@@ -55,3 +55,56 @@ object Uses {
         }
     }
 }
+
+/** Escape analysis helpers (syntactic, conservative). */
+object Escape {
+    /**
+     * Visits every occurrence of `name` in the statements, with its parent and grand-parent expression.
+     * Returns false if `ok` rejects any occurrence (or the name is redeclared, i.e. shadowed).
+     */
+    fun allUses(stmts: List<S>, name: String, ok: (parent: E?, grand: E?) -> Boolean): Boolean {
+        val w = Walker(name, ok)
+        stmts.forEach { w.s(it) }
+        return w.good
+    }
+
+    private class Walker(val name: String, val ok: (E?, E?) -> Boolean) {
+        var good = true
+        fun e(x: E, p: E?, g: E?) {
+            if (!good) return
+            when (x) {
+                is NameE -> if (x.n == name && !ok(p, g)) good = false
+                is PostIncE -> e(x.target, x, p)
+                is StrL -> for (q in x.parts) if (q is E) e(q, x, p)
+                is CallE -> { e(x.callee, x, p); x.args.forEach { e(it, x, p) }; x.lambda?.let { b(it) } }
+                is MemberE -> e(x.recv, x, p)
+                is IndexE -> { e(x.recv, x, p); e(x.idx, x, p) }
+                is BinE -> { e(x.l, x, p); e(x.r, x, p) }
+                is UnE -> e(x.e, x, p)
+                is IfE -> { e(x.cond, x, p); b(x.th); x.el?.let { b(it) } }
+                is WhenE -> { x.subj?.let { e(it, x, p) }; x.branches.forEach { (c, bl) -> c?.forEach { e(it, x, p) }; b(bl) } }
+                else -> {}
+            }
+        }
+        fun s(x: S) {
+            when (x) {
+                is VarS -> { if (x.name == name) good = false; e(x.init, null, null) }
+                is AssignS -> { e(x.target, null, null); e(x.value, null, null) }
+                is IncS -> e(x.target, null, null)
+                is WhileS -> { e(x.cond, null, null); b(x.body) }
+                is ForS -> { if (x.name == name) good = false; e(x.iter, null, null); b(x.body) }
+                is RetS -> x.e?.let { e(it, null, null) }
+                is ExprS -> e(x.e, null, null)
+            }
+        }
+        fun b(bl: Block) { if (name in bl.params) good = false; bl.stmts.forEach { s(it) } }
+    }
+
+    /** True if a method body uses `this` only as the receiver of field reads/writes and calls no sibling method implicitly. */
+    fun methodKeepsThis(f: FunD, fields: Set<String>, methods: Set<String>): Boolean {
+        val body = f.body?.stmts ?: listOf(RetS(f.exprBody))
+        if (f.params.any { it.name in fields }) return false
+        return allUses(body, "this") { p, _ -> p is MemberE && p.n in fields } &&
+            methods.all { m -> allUses(body, m) { p, _ -> p !is CallE } }
+    }
+}

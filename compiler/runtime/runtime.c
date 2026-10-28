@@ -42,16 +42,42 @@ void rt_panic(const char *msg) {
 
 // ---- printing -------------------------------------------------------------
 
-/* Kotlin-style Double formatting: shortest round-trip digits, always with a '.'. */
+/* Kotlin-style Double formatting: shortest round-trip digits; plain notation for 1e-3 <= |d| < 1e7,
+   otherwise computerized scientific notation (e.g. 3.3358775E8, 1.0E-4), always with a '.'. */
 static void fmt_double(char *buf, size_t n, double d) {
     if (d != d) { snprintf(buf, n, "NaN"); return; }
     if (d == 1.0 / 0.0) { snprintf(buf, n, "Infinity"); return; }
     if (d == -1.0 / 0.0) { snprintf(buf, n, "-Infinity"); return; }
-    for (int p = 1; p <= 17; p++) {
-        snprintf(buf, n, "%.*g", p, d);
-        if (strtod(buf, NULL) == d) break;
+    if (d == 0) { snprintf(buf, n, (1.0 / d < 0) ? "-0.0" : "0.0"); return; }
+    char e[40];
+    for (int p = 0; p <= 16; p++) { snprintf(e, sizeof e, "%.*e", p, d); if (strtod(e, NULL) == d) break; }
+    /* e = [-]D[.DDD]e[+-]XX */
+    char digits[24]; int nd = 0, neg = 0; const char *q = e;
+    if (*q == '-') { neg = 1; q++; }
+    for (; *q && *q != 'e'; q++) if (*q != '.') digits[nd++] = *q;
+    int exp = atoi(q + 1);
+    while (nd > 1 && digits[nd - 1] == '0') nd--;
+    digits[nd] = 0;
+    char *o = buf; size_t left = n;
+#define PUT(...) do { int w = snprintf(o, left, __VA_ARGS__); o += w; left -= (size_t)w; } while (0)
+    if (neg) PUT("-");
+    double a = d < 0 ? -d : d;
+    if (a >= 1e-3 && a < 1e7) {
+        if (exp >= 0) {
+            for (int i = 0; i <= exp; i++) PUT("%c", i < nd ? digits[i] : '0');
+            PUT(".");
+            if (nd > exp + 1) PUT("%s", digits + exp + 1); else PUT("0");
+        } else {
+            PUT("0.");
+            for (int i = 0; i < -exp - 1; i++) PUT("0");
+            PUT("%s", digits);
+        }
+    } else {
+        PUT("%c.", digits[0]);
+        if (nd > 1) PUT("%s", digits + 1); else PUT("0");
+        PUT("E%d", exp);
     }
-    if (!strpbrk(buf, ".eEn")) strncat(buf, ".0", n - strlen(buf) - 1);
+#undef PUT
 }
 
 void rt_print_str(const char *s) { fputs(s ? s : "null", stdout); }

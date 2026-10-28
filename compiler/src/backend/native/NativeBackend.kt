@@ -223,7 +223,18 @@ class NativeBackend(private val prog: Program) {
             }
         }
         f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n")
+        relfFields(c)
         f.append("  call void @rt_free(ptr %p, i64 %sz)\n  br label %done\ndone:\n  ret void\n}\n\n")
+        funcs.append(f)
+    }
+
+    /** @relf.C: releases the reference fields of a dying C whose memory is reused (FBIP). */
+    private fun relfFields(c: ClassInfo) {
+        val f = StringBuilder("define internal void @relf.${c.name}(ptr %p) {\nentry:\n")
+        c.fields.forEachIndexed { i, (_, t) ->
+            releaseFn(t)?.let { fn -> f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void $fn(ptr %v$i)\n") }
+        }
+        f.append("  ret void\n}\n\n")
         funcs.append(f)
     }
 
@@ -269,6 +280,82 @@ class NativeBackend(private val prog: Program) {
     }
 
     private fun lookup(n: String): Local? { for (i in scopes.indices.reversed()) scopes[i].vars[n]?.let { return it }; return null }
+
+    /** Constructor calls that may reuse the memory of a dying local (Perceus FBIP reuse). */
+    private val reuseFor = HashMap<CallE, Local>()
+    private val keepsThis = HashMap<String, Boolean>()
+    var stackObjects = 0; var reuseSites = 0
+
+    private fun ctorClass(e: E?): ClassInfo? {
+        if (e !is CallE || e.lambda != null || e.typeArgs.isNotEmpty()) return null
+        val n = (e.callee as? NameE)?.n ?: return null
+        if (lookup(n) != null) return null
+        return classes[n]
+    }
+
+    /**
+     * Escape analysis: `val x = C(...)` lives on the stack when C has no reference fields and x is only
+     * used as the receiver of field reads/writes or of C's methods that keep `this` local, in this block.
+     */
+    private fun stackCandidate(s: VarS, stmts: List<S>, i: Int): Boolean {
+        if (s.isVar || s.type != null) return false
+        val ci = ctorClass(s.init) ?: return false
+        if (ci.fields.any { it.second.isRef }) return false
+        if (Uses.ofStmt(s).any { it.node.n == s.name }) return false
+        val fields = ci.fields.map { it.first }.toSet()
+        return Escape.allUses(stmts.subList(i + 1, stmts.size), s.name) { p, g ->
+            if (p !is MemberE || p.safe) false
+            else if (g is CallE && g.callee === p) g.lambda == null && ci.methods[p.n]?.let { m ->
+                keepsThis.getOrPut("${ci.name}.${p.n}") { Escape.methodKeepsThis(m, fields, ci.methods.keys) }
+            } == true
+            else p.n in fields
+        }
+    }
+
+    private fun genStackObj(s: VarS) {
+        val ci = ctorClass(s.init)!!
+        val e = s.init as CallE
+        if (e.args.size != ci.fields.size) fail("constructor ${ci.name} expects ${ci.fields.size} arguments")
+        val vals = e.args.mapIndexed { k, a -> coerce(genExpr(a), ci.fields[k].second) }
+        val slot = "%so.${tmpN++}"
+        allocas.append("  $slot = alloca ${ci.llType}\n")
+        initObj(ci, slot, vals)
+        val l = declare(s.name, Ty.Cls(ci.name), false, false)
+        emit("store ptr $slot, ptr ${l.slot}")
+        stackObjects++
+    }
+
+    private fun initObj(ci: ClassInfo, p: String, vals: List<Val>) {
+        emit("store i64 1, ptr $p")
+        emit("store ptr @vt.${ci.name}, ptr ${emitT("getelementptr ${ci.llType}, ptr $p, i32 0, i32 1")}")
+        vals.forEachIndexed { i, v -> emit("store ${v.t.llvm} ${v.v}, ptr ${emitT("getelementptr ${ci.llType}, ptr $p, i32 0, i32 ${i + 2}")}") }
+    }
+
+    /**
+     * FBIP reuse: if the statement's value is a constructor call and a block-local object dies in this
+     * statement (all its uses are inside the constructor's arguments), the new object may take its memory.
+     */
+    private fun planReuse(s: S, i: Int, uses: List<List<Use>>, last: Map<String, Int>, scope: Scope) {
+        reuseFor.clear()
+        val top = when (s) { is VarS -> s.init; is AssignS -> if (s.op == "=") s.value else null; is RetS -> s.e; else -> null }
+        val ci = ctorClass(top) ?: return
+        val call = top as CallE
+        val inArgs = HashSet<NameE>()
+        call.args.forEach { a -> Uses.ofStmt(ExprS(a)).forEach { inArgs.add(it.node) } }
+        val layout = ci.fields.map { it.second.llvm }
+        for ((n, li) in last) {
+            if (li != i) continue
+            val l = scope.vars[n] ?: continue
+            if (l !in scope.refs) continue
+            val t = l.t as? Ty.Cls ?: continue
+            val old = classes[t.name] ?: continue
+            if (old.fields.map { it.second.llvm } != layout) continue
+            if (uses[i].any { it.node.n == n && it.node !in inArgs }) continue
+            if (uses[i].count { it.node.n == n } == 1 && uses[i].first { it.node.n == n }.let { u -> call.args.any { it === u.node } }) continue // moved instead
+            reuseFor[call] = l
+            return
+        }
+    }
 
     /** NameE nodes that are the last, ownership-taking use of a local: read as a move. */
     private val moveNodes = HashSet<NameE>()
@@ -318,6 +405,8 @@ class NativeBackend(private val prog: Program) {
         uses.forEachIndexed { i, us -> for (u in us) last[u.node.n] = i }
         b.stmts.forEachIndexed { i, s ->
             if (term) return@forEachIndexed
+            planReuse(s, i, uses, last, scope)
+            val onStack = s is VarS && stackCandidate(s, b.stmts, i)
             val mine = ArrayList<NameE>()
             for (u in uses[i]) {
                 if (!u.movable || last[u.node.n] != i || uses[i].count { it.node.n == u.node.n } != 1) continue
@@ -328,7 +417,7 @@ class NativeBackend(private val prog: Program) {
                 line = s.line
                 res = genExpr(s.e)
                 if (res.t.isRef) res = consume(res)
-            } else genStmt(s)
+            } else if (onStack) { line = s.line; genStackObj(s as VarS) } else genStmt(s)
             moveNodes.removeAll(mine)
             if (!term) for ((n, li) in last) {
                 if (li != i) continue
@@ -773,10 +862,34 @@ class NativeBackend(private val prog: Program) {
             if (e.args.size != ci.fields.size) fail("constructor $n expects ${ci.fields.size} arguments")
             val vals = e.args.mapIndexed { i, a -> consume(coerce(genArg(a), ci.fields[i].second)) }
             val szp = emitT("getelementptr ${ci.llType}, ptr null, i32 1")
-            val p = emitT("call ptr @rt_alloc(i64 ${emitT("ptrtoint ptr $szp to i64")})")
-            emit("store i64 1, ptr $p")
-            emit("store ptr @vt.$n, ptr ${emitT("getelementptr ${ci.llType}, ptr $p, i32 0, i32 1")}")
-            vals.forEachIndexed { i, v -> emit("store ${v.t.llvm} ${v.v}, ptr ${emitT("getelementptr ${ci.llType}, ptr $p, i32 0, i32 ${i + 2}")}") }
+            val size = emitT("ptrtoint ptr $szp to i64")
+            val tok = reuseFor.remove(e)?.takeIf { l -> scopes.any { it.vars.containsValue(l) && it.refs.remove(l) } }
+            val p = if (tok == null) emitT("call ptr @rt_alloc(i64 $size)") else {
+                // Reuse the dying object's cell if this was its last reference, else drop it and allocate.
+                reuseSites++
+                val old = emitT("load ptr, ptr ${tok.slot}")
+                emit("store ptr null, ptr ${tok.slot}")
+                val lr = label("reuse"); val ld = label("reuse.dec"); val lf = label("reuse.fresh"); val lj = label("reuse.join")
+                val isnull = emitT("icmp eq ptr $old, null")
+                val chk = label("reuse.chk")
+                condBr(isnull, lf, chk)
+                startBlock(chk)
+                val rc = emitT("load i64, ptr $old")
+                condBr(emitT("icmp eq i64 $rc, 1"), lr, ld)
+                startBlock(lr)
+                emit("call void @relf.${(tok.t as Ty.Cls).name}(ptr $old)")
+                br(lj)
+                startBlock(ld)
+                emit("store i64 ${emitT("sub i64 $rc, 1")}, ptr $old")
+                br(lf)
+                startBlock(lf)
+                val fresh = emitT("call ptr @rt_alloc(i64 $size)")
+                val fromF = cur
+                br(lj)
+                startBlock(lj)
+                emitT("phi ptr [ $old, %$lr ], [ $fresh, %$fromF ]")
+            }
+            initObj(ci, p, vals)
             return Val(p, Ty.Cls(n), true)
         }
         val sig = sigs[n] ?: fail("unknown function '$n'")
