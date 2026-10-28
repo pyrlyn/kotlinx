@@ -1,0 +1,5 @@
+The Kotlin test sources under box/ and native/ (and the patches in patches/, which modify them)
+are copied from JetBrains/kotlin (https://github.com/JetBrains/kotlin) at the commit recorded in
+manifest.json. Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
+They are licensed under the Apache License, Version 2.0 (see LICENSE in this directory).
+Adapted tests are upstream files modified by the patch of the same path in patches/.

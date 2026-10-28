@@ -10,3 +10,4 @@ kllvm/*
 /cpu.txt
 .zig-cache/
 compiler/build/
+.upstream-cache/
