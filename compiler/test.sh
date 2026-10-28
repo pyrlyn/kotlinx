@@ -33,6 +33,7 @@ trees cases/trees/kotlin/Main.kt checksum 14723759
 free cases/free/kotlin/Main.kt checksum 1200035933190
 refpass cases/refpass/kotlin/Main.kt checksum -538200000
 cycles cases/cycles/kotlin/Main.kt checksum 120488000000
+lru cases/lru/kotlin/Main.kt checksum 322182091481
 G
 # Error reporting: an unknown name must fail with a line number.
 printf 'fun main() {\n  println(nope)\n}\n' > "$out/bad.kt"

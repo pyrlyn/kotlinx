@@ -259,19 +259,25 @@ class NativeBackend(private val prog: Program) {
         globals.append("@vt.${c.name} = internal constant [${vt.size} x ptr] [${vt.joinToString(", ")}]\n")
         val f = StringBuilder()
         val cyc = c.name in cyclic
-        f.append("define internal void @rel.${c.name}(ptr %p) {\nentry:\n")
+        // @rel.C is a tiny alwaysinline fast path (null check, decrement, count test; for cyclic classes also
+        // purple + buffered test), so every call site inlines it. The rare cases go out of line:
+        // count zero -> @relz.C (release fields, free), cyclic count non-zero and not yet buffered ->
+        // rt_cc_possible_root. Header word layout: low 32 bits count, bits 32-33 color, bit 34 buffered (runtime.c).
+        f.append("define internal void @rel.${c.name}(ptr %p) alwaysinline {\nentry:\n")
         f.append("  %isnull = icmp eq ptr %p, null\n  br i1 %isnull, label %done, label %dec\n")
         if (cyc) {
-            // Low 32 bits: count; high bits: collector color / buffered flag (runtime.c).
-            f.append("dec:\n  %c = load i64, ptr %p\n  %c1 = sub i64 %c, 1\n  %cnt = and i64 %c1, 4294967295\n  %z = icmp eq i64 %cnt, 0\n  br i1 %z, label %free, label %keep\n")
-            f.append("keep:\n  store i64 %c1, ptr %p\n  call void @rt_cc_possible_root(ptr %p)\n  br label %done\n")
+            f.append("dec:\n  %c = load i64, ptr %p\n  %c1 = sub i64 %c, 1\n  %cnt = and i64 %c1, 4294967295\n  %z = icmp eq i64 %cnt, 0\n  br i1 %z, label %zero, label %keep\n")
+            f.append("keep:\n  %c2 = or i64 %c1, 12884901888\n  store i64 %c2, ptr %p\n  %buf = and i64 %c1, 17179869184\n  %isbuf = icmp ne i64 %buf, 0\n  br i1 %isbuf, label %done, label %root\n")
+            f.append("root:\n  store i64 %c1, ptr %p\n  call void @rt_cc_possible_root(ptr %p)\n  br label %done\n")
+            // Publish the zero count before releasing children (a release may run the collector).
+            f.append("zero:\n  store i64 %c1, ptr %p\n  call void @relz.${c.name}(ptr %p)\n  br label %done\n")
         } else {
-            f.append("dec:\n  %c = load i64, ptr %p\n  %c1 = sub i64 %c, 1\n  %z = icmp eq i64 %c1, 0\n  br i1 %z, label %free, label %keep\n")
+            f.append("dec:\n  %c = load i64, ptr %p\n  %c1 = sub i64 %c, 1\n  %z = icmp eq i64 %c1, 0\n  br i1 %z, label %zero, label %keep\n")
             f.append("keep:\n  store i64 %c1, ptr %p\n  br label %done\n")
+            f.append("zero:\n  call void @relz.${c.name}(ptr %p)\n  br label %done\n")
         }
-        f.append("free:\n")
-        // Cyclic: publish the zero count before releasing children (a release may run the collector).
-        if (cyc) f.append("  store i64 %c1, ptr %p\n")
+        f.append("done:\n  ret void\n}\n\n")
+        f.append("define internal void @relz.${c.name}(ptr %p) noinline {\nentry:\n")
         c.fields.forEachIndexed { i, (_, t) ->
             releaseFn(t)?.let { fn ->
                 f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void $fn(ptr %v$i)\n")
@@ -279,8 +285,8 @@ class NativeBackend(private val prog: Program) {
         }
         f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n")
         relfFields(c)
-        if (cyc) f.append("  call void @rt_cc_dead(ptr %p)\n  br label %done\ndone:\n  ret void\n}\n\n")
-        else f.append("  call void @rt_free(ptr %p, i64 %sz)\n  br label %done\ndone:\n  ret void\n}\n\n")
+        if (cyc) f.append("  call void @rt_cc_dead(ptr %p)\n  ret void\n}\n\n")
+        else f.append("  call void @rt_free(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         // Collector hooks: trace class/interface children; release other reference fields; free memory only.
         f.append("define internal void @trav.${c.name}(ptr %p, ptr %fn) {\nentry:\n")
         c.fields.forEachIndexed { i, (_, t) ->
@@ -425,6 +431,15 @@ class NativeBackend(private val prog: Program) {
         }
     }
 
+    /**
+     * Locals whose last use is an if/else statement are handed to both branches (Perceus "push the drop
+     * into the branches"): each branch owns the reference, so a branch can move it into a field
+     * (`n.prev = p`) instead of retaining it there and releasing it after the if.
+     */
+    private var inheritFor: IfE? = null
+    private var inheritLocals: List<Pair<String, Local>> = emptyList()
+    private var inheritNext: List<Pair<String, Local>>? = null
+
     /** NameE nodes that are the last, ownership-taking use of a local: read as a move. */
     private val moveNodes = HashSet<NameE>()
 
@@ -465,6 +480,8 @@ class NativeBackend(private val prog: Program) {
     private fun genBlockBody(b: Block, want: Boolean): Val {
         scopes.add(Scope())
         val scope = scopes.last()
+        inheritNext?.let { for ((n, l) in it) { scope.vars[n] = l; scope.refs.add(l) } }
+        inheritNext = null
         var res = Val("", Ty.Unit)
         // Perceus: per statement, the uses of each name; a local of this block is dropped right
         // after its last use, or moved (no retain/release pair) into its last use if that use takes ownership.
@@ -485,7 +502,14 @@ class NativeBackend(private val prog: Program) {
                 line = s.line
                 res = genExpr(s.e)
                 if (res.t.isRef) res = consume(res)
-            } else if (onStack) { line = s.line; genStackObj(s as VarS) } else genStmt(s)
+            } else if (onStack) { line = s.line; genStackObj(s as VarS) } else {
+                val ife = ((s as? ExprS)?.e as? IfE)?.takeIf { it.el != null }
+                if (ife != null) {
+                    inheritFor = ife
+                    inheritLocals = last.filter { it.value == i }.keys.mapNotNull { n -> scope.vars[n]?.takeIf { it in scope.refs }?.let { n to it } }
+                }
+                genStmt(s)
+            }
             moveNodes.removeAll(mine)
             if (!term) for ((n, li) in last) {
                 if (li != i) continue
@@ -717,14 +741,19 @@ class NativeBackend(private val prog: Program) {
                 }
             }
             is IfE -> {
+                val inh = if (e === inheritFor) inheritLocals else emptyList()
+                if (e === inheritFor) { inheritFor = null; inheritLocals = emptyList() }
                 val c = coerce(genExpr(e.cond), Ty.I1)
+                if (inh.isNotEmpty()) for (sc in scopes.reversed()) for ((_, l) in inh) sc.refs.remove(l)
                 val lt = label("if.then"); val lf = label("if.else"); val le = label("if.end")
                 condBr(c.v, lt, lf)
                 val res = ArrayList<Pair<Val, String>>()
                 startBlock(lt)
+                if (inh.isNotEmpty()) inheritNext = inh
                 val a = genBlockBody(e.th, e.el != null)
                 if (!term) { res.add(a to cur); br(le) }
                 startBlock(lf)
+                if (inh.isNotEmpty()) inheritNext = inh
                 val b = if (e.el != null) genBlockBody(e.el, true) else Val("", Ty.Unit)
                 if (!term) { res.add(b to cur); br(le) }
                 startBlock(le)
