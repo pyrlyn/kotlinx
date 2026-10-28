@@ -217,6 +217,8 @@ class NativeBackend(private val prog: Program) {
 
     /** Classes that can be part of a reference cycle (handled by the cycle collector). */
     private val cyclic = HashSet<String>()
+    /** Region allocator for class [name]: possibly cyclic classes go to the tracing region. */
+    private fun allocFn(name: String) = if (name in cyclic) "@rt_alloc_trace" else "@rt_alloc"
 
     /**
      * A class is cyclic if it lies on a cycle of class/interface-typed fields that contains at least one
@@ -289,7 +291,7 @@ class NativeBackend(private val prog: Program) {
             if (!isTraced(t)) releaseFn(t)?.let { fn -> f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void $fn(ptr %v$i)\n") }
         }
         f.append("  ret void\n}\n\ndefine internal void @free.${c.name}(ptr %p) {\nentry:\n")
-        f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n  call void @rt_free(ptr %p, i64 %sz)\n  ret void\n}\n\n")
+        f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n  call void ${if (cyc) "@rt_free_trace" else "@rt_free"}(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         funcs.append(f)
     }
 
@@ -415,6 +417,7 @@ class NativeBackend(private val prog: Program) {
             val t = l.t as? Ty.Cls ?: continue
             val old = classes[t.name] ?: continue
             if (old.fields.map { it.second.llvm } != layout) continue
+            if ((old.name in cyclic) != (ci.name in cyclic)) continue // reuse stays within one region
             if (uses[i].any { it.node.n == n && it.node !in inArgs }) continue
             if (uses[i].count { it.node.n == n } == 1 && uses[i].first { it.node.n == n }.let { u -> call.args.any { it === u.node } }) continue // moved instead
             reuseFor[call] = l
@@ -939,7 +942,7 @@ class NativeBackend(private val prog: Program) {
             val szp = emitT("getelementptr ${ci.llType}, ptr null, i32 1")
             val size = emitT("ptrtoint ptr $szp to i64")
             val tok = reuseFor.remove(e)?.takeIf { l -> scopes.any { it.vars.containsValue(l) && it.refs.remove(l) } }
-            val p = if (tok == null) emitT("call ptr @rt_alloc(i64 $size)") else {
+            val p = if (tok == null) emitT("call ptr ${allocFn(n)}(i64 $size)") else {
                 // Reuse the dying object's cell if this was its last reference, else drop it and allocate.
                 reuseSites++
                 val old = emitT("load ptr, ptr ${tok.slot}")
@@ -958,7 +961,7 @@ class NativeBackend(private val prog: Program) {
                 emit("call void ${releaseFn(tok.t)}(ptr $old)")
                 br(lf)
                 startBlock(lf)
-                val fresh = emitT("call ptr @rt_alloc(i64 $size)")
+                val fresh = emitT("call ptr ${allocFn(n)}(i64 $size)")
                 val fromF = cur
                 br(lj)
                 startBlock(lj)
@@ -1322,6 +1325,8 @@ done:
   ret void
 }
 declare ptr @rt_alloc(i64)
+declare ptr @rt_alloc_trace(i64)
+declare void @rt_free_trace(ptr, i64)
 declare void @rt_hdr_retain(ptr)
 declare void @rt_str_release(ptr)
 declare void @rt_arr_release(ptr)

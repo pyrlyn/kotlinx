@@ -1,0 +1,17 @@
+# main-ref main 2026-10-28 22:41 EET load: { 30.51 37.10 30.46 }
+sum 3.714
+alloc 72.925
+closures 83.324
+cycles 57.632
+dispatch 94.897
+file 51.915
+free 50.158
+hashmap 73.988
+lru 1016.813
+matmul 17.667
+nbody 72.395
+recursion 6.149
+refpass 147.044
+sort 63.128
+strings 32.03
+trees 145.025

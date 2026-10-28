@@ -1,0 +1,17 @@
+# regions working tree 2026-10-28 22:41 EET load: { 30.81 36.68 30.50 }
+sum 3.824
+alloc 73.808
+closures 83.915
+cycles 51.035
+dispatch 95.694
+file 52.399
+free 49.699
+hashmap 72.407
+lru 1013.446
+matmul 17.699
+nbody 72.581
+recursion 6.134
+refpass 146.96
+sort 63.633
+strings 32.586
+trees 143.077

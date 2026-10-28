@@ -1,0 +1,3 @@
+region: rc allocated=40002 freed=40002 traced=0
+region: trace allocated=40002 freed=40002
+outside-trace=0

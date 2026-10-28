@@ -233,49 +233,87 @@ int64_t rt_map_get(Map *m, int64_t k) {
 int64_t rt_map_size(Map *m) { return m->size; }
 void rt_map_release(Map *m) { if (!m || --m->rc > 0) return; LK(LK_MAP, -1); free(m->keys); free(m->vals); free(m->used); free(m); }
 
-// ---- object allocation ----------------------------------------------------
-// Default: system malloc/free. With -DRT_POOL (newkotlinc --alloc=pool): per-size
-// free lists over 64 KiB slabs; sizes above 128 bytes fall back to malloc.
+// ---- object allocation: two regions ---------------------------------------
+// The compiler classifies every class (NativeBackend.cyclic): a class whose instances can lie on a
+// reference cycle (a field cycle containing a `var` field) is "possibly cyclic"; all others are acyclic.
+//   * RC region (rt_alloc / rt_free): acyclic objects. Freed the instant their count hits zero,
+//     never buffered, never traced (escape analysis puts non-escaping ones on the stack instead).
+//   * Tracing region (rt_alloc_trace / rt_free_trace): possibly cyclic objects only. The cycle
+//     collector below runs over this region alone; it never visits an RC-region object.
+// Backing memory: RC region = the object allocator (mimalloc by default, malloc, or the pool);
+// tracing region = its own size-class slabs (64 KiB), so traced objects stay dense and apart from
+// short-lived acyclic ones. With --alloc malloc (ASan / macOS leaks builds) both regions use malloc
+// so the tools see every object.
+// --leak-check (RT_LEAKCHECK) prefixes each object with a region tag and counts, per region,
+// allocations and collector visits; any collector visit outside the tracing region fails the run.
 
-#ifndef RT_POOL
-void *rt_alloc(int64_t size) {
-    void *p = malloc((size_t)size);
-    if (!p) rt_panic("OutOfMemoryError");
-    LK(LK_OBJ, 1);
-    return p;
+#ifdef RT_LEAKCHECK
+enum { RG_RC = 0x5243, RG_TRACE = 0x5452 };
+static int64_t rg_alloc[2], rg_free[2], cc_visits, cc_visits_outside, cc_runs;
+#define RG_PREFIX 16
+static void *rg_tag(void *raw, int64_t tag) { if (!raw) rt_panic("OutOfMemoryError"); *(int64_t *)raw = tag; return (char *)raw + RG_PREFIX; }
+static void *rg_raw(void *p, int64_t tag) {
+    char *raw = (char *)p - RG_PREFIX;
+    if (*(int64_t *)raw != tag) { fprintf(stderr, "region: object %p freed into the wrong region\n", p); abort(); }
+    *(int64_t *)raw = 0; return raw;
 }
-void rt_free(void *p, int64_t size) { (void)size; LK(LK_OBJ, -1); free(p); }
+static int rg_is_trace(void *p) { return *(int64_t *)((char *)p - RG_PREFIX) == RG_TRACE; }
+__attribute__((destructor(200))) static void rt_region_report(void) {
+    fprintf(stderr, "region: rc allocated=%lld freed=%lld traced=0\n", (long long)rg_alloc[0], (long long)rg_free[0]);
+    fprintf(stderr, "region: trace allocated=%lld freed=%lld\n", (long long)rg_alloc[1], (long long)rg_free[1]);
+    fprintf(stderr, "region: collector runs=%lld visits=%lld outside-trace=%lld\n", (long long)cc_runs, (long long)cc_visits, (long long)cc_visits_outside);
+    if (cc_visits_outside) { fprintf(stderr, "region: FAIL collector touched RC-region objects\n"); fflush(stderr); _exit(4); }
+}
+void *rt_alloc(int64_t size) { LK(LK_OBJ, 1); rg_alloc[0]++; return rg_tag(malloc((size_t)size + RG_PREFIX), RG_RC); }
+void rt_free(void *p, int64_t size) { (void)size; LK(LK_OBJ, -1); rg_free[0]++; free(rg_raw(p, RG_RC)); }
+void *rt_alloc_trace(int64_t size) { LK(LK_OBJ, 1); rg_alloc[1]++; return rg_tag(malloc((size_t)size + RG_PREFIX), RG_TRACE); }
+void rt_free_trace(void *p, int64_t size) { (void)size; LK(LK_OBJ, -1); rg_free[1]++; free(rg_raw(p, RG_TRACE)); }
+#define CC_VISIT(p) do { cc_visits++; if (!rg_is_trace(p)) cc_visits_outside++; } while (0)
 #else
+#define CC_VISIT(p) ((void)0)
 
-#define RT_CLASSES 16
-static void *rt_free_lists[RT_CLASSES + 1];
-static char *rt_slab_ptr, *rt_slab_end;
-
-void *rt_alloc(int64_t size) {
+/* Size-class slab pool (8-byte classes up to RT_CLASSES*8 bytes, 64 KiB slabs, larger -> malloc). */
+#define RT_CLASSES 32
+typedef struct { void *free_list[RT_CLASSES + 1]; char *ptr, *end; } Pool;
+static inline void *pool_alloc(Pool *pl, int64_t size) {
     size_t cls = ((size_t)size + 7) >> 3;
-    LK(LK_OBJ, 1);
-    if (cls > RT_CLASSES) return malloc((size_t)size);
-    void *p = rt_free_lists[cls];
-    if (p) { rt_free_lists[cls] = *(void **)p; return p; }
+    if (cls > RT_CLASSES) { void *q = malloc((size_t)size); if (!q) rt_panic("OutOfMemoryError"); return q; }
+    void *p = pl->free_list[cls];
+    if (p) { pl->free_list[cls] = *(void **)p; return p; }
     size_t bytes = cls << 3;
-    if (rt_slab_ptr + bytes > rt_slab_end) {
-        rt_slab_ptr = malloc(1 << 16);
-        if (!rt_slab_ptr) rt_panic("OutOfMemoryError");
-        rt_slab_end = rt_slab_ptr + (1 << 16);
+    if (pl->ptr + bytes > pl->end) {
+        pl->ptr = malloc(1 << 16);
+        if (!pl->ptr) rt_panic("OutOfMemoryError");
+        pl->end = pl->ptr + (1 << 16);
     }
-    p = rt_slab_ptr; rt_slab_ptr += bytes;
+    p = pl->ptr; pl->ptr += bytes;
     return p;
 }
-
-void rt_free(void *p, int64_t size) {
+static inline void pool_free(Pool *pl, void *p, int64_t size) {
     size_t cls = ((size_t)size + 7) >> 3;
-    LK(LK_OBJ, -1);
     if (cls > RT_CLASSES) { free(p); return; }
-    *(void **)p = rt_free_lists[cls];
-    rt_free_lists[cls] = p;
+    *(void **)p = pl->free_list[cls];
+    pl->free_list[cls] = p;
 }
+
+#ifdef RT_POOL
+static Pool rc_pool;
+void *rt_alloc(int64_t size) { return pool_alloc(&rc_pool, size); }
+void rt_free(void *p, int64_t size) { pool_free(&rc_pool, p, size); }
+#else
+void *rt_alloc(int64_t size) { void *p = malloc((size_t)size); if (!p) rt_panic("OutOfMemoryError"); return p; }
+void rt_free(void *p, int64_t size) { (void)size; free(p); }
 #endif
 
+#ifdef RT_PLAIN_MALLOC
+void *rt_alloc_trace(int64_t size) { return rt_alloc(size); }
+void rt_free_trace(void *p, int64_t size) { rt_free(p, size); }
+#else
+static Pool trace_pool;
+void *rt_alloc_trace(int64_t size) { return pool_alloc(&trace_pool, size); }
+void rt_free_trace(void *p, int64_t size) { pool_free(&trace_pool, p, size); }
+#endif
+#endif
 
 // ---- cycle collector (Bacon & Rajan 2001, synchronous trial deletion) -----
 // Only objects of "cyclic" classes (on a field cycle with a `var` field; vtable[4] != 0) take part.
@@ -330,7 +368,7 @@ static void mark_gray(void *s) {
     vpush(&cc_work, s);
     while (cc_work.n) {
         void *x = cc_work.a[--cc_work.n];
-        if (color(x) != GRAY) { set_color(x, GRAY); vtab(x)->trav(x, mg_child); }
+        if (color(x) != GRAY) { CC_VISIT(x); set_color(x, GRAY); vtab(x)->trav(x, mg_child); }
     }
 }
 static void sb_child(void *t) {
@@ -372,6 +410,9 @@ static void collect_white(void *s) {
 void rt_cc_collect(void) {
     if (cc_running || cc_roots.n == 0) return;
     cc_running = 1;
+#ifdef RT_LEAKCHECK
+    cc_runs++;
+#endif
     Vec roots = cc_roots; cc_roots = (Vec){0};
     size_t k = 0;
     for (size_t i = 0; i < roots.n; i++) {           /* MarkRoots */

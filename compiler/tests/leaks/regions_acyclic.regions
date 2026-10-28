@@ -1,0 +1,3 @@
+region: rc allocated=111150 freed=111150 traced=0
+region: trace allocated=0 freed=0
+region: collector runs=0 visits=0 outside-trace=0
