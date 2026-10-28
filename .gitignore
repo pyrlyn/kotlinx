@@ -1,0 +1,11 @@
+rust/target/
+**/target/
+*.kexe
+*.dSYM/
+bench_*
+data/
+kllvm/*
+!kllvm/.gitkeep
+results*.txt
+cpu*.txt
+.zig-cache/
