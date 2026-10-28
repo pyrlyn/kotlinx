@@ -7,59 +7,57 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| UNSUPPORTED | 5387 |
+| UNSUPPORTED | 5384 |
 | N/A | 2984 |
 | SKIPPED_TARGET | 203 |
-| PASS | 89 |
-| COMPILER_CRASH | 13 |
-| MISCOMPILE | 2 |
+| PASS | 107 |
 
-Kept in tree (re-runnable with `run.py`): 89
+Kept in tree (re-runnable with `run.py`): 107
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| class bodies / constructors | 705 |
-| top-level properties | 592 |
-| generics | 520 |
-| inline/value classes | 508 |
-| interfaces | 476 |
-| inheritance (open/abstract/sealed) | 386 |
-| ranges (step/downTo/until, ranges as values) | 358 |
-| operator/infix functions | 274 |
-| lambdas / function types / references | 163 |
-| enum classes | 146 |
-| objects / companion objects | 98 |
+| generics | 693 |
+| top-level properties | 607 |
+| inline/value classes | 537 |
+| interfaces | 435 |
+| inheritance (open/abstract/sealed) | 431 |
+| ranges (step/downTo/until, ranges as values) | 370 |
+| operator/infix functions | 291 |
+| class bodies / constructors | 233 |
+| objects / companion objects | 187 |
+| lambdas / function types / references | 186 |
+| enum classes | 154 |
 | strings / templates | 92 |
-| type checks / casts (is, as) | 77 |
-| modifiers (private/const/lateinit/...) | 76 |
-| annotations | 59 |
-| exceptions | 56 |
-| type inference (expression bodies) | 54 |
-| extension functions | 41 |
-| default arguments | 35 |
-| destructuring declarations | 34 |
-| stdlib: kotlin.test asserts | 33 |
-| other syntax (at ',') | 31 |
+| type checks / casts (is, as) | 88 |
+| modifiers (private/const/lateinit/...) | 79 |
+| annotations | 64 |
+| extension functions | 64 |
+| exceptions | 60 |
+| default arguments | 60 |
+| type inference (expression bodies) | 57 |
+| stdlib: kotlin.test asserts | 35 |
+| destructuring declarations | 35 |
 | other syntax (at 'f') | 28 |
-| other syntax (at ':') | 21 |
-| other syntax (at 'in') | 18 |
+| other syntax (at ',') | 24 |
+| other syntax (at ':') | 24 |
+| other syntax (at 'context') | 21 |
 | typealias | 17 |
 | other: expected '=' (at ' | 17 |
+| other syntax (at 'in') | 17 |
+| nullable types | 16 |
 | other syntax (at 'foo') | 16 |
 | other syntax (at 'A') | 15 |
-| other syntax (at 'context') | 15 |
-| nullable types | 13 |
 | break / continue | 13 |
-| other syntax (at '!') | 12 |
-| other syntax (at 'Local') | 11 |
+| other syntax (at '!') | 13 |
+| other syntax (at 'Local') | 12 |
+| property accessors / delegation | 11 |
+| unknown intArrayOf (stdlib API / unsupported decl) | 10 |
+| types: Any? | 10 |
 | other syntax (at 'KRunnable') | 9 |
 | other: unexpected character '`' | 9 |
-| other syntax (at 'suspend') | 9 |
-| other syntax (at 'bar') | 8 |
-| types: Any? | 8 |
-| other syntax (at '++') | 7 |
+| unknown listOf (stdlib API / unsupported decl) | 9 |
 
 ## N/A reasons
 
@@ -96,18 +94,3 @@ Minimal repros in `bugs/`:
 
 Affected upstream tests:
 
-- COMPILER_CRASH `box/box/evaluate/ulongOperations.kt` — kotlin.NumberFormatException
-- COMPILER_CRASH `box/box/ranges/stepped/unsigned/expression/downTo/maxValueToMinValueStepMaxValue.kt` — kotlin.NumberFormatException
-- COMPILER_CRASH `box/box/ranges/stepped/unsigned/expression/downTo/maxValueToOneStepMaxValue.kt` — kotlin.NumberFormatException
-- COMPILER_CRASH `box/box/ranges/stepped/unsigned/expression/downTo/maxValueToZeroStepMaxValue.kt` — kotlin.NumberFormatException
-- COMPILER_CRASH `box/box/ranges/stepped/unsigned/expression/rangeTo/oneToMaxValueStepMaxValue.kt` — kotlin.NumberFormatException
-- COMPILER_CRASH `box/box/ranges/stepped/unsigned/literal/downTo/maxValueToMinValueStepMaxValue.kt` — kotlin.NumberFormatException
-- COMPILER_CRASH `box/box/ranges/stepped/unsigned/literal/downTo/maxValueToOneStepMaxValue.kt` — kotlin.NumberFormatException
-- COMPILER_CRASH `box/box/ranges/stepped/unsigned/literal/downTo/maxValueToZeroStepMaxValue.kt` — kotlin.NumberFormatException
-- COMPILER_CRASH `box/box/ranges/stepped/unsigned/literal/rangeTo/oneToMaxValueStepMaxValue.kt` — kotlin.NumberFormatException
-- COMPILER_CRASH `box/box/ranges/unsigned/kt67383.kt` — kotlin.NumberFormatException
-- MISCOMPILE `box/box/strings/kt3652.kt` — exit=0 stdout='fail1\n' stderr=''
-- MISCOMPILE `box/box/unsignedTypes/unsignedLiteralsForMaxLongValue.kt` — exit=0 stdout='Fail\n' stderr=''
-- COMPILER_CRASH `box/box/unsignedTypes/unsignedLongToString.kt` — kotlin.NumberFormatException
-- COMPILER_CRASH `box/box/unsignedTypes/whenByUnsigned.kt` — kotlin.NumberFormatException
-- COMPILER_CRASH `box/box/when/kt2457.kt` — /var/folders/1q/t_vv3x8x07x3s6b30wdj43kr0000gn/T/nkupf5gm_da8/t.ll:65:21: error: '%t1' defined with type 'i32' but expec
