@@ -9,7 +9,6 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 |---|---|
 | UNSUPPORTED | 5384 |
 | N/A | 2984 |
-| SKIPPED_TARGET | 203 |
 | PASS | 107 |
 
 Kept in tree (re-runnable with `run.py`): 107
@@ -73,13 +72,13 @@ Kept in tree (re-runnable with `run.py`): 107
 | DISABLE_NATIVE | 18 |
 | IGNORE_NATIVE | 10 |
 
-Scope: all backends except JVM-only. Excluded as JVM-only: 277 tests (not copied, not counted). JS/Wasm/Native tests are kept.
+Scope: Native target only. Excluded by path (not copied, not counted): JVM-only 277, JS-only 73, Wasm-only 130 tests.
 
-Targets: only `--target=native` exists. Tests whose `TARGET_BACKEND` names other non-JVM backends only (JS/Wasm) are kept as candidates and reported as SKIPPED_TARGET until those targets exist.
+Targets: only `--target=native` exists. Any remaining test whose `TARGET_BACKEND` excludes NATIVE is reported as SKIPPED_TARGET (the exclude lists should keep this at 0).
 
 All kept tests are byte-for-byte copies of upstream; no test is adapted or patched.
 
-Mechanism: JVM-only tests are excluded by path via `exclude-jvm.txt` in our harness (a per-backend list: a future JVM backend run would not apply it) (directories ending in `/` or single files, relative to the upstream repo); test files are never edited. Tests that New Kotlin's harness cannot run as-is (directives such as `IGNORE_BACKEND: NATIVE`, non-JVM `TARGET_BACKEND`, multi-file/module, reflection, coroutines) are still counted, as N/A, by `run.py`.
+Mechanism: per-backend path lists in our harness: `exclude-jvm.txt`, `exclude-js.txt`, `exclude-wasm.txt` (directories ending in `/` or single files, relative to the upstream repo; a future backend of that kind would not apply its own list). Test files are never edited. Tests that New Kotlin's harness cannot run as-is (directives such as `IGNORE_BACKEND: NATIVE`, multi-file/module, reflection, coroutines) are still counted, as N/A, by `run.py`.
 
 
 ## Bugs (MISCOMPILE / COMPILER_CRASH)

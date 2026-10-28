@@ -3,10 +3,11 @@
  "counts": {
   "N/A": 2984,
   "PASS": 107,
-  "SKIPPED_TARGET": 203,
   "UNSUPPORTED": 5384
  },
+ "excluded_js_only": 73,
  "excluded_jvm_only": 277,
+ "excluded_wasm_only": 130,
  "repo": "https://github.com/JetBrains/kotlin",
  "sources": [
   "compiler/testData/codegen/box",
@@ -2326,16 +2327,6 @@
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/bridges/internalMethodOverridePublishedApi.kt"
   },
-  "box/box/bridges/jsName.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/bridges/jsName.kt"
-  },
-  "box/box/bridges/jsNative.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/bridges/jsNative.kt"
-  },
   "box/box/bridges/kt12416.kt": {
    "category": "generics",
    "detail": "unexpected top-level token (at '<')",
@@ -2882,11 +2873,6 @@
    "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/builtinStubMethods/customReadOnlyIterator.kt"
-  },
-  "box/box/builtins/stringTemplateWithValueOf.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/builtins/stringTemplateWithValueOf.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedArrayOf.kt": {
    "category": "lambdas / function types / references",
@@ -4829,11 +4815,6 @@
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/casts/functions/isFunKSmall.kt"
   },
-  "box/box/casts/functions/isFunKSmallJS.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/casts/functions/isFunKSmallJS.kt"
-  },
   "box/box/casts/functions/isFunKSmallNonJS.kt": {
    "detail": "WITH_REFLECT",
    "status": "N/A",
@@ -4980,11 +4961,6 @@
    "detail": "WITH_COROUTINES",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/casts/kt68509.kt"
-  },
-  "box/box/casts/kt73931.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/casts/kt73931.kt"
   },
   "box/box/casts/kt80795.kt": {
    "category": "generics",
@@ -5157,21 +5133,6 @@
    "detail": "unexpected top-level token (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/unitNullableCast.kt"
-  },
-  "box/box/casts/wasmCastMessages.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/casts/wasmCastMessages.kt"
-  },
-  "box/box/casts/wasmCastMessagesWasmJs.kt": {
-   "detail": "targets: WASM_JS",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/casts/wasmCastMessagesWasmJs.kt"
-  },
-  "box/box/char/unboxedCharSpecials.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/char/unboxedCharSpecials.kt"
   },
   "box/box/checkcastOptimization/kt19128.kt": {
    "category": "type checks / casts (is, as)",
@@ -6427,11 +6388,6 @@
    "detail": "expected identifier (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureOnTopLevel2.kt"
-  },
-  "box/box/closures/closureThisByUsingMethodFromParentClass.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/closures/closureThisByUsingMethodFromParentClass.kt"
   },
   "box/box/closures/closureWithParameter.kt": {
    "category": "operator/infix functions",
@@ -9848,11 +9804,6 @@
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/coroutines/captureUnaryOperator.kt"
   },
-  "box/box/coroutines/capturedOuterThis.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/coroutines/capturedOuterThis.kt"
-  },
   "box/box/coroutines/capturedVarInSuspendLambda.kt": {
    "detail": "WITH_COROUTINES",
    "status": "N/A",
@@ -10466,11 +10417,6 @@
    "detail": "WITH_COROUTINES",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/coroutines/handleResultSuspended.kt"
-  },
-  "box/box/coroutines/implicitUnitReturn.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/coroutines/implicitUnitReturn.kt"
   },
   "box/box/coroutines/indirectInlineUsedAsNonInline.kt": {
    "detail": "WITH_COROUTINES",
@@ -12035,11 +11981,6 @@
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/coroutines/suspendFunctionTypeCall/suspendModifier.kt"
   },
-  "box/box/coroutines/suspendFunctionalInterface.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/coroutines/suspendFunctionalInterface.kt"
-  },
   "box/box/coroutines/suspendInCycle.kt": {
    "detail": "WITH_COROUTINES",
    "status": "N/A",
@@ -12725,11 +12666,6 @@
    "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/deadCodeElimination/kt14357.kt"
-  },
-  "box/box/debugExperience/internalLocalsAreRenamed.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/debugExperience/internalLocalsAreRenamed.kt"
   },
   "box/box/defaultArguments/callDefaultFromInitializer.kt": {
    "category": "default arguments",
@@ -14179,21 +14115,11 @@
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/delegation/delegationExtensionPropertyDelegated.kt"
   },
-  "box/box/delegation/delegationJsNameProperty.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/delegation/delegationJsNameProperty.kt"
-  },
   "box/box/delegation/delegationOnObject.kt": {
    "category": "objects / companion objects",
    "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationOnObject.kt"
-  },
-  "box/box/delegation/delegationToExternaInterface.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/delegation/delegationToExternaInterface.kt"
   },
   "box/box/delegation/delegationToInnerClassOfGenericClass.kt": {
    "category": "generics",
@@ -15656,11 +15582,6 @@
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/complexBooleanConstant.kt"
   },
-  "box/box/evaluate/cornerCaseInFloat.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/evaluate/cornerCaseInFloat.kt"
-  },
   "box/box/evaluate/doubleOperations.kt": {
    "category": "generics",
    "detail": "expected identifier (at '<')",
@@ -16003,11 +15924,6 @@
    "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/exceptions/rethrow.kt"
-  },
-  "box/box/exceptions/stacktraceWasm.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/exceptions/stacktraceWasm.kt"
   },
   "box/box/exceptions/throw0.kt": {
    "category": "exceptions",
@@ -17160,11 +17076,6 @@
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/customEqualsThroughHierarchiesAndFields.kt"
   },
-  "box/box/fullValueClasses/defaultConstructor.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/fullValueClasses/defaultConstructor.kt"
-  },
   "box/box/fullValueClasses/fakeOverrides.kt": {
    "category": "inheritance (open/abstract/sealed)",
    "detail": "unexpected top-level token (at 'abstract')",
@@ -17299,11 +17210,6 @@
    "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/singleFieldCustomEquals.kt"
-  },
-  "box/box/fullValueClasses/singleFieldEqualsWithoutBoxing.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/fullValueClasses/singleFieldEqualsWithoutBoxing.kt"
   },
   "box/box/fullValueClasses/singleFieldWrappingCustomEquals.kt": {
    "category": "inline/value classes",
@@ -19047,11 +18953,6 @@
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/noCoercionToUnitWithEqualityConstraintForNullableReturnType.kt"
   },
-  "box/box/inference/overrideDefaultMethod.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inference/overrideDefaultMethod.kt"
-  },
   "box/box/inference/overrideDefaultProperty.kt": {
    "detail": "multi-file/module test",
    "status": "N/A",
@@ -20159,11 +20060,6 @@
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/whenAtAssignmentWithSmartCastInsideCapturedLambda.kt"
   },
-  "box/box/inheritance/overrideAnyMethods.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inheritance/overrideAnyMethods.kt"
-  },
   "box/box/initializers/correctOrder1.kt": {
    "category": "interfaces",
    "detail": "only member functions are supported in class/interface bodies (at 'val')",
@@ -20325,11 +20221,6 @@
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/inline/anonymousObjectInlineMethod.kt"
   },
-  "box/box/inline/arrayLiteralAliasing.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inline/arrayLiteralAliasing.kt"
-  },
   "box/box/inline/astCopy.kt": {
    "detail": "multi-file/module test",
    "status": "N/A",
@@ -20339,11 +20230,6 @@
    "detail": "multi-file/module test",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/inline/blocksMaterialization.kt"
-  },
-  "box/box/inline/callFunction.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inline/callFunction.kt"
   },
   "box/box/inline/callInlineFunctionOnTopLevel.kt": {
    "detail": "multi-file/module test",
@@ -20359,11 +20245,6 @@
    "detail": "multi-file/module test",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/inline/callableReference.kt"
-  },
-  "box/box/inline/callableReferenceClassMethod.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inline/callableReferenceClassMethod.kt"
   },
   "box/box/inline/callableReferenceOfLocalFun.kt": {
    "detail": "multi-file/module test",
@@ -20483,11 +20364,6 @@
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/inline/extensionWithManyArguments.kt"
   },
-  "box/box/inline/externalInlineWithSuppress.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inline/externalInlineWithSuppress.kt"
-  },
   "box/box/inline/fakeOverrideInlining.kt": {
    "detail": "multi-file/module test",
    "status": "N/A",
@@ -20497,11 +20373,6 @@
    "detail": "multi-file/module test",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/inline/fakeOverrideInliningCrossModule.kt"
-  },
-  "box/box/inline/faultyRedundantCallElimination.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inline/faultyRedundantCallElimination.kt"
   },
   "box/box/inline/genericFunctionReference.kt": {
    "detail": "multi-file/module test",
@@ -20685,11 +20556,6 @@
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/inline/inlineChainWithFewStatements.kt"
   },
-  "box/box/inline/inlineClassEquals.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inline/inlineClassEquals.kt"
-  },
   "box/box/inline/inlineCtor.kt": {
    "detail": "multi-file/module test",
    "status": "N/A",
@@ -20777,11 +20643,6 @@
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/inline/inlinedLambdaWithErasedParamType.kt"
   },
-  "box/box/inline/inlinedObjectLiteralIsCheck.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inline/inlinedObjectLiteralIsCheck.kt"
-  },
   "box/box/inline/innerInlineFunCapturesOuter.kt": {
    "detail": "multi-file/module test",
    "status": "N/A",
@@ -20802,21 +20663,6 @@
    "detail": "multi-file/module test",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/inline/iteratorOnInlineFunctionResult.kt"
-  },
-  "box/box/inline/jsCode.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inline/jsCode.kt"
-  },
-  "box/box/inline/jsCodeInLambda.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inline/jsCodeInLambda.kt"
-  },
-  "box/box/inline/jsCodeVarDeclared.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inline/jsCodeVarDeclared.kt"
   },
   "box/box/inline/kt20245.kt": {
    "category": "interfaces",
@@ -22353,11 +22199,6 @@
    "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/stringNGeneric2.kt"
-  },
-  "box/box/inlineClasses/callableReferences/withInlineFunctionWithMultipleConstraints.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/withInlineFunctionWithMultipleConstraints.kt"
   },
   "box/box/inlineClasses/callableReferencesWithInlineClasses.kt": {
    "detail": "WITH_REFLECT",
@@ -26102,11 +25943,6 @@
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/inlineEvaluationOrder/propertyAccessAndInitializer.kt"
   },
-  "box/box/inlineEvaluationOrder/propertyAccessExternalWithSideEffect.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/inlineEvaluationOrder/propertyAccessExternalWithSideEffect.kt"
-  },
   "box/box/inlineEvaluationOrder/propertyAccessWithSideEffect.kt": {
    "detail": "multi-file/module test",
    "status": "N/A",
@@ -26976,45 +26812,15 @@
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/primitiveNumberComparisons/mixedNumberTypes.kt"
   },
-  "box/box/ir/privateSignatures/deepLocalClassProperties.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/ir/privateSignatures/deepLocalClassProperties.kt"
-  },
-  "box/box/ir/privateSignatures/deepLocalClassProperties2.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/ir/privateSignatures/deepLocalClassProperties2.kt"
-  },
-  "box/box/ir/privateSignatures/deepLocalDefaultArgumentWithLocalClass.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/ir/privateSignatures/deepLocalDefaultArgumentWithLocalClass.kt"
-  },
-  "box/box/ir/privateSignatures/deepLocalFakeOverride.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/ir/privateSignatures/deepLocalFakeOverride.kt"
-  },
   "box/box/ir/privateSignatures/enumEntryArguments.kt": {
    "detail": "multi-file/module test",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/ir/privateSignatures/enumEntryArguments.kt"
   },
-  "box/box/ir/privateSignatures/localFakeOverride.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/ir/privateSignatures/localFakeOverride.kt"
-  },
   "box/box/ir/privateSignatures/privateLeakThroughInline.kt": {
    "detail": "multi-file/module test",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/ir/privateSignatures/privateLeakThroughInline.kt"
-  },
-  "box/box/ir/privateSignatures/topLevelPrivateDelegate.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/ir/privateSignatures/topLevelPrivateDelegate.kt"
   },
   "box/box/ir/recursiveGeneric.kt": {
    "detail": "multi-file/module test",
@@ -27095,85 +26901,10 @@
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/jdk/noStringToCharArray.kt"
   },
-  "box/box/js/MultiDollarInterpolation.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/MultiDollarInterpolation.kt"
-  },
-  "box/box/js/getOperatorOnDynamicThis.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/getOperatorOnDynamicThis.kt"
-  },
-  "box/box/js/inlinedReturnBreakContinue/inlineFunctionWithMultipleParameters.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/inlinedReturnBreakContinue/inlineFunctionWithMultipleParameters.kt"
-  },
-  "box/box/js/inlinedReturnBreakContinue/lambdaPassedToInlineFunction.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/inlinedReturnBreakContinue/lambdaPassedToInlineFunction.kt"
-  },
-  "box/box/js/inlinedReturnBreakContinue/loopWithinInlineFunction.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/inlinedReturnBreakContinue/loopWithinInlineFunction.kt"
-  },
-  "box/box/js/inlinedReturnBreakContinue/simple.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/inlinedReturnBreakContinue/simple.kt"
-  },
-  "box/box/js/inlinedReturnBreakContinue/simpleDoWhile.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/inlinedReturnBreakContinue/simpleDoWhile.kt"
-  },
-  "box/box/js/inlinedReturnBreakContinue/withReturnValue.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/inlinedReturnBreakContinue/withReturnValue.kt"
-  },
-  "box/box/js/inlinedReturnBreakContinue/withReturnValueDoWhileContinue.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/inlinedReturnBreakContinue/withReturnValueDoWhileContinue.kt"
-  },
-  "box/box/js/inlinedReturnBreakContinue/withReturnValueNested.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/inlinedReturnBreakContinue/withReturnValueNested.kt"
-  },
-  "box/box/js/jsPostfixAfterPrefixOrPostfix.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/jsPostfixAfterPrefixOrPostfix.kt"
-  },
-  "box/box/js/lambdaWithDynamicReceiver.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/lambdaWithDynamicReceiver.kt"
-  },
-  "box/box/js/nestedClassInheritsFromExternalClass.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/nestedClassInheritsFromExternalClass.kt"
-  },
-  "box/box/js/trailingLambdaOnDynamic.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/js/trailingLambdaOnDynamic.kt"
-  },
   "box/box/jsAstOptimizations/inlineEmptyFunction.kt": {
    "detail": "multi-file/module test",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/inlineEmptyFunction.kt"
-  },
-  "box/box/jsAstOptimizations/tempVarDeclOnAssignment.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/jsAstOptimizations/tempVarDeclOnAssignment.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/conditionInVariable.kt": {
    "category": "operator/infix functions",
@@ -27258,21 +26989,6 @@
    "detail": "unexpected top-level token (at 'var')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/whileEvaluationOrder.kt"
-  },
-  "box/box/jsCode/lambdaNoInline.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/jsCode/lambdaNoInline.kt"
-  },
-  "box/box/jsCode/regex.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/jsCode/regex.kt"
-  },
-  "box/box/jsName/peculiarIdentifiers.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/jsName/peculiarIdentifiers.kt"
   },
   "box/box/kclass/kClassEnumArgument.kt": {
    "detail": "WITH_REFLECT",
@@ -28942,11 +28658,6 @@
    "detail": "multi-file/module test",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/multiplatform/k2/complexMatchings/expectCtorlessFinalToActualObject.kt"
-  },
-  "box/box/multiplatform/k2/complexMatchings/expectCtorlessFinalToActualPromiseOfUnit.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/multiplatform/k2/complexMatchings/expectCtorlessFinalToActualPromiseOfUnit.kt"
   },
   "box/box/multiplatform/k2/complexMatchings/expectCtorlessFinalToActualUnit.kt": {
    "detail": "multi-file/module test",
@@ -30982,11 +30693,6 @@
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/conversions.kt"
   },
-  "box/box/primitiveTypes/crossTypeEquals.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/primitiveTypes/crossTypeEquals.kt"
-  },
   "box/box/primitiveTypes/ea35963.kt": {
    "detail": "box",
    "status": "PASS",
@@ -31880,11 +31586,6 @@
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/properties/eagerInitializationLambdaInvocation.kt"
   },
-  "box/box/properties/eagerInitializationWithSimpleObject.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/properties/eagerInitializationWithSimpleObject.kt"
-  },
   "box/box/properties/field.kt": {
    "category": "top-level properties",
    "detail": "unexpected top-level token (at 'var')",
@@ -32332,16 +32033,6 @@
    "detail": "multi-file/module test",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/properties/lazyInitializationSplitPerModule.kt"
-  },
-  "box/box/properties/lazyInitializationThroughTopFun.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/properties/lazyInitializationThroughTopFun.kt"
-  },
-  "box/box/properties/noInitializationLazilyOnNonPropertiesCall.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/properties/noInitializationLazilyOnNonPropertiesCall.kt"
   },
   "box/box/properties/primitiveOverrideDefaultAccessor.kt": {
    "category": "generics",
@@ -37441,35 +37132,15 @@
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reflection/classes/qualifiedNameOfStandardClassesOther.kt"
   },
-  "box/box/reflection/classes/qualifiedNameWasm.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/classes/qualifiedNameWasm.kt"
-  },
   "box/box/reflection/classes/qualifiedNameWithDollars.kt": {
    "detail": "IGNORE_BACKEND NATIVE/ANY",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/reflection/classes/qualifiedNameWithDollars.kt"
   },
-  "box/box/reflection/classes/toStringWasm.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/classes/toStringWasm.kt"
-  },
   "box/box/reflection/constructors/constructorName.kt": {
    "detail": "WITH_REFLECT",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/reflection/constructors/constructorName.kt"
-  },
-  "box/box/reflection/createInstance.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/createInstance.kt"
-  },
-  "box/box/reflection/createInstanceByInstance.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/createInstanceByInstance.kt"
   },
   "box/box/reflection/functions/genericOverriddenFunction.kt": {
    "detail": "WITH_REFLECT",
@@ -37491,21 +37162,6 @@
    "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reflection/kClassCompanion.kt"
-  },
-  "box/box/reflection/kClassLambda.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/kClassLambda.kt"
-  },
-  "box/box/reflection/kClassOnReifiedTypeInLambda.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/kClassOnReifiedTypeInLambda.kt"
-  },
-  "box/box/reflection/kClassSuspendFunction.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/kClassSuspendFunction.kt"
   },
   "box/box/reflection/methodsFromAny/functionEqualsHashCode.kt": {
    "detail": "WITH_REFLECT",
@@ -37572,46 +37228,6 @@
    "detail": "WITH_REFLECT",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/reflection/typeOf/intersectionType.kt"
-  },
-  "box/box/reflection/typeOf/js/classes.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/typeOf/js/classes.kt"
-  },
-  "box/box/reflection/typeOf/js/inlineClasses.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/typeOf/js/inlineClasses.kt"
-  },
-  "box/box/reflection/typeOf/js/kType.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/typeOf/js/kType.kt"
-  },
-  "box/box/reflection/typeOf/js/manyTypeArguments.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/typeOf/js/manyTypeArguments.kt"
-  },
-  "box/box/reflection/typeOf/js/multipleLayers.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/typeOf/js/multipleLayers.kt"
-  },
-  "box/box/reflection/typeOf/js/multipleModules.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/typeOf/js/multipleModules.kt"
-  },
-  "box/box/reflection/typeOf/js/typeOfCapturedStar.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/typeOf/js/typeOfCapturedStar.kt"
-  },
-  "box/box/reflection/typeOf/js/typeOfReifiedUnit.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/reflection/typeOf/js/typeOfReifiedUnit.kt"
   },
   "box/box/reflection/typeOf/ktype1_anonymousObject.kt": {
    "detail": "WITH_REFLECT",
@@ -39321,11 +38937,6 @@
    "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/smartcastFromGenericToString.kt"
-  },
-  "box/box/smartCasts/smartcastOnDynamic.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/smartCasts/smartcastOnDynamic.kt"
   },
   "box/box/smartCasts/smartcastToStarType.kt": {
    "category": "generics",
@@ -42240,581 +41851,6 @@
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/volatile/volatileString.kt"
   },
-  "box/box/wasm-annotations/branchHint.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-annotations/branchHint.kt"
-  },
-  "box/box/wasm-new-exception-handling/breakAndOuterFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/breakAndOuterFinally.kt"
-  },
-  "box/box/wasm-new-exception-handling/catch1.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/catch1.kt"
-  },
-  "box/box/wasm-new-exception-handling/catch2.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/catch2.kt"
-  },
-  "box/box/wasm-new-exception-handling/catch3.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/catch3.kt"
-  },
-  "box/box/wasm-new-exception-handling/catch4.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/catch4.kt"
-  },
-  "box/box/wasm-new-exception-handling/catch5.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/catch5.kt"
-  },
-  "box/box/wasm-new-exception-handling/catch6.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/catch6.kt"
-  },
-  "box/box/wasm-new-exception-handling/catch7.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/catch7.kt"
-  },
-  "box/box/wasm-new-exception-handling/catch8.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/catch8.kt"
-  },
-  "box/box/wasm-new-exception-handling/continueAndOuterFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/continueAndOuterFinally.kt"
-  },
-  "box/box/wasm-new-exception-handling/decrementInFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/decrementInFinally.kt"
-  },
-  "box/box/wasm-new-exception-handling/extend0.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/extend0.kt"
-  },
-  "box/box/wasm-new-exception-handling/finally1.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/finally1.kt"
-  },
-  "box/box/wasm-new-exception-handling/finally10.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/finally10.kt"
-  },
-  "box/box/wasm-new-exception-handling/finally11.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/finally11.kt"
-  },
-  "box/box/wasm-new-exception-handling/finally2.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/finally2.kt"
-  },
-  "box/box/wasm-new-exception-handling/finally3.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/finally3.kt"
-  },
-  "box/box/wasm-new-exception-handling/finally4.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/finally4.kt"
-  },
-  "box/box/wasm-new-exception-handling/finally5.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/finally5.kt"
-  },
-  "box/box/wasm-new-exception-handling/finally6.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/finally6.kt"
-  },
-  "box/box/wasm-new-exception-handling/finally7.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/finally7.kt"
-  },
-  "box/box/wasm-new-exception-handling/finally8.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/finally8.kt"
-  },
-  "box/box/wasm-new-exception-handling/finally9.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/finally9.kt"
-  },
-  "box/box/wasm-new-exception-handling/finallyAndFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/finallyAndFinally.kt"
-  },
-  "box/box/wasm-new-exception-handling/kt31923_break.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/kt31923_break.kt"
-  },
-  "box/box/wasm-new-exception-handling/kt31923_continue.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/kt31923_continue.kt"
-  },
-  "box/box/wasm-new-exception-handling/kt31923_return.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/kt31923_return.kt"
-  },
-  "box/box/wasm-new-exception-handling/kt3549.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/kt3549.kt"
-  },
-  "box/box/wasm-new-exception-handling/kt3706.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/kt3706.kt"
-  },
-  "box/box/wasm-new-exception-handling/kt3867.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/kt3867.kt"
-  },
-  "box/box/wasm-new-exception-handling/kt3874.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/kt3874.kt"
-  },
-  "box/box/wasm-new-exception-handling/kt3894.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/kt3894.kt"
-  },
-  "box/box/wasm-new-exception-handling/kt4134.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/kt4134.kt"
-  },
-  "box/box/wasm-new-exception-handling/loopAndFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/loopAndFinally.kt"
-  },
-  "box/box/wasm-new-exception-handling/nestedFinallyAndNonFinallyTry.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/nestedFinallyAndNonFinallyTry.kt"
-  },
-  "box/box/wasm-new-exception-handling/nestedFinallyAndNonFinallyTry2.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/nestedFinallyAndNonFinallyTry2.kt"
-  },
-  "box/box/wasm-new-exception-handling/nestedFinallyAndNonFinallyTry3.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/nestedFinallyAndNonFinallyTry3.kt"
-  },
-  "box/box/wasm-new-exception-handling/nestedFinallyAndNonFinallyTry4.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/nestedFinallyAndNonFinallyTry4.kt"
-  },
-  "box/box/wasm-new-exception-handling/notChainCatch.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/notChainCatch.kt"
-  },
-  "box/box/wasm-new-exception-handling/objectInFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/objectInFinally.kt"
-  },
-  "box/box/wasm-new-exception-handling/rethrow.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/rethrow.kt"
-  },
-  "box/box/wasm-new-exception-handling/returnNullFromInlined.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/returnNullFromInlined.kt"
-  },
-  "box/box/wasm-new-exception-handling/returnsDifferentTypes.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/returnsDifferentTypes.kt"
-  },
-  "box/box/wasm-new-exception-handling/someStuff.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/someStuff.kt"
-  },
-  "box/box/wasm-new-exception-handling/throw0.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/throw0.kt"
-  },
-  "box/box/wasm-new-exception-handling/throw_from_catch.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/throw_from_catch.kt"
-  },
-  "box/box/wasm-new-exception-handling/try1.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/try1.kt"
-  },
-  "box/box/wasm-new-exception-handling/try2.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/try2.kt"
-  },
-  "box/box/wasm-new-exception-handling/try3.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/try3.kt"
-  },
-  "box/box/wasm-new-exception-handling/try4.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/try4.kt"
-  },
-  "box/box/wasm-new-exception-handling/tryCatch.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/tryCatch.kt"
-  },
-  "box/box/wasm-new-exception-handling/tryCatchFinallyWithHandleResult.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/tryCatchFinallyWithHandleResult.kt"
-  },
-  "box/box/wasm-new-exception-handling/tryCatchWithHandleResult.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/tryCatchWithHandleResult.kt"
-  },
-  "box/box/wasm-new-exception-handling/tryFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/tryFinally.kt"
-  },
-  "box/box/wasm-new-exception-handling/tryFinallyInsideInlineLambda.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/tryFinallyInsideInlineLambda.kt"
-  },
-  "box/box/wasm-new-exception-handling/tryFinallyWithHandleResult.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/tryFinallyWithHandleResult.kt"
-  },
-  "box/box/wasm-new-exception-handling/tryLoopTry.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-new-exception-handling/tryLoopTry.kt"
-  },
-  "box/box/wasm-old-exception-handling/breakAndOuterFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/breakAndOuterFinally.kt"
-  },
-  "box/box/wasm-old-exception-handling/catch1.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/catch1.kt"
-  },
-  "box/box/wasm-old-exception-handling/catch2.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/catch2.kt"
-  },
-  "box/box/wasm-old-exception-handling/catch3.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/catch3.kt"
-  },
-  "box/box/wasm-old-exception-handling/catch4.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/catch4.kt"
-  },
-  "box/box/wasm-old-exception-handling/catch5.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/catch5.kt"
-  },
-  "box/box/wasm-old-exception-handling/catch6.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/catch6.kt"
-  },
-  "box/box/wasm-old-exception-handling/catch7.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/catch7.kt"
-  },
-  "box/box/wasm-old-exception-handling/catch8.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/catch8.kt"
-  },
-  "box/box/wasm-old-exception-handling/continueAndOuterFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/continueAndOuterFinally.kt"
-  },
-  "box/box/wasm-old-exception-handling/decrementInFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/decrementInFinally.kt"
-  },
-  "box/box/wasm-old-exception-handling/extend0.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/extend0.kt"
-  },
-  "box/box/wasm-old-exception-handling/finally1.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/finally1.kt"
-  },
-  "box/box/wasm-old-exception-handling/finally10.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/finally10.kt"
-  },
-  "box/box/wasm-old-exception-handling/finally11.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/finally11.kt"
-  },
-  "box/box/wasm-old-exception-handling/finally2.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/finally2.kt"
-  },
-  "box/box/wasm-old-exception-handling/finally3.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/finally3.kt"
-  },
-  "box/box/wasm-old-exception-handling/finally4.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/finally4.kt"
-  },
-  "box/box/wasm-old-exception-handling/finally5.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/finally5.kt"
-  },
-  "box/box/wasm-old-exception-handling/finally6.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/finally6.kt"
-  },
-  "box/box/wasm-old-exception-handling/finally7.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/finally7.kt"
-  },
-  "box/box/wasm-old-exception-handling/finally8.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/finally8.kt"
-  },
-  "box/box/wasm-old-exception-handling/finally9.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/finally9.kt"
-  },
-  "box/box/wasm-old-exception-handling/finallyAndFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/finallyAndFinally.kt"
-  },
-  "box/box/wasm-old-exception-handling/kt31923_break.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/kt31923_break.kt"
-  },
-  "box/box/wasm-old-exception-handling/kt31923_continue.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/kt31923_continue.kt"
-  },
-  "box/box/wasm-old-exception-handling/kt31923_return.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/kt31923_return.kt"
-  },
-  "box/box/wasm-old-exception-handling/kt3549.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/kt3549.kt"
-  },
-  "box/box/wasm-old-exception-handling/kt3706.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/kt3706.kt"
-  },
-  "box/box/wasm-old-exception-handling/kt3867.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/kt3867.kt"
-  },
-  "box/box/wasm-old-exception-handling/kt3874.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/kt3874.kt"
-  },
-  "box/box/wasm-old-exception-handling/kt3894.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/kt3894.kt"
-  },
-  "box/box/wasm-old-exception-handling/kt4134.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/kt4134.kt"
-  },
-  "box/box/wasm-old-exception-handling/loopAndFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/loopAndFinally.kt"
-  },
-  "box/box/wasm-old-exception-handling/nestedFinallyAndNonFinallyTry.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/nestedFinallyAndNonFinallyTry.kt"
-  },
-  "box/box/wasm-old-exception-handling/nestedFinallyAndNonFinallyTry2.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/nestedFinallyAndNonFinallyTry2.kt"
-  },
-  "box/box/wasm-old-exception-handling/nestedFinallyAndNonFinallyTry3.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/nestedFinallyAndNonFinallyTry3.kt"
-  },
-  "box/box/wasm-old-exception-handling/nestedFinallyAndNonFinallyTry4.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/nestedFinallyAndNonFinallyTry4.kt"
-  },
-  "box/box/wasm-old-exception-handling/notChainCatch.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/notChainCatch.kt"
-  },
-  "box/box/wasm-old-exception-handling/objectInFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/objectInFinally.kt"
-  },
-  "box/box/wasm-old-exception-handling/rethrow.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/rethrow.kt"
-  },
-  "box/box/wasm-old-exception-handling/returnNullFromInlined.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/returnNullFromInlined.kt"
-  },
-  "box/box/wasm-old-exception-handling/returnsDifferentTypes.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/returnsDifferentTypes.kt"
-  },
-  "box/box/wasm-old-exception-handling/someStuff.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/someStuff.kt"
-  },
-  "box/box/wasm-old-exception-handling/throw0.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/throw0.kt"
-  },
-  "box/box/wasm-old-exception-handling/throw_from_catch.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/throw_from_catch.kt"
-  },
-  "box/box/wasm-old-exception-handling/try1.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/try1.kt"
-  },
-  "box/box/wasm-old-exception-handling/try2.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/try2.kt"
-  },
-  "box/box/wasm-old-exception-handling/try3.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/try3.kt"
-  },
-  "box/box/wasm-old-exception-handling/try4.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/try4.kt"
-  },
-  "box/box/wasm-old-exception-handling/tryCatch.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/tryCatch.kt"
-  },
-  "box/box/wasm-old-exception-handling/tryCatchFinallyWithHandleResult.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/tryCatchFinallyWithHandleResult.kt"
-  },
-  "box/box/wasm-old-exception-handling/tryCatchWithHandleResult.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/tryCatchWithHandleResult.kt"
-  },
-  "box/box/wasm-old-exception-handling/tryFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/tryFinally.kt"
-  },
-  "box/box/wasm-old-exception-handling/tryFinallyInsideInlineLambda.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/tryFinallyInsideInlineLambda.kt"
-  },
-  "box/box/wasm-old-exception-handling/tryFinallyWithHandleResult.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/tryFinallyWithHandleResult.kt"
-  },
-  "box/box/wasm-old-exception-handling/tryLoopTry.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/wasm-old-exception-handling/tryLoopTry.kt"
-  },
   "box/box/wasmStringSwitch/callSubjectIfChain.kt": {
    "category": "objects / companion objects",
    "detail": "unexpected top-level token (at 'object')",
@@ -42947,11 +41983,6 @@
    "detail": "IGNORE_BACKEND NATIVE/ANY",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/box/when/NoWhenBranchMatchedExceptionAfterQualified.kt"
-  },
-  "box/box/when/NoWhenBranchMatchedExceptionAfterQualifiedJs.kt": {
-   "detail": "targets: JS_IR",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/when/NoWhenBranchMatchedExceptionAfterQualifiedJs.kt"
   },
   "box/box/when/callProperty.kt": {
    "detail": "box",
@@ -43095,11 +42126,6 @@
    "detail": "unexpected top-level token (at 'enum')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/exhaustiveBreakContinue.kt"
-  },
-  "box/box/when/exhaustiveCheckException.kt": {
-   "detail": "targets: JS_IR, JS_IR_ES6",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/box/when/exhaustiveCheckException.kt"
   },
   "box/box/when/exhaustiveWhenInitialization.kt": {
    "category": "enum classes",
@@ -47361,46 +46387,6 @@
    "detail": "multi-file/module test",
    "status": "N/A",
    "upstream": "compiler/testData/codegen/boxInline/varargs/varargAndDefaultParameters2.kt"
-  },
-  "box/boxInline/wasm-new-exception-handling/kt5863.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/boxInline/wasm-new-exception-handling/kt5863.kt"
-  },
-  "box/boxInline/wasm-new-exception-handling/tryCatch.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/boxInline/wasm-new-exception-handling/tryCatch.kt"
-  },
-  "box/boxInline/wasm-new-exception-handling/tryCatch2.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/boxInline/wasm-new-exception-handling/tryCatch2.kt"
-  },
-  "box/boxInline/wasm-new-exception-handling/tryCatchFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/boxInline/wasm-new-exception-handling/tryCatchFinally.kt"
-  },
-  "box/boxInline/wasm-old-exception-handling/kt5863.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/boxInline/wasm-old-exception-handling/kt5863.kt"
-  },
-  "box/boxInline/wasm-old-exception-handling/tryCatch.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/boxInline/wasm-old-exception-handling/tryCatch.kt"
-  },
-  "box/boxInline/wasm-old-exception-handling/tryCatch2.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/boxInline/wasm-old-exception-handling/tryCatch2.kt"
-  },
-  "box/boxInline/wasm-old-exception-handling/tryCatchFinally.kt": {
-   "detail": "targets: WASM",
-   "status": "SKIPPED_TARGET",
-   "upstream": "compiler/testData/codegen/boxInline/wasm-old-exception-handling/tryCatchFinally.kt"
   },
   "native/backend.native/samples/csvparser/src/csvParserMain/kotlin/CsvParser.kt": {
    "detail": "platform/reflect import",

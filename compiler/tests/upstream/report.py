@@ -15,15 +15,16 @@ for k, v in collections.Counter(v.get("category") for v in t.values() if v["stat
 L += ["", "## N/A reasons\n", "| reason | tests |", "|---|---|"]
 for k, v in collections.Counter(v["detail"] for v in t.values() if v["status"] == "N/A").most_common():
     L.append(f"| {k} | {v} |")
-L += ["", "Scope: all backends except JVM-only. Excluded as JVM-only: "
-      f"{m.get('excluded_jvm_only', 0)} tests (not copied, not counted). JS/Wasm/Native tests are kept.\n",
-      "Targets: only `--target=native` exists. Tests whose `TARGET_BACKEND` names other non-JVM backends only (JS/Wasm) "
-      "are kept as candidates and reported as SKIPPED_TARGET until those targets exist.\n",
+L += ["", "Scope: Native target only. Excluded by path (not copied, not counted): "
+      f"JVM-only {m.get('excluded_jvm_only', 0)}, JS-only {m.get('excluded_js_only', 0)}, "
+      f"Wasm-only {m.get('excluded_wasm_only', 0)} tests.\n",
+      "Targets: only `--target=native` exists. Any remaining test whose `TARGET_BACKEND` excludes NATIVE is "
+      "reported as SKIPPED_TARGET (the exclude lists should keep this at 0).\n",
       "All kept tests are byte-for-byte copies of upstream; no test is adapted or patched.\n",
-      "Mechanism: JVM-only tests are excluded by path via `exclude-jvm.txt` in our harness (a per-backend list: a future JVM backend run would not apply it) (directories ending in `/` "
-      "or single files, relative to the upstream repo); test files are never edited. Tests that New Kotlin's harness "
-      "cannot run as-is (directives such as `IGNORE_BACKEND: NATIVE`, non-JVM `TARGET_BACKEND`, multi-file/module, "
-      "reflection, coroutines) are still counted, as N/A, by `run.py`.\n"]
+      "Mechanism: per-backend path lists in our harness: `exclude-jvm.txt`, `exclude-js.txt`, `exclude-wasm.txt` "
+      "(directories ending in `/` or single files, relative to the upstream repo; a future backend of that kind would not apply its own list). "
+      "Test files are never edited. Tests that New Kotlin's harness cannot run as-is (directives such as "
+      "`IGNORE_BACKEND: NATIVE`, multi-file/module, reflection, coroutines) are still counted, as N/A, by `run.py`.\n"]
 L += ["", "## Bugs (MISCOMPILE / COMPILER_CRASH)\n", "Minimal repros in `bugs/`:\n"]
 for f in sorted(os.listdir(os.path.join(HERE, "bugs"))):
     first = open(os.path.join(HERE, "bugs", f)).readline().strip("/ \n")

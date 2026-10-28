@@ -2,7 +2,7 @@
 """Import upstream Kotlin tests into compiler/tests/upstream/ (Python stdlib + git).
 
 1. Sparse, blobless, shallow fetch of JetBrains/kotlin at PINNED_COMMIT into a cache dir.
-2. Select candidate tests from SOURCES, skipping JVM-only tests listed in exclude-jvm.txt (path-based;
+2. Select candidate tests from SOURCES, skipping JVM-/JS-/Wasm-only tests listed in exclude-{jvm,js,wasm}.txt (path-based;
    not copied, not counted). JS/Wasm/Native tests stay candidates.
 3. Run every candidate VERBATIM on New Kotlin (run.py) and copy only PASSING tests, byte-for-byte,
    into box/ and native/ (relative upstream paths preserved; golden .out files copied alongside).
@@ -59,9 +59,11 @@ def candidates(cache):
                     rel = os.path.normpath(os.path.join(rel_dir, f))
                     yield os.path.join(root, rel), os.path.join(prefix, rel), os.path.join(src, rel)
 
-def load_exclude():
-    """exclude-jvm.txt: JVM-only tests, one upstream path per line (a directory ending in '/' or a file)."""
-    lines = open(os.path.join(HERE, "exclude-jvm.txt")).read().splitlines()
+EXCLUDE_LISTS = ("jvm", "js", "wasm")  # exclude-<backend>.txt: tests only for other backends
+
+def load_exclude(backend):
+    """exclude-<backend>.txt: <backend>-only tests, one upstream path per line (a directory ending in '/' or a file)."""
+    lines = open(os.path.join(HERE, f"exclude-{backend}.txt")).read().splitlines()
     return [l.strip() for l in lines if l.strip() and not l.lstrip().startswith("#")]
 
 def excluded(uprel, excl):
@@ -79,14 +81,18 @@ def main():
     a = ap.parse_args()
     if not a.no_fetch:
         fetch(a.cache)
-    items, meta, n_excl, excl = [], {}, 0, load_exclude()
+    items, meta = [], {}
+    excls = {b: load_exclude(b) for b in EXCLUDE_LISTS}
+    n_excl = {b: 0 for b in EXCLUDE_LISTS}
     for up, tree, uprel in candidates(a.cache):
-        if excluded(uprel, excl):
-            n_excl += 1
+        hit = next((b for b in EXCLUDE_LISTS if excluded(uprel, excls[b])), None)
+        if hit:
+            n_excl[hit] += 1
             continue
         meta[tree] = {"upstream": uprel, "src": up}
         items.append((tree, up, None))
-    print(f"excluded {n_excl} JVM-only tests (exclude-jvm.txt)", file=sys.stderr)
+    for b in EXCLUDE_LISTS:
+        print(f"excluded {n_excl[b]} {b}-only tests (exclude-{b}.txt)", file=sys.stderr)
     print(f"running {len(items)} candidates with {a.nkc}", file=sys.stderr)
     res = R.run_many(items, a.nkc, a.jobs, a.timeout, a.cflags)
     for sub in ("box", "native"):
@@ -107,7 +113,8 @@ def main():
             if os.path.exists(out):
                 shutil.copy(out, os.path.splitext(dst)[0] + ".out")
     json.dump({"repo": URL, "commit": PINNED_COMMIT, "sources": [s for s, _, _ in SOURCES],
-               "excluded_jvm_only": n_excl, "counts": counts, "tests": tests}, open(os.path.join(HERE, "manifest.json"), "w"), indent=1, sort_keys=True)
+               "excluded_jvm_only": n_excl["jvm"], "excluded_js_only": n_excl["js"],
+               "excluded_wasm_only": n_excl["wasm"], "counts": counts, "tests": tests}, open(os.path.join(HERE, "manifest.json"), "w"), indent=1, sort_keys=True)
     print("counts:", counts)
 
 if __name__ == "__main__":
