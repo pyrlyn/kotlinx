@@ -1,0 +1,16 @@
+# baseline-main-session main 2026-10-28 22:08 EET load: { 21.44 18.64 17.36 }
+sum 3.612
+alloc 190.714
+closures 91.867
+cycles 102.855
+dispatch 94.325
+file 50.277
+free 114.893
+hashmap 71.293
+matmul 17.45
+nbody 72.01
+recursion 6.205
+refpass 139.361
+sort 63.892
+strings 30.873
+trees 313.568

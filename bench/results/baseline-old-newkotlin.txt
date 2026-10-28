@@ -1,0 +1,16 @@
+# old-newkotlin main 2026-10-28 21:41 EET load: { 12.29 11.47 11.74 }
+sum 3.687
+alloc 189.76
+closures 90.728
+cycles 103.891
+dispatch 95.002
+file 50.236
+free 113.765
+hashmap 70.213
+matmul 17.249
+nbody 71.265
+recursion 6.018
+refpass 138.362
+sort 62.418
+strings 30.074
+trees 313.168

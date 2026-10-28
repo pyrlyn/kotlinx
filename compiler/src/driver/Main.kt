@@ -12,7 +12,8 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --cc <clang>         C compiler/linker (default: clang)
   --cflags "<flags>"   optimization flags for clang (default: -O3 -flto)
   --leak-check         count live runtime objects; report at exit, exit 3 on a leak
-  --alloc <malloc|pool> object allocator: system malloc/free (default) or free-list pool
+  --alloc <mimalloc|malloc|pool> object allocator: mimalloc (default; found via ${'$'}NEWKOTLIN_MIMALLOC_DIR,
+                       pkg-config or Homebrew), system malloc/free, or free-list pool
   -S                   only write LLVM IR to <output>"""
 
 private fun readFile(path: String): String {
@@ -32,13 +33,35 @@ private fun writeFile(path: String, text: String) {
     fclose(f)
 }
 
+private fun hasLib(dir: String): Boolean =
+    listOf("dylib", "so", "a").any { access("$dir/libmimalloc.$it", F_OK) == 0 }
+
+private fun pkgConfigLibdir(): String? {
+    val p = popen("pkg-config --variable=libdir mimalloc 2>/dev/null", "r") ?: return null
+    val out = StringBuilder()
+    memScoped {
+        val buf = allocArray<ByteVar>(512)
+        while (fgets(buf, 512, p) != null) out.append(buf.toKString())
+    }
+    pclose(p)
+    return out.toString().trim().ifEmpty { null }
+}
+
+/** Directory with libmimalloc: ${'$'}NEWKOTLIN_MIMALLOC_DIR, pkg-config, then Homebrew/system paths. */
+private fun findMimalloc(): String? {
+    getenv("NEWKOTLIN_MIMALLOC_DIR")?.toKString()?.let { return if (hasLib(it)) it else null }
+    pkgConfigLibdir()?.let { if (hasLib(it)) return it }
+    return listOf("/opt/homebrew/opt/mimalloc/lib", "/usr/local/opt/mimalloc/lib", "/usr/local/lib", "/usr/lib")
+        .firstOrNull { hasLib(it) }
+}
+
 fun compileToIr(src: String): String = NativeBackend(Parser(Lexer(src).lex()).program()).generate()
 
 fun main(args: Array<String>) {
     var input: String? = null; var output: String? = null
     var runtime = getenv("NEWKOTLIN_RUNTIME")?.toKString() ?: "compiler/runtime/runtime.c"
     var target = Target.NATIVE
-    var alloc = "malloc"; var leakCheck = false; var emitLl = false; var onlyIr = false; var cc = "clang"; var cflags = "-O3 -flto"
+    var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false; var cc = "clang"; var cflags = "-O3 -flto"
     var i = 0
     while (i < args.size) {
         when (val a = args[i]) {
@@ -47,7 +70,7 @@ fun main(args: Array<String>) {
             "--runtime" -> runtime = args[++i]
             "--emit-llvm" -> emitLl = true
             "--leak-check" -> leakCheck = true
-            "--alloc" -> alloc = args[++i].also { if (it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be malloc or pool\n"); exit(2) } }
+            "--alloc" -> alloc = args[++i].also { if (it != "mimalloc" && it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be mimalloc, malloc or pool\n"); exit(2) } }
             "--cc" -> cc = args[++i]
             "--cflags" -> cflags = args[++i]
             "-S" -> onlyIr = true
@@ -66,7 +89,16 @@ fun main(args: Array<String>) {
     val ll = "$output.ll"
     writeFile(ll, ir)
     val def = (if (alloc == "pool") " -DRT_POOL" else "") + (if (leakCheck) " -DRT_LEAKCHECK" else "")
-    val cmd = "$cc $cflags$def -Wno-override-module '$ll' '$runtime' -o '$output'"
+    val link = if (alloc == "mimalloc") {
+        val dir = findMimalloc() ?: run {
+            remove(ll)
+            fprintf(stderr, "error: mimalloc not found (default --alloc mimalloc). Install it (brew install mimalloc), " +
+                "set NEWKOTLIN_MIMALLOC_DIR to the directory containing libmimalloc, or use --alloc malloc\n")
+            exit(1); return
+        }
+        " -L'$dir' -lmimalloc -Wl,-rpath,'$dir'"
+    } else ""
+    val cmd = "$cc $cflags$def -Wno-override-module '$ll' '$runtime'$link -o '$output'"
     val rc = system(cmd)
     if (!emitLl) remove(ll)
     if (rc != 0) { fprintf(stderr, "clang failed (%d): %s\n", rc, cmd); exit(1) }
