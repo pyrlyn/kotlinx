@@ -270,6 +270,28 @@ class NativeBackend(private val prog: Program) {
 
     private fun lookup(n: String): Local? { for (i in scopes.indices.reversed()) scopes[i].vars[n]?.let { return it }; return null }
 
+    /** NameE nodes that are the last, ownership-taking use of a local: read as a move. */
+    private val moveNodes = HashSet<NameE>()
+
+    /** Releases a local's reference and clears its slot (Perceus drop after the last use). */
+    private fun dropLocal(l: Local) {
+        release(Val(emitT("load ptr, ptr ${l.slot}"), l.t))
+        emit("store ptr null, ptr ${l.slot}")
+    }
+
+    /** Generates an expression in an ownership-taking position; a moved local is handed over without retain. */
+    private fun genArg(e: E): Val {
+        if (e is NameE && e in moveNodes) {
+            moveNodes.remove(e)
+            val l = lookup(e.n)
+            if (l != null && l.t.isRef) for (sc in scopes.reversed()) if (sc.vars[e.n] === l && sc.refs.remove(l)) {
+                if (e.line != 0) line = e.line
+                return Val(emitT("load ptr, ptr ${l.slot}"), l.t, true)
+            }
+        }
+        return genExpr(e)
+    }
+
     private fun releaseScope(s: Scope) { for (l in s.refs) release(Val(emitT("load ptr, ptr ${l.slot}"), l.t)) }
     private fun releaseAll() { for (s in scopes.reversed()) releaseScope(s) }
 
@@ -287,13 +309,32 @@ class NativeBackend(private val prog: Program) {
     /** Generates a block in a new scope. With `want`, the last expression statement is the block's value. */
     private fun genBlockBody(b: Block, want: Boolean): Val {
         scopes.add(Scope())
+        val scope = scopes.last()
         var res = Val("", Ty.Unit)
+        // Perceus: per statement, the uses of each name; a local of this block is dropped right
+        // after its last use, or moved (no retain/release pair) into its last use if that use takes ownership.
+        val uses = b.stmts.map { Uses.ofStmt(it) }
+        val last = HashMap<String, Int>()
+        uses.forEachIndexed { i, us -> for (u in us) last[u.node.n] = i }
         b.stmts.forEachIndexed { i, s ->
+            if (term) return@forEachIndexed
+            val mine = ArrayList<NameE>()
+            for (u in uses[i]) {
+                if (!u.movable || last[u.node.n] != i || uses[i].count { it.node.n == u.node.n } != 1) continue
+                val l = scope.vars[u.node.n] ?: continue
+                if (l in scope.refs) { moveNodes.add(u.node); mine.add(u.node) }
+            }
             if (want && i == b.stmts.lastIndex && s is ExprS) {
                 line = s.line
                 res = genExpr(s.e)
                 if (res.t.isRef) res = consume(res)
             } else genStmt(s)
+            moveNodes.removeAll(mine)
+            if (!term) for ((n, li) in last) {
+                if (li != i) continue
+                val l = scope.vars[n] ?: continue
+                if (scope.refs.remove(l)) dropLocal(l)
+            }
         }
         if (!term) releaseScope(scopes.last())
         scopes.removeAt(scopes.size - 1)
@@ -304,7 +345,7 @@ class NativeBackend(private val prog: Program) {
         line = s.line
         when (s) {
             is VarS -> {
-                val v0 = genExpr(s.init)
+                val v0 = genArg(s.init)
                 if (v0.t == Ty.Nothing) return
                 val t = s.type?.let { resolve(it) } ?: v0.t
                 if (t == Ty.Unit) fail("cannot store Unit in '${s.name}'")
@@ -331,7 +372,7 @@ class NativeBackend(private val prog: Program) {
             is ForS -> genFor(s)
             is RetS -> {
                 if (s.e == null) { if (retTy != Ty.Unit) fail("missing return value"); releaseAll(); emit("ret void"); term = true }
-                else emitReturn(genExpr(s.e))
+                else emitReturn(genArg(s.e))
             }
             is ExprS -> releaseIfOwned(genExpr(s.e))
         }
@@ -344,7 +385,7 @@ class NativeBackend(private val prog: Program) {
                 if (l == null && owner != null && owner!!.index(target.n) >= 0) return assign(MemberE(NameE("this"), target.n, false), value)
                 if (l == null) fail("unknown variable '${target.n}'")
                 if (!l.isVar) fail("val '${target.n}' cannot be reassigned")
-                var v = coerce(genExpr(value), l.t)
+                var v = coerce(genArg(value), l.t)
                 if (l.t.isRef) {
                     v = consume(v)
                     val old = emitT("load ptr, ptr ${l.slot}")
@@ -358,7 +399,7 @@ class NativeBackend(private val prog: Program) {
                 val ci = classes.getValue(ct.name)
                 val idx = ci.index(target.n).takeIf { it >= 0 } ?: fail("no field ${target.n} in ${ct.name}")
                 val ft = ci.fields[idx].second
-                var v = coerce(genExpr(value), ft)
+                var v = coerce(genArg(value), ft)
                 val ptr = emitT("getelementptr ${ci.llType}, ptr ${r.v}, i32 0, i32 ${idx + 2}")
                 if (ft.isRef) {
                     v = consume(v)
@@ -383,7 +424,7 @@ class NativeBackend(private val prog: Program) {
                         emit("call void @rt_map_put(ptr ${r.v}, i64 ${mapKey(i0, rt)}, i64 ${toSlot(v)})")
                     }
                     is Ty.ListTy -> {
-                        val v = consume(coerce(genExpr(value), rt.elem))
+                        val v = consume(coerce(genArg(value), rt.elem))
                         val old = emitT("call i64 @rt_list_set(ptr ${r.v}, i64 ${i.v}, i64 ${toSlot(v)})")
                         if (rt.elem.isRef) release(Val(fromSlot(old, rt.elem), rt.elem))
                     }
@@ -730,7 +771,7 @@ class NativeBackend(private val prog: Program) {
         }
         classes[n]?.let { ci ->
             if (e.args.size != ci.fields.size) fail("constructor $n expects ${ci.fields.size} arguments")
-            val vals = e.args.mapIndexed { i, a -> consume(coerce(genExpr(a), ci.fields[i].second)) }
+            val vals = e.args.mapIndexed { i, a -> consume(coerce(genArg(a), ci.fields[i].second)) }
             val szp = emitT("getelementptr ${ci.llType}, ptr null, i32 1")
             val p = emitT("call ptr @rt_alloc(i64 ${emitT("ptrtoint ptr $szp to i64")})")
             emit("store i64 1, ptr $p")
@@ -797,7 +838,7 @@ class NativeBackend(private val prog: Program) {
                 v
             }
             t is Ty.ListTy && n == "add" -> {
-                val v = consume(coerce(genExpr(e.args.single()), t.elem))
+                val v = consume(coerce(genArg(e.args.single()), t.elem))
                 emit("call void @rt_list_add(ptr ${r.v}, i64 ${toSlot(v)})")
                 Val("true", Ty.I1)
             }

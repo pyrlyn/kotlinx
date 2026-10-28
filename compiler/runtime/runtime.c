@@ -13,14 +13,14 @@
 // Arrays and strings are tracked but not asserted yet (they are not freed).
 #ifdef RT_LEAKCHECK
 enum { LK_OBJ, LK_SB, LK_LIST, LK_MAP, LK_ARR, LK_STR, LK_N };
-static int64_t rt_live[LK_N], rt_total[LK_N];
-#define LK(k, d) do { rt_live[k] += (d); if ((d) > 0) rt_total[k] += (d); } while (0)
+static int64_t rt_live[LK_N], rt_total[LK_N], rt_peak[LK_N];
+#define LK(k, d) do { rt_live[k] += (d); if ((d) > 0) { rt_total[k] += (d); if (rt_live[k] > rt_peak[k]) rt_peak[k] = rt_live[k]; } } while (0)
 static const char *lk_names[LK_N] = {"object", "StringBuilder", "ArrayList", "HashMap", "array", "string"};
 __attribute__((destructor)) static void rt_leak_report(void) {
     fflush(stdout);
     int64_t bad = 0;
     for (int k = 0; k < LK_N; k++) {
-        fprintf(stderr, "leak-check: %s allocated=%lld live=%lld\n", lk_names[k], (long long)rt_total[k], (long long)rt_live[k]);
+        fprintf(stderr, "leak-check: %s allocated=%lld peak=%lld live=%lld\n", lk_names[k], (long long)rt_total[k], (long long)rt_peak[k], (long long)rt_live[k]);
         if (k < LK_ARR) bad += rt_live[k];
     }
     fprintf(stderr, "leak-check: %s\n", bad ? "FAIL" : "OK");
