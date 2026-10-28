@@ -370,11 +370,13 @@ void rt_cc_dead(void *p) {
 
 static void mg_child(void *t) { if (t && is_cyc(t)) { (*hdr(t))--; vpush(&cc_work, t); } }
 static void mark_gray(void *s) {
+    size_t traced = 0;
     vpush(&cc_work, s);
     while (cc_work.n) {
         void *x = cc_work.a[--cc_work.n];
-        if (color(x) != GRAY) { CC_VISIT(x); set_color(x, GRAY); cc_traced++; vtab(x)->trav(x, mg_child); }
+        if (color(x) != GRAY) { CC_VISIT(x); set_color(x, GRAY); traced++; vtab(x)->trav(x, mg_child); }
     }
+    cc_traced += traced;
 }
 static void sb_child(void *t) {
     if (t && is_cyc(t)) { (*hdr(t))++; if (color(t) != BLACK) { set_color(t, BLACK); vpush(&cc_black, t); } }
