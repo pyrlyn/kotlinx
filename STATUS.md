@@ -22,6 +22,6 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
 ALL=1 CASES="alloc recursion file" ./run.sh && ./summarize.sh
 # when the Kotlin->LLVM compiler exists:
 KLLVM_COMPILER=/path/to/compiler ./build.sh   # -> kllvm/<case>, kllvm/bench_kllvm (adjust CLI in build.sh)
-./run.sh && ./summarize.sh                    # KotlinLLVM rows only
+./run.sh && ./summarize.sh                    # NewKotlin rows only
 ```
 Then replace the `pending` rows in `table.md`.

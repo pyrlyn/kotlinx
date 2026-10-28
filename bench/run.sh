@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: ./run.sh                 -> KotlinLLVM rows only (kllvm/<case>; sum uses $KLLVM_BIN)
+# Usage: ./run.sh                 -> NewKotlin rows only (kllvm/<case>; sum uses $KLLVM_BIN)
 #        ALL=1 ./run.sh           -> also Rust, Zig, Kotlin Native
 #        CASES="alloc file" ...   -> subset (default: sum alloc recursion file)
 #        NOCPU=1                  -> skip the CPU (multi-launch) pass
@@ -13,11 +13,11 @@ mkdir -p results
 launches() { case $1 in alloc) echo 20;; *) echo 200;; esac; }  # alloc ~0.2 s/run -> fewer launches
 for c in $CASES; do
   if [ "$c" = sum ]; then
-    rows=("KotlinLLVM:$KLLVM_BIN")
+    rows=("NewKotlin:$KLLVM_BIN")
     [ -n "$ALL" ] && rows=("Rust:rust/target/release/mini_bench" "Zig:zig/bench_zig" "KotlinNative:kotlin/bench_kn.kexe" "${rows[@]}")
   else
     d=cases/$c
-    rows=("KotlinLLVM:kllvm/$c")
+    rows=("NewKotlin:kllvm/$c")
     [ -n "$ALL" ] && rows=("Rust:$d/rust/bench_rust" "Zig:$d/zig/bench_zig" "KotlinNative:$d/kotlin/bench_kn.kexe" "${rows[@]}")
   fi
   for p in "${rows[@]}"; do
