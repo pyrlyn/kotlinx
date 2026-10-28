@@ -2,7 +2,7 @@
 
 ## Rows
 - Rust (rustc/cargo, opt-level 3), Zig 0.16 (ReleaseFast), Kotlin Native 2.4.21 (`-opt`).
-- New Kotlin (Kotlin -> LLVM, ours): `compiler/` — newkotlinc, written in Kotlin (Kotlin/Native 2.4.21, debug build), emits LLVM IR text and links with `clang -O3 -flto` + `compiler/runtime/runtime.c`. Compiles the same `Main.kt` sources unchanged; all 4 checksums match.
+- New Kotlin (Kotlin -> LLVM, ours): `compiler/` — newkotlinc, written in Kotlin (Kotlin/Native 2.4.21, debug build), emits LLVM IR text and links with `clang -O3 -flto` + `compiler/runtime/runtime.c`. Compiles the same `Main.kt` sources unchanged; all checksums match.
 - `zigjit/` is the old ZigJit participant, unused now (kept; deleting needs Ivan's yes).
 
 ## Cases (every program prints `checksum=` / `sum=` and `nanos=` for the timed kernel)
@@ -17,20 +17,22 @@
 Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+sys)/wall over 200 launches ×5 (alloc: 20). Mean of middle 3 of 5. See `table.md`.
 
 ## New Kotlin compiler (`compiler/`)
-- Pipeline: `Lexer.kt` -> `Parser.kt` (AST in `Ast.kt`) -> `Gen.kt` (type checking + LLVM IR, types in `Types.kt`) -> `clang`.
-- Subset: top-level functions (block or `=` body, recursion), `class C(val/var ...)` (no bodies), Int/Long/Byte/Double/Boolean/String,
-  val/var, if/when (as expressions too), while, for over `a..b`, `a until b`, ArrayList, ByteArray; `+ - * / %`, comparisons,
-  `&& || !`, `and or xor shl shr ushr`, string templates, `?.`, `?:`, `!!`, `ArrayList<T>()` add/get/set/[]/size,
-  `ByteArray(n)`, `println/print`, `error/check/require`.
-- Intrinsics (no source edits needed): `kotlin.system.getTimeNanos()` / `System.nanoTime()` -> `rt_nanos`; `platform.posix`
-  `getenv/fopen/fseek/ftell/fread/fclose`, `SEEK_*`; `toKString()`; `ByteArray.usePinned { it.addressOf(i) }`.
-  `@file:` annotations and imports are skipped.
-- Memory: classes and lists are reference counted (scope-exit release); class instances come from a free-list allocator.
-  Strings built by templates and ByteArrays are never freed.
-- Limitations: no generics beyond ArrayList<T>, no lambdas except `usePinned`/`check` blocks, no class bodies/methods,
-  no interfaces/inheritance, no nullable value types (only nullable pointers), no break/continue, no overloads,
-  if/when branches must have the same type, Char literals are Ints, no exceptions (error() aborts), reference cycles leak.
-- Tests: `compiler/test.sh` (feature golden `compiler/tests/*.kt|.out`, the 4 bench checksums, an error message).
+- Pipeline: `src/frontend/Lexer.kt` -> `Parser.kt` (AST in `Ast.kt`, types in `Types.kt`) -> `Uses.kt` (last-use analysis for
+  Perceus) -> `src/backend/native/NativeBackend.kt` (type checking + LLVM IR) -> `clang -O3 -flto` with `runtime/runtime.c`.
+  Entry point `src/driver/Main.kt`; `--target=native` is the default and the only implemented target (js/wasm/jvm stubs exit non-zero).
+- Language subset: top-level functions, top-level properties (`val`/`var`/`const val`), classes with primary-constructor
+  fields and methods, interfaces with virtual dispatch, val/var, if/when expressions, while, for over ranges/arrays/lists/strings,
+  unlabeled `break`/`continue`, lambdas as trailing blocks for built-ins, ArrayList/HashMap/StringBuilder/arrays, string
+  templates, nullable references with `?.` `?:` `!!`, Int/Long/unsigned/Double/Boolean/Char/String.
+- Not yet: user generics, function types and general lambdas, inheritance from classes (open/abstract/sealed), objects and
+  companions, enums, inline/value classes, extension and operator functions, default/named arguments, exceptions,
+  labeled jumps. `compiler/tests/upstream/report.md` ranks the missing features by upstream test count.
+- Memory: Perceus-style reference counting (drop after last use, moves, FBIP reuse, stack allocation of non-escaping
+  objects), two regions (RC region for acyclic objects, tracing region for possibly cyclic ones) and a trial-deletion
+  cycle collector with an adaptive root threshold. Leak tests (`compiler/tests/leaks`) check live count = 0, ASan and macOS `leaks`.
+- Tests: `compiler/test.sh` (golden `compiler/tests/*.kt|.out`, benchmark checksums, leak tests);
+  upstream Kotlin tests in `compiler/tests/upstream` (unmodified, JetBrains/kotlin @ 19c36e1): 129 kept and passing
+  (`run.py`); `import.py --no-fetch` re-scans all candidates and keeps the newly passing ones.
 
 ## Resume
 ```
@@ -43,8 +45,8 @@ compiler/build/newkotlinc.kexe X.kt -o X --emit-llvm --cflags "-O2"   # inspect 
 ```
 Then copy the NewKotlin rows into `table.md`.
 
-## Status 2026-10-28
-- Cases: sum, alloc, recursion, file, strings, hashmap, sort, nbody, matmul, dispatch, closures (Rust/Zig/Kotlin; Kotlin built by Kotlin Native and New Kotlin).
+## Status 2026-10-29
+- Cases: sum, alloc, recursion, file, strings, hashmap, sort, nbody, matmul, dispatch, closures, trees, free, refpass, cycles, lru, bigheap (Rust/Zig/Kotlin; Kotlin built by Kotlin Native and New Kotlin).
 - New Kotlin: frontend (`compiler/src/frontend`) + compile-time backends (`compiler/src/backend/{native,js,wasm,jvm}`); `--target=native` default and only implemented; js/wasm/jvm exit non-zero with "target <x> is not supported yet".
 - Allocation: mimalloc default (`--alloc mimalloc`, found via `$NEWKOTLIN_MIMALLOC_DIR`, pkg-config or Homebrew; `brew install mimalloc`; clear error if missing), `--alloc malloc` (system) and `--alloc pool` optional. Leak tests: leak-count on the default build; ASan and macOS `leaks` on `--alloc malloc` builds. Benchmarks: see README.md.
 - Resume: `./build.sh` → `./round.sh` → `RESULTS=results/round ./summarize.sh`; `compiler/test.sh` for compiler tests; `compiler/tests/upstream/run.py` for upstream tests.
