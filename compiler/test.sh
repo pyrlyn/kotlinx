@@ -38,5 +38,7 @@ for t in js wasm jvm; do
   msg=$("$NKC" --target=$t "$out/bad.kt" -o "$out/x" 2>&1); rc=$?
   if [ $rc -ne 0 ] && [ "$msg" = "target $t is not supported yet" ]; then echo "PASS target-$t"; else echo "FAIL target-$t: rc=$rc $msg"; fail=1; fi
 done
+# Leak tests (own tests, compiler/tests/leaks): runtime live-object count, ASan, macOS leaks.
+NKC="$NKC" compiler/tests/leaks/run.sh || fail=1
 rm -rf "$out"
 [ $fail = 0 ] && echo "ALL PASSED" || { echo "SOME FAILED"; exit 1; }

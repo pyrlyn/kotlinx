@@ -5,6 +5,30 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
+
+// ---- leak check (newkotlinc --leak-check => -DRT_LEAKCHECK) ----------------
+// Counts live runtime objects per kind; at exit prints a report to stderr and exits with 3
+// if any reference-counted object (class instance, StringBuilder, ArrayList, HashMap) is still live.
+// Arrays and strings are tracked but not asserted yet (they are not freed).
+#ifdef RT_LEAKCHECK
+enum { LK_OBJ, LK_SB, LK_LIST, LK_MAP, LK_ARR, LK_STR, LK_N };
+static int64_t rt_live[LK_N], rt_total[LK_N];
+#define LK(k, d) do { rt_live[k] += (d); if ((d) > 0) rt_total[k] += (d); } while (0)
+static const char *lk_names[LK_N] = {"object", "StringBuilder", "ArrayList", "HashMap", "array", "string"};
+__attribute__((destructor)) static void rt_leak_report(void) {
+    fflush(stdout);
+    int64_t bad = 0;
+    for (int k = 0; k < LK_N; k++) {
+        fprintf(stderr, "leak-check: %s allocated=%lld live=%lld\n", lk_names[k], (long long)rt_total[k], (long long)rt_live[k]);
+        if (k < LK_ARR) bad += rt_live[k];
+    }
+    fprintf(stderr, "leak-check: %s\n", bad ? "FAIL" : "OK");
+    if (bad) _exit(3);
+}
+#else
+#define LK(k, d) ((void)0)
+#endif
 
 int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW); }
 
@@ -49,7 +73,7 @@ void rt_print_char(int32_t c) { char b[4]; int n = utf8(b, c); fwrite(b, 1, (siz
 
 typedef struct { int64_t rc; char *buf; size_t len, cap; } SB;
 
-SB *rt_sb_new(void) { SB *s = malloc(sizeof *s); s->rc = 1; s->cap = 32; s->len = 0; s->buf = malloc(s->cap); s->buf[0] = 0; return s; }
+SB *rt_sb_new(void) { SB *s = malloc(sizeof *s); s->rc = 1; s->cap = 32; s->len = 0; s->buf = malloc(s->cap); s->buf[0] = 0; LK(LK_SB, 1); return s; }
 static inline void sb_reserve(SB *s, size_t n) {
     if (s->len + n + 1 > s->cap) { while (s->len + n + 1 > s->cap) s->cap *= 2; s->buf = realloc(s->buf, s->cap); }
 }
@@ -63,12 +87,12 @@ void rt_sb_i64(SB *s, int64_t v) {
     sb_bytes(s, b + i, (size_t)(24 - i));
 }
 void rt_sb_u64(SB *s, uint64_t v) { char b[24]; int i = 24; do { b[--i] = (char)('0' + v % 10); v /= 10; } while (v); sb_bytes(s, b + i, (size_t)(24 - i)); }
-char *rt_sb_tostring(SB *s) { char *r = malloc(s->len + 1); memcpy(r, s->buf, s->len + 1); return r; }
+char *rt_sb_tostring(SB *s) { char *r = malloc(s->len + 1); memcpy(r, s->buf, s->len + 1); LK(LK_STR, 1); return r; }
 int64_t rt_sb_len(SB *s) { return (int64_t)s->len; }
-void rt_sb_release(SB *s) { if (!s || --s->rc > 0) return; free(s->buf); free(s); }
+void rt_sb_release(SB *s) { if (!s || --s->rc > 0) return; LK(LK_SB, -1); free(s->buf); free(s); }
 void rt_sb_f64(SB *s, double d) { char b[64]; fmt_double(b, sizeof b, d); rt_sb_str(s, b); }
 void rt_sb_bool(SB *s, _Bool v) { rt_sb_str(s, v ? "true" : "false"); }
-char *rt_sb_done(SB *s) { char *r = s->buf; free(s); return r; }
+char *rt_sb_done(SB *s) { char *r = s->buf; LK(LK_SB, -1); LK(LK_STR, 1); free(s); return r; }
 
 // ---- ArrayList (reference counted; elements stored as 64-bit slots) -------
 
@@ -77,7 +101,7 @@ typedef struct { int64_t rc; int64_t len, cap; int64_t *data; release_fn rel; } 
 
 List *rt_list_new(release_fn rel) {
     List *l = malloc(sizeof *l);
-    l->rc = 1; l->len = 0; l->cap = 0; l->data = NULL; l->rel = rel;
+    l->rc = 1; l->len = 0; l->cap = 0; l->data = NULL; l->rel = rel; LK(LK_LIST, 1);
     return l;
 }
 void rt_list_add(List *l, int64_t v) {
@@ -96,6 +120,7 @@ int64_t rt_list_set(List *l, int64_t i, int64_t v) { bounds(l, i); int64_t o = l
 int64_t rt_list_size(List *l) { return l->len; }
 void rt_list_release(List *l) {
     if (!l || --l->rc > 0) return;
+    LK(LK_LIST, -1);
     if (l->rel) for (int64_t i = 0; i < l->len; i++) l->rel((void *)(intptr_t)l->data[i]);
     free(l->data); free(l);
 }
@@ -106,7 +131,7 @@ void *rt_arr_new(int64_t n, int64_t elem) {
     if (n < 0) rt_panic("NegativeArraySizeException");
     int64_t *p = calloc(1, 8 + (size_t)n * (size_t)elem);
     if (!p) rt_panic("OutOfMemoryError");
-    *p = n;
+    *p = n; LK(LK_ARR, 1);
     return p;
 }
 
@@ -128,7 +153,7 @@ static inline uint64_t map_hash(int64_t k) {
 Map *rt_map_new(void) {
     Map *m = malloc(sizeof *m);
     m->rc = 1; m->size = 0; m->cap = 16;
-    m->keys = malloc(16 * 8); m->vals = malloc(16 * 8); m->used = calloc(16, 1);
+    m->keys = malloc(16 * 8); m->vals = malloc(16 * 8); m->used = calloc(16, 1); LK(LK_MAP, 1);
     return m;
 }
 static inline int64_t map_find(Map *m, int64_t k) {
@@ -160,7 +185,7 @@ int64_t rt_map_get(Map *m, int64_t k) {
     return m->vals[i];
 }
 int64_t rt_map_size(Map *m) { return m->size; }
-void rt_map_release(Map *m) { if (!m || --m->rc > 0) return; free(m->keys); free(m->vals); free(m->used); free(m); }
+void rt_map_release(Map *m) { if (!m || --m->rc > 0) return; LK(LK_MAP, -1); free(m->keys); free(m->vals); free(m->used); free(m); }
 
 // ---- object allocation ----------------------------------------------------
 // Default: system malloc/free. With -DRT_POOL (newkotlinc --alloc=pool): per-size
@@ -170,9 +195,10 @@ void rt_map_release(Map *m) { if (!m || --m->rc > 0) return; free(m->keys); free
 void *rt_alloc(int64_t size) {
     void *p = malloc((size_t)size);
     if (!p) rt_panic("OutOfMemoryError");
+    LK(LK_OBJ, 1);
     return p;
 }
-void rt_free(void *p, int64_t size) { (void)size; free(p); }
+void rt_free(void *p, int64_t size) { (void)size; LK(LK_OBJ, -1); free(p); }
 #else
 
 #define RT_CLASSES 16
@@ -181,6 +207,7 @@ static char *rt_slab_ptr, *rt_slab_end;
 
 void *rt_alloc(int64_t size) {
     size_t cls = ((size_t)size + 7) >> 3;
+    LK(LK_OBJ, 1);
     if (cls > RT_CLASSES) return malloc((size_t)size);
     void *p = rt_free_lists[cls];
     if (p) { rt_free_lists[cls] = *(void **)p; return p; }
@@ -196,6 +223,7 @@ void *rt_alloc(int64_t size) {
 
 void rt_free(void *p, int64_t size) {
     size_t cls = ((size_t)size + 7) >> 3;
+    LK(LK_OBJ, -1);
     if (cls > RT_CLASSES) { free(p); return; }
     *(void **)p = rt_free_lists[cls];
     rt_free_lists[cls] = p;
