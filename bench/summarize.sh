@@ -1,18 +1,20 @@
 #!/bin/bash
 # Mean of the middle 3 of 5 (drop min and max) per case/row; prints markdown tables.
-# Uses the LAST 5 entries per case/row in results/runs.txt and results/cpu.txt.
+# Uses the LAST 5 entries per case/row in $RESULTS/runs.txt and $RESULTS/cpu.txt (RESULTS default: results).
 cd "$(dirname "$0")"
-python3 - <<'PY'
+RESULTS=${RESULTS:-results} python3 - <<'PY'
+import os
 from collections import defaultdict, OrderedDict
+RES = os.environ["RESULTS"]
 def mid3(v):
     v = sorted(v)[-5:] if len(v) >= 5 else sorted(v)
     v = sorted(v); return sum(v[1:-1]) / len(v[1:-1]) if len(v) >= 3 else sum(v)/len(v)
 runs = OrderedDict(); cpu = defaultdict(list); cs = defaultdict(set)
-for l in open("results/runs.txt"):
+for l in open(RES + "/runs.txt"):
     c, row, _, s, ns, rss, *_ = l.split()
     runs.setdefault((c, row), []).append((int(ns), int(rss))); cs[c].add(s)
 try:
-    for l in open("results/cpu.txt"):
+    for l in open(RES + "/cpu.txt"):
         c, row, _, n, real, user, sys = l.split()
         cpu[(c, row)].append((float(user) + float(sys)) / float(real) * 100)
 except FileNotFoundError: pass

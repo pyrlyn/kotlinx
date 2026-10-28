@@ -2,8 +2,8 @@ package newkotlin
 
 private val ASSIGN_OPS = setOf("=", "+=", "-=", "*=", "/=", "%=")
 private val INFIX_FUNS = setOf("and", "or", "xor", "shl", "shr", "ushr", "until")
-private val GENERIC_CALLS = setOf("ArrayList", "mutableListOf", "arrayListOf")
-private val LAMBDA_METHODS = setOf("usePinned", "let", "also", "run")
+private val GENERIC_CALLS = setOf("ArrayList", "mutableListOf", "arrayListOf", "HashMap", "hashMapOf", "mutableMapOf")
+private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sumOf", "count")
 
 class Parser(private val t: List<Tok>) {
     private var p = 0
@@ -23,7 +23,7 @@ class Parser(private val t: List<Tok>) {
     private inline fun <T> nested(d: Int, f: () -> T): T { depth.add(d); try { return f() } finally { depth.removeAt(depth.size - 1) } }
 
     fun program(): Program {
-        val funs = ArrayList<FunD>(); val classes = ArrayList<ClassD>()
+        val funs = ArrayList<FunD>(); val classes = ArrayList<ClassD>(); val ifaces = ArrayList<InterfaceD>()
         while (true) {
             skipNL()
             val tk = peek()
@@ -34,10 +34,35 @@ class Parser(private val t: List<Tok>) {
                 tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data") -> p++
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
                 tk.k == K.ID && tk.s == "class" -> classes.add(classDecl())
+                tk.k == K.ID && tk.s == "interface" -> ifaces.add(interfaceDecl())
                 else -> fail("unexpected top-level token")
             }
         }
-        return Program(funs, classes)
+        return Program(funs, classes, ifaces)
+    }
+
+    private fun members(): List<FunD> {
+        val ms = ArrayList<FunD>()
+        expectOp("{")
+        nested(0) {
+            while (true) {
+                skipNL()
+                if (isOp("}")) break
+                while (peek().k == K.ID && peek().s in setOf("override", "open", "public", "private", "abstract")) p++
+                if (!isId("fun")) fail("only member functions are supported in class/interface bodies")
+                ms.add(function())
+            }
+        }
+        expectOp("}")
+        return ms
+    }
+
+    private fun interfaceDecl(): InterfaceD {
+        val line = next().line
+        val name = ident()
+        val ms = if (isOp("{")) members() else emptyList()
+        if (ms.any { it.body != null || it.exprBody != null }) fail("default interface methods are not supported")
+        return InterfaceD(name, ms, line)
     }
 
     private fun function(): FunD {
@@ -55,7 +80,8 @@ class Parser(private val t: List<Tok>) {
         expectOp(")")
         val ret = if (isOp(":")) { next(); type() } else null
         return if (isOp("=")) { next(); skipNLOnly(); FunD(name, params, ret, null, expr(), line) }
-        else FunD(name, params, ret, block(), null, line)
+        else if (isOp("{")) FunD(name, params, ret, block(), null, line)
+        else FunD(name, params, ret, null, null, line) // abstract (interface) member
     }
 
     private fun classDecl(): ClassD {
@@ -74,8 +100,13 @@ class Parser(private val t: List<Tok>) {
             }
             expectOp(")")
         }
-        if (isOp("{")) { next(); skipNL(); if (!isOp("}")) fail("class bodies are not supported"); next() }
-        return ClassD(name, fields, line)
+        val supers = ArrayList<String>()
+        if (isOp(":")) {
+            next()
+            while (true) { supers.add(ident()); if (isOp("(")) { next(); expectOp(")") }; if (isOp(",")) next() else break }
+        }
+        val ms = if (isOp("{")) members() else emptyList()
+        return ClassD(name, fields, supers, ms, line)
     }
 
     private fun type(): TypeRef {
@@ -91,9 +122,20 @@ class Parser(private val t: List<Tok>) {
         return TypeRef(name, args, nullable)
     }
 
-    private fun block(): Block {
+    private fun block(lambda: Boolean = false): Block {
         expectOp("{")
+        val params = ArrayList<String>()
         val stmts = nested(0) {
+            if (lambda) {
+                var q = p
+                while (t[q].k == K.NL) q++
+                val ps = ArrayList<String>()
+                while (t[q].k == K.ID) {
+                    ps.add(t[q].s); q++
+                    if (t[q].k == K.OP && t[q].s == ",") q++ else break
+                }
+                if (ps.isNotEmpty() && t[q].k == K.OP && t[q].s == "->") { params.addAll(ps); p = q + 1 }
+            }
             val ss = ArrayList<S>()
             while (true) {
                 skipNL()
@@ -105,7 +147,7 @@ class Parser(private val t: List<Tok>) {
             ss
         }
         expectOp("}")
-        return Block(stmts)
+        return Block(stmts, params)
     }
 
     private fun controlBody(): Block { skipNLOnly(); return if (isOp("{")) block() else Block(listOf(stmt())) }
@@ -202,12 +244,13 @@ class Parser(private val t: List<Tok>) {
                 ".", "?." -> { p++; skipNLOnly(); MemberE(e, ident(), tk.s == "?.") }
                 "(" -> {
                     val a = args()
-                    val lam = if (t[p].k == K.OP && t[p].s == "{") block() else null
+                    val lam = if (t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
                     CallE(e, emptyList(), a, lam)
                 }
                 "[" -> { p++; val i = nested(1) { expr() }; expectOp("]"); IndexE(e, i) }
                 "!!" -> { p++; e }
-                "{" -> if (e is MemberE && e.n in LAMBDA_METHODS) CallE(e, emptyList(), emptyList(), block()) else break
+                "++", "--" -> if (e is NameE || e is MemberE || e is IndexE) { p++; PostIncE(e, tk.s) } else break
+                "{" -> if (e is MemberE && e.n in LAMBDA_METHODS) CallE(e, emptyList(), emptyList(), block(lambda = true)) else break
                 else -> break
             }
             e.line = line
@@ -218,7 +261,8 @@ class Parser(private val t: List<Tok>) {
     private fun primary(): E {
         val tk = next()
         val e: E = when (tk.k) {
-            K.INT -> IntL(tk.num, tk.isLong)
+            K.INT -> IntL(tk.num, tk.isLong, tk.unsigned)
+            K.CHAR -> CharL(tk.num)
             K.DBL -> DblL(tk.dbl)
             K.STR -> StrL(tk.parts.map {
                 if (it is TemplateCode) Parser(Lexer(it.code, it.line).lex()).also { p -> p.depth[0] = 1 }.expr() else it

@@ -33,21 +33,39 @@ static void fmt_double(char *buf, size_t n, double d) {
 void rt_print_str(const char *s) { fputs(s ? s : "null", stdout); }
 void rt_print_i64(int64_t v) { printf("%" PRId64, v); }
 void rt_print_f64(double d) { char b[64]; fmt_double(b, sizeof b, d); fputs(b, stdout); }
+void rt_print_u64(uint64_t v) { printf("%" PRIu64, v); }
+int32_t rt_str_eq(const char *a, const char *b) { return a == b || (a && b && strcmp(a, b) == 0); }
 void rt_print_bool(_Bool b) { fputs(b ? "true" : "false", stdout); }
 void rt_newline(void) { putchar('\n'); }
-
-// ---- string builder (templates); strings are never freed ------------------
-
-typedef struct { char *buf; size_t len, cap; } SB;
-
-SB *rt_sb_new(void) { SB *s = malloc(sizeof *s); s->cap = 32; s->len = 0; s->buf = malloc(s->cap); s->buf[0] = 0; return s; }
-void rt_sb_str(SB *s, const char *x) {
-    if (!x) x = "null";
-    size_t n = strlen(x);
-    if (s->len + n + 1 > s->cap) { while (s->len + n + 1 > s->cap) s->cap *= 2; s->buf = realloc(s->buf, s->cap); }
-    memcpy(s->buf + s->len, x, n + 1); s->len += n;
+static int utf8(char *b, int32_t c) {
+    if (c < 0x80) { b[0] = (char)c; return 1; }
+    if (c < 0x800) { b[0] = (char)(0xC0 | c >> 6); b[1] = (char)(0x80 | (c & 63)); return 2; }
+    b[0] = (char)(0xE0 | c >> 12); b[1] = (char)(0x80 | ((c >> 6) & 63)); b[2] = (char)(0x80 | (c & 63)); return 3;
 }
-void rt_sb_i64(SB *s, int64_t v) { char b[32]; snprintf(b, sizeof b, "%" PRId64, v); rt_sb_str(s, b); }
+void rt_print_char(int32_t c) { char b[4]; int n = utf8(b, c); fwrite(b, 1, (size_t)n, stdout); }
+
+// ---- StringBuilder (reference counted; also used for templates) ----------
+// Strings (char*) are never freed.
+
+typedef struct { int64_t rc; char *buf; size_t len, cap; } SB;
+
+SB *rt_sb_new(void) { SB *s = malloc(sizeof *s); s->rc = 1; s->cap = 32; s->len = 0; s->buf = malloc(s->cap); s->buf[0] = 0; return s; }
+static inline void sb_reserve(SB *s, size_t n) {
+    if (s->len + n + 1 > s->cap) { while (s->len + n + 1 > s->cap) s->cap *= 2; s->buf = realloc(s->buf, s->cap); }
+}
+static void sb_bytes(SB *s, const char *x, size_t n) { sb_reserve(s, n); memcpy(s->buf + s->len, x, n); s->len += n; s->buf[s->len] = 0; }
+void rt_sb_str(SB *s, const char *x) { if (!x) x = "null"; sb_bytes(s, x, strlen(x)); }
+void rt_sb_char(SB *s, int32_t c) { char b[4]; sb_bytes(s, b, (size_t)utf8(b, c)); }
+void rt_sb_i64(SB *s, int64_t v) {
+    char b[24]; int i = 24; uint64_t u = v < 0 ? 0 - (uint64_t)v : (uint64_t)v;
+    do { b[--i] = (char)('0' + u % 10); u /= 10; } while (u);
+    if (v < 0) b[--i] = '-';
+    sb_bytes(s, b + i, (size_t)(24 - i));
+}
+void rt_sb_u64(SB *s, uint64_t v) { char b[24]; int i = 24; do { b[--i] = (char)('0' + v % 10); v /= 10; } while (v); sb_bytes(s, b + i, (size_t)(24 - i)); }
+char *rt_sb_tostring(SB *s) { char *r = malloc(s->len + 1); memcpy(r, s->buf, s->len + 1); return r; }
+int64_t rt_sb_len(SB *s) { return (int64_t)s->len; }
+void rt_sb_release(SB *s) { if (!s || --s->rc > 0) return; free(s->buf); free(s); }
 void rt_sb_f64(SB *s, double d) { char b[64]; fmt_double(b, sizeof b, d); rt_sb_str(s, b); }
 void rt_sb_bool(SB *s, _Bool v) { rt_sb_str(s, v ? "true" : "false"); }
 char *rt_sb_done(SB *s) { char *r = s->buf; free(s); return r; }
@@ -82,17 +100,80 @@ void rt_list_release(List *l) {
     free(l->data); free(l);
 }
 
-// ---- ByteArray: { int64 length; bytes... }; not freed ----------------------
+// ---- primitive arrays: { int64 length; elements... }; not freed ------------
 
-void *rt_bytes_new(int64_t n) {
-    int64_t *p = calloc(1, 8 + (size_t)n);
+void *rt_arr_new(int64_t n, int64_t elem) {
+    if (n < 0) rt_panic("NegativeArraySizeException");
+    int64_t *p = calloc(1, 8 + (size_t)n * (size_t)elem);
     if (!p) rt_panic("OutOfMemoryError");
     *p = n;
     return p;
 }
 
-// ---- small-object allocator: per-size free lists over 64 KiB slabs ---------
-// Objects of classes are <= 128 bytes in practice; larger sizes fall back to malloc.
+void rt_oob(int64_t i, int64_t len) {
+    fflush(stdout);
+    fprintf(stderr, "Exception in thread \"main\" kotlin.ArrayIndexOutOfBoundsException: Index %" PRId64 " out of bounds for length %" PRId64 "\n", i, len);
+    exit(1);
+}
+
+// ---- HashMap<primitive, primitive>: open addressing, linear probing --------
+
+typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; } Map;
+
+static inline uint64_t map_hash(int64_t k) {
+    uint64_t x = (uint64_t)k;
+    x ^= x >> 33; x *= 0xff51afd7ed558ccdULL; x ^= x >> 33;
+    return x;
+}
+Map *rt_map_new(void) {
+    Map *m = malloc(sizeof *m);
+    m->rc = 1; m->size = 0; m->cap = 16;
+    m->keys = malloc(16 * 8); m->vals = malloc(16 * 8); m->used = calloc(16, 1);
+    return m;
+}
+static inline int64_t map_find(Map *m, int64_t k) {
+    uint64_t mask = (uint64_t)m->cap - 1, i = map_hash(k) & mask;
+    while (m->used[i] && m->keys[i] != k) i = (i + 1) & mask;
+    return (int64_t)i;
+}
+static void map_grow(Map *m) {
+    Map old = *m;
+    m->cap *= 2; m->size = 0;
+    m->keys = malloc((size_t)m->cap * 8); m->vals = malloc((size_t)m->cap * 8); m->used = calloc((size_t)m->cap, 1);
+    for (int64_t i = 0; i < old.cap; i++) if (old.used[i]) {
+        int64_t j = map_find(m, old.keys[i]);
+        m->used[j] = 1; m->keys[j] = old.keys[i]; m->vals[j] = old.vals[i]; m->size++;
+    }
+    free(old.keys); free(old.vals); free(old.used);
+}
+void rt_map_put(Map *m, int64_t k, int64_t v) {
+    if ((m->size + 1) * 4 > m->cap * 3) map_grow(m);
+    int64_t i = map_find(m, k);
+    if (!m->used[i]) { m->used[i] = 1; m->keys[i] = k; m->size++; }
+    m->vals[i] = v;
+}
+int32_t rt_map_contains(Map *m, int64_t k) { return m->used[map_find(m, k)]; }
+int64_t rt_map_get_or(Map *m, int64_t k, int64_t d) { int64_t i = map_find(m, k); return m->used[i] ? m->vals[i] : d; }
+int64_t rt_map_get(Map *m, int64_t k) {
+    int64_t i = map_find(m, k);
+    if (!m->used[i]) { fflush(stdout); fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %" PRId64 " not in map\n", k); exit(1); }
+    return m->vals[i];
+}
+int64_t rt_map_size(Map *m) { return m->size; }
+void rt_map_release(Map *m) { if (!m || --m->rc > 0) return; free(m->keys); free(m->vals); free(m->used); free(m); }
+
+// ---- object allocation ----------------------------------------------------
+// Default: system malloc/free. With -DRT_POOL (newkotlinc --alloc=pool): per-size
+// free lists over 64 KiB slabs; sizes above 128 bytes fall back to malloc.
+
+#ifndef RT_POOL
+void *rt_alloc(int64_t size) {
+    void *p = malloc((size_t)size);
+    if (!p) rt_panic("OutOfMemoryError");
+    return p;
+}
+void rt_free(void *p, int64_t size) { (void)size; free(p); }
+#else
 
 #define RT_CLASSES 16
 static void *rt_free_lists[RT_CLASSES + 1];
@@ -119,3 +200,4 @@ void rt_free(void *p, int64_t size) {
     *(void **)p = rt_free_lists[cls];
     rt_free_lists[cls] = p;
 }
+#endif

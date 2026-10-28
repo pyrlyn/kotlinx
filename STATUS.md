@@ -42,3 +42,9 @@ ONLY=newkotlin ./build.sh                      # -> kllvm/<case>, kllvm/bench_kl
 compiler/build/newkotlinc.kexe X.kt -o X --emit-llvm --cflags "-O2"   # inspect IR / try flags
 ```
 Then copy the NewKotlin rows into `table.md`.
+
+## Status 2026-10-28
+- Cases: sum, alloc, recursion, file, strings, hashmap, sort, nbody, matmul, dispatch, closures (Rust/Zig/Kotlin; Kotlin built by Kotlin Native and New Kotlin).
+- New Kotlin: frontend (`compiler/src/frontend`) + compile-time backends (`compiler/src/backend/{native,js,wasm,jvm}`); `--target=native` default and only implemented; js/wasm/jvm exit non-zero with "target <x> is not supported yet".
+- Allocation: malloc default, `--alloc pool` optional.
+- Resume: `./build.sh` → `./round.sh` → `RESULTS=results/round ./summarize.sh`; `compiler/test.sh` for compiler tests; `compiler/tests/upstream/run.py` for upstream tests.

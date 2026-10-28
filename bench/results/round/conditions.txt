@@ -1,0 +1,27 @@
+date: 2026-10-28 20:04 EET
+machine: Apple M3 Max, 16 cpus, 64 GB
+os: macOS 27.0.1
+load at start: 27.09 34.44 37.42
+case sum load before: 27.09 34.44 37.42
+case sum load after: 25.32 33.95 37.23
+case alloc load before: 25.32 33.95 37.23
+case alloc load after: 18.96 31.64 36.28
+case closures load before: 18.96 31.64 36.28
+case closures load after: 20.00 30.67 35.77
+case dispatch load before: 20.00 30.67 35.77
+case dispatch load after: 15.86 29.04 35.06
+case file load before: 15.86 29.04 35.06
+case file load after: 16.63 28.78 34.90
+case hashmap load before: 16.63 28.78 34.90
+case hashmap load after: 15.21 27.67 34.36
+case matmul load before: 15.21 27.67 34.36
+case matmul load after: 13.41 26.88 34.00
+case nbody load before: 13.41 26.88 34.00
+case nbody load after: 15.72 26.69 33.81
+case recursion load before: 15.72 26.69 33.81
+case recursion load after: 15.02 26.37 33.65
+case sort load before: 15.02 26.37 33.65
+case sort load after: 14.27 25.83 33.37
+case strings load before: 14.27 25.83 33.37
+case strings load after: 12.66 24.90 32.91
+load at end: 12.66 24.90 32.91

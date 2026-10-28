@@ -2,14 +2,14 @@ package newkotlin
 
 class CompileError(msg: String) : Exception(msg)
 
-enum class K { ID, INT, DBL, STR, OP, NL, EOF }
+enum class K { ID, INT, CHAR, DBL, STR, OP, NL, EOF }
 
 /** A `${...}` or `$name` piece inside a string literal; parsed later as an expression. */
 class TemplateCode(val code: String, val line: Int)
 
 class Tok(
     val k: K, val s: String, val line: Int,
-    val num: Long = 0, val isLong: Boolean = false,
+    val num: Long = 0, val isLong: Boolean = false, val unsigned: Boolean = false,
     val dbl: Double = 0.0, val parts: List<Any> = emptyList(),
 )
 
@@ -64,8 +64,10 @@ class Lexer(private val src: String, private var line: Int = 1) {
             suffix(v, st); return
         }
         while (i < src.length && (src[i].isDigit() || src[i] == '_')) i++
-        if (i + 1 < src.length && src[i] == '.' && src[i + 1].isDigit()) {
-            i++
+        val frac = i + 1 < src.length && src[i] == '.' && src[i + 1].isDigit()
+        val exp = !frac && i + 1 < src.length && (src[i] == 'e' || src[i] == 'E') && (src[i + 1].isDigit() || src[i + 1] == '-' || src[i + 1] == '+')
+        if (frac || exp) {
+            if (frac) i++
             while (i < src.length && (src[i].isDigit() || src[i] == '_')) i++
             if (i < src.length && (src[i] == 'e' || src[i] == 'E')) {
                 i++; if (src[i] == '+' || src[i] == '-') i++
@@ -74,14 +76,17 @@ class Lexer(private val src: String, private var line: Int = 1) {
             val text = src.substring(st, i).replace("_", "")
             out.add(Tok(K.DBL, text, line, dbl = text.toDouble())); return
         }
-        suffix(src.substring(st, i).replace("_", "").toLong(), st)
+        val digits = src.substring(st, i).replace("_", "")
+        val v = digits.toULongOrNull()?.toLong() ?: throw CompileError("line $line: integer literal out of range: $digits")
+        suffix(v, st)
     }
 
     private fun suffix(v: Long, st: Int) {
-        var long = false
-        if (i < src.length && (src[i] == 'u' || src[i] == 'U')) i++
+        var long = false; var unsigned = false
+        if (i < src.length && (src[i] == 'u' || src[i] == 'U')) { unsigned = true; i++ }
         if (i < src.length && src[i] == 'L') { long = true; i++ }
-        out.add(Tok(K.INT, src.substring(st, i), line, num = v, isLong = long))
+        if (!unsigned && !long && v < 0) throw CompileError("line $line: integer literal out of range: ${src.substring(st, i)}")
+        out.add(Tok(K.INT, src.substring(st, i), line, num = v, isLong = long, unsigned = unsigned))
     }
 
     private fun escape(): Char {
@@ -98,7 +103,7 @@ class Lexer(private val src: String, private var line: Int = 1) {
         val ch = if (src[i] == '\\') escape() else src[i++]
         if (src[i] != '\'') throw CompileError("line $line: bad char literal")
         i++
-        out.add(Tok(K.INT, "'$ch'", line, num = ch.code.toLong()))
+        out.add(Tok(K.CHAR, "'$ch'", line, num = ch.code.toLong()))
     }
 
     private fun string() {

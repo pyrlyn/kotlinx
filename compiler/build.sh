@@ -5,5 +5,5 @@ set -e
 cd "$(dirname "$0")"
 KN=${KONANC:-$HOME/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.21/bin/kotlinc-native}
 mkdir -p build
-"$KN" src/*.kt -e newkotlin.main ${NEWKOTLIN_KN_FLAGS:-} -o build/newkotlinc
+"$KN" $(find src -name "*.kt" | sort) -e newkotlin.main ${NEWKOTLIN_KN_FLAGS:-} -o build/newkotlinc
 echo "built compiler/build/newkotlinc.kexe"

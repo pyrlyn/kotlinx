@@ -6,10 +6,12 @@ import kotlinx.cinterop.*
 import platform.posix.*
 
 private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
+  --target <t>         native (default; LLVM, native binary), js, wasm, jvm (only native is implemented)
   --runtime <file.c>   C runtime to link (default: ${'$'}NEWKOTLIN_RUNTIME or compiler/runtime/runtime.c)
   --emit-llvm          also keep <output>.ll
   --cc <clang>         C compiler/linker (default: clang)
   --cflags "<flags>"   optimization flags for clang (default: -O3 -flto)
+  --alloc <malloc|pool> object allocator: system malloc/free (default) or free-list pool
   -S                   only write LLVM IR to <output>"""
 
 private fun readFile(path: String): String {
@@ -29,26 +31,31 @@ private fun writeFile(path: String, text: String) {
     fclose(f)
 }
 
-fun compileToIr(src: String): String = Gen(Parser(Lexer(src).lex()).program()).generate()
+fun compileToIr(src: String): String = NativeBackend(Parser(Lexer(src).lex()).program()).generate()
 
 fun main(args: Array<String>) {
     var input: String? = null; var output: String? = null
     var runtime = getenv("NEWKOTLIN_RUNTIME")?.toKString() ?: "compiler/runtime/runtime.c"
-    var emitLl = false; var onlyIr = false; var cc = "clang"; var cflags = "-O3 -flto"
+    var target = Target.NATIVE
+    var alloc = "malloc"; var emitLl = false; var onlyIr = false; var cc = "clang"; var cflags = "-O3 -flto"
     var i = 0
     while (i < args.size) {
         when (val a = args[i]) {
             "-o" -> output = args[++i]
+            "--target" -> target = Target.parse(args[++i]) ?: run { fprintf(stderr, "unknown target: %s\n", args[i]); exit(2); return }
             "--runtime" -> runtime = args[++i]
             "--emit-llvm" -> emitLl = true
+            "--alloc" -> alloc = args[++i].also { if (it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be malloc or pool\n"); exit(2) } }
             "--cc" -> cc = args[++i]
             "--cflags" -> cflags = args[++i]
             "-S" -> onlyIr = true
             "-h", "--help" -> { println(USAGE); return }
-            else -> if (input == null && !a.startsWith("-")) input = a else { fprintf(stderr, "unknown argument: %s\n%s\n", a, USAGE); exit(2) }
+            else -> if (a.startsWith("--target=")) target = Target.parse(a.substringAfter('=')) ?: run { fprintf(stderr, "unknown target: %s\n", a); exit(2); return }
+            else if (input == null && !a.startsWith("-")) input = a else { fprintf(stderr, "unknown argument: %s\n%s\n", a, USAGE); exit(2) }
         }
         i++
     }
+    if (!target.implemented) { fprintf(stderr, "target %s is not supported yet\n", target.flag); exit(1); return }
     if (input == null || output == null) { fprintf(stderr, "%s\n", USAGE); exit(2); return }
     val ir = try { compileToIr(readFile(input)) } catch (e: CompileError) {
         fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1); return
@@ -56,7 +63,8 @@ fun main(args: Array<String>) {
     if (onlyIr) { writeFile(output, ir); return }
     val ll = "$output.ll"
     writeFile(ll, ir)
-    val cmd = "$cc $cflags -Wno-override-module '$ll' '$runtime' -o '$output'"
+    val def = if (alloc == "pool") " -DRT_POOL" else ""
+    val cmd = "$cc $cflags$def -Wno-override-module '$ll' '$runtime' -o '$output'"
     val rc = system(cmd)
     if (!emitLl) remove(ll)
     if (rc != 0) { fprintf(stderr, "clang failed (%d): %s\n", rc, cmd); exit(1) }

@@ -1,6 +1,6 @@
 #!/bin/bash
-# Compiler tests: feature golden outputs (tests/*.kt -> tests/*.out) and the four
-# benchmark sources, whose checksums must match Rust/Zig/Kotlin Native.
+# Compiler tests: feature golden outputs (tests/*.kt -> tests/*.out, incl. bug_* regressions),
+# --target handling, and the benchmark sources, whose checksums must match Rust/Zig/Kotlin Native.
 set -u
 cd "$(dirname "$0")/.."
 NKC=${NKC:-compiler/build/newkotlinc.kexe}
@@ -22,10 +22,21 @@ sum kotlin/Main.kt sum -430663335525468082
 alloc cases/alloc/kotlin/Main.kt checksum 31012435000000
 recursion cases/recursion/kotlin/Main.kt checksum 5002228309
 file cases/file/kotlin/Main.kt checksum 3412301833168394113
+strings cases/strings/kotlin/Main.kt checksum 2000030888890
+hashmap cases/hashmap/kotlin/Main.kt checksum 3000006000000
+sort cases/sort/kotlin/Main.kt checksum -5669152051897089489
+nbody cases/nbody/kotlin/Main.kt checksum 1419289376832
+matmul cases/matmul/kotlin/Main.kt checksum -9228
+dispatch cases/dispatch/kotlin/Main.kt checksum 5597155580000
+closures cases/closures/kotlin/Main.kt checksum 3258209507
 G
 # Error reporting: an unknown name must fail with a line number.
 printf 'fun main() {\n  println(nope)\n}\n' > "$out/bad.kt"
 msg=$("$NKC" "$out/bad.kt" -o "$out/bad" 2>&1)
 case "$msg" in *"line 2: unknown name 'nope'"*) echo "PASS error-message";; *) echo "FAIL error-message: $msg"; fail=1;; esac
+for t in js wasm jvm; do
+  msg=$("$NKC" --target=$t "$out/bad.kt" -o "$out/x" 2>&1); rc=$?
+  if [ $rc -ne 0 ] && [ "$msg" = "target $t is not supported yet" ]; then echo "PASS target-$t"; else echo "FAIL target-$t: rc=$rc $msg"; fail=1; fi
+done
 rm -rf "$out"
 [ $fail = 0 ] && echo "ALL PASSED" || { echo "SOME FAILED"; exit 1; }

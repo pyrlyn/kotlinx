@@ -5,7 +5,10 @@ class TypeRef(val name: String, val args: List<TypeRef>, val nullable: Boolean) 
 }
 
 sealed class E { var line = 0 }
-class IntL(val v: Long, val long: Boolean) : E()
+class IntL(val v: Long, val long: Boolean, val unsigned: Boolean = false) : E()
+/** `x++` / `x--` used as an expression: yields the old value. */
+class PostIncE(val target: E, val op: String) : E()
+class CharL(val v: Long) : E()
 class DblL(val v: Double) : E()
 class BoolL(val v: Boolean) : E()
 class NullL : E()
@@ -29,9 +32,11 @@ class ForS(val name: String, val iter: E, val body: Block) : S()
 class RetS(val e: E?) : S()
 class ExprS(val e: E) : S()
 
-class Block(val stmts: List<S>)
+/** `params` are lambda parameter names (empty = implicit `it`). */
+class Block(val stmts: List<S>, val params: List<String> = emptyList())
 class Param(val name: String, val type: TypeRef)
 class FunD(val name: String, val params: List<Param>, val ret: TypeRef?, val body: Block?, val exprBody: E?, val line: Int)
 class FieldD(val name: String, val type: TypeRef, val isVar: Boolean)
-class ClassD(val name: String, val fields: List<FieldD>, val line: Int)
-class Program(val funs: List<FunD>, val classes: List<ClassD>)
+class ClassD(val name: String, val fields: List<FieldD>, val supers: List<String>, val methods: List<FunD>, val line: Int)
+class InterfaceD(val name: String, val methods: List<FunD>, val line: Int)
+class Program(val funs: List<FunD>, val classes: List<ClassD>, val ifaces: List<InterfaceD>)
