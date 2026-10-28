@@ -32,7 +32,8 @@ __attribute__((destructor)) static void rt_leak_report(void) {
 
 int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW); }
 
-void rt_exit_flush(void) { fflush(stdout); }
+void rt_cc_collect(void);
+void rt_exit_flush(void) { rt_cc_collect(); fflush(stdout); }
 
 void rt_panic(const char *msg) {
     fflush(stdout);
@@ -255,3 +256,121 @@ void rt_free(void *p, int64_t size) {
     rt_free_lists[cls] = p;
 }
 #endif
+
+
+// ---- cycle collector (Bacon & Rajan 2001, synchronous trial deletion) -----
+// Only objects of "cyclic" classes (on a field cycle with a `var` field; vtable[4] != 0) take part.
+// Their 64-bit header word: low 32 bits = reference count, bits 32-33 = color, bit 34 = buffered.
+// A decrement to a non-zero count makes the object a possible root (purple, buffered). When the
+// buffer reaches CC_THRESHOLD, and at program exit, the collector runs MarkRoots / ScanRoots /
+// CollectRoots. Other objects (acyclic classes, lists, maps, builders) are released by plain RC.
+// Limitation: cycles that pass through an ArrayList/HashMap are not traced.
+
+typedef void (*visit_fn)(void *);
+typedef struct { void (*rel)(void *); void (*trav)(void *, visit_fn); void (*relo)(void *); void (*freemem)(void *); void *cyclic; } VTab;
+
+#define CC_THRESHOLD 10000
+#define CNT_MASK 0xffffffffULL
+#define COLOR_SHIFT 32
+#define BUF_BIT (1ULL << 34)
+enum { BLACK = 0, GRAY = 1, WHITE = 2, PURPLE = 3 };
+
+static inline VTab *vtab(void *p) { return *(VTab **)((char *)p + 8); }
+static inline uint64_t *hdr(void *p) { return (uint64_t *)p; }
+static inline int is_cyc(void *p) { return vtab(p)->cyclic != NULL; }
+static inline uint64_t cnt(void *p) { return *hdr(p) & CNT_MASK; }
+static inline int color(void *p) { return (int)((*hdr(p) >> COLOR_SHIFT) & 3); }
+static inline void set_color(void *p, int c) { *hdr(p) = (*hdr(p) & ~(3ULL << COLOR_SHIFT)) | ((uint64_t)c << COLOR_SHIFT); }
+static inline int buffered(void *p) { return (*hdr(p) & BUF_BIT) != 0; }
+
+typedef struct { void **a; size_t n, cap; } Vec;
+static void vpush(Vec *v, void *p) {
+    if (v->n == v->cap) { v->cap = v->cap ? v->cap * 2 : 256; v->a = realloc(v->a, v->cap * sizeof *v->a); if (!v->a) rt_panic("OutOfMemoryError"); }
+    v->a[v->n++] = p;
+}
+static Vec cc_roots, cc_work, cc_black, cc_garbage;
+static int cc_running;
+
+void rt_cc_collect(void);
+void rt_cc_possible_root(void *p) {
+    set_color(p, PURPLE);
+    if (!buffered(p)) {
+        *hdr(p) |= BUF_BIT;
+        vpush(&cc_roots, p);
+        if (cc_roots.n >= CC_THRESHOLD && !cc_running) rt_cc_collect();
+    }
+}
+/* Count reached zero and the children were released: free now, unless the root buffer still holds it. */
+void rt_cc_dead(void *p) {
+    set_color(p, BLACK);
+    if (!buffered(p)) vtab(p)->freemem(p);
+}
+
+static void mg_child(void *t) { if (t && is_cyc(t)) { (*hdr(t))--; vpush(&cc_work, t); } }
+static void mark_gray(void *s) {
+    vpush(&cc_work, s);
+    while (cc_work.n) {
+        void *x = cc_work.a[--cc_work.n];
+        if (color(x) != GRAY) { set_color(x, GRAY); vtab(x)->trav(x, mg_child); }
+    }
+}
+static void sb_child(void *t) {
+    if (t && is_cyc(t)) { (*hdr(t))++; if (color(t) != BLACK) { set_color(t, BLACK); vpush(&cc_black, t); } }
+}
+static void scan_black(void *s) {
+    set_color(s, BLACK); vpush(&cc_black, s);
+    while (cc_black.n) { void *x = cc_black.a[--cc_black.n]; vtab(x)->trav(x, sb_child); }
+}
+static void scan_child(void *t) { if (t && is_cyc(t)) vpush(&cc_work, t); }
+static void scan(void *s) {
+    vpush(&cc_work, s);
+    while (cc_work.n) {
+        void *x = cc_work.a[--cc_work.n];
+        if (color(x) != GRAY) continue;
+        if (cnt(x) > 0) scan_black(x);
+        else { set_color(x, WHITE); vtab(x)->trav(x, scan_child); }
+    }
+}
+/* Garbage objects are claimed (colored black) when pushed, so each one is freed exactly once. */
+static int cw_claim(void *t) {
+    if (color(t) != WHITE || buffered(t)) return 0;
+    set_color(t, BLACK); vpush(&cc_work, t); return 1;
+}
+static void cw_child(void *t) {
+    if (!t) return;
+    if (is_cyc(t)) cw_claim(t);
+    else vtab(t)->rel(t); /* acyclic child: drop the garbage object's reference normally */
+}
+static void collect_white(void *s) {
+    if (!cw_claim(s)) return;
+    while (cc_work.n) {
+        void *x = cc_work.a[--cc_work.n];
+        vtab(x)->trav(x, cw_child);
+        vpush(&cc_garbage, x); /* freed after all roots are processed: other garbage may still point here */
+    }
+}
+
+void rt_cc_collect(void) {
+    if (cc_running || cc_roots.n == 0) return;
+    cc_running = 1;
+    Vec roots = cc_roots; cc_roots = (Vec){0};
+    size_t k = 0;
+    for (size_t i = 0; i < roots.n; i++) {           /* MarkRoots */
+        void *s = roots.a[i];
+        if (color(s) == PURPLE && cnt(s) > 0) { mark_gray(s); roots.a[k++] = s; }
+        else { *hdr(s) &= ~BUF_BIT; if (color(s) == BLACK && cnt(s) == 0) vtab(s)->freemem(s); }
+    }
+    roots.n = k;
+    for (size_t i = 0; i < roots.n; i++) scan(roots.a[i]);  /* ScanRoots */
+    for (size_t i = 0; i < roots.n; i++) {           /* CollectRoots */
+        void *s = roots.a[i];
+        *hdr(s) &= ~BUF_BIT;
+        collect_white(s);
+    }
+    for (size_t i = 0; i < cc_garbage.n; i++) vtab(cc_garbage.a[i])->relo(cc_garbage.a[i]);
+    for (size_t i = 0; i < cc_garbage.n; i++) vtab(cc_garbage.a[i])->freemem(cc_garbage.a[i]);
+    cc_garbage.n = 0;
+    free(roots.a);
+    cc_running = 0;
+    if (cc_roots.n >= CC_THRESHOLD) rt_cc_collect();
+}

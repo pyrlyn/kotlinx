@@ -25,6 +25,9 @@ private val POSIX = mapOf(
 private val CONSTS = mapOf("SEEK_SET" to 0L, "SEEK_CUR" to 1L, "SEEK_END" to 2L)
 private val NANOS = setOf("kotlin.system.getTimeNanos", "getTimeNanos", "System.nanoTime", "kotlin.system.System.nanoTime")
 
+/** vtable entries before the interface-method slots (see genClass). */
+private const val VT_HEADER = 5
+
 /** Native target: typed LLVM IR generation (linked by clang with runtime/runtime.c). */
 class NativeBackend(private val prog: Program) {
     private val globals = StringBuilder()
@@ -34,7 +37,7 @@ class NativeBackend(private val prog: Program) {
     private val sigs = HashMap<String, FunSig>()
     private val ifaces = HashMap<String, IfaceInfo>()
     private val methodSigs = HashMap<String, FunSig>() // "Class.method"
-    private val slots = ArrayList<String>()             // interface method name -> vtable slot (index + 1)
+    private val slots = ArrayList<String>()             // interface method name -> vtable slot (index + VT_HEADER)
     private var owner: ClassInfo? = null
 
     // per-function state
@@ -189,6 +192,7 @@ class NativeBackend(private val prog: Program) {
             val ret = m.ret?.let { resolve(it) } ?: if (m.body != null) Ty.Unit else fail("method '${m.name}' needs an explicit return type")
             methodSigs["${c.name}.${m.name}"] = FunSig(m.name, m.params.map { resolve(it.type) }, ret)
         }
+        computeCyclic()
         for (c in classes.values) genClass(c)
         for (f in prog.funs) {
             line = f.line
@@ -207,16 +211,61 @@ class NativeBackend(private val prog: Program) {
         return sb.toString()
     }
 
+    /** Classes that can be part of a reference cycle (handled by the cycle collector). */
+    private val cyclic = HashSet<String>()
+
+    /**
+     * A class is cyclic if it lies on a cycle of class/interface-typed fields that contains at least one
+     * `var` field (with `val` fields only, a cycle cannot be built). Other classes never enter the collector.
+     */
+    private fun computeCyclic() {
+        fun targets(t: Ty): List<String> = when (t) {
+            is Ty.Cls -> listOf(t.name)
+            is Ty.Iface -> classes.values.filter { t.name in it.supers }.map { it.name }
+            else -> emptyList()
+        }
+        val edges = HashMap<String, List<Pair<String, Boolean>>>()
+        for (c in prog.classes) {
+            val ci = classes.getValue(c.name)
+            edges[c.name] = c.fields.flatMap { f -> targets(ci.fields[ci.index(f.name)].second).map { it to f.isVar } }
+        }
+        fun reach(from: String): Set<String> {
+            val seen = HashSet<String>(); val work = ArrayList<String>(); work.add(from)
+            while (work.isNotEmpty()) { val x = work.removeAt(work.size - 1); for ((y, _) in edges[x].orEmpty()) if (seen.add(y)) work.add(y) }
+            return seen
+        }
+        val r = classes.keys.associateWith { reach(it) }
+        for ((a, es) in edges) for ((b, isVar) in es) {
+            if (!isVar || (a != b && a !in r.getValue(b))) continue
+            // var edge a -> b lies on a cycle: every class on a cycle through it is cyclic.
+            for (c in classes.keys) if ((c == b || c in r.getValue(b)) && (c == a || a in r.getValue(c))) cyclic.add(c)
+        }
+    }
+
+    private fun isTraced(t: Ty) = t is Ty.Cls || t is Ty.Iface
+
     private fun genClass(c: ClassInfo) {
         globals.append("${c.llType} = type { i64, ptr${c.fields.joinToString("") { ", " + it.second.llvm }} }\n")
-        val vt = listOf("ptr @rel.${c.name}") + slots.map { if (it in c.methods) "ptr @m.${c.name}.$it" else "ptr null" }
+        // vtable: [release, trace children, release untraced fields, free memory, is-cyclic, interface methods...]
+        val vt = listOf("ptr @rel.${c.name}", "ptr @trav.${c.name}", "ptr @relo.${c.name}", "ptr @free.${c.name}",
+            "ptr ${if (c.name in cyclic) "inttoptr (i64 1 to ptr)" else "null"}") +
+            slots.map { if (it in c.methods) "ptr @m.${c.name}.$it" else "ptr null" }
         globals.append("@vt.${c.name} = internal constant [${vt.size} x ptr] [${vt.joinToString(", ")}]\n")
         val f = StringBuilder()
+        val cyc = c.name in cyclic
         f.append("define internal void @rel.${c.name}(ptr %p) {\nentry:\n")
         f.append("  %isnull = icmp eq ptr %p, null\n  br i1 %isnull, label %done, label %dec\n")
-        f.append("dec:\n  %c = load i64, ptr %p\n  %c1 = sub i64 %c, 1\n  %z = icmp eq i64 %c1, 0\n  br i1 %z, label %free, label %keep\n")
-        f.append("keep:\n  store i64 %c1, ptr %p\n  br label %done\n")
+        if (cyc) {
+            // Low 32 bits: count; high bits: collector color / buffered flag (runtime.c).
+            f.append("dec:\n  %c = load i64, ptr %p\n  %c1 = sub i64 %c, 1\n  %cnt = and i64 %c1, 4294967295\n  %z = icmp eq i64 %cnt, 0\n  br i1 %z, label %free, label %keep\n")
+            f.append("keep:\n  store i64 %c1, ptr %p\n  call void @rt_cc_possible_root(ptr %p)\n  br label %done\n")
+        } else {
+            f.append("dec:\n  %c = load i64, ptr %p\n  %c1 = sub i64 %c, 1\n  %z = icmp eq i64 %c1, 0\n  br i1 %z, label %free, label %keep\n")
+            f.append("keep:\n  store i64 %c1, ptr %p\n  br label %done\n")
+        }
         f.append("free:\n")
+        // Cyclic: publish the zero count before releasing children (a release may run the collector).
+        if (cyc) f.append("  store i64 %c1, ptr %p\n")
         c.fields.forEachIndexed { i, (_, t) ->
             releaseFn(t)?.let { fn ->
                 f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void $fn(ptr %v$i)\n")
@@ -224,7 +273,19 @@ class NativeBackend(private val prog: Program) {
         }
         f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n")
         relfFields(c)
-        f.append("  call void @rt_free(ptr %p, i64 %sz)\n  br label %done\ndone:\n  ret void\n}\n\n")
+        if (cyc) f.append("  call void @rt_cc_dead(ptr %p)\n  br label %done\ndone:\n  ret void\n}\n\n")
+        else f.append("  call void @rt_free(ptr %p, i64 %sz)\n  br label %done\ndone:\n  ret void\n}\n\n")
+        // Collector hooks: trace class/interface children; release other reference fields; free memory only.
+        f.append("define internal void @trav.${c.name}(ptr %p, ptr %fn) {\nentry:\n")
+        c.fields.forEachIndexed { i, (_, t) ->
+            if (isTraced(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void %fn(ptr %v$i)\n")
+        }
+        f.append("  ret void\n}\n\ndefine internal void @relo.${c.name}(ptr %p) {\nentry:\n")
+        c.fields.forEachIndexed { i, (_, t) ->
+            if (!isTraced(t)) releaseFn(t)?.let { fn -> f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void $fn(ptr %v$i)\n") }
+        }
+        f.append("  ret void\n}\n\ndefine internal void @free.${c.name}(ptr %p) {\nentry:\n")
+        f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n  call void @rt_free(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         funcs.append(f)
     }
 
@@ -880,7 +941,7 @@ class NativeBackend(private val prog: Program) {
                 emit("call void @relf.${(tok.t as Ty.Cls).name}(ptr $old)")
                 br(lj)
                 startBlock(ld)
-                emit("store i64 ${emitT("sub i64 $rc, 1")}, ptr $old")
+                emit("call void ${releaseFn(tok.t)}(ptr $old)")
                 br(lf)
                 startBlock(lf)
                 val fresh = emitT("call ptr @rt_alloc(i64 $size)")
@@ -984,12 +1045,12 @@ class NativeBackend(private val prog: Program) {
         return finishCall("call ${sig.ret.llvm} @m.${ci.name}.$n(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args)
     }
 
-    /** Interface call through the object's vtable (slot = global interface-method index + 1). */
+    /** Interface call through the object's vtable (slot = global interface-method index + VT_HEADER). */
     private fun callIface(r: Val, ii: IfaceInfo, n: String, e: CallE): Val {
         val sig = ii.methods[n] ?: fail("unknown method ${ii.name}.$n()")
         val args = methodArgs(sig, e)
         val vt = emitT("load ptr, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 8")}")
-        val fp = emitT("load ptr, ptr ${emitT("getelementptr ptr, ptr $vt, i64 ${slots.indexOf(n) + 1}")}")
+        val fp = emitT("load ptr, ptr ${emitT("getelementptr ptr, ptr $vt, i64 ${slots.indexOf(n) + VT_HEADER}")}")
         return finishCall("call ${sig.ret.llvm} $fp(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args)
     }
 
@@ -1245,6 +1306,8 @@ done:
   ret void
 }
 declare ptr @rt_alloc(i64)
+declare void @rt_cc_possible_root(ptr)
+declare void @rt_cc_dead(ptr)
 declare void @rt_free(ptr, i64)
 
 define internal void @rt_retain(ptr %p) alwaysinline {
