@@ -7,56 +7,56 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| UNSUPPORTED | 5362 |
+| UNSUPPORTED | 5348 |
 | N/A | 2984 |
-| PASS | 129 |
+| PASS | 143 |
 
-Kept in tree (re-runnable with `run.py`): 129
+Kept in tree (re-runnable with `run.py`): 143
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| generics | 740 |
-| inline/value classes | 560 |
-| interfaces | 469 |
-| inheritance (open/abstract/sealed) | 468 |
+| generics | 799 |
+| inline/value classes | 565 |
 | ranges (step/downTo/until, ranges as values) | 423 |
-| operator/infix functions | 325 |
-| class bodies / constructors | 304 |
-| lambdas / function types / references | 226 |
-| objects / companion objects | 224 |
-| enum classes | 165 |
-| type checks / casts (is, as) | 98 |
-| strings / templates | 94 |
-| exceptions | 75 |
-| annotations | 68 |
-| extension functions | 65 |
+| interfaces | 420 |
+| operator/infix functions | 342 |
+| class bodies / constructors | 288 |
+| lambdas / function types / references | 269 |
+| objects / companion objects | 249 |
+| inheritance (open/abstract/sealed) | 181 |
+| enum classes | 166 |
+| type checks / casts (is, as) | 112 |
+| strings / templates | 95 |
+| exceptions | 77 |
+| annotations | 72 |
+| extension functions | 71 |
 | destructuring declarations | 64 |
-| default arguments | 63 |
-| type inference (expression bodies) | 61 |
+| type inference (expression bodies) | 62 |
+| default arguments | 52 |
+| property accessors / delegation | 52 |
+| stdlib: kotlin.test asserts | 45 |
 | modifiers (private/const/lateinit/...) | 44 |
-| stdlib: kotlin.test asserts | 39 |
-| other syntax (at 'context') | 37 |
+| other syntax (at '.') | 42 |
+| other syntax (at 'context') | 40 |
 | other syntax (at 'in') | 36 |
+| other syntax (at ':') | 34 |
 | other syntax (at 'f') | 31 |
+| other syntax (at '=') | 31 |
+| other: body properties need an initializer (at ' | 30 |
 | other syntax (at ',') | 28 |
-| property accessors / delegation | 27 |
+| types: Any | 27 |
 | other: expected '=' (at ' | 27 |
-| other syntax (at ':') | 26 |
-| other syntax (at '.') | 25 |
-| nullable types | 21 |
+| nullable types | 23 |
+| other syntax (at '!') | 18 |
 | typealias | 17 |
-| other syntax (at '!') | 17 |
 | other syntax (at 'A') | 16 |
 | other syntax (at 'foo') | 16 |
-| types: Any | 15 |
 | types: Any? | 15 |
 | type inference / mismatch | 15 |
+| other syntax (at 'Local') | 14 |
 | other syntax (at 'F') | 12 |
-| other syntax (at 'Local') | 12 |
-| other syntax (at 'suspend') | 12 |
-| unknown intArrayOf (stdlib API / unsupported decl) | 11 |
 
 ## N/A reasons
 

@@ -5,6 +5,8 @@ private val INFIX_FUNS = setOf("and", "or", "xor", "shl", "shr", "ushr", "until"
 private val GENERIC_CALLS = setOf("ArrayList", "mutableListOf", "arrayListOf", "HashMap", "hashMapOf", "mutableMapOf")
 private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sumOf", "count")
 
+private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract")
+
 class Parser(private val t: List<Tok>) {
     private var p = 0
     /** Newlines are insignificant while inside (...) or [...]; a `{` block resets that. */
@@ -31,7 +33,7 @@ class Parser(private val t: List<Tok>) {
                 tk.k == K.EOF -> break
                 tk.k == K.OP && tk.s == "@" -> skipLine()
                 tk.k == K.ID && (tk.s == "import" || tk.s == "package") -> skipLine()
-                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "const") -> p++
+                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "const", "open", "final") -> p++
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> globals.add(stmt() as VarS)
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
                 tk.k == K.ID && tk.s == "class" -> classes.add(classDecl())
@@ -42,14 +44,25 @@ class Parser(private val t: List<Tok>) {
         return Program(funs, classes, ifaces, globals)
     }
 
-    private fun members(): List<FunD> {
+    private fun members(props: MutableList<FieldD>? = null, inits: MutableList<Any>? = null): List<FunD> {
         val ms = ArrayList<FunD>()
         expectOp("{")
         nested(0) {
             while (true) {
                 skipNL()
                 if (isOp("}")) break
-                while (peek().k == K.ID && peek().s in setOf("override", "open", "public", "private", "abstract")) p++
+                while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) p++
+                if (props != null && inits != null && (isId("val") || isId("var"))) {
+                    val isVar = next().s == "var"
+                    val n = ident()
+                    val ty = if (isOp(":")) { next(); type() } else null
+                    if (!isOp("=")) fail("body properties need an initializer")
+                    next(); skipNLOnly()
+                    val f = FieldD(n, ty, isVar, expr())
+                    props.add(f); inits.add(f)
+                    continue
+                }
+                if (inits != null && isId("init")) { next(); skipNLOnly(); inits.add(block()); continue }
                 if (!isId("fun")) fail("only member functions are supported in class/interface bodies")
                 ms.add(function())
             }
@@ -88,14 +101,17 @@ class Parser(private val t: List<Tok>) {
     private fun classDecl(): ClassD {
         val line = next().line
         val name = ident()
-        val fields = ArrayList<FieldD>()
+        val fields = ArrayList<FieldD>(); val ctorParams = ArrayList<Param>(); val inits = ArrayList<Any>()
         if (isOp("(")) {
             next()
             nested(1) {
                 while (!isOp(")")) {
-                    val kw = ident()
-                    if (kw != "val" && kw != "var") fail("only val/var constructor properties are supported")
-                    val n = ident(); expectOp(":"); fields.add(FieldD(n, type(), kw == "var"))
+                    while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) p++
+                    val kw = if (isId("val") || isId("var")) next().s else null
+                    val n = ident(); expectOp(":"); val ty = type()
+                    if (isOp("=")) fail("default arguments are not supported")
+                    ctorParams.add(Param(n, ty))
+                    if (kw != null) fields.add(FieldD(n, ty, kw == "var"))
                     if (isOp(",")) next()
                 }
             }
@@ -106,8 +122,8 @@ class Parser(private val t: List<Tok>) {
             next()
             while (true) { supers.add(ident()); if (isOp("(")) { next(); expectOp(")") }; if (isOp(",")) next() else break }
         }
-        val ms = if (isOp("{")) members() else emptyList()
-        return ClassD(name, fields, supers, ms, line)
+        val ms = if (isOp("{")) members(fields, inits) else emptyList()
+        return ClassD(name, fields, supers, ms, line, ctorParams, inits)
     }
 
     private fun type(): TypeRef {

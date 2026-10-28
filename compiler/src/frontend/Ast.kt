@@ -38,8 +38,17 @@ class JumpS(val isBreak: Boolean) : S()
 class Block(val stmts: List<S>, val params: List<String> = emptyList())
 class Param(val name: String, val type: TypeRef)
 class FunD(val name: String, val params: List<Param>, val ret: TypeRef?, val body: Block?, val exprBody: E?, val line: Int)
-class FieldD(val name: String, val type: TypeRef, val isVar: Boolean)
-class ClassD(val name: String, val fields: List<FieldD>, val supers: List<String>, val methods: List<FunD>, val line: Int)
+/** `type == null` (inferred) only for body properties, which have `init`. */
+class FieldD(val name: String, val type: TypeRef?, val isVar: Boolean, val init: E? = null)
+/**
+ * `fields`: constructor properties, then body properties. `ctorParams`: the primary constructor's parameters in order
+ * (properties and plain parameters). `inits`: body properties (FieldD) and `init` blocks (Block) in declaration order.
+ */
+class ClassD(val name: String, val fields: List<FieldD>, val supers: List<String>, val methods: List<FunD>, val line: Int,
+             val ctorParams: List<Param> = fields.map { Param(it.name, it.type!!) }, val inits: List<Any> = emptyList()) {
+    /** Needs a constructor function (plain parameters or initializers), not just field stores. */
+    val hasCtorBody get() = inits.isNotEmpty() || ctorParams.size != fields.size
+}
 class InterfaceD(val name: String, val methods: List<FunD>, val line: Int)
 /** `globals`: top-level properties, initialized in declaration order before `main`. */
 class Program(val funs: List<FunD>, val classes: List<ClassD>, val ifaces: List<InterfaceD>, val globals: List<VarS> = emptyList())
