@@ -75,8 +75,9 @@ class NativeBackend(private val prog: Program) {
             if (c in 32..126 && c != '"'.code && c != '\\'.code) enc.append(c.toChar())
             else enc.append('\\').append(c.toString(16).uppercase().padStart(2, '0'))
         }
-        globals.append("$name = private unnamed_addr constant [${bytes.size + 1} x i8] c\"$enc\\00\"\n")
-        name
+        // Immortal string object (writable: retain/release touch the count): { refcount = 2^62, never reaches 0; chars }.
+        globals.append("$name = private global { i64, [${bytes.size + 1} x i8] } { i64 4611686018427387904, [${bytes.size + 1} x i8] c\"$enc\\00\" }, align 8\n")
+        "getelementptr inbounds ({ i64, [${bytes.size + 1} x i8] }, ptr $name, i32 0, i32 1)"
     }
 
     // ---------------------------------------------------------------- types
@@ -115,16 +116,18 @@ class NativeBackend(private val prog: Program) {
         is Ty.MapTy -> "@rt_map_release"
         is Ty.Iface -> "@rt_release_dyn"
         Ty.SB -> "@rt_sb_release"
+        Ty.Str -> "@rt_str_release"
+        is Ty.Arr -> "@rt_arr_release"
         else -> null
     }
 
-    private fun retain(v: String) = emit("call void @rt_retain(ptr $v)")
+    private fun retain(v: String, t: Ty) = emit("call void @${if (t.hasPrefixRc) "rt_hdr_retain" else "rt_retain"}(ptr $v)")
     private fun release(v: Val) { releaseFn(v.t)?.let { emit("call void $it(ptr ${v.v})") } }
     private fun releaseIfOwned(v: Val) { if (v.owned && v.t.isRef) release(v) }
     /** Turns a value into a +1 reference that can be stored. */
     private fun consume(v: Val): Val {
         if (!v.t.isRef || v.owned) return v
-        retain(v.v); return Val(v.v, v.t, true)
+        retain(v.v, v.t); return Val(v.v, v.t, true)
     }
 
     private fun coerce(v: Val, t: Ty): Val {
@@ -137,7 +140,8 @@ class NativeBackend(private val prog: Program) {
             }
         }
         if (v.t.isInt && t == Ty.F64) return Val(emitT("${if (v.t.isUnsigned) "uitofp" else "sitofp"} ${v.t.llvm} ${v.v} to double"), t)
-        if ((v.t == Ty.RawPtr || v.t == Ty.Str) && (t == Ty.RawPtr || t == Ty.Str)) return Val(v.v, t)
+        if (v.t == Ty.RawPtr && t == Ty.Str) return Val(emitT("call ptr @rt_str_from_c(ptr ${v.v})"), Ty.Str, true)
+        if ((v.t == Ty.RawPtr || v.t == Ty.Str) && (t == Ty.RawPtr || t == Ty.Str)) return Val(v.v, t, v.owned)
         if (v.v == "null" && t.llvm == "ptr") return Val("null", t)
         if (v.t is Ty.Cls && t is Ty.Iface && t.name in classes.getValue(v.t.name).supers) return Val(v.v, t, v.owned)
         fail("type mismatch: expected $t, found ${v.t}")
@@ -777,7 +781,7 @@ class NativeBackend(private val prog: Program) {
             if (p is String) { if (p.isNotEmpty()) emit("call void @rt_sb_str(ptr $sb, ptr ${cstr(p)})") }
             else appendVal("rt_sb_", "ptr $sb, ", genExpr(p as E))
         }
-        return Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str)
+        return Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str, true)
     }
 
     /** Calls `<prefix>{str,i64,f64,bool}(<lead> value)` for printing / string building. */
@@ -877,7 +881,7 @@ class NativeBackend(private val prog: Program) {
             "IntArray", "LongArray", "DoubleArray" -> {
                 val et = when (n) { "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; else -> Ty.F64 }
                 val size = coerce(genExpr(e.args.single()), Ty.I64)
-                return Val(emitT("call ptr @rt_arr_new(i64 ${size.v}, i64 ${et.size})"), Ty.Arr(et))
+                return Val(emitT("call ptr @rt_arr_new(i64 ${size.v}, i64 ${et.size})"), Ty.Arr(et), true)
             }
             "println", "print" -> {
                 val a = e.args.singleOrNull()
@@ -911,7 +915,7 @@ class NativeBackend(private val prog: Program) {
             }
             "ByteArray" -> {
                 val size = coerce(genExpr(e.args.single()), Ty.I64)
-                return Val(emitT("call ptr @rt_arr_new(i64 ${size.v}, i64 1)"), Ty.Arr(Ty.I8))
+                return Val(emitT("call ptr @rt_arr_new(i64 ${size.v}, i64 1)"), Ty.Arr(Ty.I8), true)
             }
         }
         POSIX[n]?.let { (ps, ret) ->
@@ -967,15 +971,16 @@ class NativeBackend(private val prog: Program) {
         val t = r.t
         val res: Val = when {
             t.isNum && n in setOf("toInt", "toUInt", "toLong", "toULong", "toByte", "toDouble", "toString") -> {
-                if (n == "toString") { val sb = emitT("call ptr @rt_sb_new()"); appendVal("rt_sb_", "ptr $sb, ", r); return Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str) }
+                if (n == "toString") { val sb = emitT("call ptr @rt_sb_new()"); appendVal("rt_sb_", "ptr $sb, ", r); return Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str, true) }
                 val target = when (n) { "toInt" -> Ty.I32; "toUInt" -> Ty.U32; "toLong" -> Ty.I64; "toULong" -> Ty.U64; "toByte" -> Ty.I8; else -> Ty.F64 }
                 when {
                     t == Ty.F64 && target.isInt -> Val(emitT("fptosi double ${r.v} to ${target.llvm}"), target)
                     else -> coerce(r, target)
                 }
             }
-            (t == Ty.RawPtr || t == Ty.Str) && n == "toKString" -> Val(r.v, Ty.Str)
-            t == Ty.Str && n == "toString" -> r
+            t == Ty.RawPtr && n == "toKString" -> Val(emitT("call ptr @rt_str_from_c(ptr ${r.v})"), Ty.Str, true)
+            t == Ty.Str && n == "toKString" -> return r
+            t == Ty.Str && n == "toString" -> return r
             t == Ty.Pinned && n == "addressOf" -> {
                 val i = coerce(genExpr(e.args.single()), Ty.I64)
                 Val(emitT("getelementptr i8, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 8")}, i64 ${i.v}"), Ty.RawPtr)
@@ -991,7 +996,7 @@ class NativeBackend(private val prog: Program) {
                 appendVal("rt_sb_", "ptr ${r.v}, ", v)
                 Val(r.v, Ty.SB, false)
             }
-            t == Ty.SB && n == "toString" -> Val(emitT("call ptr @rt_sb_tostring(ptr ${r.v})"), Ty.Str)
+            t == Ty.SB && n == "toString" -> Val(emitT("call ptr @rt_sb_tostring(ptr ${r.v})"), Ty.Str, true)
             t is Ty.MapTy && (n == "containsKey" || n == "get" || n == "put" || n == "getOrDefault") -> {
                 val k = mapKey(genExpr(e.args[0]), t)
                 when (n) {
@@ -1082,7 +1087,7 @@ class NativeBackend(private val prog: Program) {
                 val add = label("lam.add")
                 condBr(coerce(v, Ty.I1).v, add, ls)
                 startBlock(add)
-                if (t.elem.isRef) retain(elem.v)
+                if (t.elem.isRef) retain(elem.v, t.elem)
                 emit("call void @rt_list_add(ptr $res, i64 ${toSlot(elem)})")
             }
             "forEach" -> releaseIfOwned(v)
@@ -1190,7 +1195,7 @@ class NativeBackend(private val prog: Program) {
     private fun concat(a: Val, b: Val): Val {
         val sb = emitT("call ptr @rt_sb_new()")
         appendVal("rt_sb_", "ptr $sb, ", a); appendVal("rt_sb_", "ptr $sb, ", b)
-        return Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str)
+        return Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str, true)
     }
 
     private fun numType(a: Val, b: Val): Ty {
@@ -1218,11 +1223,12 @@ class NativeBackend(private val prog: Program) {
         }
         if (a.t.llvm == "ptr" || b.t.llvm == "ptr") {
             if (op != "==" && op != "!=") fail("cannot order references")
-            if (a.t == Ty.Str && b.t == Ty.Str) {
+            val res = if (a.t == Ty.Str && b.t == Ty.Str) {
                 val c = emitT("call i32 @rt_str_eq(ptr ${a.v}, ptr ${b.v})") // null-safe
-                return Val(emitT("icmp ${if (op == "==") "ne" else "eq"} i32 $c, 0"), Ty.I1)
-            }
-            return Val(emitT("icmp ${if (op == "==") "eq" else "ne"} ptr ${a.v}, ${b.v}"), Ty.I1)
+                Val(emitT("icmp ${if (op == "==") "ne" else "eq"} i32 $c, 0"), Ty.I1)
+            } else Val(emitT("icmp ${if (op == "==") "eq" else "ne"} ptr ${a.v}, ${b.v}"), Ty.I1)
+            releaseIfOwned(a); releaseIfOwned(b)
+            return res
         }
         val t = numType(a, b)
         val x = coerce(a, t).v; val y = coerce(b, t).v
@@ -1306,6 +1312,10 @@ done:
   ret void
 }
 declare ptr @rt_alloc(i64)
+declare void @rt_hdr_retain(ptr)
+declare void @rt_str_release(ptr)
+declare void @rt_arr_release(ptr)
+declare ptr @rt_str_from_c(ptr)
 declare void @rt_cc_possible_root(ptr)
 declare void @rt_cc_dead(ptr)
 declare void @rt_free(ptr, i64)

@@ -9,8 +9,7 @@
 
 // ---- leak check (newkotlinc --leak-check => -DRT_LEAKCHECK) ----------------
 // Counts live runtime objects per kind; at exit prints a report to stderr and exits with 3
-// if any reference-counted object (class instance, StringBuilder, ArrayList, HashMap) is still live.
-// Arrays and strings are tracked but not asserted yet (they are not freed).
+// if any object (class instance, StringBuilder, ArrayList, HashMap, array, string) is still live.
 #ifdef RT_LEAKCHECK
 enum { LK_OBJ, LK_SB, LK_LIST, LK_MAP, LK_ARR, LK_STR, LK_N };
 static int64_t rt_live[LK_N], rt_total[LK_N], rt_peak[LK_N];
@@ -21,7 +20,7 @@ __attribute__((destructor)) static void rt_leak_report(void) {
     int64_t bad = 0;
     for (int k = 0; k < LK_N; k++) {
         fprintf(stderr, "leak-check: %s allocated=%lld peak=%lld live=%lld\n", lk_names[k], (long long)rt_total[k], (long long)rt_peak[k], (long long)rt_live[k]);
-        if (k < LK_ARR) bad += rt_live[k];
+        bad += rt_live[k];
     }
     fprintf(stderr, "leak-check: %s\n", bad ? "FAIL" : "OK");
     if (bad) _exit(3);
@@ -96,13 +95,14 @@ static int utf8(char *b, int32_t c) {
 void rt_print_char(int32_t c) { char b[4]; int n = utf8(b, c); fwrite(b, 1, (size_t)n, stdout); }
 
 // ---- StringBuilder (reference counted; also used for templates) ----------
-// Strings (char*) are never freed.
+// Strings are char* with an 8-byte refcount just before the chars (literals: immortal, 2^62).
 
 typedef struct { int64_t rc; char *buf; size_t len, cap; } SB;
 
-SB *rt_sb_new(void) { SB *s = malloc(sizeof *s); s->rc = 1; s->cap = 32; s->len = 0; s->buf = malloc(s->cap); s->buf[0] = 0; LK(LK_SB, 1); return s; }
+/* The buffer keeps 8 spare bytes in front, so rt_sb_done can hand it over as a string without copying. */
+SB *rt_sb_new(void) { SB *s = malloc(sizeof *s); s->rc = 1; s->cap = 32; s->len = 0; s->buf = (char *)malloc(s->cap + 8) + 8; s->buf[0] = 0; LK(LK_SB, 1); return s; }
 static inline void sb_reserve(SB *s, size_t n) {
-    if (s->len + n + 1 > s->cap) { while (s->len + n + 1 > s->cap) s->cap *= 2; s->buf = realloc(s->buf, s->cap); }
+    if (s->len + n + 1 > s->cap) { while (s->len + n + 1 > s->cap) s->cap *= 2; s->buf = (char *)realloc(s->buf - 8, s->cap + 8) + 8; }
 }
 static void sb_bytes(SB *s, const char *x, size_t n) { sb_reserve(s, n); memcpy(s->buf + s->len, x, n); s->len += n; s->buf[s->len] = 0; }
 void rt_sb_str(SB *s, const char *x) { if (!x) x = "null"; sb_bytes(s, x, strlen(x)); }
@@ -114,12 +114,26 @@ void rt_sb_i64(SB *s, int64_t v) {
     sb_bytes(s, b + i, (size_t)(24 - i));
 }
 void rt_sb_u64(SB *s, uint64_t v) { char b[24]; int i = 24; do { b[--i] = (char)('0' + v % 10); v /= 10; } while (v); sb_bytes(s, b + i, (size_t)(24 - i)); }
-char *rt_sb_tostring(SB *s) { char *r = malloc(s->len + 1); memcpy(r, s->buf, s->len + 1); LK(LK_STR, 1); return r; }
+static char *str_alloc(size_t len) {
+    int64_t *h = malloc(8 + len + 1);
+    if (!h) rt_panic("OutOfMemoryError");
+    *h = 1; LK(LK_STR, 1);
+    return (char *)(h + 1);
+}
+char *rt_sb_tostring(SB *s) { char *r = str_alloc(s->len); memcpy(r, s->buf, s->len + 1); return r; }
+char *rt_str_from_c(const char *c) { if (!c) return NULL; size_t n = strlen(c); char *r = str_alloc(n); memcpy(r, c, n + 1); return r; }
+/* Strings and primitive arrays: refcount at p - 8. */
+void rt_hdr_retain(void *p) { if (p) ((int64_t *)p)[-1]++; }
+void rt_str_release(char *p) {
+    if (!p) return;
+    int64_t *h = (int64_t *)p - 1;
+    if (--*h == 0) { LK(LK_STR, -1); free(h); }
+}
 int64_t rt_sb_len(SB *s) { return (int64_t)s->len; }
-void rt_sb_release(SB *s) { if (!s || --s->rc > 0) return; LK(LK_SB, -1); free(s->buf); free(s); }
+void rt_sb_release(SB *s) { if (!s || --s->rc > 0) return; LK(LK_SB, -1); free(s->buf - 8); free(s); }
 void rt_sb_f64(SB *s, double d) { char b[64]; fmt_double(b, sizeof b, d); rt_sb_str(s, b); }
 void rt_sb_bool(SB *s, _Bool v) { rt_sb_str(s, v ? "true" : "false"); }
-char *rt_sb_done(SB *s) { char *r = s->buf; LK(LK_SB, -1); LK(LK_STR, 1); free(s); return r; }
+char *rt_sb_done(SB *s) { char *r = s->buf; ((int64_t *)r)[-1] = 1; LK(LK_SB, -1); LK(LK_STR, 1); free(s); return r; }
 
 // ---- ArrayList (reference counted; elements stored as 64-bit slots) -------
 
@@ -152,14 +166,19 @@ void rt_list_release(List *l) {
     free(l->data); free(l);
 }
 
-// ---- primitive arrays: { int64 length; elements... }; not freed ------------
+// ---- primitive arrays: pointer to { int64 length; elements... }, refcount at -8 ----
 
 void *rt_arr_new(int64_t n, int64_t elem) {
     if (n < 0) rt_panic("NegativeArraySizeException");
-    int64_t *p = calloc(1, 8 + (size_t)n * (size_t)elem);
+    int64_t *p = calloc(1, 16 + (size_t)n * (size_t)elem); /* { rc, length, elements } */
     if (!p) rt_panic("OutOfMemoryError");
-    *p = n; LK(LK_ARR, 1);
-    return p;
+    p[0] = 1; p[1] = n; LK(LK_ARR, 1);
+    return p + 1;
+}
+void rt_arr_release(void *a) {
+    if (!a) return;
+    int64_t *h = (int64_t *)a - 1;
+    if (--*h == 0) { LK(LK_ARR, -1); free(h); }
 }
 
 void rt_oob(int64_t i, int64_t len) {
