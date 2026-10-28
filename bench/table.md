@@ -146,3 +146,57 @@ The backend split / `--target` adds no runtime cost (within noise). alloc on mal
 4. Fast integer append in StringBuilder; open-addressing HashMap in runtime.c.
 5. Inline expansion of collection lambdas (map/filter/forEach/sumOf/count).
 6. Default switched back to malloc for equal conditions; pool kept as an extra row.
+
+## Memory benchmarks (round 2026-10-28 21:22 EET)
+
+Same conditions as above (round-robin, warm-up, middle 3 of 5). Load average 12.1 at start and 10.6 at end (other jobs running). Cases: alloc, free (three object sizes, replace and drop), refpass (argument passing plus a shared field store), trees (binary trees, depths 4..16), cycles (rings of 100 nodes). Memory handling differs by language: Rust uses Box/Rc and breaks its rings by hand; Zig frees by hand with malloc/free; Kotlin Native uses a tracing GC; New Kotlin uses Perceus RC plus the cycle collector. Best value per metric is **bold**.
+
+### alloc  (checksums match)
+
+| Participant | Time, ns (lower is better) | Peak RSS, MB (lower is better) | CPU, % (lower is better) |
+|---|---|---|---|
+| Rust | 164 974 458 | 8.31 | 96.9 |
+| Zig | 155 276 986 | **8.30** | 97.1 |
+| KotlinNative | 225 163 931 | 38.31 | 111.6 |
+| NewKotlin | 189 381 111 | 12.21 | 97.3 |
+| NewKotlinPool | **53 571 986** | 12.47 | **93.6** |
+
+### free  (checksums match)
+
+| Participant | Time, ns (lower is better) | Peak RSS, MB (lower is better) | CPU, % (lower is better) |
+|---|---|---|---|
+| Rust | 105 899 069 | 16.47 | 97.0 |
+| Zig | 90 883 986 | **15.29** | 96.0 |
+| KotlinNative | 120 207 708 | 51.88 | 111.5 |
+| NewKotlin | 115 079 722 | 17.30 | 97.2 |
+| NewKotlinPool | **43 146 597** | 15.83 | **94.0** |
+
+### refpass  (checksums match)
+
+| Participant | Time, ns (lower is better) | Peak RSS, MB (lower is better) | CPU, % (lower is better) |
+|---|---|---|---|
+| Rust | 51 945 305 | 1.96 | 93.6 |
+| Zig | **27 693 667** | 1.95 | **92.6** |
+| KotlinNative | 128 664 681 | 6.66 | 97.1 |
+| NewKotlin | 142 198 514 | **1.81** | 97.3 |
+| NewKotlinPool | 163 078 375 | 1.84 | 97.5 |
+
+### trees  (checksums match)
+
+| Participant | Time, ns (lower is better) | Peak RSS, MB (lower is better) | CPU, % (lower is better) |
+|---|---|---|---|
+| Rust | 305 050 028 | 5.99 | 98.3 |
+| Zig | 278 959 430 | **5.95** | 98.4 |
+| KotlinNative | 238 144 042 | 33.14 | 107.3 |
+| NewKotlin | 315 203 445 | 9.81 | 98.8 |
+| NewKotlinPool | **102 086 542** | 9.78 | **95.9** |
+
+### cycles  (checksums match)
+
+| Participant | Time, ns (lower is better) | Peak RSS, MB (lower is better) | CPU, % (lower is better) |
+|---|---|---|---|
+| Rust | 82 322 764 | 1.97 | 94.7 |
+| Zig | 61 676 861 | **1.91** | 94.2 |
+| KotlinNative | **17 477 736** | 15.80 | 114.3 |
+| NewKotlin | 103 250 486 | 3.00 | 95.9 |
+| NewKotlinPool | 48 067 181 | 2.81 | **92.8** |

@@ -734,14 +734,23 @@ class NativeBackend(private val prog: Program) {
     /** Joins branch results with a phi when every live branch produced a value of the same type. */
     private fun merge(res: List<Pair<Val, String>>, exhaustive: Boolean): Val {
         if (res.isEmpty()) { emit("unreachable"); term = true; return Val("undef", Ty.Nothing) }
-        val t = res[0].first.t
-        if (!exhaustive || t == Ty.Unit || res.any { it.first.t != t }) {
+        var t = res[0].first.t
+        if (exhaustive && res.any { it.first.t != t }) commonIface(res.map { it.first.t })?.let { t = it }
+        if (!exhaustive || t == Ty.Unit || res.any { it.first.t != t && !(t is Ty.Iface && it.first.t is Ty.Cls) }) {
             for ((v, _) in res) if (v.t.isRef && v.owned) fail("if/when branches yield references of different types; assign the result or make the types match")
             return Val("", Ty.Unit)
         }
         if (res.size == 1) return res[0].first
         val phi = emitT("phi ${t.llvm} " + res.joinToString(", ") { "[ ${it.first.v}, %${it.second} ]" })
         return Val(phi, t, t.isRef)
+    }
+
+    /** The single interface all branch types (classes or that interface) implement, if any; Cls -> Iface is free. */
+    private fun commonIface(ts: List<Ty>): Ty? {
+        if (ts.any { it !is Ty.Cls && it !is Ty.Iface }) return null
+        val sets = ts.map { t -> if (t is Ty.Iface) setOf(t.name) else classes.getValue((t as Ty.Cls).name).supers.toSet() }
+        val common = sets.reduce { a, b -> a intersect b }
+        return common.singleOrNull()?.let { Ty.Iface(it) }
     }
 
     private fun genWhen(e: WhenE): Val {
@@ -857,7 +866,8 @@ class NativeBackend(private val prog: Program) {
 
     private fun genNamedCall(n: String, e: CallE): Val {
         owner?.let { o -> if (n in o.methods) return callMethod(Val("%this", Ty.Cls(o.name)), o, n, e) }
-        when (n) {
+        // User-declared functions and classes shadow the built-in ones (e.g. a user `fun check`).
+        if (n !in sigs && n !in classes) when (n) {
             "sqrt", "kotlin.math.sqrt", "abs", "kotlin.math.abs" -> {
                 val a = genExpr(e.args.single())
                 if (n.endsWith("abs") && a.t.isInt) {

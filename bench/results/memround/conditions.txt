@@ -1,0 +1,15 @@
+date: 2026-10-28 21:22 EET
+machine: Apple M3 Max, 16 cpus, 64 GB
+os: macOS 27.0.1
+load at start: 12.10 15.01 14.41
+case alloc load before: 12.10 15.01 14.41
+case alloc load after: 11.70 14.59 14.28
+case free load before: 11.70 14.59 14.28
+case free load after: 10.77 14.19 14.14
+case refpass load before: 10.77 14.19 14.14
+case refpass load after: 9.48 13.68 13.96
+case trees load before: 9.48 13.68 13.96
+case trees load after: 10.93 13.52 13.89
+case cycles load before: 10.93 13.52 13.89
+case cycles load after: 10.60 13.33 13.81
+load at end: 10.60 13.33 13.81

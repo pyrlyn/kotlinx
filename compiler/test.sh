@@ -29,6 +29,10 @@ nbody cases/nbody/kotlin/Main.kt checksum 1419289376832
 matmul cases/matmul/kotlin/Main.kt checksum -9228
 dispatch cases/dispatch/kotlin/Main.kt checksum 5597155580000
 closures cases/closures/kotlin/Main.kt checksum 3258209507
+trees cases/trees/kotlin/Main.kt checksum 14723759
+free cases/free/kotlin/Main.kt checksum 1200035933190
+refpass cases/refpass/kotlin/Main.kt checksum -538200000
+cycles cases/cycles/kotlin/Main.kt checksum 120488000000
 G
 # Error reporting: an unknown name must fail with a line number.
 printf 'fun main() {\n  println(nope)\n}\n' > "$out/bad.kt"
