@@ -17,7 +17,10 @@ try:
         cpu[(c, row)].append((float(user) + float(sys)) / float(real) * 100)
 except FileNotFoundError: pass
 cur = None
-for (c, row), v in runs.items():
+order = []
+for (c, _) in runs:
+    if c not in order: order.append(c)
+for (c, row), v in sorted(runs.items(), key=lambda kv: order.index(kv[0][0])):
     v = v[-5:]
     if c != cur:
         cur = c; print(f"\n### {c}  (checksums {'match' if len(cs[c]) == 1 else 'DIFFER: ' + ', '.join(cs[c])})\n")

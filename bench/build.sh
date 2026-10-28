@@ -1,15 +1,20 @@
 #!/bin/bash
 # Builds every case for Rust, Zig, Kotlin Native (optimized). Outputs are git-ignored.
 #   ./build.sh [case...]   default: all cases (sum + cases/*)
-# Kotlin->LLVM: if KLLVM_COMPILER is set, it is invoked as
-#   $KLLVM_COMPILER <Main.kt> -o kllvm/<case>    (adjust when the compiler exists)
+# New Kotlin: KLLVM_COMPILER defaults to compiler/build/newkotlinc.kexe (built if missing);
+#   $KLLVM_COMPILER <Main.kt> -o kllvm/<case>   (sum -> kllvm/bench_kllvm). KLLVM_COMPILER=none skips it.
+# ONLY=newkotlin builds only the New Kotlin row.
 set -e
 cd "$(dirname "$0")"
 KN=${KONANC:-$HOME/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.21/bin/kotlinc-native}
 CASES=${*:-sum alloc recursion file}
+KLLVM_COMPILER=${KLLVM_COMPILER:-compiler/build/newkotlinc.kexe}
+if [ "$KLLVM_COMPILER" = compiler/build/newkotlinc.kexe ] && [ ! -x "$KLLVM_COMPILER" ]; then compiler/build.sh; fi
+mkdir -p kllvm
 for c in $CASES; do
   echo "== $c"
-  if [ "$c" = sum ]; then
+  if [ "$ONLY" = newkotlin ]; then src=cases/$c/kotlin/Main.kt; [ "$c" = sum ] && src=kotlin/Main.kt
+  elif [ "$c" = sum ]; then
     (cd rust && cargo build --release -q)
     (cd zig && zig build-exe main.zig -OReleaseFast -femit-bin=bench_zig)
     (cd kotlin && "$KN" Main.kt -opt -o bench_kn)
@@ -21,7 +26,7 @@ for c in $CASES; do
     (cd $d/kotlin && "$KN" Main.kt -opt -o bench_kn)
     src=$d/kotlin/Main.kt
   fi
-  if [ -n "$KLLVM_COMPILER" ]; then
+  if [ "$KLLVM_COMPILER" != none ]; then
     out=kllvm/$c; [ "$c" = sum ] && out=kllvm/bench_kllvm
     $KLLVM_COMPILER "$src" -o "$out"
   fi

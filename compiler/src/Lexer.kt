@@ -1,0 +1,139 @@
+package newkotlin
+
+class CompileError(msg: String) : Exception(msg)
+
+enum class K { ID, INT, DBL, STR, OP, NL, EOF }
+
+/** A `${...}` or `$name` piece inside a string literal; parsed later as an expression. */
+class TemplateCode(val code: String, val line: Int)
+
+class Tok(
+    val k: K, val s: String, val line: Int,
+    val num: Long = 0, val isLong: Boolean = false,
+    val dbl: Double = 0.0, val parts: List<Any> = emptyList(),
+)
+
+private val OPS = listOf(
+    "?.", "?:", "..", "->", "++", "--", "&&", "||", "==", "!=", "<=", ">=", "+=", "-=", "*=", "/=", "%=", "::", "!!",
+    "+", "-", "*", "/", "%", "<", ">", "=", "!", "(", ")", "{", "}", "[", "]", ",", ".", ":", ";", "?", "@",
+)
+
+class Lexer(private val src: String, private var line: Int = 1) {
+    private var i = 0
+    private val out = ArrayList<Tok>()
+
+    fun lex(): List<Tok> {
+        while (i < src.length) {
+            val c = src[i]
+            when {
+                c == '\n' -> { out.add(Tok(K.NL, "\n", line)); line++; i++ }
+                c == ' ' || c == '\t' || c == '\r' -> i++
+                src.startsWith("//", i) -> while (i < src.length && src[i] != '\n') i++
+                src.startsWith("/*", i) -> {
+                    val e = src.indexOf("*/", i + 2)
+                    if (e < 0) throw CompileError("line $line: unterminated comment")
+                    line += src.substring(i, e).count { it == '\n' }
+                    i = e + 2
+                }
+                c.isDigit() -> number()
+                c.isLetter() || c == '_' -> {
+                    val st = i
+                    while (i < src.length && (src[i].isLetterOrDigit() || src[i] == '_')) i++
+                    out.add(Tok(K.ID, src.substring(st, i), line))
+                }
+                c == '"' -> string()
+                c == '\'' -> char()
+                else -> {
+                    val op = OPS.firstOrNull { src.startsWith(it, i) }
+                        ?: throw CompileError("line $line: unexpected character '$c'")
+                    out.add(Tok(K.OP, op, line)); i += op.length
+                }
+            }
+        }
+        out.add(Tok(K.EOF, "<eof>", line))
+        return out
+    }
+
+    private fun number() {
+        val st = i
+        if (src.startsWith("0x", i) || src.startsWith("0X", i)) {
+            i += 2
+            val ds = i
+            while (i < src.length && (src[i].isLetterOrDigit() || src[i] == '_') && src[i] !in "uUL") i++
+            val v = src.substring(ds, i).replace("_", "").toULong(16).toLong()
+            suffix(v, st); return
+        }
+        while (i < src.length && (src[i].isDigit() || src[i] == '_')) i++
+        if (i + 1 < src.length && src[i] == '.' && src[i + 1].isDigit()) {
+            i++
+            while (i < src.length && (src[i].isDigit() || src[i] == '_')) i++
+            if (i < src.length && (src[i] == 'e' || src[i] == 'E')) {
+                i++; if (src[i] == '+' || src[i] == '-') i++
+                while (i < src.length && src[i].isDigit()) i++
+            }
+            val text = src.substring(st, i).replace("_", "")
+            out.add(Tok(K.DBL, text, line, dbl = text.toDouble())); return
+        }
+        suffix(src.substring(st, i).replace("_", "").toLong(), st)
+    }
+
+    private fun suffix(v: Long, st: Int) {
+        var long = false
+        if (i < src.length && (src[i] == 'u' || src[i] == 'U')) i++
+        if (i < src.length && src[i] == 'L') { long = true; i++ }
+        out.add(Tok(K.INT, src.substring(st, i), line, num = v, isLong = long))
+    }
+
+    private fun escape(): Char {
+        val e = src[i + 1]; i += 2
+        return when (e) {
+            'n' -> '\n'; 't' -> '\t'; 'r' -> '\r'; '0' -> '\u0000'
+            '\\', '"', '\'', '$' -> e
+            else -> throw CompileError("line $line: unknown escape \\$e")
+        }
+    }
+
+    private fun char() {
+        i++
+        val ch = if (src[i] == '\\') escape() else src[i++]
+        if (src[i] != '\'') throw CompileError("line $line: bad char literal")
+        i++
+        out.add(Tok(K.INT, "'$ch'", line, num = ch.code.toLong()))
+    }
+
+    private fun string() {
+        i++
+        val parts = ArrayList<Any>()
+        val sb = StringBuilder()
+        while (true) {
+            if (i >= src.length) throw CompileError("line $line: unterminated string")
+            val c = src[i]
+            when {
+                c == '"' -> { i++; break }
+                c == '\\' -> sb.append(escape())
+                c == '$' && i + 1 < src.length && src[i + 1] == '{' -> {
+                    var d = 1; var j = i + 2
+                    while (d > 0) {
+                        if (j >= src.length) throw CompileError("line $line: unterminated template")
+                        if (src[j] == '{') d++ else if (src[j] == '}') d--
+                        j++
+                    }
+                    if (sb.isNotEmpty()) { parts.add(sb.toString()); sb.clear() }
+                    parts.add(TemplateCode(src.substring(i + 2, j - 1), line))
+                    i = j
+                }
+                c == '$' && i + 1 < src.length && (src[i + 1].isLetter() || src[i + 1] == '_') -> {
+                    var j = i + 1
+                    while (j < src.length && (src[j].isLetterOrDigit() || src[j] == '_')) j++
+                    if (sb.isNotEmpty()) { parts.add(sb.toString()); sb.clear() }
+                    parts.add(TemplateCode(src.substring(i + 1, j), line))
+                    i = j
+                }
+                c == '\n' -> throw CompileError("line $line: newline in string")
+                else -> { sb.append(c); i++ }
+            }
+        }
+        if (sb.isNotEmpty() || parts.isEmpty()) parts.add(sb.toString())
+        out.add(Tok(K.STR, "\"...\"", line, parts = parts))
+    }
+}

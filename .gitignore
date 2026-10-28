@@ -9,3 +9,4 @@ kllvm/*
 /results.txt
 /cpu.txt
 .zig-cache/
+compiler/build/
