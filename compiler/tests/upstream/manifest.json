@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 107,
-  "UNSUPPORTED": 5384
+  "PASS": 114,
+  "UNSUPPORTED": 5377
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -8320,9 +8320,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/breakInDoWhile.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/breakInExpr.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/breakInExpr.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/breakInLoopConditions.kt": {
@@ -8338,9 +8337,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/continueInDoWhile.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/continueInExpr.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'continue'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/continueInExpr.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/inlineWithStack.kt": {
@@ -8480,9 +8478,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/tryFinally2.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/whileTrueBreak.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/whileTrueBreak.kt"
   },
   "box/box/controlStructures/breakInDoWhile.kt": {
@@ -8521,8 +8518,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInExpr.kt"
   },
   "box/box/controlStructures/continueInFor.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'continue'",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInFor.kt"
   },
@@ -8539,9 +8536,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInWhen.kt"
   },
   "box/box/controlStructures/continueInWhile.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'continue'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInWhile.kt"
   },
   "box/box/controlStructures/continueToLabelInFor.kt": {
@@ -26913,9 +26909,8 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/conditionInVariable.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/consequentConditions.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/consequentConditions.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/doWhileEvaluationOrder.kt": {
@@ -26961,9 +26956,8 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/labeledContinueInNestedLoop.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/nestedConditions.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/nestedConditions.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/simpleDoWhile.kt": {
@@ -26973,9 +26967,8 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/simpleDoWhile.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/simpleWhile.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/simpleWhile.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/singleBreakInLoopBody.kt": {
@@ -33734,8 +33727,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/oneElementDownTo.kt"
   },
   "box/box/ranges/literal/oneElementRange.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown name 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/oneElementRange.kt"
   },
@@ -36930,8 +36923,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/oneElementDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/oneElementRange.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown name 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/oneElementRange.kt"
   },

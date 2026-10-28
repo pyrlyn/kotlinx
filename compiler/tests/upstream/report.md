@@ -7,11 +7,11 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| UNSUPPORTED | 5384 |
+| UNSUPPORTED | 5377 |
 | N/A | 2984 |
-| PASS | 107 |
+| PASS | 114 |
 
-Kept in tree (re-runnable with `run.py`): 107
+Kept in tree (re-runnable with `run.py`): 114
 
 ## Unsupported features (roadmap, by test count)
 
@@ -48,15 +48,15 @@ Kept in tree (re-runnable with `run.py`): 107
 | nullable types | 16 |
 | other syntax (at 'foo') | 16 |
 | other syntax (at 'A') | 15 |
-| break / continue | 13 |
 | other syntax (at '!') | 13 |
 | other syntax (at 'Local') | 12 |
 | property accessors / delegation | 11 |
+| unknown listOf (stdlib API / unsupported decl) | 11 |
 | unknown intArrayOf (stdlib API / unsupported decl) | 10 |
 | types: Any? | 10 |
 | other syntax (at 'KRunnable') | 9 |
 | other: unexpected character '`' | 9 |
-| unknown listOf (stdlib API / unsupported decl) | 9 |
+| other syntax (at 'suspend') | 9 |
 
 ## N/A reasons
 

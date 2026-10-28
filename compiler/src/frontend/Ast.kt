@@ -31,6 +31,8 @@ class WhileS(val cond: E, val body: Block) : S()
 class ForS(val name: String, val iter: E, val body: Block) : S()
 class RetS(val e: E?) : S()
 class ExprS(val e: E) : S()
+/** `break` / `continue` (unlabeled: innermost loop). */
+class JumpS(val isBreak: Boolean) : S()
 
 /** `params` are lambda parameter names (empty = implicit `it`). */
 class Block(val stmts: List<S>, val params: List<String> = emptyList())

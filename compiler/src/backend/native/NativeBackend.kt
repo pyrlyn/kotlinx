@@ -466,6 +466,8 @@ class NativeBackend(private val prog: Program) {
     }
 
     private fun releaseScope(s: Scope) { for (l in s.refs) release(Val(emitT("load ptr, ptr ${l.slot}"), l.t)) }
+    /** Innermost-last: (continue target, break target, scope depth at loop entry). */
+    private val loops = ArrayList<Triple<String, String, Int>>()
     private fun releaseAll() { for (s in scopes.reversed()) releaseScope(s) }
 
     private fun emitReturn(v0: Val) {
@@ -549,7 +551,9 @@ class NativeBackend(private val prog: Program) {
                 val c = coerce(genExpr(s.cond), Ty.I1)
                 condBr(c.v, lb, le)
                 startBlock(lb)
+                loops.add(Triple(lc, le, scopes.size))
                 genBlockBody(s.body, false)
+                loops.removeAt(loops.size - 1)
                 if (!term) br(lc)
                 startBlock(le)
             }
@@ -559,6 +563,11 @@ class NativeBackend(private val prog: Program) {
                 else emitReturn(genArg(s.e))
             }
             is ExprS -> releaseIfOwned(genExpr(s.e))
+            is JumpS -> {
+                val (lc, le, depth) = loops.lastOrNull() ?: fail("'${if (s.isBreak) "break" else "continue"}' outside a loop")
+                for (k in scopes.size - 1 downTo depth) releaseScope(scopes[k])
+                br(if (s.isBreak) le else lc)
+            }
         }
     }
 
@@ -635,7 +644,9 @@ class NativeBackend(private val prog: Program) {
             val c = emitT("icmp ${if (it.op == "..") "sle" else "slt"} ${t.llvm} $i, ${hi.v}")
             condBr(c, lb, le)
             startBlock(lb)
+            loops.add(Triple(ls, le, scopes.size))
             genBlockBody(s.body, false)
+            loops.removeAt(loops.size - 1)
             startBlock(ls)
             val i2 = emitT("load ${t.llvm}, ptr ${idx.slot}")
             if (it.op == "..") {
@@ -667,7 +678,9 @@ class NativeBackend(private val prog: Program) {
             else if (coll.t == Ty.Str) emitT("zext i8 ${emitT("load i8, ptr ${emitT("getelementptr i8, ptr ${coll.v}, i64 $i")}")} to i32")
             else fromSlot(emitT("call i64 @rt_list_get(ptr ${coll.v}, i64 $i)"), elemT)
             emit("store ${elemT.llvm} $e, ptr ${v.slot}")
+            loops.add(Triple(ls, le, scopes.size))
             genBlockBody(s.body, false)
+            loops.removeAt(loops.size - 1)
             startBlock(ls)
             emit("store i64 ${emitT("add i64 ${emitT("load i64, ptr $idx")}, 1")}, ptr $idx")
             br(lc)

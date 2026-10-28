@@ -20,6 +20,7 @@ object Uses {
             is ForS -> { expr(s.iter, straight, false, out); block(s.body, out) }
             is RetS -> s.e?.let { expr(it, straight, straight, out) }
             is ExprS -> expr(s.e, straight, false, out)
+            is JumpS -> {}
         }
     }
 
@@ -95,6 +96,7 @@ object Escape {
                 is ForS -> { if (x.name == name) good = false; e(x.iter, null, null); b(x.body) }
                 is RetS -> x.e?.let { e(it, null, null) }
                 is ExprS -> e(x.e, null, null)
+                is JumpS -> {}
             }
         }
         fun b(bl: Block) { if (name in bl.params) good = false; bl.stmts.forEach { s(it) } }

@@ -174,6 +174,7 @@ class Parser(private val t: List<Tok>) {
                 expectOp(")")
                 ForS(n, it, controlBody())
             }
+            isId("break") || isId("continue") -> JumpS(next().s == "break")
             isId("return") -> {
                 next()
                 val tk = t[p]
