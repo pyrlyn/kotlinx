@@ -285,7 +285,10 @@ class NativeBackend(private val prog: Program) {
         }
         f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n")
         relfFields(c)
-        if (cyc) f.append("  call void @rt_cc_dead(ptr %p)\n  ret void\n}\n\n")
+        // Inline rt_cc_dead: a buffered object is colored black and left to the collector; otherwise freed here.
+        if (cyc) f.append("  %d = load i64, ptr %p\n  %dbuf = and i64 %d, 17179869184\n  %dead = icmp ne i64 %dbuf, 0\n  br i1 %dead, label %blk, label %fr\n" +
+            "blk:\n  %d2 = and i64 %d, -12884901889\n  store i64 %d2, ptr %p\n  ret void\n" +
+            "fr:\n  call void @rt_free_trace(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         else f.append("  call void @rt_free(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         // Collector hooks: trace class/interface children; release other reference fields; free memory only.
         f.append("define internal void @trav.${c.name}(ptr %p, ptr %fn) {\nentry:\n")

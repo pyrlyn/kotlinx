@@ -327,6 +327,11 @@ typedef void (*visit_fn)(void *);
 typedef struct { void (*rel)(void *); void (*trav)(void *, visit_fn); void (*relo)(void *); void (*freemem)(void *); void *cyclic; } VTab;
 
 #define CC_THRESHOLD 10000
+/* Adaptive trigger: a collection whose trial deletion traced far more objects than it reclaimed as
+ * cyclic garbage (the buffered roots were live, e.g. relinked list nodes in a cache) doubles the threshold, up to CC_MAX_THRESHOLD, so live
+ * structures are not re-traced every 10k decrements; a productive collection resets it. */
+#define CC_MAX_THRESHOLD (1u << 18)
+static size_t cc_threshold = CC_THRESHOLD, cc_traced;
 #define CNT_MASK 0xffffffffULL
 #define COLOR_SHIFT 32
 #define BUF_BIT (1ULL << 34)
@@ -354,7 +359,7 @@ void rt_cc_possible_root(void *p) {
     if (!buffered(p)) {
         *hdr(p) |= BUF_BIT;
         vpush(&cc_roots, p);
-        if (cc_roots.n >= CC_THRESHOLD && !cc_running) rt_cc_collect();
+        if (cc_roots.n >= cc_threshold && !cc_running) rt_cc_collect();
     }
 }
 /* Count reached zero and the children were released: free now, unless the root buffer still holds it. */
@@ -368,7 +373,7 @@ static void mark_gray(void *s) {
     vpush(&cc_work, s);
     while (cc_work.n) {
         void *x = cc_work.a[--cc_work.n];
-        if (color(x) != GRAY) { CC_VISIT(x); set_color(x, GRAY); vtab(x)->trav(x, mg_child); }
+        if (color(x) != GRAY) { CC_VISIT(x); set_color(x, GRAY); cc_traced++; vtab(x)->trav(x, mg_child); }
     }
 }
 static void sb_child(void *t) {
@@ -415,6 +420,7 @@ void rt_cc_collect(void) {
 #endif
     Vec roots = cc_roots; cc_roots = (Vec){0};
     size_t k = 0;
+    cc_traced = 0;
     for (size_t i = 0; i < roots.n; i++) {           /* MarkRoots */
         void *s = roots.a[i];
         if (color(s) == PURPLE && cnt(s) > 0) { mark_gray(s); roots.a[k++] = s; }
@@ -429,8 +435,11 @@ void rt_cc_collect(void) {
     }
     for (size_t i = 0; i < cc_garbage.n; i++) vtab(cc_garbage.a[i])->relo(cc_garbage.a[i]);
     for (size_t i = 0; i < cc_garbage.n; i++) vtab(cc_garbage.a[i])->freemem(cc_garbage.a[i]);
+    size_t reclaimed = cc_garbage.n;
     cc_garbage.n = 0;
     free(roots.a);
+    if (reclaimed * 4 < cc_traced) { if (cc_threshold < CC_MAX_THRESHOLD) cc_threshold *= 2; }
+    else cc_threshold = CC_THRESHOLD;
     cc_running = 0;
-    if (cc_roots.n >= CC_THRESHOLD) rt_cc_collect();
+    if (cc_roots.n >= cc_threshold) rt_cc_collect();
 }
