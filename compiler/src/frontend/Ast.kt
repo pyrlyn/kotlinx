@@ -41,4 +41,5 @@ class FunD(val name: String, val params: List<Param>, val ret: TypeRef?, val bod
 class FieldD(val name: String, val type: TypeRef, val isVar: Boolean)
 class ClassD(val name: String, val fields: List<FieldD>, val supers: List<String>, val methods: List<FunD>, val line: Int)
 class InterfaceD(val name: String, val methods: List<FunD>, val line: Int)
-class Program(val funs: List<FunD>, val classes: List<ClassD>, val ifaces: List<InterfaceD>)
+/** `globals`: top-level properties, initialized in declaration order before `main`. */
+class Program(val funs: List<FunD>, val classes: List<ClassD>, val ifaces: List<InterfaceD>, val globals: List<VarS> = emptyList())

@@ -7,56 +7,56 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| UNSUPPORTED | 5377 |
+| UNSUPPORTED | 5362 |
 | N/A | 2984 |
-| PASS | 114 |
+| PASS | 129 |
 
-Kept in tree (re-runnable with `run.py`): 114
+Kept in tree (re-runnable with `run.py`): 129
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| generics | 693 |
-| top-level properties | 607 |
-| inline/value classes | 537 |
-| interfaces | 435 |
-| inheritance (open/abstract/sealed) | 431 |
-| ranges (step/downTo/until, ranges as values) | 370 |
-| operator/infix functions | 291 |
-| class bodies / constructors | 233 |
-| objects / companion objects | 187 |
-| lambdas / function types / references | 186 |
-| enum classes | 154 |
-| strings / templates | 92 |
-| type checks / casts (is, as) | 88 |
-| modifiers (private/const/lateinit/...) | 79 |
-| annotations | 64 |
-| extension functions | 64 |
-| exceptions | 60 |
-| default arguments | 60 |
-| type inference (expression bodies) | 57 |
-| stdlib: kotlin.test asserts | 35 |
-| destructuring declarations | 35 |
-| other syntax (at 'f') | 28 |
-| other syntax (at ',') | 24 |
-| other syntax (at ':') | 24 |
-| other syntax (at 'context') | 21 |
+| generics | 740 |
+| inline/value classes | 560 |
+| interfaces | 469 |
+| inheritance (open/abstract/sealed) | 468 |
+| ranges (step/downTo/until, ranges as values) | 423 |
+| operator/infix functions | 325 |
+| class bodies / constructors | 304 |
+| lambdas / function types / references | 226 |
+| objects / companion objects | 224 |
+| enum classes | 165 |
+| type checks / casts (is, as) | 98 |
+| strings / templates | 94 |
+| exceptions | 75 |
+| annotations | 68 |
+| extension functions | 65 |
+| destructuring declarations | 64 |
+| default arguments | 63 |
+| type inference (expression bodies) | 61 |
+| modifiers (private/const/lateinit/...) | 44 |
+| stdlib: kotlin.test asserts | 39 |
+| other syntax (at 'context') | 37 |
+| other syntax (at 'in') | 36 |
+| other syntax (at 'f') | 31 |
+| other syntax (at ',') | 28 |
+| property accessors / delegation | 27 |
+| other: expected '=' (at ' | 27 |
+| other syntax (at ':') | 26 |
+| other syntax (at '.') | 25 |
+| nullable types | 21 |
 | typealias | 17 |
-| other: expected '=' (at ' | 17 |
-| other syntax (at 'in') | 17 |
-| nullable types | 16 |
+| other syntax (at '!') | 17 |
+| other syntax (at 'A') | 16 |
 | other syntax (at 'foo') | 16 |
-| other syntax (at 'A') | 15 |
-| other syntax (at '!') | 13 |
+| types: Any | 15 |
+| types: Any? | 15 |
+| type inference / mismatch | 15 |
+| other syntax (at 'F') | 12 |
 | other syntax (at 'Local') | 12 |
-| property accessors / delegation | 11 |
-| unknown listOf (stdlib API / unsupported decl) | 11 |
-| unknown intArrayOf (stdlib API / unsupported decl) | 10 |
-| types: Any? | 10 |
-| other syntax (at 'KRunnable') | 9 |
-| other: unexpected character '`' | 9 |
-| other syntax (at 'suspend') | 9 |
+| other syntax (at 'suspend') | 12 |
+| unknown intArrayOf (stdlib API / unsupported decl) | 11 |
 
 ## N/A reasons
 

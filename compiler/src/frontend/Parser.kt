@@ -23,7 +23,7 @@ class Parser(private val t: List<Tok>) {
     private inline fun <T> nested(d: Int, f: () -> T): T { depth.add(d); try { return f() } finally { depth.removeAt(depth.size - 1) } }
 
     fun program(): Program {
-        val funs = ArrayList<FunD>(); val classes = ArrayList<ClassD>(); val ifaces = ArrayList<InterfaceD>()
+        val globals = ArrayList<VarS>(); val funs = ArrayList<FunD>(); val classes = ArrayList<ClassD>(); val ifaces = ArrayList<InterfaceD>()
         while (true) {
             skipNL()
             val tk = peek()
@@ -31,14 +31,15 @@ class Parser(private val t: List<Tok>) {
                 tk.k == K.EOF -> break
                 tk.k == K.OP && tk.s == "@" -> skipLine()
                 tk.k == K.ID && (tk.s == "import" || tk.s == "package") -> skipLine()
-                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data") -> p++
+                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "const") -> p++
+                tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> globals.add(stmt() as VarS)
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
                 tk.k == K.ID && tk.s == "class" -> classes.add(classDecl())
                 tk.k == K.ID && tk.s == "interface" -> ifaces.add(interfaceDecl())
                 else -> fail("unexpected top-level token")
             }
         }
-        return Program(funs, classes, ifaces)
+        return Program(funs, classes, ifaces, globals)
     }
 
     private fun members(): List<FunD> {
