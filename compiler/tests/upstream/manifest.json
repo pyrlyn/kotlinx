@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 5,
   "MISCOMPILE": 42,
   "N/A": 2984,
-  "PASS": 1810,
-  "UNSUPPORTED": 3634
+  "PASS": 1849,
+  "UNSUPPORTED": 3595
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -285,8 +285,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/resolveWithLowPriorityAnnotation.kt"
   },
   "box/box/annotations/selfReferentialAnnotation.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "unknown MyRequiresOptIn (stdlib API / unsupported decl)",
+   "detail": "unknown name 'MyRequiresOptIn'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/selfReferentialAnnotation.kt"
   },
@@ -1658,17 +1658,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup1l0f8z7t/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup1l0f8z7t/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup956yc8jv/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup956yc8jv/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupbj4vkz6i/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupbj4vkz6i/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz8jgbzzv/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz8jgbzzv/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0zfets_o/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0zfets_o/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwwxlgxbd/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwwxlgxbd/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -4635,8 +4635,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/twoRefsOneScope.kt"
   },
   "box/box/callableReference/varargOfUnsignedTypes.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "other: unknown method ArrayList<UInt>.sum()",
+   "detail": "unknown method ArrayList<UInt>.sum()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/varargOfUnsignedTypes.kt"
   },
@@ -5544,8 +5544,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2566.kt"
   },
   "box/box/classes/kt2566_2.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '}')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2566_2.kt"
   },
@@ -12393,15 +12393,13 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/complexInheritance.kt"
   },
   "box/box/defaultArguments/constructor/annotation.kt": {
-   "category": "unknown test1 (stdlib API / unsupported decl)",
-   "detail": "unknown function 'test1'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/annotation.kt"
   },
   "box/box/defaultArguments/constructor/annotationWithEmptyArray.kt": {
-   "category": "unknown test1 (stdlib API / unsupported decl)",
-   "detail": "unknown function 'test1'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/annotationWithEmptyArray.kt"
   },
   "box/box/defaultArguments/constructor/anonymousObjectAsDefaultParam.kt": {
@@ -13786,8 +13784,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationOnObject.kt"
   },
   "box/box/delegation/delegationToInnerClassOfGenericClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '@')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationToInnerClassOfGenericClass.kt"
   },
@@ -14089,9 +14087,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/functionWithNoTails.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/functionWithNonTailRecursions.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/functionWithNonTailRecursions.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/functionWithoutAnnotation.kt": {
@@ -14591,8 +14588,8 @@
    "upstream": "compiler/testData/codegen/box/enum/enumConstructorParameterClashWithDefaults.kt"
   },
   "box/box/enum/enumEntriesInCompanion.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '@')",
+   "category": "unknown entries (stdlib API / unsupported decl)",
+   "detail": "unknown name 'entries'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntriesInCompanion.kt"
   },
@@ -14765,7 +14762,7 @@
   },
   "box/box/enum/k54079.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '@')",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/k54079.kt"
   },
@@ -15321,9 +15318,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/nanBitPattern.kt"
   },
   "box/box/evaluate/objectConstValInAnnotationArgument.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/evaluate/objectConstValInAnnotationArgument.kt"
   },
   "box/box/evaluate/serialization/actualAnnotationOnFakeOverride.kt": {
@@ -18545,8 +18541,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt47989b.kt"
   },
   "box/box/inference/pcla/issues/kt48633.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '@')",
+   "category": "other syntax (at 'Foo')",
+   "detail": "expected end of statement (at 'Foo')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt48633.kt"
   },
@@ -19521,8 +19517,8 @@
    "upstream": "compiler/testData/codegen/box/inference/tryWithAssignmentAndNothingTypedCatch.kt"
   },
   "box/box/inference/unsafeVarianceCodegen.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/unsafeVarianceCodegen.kt"
   },
@@ -20313,8 +20309,8 @@
    "upstream": "compiler/testData/codegen/box/inline/nameBasedDestructuring.kt"
   },
   "box/box/inline/nestedLabelsInlinedClashingAtFunctionsWithClosure.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "local / extension functions",
+   "detail": "expected end of statement (at 'fun')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/nestedLabelsInlinedClashingAtFunctionsWithClosure.kt"
   },
@@ -20547,14 +20543,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/UIntSafeAsInt.kt"
   },
   "box/box/inlineClasses/annotatedMemberExtensionProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '@')",
+   "category": "other syntax (at '.')",
+   "detail": "body properties need an initializer (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/annotatedMemberExtensionProperty.kt"
   },
   "box/box/inlineClasses/annotatedMemberExtensionPropertyGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '@')",
+   "category": "generics",
+   "detail": "body properties need an initializer (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/annotatedMemberExtensionPropertyGeneric.kt"
   },
@@ -23225,12 +23221,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342967008\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823136\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823072\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 537660704\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23707,26 +23703,24 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27140Generic.kt"
   },
   "box/box/inlineClasses/kt27705.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27705.kt"
   },
   "box/box/inlineClasses/kt27705Generic.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '@')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27705Generic.kt"
   },
   "box/box/inlineClasses/kt27706.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27706.kt"
   },
   "box/box/inlineClasses/kt27706Generic.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '@')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27706Generic.kt"
   },
@@ -24574,8 +24568,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "types: UIntArray",
+   "detail": "unknown type UIntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt"
   },
@@ -25859,7 +25853,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1000f0def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x1001f172b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x100754def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x1008563bf        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -29451,9 +29445,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/BoundedGenericValueInRangeCheck.kt"
   },
   "box/box/operatorConventions/annotatedAssignment.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/operatorConventions/annotatedAssignment.kt"
   },
   "box/box/operatorConventions/assignToDotQualifiedWithSideEffect.kt": {
@@ -31156,9 +31149,8 @@
    "upstream": "compiler/testData/codegen/box/properties/privatePropertyWithoutBackingField.kt"
   },
   "box/box/properties/twoAnnotatedExtensionPropertiesWithoutBackingFields.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/twoAnnotatedExtensionPropertiesWithoutBackingFields.kt"
   },
   "box/box/properties/typeInferredFromGetter.kt": {
@@ -37546,8 +37538,8 @@
    "upstream": "compiler/testData/codegen/box/storeStackBeforeInline/withLambda.kt"
   },
   "box/box/strictEquals/abstractBound.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: unknown property Any.area",
+   "detail": "unknown property Any.area",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/abstractBound.kt"
   },
@@ -37569,68 +37561,67 @@
    "upstream": "compiler/testData/codegen/box/strictEquals/dataObject.kt"
   },
   "box/box/strictEquals/delegated.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strictEquals/delegated.kt"
   },
   "box/box/strictEquals/directEqualsCall.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: unknown property Any.n",
+   "detail": "unknown property Any.n",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/directEqualsCall.kt"
   },
   "box/box/strictEquals/fullValueClass.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/fullValueClass.kt"
   },
   "box/box/strictEquals/generic.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "generics",
+   "detail": "generic class Box used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/generic.kt"
   },
   "box/box/strictEquals/implicitInvoke.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "unknown this (stdlib API / unsupported decl)",
+   "detail": "unknown function 'this'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/implicitInvoke.kt"
   },
   "box/box/strictEquals/inheritedExplicit.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: unknown property Any.n",
+   "detail": "unknown property Any.n",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/inheritedExplicit.kt"
   },
   "box/box/strictEquals/inheritedImplicit.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: unknown property Any.n",
+   "detail": "unknown property Any.n",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/inheritedImplicit.kt"
   },
   "box/box/strictEquals/nullableLhs.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: unknown property Any.n",
+   "detail": "unknown property Any.n",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/nullableLhs.kt"
   },
   "box/box/strictEquals/referenceEqualityGuard.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: unknown property Any.n",
+   "detail": "unknown property Any.n",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/referenceEqualityGuard.kt"
   },
   "box/box/strictEquals/simple.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/simple.kt"
   },
   "box/box/strictEquals/typealiasInBound.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: unknown property Any.n",
+   "detail": "unknown property Any.n",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/typealiasInBound.kt"
   },
@@ -37901,14 +37892,14 @@
    "upstream": "compiler/testData/codegen/box/super/diamondWithGenericReturnType.kt"
   },
   "box/box/super/enclosedFun.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'test3')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/enclosedFun.kt"
   },
   "box/box/super/enclosedVar.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '+=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/enclosedVar.kt"
   },
@@ -37925,26 +37916,26 @@
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuper2.kt"
   },
   "box/box/super/innerClassLabeledSuperProperty.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'test2')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuperProperty.kt"
   },
   "box/box/super/innerClassLabeledSuperProperty2.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'test2')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuperProperty2.kt"
   },
   "box/box/super/innerClassQualifiedFunctionCall.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'bar')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassQualifiedFunctionCall.kt"
   },
   "box/box/super/innerClassQualifiedPropertyAccess.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassQualifiedPropertyAccess.kt"
   },
@@ -37979,26 +37970,26 @@
    "upstream": "compiler/testData/codegen/box/super/kt14243_prop.kt"
   },
   "box/box/super/kt3492ClassFun.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '}')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt3492ClassFun.kt"
   },
   "box/box/super/kt3492ClassProperty.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '}')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt3492ClassProperty.kt"
   },
   "box/box/super/kt3492TraitFun.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '}')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt3492TraitFun.kt"
   },
   "box/box/super/kt3492TraitProperty.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '}')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt3492TraitProperty.kt"
   },
@@ -39347,7 +39338,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupn2edw9ls/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupn2edw9ls/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupu3gv3hc6/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupu3gv3hc6/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -39802,26 +39793,26 @@
    "upstream": "compiler/testData/codegen/box/vararg/varargsAndFunctionLiterals.kt"
   },
   "box/box/versionOverloads/basicWrappers.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "class bodies / constructors",
+   "detail": "unknown method WithVersionedConstructor.run()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/basicWrappers.kt"
   },
   "box/box/versionOverloads/callableRefDefault.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: default argument referring to a non-trivial argument is not ",
+   "detail": "default argument referring to a non-trivial argument is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/callableRefDefault.kt"
   },
   "box/box/versionOverloads/companions.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/companions.kt"
   },
   "box/box/versionOverloads/comparableVersionDefaults.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: default argument referring to a non-trivial argument is not ",
+   "detail": "default argument referring to a non-trivial argument is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/comparableVersionDefaults.kt"
   },
@@ -39832,51 +39823,44 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/contextParameters.kt"
   },
   "box/box/versionOverloads/contracts.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other syntax (at 'implies')",
+   "detail": "expected end of statement (at 'implies')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/contracts.kt"
   },
   "box/box/versionOverloads/crossinlineNoinlineDefaults.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/crossinlineNoinlineDefaults.kt"
   },
   "box/box/versionOverloads/dataClassMiddleInsertion.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/dataClassMiddleInsertion.kt"
   },
   "box/box/versionOverloads/dataClassMultipleInsertions.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/dataClassMultipleInsertions.kt"
   },
   "box/box/versionOverloads/defaultExpressions.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/defaultExpressions.kt"
   },
   "box/box/versionOverloads/enumConstructor.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/enumConstructor.kt"
   },
   "box/box/versionOverloads/enumMultipleVersions.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/enumMultipleVersions.kt"
   },
   "box/box/versionOverloads/equivalentVersionStrings.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/equivalentVersionStrings.kt"
   },
   "box/box/versionOverloads/expectActualMember.kt": {
@@ -39885,26 +39869,25 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/expectActualMember.kt"
   },
   "box/box/versionOverloads/fullValueClassPrimaryConstructor.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/fullValueClassPrimaryConstructor.kt"
   },
   "box/box/versionOverloads/genericBoundsAndDefaults.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/genericBoundsAndDefaults.kt"
   },
   "box/box/versionOverloads/genericCallableReferences.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "generics",
+   "detail": "reference to generic function genericCallableReference is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/genericCallableReferences.kt"
   },
   "box/box/versionOverloads/genericInnerSecondaryConstructor.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/genericInnerSecondaryConstructor.kt"
   },
@@ -39914,39 +39897,34 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/genericReturnCombinations.kt"
   },
   "box/box/versionOverloads/generics.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/generics.kt"
   },
   "box/box/versionOverloads/handWrittenDeprecated.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/handWrittenDeprecated.kt"
   },
   "box/box/versionOverloads/inlineTrailingLambda.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/inlineTrailingLambda.kt"
   },
   "box/box/versionOverloads/innerSecondaryConstructor.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/innerSecondaryConstructor.kt"
   },
   "box/box/versionOverloads/interfaceOverride.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/interfaceOverride.kt"
   },
   "box/box/versionOverloads/introducedAtFinalOverride.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/introducedAtFinalOverride.kt"
   },
   "box/box/versionOverloads/introducedAtFinalOverrideFromExpect.kt": {
@@ -39955,14 +39933,14 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/introducedAtFinalOverrideFromExpect.kt"
   },
   "box/box/versionOverloads/memberNameCollision.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: overloads are not supported: MemberNameCollision.render",
+   "detail": "overloads are not supported: MemberNameCollision.render",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/memberNameCollision.kt"
   },
   "box/box/versionOverloads/memberOperators.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "operator/infix functions",
+   "detail": "overloads are not supported: VersionedOperators.plus",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/memberOperators.kt"
   },
@@ -39993,56 +39971,52 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/multipleContextParameters.kt"
   },
   "box/box/versionOverloads/nameCollision.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: overloads are not supported: collidingOverload",
+   "detail": "overloads are not supported: collidingOverload",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/nameCollision.kt"
   },
   "box/box/versionOverloads/namedArgumentGap.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/namedArgumentGap.kt"
   },
   "box/box/versionOverloads/objectMembers.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "objects / companion objects",
+   "detail": "nested declarations are only supported in classes (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/objectMembers.kt"
   },
   "box/box/versionOverloads/operatorGet.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ']' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/operatorGet.kt"
   },
   "box/box/versionOverloads/operatorInvoke.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other: unsupported call",
+   "detail": "unsupported call",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/operatorInvoke.kt"
   },
   "box/box/versionOverloads/primaryConstructorDefaults.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/primaryConstructorDefaults.kt"
   },
   "box/box/versionOverloads/privateDeclarations.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/privateDeclarations.kt"
   },
   "box/box/versionOverloads/secondaryConstructor.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/secondaryConstructor.kt"
   },
   "box/box/versionOverloads/super.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/super.kt"
   },
@@ -40052,38 +40026,33 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/suspend.kt"
   },
   "box/box/versionOverloads/tailrec.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/tailrec.kt"
   },
   "box/box/versionOverloads/trailingLambda.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/trailingLambda.kt"
   },
   "box/box/versionOverloads/valueClassParameters.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/valueClassParameters.kt"
   },
   "box/box/versionOverloads/valueClassSecondaryConstructor.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/valueClassSecondaryConstructor.kt"
   },
   "box/box/versionOverloads/varAndProtected.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/varAndProtected.kt"
   },
   "box/box/versionOverloads/varargBeforeVersioned.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.joinToString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/varargBeforeVersioned.kt"
   },
@@ -40108,57 +40077,49 @@
    "upstream": "compiler/testData/codegen/box/volatile/intrinsicsOnCompanionExtensions.kt"
   },
   "box/box/volatile/volatileBool.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/volatile/volatileBool.kt"
   },
   "box/box/volatile/volatileByte.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/volatile/volatileByte.kt"
   },
   "box/box/volatile/volatileDouble.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/volatile/volatileDouble.kt"
   },
   "box/box/volatile/volatileFloat.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
+   "category": "other syntax (at 'f')",
+   "detail": "expected ')' (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/volatile/volatileFloat.kt"
   },
   "box/box/volatile/volatileGeneric.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/volatile/volatileGeneric.kt"
   },
   "box/box/volatile/volatileInt.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/volatile/volatileInt.kt"
   },
   "box/box/volatile/volatileLong.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/volatile/volatileLong.kt"
   },
   "box/box/volatile/volatileShort.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/volatile/volatileShort.kt"
   },
   "box/box/volatile/volatileString.kt": {
-   "category": "annotations",
-   "detail": "expected identifier (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/volatile/volatileString.kt"
   },
   "box/box/wasmStringSwitch/callSubjectIfChain.kt": {
@@ -45283,8 +45244,8 @@
    "upstream": "native/native.tests/testData/codegen/literals/strdedup2.kt"
   },
   "native/native.tests/codegen/lower/immutable_blob_in_lambda.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/lower/immutable_blob_in_lambda.kt"
   },
@@ -45428,8 +45389,8 @@
    "upstream": "native/native.tests/testData/codegen/serialization/deserialized_fields.kt"
   },
   "native/native.tests/codegen/serialization/deserialized_inline0.kt": {
-   "category": "annotations",
-   "detail": "unexpected operator (at '@')",
+   "category": "unknown maxOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'maxOf'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/serialization/deserialized_inline0.kt"
   },

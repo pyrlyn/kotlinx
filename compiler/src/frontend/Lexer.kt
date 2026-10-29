@@ -38,6 +38,9 @@ class Lexer(private val src: String, private var line: Int = 1) {
                     i = e + 2
                 }
                 c.isDigit() -> number()
+                // Annotations (`@Ann`, `@file:Ann(...)`, `@a.b.Ann`, `@[A B]`) have no effect here; labels (`x@`, `break@x`) are glued.
+                c == '@' && (i == 0 || !(src[i - 1].isLetterOrDigit() || src[i - 1] == '_' || src[i - 1] == '`')) &&
+                    i + 1 < src.length && (src[i + 1].isLetter() || src[i + 1] == '_' || src[i + 1] == '[') -> skipAnnotation()
                 c == '`' && src.indexOf('`', i + 1).let { e -> e > i + 1 && '\n' !in src.substring(i + 1, e) } -> {
                     // Backtick identifier: characters outside [A-Za-z0-9_$] are escaped so the name stays a valid symbol.
                     val e = src.indexOf('`', i + 1)
@@ -67,6 +70,34 @@ class Lexer(private val src: String, private var line: Int = 1) {
         }
         out.add(Tok(K.EOF, "<eof>", line))
         return out
+    }
+
+    private fun skipBalanced(open: Char, close: Char) {
+        var d = 0
+        while (i < src.length) {
+            val ch = src[i]
+            when {
+                ch == '"' -> { i++; while (i < src.length && src[i] != '"') { if (src[i] == '\\') i++; i++ } }
+                ch == '\n' -> line++
+                ch == open -> d++
+                ch == close -> { d--; if (d == 0) { i++; return } }
+            }
+            i++
+        }
+    }
+
+    private fun skipAnnotation() {
+        i++
+        if (src[i] == '[') { skipBalanced('[', ']'); return }
+        fun name() { while (i < src.length && (src[i].isLetterOrDigit() || src[i] == '_' || src[i] == '.')) i++ }
+        name()
+        if (i < src.length && src[i] == ':' && (i + 1 < src.length && src[i + 1] != ':')) {
+            i++
+            if (i < src.length && src[i] == '[') { skipBalanced('[', ']'); return }
+            name()
+        }
+        if (i < src.length && src[i] == '<') skipBalanced('<', '>')
+        if (i < src.length && src[i] == '(') skipBalanced('(', ')')
     }
 
     private fun number() {

@@ -201,7 +201,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         withTemps(vs) { xs -> genNamedCall(fn, CallE(NameE(fn).also { it.line = line }, emptyList(), xs, null).also { it.line = line }) }
 
     private fun coerce(v: Val, t: Ty): Val {
-        if (v.t == t || v.t == Ty.Nothing) return v
+        if (v.t == t) return v
+        // Unreachable value (after `throw`): keep the slot well-typed.
+        if (v.t == Ty.Nothing) return if (t.llvm == "void") v else Val("undef", t)
         if (isAny(t)) return toAny(v, t)
         if (v.t.isInt && t.isInt) {
             return when {
