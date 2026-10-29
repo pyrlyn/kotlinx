@@ -2,10 +2,10 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "COMPILER_CRASH": 5,
-  "MISCOMPILE": 49,
+  "MISCOMPILE": 50,
   "N/A": 2984,
-  "PASS": 1213,
-  "UNSUPPORTED": 4224
+  "PASS": 1315,
+  "UNSUPPORTED": 4121
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -445,9 +445,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_shifts.kt"
   },
   "box/box/arithmetic/basic_uintTests.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_uintTests.kt"
   },
   "box/box/arithmetic/division.kt": {
@@ -457,8 +456,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/division.kt"
   },
   "box/box/arithmetic/divisionByZero.kt": {
-   "category": "types: UByte",
-   "detail": "unknown type UByte",
+   "category": "types: Float",
+   "detail": "unknown type Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/divisionByZero.kt"
   },
@@ -1670,17 +1669,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8ipq8j9n/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8ipq8j9n/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup493bcyip/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup493bcyip/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup9kzi_3fj/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup9kzi_3fj/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupea60x7q0/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupea60x7q0/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup39blmdo2/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup39blmdo2/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup771gqf92/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup771gqf92/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -23427,12 +23426,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804517024\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146693984\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387488\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823008\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -31920,27 +31919,23 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/smartCastOnBothEndsGeneric.kt"
   },
   "box/box/ranges/contains/uintInUByteRangeWithPossibleOverflow.kt": {
-   "category": "unknown UByte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UByte'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/uintInUByteRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/uintInUIntRangeWithPossibleOverflow.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/uintInUIntRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/uintInUShortRangeWithPossibleOverflow.kt": {
-   "category": "unknown UShort (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UShort'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/uintInUShortRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/ulongInULongRangeWithPossibleOverflow.kt": {
-   "category": "unknown ULong (stdlib API / unsupported decl)",
-   "detail": "unknown name 'ULong'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/ulongInULongRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/userDefinedContainsExtension.kt": {
@@ -34400,27 +34395,23 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/maxValueToMinValueStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/maxValueToMinValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/maxValueToOneStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/maxValueToOneStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/maxValueToZeroStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/maxValueToZeroStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/mixedTypeStep.kt": {
-   "category": "other: unknown method Int.toUByte()",
-   "detail": "unknown method Int.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepOneThenStepOne.kt": {
@@ -34554,15 +34545,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/minValueToMaxValueStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/mixedTypeStep.kt": {
-   "category": "other: unknown method Int.toUByte()",
-   "detail": "unknown method Int.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepOneThenStepOne.kt": {
@@ -34606,9 +34595,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/oneToMaxValueStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStep.kt": {
@@ -34672,9 +34660,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/zeroToMaxValueStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/emptyProgression.kt": {
@@ -34827,9 +34814,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/emptyProgressionToMinValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/emptyProgressionToMinValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/illegalStepNegative.kt": {
@@ -34858,15 +34844,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/minValueToMaxValueStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/mixedTypeStep.kt": {
-   "category": "other: unknown method Int.toUByte()",
-   "detail": "unknown method Int.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepOneThenStepOne.kt": {
@@ -34975,9 +34959,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/zeroToMaxValueStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/emptyProgression.kt": {
@@ -35011,27 +34994,23 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/maxValueToMinValueStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/maxValueToMinValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/maxValueToOneStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/maxValueToOneStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/maxValueToZeroStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/maxValueToZeroStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/mixedTypeStep.kt": {
-   "category": "other: unknown method Int.toUByte()",
-   "detail": "unknown method Int.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepOneThenStepOne.kt": {
@@ -35165,15 +35144,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/minValueToMaxValueStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/mixedTypeStep.kt": {
-   "category": "other: unknown method Int.toUByte()",
-   "detail": "unknown method Int.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepOneThenStepOne.kt": {
@@ -35217,9 +35194,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/oneToMaxValueStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStep.kt": {
@@ -35283,9 +35259,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/zeroToMaxValueStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/emptyProgression.kt": {
@@ -35438,9 +35413,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/emptyProgressionToMinValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/emptyProgressionToMinValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/illegalStepNegative.kt": {
@@ -35469,15 +35443,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/minValueToMaxValueStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/mixedTypeStep.kt": {
-   "category": "other: unknown method Int.toUByte()",
-   "detail": "unknown method Int.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepOneThenStepOne.kt": {
@@ -35586,9 +35558,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/zeroToMaxValueStepMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/unsigned/bitShifting.kt": {
@@ -35597,75 +35568,63 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/bitShifting.kt"
   },
   "box/box/ranges/unsigned/expression/emptyDownto.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/emptyDownto.kt"
   },
   "box/box/ranges/unsigned/expression/emptyRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/emptyRange.kt"
   },
   "box/box/ranges/unsigned/expression/inexactDownToMinValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/inexactDownToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/inexactSteppedDownTo.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/inexactSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/expression/inexactSteppedRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/inexactSteppedRange.kt"
   },
   "box/box/ranges/unsigned/expression/inexactToMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/inexactToMaxValue.kt"
   },
   "box/box/ranges/unsigned/expression/maxValueMinusTwoToMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/maxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/unsigned/expression/maxValueToMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/maxValueToMaxValue.kt"
   },
   "box/box/ranges/unsigned/expression/maxValueToMinValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/maxValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/oneElementDownTo.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/oneElementDownTo.kt"
   },
   "box/box/ranges/unsigned/expression/oneElementRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/oneElementRange.kt"
   },
   "box/box/ranges/unsigned/expression/openRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/openRange.kt"
   },
   "box/box/ranges/unsigned/expression/openRangeUntil.kt": {
@@ -35675,9 +35634,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/openRangeUntil.kt"
   },
   "box/box/ranges/unsigned/expression/overflowZeroDownToMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/overflowZeroDownToMaxValue.kt"
   },
   "box/box/ranges/unsigned/expression/overflowZeroToMinValue.kt": {
@@ -35687,105 +35645,88 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/progressionDownToMinValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/progressionDownToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/progressionMaxValueMinusTwoToMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/progressionMaxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/unsigned/expression/progressionMaxValueToMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/progressionMaxValueToMaxValue.kt"
   },
   "box/box/ranges/unsigned/expression/progressionMaxValueToMinValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/progressionMaxValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/progressionMinValueToMinValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/progressionMinValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/reversedBackSequence.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedBackSequence.kt"
   },
   "box/box/ranges/unsigned/expression/reversedEmptyBackSequence.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedEmptyBackSequence.kt"
   },
   "box/box/ranges/unsigned/expression/reversedEmptyRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedEmptyRange.kt"
   },
   "box/box/ranges/unsigned/expression/reversedInexactSteppedDownTo.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedInexactSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/expression/reversedRange.kt": {
-   "category": "other: unknown method UInt.toUShort()",
-   "detail": "unknown method UInt.toUShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedRange.kt"
   },
   "box/box/ranges/unsigned/expression/reversedSimpleSteppedRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedSimpleSteppedRange.kt"
   },
   "box/box/ranges/unsigned/expression/simpleDownTo.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleDownTo.kt"
   },
   "box/box/ranges/unsigned/expression/simpleRange.kt": {
-   "category": "other: unknown method Int.toUByte()",
-   "detail": "unknown method Int.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleRange.kt"
   },
   "box/box/ranges/unsigned/expression/simpleRangeWithNonConstantEnds.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleRangeWithNonConstantEnds.kt"
   },
   "box/box/ranges/unsigned/expression/simpleSteppedDownTo.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/expression/simpleSteppedRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleSteppedRange.kt"
   },
   "box/box/ranges/unsigned/inMixedUnsignedRange.kt": {
-   "category": "types: UByte",
-   "detail": "unknown type UByte",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/inMixedUnsignedRange.kt"
   },
   "box/box/ranges/unsigned/kt35004.kt": {
@@ -35812,75 +35753,63 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt67383.kt"
   },
   "box/box/ranges/unsigned/literal/emptyDownto.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/emptyDownto.kt"
   },
   "box/box/ranges/unsigned/literal/emptyRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/emptyRange.kt"
   },
   "box/box/ranges/unsigned/literal/inexactDownToMinValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/inexactDownToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/inexactSteppedDownTo.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/inexactSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/inexactSteppedRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/inexactSteppedRange.kt"
   },
   "box/box/ranges/unsigned/literal/inexactToMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/inexactToMaxValue.kt"
   },
   "box/box/ranges/unsigned/literal/maxValueMinusTwoToMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/maxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/unsigned/literal/maxValueToMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/maxValueToMaxValue.kt"
   },
   "box/box/ranges/unsigned/literal/maxValueToMinValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/maxValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/oneElementDownTo.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/oneElementDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/oneElementRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/oneElementRange.kt"
   },
   "box/box/ranges/unsigned/literal/openRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/openRange.kt"
   },
   "box/box/ranges/unsigned/literal/openRangeUntil.kt": {
@@ -35890,9 +35819,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/openRangeUntil.kt"
   },
   "box/box/ranges/unsigned/literal/overflowZeroDownToMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/overflowZeroDownToMaxValue.kt"
   },
   "box/box/ranges/unsigned/literal/overflowZeroToMinValue.kt": {
@@ -35902,99 +35830,83 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/progressionDownToMinValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/progressionDownToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/progressionMaxValueMinusTwoToMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/progressionMaxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/unsigned/literal/progressionMaxValueToMaxValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/progressionMaxValueToMaxValue.kt"
   },
   "box/box/ranges/unsigned/literal/progressionMaxValueToMinValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/progressionMaxValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/progressionMinValueToMinValue.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/progressionMinValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/reversedBackSequence.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedBackSequence.kt"
   },
   "box/box/ranges/unsigned/literal/reversedEmptyBackSequence.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedEmptyBackSequence.kt"
   },
   "box/box/ranges/unsigned/literal/reversedEmptyRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedEmptyRange.kt"
   },
   "box/box/ranges/unsigned/literal/reversedInexactSteppedDownTo.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedInexactSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/reversedRange.kt": {
-   "category": "other: unknown method UInt.toUShort()",
-   "detail": "unknown method UInt.toUShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedRange.kt"
   },
   "box/box/ranges/unsigned/literal/reversedSimpleSteppedRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedSimpleSteppedRange.kt"
   },
   "box/box/ranges/unsigned/literal/simpleDownTo.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/simpleRange.kt": {
-   "category": "other: unknown method Int.toUByte()",
-   "detail": "unknown method Int.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleRange.kt"
   },
   "box/box/ranges/unsigned/literal/simpleRangeWithNonConstantEnds.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleRangeWithNonConstantEnds.kt"
   },
   "box/box/ranges/unsigned/literal/simpleSteppedDownTo.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/simpleSteppedRange.kt": {
-   "category": "other: unknown method UInt.toUByte()",
-   "detail": "unknown method UInt.toUByte()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleSteppedRange.kt"
   },
   "box/box/ranges/unsigned/nullableLoopParameter/progressionExpression.kt": {
@@ -36016,9 +35928,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/nullableLoopParameter/rangeLiteral.kt"
   },
   "box/box/ranges/unsigned/outOfBoundsInMixedContains.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='Failed\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/outOfBoundsInMixedContains.kt"
   },
   "box/box/reflection/classLiterals/annotationClassLiteral.kt": {
@@ -39911,7 +39822,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwb1iunlp/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwb1iunlp/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupv4z3f_71/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupv4z3f_71/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -40039,9 +39950,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/checkBasicUnsignedLiterals.kt"
   },
   "box/box/unsignedTypes/defaultArguments.kt": {
-   "category": "types: UByte",
-   "detail": "unknown type UByte",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/defaultArguments.kt"
   },
   "box/box/unsignedTypes/equalsImplForInlineClassWrappingNullableInlineClass.kt": {
@@ -40056,39 +39966,33 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forEachIndexedInListOfUInts.kt"
   },
   "box/box/unsignedTypes/forInUnsignedDownTo.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedDownTo.kt"
   },
   "box/box/unsignedTypes/forInUnsignedProgression.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedProgression.kt"
   },
   "box/box/unsignedTypes/forInUnsignedRange.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedRange.kt"
   },
   "box/box/unsignedTypes/forInUnsignedRangeLiteral.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedRangeLiteral.kt"
   },
   "box/box/unsignedTypes/forInUnsignedRangeWithCoercion.kt": {
-   "category": "unknown UByte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UByte'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedRangeWithCoercion.kt"
   },
   "box/box/unsignedTypes/forInUnsignedUntil.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedUntil.kt"
   },
   "box/box/unsignedTypes/generic.kt": {
@@ -40108,27 +40012,23 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/implicitIntegerCoercionOverloadResolutionAmbiguity.kt"
   },
   "box/box/unsignedTypes/inUnsignedDownTo.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/inUnsignedDownTo.kt"
   },
   "box/box/unsignedTypes/inUnsignedRange.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/inUnsignedRange.kt"
   },
   "box/box/unsignedTypes/inUnsignedRangeLiteral.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/inUnsignedRangeLiteral.kt"
   },
   "box/box/unsignedTypes/inUnsignedUntil.kt": {
-   "category": "unknown UInt (stdlib API / unsupported decl)",
-   "detail": "unknown name 'UInt'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/inUnsignedUntil.kt"
   },
   "box/box/unsignedTypes/iterateOverArrayOfUnsignedValues.kt": {
@@ -40165,8 +40065,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/literalEqualsNullableUnsigned.kt"
   },
   "box/box/unsignedTypes/nullableSmartcastUnsignedArray.kt": {
-   "category": "other: unknown method Int.toUByte()",
-   "detail": "unknown method Int.toUByte()",
+   "category": "unknown ubyteArrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'ubyteArrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/nullableSmartcastUnsignedArray.kt"
   },
@@ -40218,9 +40118,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedLiteralsForMaxLongValue.kt"
   },
   "box/box/unsignedTypes/unsignedLiteralsWithSignedOverflow.kt": {
-   "category": "types: UByte",
-   "detail": "unknown type UByte",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedLiteralsWithSignedOverflow.kt"
   },
   "box/box/unsignedTypes/unsignedLongCompare.kt": {
@@ -40250,9 +40149,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedRangeIterator.kt"
   },
   "box/box/unsignedTypes/unsignedToSignedConversion.kt": {
-   "category": "types: UByte",
-   "detail": "unknown type UByte",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedToSignedConversion.kt"
   },
   "box/box/unsignedTypes/unsignedTypePrefixIncrementDecrementBoxing.kt": {
@@ -40261,9 +40159,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedTypePrefixIncrementDecrementBoxing.kt"
   },
   "box/box/unsignedTypes/unsignedTypeValuesInsideStringTemplates.kt": {
-   "category": "types: UByte",
-   "detail": "unknown type UByte",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedTypeValuesInsideStringTemplates.kt"
   },
   "box/box/unsignedTypes/varargsOfUnsignedTypes.kt": {
@@ -40300,8 +40197,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/evaluationOrder.kt"
   },
   "box/box/vararg/inlineClassArraysAsNamedArgumentInVararg.kt": {
-   "category": "types: UShort",
-   "detail": "unknown type UShort",
+   "category": "other: unknown method ArrayList<Int>.sum()",
+   "detail": "unknown method ArrayList<Int>.sum()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/inlineClassArraysAsNamedArgumentInVararg.kt"
   },
@@ -45744,7 +45641,7 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup549rplj6/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup549rplj6/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprmhkbcbc/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprmhkbcbc/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },

@@ -119,6 +119,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "UInt" -> Ty.U32
         "ULong" -> Ty.U64
         "Byte" -> Ty.I8
+        "UByte", "UShort" -> Ty.U32 // like Short: UInt-backed, toUByte()/toUShort() truncate
         "Short" -> Ty.I32 // Short values live in Int (Kotlin widens Short arithmetic to Int; toShort() truncates)
         "Boolean" -> Ty.I1
         "Double" -> Ty.F64
@@ -1469,6 +1470,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private val LIMITS = mapOf("Long.MAX_VALUE" to ("9223372036854775807" to Ty.I64), "Long.MIN_VALUE" to ("-9223372036854775808" to Ty.I64),
         "Int.MAX_VALUE" to ("2147483647" to Ty.I32), "Int.MIN_VALUE" to ("-2147483648" to Ty.I32),
         "Short.MAX_VALUE" to ("32767" to Ty.I32), "Short.MIN_VALUE" to ("-32768" to Ty.I32),
+        "UByte.MAX_VALUE" to ("255" to Ty.U32), "UByte.MIN_VALUE" to ("0" to Ty.U32), "UShort.MAX_VALUE" to ("65535" to Ty.U32), "UShort.MIN_VALUE" to ("0" to Ty.U32),
+        "UInt.MAX_VALUE" to ("4294967295" to Ty.U32), "UInt.MIN_VALUE" to ("0" to Ty.U32), "ULong.MAX_VALUE" to ("-1" to Ty.U64), "ULong.MIN_VALUE" to ("0" to Ty.U64),
         "Byte.MAX_VALUE" to ("127" to Ty.I8), "Byte.MIN_VALUE" to ("-128" to Ty.I8))
 
     private fun property(r: Val, n: String): Val {
@@ -2113,6 +2116,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val e = if (e0.lambda != null && t !is Ty.Cls && t !is Ty.Iface && !(t is Ty.ListTy && n in setOf("map", "filter", "forEach", "sumOf", "count")) && n != "usePinned")
             CallE(e0.callee, e0.typeArgs, allArgs(e0), null) else e0
         val res: Val = when {
+            t.isNum && t != Ty.F64 && (n == "toUByte" || n == "toUShort") -> {
+                val w = if (n == "toUByte") "i8" else "i16"
+                Val(emitT("zext $w ${emitT("trunc ${t.llvm} ${r.v} to $w")} to i32"), Ty.U32)
+            }
             (t.isNum || t == Ty.Char) && n == "toShort" -> {
                 val i = if (t == Ty.Char) Val(r.v, Ty.I32) else if (t == Ty.F64) Val(emitT("fptosi double ${r.v} to i32"), Ty.I32) else coerce(r, Ty.I32)
                 Val(emitT("sext i16 ${emitT("trunc i32 ${i.v} to i16")} to i32"), Ty.I32)
