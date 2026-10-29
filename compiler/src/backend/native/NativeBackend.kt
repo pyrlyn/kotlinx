@@ -1014,6 +1014,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     e.n == "this" && owner != null -> Val("%this", Ty.Cls(owner!!.name))
                     owner != null && (owner!!.index(e.n) >= 0 || "\$prop\$${e.n}" in owner!!.methods) -> property(Val("%this", Ty.Cls(owner!!.name)), e.n)
                     e.n in CONSTS -> Val("${CONSTS.getValue(e.n)}", Ty.I32)
+                    "\$get\$${e.n}" in sigs -> genNamedCall("\$get\$${e.n}", CallE(NameE("\$get\$${e.n}"), emptyList(), emptyList(), null).also { it.line = e.line })
                     // Implicit receiver of a top-level extension function.
                     lookup("this") != null -> property(genExpr(NameE("this").also { it.line = e.line }), e.n)
                     else -> fail("unknown name '${e.n}'")

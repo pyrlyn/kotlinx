@@ -159,7 +159,23 @@ class Parser(private val t: List<Tok>) {
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
         resolveNested(funs, classes, ifaces, globals)
         resolveExtensions(funs, classes)
-        val objGlobals = objects.map { n -> VarS(n, false, TypeRef(n, emptyList(), false), CallE(NameE(n), emptyList(), emptyList(), null)) }
+        // Creating an instance of a class initializes its companion object first.
+        for (i in classes.indices) {
+            val c = classes[i]
+            val comp = companionOf[c.name]?.first ?: continue
+            val trigger = Block(listOf(ExprS(CallE(NameE("\$init\$$comp").also { it.line = c.line }, emptyList(), emptyList(), null).also { it.line = c.line }).also { it.line = c.line }))
+            classes[i] = ClassD(c.name, c.fields, c.supers, c.methods, c.line, c.ctorParams, listOf<Any>(trigger) + c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
+        }
+        inlineConsts(funs, classes, globals)
+        // Objects are created lazily on first access: `$o$N` holds the instance, `$get$N()` creates it once.
+        // `$i$N` guards re-entry: constructing a class from inside its own companion's init must not recurse.
+        val objGlobals = objects.flatMap { n -> listOf(VarS("\$o\$$n", true, TypeRef(n, emptyList(), true), NullL()), VarS("\$i\$$n", true, TypeRef("Boolean", emptyList(), false), BoolL(false))) }
+        for (n in objects) {
+            val slot = NameE("\$o\$$n"); val flag = NameE("\$i\$$n")
+            val init = IfE(UnE("!", flag), Block(listOf(AssignS(flag, "=", BoolL(true)), AssignS(slot, "=", CallE(NameE(n), emptyList(), emptyList(), null)))), null)
+            funs.add(FunD("\$init\$$n", emptyList(), TypeRef("Unit", emptyList(), false), Block(listOf(ExprS(init))), null, 0))
+            funs.add(FunD("\$get\$$n", emptyList(), TypeRef(n, emptyList(), false), Block(listOf(ExprS(CallE(NameE("\$init\$$n"), emptyList(), emptyList(), null)), RetS(slot))), null, 0))
+        }
         return Program(funs, classes, ifaces, enumGlobals(classes) + globals + objGlobals, companionOf)
     }
 
@@ -172,6 +188,8 @@ class Parser(private val t: List<Tok>) {
     /** Class name -> (companion object name, companion member names). */
     private val companionOf = HashMap<String, Pair<String, Set<String>>>()
     private var curClass: String? = null
+    /** Object being parsed (members of objects see no [curClass]). */
+    private var curObject: String? = null
 
     private fun objectDecl(name: String): ClassD {
         val line = t[p - 1].line
@@ -183,7 +201,8 @@ class Parser(private val t: List<Tok>) {
         val fields = ArrayList<FieldD>(); val inits = ArrayList<Any>()
         val sta = takeSuperArgs()
         val saved = curClass; curClass = null
-        val ms = try { if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved }
+        val savedObj = curObject; curObject = name
+        val ms = try { if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved; curObject = savedObj }
         objects.add(name)
         return ClassD(name, fields, supers, ms, line, emptyList(), inits, superTypeArgs = sta)
     }
@@ -210,7 +229,8 @@ class Parser(private val t: List<Tok>) {
             while (true) {
                 skipNL()
                 if (isOp("}")) break
-                while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) p++
+                var isConst = false
+                while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) { if (peek().s == "const") isConst = true; p++ }
                 if (props != null && inits != null && (isId("val") || isId("var"))) {
                     val isVar = next().s == "var"
                     val n = ident()
@@ -220,6 +240,9 @@ class Parser(private val t: List<Tok>) {
                     next(); skipNLOnly()
                     val f = FieldD(n, ty, isVar, expr())
                     props.add(f); inits.add(f)
+                    val constOwner = curClass ?: curObject
+                    if (isConst && constOwner != null && (f.init is IntL || f.init is BoolL || f.init is CharL || f.init is DblL || (f.init is StrL && (f.init as StrL).parts.all { it is String })))
+                        { constVals["$constOwner.$n"] = f.init!!; if ('$' in constOwner) constVals["${constOwner.substringBefore('$')}.$n"] = f.init!! }
                     continue
                 }
                 if (inits != null && isId("init")) { next(); skipNLOnly(); inits.add(block()); continue }
@@ -241,6 +264,23 @@ class Parser(private val t: List<Tok>) {
         }
         expectOp("}")
         return ms
+    }
+
+    /** `const val`s of objects and companions with literal values ("Obj.name" -> literal); uses do not initialize the object. */
+    private val constVals = HashMap<String, E>()
+
+    private fun inlineConsts(funs: MutableList<FunD>, classes: MutableList<ClassD>, globals: MutableList<VarS>) {
+        if (constVals.isEmpty()) return
+        val sub = Subst(emptyMap(), rw = { x -> if (x is MemberE && x.recv is NameE) constVals["${x.recv.n}.${x.n}"] else null })
+        for (i in funs.indices) funs[i] = keepRecv(sub.fn(funs[i]), funs[i])
+        for (i in globals.indices) globals[i] = sub.s(globals[i]) as VarS
+        for (i in classes.indices) {
+            val c = classes[i]
+            val fields = c.fields.map { FieldD(it.name, it.type, it.isVar, it.init?.let { e -> sub.e(e) }) }
+            val inits = c.inits.map { if (it is FieldD) fields.first { f -> f.name == it.name } else sub.block(it as Block) }
+            classes[i] = ClassD(c.name, fields, c.supers, c.methods.map { keepRecv(sub.fn(it), it) }, c.line, c.ctorParams, inits, c.superArgs?.map { sub.e(it) }, c.typeParams,
+                c.enumEntries?.map { (n, a) -> n to a.map { sub.e(it) } }, c.isValue, c.superTypeArgs)
+        }
     }
 
     /** Classes, objects and interfaces declared inside class bodies, hoisted to the top level under their simple names. */
