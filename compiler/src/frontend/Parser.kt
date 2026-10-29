@@ -79,19 +79,24 @@ class Parser(private val t: List<Tok>) {
         return InterfaceD(name, ms, line)
     }
 
+    /** `<T, reified U : Bound>`: type parameter names; upper bounds are parsed but not checked (monomorphization). */
+    private fun typeParams(): List<String> {
+        val tps = ArrayList<String>()
+        if (!isOp("<")) return tps
+        next()
+        while (!isOp(">")) {
+            while (isId("reified") || isId("out") || isId("in")) next()
+            tps.add(ident())
+            if (isOp(":")) { next(); type() }
+            if (isOp(",")) next()
+        }
+        next()
+        return tps
+    }
+
     private fun function(): FunD {
         val line = next().line
-        val typeParams = ArrayList<String>()
-        if (isOp("<")) {
-            next()
-            while (!isOp(">")) {
-                if (isId("reified")) next()
-                typeParams.add(ident())
-                if (isOp(":")) { next(); type() } // upper bound: not checked (monomorphization)
-                if (isOp(",")) next()
-            }
-            next()
-        }
+        val typeParams = typeParams()
         val name = ident()
         expectOp("(")
         val params = nested(1) {
@@ -112,6 +117,7 @@ class Parser(private val t: List<Tok>) {
     private fun classDecl(): ClassD {
         val line = next().line
         val name = ident()
+        val typeParams = typeParams()
         val fields = ArrayList<FieldD>(); val ctorParams = ArrayList<Param>(); val inits = ArrayList<Any>()
         if (isOp("(")) {
             next()
@@ -144,7 +150,7 @@ class Parser(private val t: List<Tok>) {
             }
         }
         val ms = if (isOp("{")) members(fields, inits) else emptyList()
-        return ClassD(name, fields, supers, ms, line, ctorParams, inits, superArgs)
+        return ClassD(name, fields, supers, ms, line, ctorParams, inits, superArgs, typeParams)
     }
 
     private fun type(): TypeRef {

@@ -1,9 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
+  "MISCOMPILE": 1,
   "N/A": 2984,
-  "PASS": 154,
-  "UNSUPPORTED": 5337
+  "PASS": 165,
+  "UNSUPPORTED": 5325
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -672,8 +673,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexReversed.kt"
   },
   "box/box/arrays/genericArrayInObjectLiteralConstructor.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/genericArrayInObjectLiteralConstructor.kt"
   },
@@ -1602,9 +1603,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/box_cache0.kt"
   },
   "box/box/boxing/boxing0.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxing/boxing0.kt"
   },
   "box/box/boxing/boxing1.kt": {
@@ -1785,8 +1785,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt15871.kt"
   },
   "box/box/boxingOptimization/kt19767.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt19767.kt"
   },
@@ -1797,8 +1797,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt19767_2.kt"
   },
   "box/box/boxingOptimization/kt19767_chain.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt19767_chain.kt"
   },
@@ -2290,14 +2290,14 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideWithSynthesizedImplementation.kt"
   },
   "box/box/bridges/genericProperty.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/genericProperty.kt"
   },
   "box/box/bridges/innerClassTypeParameters.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/innerClassTypeParameters.kt"
   },
@@ -2468,8 +2468,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/noBridges/simpleFakeOverrideSameSignature.kt"
   },
   "box/box/bridges/overrideAbstractProperty.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overrideAbstractProperty.kt"
   },
@@ -2510,8 +2510,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesTwoAbstractDeclarations.kt"
   },
   "box/box/bridges/propertyAccessorsWithoutBody.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/propertyAccessorsWithoutBody.kt"
   },
@@ -2564,8 +2564,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/simpleGenericMethod.kt"
   },
   "box/box/bridges/simpleObject.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "objects / companion objects",
+   "detail": "unexpected top-level token (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/simpleObject.kt"
   },
@@ -2660,8 +2660,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/property.kt"
   },
   "box/box/bridges/substitutionInSuperClass/simple.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'xs')",
+   "detail": "expected ':' (at 'xs')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/simple.kt"
   },
@@ -2702,8 +2702,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test12.kt"
   },
   "box/box/bridges/test13.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test13.kt"
   },
@@ -2714,8 +2714,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test14.kt"
   },
   "box/box/bridges/test15.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test15.kt"
   },
@@ -2774,14 +2774,14 @@
    "upstream": "compiler/testData/codegen/box/bridges/test24.kt"
   },
   "box/box/bridges/test25.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test25.kt"
   },
   "box/box/bridges/test3.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test3.kt"
   },
@@ -2792,8 +2792,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test4.kt"
   },
   "box/box/bridges/test5.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test5.kt"
   },
@@ -2857,8 +2857,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/varargBridge1.kt"
   },
   "box/box/bridges/varargBridge2.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'x')",
+   "detail": "expected ':' (at 'x')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/varargBridge2.kt"
   },
@@ -3094,8 +3094,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorToExtensionFun.kt"
   },
   "box/box/callableReference/adaptedReferences/innerConstructorToExtensionWithTypeParam.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorToExtensionWithTypeParam.kt"
   },
@@ -3480,8 +3480,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/genericBoundPropertyAsCrossinline.kt"
   },
   "box/box/callableReference/bound/genericValOnLHS.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/genericValOnLHS.kt"
   },
@@ -3896,8 +3896,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromInnerClass.kt"
   },
   "box/box/callableReference/function/constructorFromInnerClassWithTypeParam.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromInnerClassWithTypeParam.kt"
   },
@@ -4016,8 +4016,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionWithNestedFunction.kt"
   },
   "box/box/callableReference/function/extensionWithTypeParam.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionWithTypeParam.kt"
   },
@@ -4043,14 +4043,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/genericCallableReferencesWithOverload.kt"
   },
   "box/box/callableReference/function/genericMember.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/genericMember.kt"
   },
   "box/box/callableReference/function/genericWithDependentType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/genericWithDependentType.kt"
   },
@@ -4288,8 +4288,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/referenceToCompanionMember.kt"
   },
   "box/box/callableReference/function/referenceToStaticOrStaticLike.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/referenceToStaticOrStaticLike.kt"
   },
@@ -4365,20 +4365,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/functionAndKFunctionSharedClassSplit.kt"
   },
   "box/box/callableReference/genericConstructorReference.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/genericConstructorReference.kt"
   },
   "box/box/callableReference/genericLocalClassConstructorReference.kt": {
    "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "detail": "expected '(' (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/genericLocalClassConstructorReference.kt"
   },
   "box/box/callableReference/generticReferences.kt": {
    "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "detail": "expected '(' (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/generticReferences.kt"
   },
@@ -4957,8 +4957,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt68509.kt"
   },
   "box/box/casts/kt80795.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '*')",
+   "detail": "expected identifier (at '*')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt80795.kt"
   },
@@ -4993,21 +4993,19 @@
    "upstream": "compiler/testData/codegen/box/casts/lambdaToUnitCast.kt"
   },
   "box/box/casts/literalExpressionAsGenericArgument/binaryExpressionCast.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/literalExpressionAsGenericArgument/binaryExpressionCast.kt"
   },
   "box/box/casts/literalExpressionAsGenericArgument/labeledExpressionCast.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/literalExpressionAsGenericArgument/labeledExpressionCast.kt"
   },
   "box/box/casts/literalExpressionAsGenericArgument/parenthesizedExpressionCast.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/literalExpressionAsGenericArgument/parenthesizedExpressionCast.kt"
   },
   "box/box/casts/literalExpressionAsGenericArgument/superConstructor.kt": {
@@ -5017,14 +5015,13 @@
    "upstream": "compiler/testData/codegen/box/casts/literalExpressionAsGenericArgument/superConstructor.kt"
   },
   "box/box/casts/literalExpressionAsGenericArgument/unaryExpressionCast.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/literalExpressionAsGenericArgument/unaryExpressionCast.kt"
   },
   "box/box/casts/literalExpressionAsGenericArgument/vararg.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'z')",
+   "detail": "expected ':' (at 'z')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/literalExpressionAsGenericArgument/vararg.kt"
   },
@@ -5543,8 +5540,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1535.kt"
   },
   "box/box/classes/kt1538.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1538.kt"
   },
@@ -5579,8 +5576,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1759.kt"
   },
   "box/box/classes/kt1891.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1891.kt"
   },
@@ -5638,8 +5635,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2477.kt"
   },
   "box/box/classes/kt2480.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2480.kt"
   },
@@ -5817,8 +5814,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt6816.kt"
   },
   "box/box/classes/kt707.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt707.kt"
   },
@@ -5877,32 +5874,32 @@
    "upstream": "compiler/testData/codegen/box/classes/outerThis.kt"
   },
   "box/box/classes/overloadBinaryOperator.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/overloadBinaryOperator.kt"
   },
   "box/box/classes/overloadPlusAssign.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/overloadPlusAssign.kt"
   },
   "box/box/classes/overloadPlusAssignReturn.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/overloadPlusAssignReturn.kt"
   },
   "box/box/classes/overloadPlusToPlusAssign.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/overloadPlusToPlusAssign.kt"
   },
   "box/box/classes/overloadUnaryOperator.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/overloadUnaryOperator.kt"
   },
@@ -5919,8 +5916,8 @@
    "upstream": "compiler/testData/codegen/box/classes/privateOuterProperty.kt"
   },
   "box/box/classes/privateToThis.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'getOk' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/privateToThis.kt"
   },
@@ -5955,9 +5952,8 @@
    "upstream": "compiler/testData/codegen/box/classes/selfcreate.kt"
   },
   "box/box/classes/simpleBox.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/simpleBox.kt"
   },
   "box/box/classes/superConstructorCallWithComplexArg.kt": {
@@ -6634,8 +6630,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/companionBlockOf.kt"
   },
   "box/box/collectionLiterals/genericCollection.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/genericCollection.kt"
   },
@@ -6775,8 +6771,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/basicBlockAndExtension.kt"
   },
   "box/box/companionBlocksAndExtensions/callableReferencesGenericCompanionBlockMembers.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/callableReferencesGenericCompanionBlockMembers.kt"
   },
@@ -6855,8 +6851,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/ebf.kt"
   },
   "box/box/companionBlocksAndExtensions/generics.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "objects / companion objects",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/generics.kt"
   },
@@ -7888,14 +7884,14 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/functionalType.kt"
   },
   "box/box/contextParameters/genericPropertyWithContextParameters.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'context')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/genericPropertyWithContextParameters.kt"
   },
   "box/box/contextParameters/inferGenericPropertyType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'context')",
+   "detail": "unexpected top-level token (at 'context')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/inferGenericPropertyType.kt"
   },
@@ -7928,8 +7924,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/invokeOnTypeWithContext.kt"
   },
   "box/box/contextParameters/kt51277.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'context')",
+   "detail": "unexpected top-level token (at 'context')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt51277.kt"
   },
@@ -8103,8 +8099,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/specificity.kt"
   },
   "box/box/contextParameters/substitutedContextReceivers.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'context')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/substitutedContextReceivers.kt"
   },
@@ -8227,8 +8223,8 @@
    "upstream": "compiler/testData/codegen/box/contracts/kt39374.kt"
   },
   "box/box/contracts/kt45236.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/kt45236.kt"
   },
@@ -8611,8 +8607,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInArrayWithArrayVarUpdatedInLoopBody13.kt"
   },
   "box/box/controlStructures/forInArray/forInDelegatedPropertyUpdatedInLoopBody.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInDelegatedPropertyUpdatedInLoopBody.kt"
   },
@@ -9677,8 +9673,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_types.kt"
   },
   "box/box/controlflow/smartcastOnThisInInitializationSection.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/smartcastOnThisInInitializationSection.kt"
   },
@@ -10103,8 +10099,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/deserializedSuspendFunctionProperty.kt"
   },
   "box/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "objects / companion objects",
+   "detail": "unexpected top-level token (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt"
   },
@@ -11365,8 +11361,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/kt44221.kt"
   },
   "box/box/coroutines/kt44710.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/kt44710.kt"
   },
@@ -12329,8 +12325,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/varInConstructorParams.kt"
   },
   "box/box/dataClasses/copy/withGenericParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other: unknown method A.copy()",
+   "detail": "unknown method A.copy()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/withGenericParameter.kt"
   },
@@ -12383,8 +12379,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/intarray.kt"
   },
   "box/box/dataClasses/equals/null.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/null.kt"
   },
@@ -12412,8 +12408,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/fromOtherModule.kt"
   },
   "box/box/dataClasses/genericParam.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other: unknown method A$Int.component1()",
+   "detail": "unknown method A$Int.component1()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/genericParam.kt"
   },
@@ -12453,8 +12449,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/float.kt"
   },
   "box/box/dataClasses/hashCode/genericNull.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "strings / templates",
+   "detail": "unknown method A$String.hashCode()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/genericNull.kt"
   },
@@ -12554,9 +12550,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/changingVarParam.kt"
   },
   "box/box/dataClasses/toString/genericParam.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='A$Int@obj\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/genericParam.kt"
   },
   "box/box/dataClasses/toString/mixedParams.kt": {
@@ -13030,14 +13025,14 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt46189.kt"
   },
   "box/box/defaultArguments/kt47073.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt47073.kt"
   },
   "box/box/defaultArguments/kt47073_nested.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'nested')",
+   "detail": "expected end of statement (at 'nested')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt47073_nested.kt"
   },
@@ -13114,14 +13109,14 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/signature/kt2789.kt"
   },
   "box/box/defaultArguments/signature/kt9428.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/signature/kt9428.kt"
   },
   "box/box/defaultArguments/signature/kt9924.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/signature/kt9924.kt"
   },
@@ -13713,14 +13708,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/observable.kt"
   },
   "box/box/delegatedProperty/optimizedDelegatedProperties/definedInSources.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/optimizedDelegatedProperties/definedInSources.kt"
   },
   "box/box/delegatedProperty/optimizedDelegatedProperties/definedInSourcesWithNonNullParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/optimizedDelegatedProperties/definedInSourcesWithNonNullParameter.kt"
   },
@@ -13782,8 +13777,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/privateVar.kt"
   },
   "box/box/delegatedProperty/protectedVarWithPrivateSet.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/protectedVarWithPrivateSet.kt"
   },
@@ -13914,8 +13909,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/provideDelegateByExtensionFunction.kt"
   },
   "box/box/delegatedProperty/provideDelegate/setValue.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/setValue.kt"
   },
@@ -14216,14 +14211,14 @@
    "upstream": "compiler/testData/codegen/box/delegation/withDefaultsMultipleFilesOrder.kt"
   },
   "box/box/destructuringDeclInLambdaParam/extensionComponents.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/extensionComponents.kt"
   },
   "box/box/destructuringDeclInLambdaParam/generic.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/generic.kt"
   },
@@ -15889,8 +15884,8 @@
    "upstream": "compiler/testData/codegen/box/exceptions/extend0.kt"
   },
   "box/box/exceptions/kt69534.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/exceptions/kt69534.kt"
   },
@@ -16107,8 +16102,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionWithReceiverConflict.kt"
   },
   "box/box/extensionFunctions/extensionMemberWithTypeParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionMemberWithTypeParameter.kt"
   },
@@ -16136,8 +16131,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1249.kt"
   },
   "box/box/extensionFunctions/kt1290.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1290.kt"
   },
@@ -16294,8 +16289,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/contextPropertyInInterface.kt"
   },
   "box/box/extensionProperties/extensionMemberWithTypeParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "body properties need an initializer (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionMemberWithTypeParameter.kt"
   },
@@ -16560,8 +16555,8 @@
    "upstream": "compiler/testData/codegen/box/fieldRename/delegates.kt"
   },
   "box/box/fieldRename/genericPropertyWithItself.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fieldRename/genericPropertyWithItself.kt"
   },
@@ -16837,8 +16832,8 @@
    "upstream": "compiler/testData/codegen/box/fir/nestedClassTypeParameterDeserialization.kt"
   },
   "box/box/fir/noRecursiveProblemWithProjection.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/noRecursiveProblemWithProjection.kt"
   },
@@ -17964,8 +17959,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3822invokeOnThis.kt"
   },
   "box/box/functions/kt1038.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt1038.kt"
   },
@@ -18327,8 +18322,8 @@
    "upstream": "compiler/testData/codegen/box/functions/typeParameterAsUpperBound.kt"
   },
   "box/box/functions/typeParametersInLocalFunction.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/typeParametersInLocalFunction.kt"
   },
@@ -18618,8 +18613,8 @@
    "upstream": "compiler/testData/codegen/box/increment/extOnLong.kt"
   },
   "box/box/increment/genericClassWithGetSet.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/genericClassWithGetSet.kt"
   },
@@ -18780,7 +18775,7 @@
   },
   "box/box/inference/coerctionToUnitForLastExpressionWithStarProjection.kt": {
    "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "detail": "expected '(' (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/coerctionToUnitForLastExpressionWithStarProjection.kt"
   },
@@ -18826,13 +18821,13 @@
   },
   "box/box/inference/inferenceWithTypeVariableInsideCapturedType.kt": {
    "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "detail": "cannot infer type parameter E of materializeInvInv; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/inferenceWithTypeVariableInsideCapturedType.kt"
   },
   "box/box/inference/integerLiteralTypeInLamdaReturnType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/integerLiteralTypeInLamdaReturnType.kt"
   },
@@ -18922,8 +18917,8 @@
    "upstream": "compiler/testData/codegen/box/inference/noCoercionToUniForNullableLambdaReturnType.kt"
   },
   "box/box/inference/noCoercionToUnitWithEqualityConstraintForNullableReturnType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/noCoercionToUnitWithEqualityConstraintForNullableReturnType.kt"
   },
@@ -18961,14 +18956,14 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/capturedTypes.kt"
   },
   "box/box/inference/pcla/constraintsBetweenTwoStubVariables.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/constraintsBetweenTwoStubVariables.kt"
   },
   "box/box/inference/pcla/contextParameters.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/contextParameters.kt"
   },
@@ -18997,7 +18992,7 @@
   },
   "box/box/inference/pcla/issues/kt44241.kt": {
    "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "detail": "expected '(' (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt44241.kt"
   },
@@ -19138,8 +19133,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53422b.kt"
   },
   "box/box/inference/pcla/issues/kt53478.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53478.kt"
   },
@@ -19383,8 +19378,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66229.kt"
   },
   "box/box/inference/pcla/issues/kt66243.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66243.kt"
   },
@@ -19440,8 +19435,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/lackOfNullCheckOnNullableInsideBuild.kt"
   },
   "box/box/inference/pcla/lambdaParameterHasTVType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/lambdaParameterHasTVType.kt"
   },
@@ -19463,26 +19458,26 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/nullability.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/AnonymousFunctionArgumentAndBuildeeParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/AnonymousFunctionArgumentAndBuildeeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/AnonymousFunctionArgumentAndBuildeeReceiver.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/AnonymousFunctionArgumentAndBuildeeReceiver.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/LambdaArgumentAndBuildeeParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/LambdaArgumentAndBuildeeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/LambdaArgumentAndBuildeeReceiver.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/LambdaArgumentAndBuildeeReceiver.kt"
   },
@@ -19499,8 +19494,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ByAssignmentToALocalVariableYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideAnonymousObject.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideAnonymousObject.kt"
   },
@@ -19511,8 +19506,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideLocalClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideNestedLambda.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideNestedLambda.kt"
   },
@@ -19533,14 +19528,14 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughGenericFunctionCall.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughLocalVariable.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughLocalVariable.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/AnonymousObject.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/AnonymousObject.kt"
   },
@@ -19551,206 +19546,206 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/DefinitelyNonNullableTypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingClass.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingEnumerationEntryType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingEnumerationEntryType.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingEnumerationType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingEnumerationType.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingExplicitlyGenericInnerClass.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ')')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingExplicitlyGenericInnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingGenericClass.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingGenericClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingImplicitlyGenericInnerClass.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingImplicitlyGenericInnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingInnerClass.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingInnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnumerationType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnumerationType.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ExplicitlyGenericInnerClass.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ')')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ExplicitlyGenericInnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/FunctionWithParameterToUnit.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/FunctionWithParameterToUnit.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/FunctionWithReceiverToUnit.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'UserKlass')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/FunctionWithReceiverToUnit.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericLocalClass.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericLocalClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericLocalClassWithLeakingTypeParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericLocalClassWithLeakingTypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithContravariantTypeParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithContravariantTypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithCovariantTypeParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithCovariantTypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithInProjectedTypeArgument.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithInProjectedTypeArgument.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithInvariantTypeParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithInvariantTypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithOutProjectedTypeArgument.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithOutProjectedTypeArgument.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithStarProjectedTypeArgument.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithStarProjectedTypeArgument.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ImplicitlyGenericInnerClass.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ImplicitlyGenericInnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/InnerClass.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/InnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/Int.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/Int.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/IntersectionType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/IntersectionType.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/LocalClass.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/LocalClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NothingYieldCase.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NothingYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableNothing.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableNothing.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableNothingNullLiteralYieldCase.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableNothingNullLiteralYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableType.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableTypeParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableTypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullaryFunctionToUnit.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullaryFunctionToUnit.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullaryFunctionWithReturnValue.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullaryFunctionWithReturnValue.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/String.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/String.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/SuspendingFunction.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/SuspendingFunction.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/TypeParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/TypeParameter.kt"
   },
@@ -19875,8 +19870,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/pclaRootIsTrySyntheticCallWithDelegate.kt"
   },
   "box/box/inference/pcla/posptonedPCLACallInsideStringInterpolation.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/posptonedPCLACallInsideStringInterpolation.kt"
   },
@@ -19887,14 +19882,14 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/propagateInferenceSessionIntoDeclarationAnalyzers.kt"
   },
   "box/box/inference/pcla/propertyInvokeInsidePCLALambda.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/propertyInvokeInsidePCLALambda.kt"
   },
   "box/box/inference/pcla/receiverUsesOuterTVButReturnTypeIsProper.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/receiverUsesOuterTVButReturnTypeIsProper.kt"
   },
@@ -19916,8 +19911,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/substituteStubTypeIntoCR.kt"
   },
   "box/box/inference/pcla/substituteStubTypeIntolambdaParameterDescriptor.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/substituteStubTypeIntolambdaParameterDescriptor.kt"
   },
@@ -19928,26 +19923,26 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/substitutelambdaExtensionReceiverType.kt"
   },
   "box/box/inference/pcla/topDownCompletionBreakedByNonBuilderInferenceSession.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionBreakedByNonBuilderInferenceSession.kt"
   },
   "box/box/inference/pcla/topDownCompletionWithThreeBuilderInferenceCalls.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionWithThreeBuilderInferenceCalls.kt"
   },
   "box/box/inference/pcla/topDownCompletionWithThreeBuilderInferenceCallsSameLevel.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionWithThreeBuilderInferenceCallsSameLevel.kt"
   },
   "box/box/inference/pcla/topDownCompletionWithTwoBuilderInferenceCalls.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionWithTwoBuilderInferenceCalls.kt"
   },
@@ -19963,8 +19958,8 @@
    "upstream": "compiler/testData/codegen/box/inference/plusAssignInsideLambda.kt"
   },
   "box/box/inference/recursiveConstraintInsideTypeArgumentWithStarProjection.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/recursiveConstraintInsideTypeArgumentWithStarProjection.kt"
   },
@@ -20005,8 +20000,8 @@
    "upstream": "compiler/testData/codegen/box/inference/tryWithAssignmentAndNothingTypedCatch.kt"
   },
   "box/box/inference/unsafeVarianceCodegen.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/unsafeVarianceCodegen.kt"
   },
@@ -21020,8 +21015,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClass/nestedInlineClasses.kt"
   },
   "box/box/inlineClass/secondaryConstructorWithGenerics.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClass/secondaryConstructorWithGenerics.kt"
   },
@@ -21122,56 +21117,56 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInitBlockGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverride.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverride.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverrideGeneric.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverrideGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverrideGeneric2.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverrideGeneric2.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingType.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric2.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric2.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric2.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric2.kt"
   },
@@ -22901,8 +22896,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/delegationByUnderlyingType/simple.kt"
   },
   "box/box/inlineClasses/delegationByUnderlyingType/simpleGeneric.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/delegationByUnderlyingType/simpleGeneric.kt"
   },
@@ -23384,26 +23379,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/mixedSignatureFunctionsDoNotClashGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass.kt"
   },
   "box/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass2.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass2.kt"
   },
   "box/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass2Generic.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass2Generic.kt"
   },
   "box/box/inlineClasses/functionNameMangling/overridingMethodInGenericClassGeneric.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/overridingMethodInGenericClassGeneric.kt"
   },
@@ -23473,45 +23468,40 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericInlineClassSynthMembers.kt"
   },
   "box/box/inlineClasses/genericUnderlyingValue/array.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "unknown arrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'arrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericUnderlyingValue/array.kt"
   },
   "box/box/inlineClasses/genericUnderlyingValue/arrayIC.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "unknown arrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'arrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericUnderlyingValue/arrayIC.kt"
   },
   "box/box/inlineClasses/genericUnderlyingValue/primitive.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericUnderlyingValue/primitive.kt"
   },
   "box/box/inlineClasses/genericUnderlyingValue/recursive.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericUnderlyingValue/recursive.kt"
   },
   "box/box/inlineClasses/genericUnderlyingValue/simple.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericUnderlyingValue/simple.kt"
   },
   "box/box/inlineClasses/genericUnderlyingValue/simple2.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericUnderlyingValue/simple2.kt"
   },
   "box/box/inlineClasses/genericUnderlyingValue/upperBound.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericUnderlyingValue/upperBound.kt"
   },
   "box/box/inlineClasses/genericVararg2ndConstructor.kt": {
@@ -23613,8 +23603,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/innerClassConstructorGeneric.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/kt28855.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'ys')",
+   "detail": "expected ':' (at 'ys')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/kt28855.kt"
   },
@@ -24280,8 +24270,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_functionalGeneric.kt"
   },
   "box/box/inlineClasses/kt27096_innerClass.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_innerClass.kt"
   },
@@ -25493,62 +25483,62 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingType.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullableInlineClassUnderlyingTypeGWI.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullableInlineClassUnderlyingTypeGWI.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullableInlineClassUnderlyingTypeGWI2.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullableInlineClassUnderlyingTypeGWI2.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingType.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGWI.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGWI.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGWI2.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGWI2.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGeneric.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGeneric.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt"
   },
@@ -26067,20 +26057,20 @@
    "upstream": "compiler/testData/codegen/box/innerClass/getOuterVal.kt"
   },
   "box/box/innerClass/inCallableReferenceLHS.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/inCallableReferenceLHS.kt"
   },
   "box/box/innerClass/inCallableReferenceLHSclassReference.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/inCallableReferenceLHSclassReference.kt"
   },
   "box/box/innerClass/inCallableReferenceLHSwithGenericFun.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/inCallableReferenceLHSwithGenericFun.kt"
   },
@@ -26182,8 +26172,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/innerGeneric.kt"
   },
   "box/box/innerNested/innerImplicitParameter.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/innerImplicitParameter.kt"
   },
@@ -26206,8 +26196,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/innerWithDefaultArgument.kt"
   },
   "box/box/innerNested/innerWithDefaultArgumentGenericExtensionProperty.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "body properties need an initializer (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/innerWithDefaultArgumentGenericExtensionProperty.kt"
   },
@@ -26237,7 +26227,7 @@
   },
   "box/box/innerNested/kt46829.kt": {
    "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "detail": "expected identifier (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/kt46829.kt"
   },
@@ -27502,8 +27492,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/defaultParameterInConstructor.kt"
   },
   "box/box/localClasses/inCallableReferenceLHS.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'L')",
+   "detail": "expected end of statement (at 'L')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/inCallableReferenceLHS.kt"
   },
@@ -27640,8 +27630,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/localExtendsInnerAndReferencesOuterMember.kt"
   },
   "box/box/localClasses/localGenericWithTypeParameters.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localGenericWithTypeParameters.kt"
   },
@@ -29367,8 +29357,8 @@
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/fullFormFromSmartCast.kt"
   },
   "box/box/nameBasedDestructuring/fullFormGenericBounds.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 's')",
+   "detail": "expected ')' (at 's')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/fullFormGenericBounds.kt"
   },
@@ -29396,8 +29386,8 @@
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/shortFormFromSmartCast.kt"
   },
   "box/box/nameBasedDestructuring/shortFormGenericBounds.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/shortFormGenericBounds.kt"
   },
@@ -29863,8 +29853,8 @@
    "upstream": "compiler/testData/codegen/box/objects/dceRemoveUnusedEagerlyInitializedObject.kt"
   },
   "box/box/objects/flist.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/flist.kt"
   },
@@ -29887,8 +29877,8 @@
    "upstream": "compiler/testData/codegen/box/objects/initializerBlockResetToDefault.kt"
   },
   "box/box/objects/innerClassInsideAnonymousObject.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/innerClassInsideAnonymousObject.kt"
   },
@@ -30001,8 +29991,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt45170.kt"
   },
   "box/box/objects/kt46136.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt46136.kt"
   },
@@ -30012,8 +30002,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt52540.kt"
   },
   "box/box/objects/kt535.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt535.kt"
   },
@@ -30335,8 +30325,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/longInt.kt"
   },
   "box/box/operatorConventions/genericArrayAccessCall.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/genericArrayAccessCall.kt"
   },
@@ -31187,8 +31177,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/stringEqualsHashCodeToString.kt"
   },
   "box/box/primitiveTypes/substituteIntForGeneric.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/substituteIntForGeneric.kt"
   },
@@ -31288,20 +31278,20 @@
    "upstream": "compiler/testData/codegen/box/privateConstructors/withVarargs.kt"
   },
   "box/box/properties/PrivatePropertyOfComplexGenericFunctionType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/PrivatePropertyOfComplexGenericFunctionType.kt"
   },
   "box/box/properties/PrivatePropertyOfGenericContravariantFunctionType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/PrivatePropertyOfGenericContravariantFunctionType.kt"
   },
   "box/box/properties/PrivatePropertyOfGenericCovariantFunctionType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/PrivatePropertyOfGenericCovariantFunctionType.kt"
   },
@@ -31593,7 +31583,7 @@
   },
   "box/box/properties/genericWithSameName.kt": {
    "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "detail": "expected identifier (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/genericWithSameName.kt"
   },
@@ -31683,9 +31673,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt2331.kt"
   },
   "box/box/properties/kt257.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt257.kt"
   },
   "box/box/properties/kt2655.kt": {
@@ -32333,8 +32322,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/ulongUntil.kt"
   },
   "box/box/ranges/contains/genericCharInRangeLiteral.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'in')",
+   "detail": "expected ')' (at 'in')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/genericCharInRangeLiteral.kt"
   },
@@ -37378,13 +37367,13 @@
   },
   "box/box/regressions/dataClassInInlineFunctionWithTypeParameters.kt": {
    "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "detail": "expected '(' (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/dataClassInInlineFunctionWithTypeParameters.kt"
   },
   "box/box/regressions/dataClassInRegularFunctionWithTypeParameters.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/dataClassInRegularFunctionWithTypeParameters.kt"
   },
@@ -37402,7 +37391,7 @@
   },
   "box/box/regressions/dontCaptureTypesWithTypeVariables.kt": {
    "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "detail": "expected '(' (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/dontCaptureTypesWithTypeVariables.kt"
   },
@@ -37452,8 +37441,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt10143.kt"
   },
   "box/box/regressions/kt10934.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt10934.kt"
   },
@@ -37515,8 +37504,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt2060.kt"
   },
   "box/box/regressions/kt2210.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other: unsupported type Array<Array<Int>>",
+   "detail": "unsupported type Array<Array<Int>>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt2210.kt"
   },
@@ -37532,8 +37521,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt2470.kt"
   },
   "box/box/regressions/kt24913.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt24913.kt"
   },
@@ -37586,8 +37575,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt3587.kt"
   },
   "box/box/regressions/kt35914.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt35914.kt"
   },
@@ -37679,8 +37668,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt68727.kt"
   },
   "box/box/regressions/kt71119.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'f')",
+   "detail": "expected end of statement (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt71119.kt"
   },
@@ -37714,8 +37703,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/lambdaAsLastExpressionInLambda.kt"
   },
   "box/box/regressions/lambdaPostponeConstruction.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/lambdaPostponeConstruction.kt"
   },
@@ -37928,7 +37917,7 @@
   },
   "box/box/reified/kt39256_privateInlineWithAnonymousObject.kt": {
    "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "detail": "expected '(' (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/kt39256_privateInlineWithAnonymousObject.kt"
   },
@@ -38395,8 +38384,8 @@
    "upstream": "compiler/testData/codegen/box/sealed/delegatingConstructor.kt"
   },
   "box/box/sealed/kt49752.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'where')",
+   "detail": "unexpected top-level token (at 'where')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sealed/kt49752.kt"
   },
@@ -38542,8 +38531,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/fieldInitializerOptimization.kt"
   },
   "box/box/secondaryConstructors/generics.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/generics.kt"
   },
@@ -38889,8 +38878,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/smartCastedGenericWhenSubjectInRangeCheck.kt"
   },
   "box/box/smartCasts/smartcastFromGenericToString.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "inline/value classes",
+   "detail": "expected ')' (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/smartcastFromGenericToString.kt"
   },
@@ -39071,14 +39060,14 @@
    "upstream": "compiler/testData/codegen/box/statics/incInObject.kt"
   },
   "box/box/statics/inheritedPropertyInClassObject.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/inheritedPropertyInClassObject.kt"
   },
   "box/box/statics/inheritedPropertyInObject.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "objects / companion objects",
+   "detail": "unexpected top-level token (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/inheritedPropertyInObject.kt"
   },
@@ -39161,8 +39150,8 @@
    "upstream": "compiler/testData/codegen/box/strictEquals/fullValueClass.kt"
   },
   "box/box/strictEquals/generic.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/generic.kt"
   },
@@ -39801,8 +39790,8 @@
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/accessorForAbstractProtected.kt"
   },
   "box/box/syntheticAccessors/accessorForGenericConstructor.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "class bodies / constructors",
+   "detail": "unexpected top-level token (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/accessorForGenericConstructor.kt"
   },
@@ -40651,8 +40640,8 @@
    "upstream": "compiler/testData/codegen/box/typeInfo/kt2811.kt"
   },
   "box/box/typeInfo/primitiveTypeInfo.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typeInfo/primitiveTypeInfo.kt"
   },
@@ -40731,20 +40720,20 @@
    "upstream": "compiler/testData/codegen/box/typealias/extensionFunction.kt"
   },
   "box/box/typealias/genericTypeAliasConstructor.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/genericTypeAliasConstructor.kt"
   },
   "box/box/typealias/genericTypeAliasConstructor2.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt"
   },
   "box/box/typealias/genericTypeAliasConstructor_implicitTypeArguments.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/genericTypeAliasConstructor_implicitTypeArguments.kt"
   },
@@ -40803,8 +40792,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/nestedTypeAliasesAndTypeArguments.kt"
   },
   "box/box/typealias/objectLiteralConstructor.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/objectLiteralConstructor.kt"
   },
@@ -40850,8 +40839,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasConstructorForArray.kt"
   },
   "box/box/typealias/typeAliasConstructorInSuperCall.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasConstructorInSuperCall.kt"
   },
@@ -40862,8 +40851,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasFunction.kt"
   },
   "box/box/typealias/typeAliasInAnonymousObjectType.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasInAnonymousObjectType.kt"
   },
@@ -40896,8 +40885,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasUsedAcrossModules.kt"
   },
   "box/box/typealias/typeArgumentsMappingForTopLevelTAWithInnerRHS.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeArgumentsMappingForTopLevelTAWithInnerRHS.kt"
   },
@@ -41372,8 +41361,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/inlineClassArraysAsNamedArgumentInVararg.kt"
   },
   "box/box/vararg/kt10926.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'values')",
+   "detail": "expected ':' (at 'values')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt10926.kt"
   },
@@ -41549,8 +41538,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/genericCallableReferences.kt"
   },
   "box/box/versionOverloads/genericInnerSecondaryConstructor.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/genericInnerSecondaryConstructor.kt"
   },
@@ -41560,8 +41549,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/genericReturnCombinations.kt"
   },
   "box/box/versionOverloads/generics.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/generics.kt"
   },
@@ -41778,8 +41767,8 @@
    "upstream": "compiler/testData/codegen/box/volatile/volatileFloat.kt"
   },
   "box/box/volatile/volatileGeneric.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/volatile/volatileGeneric.kt"
   },
@@ -41999,8 +41988,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt14597_full.kt"
   },
   "box/box/when/enumOptimization/kt14802.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "enum classes",
+   "detail": "unexpected top-level token (at 'enum')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt14802.kt"
   },

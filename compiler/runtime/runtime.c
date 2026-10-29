@@ -159,6 +159,12 @@ static void bounds(List *l, int64_t i) {
 int64_t rt_list_get(List *l, int64_t i) { bounds(l, i); return l->data[i]; }
 int64_t rt_list_set(List *l, int64_t i, int64_t v) { bounds(l, i); int64_t o = l->data[i]; l->data[i] = v; return o; }
 int64_t rt_list_size(List *l) { return l->len; }
+/* Removes and returns element i; ownership of a reference element moves to the caller. */
+int64_t rt_list_remove_at(List *l, int64_t i) {
+    bounds(l, i); int64_t o = l->data[i];
+    memmove(l->data + i, l->data + i + 1, (size_t)(l->len - i - 1) * 8); l->len--;
+    return o;
+}
 void rt_list_release(List *l) {
     if (!l || --l->rc > 0) return;
     LK(LK_LIST, -1);

@@ -34,7 +34,10 @@ private val NANOS = setOf("kotlin.system.getTimeNanos", "getTimeNanos", "System.
 private const val VT_HEADER = 5
 
 /** Native target: typed LLVM IR generation (linked by clang with runtime/runtime.c). */
-class NativeBackend(private val prog: Program) {
+/** Thrown when code needs an instance of a generic class that is not in the program yet; [compileGenerics] adds it and retries. */
+class NeedInstance(val name: String, val args: List<TypeRef>) : Exception()
+
+class NativeBackend(private val prog: Program, private val genericClasses: Map<String, ClassD> = emptyMap()) {
     private val globals = StringBuilder()
     private val funcs = StringBuilder()
     private val strMap = HashMap<String, String>()
@@ -113,7 +116,7 @@ class NativeBackend(private val prog: Program) {
         "HashMap", "MutableMap", "Map" -> mapTy(resolve(t.args[0]), resolve(t.args[1]))
         "ArrayList", "MutableList", "List" -> Ty.ListTy(resolve(t.args.single()))
         "Array" -> if (t.args.singleOrNull()?.name == "String") Ty.Args else fail("unsupported type $t")
-        else -> if (t.name in classes) Ty.Cls(t.name) else if (t.name in ifaces) Ty.Iface(t.name) else if (t.name.startsWith("CPointer")) Ty.RawPtr else fail("unknown type $t")
+        else -> if (t.name in genericClasses) instanceTy(t.name, t.args) else if (t.name in classes) Ty.Cls(t.name) else if (t.name in ifaces) Ty.Iface(t.name) else if (t.name.startsWith("CPointer")) Ty.RawPtr else fail("unknown type $t")
     }
 
     private fun mapTy(k: Ty, v: Ty): Ty {
@@ -1159,6 +1162,22 @@ class NativeBackend(private val prog: Program) {
             val args = e.args.mapIndexed { i, a -> "${ps[i].llvm} ${coerce(genExpr(a), ps[i]).v}" }
             return Val(emitT("call ${ret.llvm} @$n(${args.joinToString(", ")})"), ret)
         }
+        genericClasses[n]?.let { cd ->
+            val ta = if (e.typeArgs.isNotEmpty()) {
+                if (e.typeArgs.size != cd.typeParams.size) fail("$n expects ${cd.typeParams.size} type arguments")
+                e.typeArgs
+            } else {
+                // Infer from the constructor argument types; the probe's IR is rolled back, the call is generated below.
+                if (e.args.size != cd.ctorParams.size) fail("constructor $n expects ${cd.ctorParams.size} arguments")
+                val env = LinkedHashMap<String, Ty>()
+                val sb = body.length; val sa = allocas.length; val sc = cur; val st = term
+                val tys = e.args.map { genExpr(it).t }
+                body.setLength(sb); allocas.setLength(sa); cur = sc; term = st
+                cd.ctorParams.forEachIndexed { i, p -> unify(p.type, tys[i], cd.typeParams, env) }
+                cd.typeParams.map { tp -> tyRef(env[tp] ?: fail("cannot infer type parameter $tp of $n; pass it explicitly")) }
+            }
+            return genNamedCall((instanceTy(n, ta) as Ty.Cls).name, CallE(e.callee, emptyList(), e.args, e.lambda))
+        }
         classes[n]?.let { ci ->
             val cd = classDecls.getValue(n)
             if (cd.hasCtorBody) {
@@ -1242,6 +1261,16 @@ class NativeBackend(private val prog: Program) {
         return finishCall("call ${sig.ret.llvm} @$sym($args)", sig.ret, vals)
     }
 
+    /** `Box<Int>` -> the monomorphized class `Box$Int`; requests the instance if the program does not have it yet. */
+    private fun instanceTy(n: String, args: List<TypeRef>): Ty {
+        val cd = genericClasses.getValue(n)
+        if (args.size != cd.typeParams.size) fail("$n expects ${cd.typeParams.size} type arguments")
+        val concrete = args.map { tyRef(resolve(it)) }
+        val m = mangle(n, concrete)
+        if (m in classes) return Ty.Cls(m)
+        throw NeedInstance(n, concrete)
+    }
+
     /** Binds type parameters in [ref] against the concrete argument type [t]; the first binding wins (later args coerce). */
     private fun unify(ref: TypeRef, t: Ty, tps: List<String>, env: MutableMap<String, Ty>) {
         if (ref.name in tps) { if (ref.name !in env && t != Ty.Nothing) env[ref.name] = t; return }
@@ -1309,6 +1338,10 @@ class NativeBackend(private val prog: Program) {
                 val i = coerce(genExpr(e.args.single()), Ty.I64)
                 val v = Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${r.v}, i64 ${i.v})"), t.elem), t.elem)
                 if (r.owned) consume(v) else v
+            }
+            t is Ty.ListTy && n == "removeAt" -> {
+                val i = coerce(genExpr(e.args.single()), Ty.I64)
+                Val(fromSlot(emitT("call i64 @rt_list_remove_at(ptr ${r.v}, i64 ${i.v})"), t.elem), t.elem, t.elem.isRef)
             }
             else -> fail("unknown method ${r.t}.$n()")
         }
@@ -1565,6 +1598,7 @@ declare ptr @rt_list_new(ptr)
 declare void @rt_list_add(ptr, i64)
 declare i64 @rt_list_get(ptr, i64)
 declare i64 @rt_list_set(ptr, i64, i64)
+declare i64 @rt_list_remove_at(ptr, i64)
 declare i64 @rt_list_size(ptr)
 declare void @rt_list_release(ptr)
 declare ptr @rt_arr_new(i64, i64)
