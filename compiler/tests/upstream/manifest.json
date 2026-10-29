@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 1979,
-  "UNSUPPORTED": 3472
+  "PASS": 1991,
+  "UNSUPPORTED": 3460
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -5603,8 +5603,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt454.kt"
   },
   "box/box/classes/kt471.kt": {
-   "category": "other: ++ on MyNumber",
-   "detail": "++ on MyNumber",
+   "category": "unknown Array (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Array'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt471.kt"
   },
@@ -5671,15 +5671,13 @@
    "upstream": "compiler/testData/codegen/box/classes/kt707.kt"
   },
   "box/box/classes/kt723.kt": {
-   "category": "operator/infix functions",
-   "detail": "custom inc/dec operators are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt723.kt"
   },
   "box/box/classes/kt725.kt": {
-   "category": "other: unknown method Int.ext$Int$inc()",
-   "detail": "unknown method Int.ext$Int$inc()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt725.kt"
   },
   "box/box/classes/kt8011.kt": {
@@ -12442,9 +12440,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/objectExpressionDelegatingToSecondaryConstructor.kt"
   },
   "box/box/defaultArguments/convention/incWithDefaultInGetter.kt": {
-   "category": "operator/infix functions",
-   "detail": "custom inc/dec operators are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/incWithDefaultInGetter.kt"
   },
   "box/box/defaultArguments/convention/incWithDefaults.kt": {
@@ -15733,9 +15730,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3646.kt"
   },
   "box/box/extensionFunctions/kt3969.kt": {
-   "category": "other: ++ on A",
-   "detail": "++ on A",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3969.kt"
   },
   "box/box/extensionFunctions/kt4228.kt": {
@@ -17788,9 +17784,8 @@
    "upstream": "compiler/testData/codegen/box/functions/recursiveCompareTo.kt"
   },
   "box/box/functions/recursiveIncrementCall.kt": {
-   "category": "operator/infix functions",
-   "detail": "custom inc/dec operators are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/recursiveIncrementCall.kt"
   },
   "box/box/functions/typeParameterAsUpperBound.kt": {
@@ -18152,9 +18147,8 @@
    "upstream": "compiler/testData/codegen/box/increment/postfixNullableClassIncrement.kt"
   },
   "box/box/increment/postfixNullableIncrement.kt": {
-   "category": "operator/infix functions",
-   "detail": "custom inc/dec operators are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/postfixNullableIncrement.kt"
   },
   "box/box/increment/prefixIncrementOnClass.kt": {
@@ -18182,9 +18176,8 @@
    "upstream": "compiler/testData/codegen/box/increment/prefixNullableClassIncrement.kt"
   },
   "box/box/increment/prefixNullableIncrement.kt": {
-   "category": "operator/infix functions",
-   "detail": "custom inc/dec operators are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/prefixNullableIncrement.kt"
   },
   "box/box/inference/approximateNonTopLevelCapturedTypes.kt": {
@@ -23151,12 +23144,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 537660704\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531424\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1611402208\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 537660384\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23675,15 +23668,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt32793.kt"
   },
   "box/box/inlineClasses/kt33119.kt": {
-   "category": "other: ++ on WrappingInt",
-   "detail": "++ on WrappingInt",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt33119.kt"
   },
   "box/box/inlineClasses/kt33119Generic.kt": {
-   "category": "other: ++ on WrappingInt$Int",
-   "detail": "++ on WrappingInt$Int",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt33119Generic.kt"
   },
   "box/box/inlineClasses/kt34268.kt": {
@@ -25781,7 +25772,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1029bcf1b        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102ac9f67        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x10084cf1b        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10095ac2b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -29437,9 +29428,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/genericArrayAccessCall.kt"
   },
   "box/box/operatorConventions/incDecOnObject.kt": {
-   "category": "other: ++ on X",
-   "detail": "++ on X",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/operatorConventions/incDecOnObject.kt"
   },
   "box/box/operatorConventions/infixFunctionOverBuiltinMember.kt": {
@@ -39216,7 +39206,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz0qxf9dh/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz0qxf9dh/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8z3kpfk9/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8z3kpfk9/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -39337,9 +39327,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/boxedUnsignedEqualsZero.kt"
   },
   "box/box/unsignedTypes/checkBasicUnsignedLiterals.kt": {
-   "category": "other: unknown method UInt.dec()",
-   "detail": "unknown method UInt.dec()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/checkBasicUnsignedLiterals.kt"
   },
   "box/box/unsignedTypes/defaultArguments.kt": {
@@ -45283,9 +45272,8 @@
    "upstream": "native/native.tests/testData/codegen/serialization/no_type_map.kt"
   },
   "native/native.tests/codegen/variables/var1.kt": {
-   "category": "other: ++ on Integer",
-   "detail": "++ on Integer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/variables/var1.kt"
   },
   "native/native.tests/codegen/variables/var2.kt": {

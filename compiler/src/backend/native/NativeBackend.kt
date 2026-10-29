@@ -908,7 +908,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val value = if (s.op == "=") s.value else BinE(s.op.dropLast(1), s.target, s.value).also { it.line = s.line }
                 assign(s.target, value)
             }
-            is IncS -> if (extFuns.containsKey(if (s.op == "++") "inc" else "dec")) fail("custom inc/dec operators are not supported") else onceRecv(s.target) { tg -> assign(tg, BinE(if (s.op == "++") "+" else "-", tg, IntL(1, false)).also { it.line = s.line }); Val("", Ty.Unit) }
+            is IncS -> releaseIfOwned(genExpr(PostIncE(s.target, s.op).also { it.line = s.line }))
             is WhileS -> if (s.isDo) {
                 pendingLabel = s.label ?: pendingLabel
                 val lc = label("do.cond"); val lb = label("do.body"); val le = label("do.end")
@@ -1142,13 +1142,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is PostIncE -> {
                 val pre = e.op.startsWith("pre")
                 val op = e.op.removePrefix("pre")
-                if (extFuns.containsKey(if (op == "++") "inc" else "dec")) fail("custom inc/dec operators are not supported")
+                val mname = if (op == "++") "inc" else "dec"
                 onceRecv(e.target) { tg ->
                     val old = genExpr(tg)
-                    if (old.t.llvm == "ptr") fail("$op on ${old.t}")
+                    // `operator fun inc()/dec()` (member, or an extension on the operand type).
+                    val custom = (old.t as? Ty.Cls)?.let { mname in classes.getValue(it.name).methods } == true ||
+                        extFuns[mname]?.any { extMatches(old.t, it.params[0].type, it.typeParams) } == true
+                    if (!custom && old.t.llvm == "ptr") fail("$op on ${old.t}")
                     // The getter runs once for the old value; prefix forms read the property again for the result.
                     withTemps(listOf(old)) { (x) ->
-                        assign(tg, BinE(if (op == "++") "+" else "-", x, IntL(1, false)).also { it.line = e.line })
+                        val savedIv = incViaExt; incViaExt = custom
+                        try { assign(tg, (if (custom) CallE(MemberE(x, mname, false).also { it.line = e.line }, emptyList(), emptyList(), null)
+                            else BinE(if (op == "++") "+" else "-", x, IntL(1, false))).also { it.line = e.line }) } finally { incViaExt = savedIv }
                         genExpr(if (pre) tg else x)
                     }
                 }
@@ -2313,6 +2318,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return null
     }
 
+    /** `x++` with an `operator fun T?.inc()` extension: the operator call resolves to the extension. */
+    private var incViaExt = false
+
     private fun method(r: Val, n: String, e0: CallE): Val {
         val t = r.t
         // Member extension of the enclosing class (dispatch receiver `this`).
@@ -2323,6 +2331,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (isAny(t) && n == "toString" && e0.args.isEmpty()) { val s = anyCall("anyToString__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return s }
         if (isAny(t) && n == "equals" && e0.args.size == 1) return compare("==", r, genExpr(e0.args[0]))
         if (isAny(t) && n == "hashCode" && e0.args.isEmpty()) { val h = anyCall("anyHashCode__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return h }
+        // Built-in members `inc()`/`dec()` of numbers and chars win over extensions.
+        // Byte (I8) is excluded: its inc() must wrap at 8 bits.
+        if ((t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.Char) && (n == "inc" || n == "dec") && e0.args.isEmpty() && !incViaExt)
+            return withTemps(listOf(r)) { (x) -> genExpr(BinE(if (n == "inc") "+" else "-", x, IntL(1, false)).also { it.line = line }) }
         if (!hasMember(t, n)) extFuns[n]?.firstOrNull { extMatches(t, it.params[0].type, it.typeParams) }?.let { f ->
             return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
         }
