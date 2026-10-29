@@ -9,6 +9,13 @@ The library directory is taken from `$NEWKOTLIN_MIMALLOC_DIR`, then `pkg-config 
 then `/opt/homebrew/opt/mimalloc/lib`, `/usr/local/opt/mimalloc/lib`, `/usr/local/lib`, `/usr/lib`.
 If none has `libmimalloc`, compilation fails with an error. Install with `brew install mimalloc`.
 
+Before linking, `newkotlinc` runs LLVM `opt` on the generated IR (`lto-pre-link<O3>` with the default `-flto`,
+otherwise `default<O3>`); `--no-opt` skips it. `opt` is taken from `--opt <path>`, then `$NK_OPT`, `opt` on `PATH`,
+`xcrun --find opt`, `$CONDA_PREFIX/bin/opt`, `/opt/homebrew/opt/llvm/bin/opt`, `/usr/local/opt/llvm/bin/opt`,
+the newest Homebrew `llvm@N`, then mise LLVM installs (`~/.local/share/mise/installs/llvm/*`). Apple's Xcode
+toolchain does not ship `opt`; install LLVM with `brew install llvm` (or point `NK_OPT` at any LLVM `opt`).
+If none is found, compilation fails with an error.
+
 - `--alloc malloc`: system malloc/free (used for ASan and macOS `leaks` in `compiler/tests/leaks/run.sh`).
 - `--alloc pool`: built-in free-list pool.
 

@@ -12,8 +12,8 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --cc <clang>         C compiler/linker (default: clang)
   --cflags "<flags>"   optimization flags for clang (default: -O3 -flto)
   --opt <path>         LLVM opt run on the IR before linking (lto-pre-link<O3> with -flto, else default<O3>);
-                       default: ${'$'}NK_OPT,
-                       opt on PATH, then `xcrun --find opt`
+                       default: ${'$'}NK_OPT, opt on PATH, `xcrun --find opt`, ${'$'}CONDA_PREFIX/bin, Homebrew llvm
+                       (llvm, then newest llvm@N), mise llvm installs
   --no-opt             skip the opt step (clang -O3 -flto still optimizes)
   --leak-check         count live runtime objects; report at exit, exit 3 on a leak
   --alloc <mimalloc|malloc|pool> object allocator: mimalloc (default; found via ${'$'}NEWKOTLIN_MIMALLOC_DIR,
@@ -54,11 +54,18 @@ private fun capture(cmd: String): String? {
     return out.toString().trim().lineSequence().firstOrNull()?.trim()?.ifEmpty { null }
 }
 
-/** LLVM `opt`: --opt <path>, ${'$'}NK_OPT, `opt` on PATH, then `xcrun --find opt`. */
+/** LLVM `opt`: --opt <path>, ${'$'}NK_OPT, `opt` on PATH, `xcrun --find opt`, then common install locations. */
 private fun findOpt(explicit: String?): String? {
     (explicit ?: getenv("NK_OPT")?.toKString())?.let { return if (access(it, X_OK) == 0) it else null }
     capture("command -v opt 2>/dev/null")?.let { if (access(it, X_OK) == 0) return it }
-    return capture("xcrun --find opt 2>/dev/null")?.takeIf { access(it, X_OK) == 0 }
+    capture("xcrun --find opt 2>/dev/null")?.let { if (access(it, X_OK) == 0) return it }
+    // Common LLVM install locations: conda env, Homebrew llvm (unversioned, then newest llvm@N), mise.
+    val home = getenv("HOME")?.toKString() ?: ""
+    val fixed = listOfNotNull(getenv("CONDA_PREFIX")?.toKString()?.let { "$it/bin/opt" },
+        "/opt/homebrew/opt/llvm/bin/opt", "/usr/local/opt/llvm/bin/opt")
+    fixed.firstOrNull { access(it, X_OK) == 0 }?.let { return it }
+    val globs = "/opt/homebrew/opt/llvm@*/bin/opt /usr/local/opt/llvm@*/bin/opt '$home'/.local/share/mise/installs/llvm/*/bin/opt"
+    return capture("ls -d $globs 2>/dev/null | sort -V | tail -1")?.takeIf { access(it, X_OK) == 0 }
 }
 
 /** Directory with libmimalloc: ${'$'}NEWKOTLIN_MIMALLOC_DIR, pkg-config, then Homebrew/system paths. */
@@ -119,7 +126,7 @@ fun main(args: Array<String>) {
         val opt = findOpt(optPath) ?: run {
             if (!emitLl) remove(ll)
             fprintf(stderr, "error: LLVM opt not found (or not executable). Pass --opt <path>, set NK_OPT, put opt on PATH, " +
-                "or use --no-opt\n")
+                "install LLVM (e.g. brew install llvm), or use --no-opt\n")
             exit(1); return
         }
         linkLl = "$output.opt.ll"
