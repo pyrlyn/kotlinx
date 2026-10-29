@@ -1,6 +1,8 @@
 #!/bin/bash
 # KotlinX compiler (default allocator; NKFLAGS adds compiler flags) on every case: warm-up + 5 runs, mean of the middle 3, in ms.
-#   ./nkbench.sh <name> [git-ref]   -> results/nk/<name>.txt  ("case ms" per line)
+#   ./nkbench.sh <name> [git-ref]   -> results/nk/<name>.txt  ("case ms" per line, summary of this run)
+#   and one file per benchmark: results/${NKBENCH_SUITE:-nk}/<case>.json (every run appended: date, commit,
+#   ref, machine, toolchain, GC, mean ms and the 5 raw timings; see record.py).
 # With a git ref the compiler is built from that ref (e.g. main = 'old NewKotlin' baseline);
 # otherwise the working tree compiler is used.
 set -eu
@@ -22,6 +24,7 @@ else
 fi
 [ -f data/words.txt ] || python3 gen_data.py >/dev/null
 cat data/words.txt > /dev/null
+gc=$(echo " ${NKFLAGS:-} " | grep -oE -- '--gc[= ][a-z0-9_-]+' | tail -1 | sed -E 's/--gc[= ]//'); gc=${gc:-${NEWKOTLIN_GC:-default}}
 out=results/nk/$name.txt; : > "$out"
 echo "# $name ${ref:-working tree} $(date '+%Y-%m-%d %H:%M %Z') load: $(sysctl -n vm.loadavg)" >> "$out"
 for c in sum $(ls cases); do
@@ -30,6 +33,9 @@ for c in sum $(ls cases); do
   "$NKC" --runtime "$RT" ${NKFLAGS:-} "$src" -o "$b"
   "$b" >/dev/null
   ts=""; for r in 1 2 3 4 5; do ts="$ts $("$b" | grep -oE 'nanos=[0-9]+' | cut -d= -f2)"; done
-  python3 -c "v=sorted(map(int,'$ts'.split()))[1:4]; print('$c', round(sum(v)/3/1e6, 3))" >> "$out"
+  ms=$(python3 -c "v=sorted(map(int,'$ts'.split()))[1:4]; print(round(sum(v)/3/1e6, 3))")
+  echo "$c $ms" >> "$out"
+  python3 record.py "${NKBENCH_SUITE:-nk}" "$c" --run "$name" --gc "$gc" ${ref:+--ref "$ref" --commit "$sha"} \
+    ms="$ms" raw_ns="$(echo $ts | tr ' ' ',')" flags="${NKFLAGS:-}"
 done
 cat "$out"

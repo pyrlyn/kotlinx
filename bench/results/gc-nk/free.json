@@ -1,0 +1,94 @@
+{
+ "suite": "gc-nk",
+ "bench": "free",
+ "runs": [
+  {
+   "run": "gc-before",
+   "date": "2026-10-29T21:17:00+02:00",
+   "commit": "01b8c06",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 40.96 38.29 28.77 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 51.386
+   },
+   "note": "imported from PR #3 (bench/results/gc); main before the GC extraction"
+  },
+  {
+   "run": "gc-after",
+   "date": "2026-10-29T21:17:00+02:00",
+   "commit": "533bffd",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 39.22 37.98 28.82 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 50.753
+   },
+   "note": "imported from PR #3 summary files (bench/results/gc); measured on the PR branch before squash-merge 533bffd"
+  },
+  {
+   "run": "gc-default",
+   "date": "2026-10-29T21:03:00+02:00",
+   "commit": "533bffd",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 8.19 13.57 16.46 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 49.136
+   },
+   "note": "imported from PR #3 summary files (bench/results/gc); measured on the PR branch before squash-merge 533bffd"
+  },
+  {
+   "run": "gc-boehm",
+   "date": "2026-10-29T21:03:00+02:00",
+   "commit": "533bffd",
+   "dirty": false,
+   "ref": null,
+   "gc": "boehm",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 8.00 13.27 16.30 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 78.183
+   },
+   "note": "imported from PR #3 summary files (bench/results/gc); measured on the PR branch before squash-merge 533bffd"
+  }
+ ]
+}
