@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 1997,
-  "UNSUPPORTED": 3454
+  "PASS": 2006,
+  "UNSUPPORTED": 3445
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2292,9 +2292,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/kt2498.kt"
   },
   "box/box/bridges/kt2702.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/kt2702.kt"
   },
   "box/box/bridges/kt2833.kt": {
@@ -12781,8 +12780,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/suspendLambdaInTailrecDefault.kt"
   },
   "box/box/defaultArguments/useThisInLambda.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
+   "category": "interfaces",
+   "detail": "super calls to interface members are not supported (no superclass in $Lam0$Boolean)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/useThisInLambda.kt"
   },
@@ -17484,8 +17483,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt2280.kt"
   },
   "box/box/functions/kt2481.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
+   "category": "interfaces",
+   "detail": "super calls to interface members are not supported (no superclass in $Lam0$String)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt2481.kt"
   },
@@ -20510,14 +20509,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/anonymousObjectAsDefaultParamSingleFile.kt"
   },
   "box/box/inlineClasses/anySuperCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
+   "category": "interfaces",
+   "detail": "super calls to interface members are not supported (no superclass in A)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/anySuperCall.kt"
   },
   "box/box/inlineClasses/anySuperCallGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
+   "category": "interfaces",
+   "detail": "super calls to interface members are not supported (no superclass in A$Int)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/anySuperCallGeneric.kt"
   },
@@ -23140,12 +23139,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531552\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645728\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387936\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269225056\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23847,15 +23846,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/mangledDefaultParameterFunctionGeneric.kt"
   },
   "box/box/inlineClasses/mangledSuperCalls.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/mangledSuperCalls.kt"
   },
   "box/box/inlineClasses/mangledSuperCallsGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/mangledSuperCallsGeneric.kt"
   },
   "box/box/inlineClasses/multifileClass.kt": {
@@ -25768,7 +25765,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x102bb50a3        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102cc59ff        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1050350a3        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x105147747        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -37167,9 +37164,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/smartCastInsideIf.kt"
   },
   "box/box/smartCasts/smartCastOnSuper.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/smartCasts/smartCastOnSuper.kt"
   },
   "box/box/smartCasts/smartCastedGenericWhenSubjectInRangeCheck.kt": {
@@ -37317,8 +37313,8 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableComplex.kt"
   },
   "box/box/specialBuiltins/throwableImpl.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
+   "category": "class bodies / constructors",
+   "detail": "constructor Throwable expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableImpl.kt"
   },
@@ -37811,27 +37807,23 @@
    "upstream": "compiler/testData/codegen/box/super/interfaceHashCode.kt"
   },
   "box/box/super/kt14243.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/super/kt14243.kt"
   },
   "box/box/super/kt14243_2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/super/kt14243_2.kt"
   },
   "box/box/super/kt14243_class.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/super/kt14243_class.kt"
   },
   "box/box/super/kt14243_prop.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/super/kt14243_prop.kt"
   },
   "box/box/super/kt3492ClassFun.kt": {
@@ -37943,15 +37935,14 @@
    "upstream": "compiler/testData/codegen/box/super/unqualifiedSuper.kt"
   },
   "box/box/super/unqualifiedSuperWithDeeperHierarchies.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
+   "category": "interfaces",
+   "detail": "abstract method DeepBase.deepInterfaceFun() cannot be called via super",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/unqualifiedSuperWithDeeperHierarchies.kt"
   },
   "box/box/super/unqualifiedSuperWithMethodsOfAny.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/super/unqualifiedSuperWithMethodsOfAny.kt"
   },
   "box/box/suppressions/suppressInvisible.kt": {
@@ -38269,8 +38260,8 @@
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/protectedMemberReferenceAccessor/kt46597_property.kt"
   },
   "box/box/syntheticAccessors/superCallFromMultipleSubclasses.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
+   "category": "other: unknown method A.test()",
+   "detail": "unknown method A.test()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/superCallFromMultipleSubclasses.kt"
   },
@@ -38503,8 +38494,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt36973.kt"
   },
   "box/box/traits/kt5393.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown name 'super'",
+   "category": "interfaces",
+   "detail": "super calls to interface members are not supported (no superclass in C)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt5393.kt"
   },
@@ -39200,7 +39191,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/Grok/nk-opt-mlgo/build/bin/opt: /Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupgin8ikv4/t.ll:167:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\nopt failed (256): '/Users/listepo/Grok/nk-opt-mlgo/build/bin/opt' -passes='default<O3>' -S '/Users/listepo/grok/mini-bench-wt-co",
+   "detail": "/Users/listepo/Grok/nk-opt-mlgo/build/bin/opt: /Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupx5fs_yb6/t.ll:167:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\nopt failed (256): '/Users/listepo/Grok/nk-opt-mlgo/build/bin/opt' -passes='lto-pre-link<O3>' -S '/Users/listepo/grok/mini-bench-",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },

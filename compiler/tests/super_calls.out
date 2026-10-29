@@ -1,0 +1,5 @@
+Leaf{Mid[Base.hello(6) leaf]}
+Leaf{Mid[Base.hello(2) leaf]}
+base/leaf leaf
+22
+Mid[Base.hello(5) m]

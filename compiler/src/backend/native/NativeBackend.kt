@@ -1585,6 +1585,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun genMember(e: MemberE): Val {
         flatten(e)?.let { LIMITS[it]?.let { (v, t) -> return Val(v, t) } }
         if (e.safe) return safe(e.recv) { r -> property(r, e.n) }
+        if (e.recv is NameE && e.recv.n == "super") {
+            // `super.x`: the superclass getter if it has one, else the (inherited) field.
+            val pm = "\$prop\$${e.n}"
+            if (superOf().index(e.n) < 0 && pm in superOf().methods) return superCall(pm, CallE(NameE(pm), emptyList(), emptyList(), null).also { it.line = line })
+            return property(Val("%this", Ty.Cls(owner!!.name)), e.n)
+        }
         return property(genExpr(e.recv), e.n)
     }
 
@@ -1689,8 +1695,28 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
     private var scopeN = 0
 
+    /** Superclass of the class being compiled (for `super.f()`), or a compile error. */
+    private fun superOf(): ClassInfo {
+        val o = owner ?: fail("'super' outside a class")
+        val sc = classDecls[o.name]?.superClass ?: fail("super calls to interface members are not supported (no superclass in ${o.name})")
+        return classes[sc] ?: fail("unknown superclass $sc")
+    }
+
+    /** `super.f(args)`: direct (non-virtual) call of the superclass implementation on `this`. */
+    private fun superCall(n: String, e: CallE): Val {
+        val sci = superOf()
+        if (sci.methods[n]?.typeParams?.isNotEmpty() == true) fail("super calls to generic methods are not supported")
+        val impl = sci.impl[n] ?: fail("abstract method ${sci.name}.$n() cannot be called via super")
+        val sig = methodSigs["${sci.name}.$n"] ?: fail("unknown method ${sci.name}.$n()")
+        val ps = methodParams(sci, n)
+        val e2 = if (ps != null && (e.args.any { it is NamedE } || allArgs(e).size < ps.size || ps.any { it.vararg })) normalize(ps, e, NameE("this").also { it.line = line }, sci) else e
+        val args = methodArgs(sig, e2)
+        return finishCall("call ${sig.ret.llvm} @m.$impl.$n(ptr %this${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args)
+    }
+
     private fun genCall(e: CallE): Val {
         val callee = e.callee
+        if (callee is MemberE && !callee.safe && callee.recv is NameE && (callee.recv as NameE).n == "super") return superCall(callee.n, e)
         val qn = flatten(callee)
         if (qn != null && qn in NANOS) return Val(emitT("call i64 @rt_nanos()"), Ty.I64)
         if (qn != null && (qn == "kotlin.math.sqrt" || qn == "kotlin.math.abs")) return genNamedCall(qn, e)
