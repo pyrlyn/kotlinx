@@ -7,6 +7,7 @@ linked into every program.
 | `--gc=` | Implementation | Cycles | Notes |
 |---|---|---|---|
 | `default` | [`default/gc.c`](default/gc.c) | collected | Perceus-style RC + synchronous trial-deletion cycle collector over the tracing region (Bacon & Rajan). The previous built-in GC, unchanged. |
+| `incremental` | [`incremental/gc.c`](incremental/gc.c) | collected | Default GC with the root buffer processed in slices of 64 under a per-step time budget (`KX_GC_BUDGET_US`, default 500 us); falls back to one pass when a single slice already exceeds the budget. |
 | `rc` | [`rc/gc.c`](rc/gc.c) | leak | Same RC and regions, no cycle collector. Baseline for the collector's cost. |
 | `boehm` | [`boehm/gc.c`](boehm/gc.c) | collected | RC + [bdwgc](https://github.com/bdwgc/bdwgc) 8.2.12 (conservative mark-sweep) for unreachable cycles. bdwgc is installed by `mise install` (`conda:bdw-gc` in `mise.toml`). |
 

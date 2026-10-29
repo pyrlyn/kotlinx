@@ -89,6 +89,52 @@
     "ms": 9.921
    },
    "note": "imported from PR #3 summary files (bench/results/gc); measured on the PR branch before squash-merge 533bffd"
+  },
+  {
+   "run": "gc-default",
+   "date": "2026-10-29T22:40:01+02:00",
+   "commit": "2221748233c7cf2c27665233063cc12d4088cca2",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 27.56 23.36 25.74 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 10.039,
+    "raw_ns": "10044458,10127791,10010292,10042292,10030500",
+    "flags": "--gc=default "
+   }
+  },
+  {
+   "run": "gc-incremental",
+   "date": "2026-10-29T22:40:19+02:00",
+   "commit": "2221748233c7cf2c27665233063cc12d4088cca2",
+   "dirty": false,
+   "ref": null,
+   "gc": "incremental",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 26.39 23.36 25.68 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 10.264,
+    "raw_ns": "10033709,10167250,11776708,10202125,10423333",
+    "flags": "--gc=incremental "
+   }
   }
  ]
 }
