@@ -11,6 +11,9 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --emit-llvm          also keep <output>.ll
   --cc <clang>         C compiler/linker (default: clang)
   --cflags "<flags>"   optimization flags for clang (default: -O3 -flto)
+  --opt <path>         LLVM opt run on the IR before linking (-passes='default<O3>'); default: ${'$'}NK_OPT,
+                       opt on PATH, then `xcrun --find opt`
+  --no-opt             skip the opt step (clang -O3 -flto still optimizes)
   --leak-check         count live runtime objects; report at exit, exit 3 on a leak
   --alloc <mimalloc|malloc|pool> object allocator: mimalloc (default; found via ${'$'}NEWKOTLIN_MIMALLOC_DIR,
                        pkg-config or Homebrew), system malloc/free, or free-list pool
@@ -36,15 +39,25 @@ private fun writeFile(path: String, text: String) {
 private fun hasLib(dir: String): Boolean =
     listOf("dylib", "so", "a").any { access("$dir/libmimalloc.$it", F_OK) == 0 }
 
-private fun pkgConfigLibdir(): String? {
-    val p = popen("pkg-config --variable=libdir mimalloc 2>/dev/null", "r") ?: return null
+private fun pkgConfigLibdir(): String? = capture("pkg-config --variable=libdir mimalloc 2>/dev/null")
+
+/** First line of a shell command's stdout, or null. */
+private fun capture(cmd: String): String? {
+    val p = popen(cmd, "r") ?: return null
     val out = StringBuilder()
     memScoped {
         val buf = allocArray<ByteVar>(512)
         while (fgets(buf, 512, p) != null) out.append(buf.toKString())
     }
     pclose(p)
-    return out.toString().trim().ifEmpty { null }
+    return out.toString().trim().lineSequence().firstOrNull()?.trim()?.ifEmpty { null }
+}
+
+/** LLVM `opt`: --opt <path>, ${'$'}NK_OPT, `opt` on PATH, then `xcrun --find opt`. */
+private fun findOpt(explicit: String?): String? {
+    (explicit ?: getenv("NK_OPT")?.toKString())?.let { return if (access(it, X_OK) == 0) it else null }
+    capture("command -v opt 2>/dev/null")?.let { if (access(it, X_OK) == 0) return it }
+    return capture("xcrun --find opt 2>/dev/null")?.takeIf { access(it, X_OK) == 0 }
 }
 
 /** Directory with libmimalloc: ${'$'}NEWKOTLIN_MIMALLOC_DIR, pkg-config, then Homebrew/system paths. */
@@ -61,7 +74,7 @@ fun main(args: Array<String>) {
     var input: String? = null; var output: String? = null
     var runtime = getenv("NEWKOTLIN_RUNTIME")?.toKString() ?: "compiler/runtime/runtime.c"
     var target = Target.NATIVE
-    var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false; var cc = "clang"; var cflags = "-O3 -flto"
+    var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false; var cc = "clang"; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
     var i = 0
     while (i < args.size) {
         when (val a = args[i]) {
@@ -73,6 +86,8 @@ fun main(args: Array<String>) {
             "--alloc" -> alloc = args[++i].also { if (it != "mimalloc" && it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be mimalloc, malloc or pool\n"); exit(2) } }
             "--cc" -> cc = args[++i]
             "--cflags" -> cflags = args[++i]
+            "--opt" -> optPath = args[++i]
+            "--no-opt" -> noOpt = true
             "-S" -> onlyIr = true
             "-h", "--help" -> { println(USAGE); return }
             else -> if (a.startsWith("--target=")) target = Target.parse(a.substringAfter('=')) ?: run { fprintf(stderr, "unknown target: %s\n", a); exit(2); return }
@@ -98,8 +113,22 @@ fun main(args: Array<String>) {
         }
         " -L'$dir' -lmimalloc -Wl,-rpath,'$dir'"
     } else ""
-    val cmd = "$cc $cflags$def -Wno-override-module '$ll' '$runtime'$link -o '$output'"
+    var linkLl = ll
+    if (!noOpt) {
+        val opt = findOpt(optPath) ?: run {
+            if (!emitLl) remove(ll)
+            fprintf(stderr, "error: LLVM opt not found (or not executable). Pass --opt <path>, set NK_OPT, put opt on PATH, " +
+                "or use --no-opt\n")
+            exit(1); return
+        }
+        linkLl = "$output.opt.ll"
+        val ocmd = "'$opt' -passes='default<O3>' -S '$ll' -o '$linkLl'"
+        val orc = system(ocmd)
+        if (orc != 0) { if (!emitLl) remove(ll); remove(linkLl); fprintf(stderr, "opt failed (%d): %s\n", orc, ocmd); exit(1); return }
+    }
+    val cmd = "$cc $cflags$def -Wno-override-module '$linkLl' '$runtime'$link -o '$output'"
     val rc = system(cmd)
     if (!emitLl) remove(ll)
+    if (linkLl != ll && !emitLl) remove(linkLl)
     if (rc != 0) { fprintf(stderr, "clang failed (%d): %s\n", rc, cmd); exit(1) }
 }
