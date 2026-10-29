@@ -282,8 +282,10 @@ fun <T> ArrayList<T>.first(): T { if (size == 0) throw NoSuchElementException("L
 fun <T> ArrayList<T>.last(): T { if (size == 0) throw NoSuchElementException("List is empty."); return get(size - 1) }
 fun <T> ArrayList<T>.firstOrNull(): T? = if (size == 0) null else get(0)
 fun <T> ArrayList<T>.lastOrNull(): T? = if (size == 0) null else get(size - 1)
+data class IndexedValue<T>(val index: Int, val value: T)
+fun <T> ArrayList<T>.withIndex(): ArrayList<IndexedValue<T>> { val r = ArrayList<IndexedValue<T>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
-private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull)\(|-=|\bin\b""")
+private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex)\(|-=|\bin\b""")
 
 fun withPrelude(src: String, p: Program): Program {
     val ranges = RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)

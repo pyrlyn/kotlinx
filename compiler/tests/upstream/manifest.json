@@ -1,11 +1,11 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "COMPILER_CRASH": 5,
+  "COMPILER_CRASH": 6,
   "MISCOMPILE": 50,
   "N/A": 2984,
-  "PASS": 1315,
-  "UNSUPPORTED": 4121
+  "PASS": 1465,
+  "UNSUPPORTED": 3970
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -633,26 +633,26 @@
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayReversed.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: UIntArray",
+   "detail": "unknown type UIntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndex.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoElementVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: UIntArray",
+   "detail": "unknown type UIntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoElementVar.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoIndexVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: UIntArray",
+   "detail": "unknown type UIntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoIndexVar.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexReversed.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: UIntArray",
+   "detail": "unknown type UIntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexReversed.kt"
   },
@@ -892,14 +892,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiArrayConstructors.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclFor.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "unknown Array (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Array'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclFor.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "unknown Array (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Array'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentExtensions.kt"
   },
@@ -916,20 +916,20 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForValCaptured.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "unknown Array (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Array'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -962,14 +962,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/kt15575.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "unknown Array (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Array'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -1393,8 +1393,8 @@
    "upstream": "compiler/testData/codegen/box/bce/forUntilWithStep.kt"
   },
   "box/box/bce/forWithIndex.kt": {
-   "category": "other: unknown method ArrayList<Int>.withIndex()",
-   "detail": "unknown method ArrayList<Int>.withIndex()",
+   "category": "other: unknown method IntProgression.withIndex()",
+   "detail": "unknown method IntProgression.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bce/forWithIndex.kt"
   },
@@ -1576,8 +1576,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing0.kt"
   },
   "box/box/boxing/boxing1.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing1.kt"
   },
@@ -1599,8 +1599,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing12.kt"
   },
   "box/box/boxing/boxing13.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing13.kt"
   },
@@ -1616,8 +1616,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing15.kt"
   },
   "box/box/boxing/boxing2.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing2.kt"
   },
@@ -1652,14 +1652,14 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing7.kt"
   },
   "box/box/boxing/boxing8.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing8.kt"
   },
   "box/box/boxing/boxing9.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing9.kt"
   },
@@ -1669,17 +1669,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup493bcyip/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup493bcyip/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupe3un01z9/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupe3un01z9/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupea60x7q0/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupea60x7q0/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprczmjvc7/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprczmjvc7/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup771gqf92/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup771gqf92/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupc6c5rkj1/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupc6c5rkj1/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -2657,7 +2657,7 @@
   },
   "box/box/bridges/test14.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test14.kt"
   },
@@ -8473,9 +8473,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forArrayList.kt"
   },
   "box/box/controlStructures/forArrayListMultiDecl.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forArrayListMultiDecl.kt"
   },
   "box/box/controlStructures/forInArray/forInArraySpecializedToUntil.kt": {
@@ -8536,26 +8535,25 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forPrimitiveIntArray.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayOfObjectArrayWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.toList()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayOfObjectArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayOfPrimArrayWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "cannot convert IntArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayOfPrimArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexBreakAndContinue.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexBreakAndContinue.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexContinuesAsUnmodified.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntArray.withIndex()",
+   "detail": "unknown method IntArray.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexContinuesAsUnmodified.kt"
   },
@@ -8566,21 +8564,18 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNameBasedDestructuringShortForm.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNoElementVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNoElementVar.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNoIndexOrElementVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNoIndexOrElementVar.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNoIndexVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNoIndexVar.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNotDestructured.kt": {
@@ -8590,74 +8585,71 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNotDestructured.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexWithExplicitlyTypedIndexVariable.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method ByteArray.withIndex()",
+   "detail": "unknown method ByteArray.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndexWithSmartCast.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndexWithSmartCast.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInEmptyArrayWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntArray.withIndex()",
+   "detail": "unknown method IntArray.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInEmptyArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInGenericArrayOfIntsWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInGenericArrayOfIntsWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInGenericArrayOfIntsWithIndexWithSmartCast.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInGenericArrayOfIntsWithIndexWithSmartCast.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInGenericArrayWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInGenericArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntArray.withIndex()",
+   "detail": "unknown method IntArray.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndexWithSmartCast.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndexWithSmartCast.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInObjectArrayWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInObjectArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'shortArrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndexWithSmartCast.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndexWithSmartCast.kt"
   },
@@ -8674,32 +8666,32 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceMut.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSeqWithIndexStops.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method StringBuilder.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSeqWithIndexStops.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceTypeParameterWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceTypeParameterWithIndex.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndex.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexBreakAndContinue.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexBreakAndContinue.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexCheckSideEffects.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "interfaces",
+   "detail": "unknown interface CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexCheckSideEffects.kt"
   },
@@ -8710,26 +8702,26 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNameBasedDestructuringShortForm.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNoElementVarCheckSideEffects.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "interfaces",
+   "detail": "unknown interface CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNoElementVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNoIndexVarCheckSideEffects.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "interfaces",
+   "detail": "unknown interface CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNoIndexVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInEmptyStringWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method String.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInEmptyStringWithIndex.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method String.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndex.kt"
   },
@@ -8746,20 +8738,20 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNameBasedDestructuringShortForm.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoElementVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method String.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoElementVar.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoIndexOrElementVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method String.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoIndexOrElementVar.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoIndexVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method String.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoIndexVar.kt"
   },
@@ -8770,63 +8762,58 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNotDestructured.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexWithExplicitlyTypedIndexVariable.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInEmptyListWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInEmptyListWithIndex.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInIterableTypeParameterWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInIterableTypeParameterWithIndex.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInIterableWithIndexCheckSideEffects.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInIterableWithIndexCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInIterableWithIndexNoElementVarCheckSideEffects.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInIterableWithIndexNoElementVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInIterableWithIndexNoIndexVarCheckSideEffects.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInIterableWithIndexNoIndexVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInListWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndex.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInListWithIndexBreak.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexBreak.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInListWithIndexBreakAndContinue.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexBreakAndContinue.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInListWithIndexContinue.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexContinue.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInListWithIndexNameBasedDestructuringShortForm.kt": {
@@ -8836,50 +8823,48 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexNameBasedDestructuringShortForm.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInListWithIndexNoElementVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexNoElementVar.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInListWithIndexNoIndexVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexNoIndexVar.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInListWithIndexWithExplicitlyTypedIndexVariable.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInEmptySequenceWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInEmptySequenceWithIndex.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceTypeParameterWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.asSequence()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceTypeParameterWithIndex.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.asSequence()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndex.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexBreakAndContinue.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.asSequence()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexBreakAndContinue.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexCheckSideEffects.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexCheckSideEffects.kt"
   },
@@ -8890,32 +8875,32 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNameBasedDestructuringShortForm.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoElementVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.asSequence()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoElementVar.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoElementVarCheckSideEffects.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoElementVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.asSequence()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVar.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVarCheckSideEffects.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexWithExplicitlyTypedIndexVariable.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
@@ -9425,8 +9410,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tryFinally.kt"
   },
   "box/box/controlflow/break.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "annotations",
+   "detail": "expected end of statement (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/break.kt"
   },
@@ -9443,7 +9428,7 @@
   },
   "box/box/controlflow/for_loops.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops.kt"
   },
@@ -9465,8 +9450,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_mutation.kt"
   },
   "box/box/controlflow/for_loops_array_nested.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "annotations",
+   "detail": "expected end of statement (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_nested.kt"
   },
@@ -9477,20 +9462,20 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_nullable.kt"
   },
   "box/box/controlflow/for_loops_array_side_effects.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_side_effects.kt"
   },
   "box/box/controlflow/for_loops_call_order.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_call_order.kt"
   },
   "box/box/controlflow/for_loops_coroutines.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "unknown sequence (stdlib API / unsupported decl)",
+   "detail": "unknown function 'sequence'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_coroutines.kt"
   },
@@ -9505,26 +9490,26 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_errors.kt"
   },
   "box/box/controlflow/for_loops_let_with_nullable.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "other: unknown method Int.let()",
+   "detail": "unknown method Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_let_with_nullable.kt"
   },
   "box/box/controlflow/for_loops_nested.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "annotations",
+   "detail": "expected end of statement (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_nested.kt"
   },
   "box/box/controlflow/for_loops_overflow.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_overflow.kt"
   },
   "box/box/controlflow/for_loops_types.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_types.kt"
   },
@@ -13360,8 +13345,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt9712.kt"
   },
   "box/box/delegatedProperty/lazy.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/lazy.kt"
   },
@@ -13494,8 +13479,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/noTypeVariablesLeft.kt"
   },
   "box/box/delegatedProperty/observable.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/observable.kt"
   },
@@ -14169,7 +14154,7 @@
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgsOverridden.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'override')",
+   "detail": "only member functions are supported in class/interface bodies (at 'tailrec')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgsOverridden.kt"
   },
@@ -14191,14 +14176,13 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/extensionTailCall.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/functionWithNoTails.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/functionWithNoTails.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/functionWithNonTailRecursions.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/functionWithNonTailRecursions.kt"
   },
@@ -14218,8 +14202,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/infixRecursiveCall.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/insideElvis.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/insideElvis.kt"
   },
@@ -14236,15 +14220,13 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/labeledThisReferences.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/loops.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/loops.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/multilevelBlocks.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/multilevelBlocks.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/realIteratorFoldl.kt": {
@@ -14275,14 +14257,14 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/recursiveCallInInlineLambdaWithCapture.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/recursiveCallInLambda.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/recursiveCallInLambda.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/recursiveCallInLocalFunction.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
+   "category": "other syntax (at 'bar')",
+   "detail": "expected end of statement (at 'bar')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/recursiveCallInLocalFunction.kt"
   },
@@ -14293,27 +14275,23 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/recursiveInnerFunction.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/returnIf.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/returnIf.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/returnInCatch.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/returnInCatch.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/returnInFinally.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/returnInFinally.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/returnInIfInFinally.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/returnInIfInFinally.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/returnInParentheses.kt": {
@@ -14323,9 +14301,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/returnInParentheses.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/returnInTry.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/returnInTry.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/shortCircuit.kt": {
@@ -14335,21 +14312,18 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/shortCircuit.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/simpleBlock.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/simpleBlock.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/simpleReturn.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/simpleReturn.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/simpleReturnWithElse.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/simpleReturnWithElse.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/sum.kt": {
@@ -14376,14 +14350,13 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailCallInRun.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailRecursionInFinally.kt": {
-   "category": "generics",
-   "detail": "unexpected top-level token (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailRecursionInFinally.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailrecWithExplicitCompanionObjectDispatcher.kt": {
-   "category": "generics",
-   "detail": "only member functions are supported in class/interface bodies (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'tailrec')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailrecWithExplicitCompanionObjectDispatcher.kt"
   },
@@ -14400,20 +14373,18 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/thisReferences.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/unitBlocks.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/unitBlocks.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/whenWithCondition.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithCondition.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/whenWithInRange.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithInRange.kt"
   },
@@ -14430,9 +14401,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithLambda.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/whenWithoutCondition.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithoutCondition.kt"
   },
   "box/box/diagnostics/vararg/kt4172.kt": {
@@ -15051,8 +15021,8 @@
    "upstream": "compiler/testData/codegen/box/enum/lambdaInDefault.kt"
   },
   "box/box/enum/loop.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "enum classes",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/loop.kt"
   },
@@ -15123,8 +15093,8 @@
    "upstream": "compiler/testData/codegen/box/enum/superCallInEnumLiteral.kt"
   },
   "box/box/enum/switchLowering.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "local / extension functions",
+   "detail": "expected end of statement (at 'fun')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/switchLowering.kt"
   },
@@ -15357,8 +15327,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/companions.kt"
   },
   "box/box/evaluate/intrinsicConst/constTrim.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/constTrim.kt"
   },
@@ -15605,13 +15575,13 @@
   },
   "box/box/exceptions/catch1.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/exceptions/catch1.kt"
   },
   "box/box/exceptions/catch2.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/exceptions/catch2.kt"
   },
@@ -17282,14 +17252,14 @@
    "upstream": "compiler/testData/codegen/box/function/defaultsWithInlineClasses.kt"
   },
   "box/box/function/defaultsWithVarArg1.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaultsWithVarArg1.kt"
   },
   "box/box/function/defaultsWithVarArg2.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaultsWithVarArg2.kt"
   },
@@ -19735,8 +19705,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/files/simpleMultiModule.kt"
   },
   "box/box/initializers/initializers0.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/initializers/initializers0.kt"
   },
@@ -19747,7 +19717,7 @@
   },
   "box/box/initializers/initializers2.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/initializers/initializers2.kt"
   },
@@ -20498,7 +20468,7 @@
   },
   "box/box/inline/propertyAccessorInline.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/propertyAccessorInline.kt"
   },
@@ -23426,12 +23396,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146693984\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146693920\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823008\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146693984\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -24043,9 +24013,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt44867.kt"
   },
   "box/box/inlineClasses/kt44978.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt44978.kt"
   },
   "box/box/inlineClasses/kt45084.kt": {
@@ -26082,9 +26051,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.trimMargin()",
-   "status": "UNSUPPORTED",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x100f6851f        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10104a4e3        kfun:newkotlin.Parser.prefix#internal + 7535 \n    at 2   newkotlinc.kexe              ",
+   "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
   "box/box/invokedynamic/extensionFunInvoke.kt": {
@@ -26578,19 +26546,19 @@
   },
   "box/box/lambda/lambda10.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lambda/lambda10.kt"
   },
   "box/box/lambda/lambda11.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lambda/lambda11.kt"
   },
   "box/box/lambda/lambda12.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lambda/lambda12.kt"
   },
@@ -26617,7 +26585,7 @@
   },
   "box/box/lambda/lambda4.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lambda/lambda4.kt"
   },
@@ -26628,7 +26596,7 @@
   },
   "box/box/lambda/lambda6.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lambda/lambda6.kt"
   },
@@ -26639,13 +26607,13 @@
   },
   "box/box/lambda/lambda8.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lambda/lambda8.kt"
   },
   "box/box/lambda/lambda9.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lambda/lambda9.kt"
   },
@@ -26681,8 +26649,8 @@
    "upstream": "compiler/testData/codegen/box/lambda/lambda_kt83995.kt"
   },
   "box/box/lateinit/globalIsInitialized.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "modifiers (private/const/lateinit/...)",
+   "detail": "unexpected top-level token (at 'lateinit')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lateinit/globalIsInitialized.kt"
   },
@@ -26703,8 +26671,8 @@
    "upstream": "compiler/testData/codegen/box/lateinit/innerIsInitialized.kt"
   },
   "box/box/lateinit/isInitialized.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lateinit/isInitialized.kt"
   },
@@ -26851,8 +26819,8 @@
    "upstream": "compiler/testData/codegen/box/literals/strdedup1.kt"
   },
   "box/box/localClass/innerTakesCapturedFromOuter.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "other syntax (at 'Outer')",
+   "detail": "expected end of statement (at 'Outer')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/innerTakesCapturedFromOuter.kt"
   },
@@ -27163,8 +27131,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/withclosure.kt"
   },
   "box/box/localEscapeAnalysis/arraysFieldWrite.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localEscapeAnalysis/arraysFieldWrite.kt"
   },
@@ -27197,14 +27165,14 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/progressions.kt"
   },
   "box/box/lower/forLoopsLowering/reversed.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntArray.reversedArray()",
+   "detail": "unknown method IntArray.reversedArray()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/reversed.kt"
   },
   "box/box/lower/forLoopsLowering/reversedCharProgression.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
+   "category": "other: unknown method CharProgression.forEach()",
+   "detail": "unknown method CharProgression.forEach()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/reversedCharProgression.kt"
   },
@@ -27227,8 +27195,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/withIndex.kt"
   },
   "box/box/lower/forLoopsLowering/withIndexUInt.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method UIntRange.withIndex()",
+   "detail": "unknown method UIntRange.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/withIndexUInt.kt"
   },
@@ -27373,15 +27341,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/component.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclFor.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensions.kt": {
@@ -27397,20 +27363,19 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -27427,14 +27392,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclFor.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentExtensions.kt"
   },
@@ -27451,8 +27416,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForValCaptured.kt"
   },
@@ -27463,20 +27428,19 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/UnderscoreNames.kt"
   },
   "box/box/multiDecl/forRange/UnderscoreNamesDontCallComponent.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/UnderscoreNamesDontCallComponent.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclFor.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: cannot iterate over Range",
+   "detail": "cannot iterate over Range",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: cannot iterate over Range",
+   "detail": "cannot iterate over Range",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt"
   },
@@ -27493,20 +27457,20 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: cannot iterate over Range",
+   "detail": "cannot iterate over Range",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method Int.rangeTo()",
+   "detail": "unknown method Int.rangeTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method Int.rangeTo()",
+   "detail": "unknown method Int.rangeTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -27523,14 +27487,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method Long.rangeTo()",
+   "detail": "unknown method Long.rangeTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method Long.rangeTo()",
+   "detail": "unknown method Long.rangeTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -27547,14 +27511,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclFor.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: cannot iterate over Range",
+   "detail": "cannot iterate over Range",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: cannot iterate over Range",
+   "detail": "cannot iterate over Range",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt"
   },
@@ -27571,20 +27535,20 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: cannot iterate over Range",
+   "detail": "cannot iterate over Range",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method Int.rangeTo()",
+   "detail": "unknown method Int.rangeTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method Int.rangeTo()",
+   "detail": "unknown method Int.rangeTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -27607,8 +27571,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method Long.rangeTo()",
+   "detail": "unknown method Long.rangeTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -27625,14 +27589,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -27649,14 +27612,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -28968,8 +28930,8 @@
    "upstream": "compiler/testData/codegen/box/object/fields1.kt"
   },
   "box/box/object/fields2.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/object/fields2.kt"
   },
@@ -28991,8 +28953,8 @@
    "upstream": "compiler/testData/codegen/box/object/initialization.kt"
   },
   "box/box/object/initialization1.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/object/initialization1.kt"
   },
@@ -29014,8 +28976,8 @@
    "upstream": "compiler/testData/codegen/box/objectExpression/expr2.kt"
   },
   "box/box/objectExpression/expr3.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objectExpression/expr3.kt"
   },
@@ -30618,8 +30580,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/unboxComparable.kt"
   },
   "box/box/primitiveTypes/virtualCallToCustomNumber.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/virtualCallToCustomNumber.kt"
   },
@@ -31586,9 +31548,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/charRangeTo.kt"
   },
   "box/box/ranges/contains/generated/charRangeUntil.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/charRangeUntil.kt"
   },
   "box/box/ranges/contains/generated/charSequenceIndices.kt": {
@@ -31615,8 +31576,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/doubleRangeTo.kt"
   },
   "box/box/ranges/contains/generated/doubleRangeUntil.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
+   "category": "other syntax (at 'F')",
+   "detail": "unexpected top-level token (at 'F')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/doubleRangeUntil.kt"
   },
@@ -31643,9 +31604,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/intRangeTo.kt"
   },
   "box/box/ranges/contains/generated/intRangeUntil.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/intRangeUntil.kt"
   },
   "box/box/ranges/contains/generated/intUntil.kt": {
@@ -31664,9 +31624,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/longRangeTo.kt"
   },
   "box/box/ranges/contains/generated/longRangeUntil.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/longRangeUntil.kt"
   },
   "box/box/ranges/contains/generated/longUntil.kt": {
@@ -31685,9 +31644,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/uintRangeTo.kt"
   },
   "box/box/ranges/contains/generated/uintRangeUntil.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/uintRangeUntil.kt"
   },
   "box/box/ranges/contains/generated/uintUntil.kt": {
@@ -31706,9 +31664,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/ulongRangeTo.kt"
   },
   "box/box/ranges/contains/generated/ulongRangeUntil.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/ulongRangeUntil.kt"
   },
   "box/box/ranges/contains/generated/ulongUntil.kt": {
@@ -32208,9 +32165,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/expression/openRange.kt"
   },
   "box/box/ranges/expression/openRangeUntil.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/openRangeUntil.kt"
   },
   "box/box/ranges/expression/overflowZeroDownToMaxValue.kt": {
@@ -32219,9 +32175,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/expression/overflowZeroDownToMaxValue.kt"
   },
   "box/box/ranges/expression/overflowZeroToMinValue.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/expression/progressionDownToMinValue.kt": {
@@ -32552,62 +32507,62 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIntRangeToConstWithContinue.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInDownToWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntProgression.withIndex()",
+   "detail": "unknown method IntProgression.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInDownToWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInIndicesWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInIndicesWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInRangeToWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntRange.withIndex()",
+   "detail": "unknown method IntRange.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInRangeToWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInReversedStepWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntProgression.withIndex()",
+   "detail": "unknown method IntProgression.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInReversedStepWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInReversedWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntProgression.withIndex()",
+   "detail": "unknown method IntProgression.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInReversedWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInStepReversedWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntProgression.withIndex()",
+   "detail": "unknown method IntProgression.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInStepReversedWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInStepWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntProgression.withIndex()",
+   "detail": "unknown method IntProgression.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInStepWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInUntilWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntRange.withIndex()",
+   "detail": "unknown method IntRange.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInUntilWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexBreakAndContinue.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntProgression.withIndex()",
+   "detail": "unknown method IntProgression.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexBreakAndContinue.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexNoIndexOrElementVar.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntRange.withIndex()",
+   "detail": "unknown method IntRange.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexNoIndexOrElementVar.kt"
   },
@@ -32618,8 +32573,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexNotDestructured.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexReversed.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntRange.withIndex()",
+   "detail": "unknown method IntRange.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexReversed.kt"
   },
@@ -32636,8 +32591,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/kt42909.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IntRange.withIndex()",
+   "detail": "unknown method IntRange.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/kt42909.kt"
   },
@@ -33020,9 +32975,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/openRange.kt"
   },
   "box/box/ranges/literal/openRangeUntil.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/openRangeUntil.kt"
   },
   "box/box/ranges/literal/overflowZeroDownToMaxValue.kt": {
@@ -33031,9 +32985,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/overflowZeroDownToMaxValue.kt"
   },
   "box/box/ranges/literal/overflowZeroToMinValue.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/literal/progressionDownToMinValue.kt": {
@@ -33122,9 +33075,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleSteppedRange.kt"
   },
   "box/box/ranges/multiAssignmentIterationOverIntRange.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/multiAssignmentIterationOverIntRange.kt"
   },
   "box/box/ranges/nullableLoopParameter/progressionExpression.kt": {
@@ -33457,147 +33409,123 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/emptyProgression.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/emptyProgression.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/illegalStepNegative.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/illegalStepThenLegalStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/illegalStepZero.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/legalStepThenIllegalStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/nestedStep/stepOneThenStepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/nestedStep/stepThenSameStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/reversed/reversedThenStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/reversed/reversedThenStepThenReversed.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/reversed/stepThenReversed.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/reversed/stepThenReversedThenStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/singleElementStepTwo.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/stepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/stepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/stepToOutsideRange.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/stepToSameLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/stepToSmallerLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/emptyProgression.kt": {
@@ -34064,147 +33992,123 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/emptyProgression.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/emptyProgression.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/illegalStepNegative.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/illegalStepThenLegalStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/illegalStepZero.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/legalStepThenIllegalStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/nestedStep/stepOneThenStepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/nestedStep/stepThenSameStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/reversed/reversedThenStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/reversed/reversedThenStepThenReversed.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/reversed/stepThenReversed.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/reversed/stepThenReversedThenStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/singleElementStepTwo.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/stepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/stepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/stepToOutsideRange.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/stepToSameLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/stepToSmallerLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/emptyProgression.kt": {
@@ -34665,147 +34569,123 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/emptyProgression.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/illegalStepNegative.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/illegalStepThenLegalStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/illegalStepZero.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/legalStepThenIllegalStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepOneThenStepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepThenSameStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/reversed/reversedThenStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/reversed/reversedThenStepThenReversed.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/reversed/stepThenReversed.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/reversed/stepThenReversedThenStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/singleElementStepTwo.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/stepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/stepToOutsideRange.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/stepToSameLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeUntil/stepToSmallerLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/emptyProgression.kt": {
@@ -35264,147 +35144,123 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/emptyProgression.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/illegalStepNegative.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/illegalStepThenLegalStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/illegalStepZero.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/legalStepThenIllegalStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepOneThenStepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepThenSameStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/reversed/reversedThenStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/reversed/reversedThenStepThenReversed.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/reversed/stepThenReversed.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/reversed/stepThenReversedThenStep.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/singleElementStepTwo.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/stepOne.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/stepToOutsideRange.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/stepToSameLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeUntil/stepToSmallerLast.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/emptyProgression.kt": {
@@ -35628,9 +35484,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/openRange.kt"
   },
   "box/box/ranges/unsigned/expression/openRangeUntil.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/openRangeUntil.kt"
   },
   "box/box/ranges/unsigned/expression/overflowZeroDownToMaxValue.kt": {
@@ -35639,9 +35494,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/overflowZeroDownToMaxValue.kt"
   },
   "box/box/ranges/unsigned/expression/overflowZeroToMinValue.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/progressionDownToMinValue.kt": {
@@ -35813,9 +35667,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/openRange.kt"
   },
   "box/box/ranges/unsigned/literal/openRangeUntil.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/openRangeUntil.kt"
   },
   "box/box/ranges/unsigned/literal/overflowZeroDownToMaxValue.kt": {
@@ -35824,9 +35677,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/overflowZeroDownToMaxValue.kt"
   },
   "box/box/ranges/unsigned/literal/overflowZeroToMinValue.kt": {
-   "category": "generics",
-   "detail": "unexpected operator (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/progressionDownToMinValue.kt": {
@@ -38080,8 +37932,8 @@
    "upstream": "compiler/testData/codegen/box/strictEquals/typealiasInBound.kt"
   },
   "box/box/stringTrim/stringTrim.kt": {
-   "category": "strings / templates",
-   "detail": "newline in string",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/stringTrim/stringTrim.kt"
   },
@@ -38162,7 +38014,7 @@
   },
   "box/box/strings/kt13213.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method String.trim()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/kt13213.kt"
   },
@@ -38235,9 +38087,8 @@
    "upstream": "compiler/testData/codegen/box/strings/kt894.kt"
   },
   "box/box/strings/multilineStringsWithTemplates.kt": {
-   "category": "other: unexpected character '$'",
-   "detail": "unexpected character '$'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/multilineStringsWithTemplates.kt"
   },
   "box/box/strings/nestedConcat.kt": {
@@ -38247,15 +38098,13 @@
    "upstream": "compiler/testData/codegen/box/strings/nestedConcat.kt"
   },
   "box/box/strings/rawStrings.kt": {
-   "category": "other syntax (at '\"...\"')",
-   "detail": "expected end of statement (at '\"...\"')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/rawStrings.kt"
   },
   "box/box/strings/rawStringsWithManyQuotes.kt": {
-   "category": "other: unexpected character '\\'",
-   "detail": "unexpected character '\\'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt"
   },
   "box/box/strings/simpleStringPlus.kt": {
@@ -38294,7 +38143,7 @@
   },
   "box/box/strings/trimOptimization.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method String.trimIndent()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/trimOptimization.kt"
   },
@@ -39178,49 +39027,49 @@
   },
   "box/box/try/catch3.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/catch3.kt"
   },
   "box/box/try/catch4.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/catch4.kt"
   },
   "box/box/try/catch5.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/catch5.kt"
   },
   "box/box/try/catch6.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/catch6.kt"
   },
   "box/box/try/catch8.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/catch8.kt"
   },
   "box/box/try/finally1.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally1.kt"
   },
   "box/box/try/finally10.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally10.kt"
   },
   "box/box/try/finally11.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally11.kt"
   },
@@ -39250,49 +39099,49 @@
   },
   "box/box/try/finally2.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally2.kt"
   },
   "box/box/try/finally3.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally3.kt"
   },
   "box/box/try/finally4.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally4.kt"
   },
   "box/box/try/finally5.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally5.kt"
   },
   "box/box/try/finally6.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally6.kt"
   },
   "box/box/try/finally7.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally7.kt"
   },
   "box/box/try/finally8.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally8.kt"
   },
   "box/box/try/finally9.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally9.kt"
   },
@@ -39318,7 +39167,7 @@
   },
   "box/box/try/try4.kt": {
    "category": "strings / templates",
-   "detail": "newline in string",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/try4.kt"
   },
@@ -39822,7 +39671,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupv4z3f_71/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupv4z3f_71/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup__0_fuvt/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup__0_fuvt/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -45641,7 +45490,7 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprmhkbcbc/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprmhkbcbc/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuphj7wnrio/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuphj7wnrio/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },

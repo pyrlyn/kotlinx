@@ -18,6 +18,8 @@ private val OPS = listOf(
     "+", "-", "*", "/", "%", "<", ">", "=", "!", "(", ")", "{", "}", "[", "]", ",", ".", ":", ";", "?", "@",
 )
 
+private val DIAG = Regex("""<![A-Z_]+(\([^)]*\))?(, *[A-Z_]+(\([^)]*\))?)*!>""")
+
 class Lexer(private val src: String, private var line: Int = 1) {
     private var i = 0
     private val out = ArrayList<Tok>()
@@ -41,7 +43,12 @@ class Lexer(private val src: String, private var line: Int = 1) {
                     while (i < src.length && (src[i].isLetterOrDigit() || src[i] == '_')) i++
                     out.add(Tok(K.ID, src.substring(st, i), line))
                 }
+                src.startsWith("\"\"\"", i) -> rawString()
                 c == '"' -> string()
+                // Diagnostic markup in upstream test data (`<!NAME!>expr<!>`) is not code.
+                src.startsWith("<!>", i) -> i += 3
+                c == '<' && DIAG.matchAt(src, i) != null -> i += DIAG.matchAt(src, i)!!.value.length
+                src.startsWith("..<", i) -> { out.add(Tok(K.ID, "until", line)); i += 3 }
                 c == '\'' -> char()
                 else -> {
                     val op = OPS.firstOrNull { src.startsWith(it, i) }
@@ -104,6 +111,42 @@ class Lexer(private val src: String, private var line: Int = 1) {
         if (src[i] != '\'') throw CompileError("line $line: bad char literal")
         i++
         out.add(Tok(K.CHAR, "'$ch'", line, num = ch.code.toLong()))
+    }
+
+    /** `"""..."""`: no escapes, may span lines; `$` templates as in ordinary strings. Extra closing quotes belong to the text. */
+    private fun rawString() {
+        i += 3
+        val parts = ArrayList<Any>()
+        val sb = StringBuilder()
+        val startLine = line
+        while (true) {
+            if (i >= src.length) throw CompileError("line $startLine: unterminated string")
+            val c = src[i]
+            when {
+                src.startsWith("\"\"\"", i) && !src.startsWith("\"\"\"\"", i) -> { i += 3; break }
+                c == '$' && i + 1 < src.length && src[i + 1] == '{' -> {
+                    var d = 1; var j = i + 2
+                    while (d > 0) {
+                        if (j >= src.length) throw CompileError("line $line: unterminated template")
+                        if (src[j] == '{') d++ else if (src[j] == '}') d--
+                        j++
+                    }
+                    if (sb.isNotEmpty()) { parts.add(sb.toString()); sb.clear() }
+                    parts.add(TemplateCode(src.substring(i + 2, j - 1), line))
+                    i = j
+                }
+                c == '$' && i + 1 < src.length && (src[i + 1].isLetter() || src[i + 1] == '_') -> {
+                    var j = i + 1
+                    while (j < src.length && (src[j].isLetterOrDigit() || src[j] == '_')) j++
+                    if (sb.isNotEmpty()) { parts.add(sb.toString()); sb.clear() }
+                    parts.add(TemplateCode(src.substring(i + 1, j), line))
+                    i = j
+                }
+                else -> { if (c == '\n') line++; sb.append(c); i++ }
+            }
+        }
+        if (sb.isNotEmpty() || parts.isEmpty()) parts.add(sb.toString())
+        out.add(Tok(K.STR, "\"...\"", startLine, parts = parts))
     }
 
     private fun string() {

@@ -674,8 +674,9 @@ class Parser(private val t: List<Tok>) {
                 next(); expectOp("(")
                 val names = ArrayList<String>()
                 val (n, it) = nested(1) {
-                    val n = if (isOp("(")) {
-                        next(); while (!isOp(")")) { names.add(ident()); if (isOp(":")) { next(); type() }; if (isOp(",")) next() }; next()
+                    val n = if (isOp("(") || isOp("[")) {
+                        val close = if (isOp("(")) ")" else "]"
+                        next(); while (!isOp(close)) { names.add(ident()); if (isOp(":")) { next(); type() }; if (isOp(",")) next() }; next()
                         "\$d${destructN++}"
                     } else ident()
                     if (ident() != "in") fail("expected 'in'"); n to expr()
@@ -777,6 +778,19 @@ class Parser(private val t: List<Tok>) {
         return a
     }
 
+    /** `"literal".trimIndent()` / `.trimMargin()` on a constant string: folded at compile time. */
+    private fun foldStr(e: E, a: List<E>, lam: Block?): E? {
+        if (e !is MemberE || e.recv !is StrL || lam != null || !(e.recv as StrL).parts.all { it is String }) return null
+        val text = (e.recv as StrL).parts.joinToString("") { it as String }
+        val r = when {
+            e.n == "trimIndent" && a.isEmpty() -> text.trimIndent()
+            e.n == "trimMargin" && a.isEmpty() -> text.trimMargin()
+            e.n == "trimMargin" && a.size == 1 && a[0] is StrL && (a[0] as StrL).parts.all { it is String } -> text.trimMargin((a[0] as StrL).parts.joinToString("") { it as String })
+            else -> return null
+        }
+        return StrL(listOf(r))
+    }
+
     private fun postfix(): E {
         var e = primary()
         while (true) {
@@ -788,7 +802,7 @@ class Parser(private val t: List<Tok>) {
                 "(" -> {
                     val a = args()
                     val lam = if (t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
-                    CallE(e, emptyList(), a, lam)
+                    foldStr(e, a, lam) ?: CallE(e, emptyList(), a, lam)
                 }
                 "[" -> { p++; val i = nested(1) { expr() }; expectOp("]"); IndexE(e, i) }
                 "!!" -> { p++; UnE("!!", e).also { it.line = tk.line } }
