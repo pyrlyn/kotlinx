@@ -13,7 +13,7 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --cflags "<flags>"   optimization flags for clang (default: -O3 -flto)
   --opt <path>         LLVM opt run on the IR before linking (lto-pre-link<O3> with -flto, else default<O3>);
                        default: ${'$'}NK_OPT, opt on PATH, `xcrun --find opt`, ${'$'}CONDA_PREFIX/bin, Homebrew llvm
-                       (llvm, then newest llvm@N), mise llvm installs
+                       (llvm, then newest llvm@N), mise conda:llvm-tools and llvm installs
   --no-opt             skip the opt step (clang -O3 -flto still optimizes)
   --leak-check         count live runtime objects; report at exit, exit 3 on a leak
   --alloc <mimalloc|malloc|pool> object allocator: mimalloc (default; found via ${'$'}NEWKOTLIN_MIMALLOC_DIR,
@@ -55,7 +55,22 @@ private fun capture(cmd: String): String? {
 }
 
 /** LLVM `opt`: --opt <path>, ${'$'}NK_OPT, `opt` on PATH, `xcrun --find opt`, then common install locations. */
-private fun findOpt(explicit: String?): String? {
+/** Major LLVM version from `<tool> --version` ("LLVM version 23.1.4", "clang version 21.0.0"), or null. */
+private fun majorVersion(tool: String): Int? {
+    val out = capture("'$tool' --version 2>/dev/null | grep -oE '(LLVM|clang) version [0-9]+' | head -1") ?: return null
+    return out.substringAfterLast(' ').toIntOrNull()
+}
+
+/** All stdout lines of a shell command. */
+private fun captureAll(cmd: String): List<String> {
+    val p = popen(cmd, "r") ?: return emptyList()
+    val out = StringBuilder()
+    memScoped { val buf = allocArray<ByteVar>(512); while (fgets(buf, 512, p) != null) out.append(buf.toKString()) }
+    pclose(p)
+    return out.lines().map { it.trim() }.filter { it.isNotEmpty() }
+}
+
+private fun findOpt(explicit: String?, cc: String): String? {
     (explicit ?: getenv("NK_OPT")?.toKString())?.let { return if (access(it, X_OK) == 0) it else null }
     capture("command -v opt 2>/dev/null")?.let { if (access(it, X_OK) == 0) return it }
     capture("xcrun --find opt 2>/dev/null")?.let { if (access(it, X_OK) == 0) return it }
@@ -64,6 +79,12 @@ private fun findOpt(explicit: String?): String? {
     val fixed = listOfNotNull(getenv("CONDA_PREFIX")?.toKString()?.let { "$it/bin/opt" },
         "/opt/homebrew/opt/llvm/bin/opt", "/usr/local/opt/llvm/bin/opt")
     fixed.firstOrNull { access(it, X_OK) == 0 }?.let { return it }
+    // mise `conda:llvm-tools` (the repo's mise.toml; `mise install`), newest version first.
+    // Prefer the newest one the C compiler can read (LLVM major <= the C compiler's).
+    val maxMajor = majorVersion(cc)
+    val mise = captureAll("ls -d '$home'/.local/share/mise/installs/conda-llvm-tools/*/bin/opt 2>/dev/null | grep -v /latest/ | sort -rV")
+    (mise.firstOrNull { o -> access(o, X_OK) == 0 && (maxMajor == null || (majorVersion(o) ?: 0) <= maxMajor) } ?: mise.firstOrNull { access(it, X_OK) == 0 })
+        ?.let { return it }
     val globs = "/opt/homebrew/opt/llvm@*/bin/opt /usr/local/opt/llvm@*/bin/opt '$home'/.local/share/mise/installs/llvm/*/bin/opt"
     return capture("ls -d $globs 2>/dev/null | sort -V | tail -1")?.takeIf { access(it, X_OK) == 0 }
 }
@@ -122,24 +143,33 @@ fun main(args: Array<String>) {
         " -L'$dir' -lmimalloc -Wl,-rpath,'$dir'"
     } else ""
     var linkLl = ll
+    val tmps = ArrayList<String>()
+    fun cleanup() { if (!emitLl) { remove(ll); tmps.forEach { remove(it) } } }
     if (!noOpt) {
-        val opt = findOpt(optPath) ?: run {
-            if (!emitLl) remove(ll)
+        val opt = findOpt(optPath, cc) ?: run {
+            cleanup()
             fprintf(stderr, "error: LLVM opt not found (or not executable). Pass --opt <path>, set NK_OPT, put opt on PATH, " +
-                "install LLVM (e.g. brew install llvm), or use --no-opt\n")
+                "install LLVM (e.g. brew install llvm, or mise install in the repo), or use --no-opt\n")
             exit(1); return
         }
-        linkLl = "$output.opt.ll"
+        fun run1(c: String): Boolean { val r = system(c); if (r != 0) { cleanup(); fprintf(stderr, "command failed (%d): %s\n", r, c); exit(1) }; return r == 0 }
+        val optMajor = majorVersion(opt); val ccMajor = majorVersion(cc)
+        if (optMajor != null && ccMajor != null && optMajor > ccMajor) {
+            // The C compiler's LLVM cannot read IR written by a newer opt (attribute syntax changes). Compiling the
+            // Kotlin IR with the newer llc instead loses runtime LTO and measured 7-125% slower, so this is an error.
+            cleanup()
+            fprintf(stderr, "error: opt %s is LLVM %d, newer than %s (LLVM %d), which cannot read its IR. Use an opt of " +
+                "LLVM <= %d (e.g. conda:llvm-tools %d.x via mise, or --opt/NK_OPT), or --no-opt\n", opt, optMajor, cc, ccMajor, ccMajor, ccMajor)
+            exit(1); return
+        }
+        linkLl = "$output.opt.ll"; tmps.add(linkLl)
         // With LTO the link step runs the full O3 pipeline once; opt then runs the matching LTO pre-link pipeline
         // (a standalone default<O3> before LTO optimizes twice and was up to 2x slower on closures/dispatch/matmul).
         val pipeline = if ("-flto" in cflags) "lto-pre-link<O3>" else "default<O3>"
-        val ocmd = "'$opt' -passes='$pipeline' -S '$ll' -o '$linkLl'"
-        val orc = system(ocmd)
-        if (orc != 0) { if (!emitLl) remove(ll); remove(linkLl); fprintf(stderr, "opt failed (%d): %s\n", orc, ocmd); exit(1); return }
+        run1("'$opt' -passes='$pipeline' -S '$ll' -o '$linkLl'")
     }
     val cmd = "$cc $cflags$def -Wno-override-module '$linkLl' '$runtime'$link -o '$output'"
     val rc = system(cmd)
-    if (!emitLl) remove(ll)
-    if (linkLl != ll && !emitLl) remove(linkLl)
+    cleanup()
     if (rc != 0) { fprintf(stderr, "clang failed (%d): %s\n", rc, cmd); exit(1) }
 }

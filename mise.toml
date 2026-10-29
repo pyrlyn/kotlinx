@@ -1,0 +1,4 @@
+[tools]
+# LLVM opt for newkotlinc, found automatically (no activation needed): run `mise install`.
+# Pinned to the LLVM major of Apple clang 21: Apple clang cannot read IR written by a newer opt (e.g. 23).
+"conda:llvm-tools" = "21.1.8"
