@@ -46,6 +46,7 @@ object Uses {
             is UnE -> expr(e.e, straight, false, out)
             is IfE -> { expr(e.cond, straight, false, out); block(e.th, out); e.el?.let { block(it, out) } }
             is LambdaE -> block(e.body, out)
+            is TryE -> { block(e.body, out); e.catches.forEach { block(it.body, out) }; e.fin?.let { block(it, out) } }
             is WhenE -> {
                 e.subj?.let { expr(it, straight, false, out) }
                 e.branches.forEachIndexed { i, (conds, b) ->
@@ -86,6 +87,7 @@ object Escape {
                 is IfE -> { e(x.cond, x, p); b(x.th); x.el?.let { b(it) } }
                 is WhenE -> { x.subj?.let { e(it, x, p) }; x.branches.forEach { (c, bl) -> c?.forEach { e(it, x, p) }; b(bl) } }
                 is LambdaE -> if (containsName(x.body)) good = false // captured by a closure: escapes
+                is TryE -> { b(x.body); x.catches.forEach { if (it.name == name) good = false; b(it.body) }; x.fin?.let { b(it) } }
                 else -> {}
             }
         }

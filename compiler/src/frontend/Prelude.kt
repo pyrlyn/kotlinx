@@ -131,16 +131,47 @@ fun kt_stepC(p: CharProgression, n: Int): CharProgression {
 }
 """
 
+/** Standard exception classes (`message` only); a missing message argument is passed as null. */
+private val EXCEPTION_CLASSES = """
+open class Throwable(val message: String?)
+open class Exception(message: String?) : Throwable(message)
+open class Error(message: String?) : Throwable(message)
+open class RuntimeException(message: String?) : Exception(message)
+open class IllegalStateException(message: String?) : RuntimeException(message)
+open class IllegalArgumentException(message: String?) : RuntimeException(message)
+open class UnsupportedOperationException(message: String?) : RuntimeException(message)
+open class ArithmeticException(message: String?) : RuntimeException(message)
+open class IndexOutOfBoundsException(message: String?) : RuntimeException(message)
+open class ArrayIndexOutOfBoundsException(message: String?) : IndexOutOfBoundsException(message)
+open class NoSuchElementException(message: String?) : RuntimeException(message)
+open class NullPointerException(message: String?) : RuntimeException(message)
+open class ClassCastException(message: String?) : RuntimeException(message)
+open class NumberFormatException(message: String?) : IllegalArgumentException(message)
+open class ConcurrentModificationException(message: String?) : RuntimeException(message)
+open class AssertionError(message: String?) : Error(message)
+open class NotImplementedError(message: String?) : Error(message)
+"""
+
+/** Exception class names declared by the prelude (constructors may omit the message). */
+val PRELUDE_EXCEPTIONS = setOf("Throwable", "Exception", "Error", "RuntimeException", "IllegalStateException", "IllegalArgumentException", "UnsupportedOperationException", "ArithmeticException", "IndexOutOfBoundsException", "ArrayIndexOutOfBoundsException", "NoSuchElementException", "NullPointerException", "ClassCastException", "NumberFormatException", "ConcurrentModificationException", "AssertionError", "NotImplementedError")
+
 /** Progression class name -> element kind suffix of its `kt_*` functions (I, L, C). */
 val PROGRESSIONS = mapOf("IntProgression" to "I", "IntRange" to "I", "LongProgression" to "L", "LongRange" to "L",
     "CharProgression" to "C", "CharRange" to "C")
 
 private val RANGE_USE = Regex("""\.\.|\buntil\b|\bdownTo\b|\bstep\b|Range\b|Progression\b""")
 
-/** Merges the prelude into [p] when the source may use it. */
+private val EXC_USE = Regex("""\btry\b|\bassertFails""")
+
+/**
+ * Merges the prelude into [p] when the source may use it. Exception classes are included for programs with
+ * `try` (or `assertFailsWith`); their presence switches the backend to catchable exceptions.
+ */
 fun withPrelude(src: String, p: Program): Program {
-    if (!RANGE_USE.containsMatchIn(src)) return p
-    val lib = Parser(Lexer(INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION).lex()).program()
+    val ranges = RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src)
+    if (!ranges && !exc) return p
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION else "") + (if (exc) EXCEPTION_CLASSES else "")
+    val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },
         p.ifaces + lib.ifaces, p.globals + lib.globals, p.companions + lib.companions)

@@ -1,0 +1,30 @@
+8
+caught negative: -1
+caught my error 42
+12
+42
+3 -1
+[fin1]none
+[fin1]inner 42
+[fin1]outer negative: -2
+deep negative: -7
+check msg
+Failed requirement.
+boom
+null
+12
+136
+[0, 1, 4, 9, 16]
+n2 3
+13
+3
+6
+expected
+10406
+/ by zero
+Index 7 out of bounds for length 4
+Index -1 out of bounds for length 5
+Step must be positive, was: 0.
+TCFx
+f1 f2 from finally: boom2
+Exception in thread "main" MyError: my error 42

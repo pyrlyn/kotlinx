@@ -85,6 +85,7 @@ private fun boxCapturedVars(p: Program): Program {
                     is IfE -> { e(x.cond, d); blk(x.th, d); x.el?.let { blk(it, d) } }
                     is WhenE -> { x.subj?.let { e(it, d) }; x.branches.forEach { (c, bl) -> c?.forEach { e(it, d) }; blk(bl, d) } }
                     is LambdaE -> blk(x.body, d + 1)
+                    is TryE -> { blk(x.body, d); x.catches.forEach { blk(it.body, d) }; x.fin?.let { blk(it, d) } }
                     else -> {}
                 }
             }
@@ -220,7 +221,7 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
         is VarS -> VarS(x.name, x.isVar, x.type?.let { ty(it) }, e(x.init))
         is AssignS -> AssignS(e(x.target), x.op, e(x.value))
         is IncS -> IncS(e(x.target), x.op)
-        is WhileS -> WhileS(e(x.cond), block(x.body))
+        is WhileS -> WhileS(e(x.cond), block(x.body), x.isDo)
         is ForS -> ForS(x.name, e(x.iter), block(x.body))
         is RetS -> RetS(x.e?.let { e(it) })
         is ExprS -> ExprS(e(x.e))
@@ -238,6 +239,7 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
         is UnE -> UnE(x.op, e(x.e))
         is IfE -> IfE(e(x.cond), block(x.th), blockN(x.el))
         is LambdaE -> LambdaE(block(x.body))
+        is TryE -> TryE(block(x.body), x.catches.map { Catch(it.name, ty(it.type), block(it.body)) }, blockN(x.fin))
         is WhenE -> WhenE(x.subj?.let { e(it) }, x.branches.map { (c, b) -> c?.map { e(it) } to block(b) })
     }.also { if (it !== x) it.line = x.line }
 }

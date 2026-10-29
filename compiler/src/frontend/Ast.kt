@@ -22,6 +22,10 @@ class UnE(val op: String, val e: E) : E()
 class IfE(val cond: E, val th: Block, val el: Block?) : E()
 /** Lambda literal used as a value (function-typed); compiled to a closure object implementing a `$Fn...` interface. */
 class LambdaE(val body: Block) : E()
+/** `catch (name: type) { body }` clause of a [TryE]. */
+class Catch(val name: String, val type: TypeRef, val body: Block)
+/** `try { body } catch (...) { ... } finally { ... }` (an expression). */
+class TryE(val body: Block, val catches: List<Catch>, val fin: Block?) : E()
 /** `conds == null` is the else branch. */
 class WhenE(val subj: E?, val branches: List<Pair<List<E>?, Block>>) : E()
 
@@ -29,7 +33,8 @@ sealed class S { var line = 0 }
 class VarS(val name: String, val isVar: Boolean, val type: TypeRef?, val init: E) : S()
 class AssignS(val target: E, val op: String, val value: E) : S()
 class IncS(val target: E, val op: String) : S()
-class WhileS(val cond: E, val body: Block) : S()
+/** `isDo`: `do { body } while (cond)` (the body runs before the first test). */
+class WhileS(val cond: E, val body: Block, val isDo: Boolean = false) : S()
 class ForS(val name: String, val iter: E, val body: Block) : S()
 class RetS(val e: E?) : S()
 class ExprS(val e: E) : S()

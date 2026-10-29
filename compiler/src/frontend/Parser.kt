@@ -273,7 +273,12 @@ class Parser(private val t: List<Tok>) {
         val args = ArrayList<TypeRef>()
         if (isOp("<")) {
             next()
-            while (!isOp(">")) { args.add(type()); if (isOp(",")) next() }
+            while (!isOp(">")) {
+                // Variance (`in T`, `out T`) is ignored; a star projection is `*`.
+                if ((isId("in") || isId("out")) && t[p + 1].k == K.ID) next()
+                if (isOp("*")) { next(); args.add(TypeRef("*", emptyList(), false)) } else args.add(type())
+                if (isOp(",")) next()
+            }
             next()
         }
         val nullable = if (isOp("?")) { next(); true } else false
@@ -329,6 +334,16 @@ class Parser(private val t: List<Tok>) {
                 val c = nested(1) { expr() }
                 expectOp(")")
                 WhileS(c, controlBody())
+            }
+            isId("do") -> {
+                next()
+                val body = controlBody()
+                while (t[p].k == K.NL || (t[p].k == K.OP && t[p].s == ";")) p++
+                if (!isId("while")) fail("expected 'while'")
+                next(); expectOp("(")
+                val c = nested(1) { expr() }
+                expectOp(")")
+                WhileS(c, body, isDo = true)
             }
             isId("for") -> {
                 next(); expectOp("(")
@@ -444,6 +459,7 @@ class Parser(private val t: List<Tok>) {
                 "null" -> NullL()
                 "if" -> ifExpr()
                 "when" -> whenExpr()
+                "try" -> tryExpr()
                 "throw" -> CallE(NameE("\$throw").also { it.line = tk.line }, emptyList(), listOf(expr()), null)
                 else -> {
                     if (tk.s in GENERIC_CALLS && t[p].k == K.OP && t[p].s == "<") {
@@ -452,7 +468,12 @@ class Parser(private val t: List<Tok>) {
                         while (!isOp(">")) { ta.add(type()); if (isOp(",")) next() }
                         next()
                         CallE(NameE(tk.s).also { it.line = tk.line }, ta, args(), null)
-                    } else explicitTypeArgs()?.let { ta -> CallE(NameE(tk.s).also { it.line = tk.line }, ta, args(), null) } ?: NameE(tk.s)
+                    } else explicitTypeArgs()?.let { ta ->
+                        // `f<T>(args) { lambda }` or `f<T> { lambda }`
+                        val a = if (isOp("(")) args() else emptyList()
+                        val lam = if (t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
+                        CallE(NameE(tk.s).also { it.line = tk.line }, ta, a, lam)
+                    } ?: NameE(tk.s)
                 }
             }
             K.OP -> if (tk.s == "{") { p--; LambdaE(block(lambda = true)) } else if (tk.s == "(") { val x = nested(1) { expr() }; expectOp(")"); x } else fail("unexpected operator", tk)
@@ -471,10 +492,29 @@ class Parser(private val t: List<Tok>) {
             val ta = ArrayList<TypeRef>()
             while (!isOp(">")) { ta.add(type()); if (isOp(",")) next() else if (!isOp(">")) { p = save; return null } }
             next()
-            if (t[p].k == K.OP && t[p].s == "(") return ta
+            if (t[p].k == K.OP && (t[p].s == "(" || t[p].s == "{")) return ta
         } catch (_: CompileError) {}
         p = save
         return null
+    }
+
+    private fun tryExpr(): E {
+        val body = block()
+        val catches = ArrayList<Catch>()
+        var fin: Block? = null
+        while (true) {
+            val save = p
+            while (t[p].k == K.NL) p++
+            if (isId("catch")) {
+                next(); expectOp("(")
+                val n = ident(); expectOp(":"); val ty = type()
+                expectOp(")")
+                catches.add(Catch(n, ty, block()))
+            } else if (isId("finally")) { next(); fin = block(); break }
+            else { p = save; break }
+        }
+        if (catches.isEmpty() && fin == null) fail("try needs a catch or finally block")
+        return TryE(body, catches, fin)
     }
 
     private fun ifExpr(): E {

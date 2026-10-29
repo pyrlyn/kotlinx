@@ -1,10 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "MISCOMPILE": 3,
+  "MISCOMPILE": 7,
   "N/A": 2984,
-  "PASS": 286,
-  "UNSUPPORTED": 5202
+  "PASS": 400,
+  "UNSUPPORTED": 5084
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -468,8 +468,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/division.kt"
   },
   "box/box/arithmetic/divisionByZero.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "types: Short",
+   "detail": "unknown type Short",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/divisionByZero.kt"
   },
@@ -480,14 +480,14 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/github1856.kt"
   },
   "box/box/arrays/arrayConstructorWithNonInlineLambda.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/arrayConstructorWithNonInlineLambda.kt"
   },
   "box/box/arrays/arrayConstructorsSimple.kt": {
-   "category": "other: unsupported type Array<Int>",
-   "detail": "unsupported type Array<Int>",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/arrayConstructorsSimple.kt"
   },
@@ -515,26 +515,24 @@
    "upstream": "compiler/testData/codegen/box/arrays/arrayPlusAssign.kt"
   },
   "box/box/arrays/arrayRangeCheckAccessors.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "unknown BooleanArray (stdlib API / unsupported decl)",
+   "detail": "unknown function 'BooleanArray'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/arrayRangeCheckAccessors.kt"
   },
   "box/box/arrays/arraysOfInlineClass/accessArrayOfInlineClass.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/arraysOfInlineClass/accessArrayOfInlineClass.kt"
   },
   "box/box/arrays/arraysOfInlineClass/accessArrayOfUnsigned.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/arraysOfInlineClass/accessArrayOfUnsigned.kt"
   },
   "box/box/arrays/arraysOfInlineClass/arrayOfInlineClassOfArrayOfInlineClass.kt": {
-   "category": "other: unsupported type Array<UInt>",
-   "detail": "unsupported type Array<UInt>",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/arraysOfInlineClass/arrayOfInlineClassOfArrayOfInlineClass.kt"
   },
@@ -601,26 +599,26 @@
    "upstream": "compiler/testData/codegen/box/arrays/forEachShortArray.kt"
   },
   "box/box/arrays/forInReversed/reversedArrayOriginalUpdatedInLoopBody.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "other: unknown method IntArray.reversedArray()",
+   "detail": "unknown method IntArray.reversedArray()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInReversed/reversedArrayOriginalUpdatedInLoopBody.kt"
   },
   "box/box/arrays/forInReversed/reversedArrayReversedArrayOriginalUpdatedInLoopBody.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "other: unknown method IntArray.reversedArray()",
+   "detail": "unknown method IntArray.reversedArray()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInReversed/reversedArrayReversedArrayOriginalUpdatedInLoopBody.kt"
   },
   "box/box/arrays/forInReversed/reversedOriginalUpdatedInLoopBody.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "other: unknown method IntArray.reversed()",
+   "detail": "unknown method IntArray.reversed()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInReversed/reversedOriginalUpdatedInLoopBody.kt"
   },
   "box/box/arrays/forInReversed/reversedReversedOriginalUpdatedInLoopBody.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "other: unknown method IntArray.reversed()",
+   "detail": "unknown method IntArray.reversed()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInReversed/reversedReversedOriginalUpdatedInLoopBody.kt"
   },
@@ -685,20 +683,20 @@
    "upstream": "compiler/testData/codegen/box/arrays/hashMap.kt"
   },
   "box/box/arrays/inProjectionAsParameter.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/inProjectionAsParameter.kt"
   },
   "box/box/arrays/inProjectionOfArray.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/inProjectionOfArray.kt"
   },
   "box/box/arrays/inProjectionOfList.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/inProjectionOfList.kt"
   },
@@ -715,9 +713,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/indicesChar.kt"
   },
   "box/box/arrays/inlineInitializer.kt": {
-   "category": "strings / templates",
-   "detail": "unsupported type Array<Array<String>>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/inlineInitializer.kt"
   },
   "box/box/arrays/iterator.kt": {
@@ -817,7 +814,7 @@
   },
   "box/box/arrays/kt3771.kt": {
    "category": "strings / templates",
-   "detail": "unsupported type Array<in,String>",
+   "detail": "type mismatch: expected Int, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt3771.kt"
   },
@@ -840,8 +837,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt4348.kt"
   },
   "box/box/arrays/kt4357.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "other: unknown method IntArray.get()",
+   "detail": "unknown method IntArray.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt4357.kt"
   },
@@ -887,8 +884,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt779.kt"
   },
   "box/box/arrays/kt945.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "unknown Array (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Array'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt945.kt"
   },
@@ -965,15 +962,13 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/arrays/multiDecl/kt15560.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/kt15560.kt"
   },
   "box/box/arrays/multiDecl/kt15568.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/kt15568.kt"
   },
   "box/box/arrays/multiDecl/kt15575.kt": {
@@ -1037,8 +1032,8 @@
    "upstream": "compiler/testData/codegen/box/assert/alwaysDisable.kt"
   },
   "box/box/assert/alwaysEnable.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assert'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/assert/alwaysEnable.kt"
   },
@@ -1049,8 +1044,8 @@
    "upstream": "compiler/testData/codegen/box/assert/assertDisabledWithFunctionReference.kt"
   },
   "box/box/assert/assertEnabledInConditionAndMessage.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assert'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/assert/assertEnabledInConditionAndMessage.kt"
   },
@@ -1113,8 +1108,8 @@
    "upstream": "compiler/testData/codegen/box/basics/canonical_name.kt"
   },
   "box/box/basics/cast_null.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/cast_null.kt"
   },
@@ -1266,8 +1261,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unchecked_cast2.kt"
   },
   "box/box/basics/unchecked_cast3.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/unchecked_cast3.kt"
   },
@@ -1349,15 +1344,13 @@
    "upstream": "compiler/testData/codegen/box/bce/delegatedProperty.kt"
   },
   "box/box/bce/differentArrays.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/differentArrays.kt"
   },
   "box/box/bce/differentObjects.kt": {
-   "category": "other: unsupported type Array<Int>",
-   "detail": "unsupported type Array<Int>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/differentObjects.kt"
   },
   "box/box/bce/forDownToSize.kt": {
@@ -1373,45 +1366,41 @@
    "upstream": "compiler/testData/codegen/box/bce/forDownToWithStep.kt"
   },
   "box/box/bce/forEachIndexedTest.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: unknown method ArrayList<Int>.forEachIndexed()",
+   "detail": "unknown method ArrayList<Int>.forEachIndexed()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bce/forEachIndexedTest.kt"
   },
   "box/box/bce/forEachIndicies.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bce/forEachIndicies.kt"
   },
   "box/box/bce/forIndiciesWithStep.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bce/forIndiciesWithStep.kt"
   },
   "box/box/bce/forRangeToSize.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/forRangeToSize.kt"
   },
   "box/box/bce/forRangeToWithStep.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/forRangeToWithStep.kt"
   },
   "box/box/bce/forReversed.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/forReversed.kt"
   },
   "box/box/bce/forUntilSize.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/forUntilSize.kt"
   },
   "box/box/bce/forUntilWithStep.kt": {
@@ -1478,8 +1467,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/compareBoxedChars.kt"
   },
   "box/box/binaryOp/divisionByZero.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: unknown type Nothing?",
+   "detail": "unknown type Nothing?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/divisionByZero.kt"
   },
@@ -1613,9 +1602,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing1.kt"
   },
   "box/box/boxing/boxing10.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxing/boxing10.kt"
   },
   "box/box/boxing/boxing11.kt": {
@@ -1678,8 +1666,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing6.kt"
   },
   "box/box/boxing/boxing7.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing7.kt"
   },
@@ -1860,8 +1848,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49548a.kt"
   },
   "box/box/boxingOptimization/kt5493.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "strings / templates",
+   "detail": "unknown method CPointer.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt5493.kt"
   },
@@ -2127,9 +2115,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeCovariantOverride.kt"
   },
   "box/box/bridges/fakeGenericCovariantOverride.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeGenericCovariantOverride.kt"
   },
   "box/box/bridges/fakeGenericCovariantOverrideWithDelegation.kt": {
@@ -2205,8 +2192,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritsBridgesAndAbstract.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideManyDeclarations.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideManyDeclarations.kt"
   },
@@ -4703,8 +4690,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/serializability/referenceToCompanionFunction.kt"
   },
   "box/box/callableReference/starProjectionCallableReference.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/starProjectionCallableReference.kt"
   },
@@ -4745,8 +4732,8 @@
    "upstream": "compiler/testData/codegen/box/casts/asSafeForConstants.kt"
   },
   "box/box/casts/asToNothing.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/asToNothing.kt"
   },
@@ -4781,8 +4768,8 @@
    "upstream": "compiler/testData/codegen/box/casts/castToDefinitelyNotNullTypeWithUpperBound.kt"
   },
   "box/box/casts/dontCreateInconsistentTypeDuringStarProjectionSubstitution.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/dontCreateInconsistentTypeDuringStarProjectionSubstitution.kt"
   },
@@ -4955,8 +4942,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt68509.kt"
   },
   "box/box/casts/kt80795.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt80795.kt"
   },
@@ -4967,8 +4954,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt81257.kt"
   },
   "box/box/casts/kt81617.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt81617.kt"
   },
@@ -5500,8 +5487,8 @@
    "upstream": "compiler/testData/codegen/box/classes/innerClass.kt"
   },
   "box/box/classes/kt1018.kt": {
-   "category": "other: unsupported type Array<Int?>",
-   "detail": "unsupported type Array<Int?>",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1018.kt"
   },
@@ -5749,20 +5736,20 @@
    "upstream": "compiler/testData/codegen/box/classes/kt48.kt"
   },
   "box/box/classes/kt496.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt496.kt"
   },
   "box/box/classes/kt500.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt500.kt"
   },
   "box/box/classes/kt501.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: return is not allowed in an init block of Reluctant",
+   "detail": "return is not allowed in an init block of Reluctant",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt501.kt"
   },
@@ -6282,9 +6269,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/kt44347.kt"
   },
   "box/box/closures/capturedVarsOptimization/kt45446.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/kt45446.kt"
   },
   "box/box/closures/capturedVarsOptimization/sharedSlotsWithCapturedVars.kt": {
@@ -7472,14 +7458,14 @@
    "upstream": "compiler/testData/codegen/box/compileKotlinAgainstKotlin/willBecomeValueSupertypeFromBinary.kt"
   },
   "box/box/constants/comparisonFalse.kt": {
-   "category": "other: unsupported type Array<Boolean>",
-   "detail": "unsupported type Array<Boolean>",
+   "category": "unknown F (stdlib API / unsupported decl)",
+   "detail": "unknown name 'F'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/constants/comparisonFalse.kt"
   },
   "box/box/constants/comparisonTrue.kt": {
-   "category": "other: unsupported type Array<Boolean>",
-   "detail": "unsupported type Array<Boolean>",
+   "category": "unknown F (stdlib API / unsupported decl)",
+   "detail": "unknown name 'F'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/constants/comparisonTrue.kt"
   },
@@ -7495,9 +7481,8 @@
    "upstream": "compiler/testData/codegen/box/constants/constantsInWhen.kt"
   },
   "box/box/constants/divisionByZero.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/constants/divisionByZero.kt"
   },
   "box/box/constants/doNotTriggerInit.kt": {
@@ -8163,8 +8148,8 @@
    "upstream": "compiler/testData/codegen/box/contracts/exactlyOnceNotInline.kt"
   },
   "box/box/contracts/exception.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "unknown contract (stdlib API / unsupported decl)",
+   "detail": "unknown function 'contract'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/exception.kt"
   },
@@ -8277,8 +8262,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/breakFromOuter.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/breakInDoWhile.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "break / continue",
+   "detail": "unknown name 'break'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/breakInDoWhile.kt"
   },
@@ -8294,9 +8279,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/breakInLoopConditions.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/continueInDoWhile.kt": {
-   "category": "loops / labels",
-   "detail": "expected end of statement (at 'continue')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/continueInDoWhile.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/continueInExpr.kt": {
@@ -8321,8 +8305,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/initializerBlock.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/inlineConstructor.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: array initializer must yield a value",
+   "detail": "array initializer must yield a value",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/inlineConstructor.kt"
   },
@@ -8372,8 +8356,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/withReturnValueNested.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/innerLoopWithStack.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "break / continue",
+   "detail": "unknown name 'break'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/innerLoopWithStack.kt"
   },
@@ -8417,27 +8401,25 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/kt9022Or.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/pathologicalDoWhile.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/pathologicalDoWhile.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/popSizes.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "break / continue",
+   "detail": "unknown name 'continue'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/popSizes.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/tryFinally1.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "break / continue",
+   "detail": "unknown name 'continue'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/tryFinally1.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/tryFinally2.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/tryFinally2.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/whileTrueBreak.kt": {
@@ -8446,15 +8428,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/whileTrueBreak.kt"
   },
   "box/box/controlStructures/breakInDoWhile.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakInDoWhile.kt"
   },
   "box/box/controlStructures/breakInFinally.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakInFinally.kt"
   },
   "box/box/controlStructures/breakInWhen.kt": {
@@ -8509,26 +8489,23 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/continueToLabelInFor.kt"
   },
   "box/box/controlStructures/doWhile.kt": {
-   "category": "other syntax (at 'x')",
-   "detail": "expected end of statement (at 'x')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/doWhile.kt"
   },
   "box/box/controlStructures/doWhileFib.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/doWhileFib.kt"
   },
   "box/box/controlStructures/doWhileWithContinue.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/doWhileWithContinue.kt"
   },
   "box/box/controlStructures/emptyDoWhile.kt": {
-   "category": "other syntax (at 'while')",
-   "detail": "expected end of statement (at 'while')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ';')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/emptyDoWhile.kt"
   },
@@ -8545,15 +8522,14 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/emptyWhile.kt"
   },
   "box/box/controlStructures/factorialTest.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/factorialTest.kt"
   },
   "box/box/controlStructures/finallyOnEmptyReturn.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/finallyOnEmptyReturn.kt"
   },
   "box/box/controlStructures/forArrayList.kt": {
@@ -8575,15 +8551,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInArraySpecializedToUntil.kt"
   },
   "box/box/controlStructures/forInArray/forInArrayWithArrayPropertyUpdatedInLoopBody.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInArrayWithArrayPropertyUpdatedInLoopBody.kt"
   },
   "box/box/controlStructures/forInArray/forInArrayWithArrayVarUpdatedInLoopBody13.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInArrayWithArrayVarUpdatedInLoopBody13.kt"
   },
   "box/box/controlStructures/forInArray/forInDelegatedPropertyUpdatedInLoopBody.kt": {
@@ -8874,8 +8848,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInEmptyListWithIndex.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInIterableTypeParameterWithIndex.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInIterableTypeParameterWithIndex.kt"
   },
@@ -8952,8 +8926,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInEmptySequenceWithIndex.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceTypeParameterWithIndex.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceTypeParameterWithIndex.kt"
   },
@@ -9086,15 +9060,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt14839.kt"
   },
   "box/box/controlStructures/kt15726.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt15726.kt"
   },
   "box/box/controlStructures/kt1688.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt1688.kt"
   },
   "box/box/controlStructures/kt17110.kt": {
@@ -9131,8 +9103,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2147.kt"
   },
   "box/box/controlStructures/kt2259.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2259.kt"
   },
@@ -9155,8 +9127,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2416.kt"
   },
   "box/box/controlStructures/kt2577.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2577.kt"
   },
@@ -9194,8 +9166,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt3273.kt"
   },
   "box/box/controlStructures/kt3280.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "unknown y (stdlib API / unsupported decl)",
+   "detail": "unknown name 'y'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt3280.kt"
   },
@@ -9247,21 +9219,18 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt773.kt"
   },
   "box/box/controlStructures/kt8148.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt8148.kt"
   },
   "box/box/controlStructures/kt8148_break.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt8148_break.kt"
   },
   "box/box/controlStructures/kt8148_continue.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt8148_continue.kt"
   },
   "box/box/controlStructures/kt870.kt": {
@@ -9288,8 +9257,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt9022Throw.kt"
   },
   "box/box/controlStructures/kt910.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "other: unknown type Set<Int>",
+   "detail": "unknown type Set<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt910.kt"
   },
@@ -9355,27 +9324,25 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tcbInEliminatedCondition.kt"
   },
   "box/box/controlStructures/tryCatchExpression.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: cannot store Unit in 't'",
+   "detail": "cannot store Unit in 't'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchExpression.kt"
   },
   "box/box/controlStructures/tryCatchFinally.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchFinally.kt"
   },
   "box/box/controlStructures/tryCatchFinallyChain.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchFinallyChain.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/catch.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/catch.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/complexChain.kt": {
@@ -9389,9 +9356,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/deadTryCatch.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/differentTypes.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/differentTypes.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/expectException.kt": {
@@ -9400,9 +9366,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/expectException.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/finally.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/finally.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/inlineTryCatch.kt": {
@@ -9466,9 +9431,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/kt9644try.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/multipleCatchBlocks.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/multipleCatchBlocks.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/nonLocalReturnInTryFinally.kt": {
@@ -9482,51 +9446,44 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/splitTry.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/try.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/try.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryAfterTry.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryAfterTry.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryAndBreak.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryAndBreak.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryAndContinue.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryAndContinue.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryCatchAfterWhileTrue.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryCatchAfterWhileTrue.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryFinallyOfTypeUnit.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryFinallyOfTypeUnit.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryInsideCatch.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryInsideCatch.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryInsideTry.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryInsideTry.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/unmatchedInlineMarkers.kt": {
@@ -9535,8 +9492,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/unmatchedInlineMarkers.kt"
   },
   "box/box/controlStructures/tryFinally.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: cannot store Unit in 't'",
+   "detail": "cannot store Unit in 't'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryFinally.kt"
   },
@@ -9564,20 +9521,20 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops.kt"
   },
   "box/box/controlflow/for_loops_array_break_continue.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_break_continue.kt"
   },
   "box/box/controlflow/for_loops_array_indices.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_indices.kt"
   },
   "box/box/controlflow/for_loops_array_mutation.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_mutation.kt"
   },
@@ -9588,8 +9545,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_nested.kt"
   },
   "box/box/controlflow/for_loops_array_nullable.kt": {
-   "category": "other: unsupported type Array<Int>?",
-   "detail": "unsupported type Array<Int>?",
+   "category": "other: unknown method ArrayList<Int>.let()",
+   "detail": "unknown method ArrayList<Int>.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_nullable.kt"
   },
@@ -9617,9 +9574,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_empty_range.kt"
   },
   "box/box/controlflow/for_loops_errors.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_errors.kt"
   },
   "box/box/controlflow/for_loops_let_with_nullable.kt": {
@@ -12233,8 +12189,8 @@
    "upstream": "compiler/testData/codegen/box/cycles/cycle.kt"
   },
   "box/box/cycles/cycle_do.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/cycles/cycle_do.kt"
   },
@@ -12341,15 +12297,13 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/alreadyDeclared.kt"
   },
   "box/box/dataClasses/equals/genericarray.kt": {
-   "category": "other: unsupported type Array<Int>",
-   "detail": "unsupported type Array<Int>",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail 2\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/genericarray.kt"
   },
   "box/box/dataClasses/equals/intarray.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail 2\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/intarray.kt"
   },
   "box/box/dataClasses/equals/null.kt": {
@@ -12477,8 +12431,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/multiDeclaration.kt"
   },
   "box/box/dataClasses/multiDeclarationFor.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/multiDeclarationFor.kt"
   },
@@ -12512,8 +12466,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/alreadyDeclared.kt"
   },
   "box/box/dataClasses/toString/arrayParams.kt": {
-   "category": "other: unsupported type Array<Int>?",
-   "detail": "unsupported type Array<Int>?",
+   "category": "unknown Array (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Array'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/arrayParams.kt"
   },
@@ -12601,21 +12555,18 @@
    "upstream": "compiler/testData/codegen/box/deadCodeElimination/emptyVariableRange.kt"
   },
   "box/box/deadCodeElimination/intersectingVariableRange.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/deadCodeElimination/intersectingVariableRange.kt"
   },
   "box/box/deadCodeElimination/intersectingVariableRangeInFinally.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/deadCodeElimination/intersectingVariableRangeInFinally.kt"
   },
   "box/box/deadCodeElimination/kt14357.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/deadCodeElimination/kt14357.kt"
   },
   "box/box/defaultArguments/callDefaultFromInitializer.kt": {
@@ -15029,20 +14980,20 @@
    "upstream": "compiler/testData/codegen/box/enum/inclassobj.kt"
   },
   "box/box/enum/initEntriesInCompanionObject.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "unknown Foo (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Foo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEntriesInCompanionObject.kt"
   },
   "box/box/enum/initEntriesInCompanionObject2.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "enum classes",
+   "detail": "unknown function 'enumValueOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEntriesInCompanionObject2.kt"
   },
   "box/box/enum/initEntriesInValueOf.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "unknown Foo (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Foo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEntriesInValueOf.kt"
   },
@@ -15320,8 +15271,8 @@
    "upstream": "compiler/testData/codegen/box/enum/simple.kt"
   },
   "box/box/enum/sortEnumEntries.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
+   "category": "unknown LIZARD (stdlib API / unsupported decl)",
+   "detail": "unknown name 'LIZARD'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/sortEnumEntries.kt"
   },
@@ -15374,8 +15325,8 @@
    "upstream": "compiler/testData/codegen/box/enum/valueOf2.kt"
   },
   "box/box/enum/valueof.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/valueof.kt"
   },
@@ -15841,15 +15792,13 @@
    "upstream": "compiler/testData/codegen/box/exceptions/catch2.kt"
   },
   "box/box/exceptions/catch7.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/exceptions/catch7.kt"
   },
   "box/box/exceptions/extend0.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/exceptions/extend0.kt"
   },
   "box/box/exceptions/kt69534.kt": {
@@ -15859,9 +15808,8 @@
    "upstream": "compiler/testData/codegen/box/exceptions/kt69534.kt"
   },
   "box/box/exceptions/rethrow.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/exceptions/rethrow.kt"
   },
   "box/box/exceptions/throw0.kt": {
@@ -15870,27 +15818,24 @@
    "upstream": "compiler/testData/codegen/box/exceptions/throw0.kt"
   },
   "box/box/exceptions/throw_from_catch.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/exceptions/throw_from_catch.kt"
   },
   "box/box/exclExcl/genericNull.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/exclExcl/genericNull.kt"
   },
   "box/box/exclExcl/kt48440.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/exclExcl/kt48440.kt"
   },
   "box/box/exclExcl/kt48440_2.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/exclExcl/kt48440_2.kt"
   },
   "box/box/exclExcl/primitive.kt": {
@@ -16527,122 +16472,104 @@
    "upstream": "compiler/testData/codegen/box/fieldRename/genericPropertyWithItself.kt"
   },
   "box/box/finally/breakAndOuterFinally.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/breakAndOuterFinally.kt"
   },
   "box/box/finally/continueAndOuterFinally.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/continueAndOuterFinally.kt"
   },
   "box/box/finally/decrementInFinally.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "exit=-5 stdout='' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/finally/decrementInFinally.kt"
   },
   "box/box/finally/finallyAndFinally.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/finallyAndFinally.kt"
   },
   "box/box/finally/kt31923_break.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/kt31923_break.kt"
   },
   "box/box/finally/kt31923_continue.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/kt31923_continue.kt"
   },
   "box/box/finally/kt31923_return.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/kt31923_return.kt"
   },
   "box/box/finally/kt3549.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/kt3549.kt"
   },
   "box/box/finally/kt3706.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/kt3706.kt"
   },
   "box/box/finally/kt3867.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'fail' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/finally/kt3867.kt"
   },
   "box/box/finally/kt3874.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/kt3874.kt"
   },
   "box/box/finally/kt3894.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/kt3894.kt"
   },
   "box/box/finally/kt4134.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/kt4134.kt"
   },
   "box/box/finally/loopAndFinally.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/loopAndFinally.kt"
   },
   "box/box/finally/nestedFinallyAndNonFinallyTry.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/nestedFinallyAndNonFinallyTry.kt"
   },
   "box/box/finally/nestedFinallyAndNonFinallyTry2.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/nestedFinallyAndNonFinallyTry2.kt"
   },
   "box/box/finally/nestedFinallyAndNonFinallyTry3.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/nestedFinallyAndNonFinallyTry3.kt"
   },
   "box/box/finally/nestedFinallyAndNonFinallyTry4.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/nestedFinallyAndNonFinallyTry4.kt"
   },
   "box/box/finally/notChainCatch.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/notChainCatch.kt"
   },
   "box/box/finally/objectInFinally.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/finally/objectInFinally.kt"
   },
@@ -16652,21 +16579,19 @@
    "upstream": "compiler/testData/codegen/box/finally/returnNullFromInlined.kt"
   },
   "box/box/finally/someStuff.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/finally/someStuff.kt"
   },
   "box/box/finally/tryFinally.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/tryFinally.kt"
   },
   "box/box/finally/tryLoopTry.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/tryLoopTry.kt"
   },
   "box/box/fir/anonymousOverrideWithDefaultInLocalOverridden.kt": {
@@ -17720,14 +17645,14 @@
    "upstream": "compiler/testData/codegen/box/functions/bigArity/subclass.kt"
   },
   "box/box/functions/coerceVoidToArray.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: unknown type Nothing",
+   "detail": "unknown type Nothing",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/coerceVoidToArray.kt"
   },
   "box/box/functions/coerceVoidToObject.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: unknown type Nothing",
+   "detail": "unknown type Nothing",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/coerceVoidToObject.kt"
   },
@@ -18527,8 +18452,8 @@
    "upstream": "compiler/testData/codegen/box/increment/argumentWithSideEffects.kt"
   },
   "box/box/increment/arrayElement.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
+   "category": "types: Short",
+   "detail": "unknown type Short",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/arrayElement.kt"
   },
@@ -18718,8 +18643,8 @@
    "upstream": "compiler/testData/codegen/box/inference/capturedTypeAsLambdaInputType.kt"
   },
   "box/box/inference/capturedTypeWhenSubject.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/capturedTypeWhenSubject.kt"
   },
@@ -18816,8 +18741,8 @@
    "upstream": "compiler/testData/codegen/box/inference/kt38664.kt"
   },
   "box/box/inference/kt39824.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/kt39824.kt"
   },
@@ -18850,8 +18775,8 @@
    "upstream": "compiler/testData/codegen/box/inference/kt67609.kt"
   },
   "box/box/inference/lambdaWithStarReturn.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "type checks / casts (is, as)",
+   "detail": "unexpected top-level token (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/lambdaWithStarReturn.kt"
   },
@@ -19920,14 +19845,14 @@
    "upstream": "compiler/testData/codegen/box/inference/plusAssignInsideLambda.kt"
   },
   "box/box/inference/recursiveConstraintInsideTypeArgumentWithStarProjection.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "enum classes",
+   "detail": "unknown type Enum<*>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/recursiveConstraintInsideTypeArgumentWithStarProjection.kt"
   },
   "box/box/inference/referenceToCatchParameterFromLambdaExpression.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '->')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/referenceToCatchParameterFromLambdaExpression.kt"
   },
@@ -19956,9 +19881,8 @@
    "upstream": "compiler/testData/codegen/box/inference/tryCatchAtAssignmentWithSmartCast.kt"
   },
   "box/box/inference/tryWithAssignmentAndNothingTypedCatch.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/tryWithAssignmentAndNothingTypedCatch.kt"
   },
   "box/box/inference/unsafeVarianceCodegen.kt": {
@@ -20941,8 +20865,8 @@
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/kt49370.kt"
   },
   "box/box/inlineArgsInPlace/kt49407.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "other: unknown method Int.plus()",
+   "detail": "unknown method Int.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/kt49407.kt"
   },
@@ -22528,8 +22452,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/kt26858.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/kt26858Generic.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'dx' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/kt26858Generic.kt"
   },
@@ -23039,14 +22963,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsCallsLeftArgumentGeneric.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderInlineClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderInlineClass.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderInlineClassGeneric.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderInlineClassGeneric.kt"
   },
@@ -23412,15 +23336,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericInlineClassSynthMembers.kt"
   },
   "box/box/inlineClasses/genericUnderlyingValue/array.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericUnderlyingValue/array.kt"
   },
   "box/box/inlineClasses/genericUnderlyingValue/arrayIC.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericUnderlyingValue/arrayIC.kt"
   },
   "box/box/inlineClasses/genericUnderlyingValue/primitive.kt": {
@@ -24430,8 +24352,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680bGeneric.kt"
   },
   "box/box/inlineClasses/kt44141.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "other: unknown type Result<Int>",
+   "detail": "unknown type Result<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt44141.kt"
   },
@@ -24505,8 +24427,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt51157.kt"
   },
   "box/box/inlineClasses/kt51254.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "other: unknown type Nothing?",
+   "detail": "unknown type Nothing?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt51254.kt"
   },
@@ -25647,8 +25569,8 @@
    "upstream": "compiler/testData/codegen/box/inlineEvaluationOrder/arrayAccess3.kt"
   },
   "box/box/inlineEvaluationOrder/arrayAccessLhsDecomposed.kt": {
-   "category": "other: unsupported type Array<Int>",
-   "detail": "unsupported type Array<Int>",
+   "category": "other: unknown method ArrayList<Int>.fold()",
+   "detail": "unknown method ArrayList<Int>.fold()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineEvaluationOrder/arrayAccessLhsDecomposed.kt"
   },
@@ -26515,8 +26437,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "strings / templates",
+   "detail": "unknown method String.trimMargin()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -26805,14 +26727,13 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/consequentConditions.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/doWhileEvaluationOrder.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/doWhileEvaluationOrder.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/doWhileWithContinue.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/doWhileWithContinue.kt"
   },
@@ -26852,8 +26773,8 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/nestedConditions.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/simpleDoWhile.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/simpleDoWhile.kt"
   },
@@ -26863,9 +26784,8 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/simpleWhile.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/singleBreakInLoopBody.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/singleBreakInLoopBody.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/whileEvaluationOrder.kt": {
@@ -27047,9 +26967,8 @@
    "upstream": "compiler/testData/codegen/box/lambda/lambda14.kt"
   },
   "box/box/lambda/lambda2.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lambda/lambda2.kt"
   },
   "box/box/lambda/lambda3.kt": {
@@ -27192,9 +27111,8 @@
    "upstream": "compiler/testData/codegen/box/lateinit/notInitialized.kt"
   },
   "box/box/lazyCodegen/exceptionInFieldInitializer.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lazyCodegen/exceptionInFieldInitializer.kt"
   },
   "box/box/lazyCodegen/ifElse.kt": {
@@ -27267,9 +27185,8 @@
    "upstream": "compiler/testData/codegen/box/lazyCodegen/safeAssignComplex.kt"
   },
   "box/box/lazyCodegen/safeCallAndArray.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lazyCodegen/safeCallAndArray.kt"
   },
   "box/box/lazyCodegen/toString.kt": {
@@ -27278,9 +27195,8 @@
    "upstream": "compiler/testData/codegen/box/lazyCodegen/toString.kt"
   },
   "box/box/lazyCodegen/tryCatchExpression.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lazyCodegen/tryCatchExpression.kt"
   },
   "box/box/lazyCodegen/when.kt": {
@@ -27631,8 +27547,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/lists.kt"
   },
   "box/box/lower/forLoopsLowering/listsCME.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/listsCME.kt"
   },
@@ -29360,8 +29276,8 @@
    "upstream": "compiler/testData/codegen/box/nothingValue/nothingValueException.kt"
   },
   "box/box/nothingValue/toStringOnNothing.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nothingValue/toStringOnNothing.kt"
   },
@@ -29478,8 +29394,8 @@
    "upstream": "compiler/testData/codegen/box/objectExpression/multipleAnonymousObjectsInsideInlineFunction.kt"
   },
   "box/box/objectIntrinsics/objects.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other syntax (at 'Int')",
+   "detail": "expected end of statement (at 'Int')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objectIntrinsics/objects.kt"
   },
@@ -30165,8 +30081,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/annotatedAssignment.kt"
   },
   "box/box/operatorConventions/assignToDotQualifiedWithSideEffect.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/assignToDotQualifiedWithSideEffect.kt"
   },
@@ -31013,8 +30929,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt887.kt"
   },
   "box/box/primitiveTypes/nullAsNullableIntIsNull.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/nullAsNullableIntIsNull.kt"
   },
@@ -31720,14 +31636,14 @@
    "upstream": "compiler/testData/codegen/box/properties/lateinit/accessor.kt"
   },
   "box/box/properties/lateinit/accessorException.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'lateinit')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/accessorException.kt"
   },
   "box/box/properties/lateinit/accessorExceptionPublic.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'lateinit')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/accessorExceptionPublic.kt"
   },
@@ -32076,8 +31992,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/evaluationOrderForUntilReversed.kt"
   },
   "box/box/ranges/contains/generated/arrayIndices.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/arrayIndices.kt"
   },
@@ -32238,8 +32154,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/genericCharInRangeLiteral.kt"
   },
   "box/box/ranges/contains/inArray.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "other: unknown method IntArray.contains()",
+   "detail": "unknown method IntArray.contains()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inArray.kt"
   },
@@ -32977,8 +32893,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCollectionIndices.kt"
   },
   "box/box/ranges/forInIndices/forInCollectionTypeParameterIndices.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCollectionTypeParameterIndices.kt"
   },
@@ -33001,20 +32917,20 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInListIndicesContinue.kt"
   },
   "box/box/ranges/forInIndices/forInNonOptimizedIndices.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "other syntax (at '0')",
+   "detail": "expected ')' (at '0')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInNonOptimizedIndices.kt"
   },
   "box/box/ranges/forInIndices/forInObjectArrayIndices.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInObjectArrayIndices.kt"
   },
   "box/box/ranges/forInIndices/forInPrimitiveArrayIndices.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInPrimitiveArrayIndices.kt"
   },
@@ -33036,8 +32952,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/indexOfLast.kt"
   },
   "box/box/ranges/forInIndices/kt12983_forInGenericArrayIndices.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInGenericArrayIndices.kt"
   },
@@ -33048,8 +32964,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInGenericCollectionIndices.kt"
   },
   "box/box/ranges/forInIndices/kt12983_forInSpecificArrayIndices.kt": {
-   "category": "unknown doubleArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'doubleArrayOf'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInSpecificArrayIndices.kt"
   },
@@ -33078,8 +32994,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt13241_Collection.kt"
   },
   "box/box/ranges/forInIndices/kt43159_ArrayUpperBound.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt43159_ArrayUpperBound.kt"
   },
@@ -33207,8 +33123,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/ForInReversedReversedRange.kt"
   },
   "box/box/ranges/forInReversed/forInReversedArrayIndices.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedArrayIndices.kt"
   },
@@ -33266,8 +33182,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedRangeLiteralWithNonConstBounds.kt"
   },
   "box/box/ranges/forInReversed/forInReversedReversedArrayIndices.kt": {
-   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'intArrayOf'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedReversedArrayIndices.kt"
   },
@@ -33490,8 +33406,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInUntilIntMinValueReversed.kt"
   },
   "box/box/ranges/kt37370.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected ')' (at '{')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'falseCond' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/kt37370.kt"
   },
@@ -33514,8 +33430,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/kt47492a.kt"
   },
   "box/box/ranges/kt47492b.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other syntax (at ':')",
+   "detail": "expected identifier (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/kt47492b.kt"
   },
@@ -33740,9 +33656,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/expression/downTo/illegalStepNegative.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/expression/downTo/illegalStepNonConst.kt": {
@@ -33752,21 +33667,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/expression/downTo/illegalStepThenLegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/illegalStepZero.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/expression/downTo/legalStepThenIllegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/maxValueToMinValueStepMaxValue.kt": {
@@ -33920,9 +33832,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/illegalStepNegative.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/illegalStepNonConst.kt": {
@@ -33932,21 +33843,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/illegalStepThenLegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/illegalStepZero.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/legalStepThenIllegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/minValueToMaxValueStepMaxValue.kt": {
@@ -34250,9 +34158,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/emptyProgressionToMinValue.kt"
   },
   "box/box/ranges/stepped/expression/until/illegalStepNegative.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/expression/until/illegalStepNonConst.kt": {
@@ -34262,21 +34169,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/expression/until/illegalStepThenLegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/expression/until/illegalStepZero.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/expression/until/legalStepThenIllegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/expression/until/minValueToMaxValueStepMaxValue.kt": {
@@ -34430,9 +34334,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/literal/downTo/illegalStepNegative.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/literal/downTo/illegalStepNonConst.kt": {
@@ -34442,21 +34345,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/literal/downTo/illegalStepThenLegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/illegalStepZero.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/literal/downTo/legalStepThenIllegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/maxValueToMinValueStepMaxValue.kt": {
@@ -34610,9 +34510,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/illegalStepNegative.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/illegalStepNonConst.kt": {
@@ -34622,21 +34521,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/illegalStepThenLegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/illegalStepZero.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/legalStepThenIllegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/minValueToMaxValueStepMaxValue.kt": {
@@ -34940,9 +34836,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/emptyProgressionToMinValue.kt"
   },
   "box/box/ranges/stepped/literal/until/illegalStepNegative.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/literal/until/illegalStepNonConst.kt": {
@@ -34952,21 +34847,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/literal/until/illegalStepThenLegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/literal/until/illegalStepZero.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/literal/until/legalStepThenIllegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/literal/until/minValueToMaxValueStepMaxValue.kt": {
@@ -35120,8 +35012,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/illegalStepNegative.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/illegalStepNegative.kt"
   },
@@ -35132,20 +35024,20 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/illegalStepThenLegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/illegalStepZero.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/legalStepThenIllegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/legalStepThenIllegalStep.kt"
   },
@@ -35300,8 +35192,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepNegative.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepNegative.kt"
   },
@@ -35312,20 +35204,20 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepThenLegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepZero.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/legalStepThenIllegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/legalStepThenIllegalStep.kt"
   },
@@ -35630,8 +35522,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/emptyProgressionToMinValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/illegalStepNegative.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/illegalStepNegative.kt"
   },
@@ -35642,20 +35534,20 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/illegalStepThenLegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/illegalStepZero.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/legalStepThenIllegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/legalStepThenIllegalStep.kt"
   },
@@ -35810,9 +35702,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/illegalStepNegative.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/illegalStepNonConst.kt": {
@@ -35822,20 +35713,19 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/illegalStepThenLegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/illegalStepZero.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/legalStepThenIllegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/legalStepThenIllegalStep.kt"
   },
@@ -35990,9 +35880,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepNegative.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepNonConst.kt": {
@@ -36002,20 +35891,19 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepThenLegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepZero.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/legalStepThenIllegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/legalStepThenIllegalStep.kt"
   },
@@ -36320,9 +36208,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/emptyProgressionToMinValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/illegalStepNegative.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/illegalStepNonConst.kt": {
@@ -36332,20 +36219,19 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/illegalStepThenLegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/illegalStepZero.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/legalStepThenIllegalStep.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
+   "category": "other: unsigned ranges are not supported",
+   "detail": "unsigned ranges are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/legalStepThenIllegalStep.kt"
   },
@@ -36697,8 +36583,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt35004.kt"
   },
   "box/box/ranges/unsigned/kt36953.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "break / continue",
+   "detail": "unknown name 'break'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt36953.kt"
   },
@@ -37253,8 +37139,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/arrayLengthNPE.kt"
   },
   "box/box/regressions/commonSupertypeContravariant.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foobar' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/commonSupertypeContravariant.kt"
   },
@@ -37403,8 +37289,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt2060.kt"
   },
   "box/box/regressions/kt2210.kt": {
-   "category": "other: unsupported type Array<Array<Int>>",
-   "detail": "unsupported type Array<Array<Int>>",
+   "category": "other: arrayOf needs an explicit element type, e.g. arrayOf<Long>()",
+   "detail": "arrayOf needs an explicit element type, e.g. arrayOf<Long>()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt2210.kt"
   },
@@ -37432,9 +37318,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt2509.kt"
   },
   "box/box/regressions/kt3107.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/kt3107.kt"
   },
   "box/box/regressions/kt32949.kt": {
@@ -37509,8 +37394,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt47279.kt"
   },
   "box/box/regressions/kt5056.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.sorted()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt5056.kt"
   },
@@ -37637,8 +37522,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/noResolutionRecursion.kt"
   },
   "box/box/regressions/nullabilityForCommonCapturedSupertypes.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/nullabilityForCommonCapturedSupertypes.kt"
   },
@@ -37673,8 +37558,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/resolvedCallForGetOperator.kt"
   },
   "box/box/regressions/supertypeDepth.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/supertypeDepth.kt"
   },
@@ -37851,8 +37736,8 @@
    "upstream": "compiler/testData/codegen/box/reified/noValueParameters.kt"
   },
   "box/box/reified/nullableNothingArrayAsStringArray.kt": {
-   "category": "strings / templates",
-   "detail": "unsupported type Array<out,String?>",
+   "category": "other: unknown type Nothing?",
+   "detail": "unknown type Nothing?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/nullableNothingArrayAsStringArray.kt"
   },
@@ -37908,9 +37793,8 @@
    "upstream": "compiler/testData/codegen/box/reified/reifiedNullableNothing2.kt"
   },
   "box/box/reified/reifiedNullableNothing3.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/reified/reifiedNullableNothing3.kt"
   },
   "box/box/reified/reifiedNullableNothing4.kt": {
@@ -38898,7 +38782,7 @@
   },
   "box/box/specialBuiltins/throwable.kt": {
    "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "detail": "constructor Throwable expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwable.kt"
   },
@@ -39513,8 +39397,8 @@
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt13846.kt"
   },
   "box/box/super/superConstructor/kt17464_arrayOf.kt": {
-   "category": "other: unsupported type Array<Any>",
-   "detail": "unsupported type Array<Any>",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt17464_arrayOf.kt"
   },
@@ -39893,8 +39777,8 @@
    "upstream": "compiler/testData/codegen/box/toArray/kt3177-toTypedArray.kt"
   },
   "box/box/toArray/returnToTypedArray.kt": {
-   "category": "other: unsupported type Array<Int>",
-   "detail": "unsupported type Array<Int>",
+   "category": "other: unknown method ArrayList<Int>.toTypedArray()",
+   "detail": "unknown method ArrayList<Int>.toTypedArray()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/toArray/returnToTypedArray.kt"
   },
@@ -40246,26 +40130,26 @@
    "upstream": "compiler/testData/codegen/box/try/finally11.kt"
   },
   "box/box/try/finally12.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally12.kt"
   },
   "box/box/try/finally13.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally13.kt"
   },
   "box/box/try/finally14.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally14.kt"
   },
   "box/box/try/finally15.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/finally15.kt"
   },
@@ -40323,20 +40207,20 @@
    "upstream": "compiler/testData/codegen/box/try/returnsDifferentTypes.kt"
   },
   "box/box/try/try1.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/try1.kt"
   },
   "box/box/try/try2.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/try2.kt"
   },
   "box/box/try/try3.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/try3.kt"
   },
@@ -40347,8 +40231,8 @@
    "upstream": "compiler/testData/codegen/box/try/try4.kt"
   },
   "box/box/try/try5.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/try/try5.kt"
   },
@@ -41072,8 +40956,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/inUnsignedUntil.kt"
   },
   "box/box/unsignedTypes/iterateOverArrayOfUnsignedValues.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
+   "category": "unknown uintArrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'uintArrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/iterateOverArrayOfUnsignedValues.kt"
   },
@@ -41088,8 +40972,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/kt25784.kt"
   },
   "box/box/unsignedTypes/kt47716.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "unknown ULong (stdlib API / unsupported decl)",
+   "detail": "unknown name 'ULong'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/kt47716.kt"
   },
@@ -41873,8 +41757,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt14597_full.kt"
   },
   "box/box/when/enumOptimization/kt14802.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "other syntax (at '!')",
+   "detail": "expected ')' (at '!')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt14802.kt"
   },
@@ -41943,8 +41827,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/withoutElse.kt"
   },
   "box/box/when/exceptionOnNoMatch.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isZero' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/exceptionOnNoMatch.kt"
   },
@@ -41972,8 +41856,8 @@
    "upstream": "compiler/testData/codegen/box/when/exhaustiveness/exhaustiveWithNegativeBoolean.kt"
   },
   "box/box/when/exhaustiveness/exhaustiveWithNegativeEnum.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/exhaustiveness/exhaustiveWithNegativeEnum.kt"
   },
@@ -46381,8 +46265,8 @@
    "upstream": "native/native.tests/testData/codegen/classes/vtable1.kt"
   },
   "native/native.tests/codegen/classes/vtable_any.kt": {
-   "category": "other syntax (at '*')",
-   "detail": "expected identifier (at '*')",
+   "category": "other: unknown type Iterable<*>",
+   "detail": "unknown type Iterable<*>",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/classes/vtable_any.kt"
   },
@@ -46471,9 +46355,8 @@
    "upstream": "native/native.tests/testData/codegen/escapeAnalysis/localAllocatedArray.kt"
   },
   "native/native.tests/codegen/escapeAnalysis/negativeArraySize.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown name 'assertFailsWith'",
-   "status": "UNSUPPORTED",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.IllegalStateException: NegativeArraySizeException\\n'",
+   "status": "MISCOMPILE",
    "upstream": "native/native.tests/testData/codegen/escapeAnalysis/negativeArraySize.kt"
   },
   "native/native.tests/codegen/escapeAnalysis/stackAllocated.kt": {
@@ -46542,8 +46425,8 @@
    "upstream": "native/native.tests/testData/codegen/exceptions/stack_trace_inline_libbacktrace.kt"
   },
   "native/native.tests/codegen/exceptions/throw_cleanup.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/exceptions/throw_cleanup.kt"
   },
@@ -46700,8 +46583,8 @@
    "upstream": "native/native.tests/testData/codegen/initializers/while3.kt"
   },
   "native/native.tests/codegen/inline/inline18.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertTrue'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/inline/inline18.kt"
   },
@@ -46869,9 +46752,8 @@
    "upstream": "native/native.tests/testData/codegen/lower/vararg.kt"
   },
   "native/native.tests/codegen/lower/vararg_of_literals.kt": {
-   "category": "unknown arrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'arrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/lower/vararg_of_literals.kt"
   },
   "native/native.tests/codegen/mangling/direct.kt": {
@@ -47017,20 +46899,20 @@
    "upstream": "native/native.tests/testData/codegen/variables/var1.kt"
   },
   "native/native.tests/codegen/variables/var2.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/variables/var2.kt"
   },
   "native/native.tests/codegen/variables/var3.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/variables/var3.kt"
   },
   "native/native.tests/codegen/variables/var4.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/variables/var4.kt"
   },
