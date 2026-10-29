@@ -2,7 +2,7 @@ package newkotlin
 
 private val ASSIGN_OPS = setOf("=", "+=", "-=", "*=", "/=", "%=")
 private val INFIX_FUNS = setOf("and", "or", "xor", "shl", "shr", "ushr", "until", "downTo", "step")
-private val GENERIC_CALLS = setOf("ArrayList", "mutableListOf", "arrayListOf", "HashMap", "hashMapOf", "mutableMapOf")
+private val GENERIC_CALLS = setOf("ArrayList", "mutableListOf", "arrayListOf", "listOf", "HashMap", "hashMapOf", "mutableMapOf")
 private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sumOf", "count")
 
 private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract")
@@ -20,6 +20,7 @@ class Parser(private val t: List<Tok>) {
     private fun expectOp(s: String) { val x = next(); if (!(x.k == K.OP && x.s == s)) fail("expected '$s'", x) }
     private fun ident(): String { val x = next(); if (x.k != K.ID) fail("expected identifier", x); return x.s }
     private fun skipNL() { while (t[p].k == K.NL || (t[p].k == K.OP && t[p].s == ";")) p++ }
+    private fun skipNL0() { while (t[p].k == K.NL) p++ }
     private fun skipNLOnly() { while (t[p].k == K.NL) p++ }
     private fun skipLine() { while (t[p].k != K.NL && t[p].k != K.EOF) p++ }
     private inline fun <T> nested(d: Int, f: () -> T): T { depth.add(d); try { return f() } finally { depth.removeAt(depth.size - 1) } }
@@ -37,16 +38,32 @@ class Parser(private val t: List<Tok>) {
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> globals.add(stmt() as VarS)
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
                 tk.k == K.ID && tk.s == "class" -> classes.add(classDecl())
+                tk.k == K.ID && tk.s == "enum" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(classDecl(true)) }
                 tk.k == K.ID && tk.s == "interface" -> ifaces.add(interfaceDecl())
                 else -> fail("unexpected top-level token")
             }
         }
-        return Program(funs, classes, ifaces, globals)
+        return Program(funs, classes, ifaces, enumGlobals(classes) + globals)
     }
 
-    private fun members(props: MutableList<FieldD>? = null, inits: MutableList<Any>? = null): List<FunD> {
+    /** Enum entries become top-level immortal instances `E$A` (initialized first, in order) plus the list `E$values`. */
+    private fun enumGlobals(classes: List<ClassD>): List<VarS> {
+        val gs = ArrayList<VarS>()
+        for (c in classes) {
+            val es = c.enumEntries ?: continue
+            es.forEachIndexed { i, (n, args) ->
+                val call = CallE(NameE(c.name), emptyList(), listOf(StrL(listOf(n)), IntL(i.toLong(), false)) + args, null).also { it.line = c.line }
+                gs.add(VarS("${c.name}$$n", false, TypeRef(c.name, emptyList(), false), call).also { it.line = c.line })
+            }
+            val list = CallE(NameE("arrayListOf"), listOf(TypeRef(c.name, emptyList(), false)), es.map { NameE("${c.name}$${it.first}") }, null).also { it.line = c.line }
+            gs.add(VarS("${c.name}\$values", false, null, list).also { it.line = c.line })
+        }
+        return gs
+    }
+
+    private fun members(props: MutableList<FieldD>? = null, inits: MutableList<Any>? = null, open: Boolean = true): List<FunD> {
         val ms = ArrayList<FunD>()
-        expectOp("{")
+        if (open) expectOp("{")
         nested(0) {
             while (true) {
                 skipNL()
@@ -114,11 +131,16 @@ class Parser(private val t: List<Tok>) {
         else FunD(name, params, ret, null, null, line, typeParams) // abstract (interface) member
     }
 
-    private fun classDecl(): ClassD {
+    private fun classDecl(isEnum: Boolean = false): ClassD {
         val line = next().line
         val name = ident()
         val typeParams = typeParams()
         val fields = ArrayList<FieldD>(); val ctorParams = ArrayList<Param>(); val inits = ArrayList<Any>()
+        if (isEnum) for ((n, ty) in listOf("name" to "String", "ordinal" to "Int")) {
+            // Hidden constructor parameters `$name` / `$ordinal` (user parameters may be called `name`).
+            val tr = TypeRef(ty, emptyList(), false); ctorParams.add(Param("$$n", tr))
+            val f = FieldD(n, tr, false, NameE("$$n")); fields.add(f); inits.add(f)
+        }
         if (isOp("(")) {
             next()
             nested(1) {
@@ -149,8 +171,24 @@ class Parser(private val t: List<Tok>) {
                 if (isOp(",")) next() else break
             }
         }
-        val ms = if (isOp("{")) members(fields, inits) else emptyList()
-        return ClassD(name, fields, supers, ms, line, ctorParams, inits, superArgs, typeParams)
+        if (isEnum && superArgs != null) fail("enum classes cannot have a superclass")
+        var entries: List<Pair<String, List<E>>>? = null
+        val ms = if (isEnum) {
+            val es = ArrayList<Pair<String, List<E>>>()
+            expectOp("{")
+            skipNL0()
+            while (peek().k == K.ID) {
+                val en = ident()
+                val args = if (isOp("(")) args() else emptyList()
+                if (isOp("{")) fail("enum entries with bodies are not supported")
+                es.add(en to args)
+                skipNL0()
+                if (isOp(",")) { next(); skipNL0() } else break
+            }
+            entries = es
+            if (isOp(";")) { next(); members(fields, inits, open = false) } else { skipNL0(); expectOp("}"); emptyList() }
+        } else if (isOp("{")) members(fields, inits) else emptyList()
+        return ClassD(name, fields, supers, ms, line, ctorParams, inits, superArgs, typeParams, entries)
     }
 
     private fun type(): TypeRef {

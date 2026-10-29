@@ -7,7 +7,8 @@ package newkotlin
  * until the instance set is closed. Each instance has exact field types, so primitives stay unboxed and the
  * Perceus RC / cycle analysis (cyclic classes, field release functions) is computed per instance.
  */
-fun compileGenerics(p0: Program): String {
+fun compileGenerics(p00: Program): String {
+    val p0 = rewriteEnums(p00)
     val generic = p0.classes.filter { it.typeParams.isNotEmpty() }.associateBy { it.name }
     val inst = LinkedHashMap<String, ClassD>()
     val origin = HashMap<String, Pair<String, List<TypeRef>>>()
@@ -37,17 +38,41 @@ fun tyRef(t: Ty): TypeRef = when (t) {
     else -> TypeRef(t.toString(), emptyList(), false)
 }
 
-/** Substitutes type parameters by concrete type references throughout a class declaration. */
-private class Subst(val env: Map<String, TypeRef>) {
+/** `E.A` -> the entry global `E$A`; `E.values()` / `E.entries` -> `E$values`. */
+private fun rewriteEnums(p: Program): Program {
+    val enums = p.classes.filter { it.enumEntries != null }.associate { c -> c.name to c.enumEntries!!.map { it.first }.toSet() }
+    if (enums.isEmpty()) return p
+    val sub = Subst(emptyMap()) { x ->
+        when {
+            x is MemberE && x.recv is NameE && enums[x.recv.n]?.contains(x.n) == true -> NameE("${x.recv.n}$${x.n}")
+            x is MemberE && x.recv is NameE && x.recv.n in enums && x.n == "entries" -> NameE("${x.recv.n}\$values")
+            x is CallE && x.args.isEmpty() && x.callee is MemberE && x.callee.recv is NameE && x.callee.recv.n in enums && x.callee.n == "values" ->
+                NameE("${x.callee.recv.n}\$values")
+            else -> null
+        }?.also { it.line = x.line }
+    }
+    // Inside an enum class body, entries are in scope unqualified.
+    val classes = p.classes.map { c ->
+        val own = enums[c.name] ?: return@map sub.cls(c, c.name, keepTypeParams = true)
+        Subst(emptyMap()) { x -> (if (x is NameE && x.n in own) NameE("${c.name}$${x.n}") else sub.rw!!(x))?.also { it.line = x.line } }
+            .cls(c, c.name, keepTypeParams = true)
+    }
+    return Program(p.funs.map { sub.fn(it) }, classes, p.ifaces,
+        p.globals.map { sub.s(it) as VarS })
+}
+
+/** Substitutes type parameters by concrete type references throughout a class declaration ([rw]: optional expression rewrite). */
+private class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null) {
     val fieldMemo = HashMap<FieldD, FieldD>()
 
     fun ty(t: TypeRef): TypeRef = env[t.name]?.let { if (t.nullable) TypeRef(it.name, it.args, true) else it }
         ?: TypeRef(t.name, t.args.map { ty(it) }, t.nullable)
 
-    fun cls(c: ClassD, name: String): ClassD {
+    fun cls(c: ClassD, name: String, keepTypeParams: Boolean = false): ClassD {
         val fields = c.fields.map { field(it) }
         return ClassD(name, fields, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams.map { Param(it.name, ty(it.type)) },
-            c.inits.map { if (it is FieldD) field(it) else block(it as Block) }, c.superArgs?.map { e(it) })
+            c.inits.map { if (it is FieldD) field(it) else block(it as Block) }, c.superArgs?.map { e(it) },
+            if (keepTypeParams) c.typeParams else emptyList(), c.enumEntries?.map { (n, a) -> n to a.map { e(it) } })
     }
 
     fun field(f: FieldD): FieldD = fieldMemo.getOrPut(f) { FieldD(f.name, f.type?.let { ty(it) }, f.isVar, f.init?.let { e(it) }) }
@@ -69,7 +94,7 @@ private class Subst(val env: Map<String, TypeRef>) {
         is JumpS -> JumpS(x.isBreak)
     }.also { it.line = x.line }
 
-    fun e(x: E): E = when (x) {
+    fun e(x: E): E = rw?.invoke(x) ?: when (x) {
         is IntL, is CharL, is DblL, is BoolL, is NullL, is NameE -> x
         is PostIncE -> PostIncE(e(x.target), x.op)
         is StrL -> StrL(x.parts.map { if (it is E) e(it) else it })

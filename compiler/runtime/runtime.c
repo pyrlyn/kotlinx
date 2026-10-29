@@ -34,6 +34,11 @@ int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
 void rt_cc_collect(void);
 void rt_exit_flush(void) { rt_cc_collect(); fflush(stdout); }
 
+#ifdef RT_LEAKCHECK
+int rt_leakcheck = 1;
+#else
+int rt_leakcheck = 0;
+#endif
 void rt_bad_step(int64_t step) {
     fflush(stdout);
     fprintf(stderr, "Exception in thread \"main\" java.lang.IllegalArgumentException: Step must be positive, was: %" PRId64 ".\n", step);

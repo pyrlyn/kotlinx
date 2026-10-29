@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 1,
   "N/A": 2984,
-  "PASS": 167,
-  "UNSUPPORTED": 5323
+  "PASS": 178,
+  "UNSUPPORTED": 5312
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -135,14 +135,14 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/differentOrder.kt"
   },
   "box/box/annotations/instances/enumAndKClass.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "annotations",
+   "detail": "unexpected top-level token (at 'annotation')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/enumAndKClass.kt"
   },
   "box/box/annotations/instances/enumArray.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "annotations",
+   "detail": "unexpected top-level token (at 'annotation')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/enumArray.kt"
   },
@@ -238,8 +238,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/varargInAnnotationParameterInstantiation.kt"
   },
   "box/box/annotations/instances/withDefaults.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "annotations",
+   "detail": "unexpected top-level token (at 'annotation')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/withDefaults.kt"
   },
@@ -296,8 +296,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/spreadOperatorInAnnotationArguments.kt"
   },
   "box/box/annotations/spreadOperatorInArrayOf.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "annotations",
+   "detail": "unexpected top-level token (at 'annotation')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/spreadOperatorInArrayOf.kt"
   },
@@ -3458,8 +3458,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/emptyLHS.kt"
   },
   "box/box/callableReference/bound/enumEntryMember.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/enumEntryMember.kt"
   },
@@ -3914,8 +3914,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromTopLevelOneStringArg.kt"
   },
   "box/box/callableReference/function/enumValueOfMethod.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/enumValueOfMethod.kt"
   },
@@ -4495,8 +4495,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/delegatedMutable.kt"
   },
   "box/box/callableReference/property/enumNameOrdinal.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/enumNameOrdinal.kt"
   },
@@ -6659,8 +6659,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/primitiveArraysOperatorOf.kt"
   },
   "box/box/collectionLiterals/resolvesToOperator.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/resolvesToOperator.kt"
   },
@@ -6863,14 +6863,14 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/inheritance.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersBlocksAndEnum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersBlocksAndEnum.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersBlocksAndEnumTriggeredByBlock.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersBlocksAndEnumTriggeredByBlock.kt"
   },
@@ -6899,8 +6899,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersEnumImplementingInterfaceWithDefaultMember.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersEnumTriggeredByCompanionBlockMember.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersEnumTriggeredByCompanionBlockMember.kt"
   },
@@ -7103,8 +7103,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/lateinitIsInitializedFromTopLevelInitializer.kt"
   },
   "box/box/companionBlocksAndExtensions/membersWithNameOfEnumSpecial.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other: expected '{' (at '",
+   "detail": "expected '{' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/membersWithNameOfEnumSpecial.kt"
   },
@@ -8506,8 +8506,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInFor.kt"
   },
   "box/box/controlStructures/continueInForCondition.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "break / continue",
+   "detail": "unknown name 'continue'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInForCondition.kt"
   },
@@ -8780,8 +8780,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequence.kt"
   },
   "box/box/controlStructures/forInCharSequenceMut.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "other: listOf needs an explicit element type, e.g. listOf<Long>()",
+   "detail": "listOf needs an explicit element type, e.g. listOf<Long>()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceMut.kt"
   },
@@ -12703,26 +12703,26 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/doubleDefArgs1InnerClass.kt"
   },
   "box/box/defaultArguments/constructor/enum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/enum.kt"
   },
   "box/box/defaultArguments/constructor/enumWithOneDefArg.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/enumWithOneDefArg.kt"
   },
   "box/box/defaultArguments/constructor/enumWithTwoDefArgs.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/enumWithTwoDefArgs.kt"
   },
   "box/box/defaultArguments/constructor/enumWithTwoDoubleDefArgs.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/enumWithTwoDoubleDefArgs.kt"
   },
@@ -13358,26 +13358,26 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/initializeContainerOfTopLevelProperties.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndImportFromObject.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "unexpected top-level token (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndImportFromObject.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndLocalDelegatedProperty.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "unexpected top-level token (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndLocalDelegatedProperty.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/delegateToEnum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/delegateToEnum.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/delegateToEnumInAClass.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/delegateToEnumInAClass.kt"
   },
@@ -13405,8 +13405,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsFromFileClass.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffectsToEnum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsToEnum.kt"
   },
@@ -14330,26 +14330,26 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnClassObjectOfNestedClass2.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnEnum1.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnEnum1.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnEnum2.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnEnum2.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnImportedEnum1.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnImportedEnum1.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnImportedEnum2.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnImportedEnum2.kt"
   },
@@ -14758,8 +14758,8 @@
    "upstream": "compiler/testData/codegen/box/elvis/elvisToCommonType.kt"
   },
   "box/box/elvis/genericElvisWithMoreSpecificLHS.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "other: listOf needs an explicit element type, e.g. listOf<Long>()",
+   "detail": "listOf needs an explicit element type, e.g. listOf<Long>()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/elvis/genericElvisWithMoreSpecificLHS.kt"
   },
@@ -14824,127 +14824,126 @@
   },
   "box/box/enum/abstractMethodInEnum.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/abstractMethodInEnum.kt"
   },
   "box/box/enum/abstractNestedClass.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/abstractNestedClass.kt"
   },
   "box/box/enum/asReturnExpression.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/asReturnExpression.kt"
   },
   "box/box/enum/companionAccessingEnumValue.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/companionAccessingEnumValue.kt"
   },
   "box/box/enum/companionObject.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/companionObject.kt"
   },
   "box/box/enum/companionObjectInEnum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/companionObjectInEnum.kt"
   },
   "box/box/enum/constructorWithReordering.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/constructorWithReordering.kt"
   },
   "box/box/enum/deepInnerClassInEnumEntryClass.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/deepInnerClassInEnumEntryClass.kt"
   },
   "box/box/enum/deepInnerClassInEnumEntryClass2.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/deepInnerClassInEnumEntryClass2.kt"
   },
   "box/box/enum/defaultCtor/constructorWithDefaultArguments.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/constructorWithDefaultArguments.kt"
   },
   "box/box/enum/defaultCtor/constructorWithVararg.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at 'xs')",
+   "detail": "expected ':' (at 'xs')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/constructorWithVararg.kt"
   },
   "box/box/enum/defaultCtor/entryClassConstructorWithDefaultArguments.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/entryClassConstructorWithDefaultArguments.kt"
   },
   "box/box/enum/defaultCtor/entryClassConstructorWithVarargs.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at 'xs')",
+   "detail": "expected ':' (at 'xs')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/entryClassConstructorWithVarargs.kt"
   },
   "box/box/enum/defaultCtor/noPrimaryConstructor.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/noPrimaryConstructor.kt"
   },
   "box/box/enum/defaultCtor/secondaryConstructorWithDefaultArguments.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/secondaryConstructorWithDefaultArguments.kt"
   },
   "box/box/enum/defaultCtor/secondaryConstructorWithVararg.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/secondaryConstructorWithVararg.kt"
   },
   "box/box/enum/emptyConstructor.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/emptyConstructor.kt"
   },
   "box/box/enum/emptyEnumValuesValueOf.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other: expected '{' (at '",
+   "detail": "expected '{' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/emptyEnumValuesValueOf.kt"
   },
   "box/box/enum/enumCompanionInit.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumCompanionInit.kt"
   },
   "box/box/enum/enumConstructorParameterClashWithDefaults.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/enumConstructorParameterClashWithDefaults.kt"
   },
   "box/box/enum/enumEntriesInCompanion.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntriesInCompanion.kt"
   },
@@ -14954,8 +14953,8 @@
    "upstream": "compiler/testData/codegen/box/enum/enumEntriesMultimoduleNoMappings.kt"
   },
   "box/box/enum/enumEntryHashCode.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryHashCode.kt"
   },
@@ -14966,31 +14965,31 @@
   },
   "box/box/enum/enumEntryNamedLikeModifier.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryNamedLikeModifier.kt"
   },
   "box/box/enum/enumEntryReferenceFromInnerClassConstructor1.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryReferenceFromInnerClassConstructor1.kt"
   },
   "box/box/enum/enumEntryReferenceFromInnerClassConstructor2.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryReferenceFromInnerClassConstructor2.kt"
   },
   "box/box/enum/enumEntryReferenceFromInnerClassConstructor3.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryReferenceFromInnerClassConstructor3.kt"
   },
   "box/box/enum/enumInheritedFromTrait.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumInheritedFromTrait.kt"
   },
@@ -15000,8 +14999,8 @@
    "upstream": "compiler/testData/codegen/box/enum/enumMultiModule.kt"
   },
   "box/box/enum/enumNestedObjectInit.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumNestedObjectInit.kt"
   },
@@ -15011,44 +15010,43 @@
    "upstream": "compiler/testData/codegen/box/enum/enumNestedObjectInitCrossModule.kt"
   },
   "box/box/enum/enumShort.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumShort.kt"
   },
   "box/box/enum/enumValueOf.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumValueOf.kt"
   },
   "box/box/enum/enumWithFieldlessCompanion.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumWithFieldlessCompanion.kt"
   },
   "box/box/enum/enumWithLambdaParameter.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumWithLambdaParameter.kt"
   },
   "box/box/enum/enum_equals.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/enum_equals.kt"
   },
   "box/box/enum/getEnumEntityByOrdinal.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/getEnumEntityByOrdinal.kt"
   },
   "box/box/enum/inPackage.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/inPackage.kt"
   },
@@ -15059,26 +15057,26 @@
    "upstream": "compiler/testData/codegen/box/enum/inclassobj.kt"
   },
   "box/box/enum/initEntriesInCompanionObject.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEntriesInCompanionObject.kt"
   },
   "box/box/enum/initEntriesInCompanionObject2.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEntriesInCompanionObject2.kt"
   },
   "box/box/enum/initEntriesInValueOf.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEntriesInValueOf.kt"
   },
   "box/box/enum/initEnumAfterObjectAccess.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEnumAfterObjectAccess.kt"
   },
@@ -15090,19 +15088,19 @@
   },
   "box/box/enum/innerClassInEnumEntryClass.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/innerClassInEnumEntryClass.kt"
   },
   "box/box/enum/innerClassMethodInEnumEntryClass.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/innerClassMethodInEnumEntryClass.kt"
   },
   "box/box/enum/innerClassMethodInEnumEntryClass2.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/innerClassMethodInEnumEntryClass2.kt"
   },
@@ -15113,14 +15111,14 @@
    "upstream": "compiler/testData/codegen/box/enum/innerWithExistingClassObject.kt"
   },
   "box/box/enum/interfaceCallNoEntryClass.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/interfaceCallNoEntryClass.kt"
   },
   "box/box/enum/interfaceCallWithEntryClass.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/interfaceCallWithEntryClass.kt"
   },
@@ -15132,73 +15130,73 @@
   },
   "box/box/enum/kt1119.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt1119.kt"
   },
   "box/box/enum/kt18731.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isOne' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt18731.kt"
   },
   "box/box/enum/kt18731_2.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt18731_2.kt"
   },
   "box/box/enum/kt20651.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt20651.kt"
   },
   "box/box/enum/kt20651_inlineLambda.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt20651_inlineLambda.kt"
   },
   "box/box/enum/kt20651a.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt20651a.kt"
   },
   "box/box/enum/kt20651b.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt20651b.kt"
   },
   "box/box/enum/kt2350.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt2350.kt"
   },
   "box/box/enum/kt38540.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt38540.kt"
   },
   "box/box/enum/kt38996.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt38996.kt"
   },
   "box/box/enum/kt44744.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt44744.kt"
   },
   "box/box/enum/kt44744_innerClass.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt44744_innerClass.kt"
   },
@@ -15210,55 +15208,55 @@
   },
   "box/box/enum/kt7257.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257.kt"
   },
   "box/box/enum/kt7257_anonObjectInit.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_anonObjectInit.kt"
   },
   "box/box/enum/kt7257_anonObjectMethod.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_anonObjectMethod.kt"
   },
   "box/box/enum/kt7257_boundReference1.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_boundReference1.kt"
   },
   "box/box/enum/kt7257_boundReference2.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_boundReference2.kt"
   },
   "box/box/enum/kt7257_boundReferenceWithImplicitReceiver.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_boundReferenceWithImplicitReceiver.kt"
   },
   "box/box/enum/kt7257_explicitReceiver.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_explicitReceiver.kt"
   },
   "box/box/enum/kt7257_fullyQualifiedReceiver.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_fullyQualifiedReceiver.kt"
   },
   "box/box/enum/kt7257_namedLocalFun.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_namedLocalFun.kt"
   },
@@ -15270,19 +15268,19 @@
   },
   "box/box/enum/kt9711.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt9711.kt"
   },
   "box/box/enum/kt9711_2.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt9711_2.kt"
   },
   "box/box/enum/lambdaInDefault.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/lambdaInDefault.kt"
   },
@@ -15293,8 +15291,8 @@
    "upstream": "compiler/testData/codegen/box/enum/loop.kt"
   },
   "box/box/enum/manyDefaultParameters.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/manyDefaultParameters.kt"
   },
@@ -15305,7 +15303,7 @@
   },
   "box/box/enum/nested.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "only member functions are supported in class/interface bodies (at 'enum')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/nested.kt"
   },
@@ -15315,50 +15313,50 @@
    "upstream": "compiler/testData/codegen/box/enum/openMethodNoOverrides.kt"
   },
   "box/box/enum/ordinal.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/ordinal.kt"
   },
   "box/box/enum/ordinalsWithEnumEntitiesOverrides.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/ordinalsWithEnumEntitiesOverrides.kt"
   },
   "box/box/enum/overloadedEnumValues.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/overloadedEnumValues.kt"
   },
   "box/box/enum/refToThis.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/refToThis.kt"
   },
   "box/box/enum/reorderedArguments.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/reorderedArguments.kt"
   },
   "box/box/enum/simple.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/simple.kt"
   },
   "box/box/enum/sortEnumEntries.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "unknown arrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'arrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/sortEnumEntries.kt"
   },
   "box/box/enum/superCallInEnumLiteral.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/superCallInEnumLiteral.kt"
   },
@@ -15369,62 +15367,62 @@
    "upstream": "compiler/testData/codegen/box/enum/switchLowering.kt"
   },
   "box/box/enum/test0.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "unknown TOP_LEVEL (stdlib API / unsupported decl)",
+   "detail": "unknown name 'TOP_LEVEL'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/test0.kt"
   },
   "box/box/enum/test1.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/test1.kt"
   },
   "box/box/enum/toString.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/toString.kt"
   },
   "box/box/enum/vCallNoEntryClass.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/vCallNoEntryClass.kt"
   },
   "box/box/enum/vCallWithEntryClass.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/vCallWithEntryClass.kt"
   },
   "box/box/enum/valueOf2.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/valueOf2.kt"
   },
   "box/box/enum/valueof.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/valueof.kt"
   },
   "box/box/enum/values.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/values.kt"
   },
   "box/box/enum/varargParam.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at 'val')",
+   "detail": "expected ':' (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/varargParam.kt"
   },
   "box/box/enum/whenInObject.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/whenInObject.kt"
   },
@@ -16722,8 +16720,8 @@
    "upstream": "compiler/testData/codegen/box/fir/classCanNotBeCastedToVoid.kt"
   },
   "box/box/fir/contextSensitiveResolution/basicExampleWithEnumAndWhens.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "unknown CONNECTION (stdlib API / unsupported decl)",
+   "detail": "unknown name 'CONNECTION'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/contextSensitiveResolution/basicExampleWithEnumAndWhens.kt"
   },
@@ -16734,8 +16732,8 @@
    "upstream": "compiler/testData/codegen/box/fir/contextSensitiveResolution/eitherInTypePosition.kt"
   },
   "box/box/fir/contextSensitiveResolution/otherExpressionKindsPosition.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'data')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/contextSensitiveResolution/otherExpressionKindsPosition.kt"
   },
@@ -17517,8 +17515,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaults1.kt"
   },
   "box/box/function/defaults10.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults10.kt"
   },
@@ -20650,14 +20648,14 @@
    "upstream": "compiler/testData/codegen/box/inline/kt26466.kt"
   },
   "box/box/inline/kt26787.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/kt26787.kt"
   },
   "box/box/inline/kt66017.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "unknown repeat (stdlib API / unsupported decl)",
+   "detail": "unknown function 'repeat'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/kt66017.kt"
   },
@@ -24246,14 +24244,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096Generic.kt"
   },
   "box/box/inlineClasses/kt27096_enum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_enum.kt"
   },
   "box/box/inlineClasses/kt27096_enumGeneric.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_enumGeneric.kt"
   },
@@ -26684,20 +26682,20 @@
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/mutablePrimitives.kt"
   },
   "box/box/ir/enumClass.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/enumClass.kt"
   },
   "box/box/ir/enumClass2.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/enumClass2.kt"
   },
   "box/box/ir/enumClass3.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/enumClass3.kt"
   },
@@ -27702,8 +27700,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/arrays.kt"
   },
   "box/box/lower/forLoopsLowering/lists.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/lists.kt"
   },
@@ -29907,8 +29905,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt11117.kt"
   },
   "box/box/objects/kt1186.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'bar' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt1186.kt"
   },
@@ -30008,8 +30006,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt535.kt"
   },
   "box/box/objects/kt694.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'checkA' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt694.kt"
   },
@@ -30193,8 +30191,8 @@
    "upstream": "compiler/testData/codegen/box/objects/simpleObject.kt"
   },
   "box/box/objects/substitutionFunctionFromSuper.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/substitutionFunctionFromSuper.kt"
   },
@@ -30218,7 +30216,7 @@
   },
   "box/box/objects/useAnonymousObjectFunction.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useAnonymousObjectFunction.kt"
   },
@@ -30408,8 +30406,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusAssignWithComplexRHS.kt"
   },
   "box/box/operatorConventions/plusExplicit.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "unknown method String.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusExplicit.kt"
   },
@@ -30442,8 +30440,8 @@
    "upstream": "compiler/testData/codegen/box/optimizations/kt89860.kt"
   },
   "box/box/package/boxPrimitiveTypeInClinit.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
+   "category": "types: Float",
+   "detail": "unknown type Float?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/package/boxPrimitiveTypeInClinit.kt"
   },
@@ -30503,8 +30501,8 @@
    "upstream": "compiler/testData/codegen/box/package/packageQualifiedMethod.kt"
   },
   "box/box/package/privateMembersInImportList.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/package/privateMembersInImportList.kt"
   },
@@ -30695,8 +30693,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveLong.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveShort.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
+   "category": "types: Short",
+   "detail": "unknown type Short?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveShort.kt"
   },
@@ -30731,8 +30729,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedLong.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedShort.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
+   "category": "types: Short",
+   "detail": "unknown type Short?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedShort.kt"
   },
@@ -30767,8 +30765,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectLong.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectShort.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectShort.kt"
   },
@@ -33064,8 +33062,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCollectionImplicitReceiverIndices.kt"
   },
   "box/box/ranges/forInIndices/forInCollectionIndices.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCollectionIndices.kt"
   },
@@ -33312,8 +33310,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedCharSequenceIndices.kt"
   },
   "box/box/ranges/forInReversed/forInReversedCollectionIndices.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedCollectionIndices.kt"
   },
@@ -33617,14 +33615,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/kt47492b.kt"
   },
   "box/box/ranges/literal/emptyDownto.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/emptyDownto.kt"
   },
   "box/box/ranges/literal/emptyRange.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/emptyRange.kt"
   },
@@ -33635,14 +33633,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactDownToMinValue.kt"
   },
   "box/box/ranges/literal/inexactSteppedDownTo.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactSteppedDownTo.kt"
   },
   "box/box/ranges/literal/inexactSteppedRange.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactSteppedRange.kt"
   },
@@ -33671,20 +33669,20 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/maxValueToMinValue.kt"
   },
   "box/box/ranges/literal/oneElementDownTo.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/oneElementDownTo.kt"
   },
   "box/box/ranges/literal/oneElementRange.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/oneElementRange.kt"
   },
   "box/box/ranges/literal/openRange.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/openRange.kt"
   },
@@ -33695,8 +33693,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/openRangeUntil.kt"
   },
   "box/box/ranges/literal/overflowZeroDownToMaxValue.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/overflowZeroDownToMaxValue.kt"
   },
@@ -33773,32 +33771,32 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/reversedSimpleSteppedRange.kt"
   },
   "box/box/ranges/literal/simpleDownTo.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleDownTo.kt"
   },
   "box/box/ranges/literal/simpleRange.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleRange.kt"
   },
   "box/box/ranges/literal/simpleRangeWithNonConstantEnds.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleRangeWithNonConstantEnds.kt"
   },
   "box/box/ranges/literal/simpleSteppedDownTo.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleSteppedDownTo.kt"
   },
   "box/box/ranges/literal/simpleSteppedRange.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<Int> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleSteppedRange.kt"
   },
@@ -36813,14 +36811,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt67383.kt"
   },
   "box/box/ranges/unsigned/literal/emptyDownto.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<UInt> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/emptyDownto.kt"
   },
   "box/box/ranges/unsigned/literal/emptyRange.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<UInt> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/emptyRange.kt"
   },
@@ -36831,14 +36829,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/inexactDownToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/inexactSteppedDownTo.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<UInt> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/inexactSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/inexactSteppedRange.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<UInt> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/inexactSteppedRange.kt"
   },
@@ -36867,20 +36865,20 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/maxValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/oneElementDownTo.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<UInt> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/oneElementDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/oneElementRange.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<UInt> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/oneElementRange.kt"
   },
   "box/box/ranges/unsigned/literal/openRange.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<UInt> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/openRange.kt"
   },
@@ -36969,32 +36967,32 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedSimpleSteppedRange.kt"
   },
   "box/box/ranges/unsigned/literal/simpleDownTo.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<UInt> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/simpleRange.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<UInt> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleRange.kt"
   },
   "box/box/ranges/unsigned/literal/simpleRangeWithNonConstantEnds.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<UInt> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleRangeWithNonConstantEnds.kt"
   },
   "box/box/ranges/unsigned/literal/simpleSteppedDownTo.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<UInt> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/simpleSteppedRange.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert ArrayList<UInt> to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleSteppedRange.kt"
   },
@@ -37334,9 +37332,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/Kt1149.kt"
   },
   "box/box/regressions/Kt1619Test.kt": {
-   "category": "other: arrayListOf needs an explicit element type, e.g. arrayListOf",
-   "detail": "arrayListOf needs an explicit element type, e.g. arrayListOf<Long>()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/Kt1619Test.kt"
   },
   "box/box/regressions/Kt2495Test.kt": {
@@ -37491,8 +37488,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt18779.kt"
   },
   "box/box/regressions/kt2017.kt": {
-   "category": "other: arrayListOf needs an explicit element type, e.g. arrayListOf",
-   "detail": "arrayListOf needs an explicit element type, e.g. arrayListOf<Long>()",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.sorted()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt2017.kt"
   },
@@ -37649,8 +37646,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt6153.kt"
   },
   "box/box/regressions/kt6434.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt6434.kt"
   },
@@ -38123,8 +38120,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt1572.kt"
   },
   "box/box/safeCall/kt245.kt": {
-   "category": "other: ArrayList with arguments is not supported",
-   "detail": "ArrayList with arguments is not supported",
+   "category": "other: ArrayList(capacity) is not supported",
+   "detail": "ArrayList(capacity) is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/kt245.kt"
   },
@@ -38518,7 +38515,7 @@
   },
   "box/box/secondaryConstructors/enums.kt": {
    "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/enums.kt"
   },
@@ -39028,8 +39025,8 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableImplWithSecondaryConstructor.kt"
   },
   "box/box/specialBuiltins/valuesInsideEnum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/valuesInsideEnum.kt"
   },
@@ -40707,8 +40704,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/deserializedAbbreviationWithRedundantArgument.kt"
   },
   "box/box/typealias/enumEntryQualifier.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/enumEntryQualifier.kt"
   },
@@ -41180,9 +41177,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/iterateOverArrayOfUnsignedValues.kt"
   },
   "box/box/unsignedTypes/iterateOverListOfBoxedUnsignedValues.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/iterateOverListOfBoxedUnsignedValues.kt"
   },
   "box/box/unsignedTypes/kt25784.kt": {
@@ -41495,14 +41491,14 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/defaultExpressions.kt"
   },
   "box/box/versionOverloads/enumConstructor.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/enumConstructor.kt"
   },
   "box/box/versionOverloads/enumMultipleVersions.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/enumMultipleVersions.kt"
   },
@@ -41938,20 +41934,19 @@
    "upstream": "compiler/testData/codegen/box/when/edgeCases.kt"
   },
   "box/box/when/emptyWhen.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/emptyWhen.kt"
   },
   "box/box/when/enumOptimization/bigEnum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/bigEnum.kt"
   },
   "box/box/when/enumOptimization/duplicatingItems.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/duplicatingItems.kt"
   },
@@ -41962,32 +41957,32 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/enumInsideClassObject.kt"
   },
   "box/box/when/enumOptimization/expression.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/expression.kt"
   },
   "box/box/when/enumOptimization/functionLiteralInTopLevel.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/functionLiteralInTopLevel.kt"
   },
   "box/box/when/enumOptimization/kt14597.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt14597.kt"
   },
   "box/box/when/enumOptimization/kt14597_full.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt14597_full.kt"
   },
   "box/box/when/enumOptimization/kt14802.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at '*')",
+   "detail": "expected identifier (at '*')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt14802.kt"
   },
@@ -41998,62 +41993,60 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt15806.kt"
   },
   "box/box/when/enumOptimization/kt50258.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt50258.kt"
   },
   "box/box/when/enumOptimization/manyWhensWithinClass.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/manyWhensWithinClass.kt"
   },
   "box/box/when/enumOptimization/nestedWhenInCondition.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "strings / templates",
+   "detail": "unknown method ABCD.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/nestedWhenInCondition.kt"
   },
   "box/box/when/enumOptimization/nestedWhenInResult.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "strings / templates",
+   "detail": "unknown method ABCD.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/nestedWhenInResult.kt"
   },
   "box/box/when/enumOptimization/nonConstantEnum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/nonConstantEnum.kt"
   },
   "box/box/when/enumOptimization/nullIsTheFirstEntry.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/nullIsTheFirstEntry.kt"
   },
   "box/box/when/enumOptimization/nullability.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/nullability.kt"
   },
   "box/box/when/enumOptimization/nullableEnum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'mytest' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/nullableEnum.kt"
   },
   "box/box/when/enumOptimization/subjectAny.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/subjectAny.kt"
   },
   "box/box/when/enumOptimization/withoutElse.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/withoutElse.kt"
   },
@@ -42064,21 +42057,20 @@
    "upstream": "compiler/testData/codegen/box/when/exceptionOnNoMatch.kt"
   },
   "box/box/when/exhaustiveBreakContinue.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "annotations",
+   "detail": "expected end of statement (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/exhaustiveBreakContinue.kt"
   },
   "box/box/when/exhaustiveWhenInitialization.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/exhaustiveWhenInitialization.kt"
   },
   "box/box/when/exhaustiveWhenReturn.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/exhaustiveWhenReturn.kt"
   },
   "box/box/when/exhaustiveness/exhaustiveWithNegativeBoolean.kt": {
@@ -42088,8 +42080,8 @@
    "upstream": "compiler/testData/codegen/box/when/exhaustiveness/exhaustiveWithNegativeBoolean.kt"
   },
   "box/box/when/exhaustiveness/exhaustiveWithNegativeEnum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "exceptions",
+   "detail": "expected end of statement (at 'AssertionError')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/exhaustiveness/exhaustiveWithNegativeEnum.kt"
   },
@@ -42100,8 +42092,8 @@
    "upstream": "compiler/testData/codegen/box/when/exhaustiveness/exhaustiveWithNegativeSealed.kt"
   },
   "box/box/when/guard/whenWithGuard.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'data')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/guard/whenWithGuard.kt"
   },
@@ -42145,9 +42137,8 @@
    "upstream": "compiler/testData/codegen/box/when/kt45081.kt"
   },
   "box/box/when/kt47365.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/kt47365.kt"
   },
   "box/box/when/kt5307.kt": {
@@ -42218,20 +42209,18 @@
    "upstream": "compiler/testData/codegen/box/when/noElseCoerceToUnit.kt"
   },
   "box/box/when/noElseExhaustive.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/noElseExhaustive.kt"
   },
   "box/box/when/noElseExhaustiveStatement.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/noElseExhaustiveStatement.kt"
   },
   "box/box/when/noElseExhaustiveUnitExpected.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other: cannot store Unit in 'u'",
+   "detail": "cannot store Unit in 'u'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/noElseExhaustiveUnitExpected.kt"
   },
@@ -42352,8 +42341,8 @@
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationMultipleConditions.kt"
   },
   "box/box/when/switchOptimizationMultipleMixedConditions.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'parse' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationMultipleMixedConditions.kt"
   },
@@ -42448,8 +42437,8 @@
    "upstream": "compiler/testData/codegen/box/when/whenSubjectVariable/isCheckOnSubjectVariable.kt"
   },
   "box/box/when/whenSubjectVariable/kt27161.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at 'type')",
+   "detail": "expected ')' (at 'type')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/whenSubjectVariable/kt27161.kt"
   },
@@ -42460,14 +42449,14 @@
    "upstream": "compiler/testData/codegen/box/when/whenSubjectVariable/kt27161_int.kt"
   },
   "box/box/when/whenSubjectVariable/kt27161_nested.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at 't1')",
+   "detail": "expected ')' (at 't1')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/whenSubjectVariable/kt27161_nested.kt"
   },
   "box/box/when/whenSubjectVariable/kt27161_nested2.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at 't1')",
+   "detail": "expected ')' (at 't1')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/whenSubjectVariable/kt27161_nested2.kt"
   },
@@ -42502,14 +42491,14 @@
    "upstream": "compiler/testData/codegen/box/when/whenSubjectVariable/subjectExpressionIsEvaluatedOnce.kt"
   },
   "box/box/when/whenSubjectVariable/whenByEnum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at 'xx')",
+   "detail": "expected ')' (at 'xx')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/whenSubjectVariable/whenByEnum.kt"
   },
   "box/box/when/whenSubjectVariable/whenByNullableEnum.kt": {
-   "category": "enum classes",
-   "detail": "unexpected top-level token (at 'enum')",
+   "category": "other syntax (at 'xx')",
+   "detail": "expected ')' (at 'xx')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/whenSubjectVariable/whenByNullableEnum.kt"
   },
@@ -47121,8 +47110,8 @@
    "upstream": "native/native.tests/testData/codegen/serialization/deserialized_inline0.kt"
   },
   "native/native.tests/codegen/serialization/deserialized_listof0.kt": {
-   "category": "unknown listOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'listOf'",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types ArrayList<Int>, ArrayList<Int>",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/serialization/deserialized_listof0.kt"
   },
