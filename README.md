@@ -24,7 +24,7 @@ bin/newkotlinc /tmp/hello.kt -o /tmp/hello   # works from any directory
 ## Tests
 
 ```
-compiler/test.sh                             # golden tests, benchmark checksums, leak tests
+compiler/test.sh                             # golden tests, benchmark checksums, leak tests, GC tests
 python3 compiler/tests/upstream/run.py       # kept upstream Kotlin tests (unmodified)
 ```
 
@@ -61,6 +61,12 @@ If none is found, compilation fails with an error.
 
 - `--alloc malloc`: system malloc/free (used for ASan and macOS `leaks` in `compiler/tests/leaks/run.sh`).
 - `--alloc pool`: built-in free-list pool.
+
+## Garbage collector
+
+The memory manager lives in [`compiler/gc`](compiler/gc/README.md) behind a stable interface and is
+selected per build: `--gc=default` (RC + cycle collector, the default), `--gc=rc` (no cycle collector),
+`--gc=boehm` ([bdwgc](https://github.com/bdwgc/bdwgc), installed by `mise install`). GC benchmarks: [`bench/gc`](bench/gc/README.md).
 
 ## Benchmark tooling (`bench/`)
 
