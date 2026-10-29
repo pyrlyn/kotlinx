@@ -911,8 +911,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiArrayConstructors.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclFor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclFor.kt"
   },
@@ -923,20 +923,20 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForValCaptured.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForValCaptured.kt"
   },
@@ -953,14 +953,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -995,14 +995,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -1549,8 +1549,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/kt11163_properIeee754comparisons.kt"
   },
   "box/box/binaryOp/kt23030_properIeee754comparisons.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/kt23030_properIeee754comparisons.kt"
   },
@@ -5575,8 +5575,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1759.kt"
   },
   "box/box/classes/kt1891.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1891.kt"
   },
@@ -5686,8 +5686,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2626.kt"
   },
   "box/box/classes/kt2711.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "other syntax (at 'in')",
+   "detail": "expected ')' (at 'in')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2711.kt"
   },
@@ -5746,8 +5746,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt454.kt"
   },
   "box/box/classes/kt471.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt471.kt"
   },
@@ -5799,8 +5799,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt6136.kt"
   },
   "box/box/classes/kt633.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt633.kt"
   },
@@ -5871,32 +5871,32 @@
    "upstream": "compiler/testData/codegen/box/classes/outerThis.kt"
   },
   "box/box/classes/overloadBinaryOperator.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.addAll()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/overloadBinaryOperator.kt"
   },
   "box/box/classes/overloadPlusAssign.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayWrapper$String.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/overloadPlusAssign.kt"
   },
   "box/box/classes/overloadPlusAssignReturn.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.addAll()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/overloadPlusAssignReturn.kt"
   },
   "box/box/classes/overloadPlusToPlusAssign.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.addAll()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/overloadPlusToPlusAssign.kt"
   },
   "box/box/classes/overloadUnaryOperator.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.addAll()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/overloadUnaryOperator.kt"
   },
@@ -6257,8 +6257,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/capturedInInlineOnlyIncrDecr.kt"
   },
   "box/box/closures/capturedVarsOptimization/capturedInInlineOnlyIndexedCAO.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/capturedInInlineOnlyIndexedCAO.kt"
   },
@@ -6627,20 +6627,20 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/companionBlockOf.kt"
   },
   "box/box/collectionLiterals/genericCollection.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "other syntax (at 'strs')",
+   "detail": "expected ':' (at 'strs')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/genericCollection.kt"
   },
   "box/box/collectionLiterals/multipleOfOverloads.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "other syntax (at 'strs')",
+   "detail": "expected ':' (at 'strs')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/multipleOfOverloads.kt"
   },
   "box/box/collectionLiterals/nonGenericCollection.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "other syntax (at 'strs')",
+   "detail": "expected ':' (at 'strs')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/nonGenericCollection.kt"
   },
@@ -6656,8 +6656,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/primitiveArraysOperatorOf.kt"
   },
   "box/box/collectionLiterals/resolvesToOperator.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "other syntax (at 'es')",
+   "detail": "expected ':' (at 'es')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/resolvesToOperator.kt"
   },
@@ -7129,14 +7129,14 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/nestedObjectDoesNotTriggerOuterInitializer.kt"
   },
   "box/box/companionBlocksAndExtensions/propertyDelegation_block.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/propertyDelegation_block.kt"
   },
   "box/box/companionBlocksAndExtensions/propertyDelegation_extensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "objects / companion objects",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/propertyDelegation_extensions.kt"
   },
@@ -8603,8 +8603,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInArrayWithArrayVarUpdatedInLoopBody13.kt"
   },
   "box/box/controlStructures/forInArray/forInDelegatedPropertyUpdatedInLoopBody.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInDelegatedPropertyUpdatedInLoopBody.kt"
   },
@@ -9034,20 +9034,20 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSmartCastToArray.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionAll.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionAll.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionHasNext.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionHasNext.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionNext.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionNext.kt"
   },
@@ -9236,14 +9236,14 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt47245.kt"
   },
   "box/box/controlStructures/kt513.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'infix')",
+   "category": "generics",
+   "detail": "expected '(' (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt513.kt"
   },
   "box/box/controlStructures/kt628.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'infix')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt628.kt"
   },
@@ -12753,38 +12753,38 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/objectExpressionDelegatingToSecondaryConstructor.kt"
   },
   "box/box/defaultArguments/convention/incWithDefaultInGetter.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/incWithDefaultInGetter.kt"
   },
   "box/box/defaultArguments/convention/incWithDefaults.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/incWithDefaults.kt"
   },
   "box/box/defaultArguments/convention/kt16520.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/kt16520.kt"
   },
   "box/box/defaultArguments/convention/kt9140.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/kt9140.kt"
   },
   "box/box/defaultArguments/convention/plusAssignWithDefaultInGetter.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/plusAssignWithDefaultInGetter.kt"
   },
   "box/box/defaultArguments/convention/plusAssignWithDefaults.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/plusAssignWithDefaults.kt"
   },
@@ -13144,8 +13144,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/accessTopLevelDelegatedPropertyInClinit.kt"
   },
   "box/box/delegatedProperty/beforeDeclarationContainerOptimization.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/beforeDeclarationContainerOptimization.kt"
   },
@@ -13389,14 +13389,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/noInitializationOfOuterClass.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffects.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "exceptions",
+   "detail": "expected end of statement (at 'RuntimeException')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffects.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffectsFromFileClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "exceptions",
+   "detail": "expected end of statement (at 'RuntimeException')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsFromFileClass.kt"
   },
@@ -13413,14 +13413,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSmartCastReceiver.kt"
   },
   "box/box/delegatedProperty/delegateToThis/delegateToOuterThis.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToThis/delegateToOuterThis.kt"
   },
   "box/box/delegatedProperty/delegateToThis/delegateToThis.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToThis/delegateToThis.kt"
   },
@@ -13454,8 +13454,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedOverride.kt"
   },
   "box/box/delegatedProperty/delegatedPropertyInEnum.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedPropertyInEnum.kt"
   },
@@ -13628,8 +13628,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt13557.kt"
   },
   "box/box/delegatedProperty/local/kt16864.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt16864.kt"
   },
@@ -13639,8 +13639,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt19690.kt"
   },
   "box/box/delegatedProperty/local/kt21085.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt21085.kt"
   },
@@ -14248,8 +14248,8 @@
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/stdlibUsages.kt"
   },
   "box/box/destructuringDeclInLambdaParam/underscoreNames.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "exceptions",
+   "detail": "only member functions are supported in class/interface bodies (at 'RuntimeException')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/underscoreNames.kt"
   },
@@ -14302,8 +14302,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/inference/kt6176.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnClassObject1.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'invoke' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnClassObject1.kt"
   },
@@ -14326,8 +14326,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnClassObjectOfNestedClass2.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnEnum1.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'invoke' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnEnum1.kt"
   },
@@ -14338,8 +14338,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnEnum2.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnImportedEnum1.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'invoke' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnImportedEnum1.kt"
   },
@@ -14356,8 +14356,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnObject1.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnObject2.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'invoke' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnObject2.kt"
   },
@@ -16149,8 +16149,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1953.kt"
   },
   "box/box/extensionFunctions/kt1953_class.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1953_class.kt"
   },
@@ -16167,8 +16167,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3285.kt"
   },
   "box/box/extensionFunctions/kt3298.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3298.kt"
   },
@@ -16209,14 +16209,14 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt606.kt"
   },
   "box/box/extensionFunctions/kt865.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt865.kt"
   },
   "box/box/extensionFunctions/memberExtensionEqualsHashCodeToStringInInterface.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'infix')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/memberExtensionEqualsHashCodeToStringInInterface.kt"
   },
@@ -16572,8 +16572,8 @@
    "upstream": "compiler/testData/codegen/box/finally/decrementInFinally.kt"
   },
   "box/box/finally/finallyAndFinally.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/finally/finallyAndFinally.kt"
   },
@@ -16620,8 +16620,8 @@
    "upstream": "compiler/testData/codegen/box/finally/kt3874.kt"
   },
   "box/box/finally/kt3894.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/finally/kt3894.kt"
   },
@@ -16632,8 +16632,8 @@
    "upstream": "compiler/testData/codegen/box/finally/kt4134.kt"
   },
   "box/box/finally/loopAndFinally.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/finally/loopAndFinally.kt"
   },
@@ -16691,8 +16691,8 @@
    "upstream": "compiler/testData/codegen/box/finally/tryFinally.kt"
   },
   "box/box/finally/tryLoopTry.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/finally/tryLoopTry.kt"
   },
@@ -16857,8 +16857,8 @@
    "upstream": "compiler/testData/codegen/box/fir/toLong.kt"
   },
   "box/box/fir/unnamedLocalVariable.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/unnamedLocalVariable.kt"
   },
@@ -17874,8 +17874,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/castFunctionToExtension.kt"
   },
   "box/box/functions/invoke/extensionInvokeOnExpr.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/extensionInvokeOnExpr.kt"
   },
@@ -17898,8 +17898,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/invoke.kt"
   },
   "box/box/functions/invoke/invokeOnExprByConvention.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/invokeOnExprByConvention.kt"
   },
@@ -17922,8 +17922,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3297.kt"
   },
   "box/box/functions/invoke/kt3450getAndInvoke.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3450getAndInvoke.kt"
   },
@@ -17940,8 +17940,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3772.kt"
   },
   "box/box/functions/invoke/kt3821invokeOnThis.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'invoke' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3821invokeOnThis.kt"
   },
@@ -18576,14 +18576,14 @@
    "upstream": "compiler/testData/codegen/box/increment/augmentedAssignmentWithComplexRhs.kt"
   },
   "box/box/increment/classNaryGetSet.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ']' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/classNaryGetSet.kt"
   },
   "box/box/increment/classVarargGetSet.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "other syntax (at 'va')",
+   "detail": "expected ':' (at 'va')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/classVarargGetSet.kt"
   },
@@ -18594,8 +18594,8 @@
    "upstream": "compiler/testData/codegen/box/increment/classVarargGetSetEvaluationOrder.kt"
   },
   "box/box/increment/classWithGetSet.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "other syntax (at 'f')",
+   "detail": "expected end of statement (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/classWithGetSet.kt"
   },
@@ -18606,20 +18606,20 @@
    "upstream": "compiler/testData/codegen/box/increment/extOnLong.kt"
   },
   "box/box/increment/genericClassWithGetSet.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "other syntax (at 'f')",
+   "detail": "expected end of statement (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/genericClassWithGetSet.kt"
   },
   "box/box/increment/kt36956.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'get' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/kt36956.kt"
   },
   "box/box/increment/memberExtOnLong.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/memberExtOnLong.kt"
   },
@@ -24860,14 +24860,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/kt27070Generic.kt"
   },
   "box/box/inlineClasses/propertyDelegation/kt42933.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/kt42933.kt"
   },
   "box/box/inlineClasses/propertyDelegation/kt42933Generic.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/kt42933Generic.kt"
   },
@@ -27820,14 +27820,14 @@
    "upstream": "compiler/testData/codegen/box/mixedNamedPosition/varargsEvaluationOrder.kt"
   },
   "box/box/multiDecl/ComplexInitializer.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/ComplexInitializer.kt"
   },
   "box/box/multiDecl/SimpleVals.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/SimpleVals.kt"
   },
@@ -27838,8 +27838,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/SimpleValsExtensions.kt"
   },
   "box/box/multiDecl/SimpleVarsExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/SimpleVarsExtensions.kt"
   },
@@ -27850,26 +27850,26 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/UnderscoreNames.kt"
   },
   "box/box/multiDecl/ValCapturedInFunctionLiteral.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/ValCapturedInFunctionLiteral.kt"
   },
   "box/box/multiDecl/ValCapturedInLocalFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/ValCapturedInLocalFunction.kt"
   },
   "box/box/multiDecl/ValCapturedInObjectLiteral.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/ValCapturedInObjectLiteral.kt"
   },
   "box/box/multiDecl/VarCapturedInFunctionLiteral.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/VarCapturedInFunctionLiteral.kt"
   },
@@ -27880,20 +27880,20 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/VarCapturedInLocalFunction.kt"
   },
   "box/box/multiDecl/VarCapturedInObjectLiteral.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/VarCapturedInObjectLiteral.kt"
   },
   "box/box/multiDecl/component.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/component.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclFor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclFor.kt"
   },
@@ -27904,20 +27904,20 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForValCaptured.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForValCaptured.kt"
   },
@@ -27934,44 +27934,44 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclFor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForValCaptured.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForValCaptured.kt"
   },
@@ -27982,38 +27982,38 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/UnderscoreNames.kt"
   },
   "box/box/multiDecl/forRange/UnderscoreNamesDontCallComponent.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "exceptions",
+   "detail": "only member functions are supported in class/interface bodies (at 'RuntimeException')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/UnderscoreNamesDontCallComponent.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclFor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt"
   },
@@ -28030,14 +28030,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -28054,44 +28054,44 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclFor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt"
   },
@@ -28108,14 +28108,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -28132,14 +28132,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -28156,14 +28156,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -28180,14 +28180,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -30102,8 +30102,8 @@
    "upstream": "compiler/testData/codegen/box/objects/safeAccess.kt"
   },
   "box/box/objects/selfReferenceToCompanionObjectInAnonymousObjectInSuperConstructorCall.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
@@ -30126,8 +30126,8 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInAnonymousObjectInSuperConstructorCall.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "objects / companion objects",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
@@ -30150,8 +30150,8 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToObjectInAnonymousObjectInSuperConstructorCall.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
@@ -30245,8 +30245,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/assignmentOperations.kt"
   },
   "box/box/operatorConventions/augmentedAssignmentWithArrayLHS.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'plus' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/augmentedAssignmentWithArrayLHS.kt"
   },
@@ -30335,8 +30335,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt14201.kt"
   },
   "box/box/operatorConventions/kt14201_2.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt14201_2.kt"
   },
@@ -30358,8 +30358,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt44647.kt"
   },
   "box/box/operatorConventions/kt45022.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'plusAssign' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt45022.kt"
   },
@@ -30370,20 +30370,20 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt4987.kt"
   },
   "box/box/operatorConventions/nestedMaps.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ']' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/nestedMaps.kt"
   },
   "box/box/operatorConventions/operatorSetLambda.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/operatorSetLambda.kt"
   },
   "box/box/operatorConventions/overloadedSet.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "exceptions",
+   "detail": "expected end of statement (at 'Exception')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/overloadedSet.kt"
   },
@@ -30400,8 +30400,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusExplicit.kt"
   },
   "box/box/operatorConventions/reassignmentLhsCaching.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/reassignmentLhsCaching.kt"
   },
@@ -31747,13 +31747,13 @@
   },
   "box/box/properties/kt49203_lateinit.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "detail": "only member functions are supported in class/interface bodies (at 'lateinit')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt49203_lateinit.kt"
   },
   "box/box/properties/kt49203_var.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt49203_var.kt"
   },
@@ -37533,8 +37533,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt33638.kt"
   },
   "box/box/regressions/kt3421.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt3421.kt"
   },
@@ -38818,8 +38818,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/lambdaArgumentWithoutType.kt"
   },
   "box/box/smartCasts/multipleSmartCast.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/multipleSmartCast.kt"
   },
@@ -39138,8 +39138,8 @@
    "upstream": "compiler/testData/codegen/box/strictEquals/generic.kt"
   },
   "box/box/strictEquals/implicitInvoke.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/implicitInvoke.kt"
   },
@@ -40845,8 +40845,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasObject.kt"
   },
   "box/box/typealias/typeAliasObjectCallable.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasObjectCallable.kt"
   },
@@ -40964,8 +40964,8 @@
    "upstream": "compiler/testData/codegen/box/unit/kt4265.kt"
   },
   "box/box/unit/kt51036.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/kt51036.kt"
   },
@@ -41577,8 +41577,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/memberNameCollision.kt"
   },
   "box/box/versionOverloads/memberOperators.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/memberOperators.kt"
   },
@@ -41627,8 +41627,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/objectMembers.kt"
   },
   "box/box/versionOverloads/operatorGet.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/operatorGet.kt"
   },
@@ -42165,8 +42165,8 @@
    "upstream": "compiler/testData/codegen/box/when/kt83740.kt"
   },
   "box/box/when/longInRange.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "other syntax (at '!')",
+   "detail": "expected ')' (at '!')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/longInRange.kt"
   },
@@ -47104,8 +47104,8 @@
    "upstream": "native/native.tests/testData/codegen/serialization/no_type_map.kt"
   },
   "native/native.tests/codegen/variables/var1.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/variables/var1.kt"
   },

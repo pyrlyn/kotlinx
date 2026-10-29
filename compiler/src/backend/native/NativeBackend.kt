@@ -32,6 +32,8 @@ private val NANOS = setOf("kotlin.system.getTimeNanos", "getTimeNanos", "System.
 
 /** vtable entries before the interface-method slots (see genClass). */
 private const val VT_HEADER = 5
+/** Binary operators that call an `operator fun` on class/interface operands. */
+private val OP_FUNS = mapOf("+" to "plus", "-" to "minus", "*" to "times", "/" to "div", "%" to "rem")
 
 /** Native target: typed LLVM IR generation (linked by clang with runtime/runtime.c). */
 /** Thrown when code needs an instance of a generic class that is not in the program yet; [compileGenerics] adds it and retries. */
@@ -806,6 +808,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             is IndexE -> {
                 val r = genExpr(target.recv)
+                if (r.t is Ty.Cls || r.t is Ty.Iface) {
+                    releaseIfOwned(method(r, "set", CallE(MemberE(target.recv, "set", false), emptyList(), listOf(target.idx, value), null)))
+                    return
+                }
                 val i0 = genExpr(target.idx)
                 val i = if (r.t is Ty.MapTy) i0 else coerce(i0, Ty.I64)
                 when (val rt = r.t) {
@@ -946,6 +952,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is CallE -> genCall(e)
             is IndexE -> {
                 val r = genExpr(e.recv)
+                if (r.t is Ty.Cls || r.t is Ty.Iface) return method(r, "get", opCall("get", e.idx))
                 val i0 = genExpr(e.idx)
                 val i = if (r.t is Ty.MapTy) i0 else coerce(i0, Ty.I64)
                 val res = when (val rt = r.t) {
@@ -960,6 +967,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is BinE -> genBin(e)
             is UnE -> {
                 val v = genExpr(e.e)
+                if (v.t is Ty.Cls || v.t is Ty.Iface) return method(v, if (e.op == "-") "unaryMinus" else "not", opCall("", null))
                 when (e.op) {
                     "!" -> Val(emitT("xor i1 ${coerce(v, Ty.I1).v}, true"), Ty.I1)
                     "-" -> when {
@@ -1511,6 +1519,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
     }
 
+    /** Synthetic call node for an operator method with at most one argument. */
+    private fun opCall(n: String, arg: E?): CallE = CallE(NameE(n), emptyList(), listOfNotNull(arg), null)
+
     private fun genBin(e: BinE): Val {
         when (e.op) {
             "&&", "||" -> {
@@ -1541,7 +1552,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             "..", "until", "downTo", "step" -> fail("ranges are only supported in for loops")
         }
-        val a = genExpr(e.l); val b = genExpr(e.r)
+        val a = genExpr(e.l)
+        if (a.t is Ty.Cls || a.t is Ty.Iface) {
+            // Operator overloading: `a + b` -> a.plus(b); `a < b` -> a.compareTo(b) < 0. `==` stays identity.
+            OP_FUNS[e.op]?.let { return method(a, it, opCall(it, e.r)) }
+            if (e.op in setOf("<", ">", "<=", ">=")) return compare(e.op, method(a, "compareTo", opCall("compareTo", e.r)), Val("0", Ty.I32))
+        }
+        val b = genExpr(e.r)
         if (a.t == Ty.Char || b.t == Ty.Char) return charOp(e.op, a, b)
         return when (e.op) {
             "==", "!=", "<", ">", "<=", ">=" -> compare(e.op, a, b)

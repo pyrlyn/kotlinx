@@ -5,7 +5,7 @@ private val INFIX_FUNS = setOf("and", "or", "xor", "shl", "shr", "ushr", "until"
 private val GENERIC_CALLS = setOf("ArrayList", "mutableListOf", "arrayListOf", "listOf", "HashMap", "hashMapOf", "mutableMapOf")
 private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sumOf", "count")
 
-private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const")
+private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix")
 
 class Parser(private val t: List<Tok>) {
     private var p = 0
