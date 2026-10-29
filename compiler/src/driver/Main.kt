@@ -55,7 +55,7 @@ private fun findMimalloc(): String? {
         .firstOrNull { hasLib(it) }
 }
 
-fun compileToIr(src: String): String = compileGenerics(withPrelude(src, Parser(Lexer(src).lex()).program()))
+fun compileToIr(src: String): String = compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program())))
 
 fun main(args: Array<String>) {
     var input: String? = null; var output: String? = null

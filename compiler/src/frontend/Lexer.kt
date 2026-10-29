@@ -38,6 +38,14 @@ class Lexer(private val src: String, private var line: Int = 1) {
                     i = e + 2
                 }
                 c.isDigit() -> number()
+                c == '`' && src.indexOf('`', i + 1).let { e -> e > i + 1 && '\n' !in src.substring(i + 1, e) } -> {
+                    // Backtick identifier: characters outside [A-Za-z0-9_$] are escaped so the name stays a valid symbol.
+                    val e = src.indexOf('`', i + 1)
+                    val raw = src.substring(i + 1, e)
+                    val name = raw.map { ch -> if (ch.isLetterOrDigit() || ch == '_' || ch == '$') ch.toString() else "_x${ch.code.toString(16)}_" }.joinToString("")
+                    out.add(Tok(K.ID, if (name[0].isDigit()) "_$name" else name, line))
+                    i = e + 1
+                }
                 c.isLetter() || c == '_' -> {
                     val st = i
                     while (i < src.length && (src[i].isLetterOrDigit() || src[i] == '_')) i++

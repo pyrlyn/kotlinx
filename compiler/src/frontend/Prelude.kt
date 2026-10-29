@@ -298,3 +298,53 @@ fun withPrelude(src: String, p: Program): Program {
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },
         p.ifaces + lib.ifaces.filter { i -> p.ifaces.none { it.name == i.name } }, p.globals + lib.globals, p.companions + lib.companions)
 }
+
+/** Primitive types that are boxed (into `AnyBox<T>` classes) when used as `Any`. */
+val ANY_BOXED = listOf("Int", "Long", "Double", "Boolean", "Char", "String", "UInt", "ULong", "Byte")
+private val ANY_USE = Regex("""\bAny\b""")
+
+/**
+ * `Any`: a built-in interface with no methods that every class implements. Primitives and strings are boxed into
+ * `AnyBox<T>` classes. `anyToString__` / `anyEquals__` dispatch over the concrete (non-generic) classes.
+ */
+fun withAny(src: String, p: Program): Program {
+    if (!ANY_USE.containsMatchIn(src)) return p
+    val boxes = ANY_BOXED.joinToString("\n") { "class AnyBox$it(val v: $it)" }
+    val lib0 = Parser(Lexer(boxes).lex()).program()
+    val all = p.classes + lib0.classes
+    val byName = all.associateBy { it.name }
+    fun depth(c: ClassD): Int = c.superClass?.let { s -> byName[s]?.let { 1 + depth(it) } } ?: 0
+    fun has(c: ClassD, m: String): Boolean = c.methods.any { it.name == m && it.params.size <= 1 } || (c.superClass?.let { byName[it] }?.let { has(it, m) } ?: false)
+    for (c in p.classes) if (c.methods.any { it.name == "\$equals" }) {
+        val sup = c.superClass?.let { byName[it] }
+        if (sup != null && listOf("toString", "equals", "hashCode").any { has(sup, it) })
+            throw CompileError("line ${c.line}: data class ${c.name} with a superclass overriding toString/equals/hashCode is not supported")
+    }
+    val concrete = p.classes.filter { it.typeParams.isEmpty() }.sortedByDescending { depth(it) }
+    val sb = StringBuilder()
+    sb.append("fun anyToString__(x: Any?): String {\n    if (x == null) return \"null\"\n")
+    for (b in ANY_BOXED) sb.append("    if (x is AnyBox$b) return \"\${x.v}\"\n")
+    for (c in concrete) when {
+        c.enumEntries != null -> sb.append("    if (x is `${c.name}`) return x.name\n")
+        c.isValue -> sb.append("    if (x is `${c.name}`) return \"\${x}\"\n")
+        c.methods.any { it.name == "\$equals" } -> sb.append("    if (x is `${c.name}`) return x.toString()\n")
+        has(c, "toString") -> sb.append("    if (x is `${c.name}`) return x.toString()\n")
+        else -> sb.append("    if (x is `${c.name}`) return \"${c.name.substringAfterLast('$')}\"\n")
+    }
+    sb.append("    return \"Any\"\n}\n")
+    sb.append("fun anyEquals__(a: Any?, b: Any?): Boolean {\n    if (a == null) return b == null\n    if (b == null) return false\n")
+    for (b in ANY_BOXED) sb.append(if (b == "Double") "    if (a is AnyBoxDouble) return b is AnyBoxDouble && a.v.compareTo(b.v) == 0\n" else "    if (a is AnyBox$b) return b is AnyBox$b && a.v == b.v\n")
+    for (c in concrete) when {
+        has(c, "equals") -> sb.append("    if (a is `${c.name}`) return a.equals(b)\n")
+        c.isValue || c.methods.any { it.name == "\$equals" } -> sb.append("    if (a is `${c.name}`) return b is `${c.name}` && a == b\n")
+    }
+    sb.append("    return false\n}\n")
+    sb.append("fun anyHashCode__(x: Any?): Int {\n    if (x == null) return 0\n")
+    for (b in ANY_BOXED) if (b != "UInt" && b != "ULong" && b != "Byte") sb.append("    if (x is AnyBox$b) return x.v.hashCode()\n")
+    for (c in concrete) if (has(c, "hashCode") || c.methods.any { it.name == "\$equals" }) sb.append("    if (x is `${c.name}`) return x.hashCode()\n")
+    sb.append("    return 0\n}\n")
+    val lib = Parser(Lexer("interface Any\n" + sb).lex()).program()
+    fun withAnySuper(c: ClassD) = if ("Any" in c.supers) c else
+        ClassD(c.name, c.fields, c.supers + "Any", c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
+    return Program(p.funs + lib.funs, all.map { withAnySuper(it) }, p.ifaces + lib.ifaces, p.globals, p.companions)
+}

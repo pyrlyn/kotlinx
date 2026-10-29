@@ -1,11 +1,11 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "COMPILER_CRASH": 6,
-  "MISCOMPILE": 45,
+  "COMPILER_CRASH": 5,
+  "MISCOMPILE": 42,
   "N/A": 2984,
-  "PASS": 1592,
-  "UNSUPPORTED": 3848
+  "PASS": 1728,
+  "UNSUPPORTED": 3716
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -203,8 +203,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/nestedAnnotationInstances.kt"
   },
   "box/box/annotations/instances/nestedDefaults.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: BooleanArray",
+   "detail": "unknown type BooleanArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/nestedDefaults.kt"
   },
@@ -358,8 +358,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/extensionInClass.kt"
   },
   "box/box/argumentOrder/kt17691WithEnabledFeature.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: Unit cannot be used as Any",
+   "detail": "Unit cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt17691WithEnabledFeature.kt"
   },
@@ -535,8 +535,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/collectionGetMultiIndex.kt"
   },
   "box/box/arrays/constantArrayOfAny.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "ArrayList<String> cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/constantArrayOfAny.kt"
   },
@@ -782,8 +782,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt238.kt"
   },
   "box/box/arrays/kt2997.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: type check of Any against IntArray is not supported",
+   "detail": "type check of Any against IntArray is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt2997.kt"
   },
@@ -1080,8 +1080,8 @@
    "upstream": "compiler/testData/codegen/box/associatedObjects/kt88571.kt"
   },
   "box/box/basics/array_to_any.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown Array (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Array'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/array_to_any.kt"
   },
@@ -1091,21 +1091,18 @@
    "upstream": "compiler/testData/codegen/box/basics/canonical_name.kt"
   },
   "box/box/basics/cast_null.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/cast_null.kt"
   },
   "box/box/basics/cast_simple.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/cast_simple.kt"
   },
   "box/box/basics/check_type.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/check_type.kt"
   },
   "box/box/basics/companion.kt": {
@@ -1210,8 +1207,8 @@
    "upstream": "compiler/testData/codegen/box/basics/typealias1.kt"
   },
   "box/box/basics/unchecked_cast1.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "nullable types",
+   "detail": "nullable cast from Any to String is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/unchecked_cast1.kt"
   },
@@ -1242,9 +1239,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unchecked_cast2.kt"
   },
   "box/box/basics/unchecked_cast3.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/unchecked_cast3.kt"
   },
   "box/box/basics/unchecked_cast4.kt": {
@@ -1284,8 +1280,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unchecked_cast9.kt"
   },
   "box/box/basics/unit1.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: cannot store Unit in 'unit'",
+   "detail": "cannot store Unit in 'unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/unit1.kt"
   },
@@ -1296,8 +1292,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unit2.kt"
   },
   "box/box/basics/unit3.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown Unit (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/unit3.kt"
   },
@@ -1412,8 +1408,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOp.kt"
   },
   "box/box/binaryOp/bitwiseOpAny.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown method Int.inv()",
+   "detail": "unknown method Int.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpAny.kt"
   },
@@ -1452,15 +1448,14 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/divisionByZero.kt"
   },
   "box/box/binaryOp/eqNullableDoubles.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Double, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableDoubles.kt"
   },
   "box/box/binaryOp/eqNullableDoublesToInt.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableDoublesToInt.kt"
   },
   "box/box/binaryOp/eqNullableDoublesToIntWithTP.kt": {
@@ -1555,8 +1550,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/primitiveEqualsSafeCall.kt"
   },
   "box/box/boxing/boxBoolean.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: unknown method Boolean.compareTo()",
+   "detail": "unknown method Boolean.compareTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxBoolean.kt"
   },
@@ -1572,9 +1567,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing0.kt"
   },
   "box/box/boxing/boxing1.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxing/boxing1.kt"
   },
   "box/box/boxing/boxing10.kt": {
@@ -1595,9 +1589,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing12.kt"
   },
   "box/box/boxing/boxing13.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxing/boxing13.kt"
   },
   "box/box/boxing/boxing14.kt": {
@@ -1612,8 +1605,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing15.kt"
   },
   "box/box/boxing/boxing2.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'printInt' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing2.kt"
   },
@@ -1624,8 +1617,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing3.kt"
   },
   "box/box/boxing/boxing4.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "unknown sb (stdlib API / unsupported decl)",
+   "detail": "unknown name 'sb'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing4.kt"
   },
@@ -1636,26 +1629,26 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing5.kt"
   },
   "box/box/boxing/boxing6.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown sb (stdlib API / unsupported decl)",
+   "detail": "unknown name 'sb'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing6.kt"
   },
   "box/box/boxing/boxing7.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown sb (stdlib API / unsupported decl)",
+   "detail": "unknown name 'sb'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing7.kt"
   },
   "box/box/boxing/boxing8.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: CPointer cannot be used as Any",
+   "detail": "CPointer cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing8.kt"
   },
   "box/box/boxing/boxing9.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "varargs",
+   "detail": "spread mixed with other vararg arguments is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing9.kt"
   },
@@ -1665,17 +1658,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprxirmtkk/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprxirmtkk/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupefrrtsc7/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupefrrtsc7/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupr34iqi9q/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupr34iqi9q/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupdoteivz1/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupdoteivz1/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuppypveld4/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuppypveld4/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupr17b_32t/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupr17b_32t/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -1734,8 +1727,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/foldRange.kt"
   },
   "box/box/boxingOptimization/intCompareTo.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: Any as Comparable is not supported",
+   "detail": "Any as Comparable is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/intCompareTo.kt"
   },
@@ -1773,38 +1766,38 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt48394.kt"
   },
   "box/box/boxingOptimization/kt49092a.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: foo expects 2 arguments",
+   "detail": "foo expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092a.kt"
   },
   "box/box/boxingOptimization/kt49092b.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: foo expects 2 arguments",
+   "detail": "foo expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092b.kt"
   },
   "box/box/boxingOptimization/kt49092c.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: foo expects 2 arguments",
+   "detail": "foo expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092c.kt"
   },
   "box/box/boxingOptimization/kt49092d.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: foo expects 2 arguments",
+   "detail": "foo expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092d.kt"
   },
   "box/box/boxingOptimization/kt49092e.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: foo expects 2 arguments",
+   "detail": "foo expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092e.kt"
   },
   "box/box/boxingOptimization/kt49092f.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092f.kt"
   },
@@ -1967,8 +1960,8 @@
    "upstream": "compiler/testData/codegen/box/branching/when_through.kt"
   },
   "box/box/branching/when_with_try1.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown Any (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Any'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/branching/when_with_try1.kt"
   },
@@ -1990,32 +1983,32 @@
    "upstream": "compiler/testData/codegen/box/bridges/complexTraitImpl.kt"
   },
   "box/box/bridges/covariantGenericDiamond.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of '$prop$result' in BImpl changes its signature",
+   "detail": "override of '$prop$result' in BImpl changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/covariantGenericDiamond.kt"
   },
   "box/box/bridges/declarationDifferentSignature/simpleAbstractDeclarationDifferentSignature.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'foo' in B changes its signature",
+   "detail": "override of 'foo' in B changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/declarationDifferentSignature/simpleAbstractDeclarationDifferentSignature.kt"
   },
   "box/box/bridges/declarationDifferentSignature/simpleAbstractDeclarationOverridesConcreteDifferentSignature.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'foo' in B changes its signature",
+   "detail": "override of 'foo' in B changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/declarationDifferentSignature/simpleAbstractDeclarationOverridesConcreteDifferentSignature.kt"
   },
   "box/box/bridges/declarationDifferentSignature/simpleConcreteDeclarationDifferentSignature.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'foo' in B changes its signature",
+   "detail": "override of 'foo' in B changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/declarationDifferentSignature/simpleConcreteDeclarationDifferentSignature.kt"
   },
   "box/box/bridges/declarationDifferentSignature/simpleConcreteDeclarationOverridesAbstractDifferentSignature.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'foo' in B changes its signature",
+   "detail": "override of 'foo' in B changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/declarationDifferentSignature/simpleConcreteDeclarationOverridesAbstractDifferentSignature.kt"
   },
@@ -2050,38 +2043,38 @@
    "upstream": "compiler/testData/codegen/box/bridges/diamond.kt"
   },
   "box/box/bridges/diamond/diamondAbstractDeclarations.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "override E.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/diamond/diamondAbstractDeclarations.kt"
   },
   "box/box/bridges/diamond/diamondAbstractFakeOverridesInTheMiddle.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "override E.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/diamond/diamondAbstractFakeOverridesInTheMiddle.kt"
   },
   "box/box/bridges/diamond/diamondMixedDeclarations.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/diamond/diamondMixedDeclarations.kt"
   },
   "box/box/bridges/doubleOverride/concreteDeclarationOverridesAbstractDeclarationOverridingConcrete.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/doubleOverride/concreteDeclarationOverridesAbstractDeclarationOverridingConcrete.kt"
   },
   "box/box/bridges/doubleOverride/concreteDeclarationOverridesTwoInheritingDeclarations.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/doubleOverride/concreteDeclarationOverridesTwoInheritingDeclarations.kt"
   },
   "box/box/bridges/fakeCovariantOverride.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeCovariantOverride.kt"
   },
@@ -2097,50 +2090,50 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeGenericCovariantOverrideWithDelegation.kt"
   },
   "box/box/bridges/fakeOverride/abstractFakeOverride.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/abstractFakeOverride.kt"
   },
   "box/box/bridges/fakeOverride/diamondFakeOverrideAbstractAndConcrete.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/diamondFakeOverrideAbstractAndConcrete.kt"
   },
   "box/box/bridges/fakeOverride/diamondFakeOverrideAbstractFakeAndConcrete.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/diamondFakeOverrideAbstractFakeAndConcrete.kt"
   },
   "box/box/bridges/fakeOverride/diamondFakeOverrideAbstractOverridesConcrete.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/diamondFakeOverrideAbstractOverridesConcrete.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideAbstractAndConcreteDeclarations.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideAbstractAndConcreteDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideDiamondWithExtraAbstract.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideDiamondWithExtraAbstract.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritingDeclarations.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritingDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritingDeclarationsAndAbstract.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritingDeclarationsAndAbstract.kt"
   },
@@ -2151,33 +2144,32 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritsBridgeFromDeclaration.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritsBridgeFromFakeOverride.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritsBridgeFromFakeOverride.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritsBridgesAndAbstract.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritsBridgesAndAbstract.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideManyDeclarations.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideManyDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideMisleadingImplementation.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideMisleadingImplementation.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideSameSuperDeclarations.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideSameSuperDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractDeclaration.kt": {
@@ -2199,32 +2191,32 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideTwoDeclarationsThroughFakeOverrides.kt"
   },
   "box/box/bridges/fakeOverride/longTreeOfFakeOverrideBridgeInheritance.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/longTreeOfFakeOverrideBridgeInheritance.kt"
   },
   "box/box/bridges/fakeOverrideDifferentSignature/simpleAbstractDeclarationOverridesAbstractThroughFakeOverride.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'foo' in C changes its signature",
+   "detail": "override of 'foo' in C changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideDifferentSignature/simpleAbstractDeclarationOverridesAbstractThroughFakeOverride.kt"
   },
   "box/box/bridges/fakeOverrideDifferentSignature/simpleAbstractDeclarationOverridesConcreteThroughFakeOverride.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'foo' in C changes its signature",
+   "detail": "override of 'foo' in C changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideDifferentSignature/simpleAbstractDeclarationOverridesConcreteThroughFakeOverride.kt"
   },
   "box/box/bridges/fakeOverrideDifferentSignature/simpleConcreteDeclarationOverridesAbstractThroughFakeOverride.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'foo' in C changes its signature",
+   "detail": "override of 'foo' in C changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideDifferentSignature/simpleConcreteDeclarationOverridesAbstractThroughFakeOverride.kt"
   },
   "box/box/bridges/fakeOverrideDifferentSignature/simpleConcreteDeclarationOverridesConcreteThroughFakeOverride.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'foo' in C changes its signature",
+   "detail": "override of 'foo' in C changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideDifferentSignature/simpleConcreteDeclarationOverridesConcreteThroughFakeOverride.kt"
   },
@@ -2234,14 +2226,14 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideOfTraitImpl.kt"
   },
   "box/box/bridges/fakeOverrideWithSeveralSuperDeclarations.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown type Number",
+   "detail": "unknown type Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideWithSeveralSuperDeclarations.kt"
   },
   "box/box/bridges/fakeOverrideWithSynthesizedImplementation.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "override C.component1 returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideWithSynthesizedImplementation.kt"
   },
@@ -2359,9 +2351,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/methodFromTrait.kt"
   },
   "box/box/bridges/methodWithDefaultParameter.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/methodWithDefaultParameter.kt"
   },
   "box/box/bridges/multipleModules1.kt": {
@@ -2386,9 +2377,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/noBridgeOnMutableCollectionInheritance.kt"
   },
   "box/box/bridges/noBridges/oneVertexAbstract.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/noBridges/oneVertexAbstract.kt"
   },
   "box/box/bridges/noBridges/oneVertexConcrete.kt": {
@@ -2422,8 +2412,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/overrideAbstractProperty.kt"
   },
   "box/box/bridges/overrideReturnType.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'f' in D changes its signature",
+   "detail": "override of 'f' in D changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overrideReturnType.kt"
   },
@@ -2434,26 +2424,26 @@
    "upstream": "compiler/testData/codegen/box/bridges/overrideWithValueClassReturn.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesAbstractAndConcreteDeclarations.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesAbstractAndConcreteDeclarations.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesTwoAbstractDeclarations.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesTwoAbstractDeclarations.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesAbstractAndConcreteDeclarations.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesAbstractAndConcreteDeclarations.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesTwoAbstractDeclarations.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesTwoAbstractDeclarations.kt"
   },
@@ -2470,8 +2460,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/propertyDiamond.kt"
   },
   "box/box/bridges/propertyDiamondFakeOverride.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of '$prop$result' in BImpl changes its signature",
+   "detail": "override of '$prop$result' in BImpl changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/propertyDiamondFakeOverride.kt"
   },
@@ -2568,14 +2558,14 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/delegation.kt"
   },
   "box/box/bridges/substitutionInSuperClass/differentErasureInSuperClass.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of A; pass it explicitly",
+   "category": "strings / templates",
+   "detail": "overloads are not supported: A$String.foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/differentErasureInSuperClass.kt"
   },
   "box/box/bridges/substitutionInSuperClass/differentErasureInSuperClassComplex.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of A; pass it explicitly",
+   "category": "strings / templates",
+   "detail": "overloads are not supported: A$String.foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/differentErasureInSuperClassComplex.kt"
   },
@@ -2615,14 +2605,14 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/upperBound.kt"
   },
   "box/box/bridges/test0.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'foo' in C changes its signature",
+   "detail": "override of 'foo' in C changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test0.kt"
   },
   "box/box/bridges/test1.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override A.foo returns Int where Any is expected (bridges ar",
+   "detail": "override A.foo returns Int where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test1.kt"
   },
@@ -2638,8 +2628,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test11.kt"
   },
   "box/box/bridges/test12.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected A$Int, found C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test12.kt"
   },
@@ -2673,8 +2663,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test17.kt"
   },
   "box/box/bridges/test18.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'foo' in B changes its signature",
+   "detail": "override of 'foo' in B changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test18.kt"
   },
@@ -2684,8 +2674,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test19.kt"
   },
   "box/box/bridges/test2.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'foo' in C changes its signature",
+   "detail": "override of 'foo' in C changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test2.kt"
   },
@@ -2727,8 +2717,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test3.kt"
   },
   "box/box/bridges/test4.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override B.foo returns Int where Any is expected (bridges ar",
+   "detail": "override B.foo returns Int where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test4.kt"
   },
@@ -2739,8 +2729,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test5.kt"
   },
   "box/box/bridges/test6.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: override of 'foo' in C changes its signature",
+   "detail": "override of 'foo' in C changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test6.kt"
   },
@@ -2762,8 +2752,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test9.kt"
   },
   "box/box/bridges/traitImplInheritsTraitImpl.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/traitImplInheritsTraitImpl.kt"
   },
@@ -2797,8 +2787,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/varargBridge1.kt"
   },
   "box/box/bridges/varargBridge2.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown type Number",
+   "detail": "unknown type Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/varargBridge2.kt"
   },
@@ -4703,9 +4693,8 @@
    "upstream": "compiler/testData/codegen/box/casts/asWithGeneric.kt"
   },
   "box/box/casts/castGenericNull.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/castGenericNull.kt"
   },
   "box/box/casts/castToDefinitelyNotNullType.kt": {
@@ -4840,20 +4829,20 @@
    "upstream": "compiler/testData/codegen/box/casts/isNullablePrimitive.kt"
   },
   "box/box/casts/kt22714.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown property Any.size",
+   "detail": "unknown property Any.size",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt22714.kt"
   },
   "box/box/casts/kt48927_privateMethodOnDerivedCastToBase.kt": {
-   "category": "other: test expects 1 arguments",
-   "detail": "test expects 1 arguments",
+   "category": "other: overloads are not supported: Base.test",
+   "detail": "overloads are not supported: Base.test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt48927_privateMethodOnDerivedCastToBase.kt"
   },
   "box/box/casts/kt50577.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'x' of B hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt50577.kt"
   },
@@ -4907,9 +4896,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt81257.kt"
   },
   "box/box/casts/kt81617.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/kt81617.kt"
   },
   "box/box/casts/kt82732.kt": {
@@ -5021,8 +5009,8 @@
    "upstream": "compiler/testData/codegen/box/casts/nativeCCEMessage/castToLocalClass.kt"
   },
   "box/box/casts/nullableSafeCastToTypeParameterWithInterfaceUpperBound.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected I, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/nullableSafeCastToTypeParameterWithInterfaceUpperBound.kt"
   },
@@ -5032,8 +5020,8 @@
    "upstream": "compiler/testData/codegen/box/casts/objectToPrimitiveWithAssertion.kt"
   },
   "box/box/casts/parallelHierarchy.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown Any (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Any'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/parallelHierarchy.kt"
   },
@@ -5061,8 +5049,8 @@
    "upstream": "compiler/testData/codegen/box/casts/unitNullableCast.kt"
   },
   "box/box/checkcastOptimization/kt19128.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: unknown method Any.plus()",
+   "detail": "unknown method Any.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/checkcastOptimization/kt19128.kt"
   },
@@ -5077,9 +5065,8 @@
    "upstream": "compiler/testData/codegen/box/checkcastOptimization/kt47851.kt"
   },
   "box/box/checkcastOptimization/kt50215.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/checkcastOptimization/kt50215.kt"
   },
   "box/box/checkcastOptimization/reifiedShouldNotBeOptimized.kt": {
@@ -5214,8 +5201,8 @@
    "upstream": "compiler/testData/codegen/box/classes/classObject.kt"
   },
   "box/box/classes/classObjectAsExtensionReceiver.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown A (stdlib API / unsupported decl)",
+   "detail": "unknown name 'A'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/classObjectAsExtensionReceiver.kt"
   },
@@ -5265,8 +5252,8 @@
    "upstream": "compiler/testData/codegen/box/classes/defaultObjectSameNamesAsInOuter.kt"
   },
   "box/box/classes/delegateConstructorCallWithKeywords.kt": {
-   "category": "other: unexpected character '`'",
-   "detail": "unexpected character '`'",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/delegateConstructorCallWithKeywords.kt"
   },
@@ -5464,8 +5451,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1535.kt"
   },
   "box/box/classes/kt1538.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "strings / templates",
+   "detail": "HashMap keys must be Int/Long/Char, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1538.kt"
   },
@@ -5480,9 +5467,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1611.kt"
   },
   "box/box/classes/kt1721.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt1721.kt"
   },
   "box/box/classes/kt1726.kt": {
@@ -5563,9 +5549,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2482.kt"
   },
   "box/box/classes/kt2485.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt2485.kt"
   },
   "box/box/classes/kt249.kt": {
@@ -5843,9 +5828,8 @@
    "upstream": "compiler/testData/codegen/box/classes/propertyInInitializer.kt"
   },
   "box/box/classes/quotedClassName.kt": {
-   "category": "other: unexpected character '`'",
-   "detail": "unexpected character '`'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/quotedClassName.kt"
   },
   "box/box/classes/rightHandOverride.kt": {
@@ -6045,8 +6029,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInObject2.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInPrimaryConstructorDefaultParameter.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown outer$ (stdlib API / unsupported decl)",
+   "detail": "unknown name 'outer$'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInPrimaryConstructorDefaultParameter.kt"
   },
@@ -8385,8 +8369,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInExpr.kt"
   },
   "box/box/controlStructures/continueInFor.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "nullable types",
+   "detail": "unknown function 'arrayOfNulls'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInFor.kt"
   },
@@ -8574,9 +8558,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNotDestructured.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexWithExplicitlyTypedIndexVariable.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndex.kt": {
@@ -8586,8 +8569,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndexWithSmartCast.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: type check of Any against ByteArray is not supported",
+   "detail": "type check of Any against ByteArray is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndexWithSmartCast.kt"
   },
@@ -8603,8 +8586,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInGenericArrayOfIntsWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInGenericArrayOfIntsWithIndexWithSmartCast.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown method Any.withIndex()",
+   "detail": "unknown method Any.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInGenericArrayOfIntsWithIndexWithSmartCast.kt"
   },
@@ -8620,8 +8603,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndexWithSmartCast.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: type check of Any against IntArray is not supported",
+   "detail": "type check of Any against IntArray is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndexWithSmartCast.kt"
   },
@@ -8637,8 +8620,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndexWithSmartCast.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'shortArrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndexWithSmartCast.kt"
   },
@@ -8751,15 +8734,14 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNotDestructured.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexWithExplicitlyTypedIndexVariable.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "unknown method String.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInEmptyListWithIndex.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInEmptyListWithIndex.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInIterableTypeParameterWithIndex.kt": {
@@ -8822,14 +8804,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexNoIndexVar.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInListWithIndexWithExplicitlyTypedIndexVariable.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInEmptySequenceWithIndex.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown method ArrayList<Any>.asSequence()",
+   "detail": "unknown method ArrayList<Any>.asSequence()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInEmptySequenceWithIndex.kt"
   },
@@ -8888,14 +8869,14 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexWithExplicitlyTypedIndexVariable.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.asSequence()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInSmartCastToArray.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: cannot iterate over Any",
+   "detail": "cannot iterate over Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSmartCastToArray.kt"
   },
@@ -9063,9 +9044,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt3203_2.kt"
   },
   "box/box/controlStructures/kt3273.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt3273.kt"
   },
   "box/box/controlStructures/kt3280.kt": {
@@ -9110,15 +9090,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt769.kt"
   },
   "box/box/controlStructures/kt772.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt772.kt"
   },
   "box/box/controlStructures/kt773.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt773.kt"
   },
   "box/box/controlStructures/kt8148.kt": {
@@ -9372,8 +9350,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryCatchAfterWhileTrue.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryFinallyOfTypeUnit.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "unknown Unit (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryFinallyOfTypeUnit.kt"
   },
@@ -9421,14 +9399,13 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops.kt"
   },
   "box/box/controlflow/for_loops_array_break_continue.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_break_continue.kt"
   },
   "box/box/controlflow/for_loops_array_indices.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_indices.kt"
   },
@@ -9450,9 +9427,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_nullable.kt"
   },
   "box/box/controlflow/for_loops_array_side_effects.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_side_effects.kt"
   },
   "box/box/controlflow/for_loops_call_order.kt": {
@@ -9499,9 +9475,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_types.kt"
   },
   "box/box/controlflow/smartcastOnThisInInitializationSection.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/smartcastOnThisInInitializationSection.kt"
   },
   "box/box/controlflow/unreachable1.kt": {
@@ -10479,8 +10454,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/inlineClasses/direct/syntheticAccessor.kt"
   },
   "box/box/coroutines/inlineClasses/genericParameterResult.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: unknown method Any.let()",
+   "detail": "unknown method Any.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/inlineClasses/genericParameterResult.kt"
   },
@@ -12177,9 +12152,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/equalityChecksPrimitiveUnboxed.kt"
   },
   "box/box/dataClasses/equals/alreadyDeclared.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/alreadyDeclared.kt"
   },
   "box/box/dataClasses/equals/genericarray.kt": {
@@ -12194,21 +12168,19 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/intarray.kt"
   },
   "box/box/dataClasses/equals/null.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: unknown method CPointer.hashCode()",
+   "detail": "unknown method CPointer.hashCode()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/null.kt"
   },
   "box/box/dataClasses/equals/nullother.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/nullother.kt"
   },
   "box/box/dataClasses/equals/sameinstance.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/sameinstance.kt"
   },
   "box/box/dataClasses/floatParam.kt": {
@@ -12274,8 +12246,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/long.kt"
   },
   "box/box/dataClasses/hashCode/null.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/null.kt"
   },
@@ -12302,9 +12274,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/mixedParams.kt"
   },
   "box/box/dataClasses/multiDeclaration.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/multiDeclaration.kt"
   },
   "box/box/dataClasses/multiDeclarationFor.kt": {
@@ -12313,14 +12284,14 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/multiDeclarationFor.kt"
   },
   "box/box/dataClasses/nonTrivialFinalMemberInSuperClass.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "data class DataClass with a superclass overriding toString/equals/hashCode is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/nonTrivialFinalMemberInSuperClass.kt"
   },
   "box/box/dataClasses/nonTrivialMemberInSuperClass.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "data class DataClass with a superclass overriding toString/equals/hashCode is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/nonTrivialMemberInSuperClass.kt"
   },
@@ -14123,15 +14094,13 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnObject2.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgs.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgs.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgs2.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgs2.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgsOverridden.kt": {
@@ -14239,9 +14208,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/recursiveCallInInlineLambdaWithCapture.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/recursiveCallInLambda.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/recursiveCallInLambda.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/recursiveCallInLocalFunction.kt": {
@@ -14365,15 +14333,13 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithCondition.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/whenWithInRange.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithInRange.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/whenWithIs.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithIs.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/whenWithLambda.kt": {
@@ -14544,8 +14510,8 @@
    "upstream": "compiler/testData/codegen/box/elvis/primitive.kt"
   },
   "box/box/elvis/withNothingConstraintAndExpectedType.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: type check of Any against CPointer is not supported",
+   "detail": "type check of Any against CPointer is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/elvis/withNothingConstraintAndExpectedType.kt"
   },
@@ -15596,9 +15562,8 @@
    "upstream": "compiler/testData/codegen/box/exceptions/throw_from_catch.kt"
   },
   "box/box/exclExcl/genericNull.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/exclExcl/genericNull.kt"
   },
   "box/box/exclExcl/kt48440.kt": {
@@ -16230,8 +16195,8 @@
    "upstream": "compiler/testData/codegen/box/fieldRename/delegates.kt"
   },
   "box/box/fieldRename/genericPropertyWithItself.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "generics",
+   "detail": "generic class MPair used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fieldRename/genericPropertyWithItself.kt"
   },
@@ -16409,8 +16374,8 @@
    "upstream": "compiler/testData/codegen/box/fir/falsePositiveBoundSmartcast.kt"
   },
   "box/box/fir/functionsDifferInTypeParameterBounds.kt": {
-   "category": "generics",
-   "detail": "generic method 'foo' in an open class hierarchy is not supported",
+   "category": "other: overloads are not supported: X.foo",
+   "detail": "overloads are not supported: X.foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/functionsDifferInTypeParameterBounds.kt"
   },
@@ -16444,8 +16409,8 @@
    "upstream": "compiler/testData/codegen/box/fir/kt68806.kt"
   },
   "box/box/fir/listAssignmentInWhen.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "unknown Unit (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/listAssignmentInWhen.kt"
   },
@@ -16484,8 +16449,8 @@
    "upstream": "compiler/testData/codegen/box/fir/nestedClassTypeParameterDeserialization.kt"
   },
   "box/box/fir/noRecursiveProblemWithProjection.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: overloads are not supported: A$Any.foo",
+   "detail": "overloads are not supported: A$Any.foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/noRecursiveProblemWithProjection.kt"
   },
@@ -16821,20 +16786,18 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/recursive.kt"
   },
   "box/box/fullValueClasses/reservedNames.kt": {
-   "category": "other: unexpected character '`'",
-   "detail": "unexpected character '`'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/reservedNames.kt"
   },
   "box/box/fullValueClasses/singleFieldCustomEquals.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/singleFieldCustomEquals.kt"
   },
   "box/box/fullValueClasses/singleFieldWrappingCustomEquals.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "unknown setOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'setOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/singleFieldWrappingCustomEquals.kt"
   },
@@ -17155,9 +17118,8 @@
    "upstream": "compiler/testData/codegen/box/function/boolean.kt"
   },
   "box/box/function/defaults.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/defaults.kt"
   },
   "box/box/function/defaults1.kt": {
@@ -17226,8 +17188,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaultsWithInlineClasses.kt"
   },
   "box/box/function/defaultsWithVarArg1.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: missing argument 'args'",
+   "detail": "missing argument 'args'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaultsWithVarArg1.kt"
   },
@@ -17412,9 +17374,8 @@
    "upstream": "compiler/testData/codegen/box/functions/defaultargs1.kt"
   },
   "box/box/functions/defaultargs2.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs2.kt"
   },
   "box/box/functions/defaultargs3.kt": {
@@ -17692,9 +17653,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt47527.kt"
   },
   "box/box/functions/kt48058.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/kt48058.kt"
   },
   "box/box/functions/kt58825_arrayOverloads.kt": {
@@ -17945,15 +17905,13 @@
    "upstream": "compiler/testData/codegen/box/functions/typeParametersInLocalFunction.kt"
   },
   "box/box/ieee754/anyCastToPrimitiveCompareTo1.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/anyCastToPrimitiveCompareTo1.kt"
   },
   "box/box/ieee754/anyCastToPrimitiveCompareTo2.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/anyCastToPrimitiveCompareTo2.kt"
   },
   "box/box/ieee754/anyToReal.kt": {
@@ -17999,8 +17957,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/differentTypesComparison.kt"
   },
   "box/box/ieee754/equalsDouble_properIeeeComparisons.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Boolean, found Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/equalsDouble_properIeeeComparisons.kt"
   },
@@ -18017,8 +17975,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/equalsNaN_properIeeeComparisons.kt"
   },
   "box/box/ieee754/equalsNullableDouble_properIeeeComparisons.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Boolean, found Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/equalsNullableDouble_properIeeeComparisons.kt"
   },
@@ -18029,8 +17987,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/equalsNullableFloat_properIeeeComparisons.kt"
   },
   "box/box/ieee754/explicitCompareCall.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Boolean, found Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/explicitCompareCall.kt"
   },
@@ -18046,8 +18004,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/generic.kt"
   },
   "box/box/ieee754/greaterDouble_properIeeeComparisons.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Boolean, found Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/greaterDouble_properIeeeComparisons.kt"
   },
@@ -18068,8 +18026,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/lessDouble_properIeeeAndNewInference.kt"
   },
   "box/box/ieee754/lessDouble_properIeeeComparisons.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Boolean, found Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/lessDouble_properIeeeComparisons.kt"
   },
@@ -18122,8 +18080,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/nullableIntEquals.kt"
   },
   "box/box/ieee754/safeCall.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: unknown method Double.equals()",
+   "detail": "unknown method Double.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/safeCall.kt"
   },
@@ -18134,14 +18092,14 @@
    "upstream": "compiler/testData/codegen/box/ieee754/smartCastOnWhenSubjectAfterCheckInBranch_properIeeeComparisons.kt"
   },
   "box/box/ieee754/smartCastToDifferentTypesWithNumericPromotion_properIeeeComparisons.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eqFI' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/smartCastToDifferentTypesWithNumericPromotion_properIeeeComparisons.kt"
   },
   "box/box/ieee754/smartCastToDifferentTypes_properIeeeComparisons.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ne' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/smartCastToDifferentTypes_properIeeeComparisons.kt"
   },
@@ -18152,26 +18110,24 @@
    "upstream": "compiler/testData/codegen/box/ieee754/smartCastToDoubleAndComparableToDouble.kt"
   },
   "box/box/ieee754/smartCastToInt.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/smartCastToInt.kt"
   },
   "box/box/ieee754/whenNoSubject_properIeeeComparisons.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/whenNoSubject_properIeeeComparisons.kt"
   },
   "box/box/ieee754/whenNullableSmartCast.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Double, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/whenNullableSmartCast.kt"
   },
   "box/box/ieee754/when_properIeeeComparisons.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Double, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/when_properIeeeComparisons.kt"
   },
@@ -18559,8 +18515,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/callableReferenceAndCoercionToUnit.kt"
   },
   "box/box/inference/pcla/callableReferencesProperCompletion.kt": {
-   "category": "other: unexpected character '`'",
-   "detail": "unexpected character '`'",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/callableReferencesProperCompletion.kt"
   },
@@ -19454,8 +19410,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/UnitReturnTypeOfBuilderParametersExplicitReturnCase.kt"
   },
   "box/box/inference/pcla/pcaRootIsDelegatedConstructorCall.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "unknown it (stdlib API / unsupported decl)",
+   "detail": "unknown name 'it'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/pcaRootIsDelegatedConstructorCall.kt"
   },
@@ -19759,8 +19715,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/static_list.kt"
   },
   "box/box/initializers/static_smallIntIdentity.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertSame'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/initializers/static_smallIntIdentity.kt"
   },
@@ -20599,9 +20555,8 @@
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/suspensionPointInsideArgument.kt"
   },
   "box/box/inlineClass/customEquals.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClass/customEquals.kt"
   },
   "box/box/inlineClass/defaultEquals.kt": {
@@ -20712,68 +20667,66 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInitBlock.kt"
   },
   "box/box/inlineClasses/boxImplDoesNotExecuteInitBlockGeneric.kt": {
-   "category": "other: unexpected character '`'",
-   "detail": "unexpected character '`'",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInitBlockGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverride.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverride.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverrideGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverrideGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverrideGeneric2.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverrideGeneric2.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingType.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingType.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'boxToNullableAny' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric2.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'boxToNullableAny' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric2.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "generics",
+   "detail": "generic class I32 used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric2.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "generics",
+   "detail": "generic class I32 used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric2.kt"
   },
   "box/box/inlineClasses/boxResultInlineClassOfConstructorCall.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "generics",
+   "detail": "generic class Result used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxResultInlineClassOfConstructorCall.kt"
   },
@@ -20788,8 +20741,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxResultInlineClassOfConstructorCallGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxAny.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxAny.kt"
   },
@@ -20824,8 +20777,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxIntGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableAny.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableAny.kt"
   },
@@ -20842,8 +20795,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyNull.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyNull.kt"
   },
@@ -20968,45 +20921,38 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/boxReturnValueInDefaultMethodGenericInt.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToAny.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToAnyGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToNullableAny.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToNullableAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToNullableAnyGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToNullableAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToNullableAnyGeneric2.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToNullableAnyGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToAny.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToAnyGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToInterface.kt": {
@@ -21022,14 +20968,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToInterfaceGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToPrimitive.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "unknown method Char.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToPrimitive.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToPrimitiveGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "unknown method Char.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToPrimitiveGeneric.kt"
   },
@@ -21046,8 +20992,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideListVsMutableListGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideUnrelatedInterfaces.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "cannot convert IQ1 to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideUnrelatedInterfaces.kt"
   },
@@ -21058,9 +21004,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideUnrelatedInterfacesGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/genericOverride.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/genericOverride.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/genericOverrideGeneric.kt": {
@@ -21092,20 +21037,19 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/inlineClassInOverriddenReturnTypesGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/kt28483.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/kt28483.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/kt28483Generic.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "generic class ResultOrClosed used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/kt28483Generic.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/kt28483Generic2.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "generic class ResultOrClosed used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/kt28483Generic2.kt"
   },
@@ -21140,9 +21084,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/kt35234a.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithInlineClass.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithInlineClass.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithInlineClassGeneric.kt": {
@@ -21152,9 +21095,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullAny.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullAnyGeneric.kt": {
@@ -21164,9 +21106,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAny.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyG.kt": {
@@ -21194,15 +21135,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyNG2.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyNull.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyNull.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullAny.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullAnyGeneric.kt": {
@@ -21211,9 +21150,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAny.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyGeneric.kt": {
@@ -21227,9 +21165,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyNull.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyNull.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyNullGeneric.kt": {
@@ -21245,57 +21182,56 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyNullGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes1a.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "cannot convert IQ to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes1a.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes1aGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "cannot convert IQ to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes1aGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes1b.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "cannot convert IQ to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes1b.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes1bGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "cannot convert IQ to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes1bGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2a.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "cannot convert IQ to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2a.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2aGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "cannot convert IQ to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2aGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2b.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "cannot convert IQ to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2b.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2bGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "cannot convert IQ to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2bGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/uncastInlineClassToAnyAndBack.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/uncastInlineClassToAnyAndBack.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/uncastInlineClassToAnyAndBackGeneric.kt": {
@@ -21305,14 +21241,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/uncastInlineClassToAnyAndBackGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/unrelatedGenerics.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected IFoo1$Any, found Test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/unrelatedGenerics.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/unrelatedGenericsGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected IFoo1$Any, found Test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/unrelatedGenericsGeneric.kt"
   },
@@ -21396,13 +21332,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingGenerics.kt"
   },
   "box/box/inlineClasses/callableRefClassMergingNestedValueClass.kt": {
-   "detail": "exit=-11 stdout='' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingNestedValueClass.kt"
   },
   "box/box/inlineClasses/callableRefClassMergingNullable.kt": {
-   "detail": "exit=-11 stdout='' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingNullable.kt"
   },
   "box/box/inlineClasses/callableRefClassMergingPrimitives.kt": {
@@ -21768,8 +21704,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferencesWithInlineClassesGeneric.kt"
   },
   "box/box/inlineClasses/castInsideWhenExpression.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown type Number",
+   "detail": "unknown type Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/castInsideWhenExpression.kt"
   },
@@ -21790,9 +21726,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxUnboxOfArgumentsOnInlinedFunctionsGeneric.kt"
   },
   "box/box/inlineClasses/checkBoxingAfterAssertionOperator.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingAfterAssertionOperator.kt"
   },
   "box/box/inlineClasses/checkBoxingAfterAssertionOperatorGeneric.kt": {
@@ -21835,26 +21770,24 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingFromReturnTypeForInlineClassesGeneric.kt"
   },
   "box/box/inlineClasses/checkBoxingOnFunctionCalls.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingOnFunctionCalls.kt"
   },
   "box/box/inlineClasses/checkBoxingOnFunctionCallsGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "generic class InlineNotNullPrimitive used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingOnFunctionCallsGeneric.kt"
   },
   "box/box/inlineClasses/checkBoxingOnLocalVariableAssignments.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingOnLocalVariableAssignments.kt"
   },
   "box/box/inlineClasses/checkBoxingOnLocalVariableAssignmentsGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "generic class InlineNullableReference2 used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingOnLocalVariableAssignmentsGeneric.kt"
   },
@@ -21879,14 +21812,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkCallingMembersInsideInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/checkCastToInlineClass.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "nullable types",
+   "detail": "nullable cast from Any to UInt is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkCastToInlineClass.kt"
   },
   "box/box/inlineClasses/checkCastToInlineClassGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "generic class UInt used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkCastToInlineClassGeneric.kt"
   },
@@ -21911,8 +21844,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkLambdaWithInlineClassesInFunctionalTypeGeneric.kt"
   },
   "box/box/inlineClasses/checkUnboxingResultFromTypeVariable.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "generics",
+   "detail": "generic class Result used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkUnboxingResultFromTypeVariable.kt"
   },
@@ -21940,9 +21873,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/classInInlineClassInitGeneric.kt"
   },
   "box/box/inlineClasses/companionObjectFieldClash.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/companionObjectFieldClash.kt"
   },
   "box/box/inlineClasses/computablePropertyInsideInlineClass.kt": {
@@ -22231,14 +22163,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/correctBoxingForBranchExpressionsGeneric.kt"
   },
   "box/box/inlineClasses/createInlineClassInArgumentPosition.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/createInlineClassInArgumentPosition.kt"
   },
   "box/box/inlineClasses/createInlineClassInArgumentPositionGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/createInlineClassInArgumentPositionGeneric.kt"
   },
@@ -22313,14 +22245,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassType.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassTypeBoxing.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassTypeBoxing.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassTypeBoxingGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown property Any.z",
+   "detail": "unknown property Any.z",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassTypeBoxingGeneric.kt"
   },
@@ -22486,9 +22417,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksGenericValueClassWrappingValueClass.kt"
   },
   "box/box/inlineClasses/equalityChecksInlineClassNonNull.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksInlineClassNonNull.kt"
   },
   "box/box/inlineClasses/equalityChecksInlineClassNonNullGeneric.kt": {
@@ -22509,9 +22439,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksMixedNullabilityGeneric.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedInlineClassNonNull.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedInlineClassNonNull.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedInlineClassNonNullGeneric.kt": {
@@ -22521,9 +22450,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedInlineClassNonNullGeneric.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedNonNull.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedNonNull.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedNonNullGeneric.kt": {
@@ -22533,9 +22461,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedNonNullGeneric.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedNullable.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedNullable.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedNullableGeneric.kt": {
@@ -22551,9 +22478,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedNullableGeneric2.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedPrimitive.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedPrimitive.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedPrimitiveGeneric.kt": {
@@ -22563,9 +22489,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedPrimitiveGeneric.kt"
   },
   "box/box/inlineClasses/equalityChecksNonNull.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNonNull.kt"
   },
   "box/box/inlineClasses/equalityChecksNonNullGeneric.kt": {
@@ -22575,9 +22500,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNonNullGeneric.kt"
   },
   "box/box/inlineClasses/equalityChecksNullable.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNullable.kt"
   },
   "box/box/inlineClasses/equalityChecksNullableGeneric.kt": {
@@ -22593,9 +22517,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNullableGeneric2.kt"
   },
   "box/box/inlineClasses/equalityChecksPrimitive.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksPrimitive.kt"
   },
   "box/box/inlineClasses/equalityChecksPrimitiveGeneric.kt": {
@@ -22628,74 +22551,69 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityForIndyLambdaParameter.kt"
   },
   "box/box/inlineClasses/equalsCallsLeftArgument.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsCallsLeftArgument.kt"
   },
   "box/box/inlineClasses/equalsCallsLeftArgumentGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "generics",
+   "detail": "generic class A used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsCallsLeftArgumentGeneric.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderInlineClass.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderInlineClass.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderInlineClassGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "generics",
+   "detail": "generic class A used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderNonNull.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderNonNull.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderNonNullGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "class bodies / constructors",
+   "detail": "constructor A expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderNonNullGeneric.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderNullable.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderNullable.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderNullableGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "class bodies / constructors",
+   "detail": "constructor A expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderNullableGeneric.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderNullableGeneric2.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "class bodies / constructors",
+   "detail": "constructor A expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderNullableGeneric2.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderPrimitive.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderPrimitive.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderPrimitiveGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "class bodies / constructors",
+   "detail": "constructor A expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderPrimitiveGeneric.kt"
   },
   "box/box/inlineClasses/equalsOperatorWithGenericCall.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsOperatorWithGenericCall.kt"
   },
@@ -22890,14 +22808,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/localClassInFunctionWithMangledNameGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/mangledFunctionsCanBeOverridden.kt": {
-   "category": "other: override of 'fromClass' in C changes its signature",
-   "detail": "override of 'fromClass' in C changes its signature",
+   "category": "other: overloads are not supported: Base.fromClass",
+   "detail": "overloads are not supported: Base.fromClass",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/mangledFunctionsCanBeOverridden.kt"
   },
   "box/box/inlineClasses/functionNameMangling/mangledFunctionsCanBeOverriddenGeneric.kt": {
-   "category": "other: override of 'fromClass' in C changes its signature",
-   "detail": "override of 'fromClass' in C changes its signature",
+   "category": "other: overloads are not supported: Base.fromClass",
+   "detail": "overloads are not supported: Base.fromClass",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/mangledFunctionsCanBeOverriddenGeneric.kt"
   },
@@ -22931,14 +22849,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass.kt"
   },
   "box/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass2.kt": {
-   "category": "other: override of 'foo' in Derived changes its signature",
-   "detail": "override of 'foo' in Derived changes its signature",
+   "category": "other: overloads are not supported: Derived.foo",
+   "detail": "overloads are not supported: Derived.foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass2.kt"
   },
   "box/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass2Generic.kt": {
-   "category": "other: override of 'foo' in Derived changes its signature",
-   "detail": "override of 'foo' in Derived changes its signature",
+   "category": "other: overloads are not supported: Derived.foo",
+   "detail": "overloads are not supported: Derived.foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass2Generic.kt"
   },
@@ -23298,8 +23216,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInInitBlockGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassInStringTemplate.kt": {
-   "detail": "exit=-11 stdout='' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInStringTemplate.kt"
   },
   "box/box/inlineClasses/inlineClassInStringTemplateGeneric.kt": {
@@ -23321,8 +23239,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassPropertyReferenceGetAndSetGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassValueCapturedInInlineLambda.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassValueCapturedInInlineLambda.kt"
   },
@@ -23333,9 +23251,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassValueCapturedInInlineLambdaGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassValueCapturedInNonInlineLambda.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassValueCapturedInNonInlineLambda.kt"
   },
   "box/box/inlineClasses/inlineClassValueCapturedInNonInlineLambdaGeneric.kt": {
@@ -23344,9 +23261,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassValueCapturedInNonInlineLambdaGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassValuesInsideStrings.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassValuesInsideStrings.kt"
   },
   "box/box/inlineClasses/inlineClassValuesInsideStringsGeneric.kt": {
@@ -23355,24 +23271,23 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassValuesInsideStringsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithCustomEquals.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEquals.kt"
   },
   "box/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "generics",
+   "detail": "generic class Z used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387872\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269225248\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952352\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387488\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23669,9 +23584,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCallGeneric.kt"
   },
   "box/box/inlineClasses/iterateOverArrayOfInlineClassValues.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/iterateOverArrayOfInlineClassValues.kt"
   },
   "box/box/inlineClasses/iterateOverArrayOfInlineClassValuesGeneric.kt": {
@@ -23711,27 +23625,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt25771.kt"
   },
   "box/box/inlineClasses/kt26103.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of Foo; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt26103.kt"
   },
   "box/box/inlineClasses/kt26103_contravariantUnderlyingType.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of GCmp; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt26103_contravariantUnderlyingType.kt"
   },
   "box/box/inlineClasses/kt26103_covariantUnderlyingType.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of GSList; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt26103_covariantUnderlyingType.kt"
   },
   "box/box/inlineClasses/kt26103_original.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt26103_original.kt"
   },
   "box/box/inlineClasses/kt27096.kt": {
@@ -23827,9 +23740,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27113.kt"
   },
   "box/box/inlineClasses/kt27113a.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27113a.kt"
   },
   "box/box/inlineClasses/kt27113aGeneric.kt": {
@@ -24050,8 +23962,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt51254.kt"
   },
   "box/box/inlineClasses/kt52913.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt52913.kt"
   },
@@ -24120,9 +24032,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/nestedInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/noAssertionsOnInlineClassBasedOnNullableType.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/noAssertionsOnInlineClassBasedOnNullableType.kt"
   },
   "box/box/inlineClasses/noAssertionsOnInlineClassBasedOnNullableTypeGeneric.kt": {
@@ -24148,20 +24059,19 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableGenericUnderlyingNull.kt"
   },
   "box/box/inlineClasses/nullableWrapperEquality.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableWrapperEquality.kt"
   },
   "box/box/inlineClasses/nullableWrapperEqualityGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected ZN2$ZN$Z1$String, found ZN2$ZN$CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableWrapperEqualityGeneric.kt"
   },
   "box/box/inlineClasses/nullableWrapperEqualityGeneric2.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected ZN2$ZN$Z1$String, found ZN2$ZN$CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableWrapperEqualityGeneric2.kt"
   },
@@ -24461,8 +24371,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/class.kt"
   },
   "box/box/inlineClasses/returnResult/classAnyOverride.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "unknown type Result<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/classAnyOverride.kt"
   },
@@ -24595,14 +24505,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/stringPlusGeneric.kt"
   },
   "box/box/inlineClasses/toStringCallingPrivateFun.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/toStringCallingPrivateFun.kt"
   },
   "box/box/inlineClasses/toStringCallingPrivateFunGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "generic class IC used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/toStringCallingPrivateFunGeneric.kt"
   },
@@ -24737,8 +24646,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/any.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/any.kt"
   },
@@ -24748,8 +24657,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/anyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/anyN.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/anyN.kt"
   },
@@ -24764,26 +24673,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/anyNGeneric2.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/iface.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "cannot convert Foo to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/iface.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/ifaceChild.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/ifaceChild.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/ifaceChildGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/ifaceChildGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/ifaceGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/ifaceGeneric.kt"
   },
@@ -24811,14 +24720,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/result.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/resultAny.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown Result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/resultAny.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/resultAnyGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown Result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/resultAnyGeneric.kt"
   },
@@ -24936,14 +24845,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingType.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingType.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'boxToTypeParameter' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt"
   },
@@ -24960,9 +24868,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullableInlineClassUnderlyingTypeGWI2.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingType.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingType.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGWI.kt": {
@@ -24978,20 +24885,19 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGWI2.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'boxToTypeParameter' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGeneric.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'boxToTypeParameter' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt"
   },
@@ -25006,9 +24912,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxParameterOfSuspendLambdaBeforeInvokeGeneric.kt"
   },
   "box/box/inlineClasses/unboxReceiverOnCallingMethodFromInlineClass.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxReceiverOnCallingMethodFromInlineClass.kt"
   },
   "box/box/inlineClasses/unboxReceiverOnCallingMethodFromInlineClassGeneric.kt": {
@@ -25032,20 +24937,19 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxValueFromPlatformTypeGeneric.kt"
   },
   "box/box/inlineClasses/unboxValueOfAnyBeforeMethodInvocation.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxValueOfAnyBeforeMethodInvocation.kt"
   },
   "box/box/inlineClasses/unboxValueOfAnyBeforeMethodInvocationGeneric.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "nullable types",
+   "detail": "type mismatch: expected ArrayList<NullableInt$Any>, found ArrayList<NullableInt$Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxValueOfAnyBeforeMethodInvocationGeneric.kt"
   },
   "box/box/inlineClasses/unboxValueOfAnyBeforeMethodInvocationGeneric2.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "nullable types",
+   "detail": "type mismatch: expected ArrayList<NullableInt$Any>, found ArrayList<NullableInt$Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxValueOfAnyBeforeMethodInvocationGeneric2.kt"
   },
@@ -25078,14 +24982,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/useInlineFunctionInsideInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/useThisInsideInlineClass.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected UInt, found UInt",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/useThisInsideInlineClass.kt"
   },
   "box/box/inlineClasses/useThisInsideInlineClassGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected UInt, found UInt$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/useThisInsideInlineClassGeneric.kt"
   },
@@ -25912,9 +25816,8 @@
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/kt83308.kt"
   },
   "box/box/intrinsics/charToInt.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/charToInt.kt"
   },
   "box/box/intrinsics/ea35953.kt": {
@@ -25988,8 +25891,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/nonShortCircuitAnd.kt"
   },
   "box/box/intrinsics/nullPlusString.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types CPointer, String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/nullPlusString.kt"
   },
@@ -26022,7 +25925,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1044c051f        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x1045a93a7        kfun:newkotlin.Parser.prefix#internal + 9131 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x100eacb1b        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x100f9fb3f        kfun:newkotlin.Parser.prefix#internal + 9131 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -26183,9 +26086,8 @@
    "upstream": "compiler/testData/codegen/box/ir/primitiveNumberComparisons/comparableToDouble.kt"
   },
   "box/box/ir/primitiveNumberComparisons/doubleEqeq.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/primitiveNumberComparisons/doubleEqeq.kt"
   },
   "box/box/ir/primitiveNumberComparisons/floatEqeq.kt": {
@@ -26195,9 +26097,8 @@
    "upstream": "compiler/testData/codegen/box/ir/primitiveNumberComparisons/floatEqeq.kt"
   },
   "box/box/ir/primitiveNumberComparisons/mixedNumberTypes.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/primitiveNumberComparisons/mixedNumberTypes.kt"
   },
   "box/box/ir/privateSignatures/enumEntryArguments.kt": {
@@ -27037,8 +26938,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/localGenericWithTypeParameters.kt"
   },
   "box/box/localClasses/nameWithWhitespace.kt": {
-   "category": "other: unexpected character '`'",
-   "detail": "unexpected character '`'",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/nameWithWhitespace.kt"
   },
@@ -27253,8 +27154,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/SimpleVarsExtensions.kt"
   },
   "box/box/multiDecl/UnderscoreNames.kt": {
-   "category": "other: unexpected character '`'",
-   "detail": "unexpected character '`'",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/UnderscoreNames.kt"
   },
@@ -27382,8 +27283,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/UnderscoreNames.kt": {
-   "category": "other: unexpected character '`'",
-   "detail": "unexpected character '`'",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/UnderscoreNames.kt"
   },
@@ -28896,9 +28797,8 @@
    "upstream": "compiler/testData/codegen/box/object/fields2.kt"
   },
   "box/box/object/globalInitializer.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/object/globalInitializer.kt"
   },
   "box/box/object/init0.kt": {
@@ -29190,9 +29090,8 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromNestedClassSeveralTimes.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectUsedInNestedClass.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectUsedInNestedClass.kt"
   },
   "box/box/objects/companionObjectAccess/protectedCompanionObjectAccessedFromNestedClass.kt": {
@@ -29626,9 +29525,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/annotatedAssignment.kt"
   },
   "box/box/operatorConventions/assignToDotQualifiedWithSideEffect.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/operatorConventions/assignToDotQualifiedWithSideEffect.kt"
   },
   "box/box/operatorConventions/assignmentOperations.kt": {
@@ -29742,8 +29640,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt44647.kt"
   },
   "box/box/operatorConventions/kt45022.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown Unit (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt45022.kt"
   },
@@ -29766,14 +29664,14 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/operatorSetLambda.kt"
   },
   "box/box/operatorConventions/overloadedSet.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: overloads are not supported: A.set",
+   "detail": "overloads are not supported: A.set",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/overloadedSet.kt"
   },
   "box/box/operatorConventions/plusAssignWithComplexRHS.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown type Set<Any>",
+   "detail": "unknown type Set<Any>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusAssignWithComplexRHS.kt"
   },
@@ -29818,9 +29716,8 @@
    "upstream": "compiler/testData/codegen/box/package/boxPrimitiveTypeInClinit.kt"
   },
   "box/box/package/checkCast.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/package/checkCast.kt"
   },
   "box/box/package/incrementProperty.kt": {
@@ -30102,39 +29999,34 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedShort.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectBoolean.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectBoolean.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectByte.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectByte.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectChar.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "operator/infix functions",
+   "detail": "operator != on Char and Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectChar.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectInt.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectInt.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectLong.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectLong.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectShort.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectShort.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/intEqualsNull.kt": {
@@ -30149,9 +30041,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/intEqualsNullableInt.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/intEqualsNullableIntWithSmartCasts.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/intEqualsNullableIntWithSmartCasts.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/kt42281.kt": {
@@ -30161,15 +30052,13 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/kt42281.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/objectWithAsymmetricEqualsEqPrimitive.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/objectWithAsymmetricEqualsEqPrimitive.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/whenIntAsNullableAny.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/whenIntAsNullableAny.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/whenNullableBoxed.kt": {
@@ -30234,8 +30123,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt1634.kt"
   },
   "box/box/primitiveTypes/kt16732.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown method Any.toInt()",
+   "detail": "unknown method Any.toInt()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt16732.kt"
   },
@@ -30363,8 +30252,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt46864_long.kt"
   },
   "box/box/primitiveTypes/kt518.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: unknown method Int.plus()",
+   "detail": "unknown method Int.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt518.kt"
   },
@@ -30524,9 +30413,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/stringEqualsHashCodeToString.kt"
   },
   "box/box/primitiveTypes/substituteIntForGeneric.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/substituteIntForGeneric.kt"
   },
   "box/box/primitiveTypes/unboxComparable.kt": {
@@ -31041,9 +30929,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt3118.kt"
   },
   "box/box/properties/kt3524.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt3524.kt"
   },
   "box/box/properties/kt3551.kt": {
@@ -31487,8 +31374,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/evaluationOrderForUntilReversed.kt"
   },
   "box/box/ranges/contains/generated/arrayIndices.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/arrayIndices.kt"
   },
@@ -31519,8 +31406,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/charUntil.kt"
   },
   "box/box/ranges/contains/generated/collectionIndices.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/collectionIndices.kt"
   },
@@ -31751,8 +31638,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithNonmatchingArguments.kt"
   },
   "box/box/ranges/contains/inRangeWithSmartCast.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: overloads are not supported: check",
+   "detail": "overloads are not supported: check",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithSmartCast.kt"
   },
@@ -32408,20 +32295,20 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInSpecificCollectionIndices.kt"
   },
   "box/box/ranges/forInIndices/kt13241_Array.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: type check of Any against IntArray is not supported",
+   "detail": "type check of Any against IntArray is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt13241_Array.kt"
   },
   "box/box/ranges/forInIndices/kt13241_CharSequence.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt13241_CharSequence.kt"
   },
   "box/box/ranges/forInIndices/kt13241_Collection.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown property Any.indices",
+   "detail": "unknown property Any.indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt13241_Collection.kt"
   },
@@ -36046,8 +35933,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/directInvokeNameBasedDestructuring.kt"
   },
   "box/box/regressions/dontCaptureTypesWithTypeVariables.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of Inv; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/dontCaptureTypesWithTypeVariables.kt"
   },
@@ -36824,8 +36711,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/primitiveEqSafeCall.kt"
   },
   "box/box/safeCall/primitiveNotEqSafeCall.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'doSimple' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/primitiveNotEqSafeCall.kt"
   },
@@ -36842,8 +36729,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallIOnUninitializedNonNullValue.kt"
   },
   "box/box/safeCall/safeCallNotEqPrimitive.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'doSimple' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallNotEqPrimitive.kt"
   },
@@ -37347,8 +37234,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/complexExplicitReceiver.kt"
   },
   "box/box/smartCasts/complexImplicitReceiver.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: unknown property CompilerPhase$Bound$Int.foo",
+   "detail": "unknown property CompilerPhase$Bound$Int.foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/complexImplicitReceiver.kt"
   },
@@ -37490,9 +37377,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/nullSmartCast.kt"
   },
   "box/box/smartCasts/propertyInitializationAfterSmartCast.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/smartCasts/propertyInitializationAfterSmartCast.kt"
   },
   "box/box/smartCasts/smartCastInsideIf.kt": {
@@ -37751,14 +37637,14 @@
    "upstream": "compiler/testData/codegen/box/strictEquals/crossModuleInheritance.kt"
   },
   "box/box/strictEquals/dataClass.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: unknown property Any.x",
+   "detail": "unknown property Any.x",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/dataClass.kt"
   },
   "box/box/strictEquals/dataObject.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: unknown property Any.tag",
+   "detail": "unknown property Any.tag",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/dataObject.kt"
   },
@@ -38005,8 +37891,8 @@
    "upstream": "compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt"
   },
   "box/box/strings/simpleStringPlus.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "strings / templates",
+   "detail": "unknown method String.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/simpleStringPlus.kt"
   },
@@ -38045,21 +37931,19 @@
    "upstream": "compiler/testData/codegen/box/strings/trimOptimization.kt"
   },
   "box/box/strings/twoArgumentNullableStringOperatorPlus.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/twoArgumentNullableStringOperatorPlus.kt"
   },
   "box/box/strings/twoArgumentNullableStringPlus.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "strings / templates",
+   "detail": "unknown method String.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/twoArgumentNullableStringPlus.kt"
   },
   "box/box/strings/twoArgumentStringTemplate.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/twoArgumentStringTemplate.kt"
   },
   "box/box/super/basicmethodSuperClass.kt": {
@@ -38241,8 +38125,8 @@
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt13846.kt"
   },
   "box/box/super/superConstructor/kt17464_arrayOf.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected ArrayList<Any>, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt17464_arrayOf.kt"
   },
@@ -38961,27 +38845,23 @@
    "upstream": "compiler/testData/codegen/box/try/finally11.kt"
   },
   "box/box/try/finally12.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally12.kt"
   },
   "box/box/try/finally13.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally13.kt"
   },
   "box/box/try/finally14.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally14.kt"
   },
   "box/box/try/finally15.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally15.kt"
   },
   "box/box/try/finally2.kt": {
@@ -39050,9 +38930,8 @@
    "upstream": "compiler/testData/codegen/box/try/try4.kt"
   },
   "box/box/try/try5.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/try5.kt"
   },
   "box/box/typeErasure/funWithReifiedTypeParameter.kt": {
@@ -39216,8 +39095,8 @@
    "upstream": "compiler/testData/codegen/box/typeErasure/twoFunWithTypeParametersWithUpperBoundsInlineFunWithReifiedTypeParameters.kt"
   },
   "box/box/typeInfo/ifOrWhenSpecialCall.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of Some; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typeInfo/ifOrWhenSpecialCall.kt"
   },
@@ -39239,8 +39118,8 @@
    "upstream": "compiler/testData/codegen/box/typeInfo/kt2811.kt"
   },
   "box/box/typeInfo/primitiveTypeInfo.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Box$Any, found Box$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typeInfo/primitiveTypeInfo.kt"
   },
@@ -39283,8 +39162,8 @@
    "upstream": "compiler/testData/codegen/box/typeMapping/nullNothing.kt"
   },
   "box/box/typeMapping/nullableNothing.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown Unit (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typeMapping/nullableNothing.kt"
   },
@@ -39498,8 +39377,8 @@
    "upstream": "compiler/testData/codegen/box/unaryOp/callNullable.kt"
   },
   "box/box/unaryOp/callWithCommonType.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: unknown method Byte.inc()",
+   "detail": "unknown method Byte.inc()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unaryOp/callWithCommonType.kt"
   },
@@ -39521,9 +39400,8 @@
    "upstream": "compiler/testData/codegen/box/unaryOp/longOverflow.kt"
   },
   "box/box/underscoredTypeArguments/backTicked.kt": {
-   "category": "other: unexpected character '`'",
-   "detail": "unexpected character '`'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/underscoredTypeArguments/backTicked.kt"
   },
   "box/box/underscoredTypeArguments/lambdaInputType.kt": {
@@ -39549,7 +39427,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxbvwy2_s/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxbvwy2_s/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupttaw9ske/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupttaw9ske/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -39565,8 +39443,8 @@
    "upstream": "compiler/testData/codegen/box/unit/kt3634.kt"
   },
   "box/box/unit/kt4212.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: Unit cannot be used as Any",
+   "detail": "Unit cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/kt4212.kt"
   },
@@ -39659,9 +39537,8 @@
    "upstream": "compiler/testData/codegen/box/unitConversion/unitConversionWithSuspend.kt"
   },
   "box/box/unsignedTypes/boxConstValOfUnsignedType.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/boxConstValOfUnsignedType.kt"
   },
   "box/box/unsignedTypes/boxedUnsignedEqualsZero.kt": {
@@ -40385,9 +40262,8 @@
    "upstream": "compiler/testData/codegen/box/wasmStringSwitch/literalOnLeft.kt"
   },
   "box/box/wasmStringSwitch/mixedStringAndNonStringComparisons.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/wasmStringSwitch/mixedStringAndNonStringComparisons.kt"
   },
   "box/box/wasmStringSwitch/mixedVariables.kt": {
@@ -40416,14 +40292,13 @@
    "upstream": "compiler/testData/codegen/box/wasmStringSwitch/safeCallElvisRHS.kt"
   },
   "box/box/wasmStringSwitch/typeOperatorCast.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/wasmStringSwitch/typeOperatorCast.kt"
   },
   "box/box/wasmStringSwitch/typeOperatorSafeCast.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "nullable types",
+   "detail": "nullable cast from Any to String is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/wasmStringSwitch/typeOperatorSafeCast.kt"
   },
@@ -40534,15 +40409,13 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/functionLiteralInTopLevel.kt"
   },
   "box/box/when/enumOptimization/kt14597.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt14597.kt"
   },
   "box/box/when/enumOptimization/kt14597_full.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt14597_full.kt"
   },
   "box/box/when/enumOptimization/kt14802.kt": {
@@ -40552,8 +40425,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt14802.kt"
   },
   "box/box/when/enumOptimization/kt15806.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "strings / templates",
+   "detail": "unknown method String.doTheThing()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt15806.kt"
   },
@@ -40599,9 +40472,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/nullableEnum.kt"
   },
   "box/box/when/enumOptimization/subjectAny.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/subjectAny.kt"
   },
   "box/box/when/enumOptimization/withoutElse.kt": {
@@ -40672,8 +40544,8 @@
    "upstream": "compiler/testData/codegen/box/when/integralWhenWithNoInlinedConstants2.kt"
   },
   "box/box/when/is.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "other: ArrayList<Int> cannot be used as Any",
+   "detail": "ArrayList<Int> cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/is.kt"
   },
@@ -40748,9 +40620,8 @@
    "upstream": "compiler/testData/codegen/box/when/matchNotNullAgainstNullable.kt"
   },
   "box/box/when/multipleEntries.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/multipleEntries.kt"
   },
   "box/box/when/noCachingFunctionCallBetweenIfBranches.kt": {
@@ -40801,8 +40672,8 @@
    "upstream": "compiler/testData/codegen/box/when/nullableWhen.kt"
   },
   "box/box/when/oneUnitBranch.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/oneUnitBranch.kt"
   },
@@ -40928,9 +40799,8 @@
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationWithGap.kt"
   },
   "box/box/when/typeDisjunction.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/typeDisjunction.kt"
   },
   "box/box/when/whenArgumentIsEvaluatedOnlyOnce.kt": {
@@ -45065,9 +44935,8 @@
    "upstream": "native/native.tests/testData/codegen/controlflow/castsOptimizationAliasCycle.kt"
   },
   "native/native.tests/codegen/controlflow/for_loops_array.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/controlflow/for_loops_array.kt"
   },
   "native/native.tests/codegen/coroutines/inheritance.kt": {
@@ -45193,8 +45062,8 @@
    "upstream": "native/native.tests/testData/codegen/exceptions/stack_trace_inline_libbacktrace.kt"
   },
   "native/native.tests/codegen/exceptions/throw_cleanup.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown Any (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Any'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/exceptions/throw_cleanup.kt"
   },
@@ -45368,8 +45237,9 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupywgu58mp/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupywgu58mp/t.l",
-   "status": "COMPILER_CRASH",
+   "category": "other: overloads are not supported: C.foo",
+   "detail": "overloads are not supported: C.foo",
+   "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },
   "native/native.tests/codegen/interop/kt61441.kt": {
@@ -45424,8 +45294,8 @@
    "upstream": "native/native.tests/testData/codegen/intrinsics/isExperimentalMM.kt"
   },
   "native/native.tests/codegen/intrinsics/uninitializedInstance.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown createUninitializedInstance (stdlib API / unsupported decl)",
+   "detail": "unknown function 'createUninitializedInstance'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/intrinsics/uninitializedInstance.kt"
   },
@@ -45511,9 +45381,8 @@
    "upstream": "native/native.tests/testData/codegen/lower/tailrec.kt"
   },
   "native/native.tests/codegen/lower/vararg.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/lower/vararg.kt"
   },
   "native/native.tests/codegen/lower/vararg_of_literals.kt": {
@@ -45658,27 +45527,26 @@
    "upstream": "native/native.tests/testData/codegen/serialization/no_type_map.kt"
   },
   "native/native.tests/codegen/variables/var1.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "other: ++ on Integer",
+   "detail": "++ on Integer",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/variables/var1.kt"
   },
   "native/native.tests/codegen/variables/var2.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
+   "category": "unknown Any (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Any'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/variables/var2.kt"
   },
   "native/native.tests/codegen/variables/var3.kt": {
-   "category": "types: Any",
-   "detail": "unknown type Any",
+   "category": "unknown Any (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Any'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/variables/var3.kt"
   },
   "native/native.tests/codegen/variables/var4.kt": {
-   "category": "types: Any?",
-   "detail": "unknown type Any?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/variables/var4.kt"
   },
   "native/native.tests/codegen/vector/default_argument.kt": {

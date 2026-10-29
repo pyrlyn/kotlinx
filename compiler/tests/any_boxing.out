@@ -1,0 +1,33 @@
+42
+hi
+P(3)
+int 43 str 2 p 3 other 2.5 other true
+true
+true
+false
+true
+true
+true
+7
+null
+84
+hi!
+t: 42 hi P(3) GREEN
+42P(3)
+int 2
+str 3
+p 3
+other c
+true
+false
+true
+true
+true
+V(value=v)
+N(b=V(value=q))
+N(b=null)
+true
+false
+-1
+3112
+4 2
