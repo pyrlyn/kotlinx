@@ -43,30 +43,54 @@ void rt_cc_dead(void *obj) {
     if (!is_buffered(obj)) vtab(obj)->freemem(obj);
 }
 
-/* Trial deletion over roots[0..n), which are buffered and PURPLE or BLACK. Returns objects reclaimed. */
-static size_t collect_slice(void **roots, size_t n) {
+/* MarkRoots for one slice. Keeps (compacted to the front of `roots`) the roots that are still PURPLE
+ * with a live count and mark-grays them. Every other root leaves the buffer here: it was either
+ * re-blackened by a later increment (still live, nothing to do) or died while buffered (BLACK, count 0),
+ * in which case this is the moment it gets freed. Returns the number of roots kept. */
+static size_t mark_roots(void **roots, size_t n) {
     size_t kept = 0;
-    for (size_t i = 0; i < n; i++) {                                 /* MarkRoots */
+    for (size_t i = 0; i < n; i++) {
         void *root = roots[i];
-        if (color(root) == PURPLE && ref_count(root) > 0) { mark_gray(root); roots[kept++] = root; }
-        else {
-            clear_buffered(root);
-            if (color(root) == BLACK && ref_count(root) == 0) vtab(root)->freemem(root);
+        if (color(root) == PURPLE && ref_count(root) > 0) {
+            mark_gray(root);
+            roots[kept++] = root;
+            continue;
         }
+        clear_buffered(root);
+        if (color(root) == BLACK && ref_count(root) == 0) vtab(root)->freemem(root);
     }
-    for (size_t i = 0; i < kept; i++) scan(roots[i]);                /* ScanRoots */
+    return kept;
+}
+
+/* ScanRoots + CollectRoots over the kept roots, in the order of Bacon & Rajan: every root is scanned
+ * before any root leaves the buffer, and only then is garbage collected from each root. */
+static void scan_and_collect_roots(void **roots, size_t kept) {
+    for (size_t i = 0; i < kept; i++) scan(roots[i]);
     for (size_t i = 0; i < kept; i++) clear_buffered(roots[i]);
-    for (size_t i = 0; i < kept; i++) collect_white(roots[i]);       /* CollectRoots */
+    for (size_t i = 0; i < kept; i++) collect_white(roots[i]);
+}
+
+/* Releases the untraced fields of everything CollectWhite found, then frees it. Garbage that is still
+ * buffered (a root of a later slice) is left BLACK with count 0 and freed by that slice's mark_roots.
+ * Returns the number of objects freed now. */
+static size_t free_garbage(void) {
     for (size_t i = 0; i < cc_garbage.len; i++) vtab(cc_garbage.items[i])->relo(cc_garbage.items[i]);
     size_t freed = 0;
     for (size_t i = 0; i < cc_garbage.len; i++) {
         void *obj = cc_garbage.items[i];
-        if (is_buffered(obj)) continue;              /* BLACK, count 0: freed by its own slice */
+        if (is_buffered(obj)) continue;
         vtab(obj)->freemem(obj);
         freed++;
     }
     cc_garbage.len = 0;
     return freed;
+}
+
+/* Full trial deletion over one slice roots[0..n) (all buffered, PURPLE or BLACK). Returns objects freed. */
+static size_t collect_slice(void **roots, size_t n) {
+    size_t kept = mark_roots(roots, n);
+    scan_and_collect_roots(roots, kept);
+    return free_garbage();
 }
 
 static int64_t budget_ns(void) {
@@ -77,7 +101,38 @@ static int64_t budget_ns(void) {
     return cc_budget_ns;
 }
 
-/* One collector step: slices until the buffer is empty or (unless `full`) the budget is spent. */
+static inline size_t min_size(size_t a, size_t b) { return a < b ? a : b; }
+
+/* Runs slices over roots[0..len) and returns how many roots were processed.
+ * Bounded mode stops after the first slice that ends over budget, with one exception: if the very first
+ * slice is already over budget, the cost is a large graph shared by the roots (re-traced by every slice),
+ * so slicing would multiply work without shortening the pause; the step then runs to completion. */
+static size_t run_slices(void **roots, size_t len, int unbounded, int64_t start, int64_t budget, size_t *reclaimed) {
+    size_t done = 0;
+    while (done < len) {
+        size_t n = min_size(len - done, CC_SLICE);
+        *reclaimed += collect_slice(roots + done, n);
+        done += n;
+        if (unbounded || rt_nanos() - start <= budget) continue;
+        int first_slice = done == n;
+        if (!first_slice) break;
+        unbounded = 1;
+    }
+    return done;
+}
+
+/* Puts roots that a bounded step did not reach back into the (fresh) buffer; they keep the buffered bit. */
+static void requeue_roots(void **roots, size_t from, size_t len) {
+    for (size_t i = from; i < len; i++) stack_push(&cc_roots, roots[i]);
+}
+
+/* Next trigger: an unfinished step resumes after CC_STEP_ROOTS more roots, otherwise the adaptive threshold. */
+static void schedule_next_step(size_t roots_left) {
+    cc_trigger = roots_left ? cc_roots.len + CC_STEP_ROOTS : cc_threshold;
+}
+
+/* One collector step: slices until the buffer is empty or (unless `full`) the budget is spent.
+ * The buffer is detached first, so roots buffered while freeing garbage go to a fresh buffer. */
 static void collect_step(int full) {
     if (cc_running || cc_roots.len == 0) return;
     cc_running = 1;
@@ -87,23 +142,13 @@ static void collect_step(int full) {
     cc_runs++;
 #endif
     PtrStack roots = cc_roots; cc_roots = (PtrStack){0};
-    size_t done = 0, reclaimed = 0;
+    size_t reclaimed = 0;
     cc_traced = 0;
-    while (done < roots.len) {
-        size_t n = roots.len - done < CC_SLICE ? roots.len - done : CC_SLICE;
-        reclaimed += collect_slice(roots.items + done, n);
-        done += n;
-        if (full || rt_nanos() - start <= budget) continue;
-        /* Over budget. If the first slice alone blew it, the cost is a large graph shared by the roots
-         * (re-traced by every slice), so slicing would multiply work without shortening the pause:
-         * finish this step in one pass instead. */
-        if (done == n) full = 1; else break;
-    }
-    size_t left = roots.len - done;
-    for (; done < roots.len; done++) stack_push(&cc_roots, roots.items[done]);   /* still buffered */
+    size_t done = run_slices(roots.items, roots.len, full, start, budget, &reclaimed);
+    requeue_roots(roots.items, done, roots.len);
     free(roots.items);
     adapt_threshold(reclaimed);
-    cc_trigger = left ? cc_roots.len + CC_STEP_ROOTS : cc_threshold;
+    schedule_next_step(roots.len - done);
     gc_stats.collections++;
     gc_stats.reclaimed += (int64_t)reclaimed;
     stats_add_pause(&gc_stats, rt_nanos() - start);
