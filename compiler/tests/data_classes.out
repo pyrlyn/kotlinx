@@ -1,0 +1,23 @@
+P(x=1, name=a)
+true
+true
+true
+true
+96354
+128
+P(x=1, name=b)
+P(x=1, name=a)
+1 b
+true
+Box(v=3)
+Line(a=P(x=1, name=a), b=P(x=1, name=b))
+true
+(1, one)
+1
+1/one
+5=five
+6=six
+16
+(1, c, 2.5)
+1231
+10

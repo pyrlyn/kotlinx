@@ -12,6 +12,51 @@ private val NO_TRAILING = setOf("try", "do", "else", "finally", "init", "object"
 private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix")
 
 class Parser(private val t: List<Tok>) {
+    /** Names of `infix fun`s declared in the source (`a name b` parses as `a.name(b)`). */
+    private val userInfix: Set<String> = hashSetOf("to").also { set ->
+        for (i in t.indices) if (t[i].k == K.ID && t[i].s == "infix") {
+            var j = i + 1
+            while (j < t.size && !(t[j].k == K.OP && t[j].s == "(")) j++
+            if (j < t.size && t[j - 1].k == K.ID) set.add(t[j - 1].s)
+        }
+    }
+    private var destructN = 0
+    /** Extra statements produced by a destructuring declaration, emitted after the one [stmt] returned. */
+    private val pendingStmts = ArrayList<S>()
+
+    /** Data class: generated toString, componentN, hashCode and `$equals` (structural `==`) over the constructor properties. */
+    private fun dataClass(c: ClassD): ClassD {
+        val props = c.ctorParams.filter { p -> c.fields.any { it.name == p.name } }
+        val have = c.methods.map { it.name }.toSet()
+        val ms = ArrayList(c.methods)
+        val l = c.line
+        fun nm(n: String) = NameE(n).also { it.line = l }
+        fun call(r: E, n: String) = CallE(MemberE(r, n, false).also { it.line = l }, emptyList(), emptyList(), null).also { it.line = l }
+        if ("toString" !in have) {
+            val parts = ArrayList<Any>()
+            props.forEachIndexed { i, p -> parts.add((if (i == 0) c.name + "(" else ", ") + p.name + "="); parts.add(nm(p.name)) }
+            parts.add(if (props.isEmpty()) c.name + "()" else ")")
+            ms.add(FunD("toString", emptyList(), TypeRef("String", emptyList(), false), null, StrL(parts).also { it.line = l }, l))
+        }
+        props.forEachIndexed { i, p -> if ("component${i + 1}" !in have) ms.add(FunD("component${i + 1}", emptyList(), p.type, null, nm(p.name), l)) }
+        if ("hashCode" !in have) {
+            var h: E = IntL(0, false)
+            props.forEachIndexed { i, p ->
+                val ph = call(nm(p.name), "hashCode")
+                h = if (i == 0) ph else BinE("+", BinE("*", h, IntL(31, false)).also { it.line = l }, ph).also { it.line = l }
+            }
+            ms.add(FunD("hashCode", emptyList(), TypeRef("Int", emptyList(), false), null, h, l))
+        }
+        val self = TypeRef(c.name, c.typeParams.map { TypeRef(it, emptyList(), false) }, false)
+        var eq: E = BoolL(true)
+        props.forEachIndexed { i, p ->
+            val one = BinE("==", nm(p.name), MemberE(nm("other"), p.name, false).also { it.line = l }).also { it.line = l }
+            eq = if (i == 0) one else BinE("&&", eq, one).also { it.line = l }
+        }
+        ms.add(FunD("\$equals", listOf(Param("other", self)), TypeRef("Boolean", emptyList(), false), null, eq, l))
+        return ClassD(c.name, c.fields, c.supers, ms, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
+    }
+
     private var p = 0
     /** Newlines are insignificant while inside (...) or [...]; a `{` block resets that. */
     private val depth = ArrayList<Int>().apply { add(0) }
@@ -97,10 +142,11 @@ class Parser(private val t: List<Tok>) {
                     if (c.fields.size != 1 || c.ctorParams.size != 1) fail("a value class needs exactly one property", tk)
                     classes.add(ClassD(c.name, c.fields, c.supers, c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true, c.superTypeArgs))
                 }
-                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "const", "open", "final", "abstract", "sealed") -> p++
+                tk.k == K.ID && tk.s == "data" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(dataClass(classDecl())) }
+                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "operator", "infix", "tailrec", "const", "open", "final", "abstract", "sealed") -> p++
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && (t[p + 1].k == K.OP && t[p + 1].s == "<" ||
                     t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> funs.add(extProperty())
-                tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> globals.add(stmt() as VarS)
+                tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> { globals.add(stmt() as VarS); if (pendingStmts.isNotEmpty()) fail("top-level destructuring declarations are not supported", tk) }
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
                 tk.k == K.ID && tk.s == "class" -> classes.add(classDecl())
                 tk.k == K.ID && tk.s == "enum" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(classDecl(true)) }
@@ -376,7 +422,7 @@ class Parser(private val t: List<Tok>) {
             while (true) {
                 skipNL()
                 if (isOp("}")) break
-                ss.add(stmt())
+                ss.add(stmt()); ss.addAll(pendingStmts); pendingStmts.clear()
                 val tk = t[p]
                 if (!(tk.k == K.NL || (tk.k == K.OP && (tk.s == ";" || tk.s == "}")))) fail("expected end of statement")
             }
@@ -388,15 +434,29 @@ class Parser(private val t: List<Tok>) {
 
     private fun controlBody(): Block { skipNLOnly(); return if (isOp("{")) block() else Block(listOf(stmt())) }
 
+    private fun destructVar(d: String, n: String, i: Int, isVar: Boolean, line: Int): S =
+        VarS(n, isVar, null, CallE(MemberE(NameE(d).also { it.line = line }, "component${i + 1}", false).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line }).also { it.line = line }
+
     private fun stmt(): S {
         val line = peek().line
         val s: S = when {
             isId("val") || isId("var") -> {
                 val isVar = next().s == "var"
+                if (isOp("(")) {
+                    next()
+                    val names = ArrayList<String>()
+                    while (!isOp(")")) { names.add(ident()); if (isOp(":")) { next(); type() }; if (isOp(",")) next() }
+                    next()
+                    expectOp("="); skipNLOnly()
+                    val d = "\$d${destructN++}"
+                    names.forEachIndexed { i, n -> if (n != "_") pendingStmts.add(destructVar(d, n, i, isVar, line)) }
+                    VarS(d, false, null, expr())
+                } else {
                 val name = ident()
                 val ty = if (isOp(":")) { next(); type() } else null
                 expectOp("="); skipNLOnly()
                 VarS(name, isVar, ty, expr())
+                }
             }
             isId("while") -> {
                 next(); expectOp("(")
@@ -416,9 +476,18 @@ class Parser(private val t: List<Tok>) {
             }
             isId("for") -> {
                 next(); expectOp("(")
-                val (n, it) = nested(1) { val n = ident(); if (ident() != "in") fail("expected 'in'"); n to expr() }
+                val names = ArrayList<String>()
+                val (n, it) = nested(1) {
+                    val n = if (isOp("(")) {
+                        next(); while (!isOp(")")) { names.add(ident()); if (isOp(":")) { next(); type() }; if (isOp(",")) next() }; next()
+                        "\$d${destructN++}"
+                    } else ident()
+                    if (ident() != "in") fail("expected 'in'"); n to expr()
+                }
                 expectOp(")")
-                ForS(n, it, controlBody())
+                val body = controlBody()
+                val pre = names.mapIndexedNotNull { i, x -> if (x == "_") null else destructVar(n, x, i, false, line) }
+                ForS(n, it, if (pre.isEmpty()) body else Block(pre + body.stmts, body.params, body.paramTypes))
             }
             isId("break") || isId("continue") -> JumpS(next().s == "break")
             isId("return") -> {
@@ -461,6 +530,11 @@ class Parser(private val t: List<Tok>) {
                 l = BinE(if (neg) "!in" else "in", l, binary(level + 1)).also { it.line = tk.line }
                 continue
             }
+            if (levels[level] === INFIX_FUNS && tk.k == K.ID && tk.s in userInfix && tk.s !in INFIX_FUNS) {
+                p++; skipNLOnly()
+                l = CallE(MemberE(l, tk.s, false).also { it.line = tk.line }, emptyList(), listOf(binary(level + 1)), null).also { it.line = tk.line }
+                continue
+            }
             val ok = if (levels[level] === INFIX_FUNS) tk.k == K.ID && tk.s in INFIX_FUNS else tk.k == K.OP && tk.s in levels[level]
             if (!ok) return l
             p++; skipNLOnly()
@@ -482,7 +556,10 @@ class Parser(private val t: List<Tok>) {
         expectOp("(")
         val a = nested(1) {
             val xs = ArrayList<E>()
-            while (!isOp(")")) { xs.add(expr()); if (isOp(",")) next() }
+            while (!isOp(")")) {
+                if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == "=") { val n = ident(); next(); xs.add(NamedE(n, expr())) } else xs.add(expr())
+                if (isOp(",")) next()
+            }
             xs
         }
         expectOp(")")

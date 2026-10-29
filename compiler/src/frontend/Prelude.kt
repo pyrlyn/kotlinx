@@ -167,10 +167,22 @@ private val EXC_USE = Regex("""\btry\b|\bassertFails""")
  * Merges the prelude into [p] when the source may use it. Exception classes are included for programs with
  * `try` (or `assertFailsWith`); their presence switches the backend to catchable exceptions.
  */
+/** `Pair`, `Triple` and `to`. */
+const val PAIRS = """
+data class Pair<A, B>(val first: A, val second: B) {
+    override fun toString(): String = "(" + first + ", " + second + ")"
+}
+data class Triple<A, B, C>(val first: A, val second: B, val third: C) {
+    override fun toString(): String = "(" + first + ", " + second + ", " + third + ")"
+}
+infix fun <A, B> A.to(that: B): Pair<A, B> = Pair(this, that)
+"""
+private val PAIR_USE = Regex("\\bPair\\b|\\bTriple\\b|\\bto\\b")
+
 fun withPrelude(src: String, p: Program): Program {
-    val ranges = RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src)
-    if (!ranges && !exc) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION else "") + (if (exc) EXCEPTION_CLASSES else "")
+    val ranges = RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
+    if (!ranges && !exc && !pairs) return p
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },

@@ -82,6 +82,7 @@ private fun boxCapturedVars(p: Program): Program {
                     is IndexE -> { e(x.recv, d); e(x.idx, d) }
                     is BinE -> { e(x.l, d); e(x.r, d) }
                     is UnE -> e(x.e, d)
+                    is NamedE -> e(x.e, d)
                     is IfE -> { e(x.cond, d); blk(x.th, d); x.el?.let { blk(it, d) } }
                     is WhenE -> { x.subj?.let { e(it, d) }; x.branches.forEach { (c, bl) -> c?.forEach { e(it, d) }; blk(bl, d) } }
                     is LambdaE -> blk(x.body, d + 1)
@@ -237,6 +238,7 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
         is IndexE -> IndexE(e(x.recv), e(x.idx))
         is BinE -> BinE(x.op, e(x.l), e(x.r))
         is UnE -> UnE(x.op, e(x.e))
+        is NamedE -> NamedE(x.name, e(x.e))
         is IfE -> IfE(e(x.cond), block(x.th), blockN(x.el))
         is LambdaE -> LambdaE(block(x.body))
         is TryE -> TryE(block(x.body), x.catches.map { Catch(it.name, ty(it.type), block(it.body)) }, blockN(x.fin))

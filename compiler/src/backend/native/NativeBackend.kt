@@ -1017,6 +1017,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             is MemberE -> genMember(e)
             is LambdaE -> genLambda(e, null, null)
+            is NamedE -> fail("named arguments are not supported")
             is CallE -> genCall(e)
             is IndexE -> {
                 val r = genExpr(e.recv)
@@ -1717,11 +1718,75 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         else -> false
     }
 
+    private fun isData(t: Ty) = t is Ty.Cls && "\$equals" in classes.getValue(t.name).methods
+
+    /** Generated members (`copy`, default `equals`/`hashCode`/`toString`) and built-in `hashCode`/`componentN`; null if not one. */
+    private fun dataMethod(r: Val, n: String, e: CallE): Val? {
+        val t = r.t
+        if (t is Ty.Cls && !hasMember(t, n)) {
+            when (n) {
+                "copy" -> if (isData(t)) {
+                    val cd = classDecls.getValue(t.name)
+                    if (cd.ctorParams.any { p -> cd.fields.none { it.name == p.name } }) fail("copy() of a data class with plain constructor parameters is not supported")
+                    val named = e.args.filterIsInstance<NamedE>().associateBy { it.name }
+                    named.keys.forEach { k -> if (cd.ctorParams.none { it.name == k }) fail("unknown copy() parameter $k") }
+                    val pos = e.args.filter { it !is NamedE }
+                    return withTemps(listOf(r)) { (x) ->
+                        val args = cd.ctorParams.mapIndexed { i, p -> pos.getOrNull(i) ?: named[p.name]?.e ?: MemberE(x, p.name, false).also { it.line = line } }
+                        genNamedCall(t.name, CallE(NameE(t.name), emptyList(), args, null).also { it.line = line })
+                    }
+                }
+                "equals" -> return compare("==", r, genExpr(e.args.single()))
+                "hashCode" -> { val v = Val(emitT("trunc i64 ${emitT("ptrtoint ptr ${r.v} to i64")} to i32"), Ty.I32); releaseIfOwned(r); return v }
+                "toString" -> return sbMsg(r)
+            }
+        }
+        if (n == "hashCode" && e.args.isEmpty()) when {
+            t == Ty.Str -> { val v = Val(emitT("call i32 @rt_str_hash(ptr ${r.v})"), Ty.I32); releaseIfOwned(r); return v }
+            t == Ty.I1 -> return Val(emitT("select i1 ${r.v}, i32 1231, i32 1237"), Ty.I32)
+            t == Ty.F64 -> return Val(emitT("call i32 @rt_double_hash(double ${r.v})"), Ty.I32)
+            t == Ty.I64 || t == Ty.U64 -> { val x = emitT("xor i64 ${r.v}, ${emitT("lshr i64 ${r.v}, 32")}"); return Val(emitT("trunc i64 $x to i32"), Ty.I32) }
+            t == Ty.Char || t.isInt -> return Val(coerce(Val(r.v, if (t == Ty.Char) Ty.I32 else t), Ty.I32).v, Ty.I32)
+        }
+        if (t is Ty.ListTy && n == "hashCode" && e.args.isEmpty()) {
+            // 31 * h + element hash over the elements, starting from 1 (null elements hash to 0).
+            val h = "%l.lh.${tmpN++}"; val idx = "%l.lhi.${tmpN++}"
+            allocas.append("  $h = alloca i32\n  $idx = alloca i64\n")
+            emit("store i32 1, ptr $h"); emit("store i64 0, ptr $idx")
+            val lc = label("lh.cond"); val lb = label("lh.body"); val le = label("lh.end")
+            val n0 = emitT("call i64 @rt_list_size(ptr ${r.v})")
+            br(lc); startBlock(lc)
+            val i = emitT("load i64, ptr $idx")
+            condBr(emitT("icmp slt i64 $i, $n0"), lb, le)
+            startBlock(lb)
+            val et = t.elem
+            val ev = Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${r.v}, i64 $i)"), et), et, false)
+            val eh = if (et.llvm == "ptr") {
+                val ln = label("lh.nn"); val lj = label("lh.join"); val from = cur
+                condBr(emitT("icmp eq ptr ${ev.v}, null"), lj, ln)
+                startBlock(ln)
+                val x = coerce(method(ev, "hashCode", CallE(e.callee, emptyList(), emptyList(), null).also { it.line = line }), Ty.I32)
+                val fromN = cur
+                br(lj); startBlock(lj)
+                emitT("phi i32 [ 0, %$from ], [ ${x.v}, %$fromN ]")
+            } else coerce(method(ev, "hashCode", CallE(e.callee, emptyList(), emptyList(), null).also { it.line = line }), Ty.I32).v
+            emit("store i32 ${emitT("add i32 ${emitT("mul i32 ${emitT("load i32, ptr $h")}, 31")}, $eh")}, ptr $h")
+            emit("store i64 ${emitT("add i64 $i, 1")}, ptr $idx")
+            br(lc); startBlock(le)
+            val v = Val(emitT("load i32, ptr $h"), Ty.I32)
+            releaseIfOwned(r); return v
+        }
+        if (t is Ty.ListTy && e.args.isEmpty() && n.startsWith("component") && n.removePrefix("component").toIntOrNull() != null)
+            return method(r, "get", CallE(e.callee, emptyList(), listOf(IntL(n.removePrefix("component").toLong() - 1, false)), null).also { it.line = line })
+        return null
+    }
+
     private fun method(r: Val, n: String, e0: CallE): Val {
         val t = r.t
         if (!hasMember(t, n)) extFuns[n]?.firstOrNull { extMatches(t, it.params[0].type, it.typeParams) }?.let { f ->
             return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
         }
+        dataMethod(r, n, e0)?.let { return it }
         // A trailing lambda on a built-in method that is not an inline lambda builtin is an ordinary last argument.
         val e = if (e0.lambda != null && t !is Ty.Cls && t !is Ty.Iface && !(t is Ty.ListTy && n in setOf("map", "filter", "forEach", "sumOf", "count")) && n != "usePinned")
             CallE(e0.callee, e0.typeArgs, allArgs(e0), null) else e0
@@ -2200,7 +2265,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (op != "==" && op != "!=") fail("cannot order null")
             return Val(if (op == "==") "false" else "true", Ty.I1)
         }
-        if (a.t is Ty.Cls && a.t == b.t && a.v != "null" && b.v != "null" && classDecls[a.t.name]?.isValue == true && (op == "==" || op == "!=")) {
+        if (a.t is Ty.Cls && a.t == b.t && a.v != "null" && b.v != "null" && (classDecls[a.t.name]?.isValue == true || isData(a.t)) && (op == "==" || op == "!=")) {
             // Value classes compare by their single property (null-safe: same pointer -> equal, one null -> different).
             val ci = classes.getValue(a.t.name); val ft = ci.fields[0].second
             val same = emitT("icmp eq ptr ${a.v}, ${b.v}")
@@ -2212,9 +2277,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val fromC = cur
             condBr(anyNull, le, lf)
             startBlock(lf)
-            val fa = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${a.v}, i32 0, i32 2")}"), ft)
-            val fb = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${b.v}, i32 0, i32 2")}"), ft)
-            val eq = coerce(compare("==", fa, fb), Ty.I1)
+            val eq = if (isData(a.t)) coerce(withTemps(listOf(Val(a.v, a.t, false), Val(b.v, b.t, false))) { (x, y) ->
+                genExpr(CallE(MemberE(x, "\$equals", false).also { it.line = line }, emptyList(), listOf(y), null).also { it.line = line })
+            }, Ty.I1) else {
+                val fa = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${a.v}, i32 0, i32 2")}"), ft)
+                val fb = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${b.v}, i32 0, i32 2")}"), ft)
+                coerce(compare("==", fa, fb), Ty.I1)
+            }
             val fromF = cur
             br(le)
             startBlock(le)
@@ -2321,6 +2390,8 @@ declare void @rt_print_char(i32)
 declare void @rt_print_u64(i64)
 declare void @rt_sb_u64(ptr, i64)
 declare i32 @rt_str_eq(ptr, ptr)
+declare i32 @rt_str_hash(ptr)
+declare i32 @rt_double_hash(double)
 declare void @rt_sb_char(ptr, i32)
 declare ptr @rt_sb_tostring(ptr)
 declare i64 @rt_sb_len(ptr)

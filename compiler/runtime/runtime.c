@@ -100,6 +100,26 @@ void rt_print_str(const char *s) { fputs(s ? s : "null", stdout); }
 void rt_print_i64(int64_t v) { printf("%" PRId64, v); }
 void rt_print_f64(double d) { char b[64]; fmt_double(b, sizeof b, d); fputs(b, stdout); }
 void rt_print_u64(uint64_t v) { printf("%" PRIu64, v); }
+/* Kotlin String.hashCode over the UTF-16 code units of a UTF-8 string. */
+int32_t rt_str_hash(const char *s) {
+    uint32_t h = 0;
+    if (!s) return 0;
+    const unsigned char *p = (const unsigned char *)s;
+    while (*p) {
+        uint32_t c = *p++;
+        if (c >= 0xF0 && p[0] && p[1] && p[2]) { c = ((c & 7) << 18) | ((p[0] & 63) << 12) | ((p[1] & 63) << 6) | (p[2] & 63); p += 3; }
+        else if (c >= 0xE0 && p[0] && p[1]) { c = ((c & 15) << 12) | ((p[0] & 63) << 6) | (p[1] & 63); p += 2; }
+        else if (c >= 0xC0 && p[0]) { c = ((c & 31) << 6) | (p[0] & 63); p += 1; }
+        if (c >= 0x10000) { c -= 0x10000; h = h * 31 + (0xD800 + (c >> 10)); h = h * 31 + (0xDC00 + (c & 0x3FF)); }
+        else h = h * 31 + c;
+    }
+    return (int32_t)h;
+}
+int32_t rt_double_hash(double d) {
+    uint64_t b;
+    if (d != d) b = 0x7ff8000000000000ULL; else { if (d == 0.0 && !__builtin_signbit(d)) d = 0.0; memcpy(&b, &d, 8); }
+    return (int32_t)(b ^ (b >> 32));
+}
 int32_t rt_str_eq(const char *a, const char *b) { return a == b || (a && b && strcmp(a, b) == 0); }
 void rt_print_bool(_Bool b) { fputs(b ? "true" : "false", stdout); }
 void rt_newline(void) { putchar('\n'); }

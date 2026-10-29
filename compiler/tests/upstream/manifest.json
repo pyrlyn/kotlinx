@@ -1,10 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "MISCOMPILE": 7,
+  "MISCOMPILE": 13,
   "N/A": 2984,
-  "PASS": 411,
-  "UNSUPPORTED": 5073
+  "PASS": 441,
+  "UNSUPPORTED": 5037
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -325,20 +325,20 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/argumentOrderInSuperCall.kt"
   },
   "box/box/argumentOrder/arguments.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: named arguments are not supported",
+   "detail": "named arguments are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/arguments.kt"
   },
   "box/box/argumentOrder/captured.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: named arguments are not supported",
+   "detail": "named arguments are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/captured.kt"
   },
   "box/box/argumentOrder/capturedInExtension.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: named arguments are not supported",
+   "detail": "named arguments are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/capturedInExtension.kt"
   },
@@ -349,8 +349,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/defaults.kt"
   },
   "box/box/argumentOrder/extension.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: named arguments are not supported",
+   "detail": "named arguments are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/extension.kt"
   },
@@ -367,38 +367,38 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt17691WithEnabledFeature.kt"
   },
   "box/box/argumentOrder/kt9277.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt9277.kt"
   },
   "box/box/argumentOrder/lambdaMigration.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: named arguments are not supported",
+   "detail": "named arguments are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/lambdaMigration.kt"
   },
   "box/box/argumentOrder/lambdaMigrationInClass.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: named arguments are not supported",
+   "detail": "named arguments are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/lambdaMigrationInClass.kt"
   },
   "box/box/argumentOrder/simple.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: named arguments are not supported",
+   "detail": "named arguments are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simple.kt"
   },
   "box/box/argumentOrder/simpleInClass.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: named arguments are not supported",
+   "detail": "named arguments are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simpleInClass.kt"
   },
   "box/box/argumentOrder/singleSideEffect.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: named arguments are not supported",
+   "detail": "named arguments are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/singleSideEffect.kt"
   },
@@ -450,8 +450,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_selfComparison.kt"
   },
   "box/box/arithmetic/basic_shifts.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'infix')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Int$myshr' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_shifts.kt"
   },
@@ -492,14 +492,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/arrayConstructorsSimple.kt"
   },
   "box/box/arrays/arrayGetAssignMultiIndex.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ']' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/arrayGetAssignMultiIndex.kt"
   },
   "box/box/arrays/arrayGetMultiIndex.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ']' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/arrayGetMultiIndex.kt"
   },
@@ -537,14 +537,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/arraysOfInlineClass/arrayOfInlineClassOfArrayOfInlineClass.kt"
   },
   "box/box/arrays/collectionAssignGetMultiIndex.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ']' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/collectionAssignGetMultiIndex.kt"
   },
   "box/box/arrays/collectionGetMultiIndex.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ']' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/collectionGetMultiIndex.kt"
   },
@@ -677,8 +677,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/genericArrayInObjectLiteralConstructor.kt"
   },
   "box/box/arrays/hashMap.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "strings / templates",
+   "detail": "HashMap keys must be Int/Long/Char, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/hashMap.kt"
   },
@@ -831,8 +831,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt42932.kt"
   },
   "box/box/arrays/kt4348.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "inline/value classes",
+   "detail": "expected ':' (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt4348.kt"
   },
@@ -866,8 +866,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt594.kt"
   },
   "box/box/arrays/kt7009.kt": {
-   "category": "other syntax (at 'to')",
-   "detail": "expected ')' (at 'to')",
+   "category": "strings / templates",
+   "detail": "cannot convert DoubleArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt7009.kt"
   },
@@ -890,14 +890,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt945.kt"
   },
   "box/box/arrays/kt950.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$MutableMap$set' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt950.kt"
   },
   "box/box/arrays/longAsIndex.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$IntArray$get' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/longAsIndex.kt"
   },
@@ -914,8 +914,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclFor.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentExtensions.kt"
   },
@@ -938,14 +938,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForValCaptured.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -978,14 +978,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/kt15575.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -1327,8 +1327,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unit4.kt"
   },
   "box/box/bce/bceCases.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bce/bceCases.kt"
   },
@@ -1410,8 +1410,8 @@
    "upstream": "compiler/testData/codegen/box/bce/forUntilWithStep.kt"
   },
   "box/box/bce/forWithIndex.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "other: unknown method ArrayList<Int>.withIndex()",
+   "detail": "unknown method ArrayList<Int>.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bce/forWithIndex.kt"
   },
@@ -1524,14 +1524,14 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/intrinsicNullable.kt"
   },
   "box/box/binaryOp/kt11163.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Int$compareTo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/kt11163.kt"
   },
   "box/box/binaryOp/kt11163_properIeee754comparisons.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Int$compareTo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/kt11163_properIeee754comparisons.kt"
   },
@@ -4521,8 +4521,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyReferenceWithTypeParameter.kt"
   },
   "box/box/callableReference/property/extensionPropertyWithExtensionReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyWithExtensionReceiver.kt"
   },
@@ -4959,8 +4959,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt81617.kt"
   },
   "box/box/casts/kt82732.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt82732.kt"
   },
@@ -5758,8 +5758,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt504.kt"
   },
   "box/box/classes/kt508.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$MutableMap$set' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt508.kt"
   },
@@ -5794,14 +5794,14 @@
    "upstream": "compiler/testData/codegen/box/classes/kt707.kt"
   },
   "box/box/classes/kt723.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt723.kt"
   },
   "box/box/classes/kt725.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt725.kt"
   },
@@ -6469,8 +6469,8 @@
    "upstream": "compiler/testData/codegen/box/closures/kt4106.kt"
   },
   "box/box/closures/kt4137.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'infix')",
+   "category": "other: unknown method $Fn$Int.let()",
+   "detail": "unknown method $Fn$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt4137.kt"
   },
@@ -8203,8 +8203,8 @@
    "upstream": "compiler/testData/codegen/box/contracts/kt47300.kt"
   },
   "box/box/contracts/lambdaParameter.kt": {
-   "category": "other syntax (at 'to')",
-   "detail": "expected ')' (at 'to')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/lambdaParameter.kt"
   },
@@ -8625,8 +8625,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexContinuesAsUnmodified.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNameBasedDestructuringShortForm.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNameBasedDestructuringShortForm.kt"
   },
@@ -8769,8 +8769,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNameBasedDestructuringShortForm.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNameBasedDestructuringShortForm.kt"
   },
@@ -8799,14 +8799,14 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndex.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNameBasedDestructuringFullForm.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNameBasedDestructuringFullForm.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNameBasedDestructuringShortForm.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNameBasedDestructuringShortForm.kt"
   },
@@ -8895,8 +8895,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexContinue.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInListWithIndexNameBasedDestructuringShortForm.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexNameBasedDestructuringShortForm.kt"
   },
@@ -8949,8 +8949,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNameBasedDestructuringShortForm.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNameBasedDestructuringShortForm.kt"
   },
@@ -9036,8 +9036,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/ifIncompatibleBranches.kt"
   },
   "box/box/controlStructures/inRangeConditionsInWhen.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other syntax (at '2')",
+   "detail": "expected '->' (at '2')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/inRangeConditionsInWhen.kt"
   },
@@ -12194,14 +12194,14 @@
    "upstream": "compiler/testData/codegen/box/cycles/cycle_do.kt"
   },
   "box/box/cycles/cycle_for.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/cycles/cycle_for.kt"
   },
   "box/box/dataClasses/arrayParams.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/arrayParams.kt"
   },
@@ -12236,27 +12236,23 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/copyInObjectNestedDataClass.kt"
   },
   "box/box/dataClasses/copy/kt3033.kt": {
-   "category": "other: unknown method A.copy()",
-   "detail": "unknown method A.copy()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/kt3033.kt"
   },
   "box/box/dataClasses/copy/valInConstructorParams.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/valInConstructorParams.kt"
   },
   "box/box/dataClasses/copy/varInConstructorParams.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/varInConstructorParams.kt"
   },
   "box/box/dataClasses/copy/withGenericParameter.kt": {
-   "category": "other: unknown method A.copy()",
-   "detail": "unknown method A.copy()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/withGenericParameter.kt"
   },
   "box/box/dataClasses/copy/withSecondaryConstructor.kt": {
@@ -12296,13 +12292,14 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/alreadyDeclared.kt"
   },
   "box/box/dataClasses/equals/genericarray.kt": {
-   "detail": "exit=0 stdout='fail 2\\n' stderr=''",
+   "detail": "exit=0 stdout='fail\\n' stderr=''",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/genericarray.kt"
   },
   "box/box/dataClasses/equals/intarray.kt": {
-   "detail": "exit=0 stdout='fail 2\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "category": "strings / templates",
+   "detail": "cannot convert IntArray to string",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/intarray.kt"
   },
   "box/box/dataClasses/equals/null.kt": {
@@ -12335,9 +12332,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/fromOtherModule.kt"
   },
   "box/box/dataClasses/genericParam.kt": {
-   "category": "other: unknown method A$Int.component1()",
-   "detail": "unknown method A$Int.component1()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/genericParam.kt"
   },
   "box/box/dataClasses/hashCode/alreadyDeclared.kt": {
@@ -12346,9 +12342,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/alreadyDeclared.kt"
   },
   "box/box/dataClasses/hashCode/boolean.kt": {
-   "category": "other: unknown method A.hashCode()",
-   "detail": "unknown method A.hashCode()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/boolean.kt"
   },
   "box/box/dataClasses/hashCode/byte.kt": {
@@ -12376,9 +12371,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/float.kt"
   },
   "box/box/dataClasses/hashCode/genericNull.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method A$String.hashCode()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/genericNull.kt"
   },
   "box/box/dataClasses/hashCode/int.kt": {
@@ -12418,21 +12412,19 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/kt49715_behaviorChange.kt"
   },
   "box/box/dataClasses/mixedParams.kt": {
-   "category": "other: unknown method A.component1()",
-   "detail": "unknown method A.component1()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/mixedParams.kt"
   },
   "box/box/dataClasses/multiDeclaration.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/multiDeclaration.kt"
   },
   "box/box/dataClasses/multiDeclarationFor.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/multiDeclarationFor.kt"
   },
   "box/box/dataClasses/nonTrivialFinalMemberInSuperClass.kt": {
@@ -12471,14 +12463,13 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/arrayParams.kt"
   },
   "box/box/dataClasses/toString/changingVarParam.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method A.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/changingVarParam.kt"
   },
   "box/box/dataClasses/toString/genericParam.kt": {
-   "detail": "exit=0 stdout='A$Int@obj\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/genericParam.kt"
   },
   "box/box/dataClasses/toString/mixedParams.kt": {
@@ -12500,15 +12491,13 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/unitComponent.kt"
   },
   "box/box/dataClasses/twoValParams.kt": {
-   "category": "other: unknown method A.component1()",
-   "detail": "unknown method A.component1()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/twoValParams.kt"
   },
   "box/box/dataClasses/twoVarParams.kt": {
-   "category": "other: unknown method A.component1()",
-   "detail": "unknown method A.component1()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/twoVarParams.kt"
   },
   "box/box/dataClasses/unitComponent.kt": {
@@ -12575,8 +12564,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/callDefaultFromInitializer.kt"
   },
   "box/box/defaultArguments/captureInTailrec.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/captureInTailrec.kt"
   },
@@ -12919,32 +12908,32 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/inheritedFromInterfaceViaAbstractSuperclass.kt"
   },
   "box/box/defaultArguments/kt36853.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853.kt"
   },
   "box/box/defaultArguments/kt36853_fibonacci.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853_fibonacci.kt"
   },
   "box/box/defaultArguments/kt36853_nestedObject.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853_nestedObject.kt"
   },
   "box/box/defaultArguments/kt36853a.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853a.kt"
   },
   "box/box/defaultArguments/kt46189.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt46189.kt"
   },
@@ -13050,8 +13039,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/simpleFromOtherFile.kt"
   },
   "box/box/defaultArguments/suspendLambdaInTailrecDefault.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/suspendLambdaInTailrecDefault.kt"
   },
@@ -13211,20 +13200,20 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToCastReceiver.kt"
   },
   "box/box/delegatedProperty/delegateToConst/delegateToConst.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConst/delegateToConst.kt"
   },
   "box/box/delegatedProperty/delegateToConst/delegateToConstProperty.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConst/delegateToConstProperty.kt"
   },
   "box/box/delegatedProperty/delegateToConst/delegateToNull.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConst/delegateToNull.kt"
   },
@@ -13247,8 +13236,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFailingCastReceiver.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/chain.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/chain.kt"
   },
@@ -13259,20 +13248,20 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/delegateToFinalInstanceProperty.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/delegateToFinalObjectProperty.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/delegateToFinalObjectProperty.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/delegateToFinalProperty.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/delegateToFinalProperty.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/finalPropertyInAnotherFile.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/finalPropertyInAnotherFile.kt"
   },
@@ -13294,8 +13283,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndLocalDelegatedProperty.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/delegateToEnum.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/delegateToEnum.kt"
   },
@@ -13329,8 +13318,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsFromFileClass.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffectsToEnum.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsToEnum.kt"
   },
@@ -13685,8 +13674,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/optimizedDelegatedProperties/lazy.kt"
   },
   "box/box/delegatedProperty/optimizedDelegatedProperties/mixedArgumentSizes.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/optimizedDelegatedProperties/mixedArgumentSizes.kt"
   },
@@ -13800,14 +13789,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/local.kt"
   },
   "box/box/delegatedProperty/provideDelegate/localCaptured.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/localCaptured.kt"
   },
   "box/box/delegatedProperty/provideDelegate/localDifferentReceivers.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/localDifferentReceivers.kt"
   },
@@ -13833,8 +13822,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/provideDelegateByExtensionFunction.kt"
   },
   "box/box/delegatedProperty/provideDelegate/setValue.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/setValue.kt"
   },
@@ -14135,8 +14124,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/withDefaultsMultipleFilesOrder.kt"
   },
   "box/box/destructuringDeclInLambdaParam/extensionComponents.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/extensionComponents.kt"
   },
@@ -14236,8 +14225,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnClassObject1.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnClassObject2.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnClassObject2.kt"
   },
@@ -14260,8 +14249,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnEnum1.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnEnum2.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'invoke' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnEnum2.kt"
   },
@@ -14272,14 +14261,14 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnImportedEnum1.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnImportedEnum2.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'invoke' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnImportedEnum2.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnObject1.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'invoke' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnObject1.kt"
   },
@@ -14290,14 +14279,14 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnObject2.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgs.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgs.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgs2.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgs2.kt"
   },
@@ -14308,21 +14297,20 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgsOverridden.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects2.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects2.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/extensionTailCall.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/extensionTailCall.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/functionWithNoTails.kt": {
@@ -14332,8 +14320,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/functionWithNoTails.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/functionWithNonTailRecursions.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/functionWithNonTailRecursions.kt"
   },
@@ -14343,26 +14331,24 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/functionWithoutAnnotation.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/infixCall.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/infixCall.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/infixRecursiveCall.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/infixRecursiveCall.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/insideElvis.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/insideElvis.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/kt47084_lambdaInDefaultArgument.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/kt47084_lambdaInDefaultArgument.kt"
   },
@@ -14373,14 +14359,14 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/labeledThisReferences.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/loops.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/loops.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/multilevelBlocks.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/multilevelBlocks.kt"
   },
@@ -14390,14 +14376,14 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/realIteratorFoldl.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/realStringEscape.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/realStringEscape.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/realStringRepeat.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/realStringRepeat.kt"
   },
@@ -14431,8 +14417,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/recursiveInnerFunction.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/returnIf.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/returnIf.kt"
   },
@@ -14455,8 +14441,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/returnInIfInFinally.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/returnInParentheses.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "other syntax (at 'foo')",
+   "detail": "expected ')' (at 'foo')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/returnInParentheses.kt"
   },
@@ -14467,50 +14453,49 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/returnInTry.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/shortCircuit.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'maybe' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/shortCircuit.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/simpleBlock.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/simpleBlock.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/simpleReturn.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/simpleReturn.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/simpleReturnWithElse.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/simpleReturnWithElse.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/sum.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "other: unsupported call",
+   "detail": "unsupported call",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/sum.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailCallInBlockInParentheses.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "unknown Unit (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailCallInBlockInParentheses.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailCallInParentheses.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailCallInParentheses.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailCallInRun.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailCallInRun.kt"
   },
@@ -14539,38 +14524,38 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/thisReferences.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/unitBlocks.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/unitBlocks.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/whenWithCondition.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithCondition.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/whenWithInRange.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "other syntax (at '3')",
+   "detail": "expected '->' (at '3')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithInRange.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/whenWithIs.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "strings / templates",
+   "detail": "expected '->' (at 'String')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithIs.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/whenWithLambda.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithLambda.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/whenWithoutCondition.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithoutCondition.kt"
   },
@@ -14698,8 +14683,8 @@
    "upstream": "compiler/testData/codegen/box/elvis/genericNull.kt"
   },
   "box/box/elvis/kt24209.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other: unknown method Holder.value()",
+   "detail": "unknown method Holder.value()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/elvis/kt24209.kt"
   },
@@ -14781,8 +14766,8 @@
    "upstream": "compiler/testData/codegen/box/enum/companionObjectInEnum.kt"
   },
   "box/box/enum/constructorWithReordering.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: named arguments are not supported",
+   "detail": "named arguments are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/constructorWithReordering.kt"
   },
@@ -15099,8 +15084,8 @@
    "upstream": "compiler/testData/codegen/box/enum/kt2350.kt"
   },
   "box/box/enum/kt38540.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: unknown type Set<Node>",
+   "detail": "unknown type Set<Node>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt38540.kt"
   },
@@ -15353,9 +15338,8 @@
    "upstream": "compiler/testData/codegen/box/equivalentCalls/localEquivalentWins.kt"
   },
   "box/box/escapeAnalysis/recursion.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method A.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/escapeAnalysis/recursion.kt"
   },
   "box/box/escapeAnalysis/stack_array.kt": {
@@ -15607,8 +15591,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/kt56215.kt"
   },
   "box/box/evaluate/kt9443.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'to')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'menuId' of ImplClass hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/kt9443.kt"
   },
@@ -15737,9 +15721,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/thisPlusString.kt"
   },
   "box/box/evaluate/thisPlusStringWithObject.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Test.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/evaluate/thisPlusStringWithObject.kt"
   },
   "box/box/evaluate/ubyteOperations.kt": {
@@ -16096,8 +16079,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3646.kt"
   },
   "box/box/extensionFunctions/kt3969.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3969.kt"
   },
@@ -16253,8 +16236,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithAnonymousExtensionFunWithTypeParam.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithExtensionAsReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithExtensionAsReceiver.kt"
   },
@@ -17530,8 +17513,8 @@
    "upstream": "compiler/testData/codegen/box/function/minus_eq.kt"
   },
   "box/box/function/named.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/named.kt"
   },
@@ -17757,9 +17740,8 @@
    "upstream": "compiler/testData/codegen/box/functions/functionExpression/underscoreParameters.kt"
   },
   "box/box/functions/infixRecursiveCall.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'infix')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/infixRecursiveCall.kt"
   },
   "box/box/functions/invoke/castFunctionToExtension.kt": {
@@ -17787,8 +17769,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt"
   },
   "box/box/functions/invoke/invoke.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/invoke.kt"
   },
@@ -17810,8 +17792,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3190.kt"
   },
   "box/box/functions/invoke/kt3297.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'infix')",
+   "category": "other: 'or' needs matching Int/Long operands",
+   "detail": "'or' needs matching Int/Long operands",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3297.kt"
   },
@@ -17822,8 +17804,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3450getAndInvoke.kt"
   },
   "box/box/functions/invoke/kt3631invokeOnString.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3631invokeOnString.kt"
   },
@@ -17852,8 +17834,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt1038.kt"
   },
   "box/box/functions/kt1199.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt1199.kt"
   },
@@ -18183,20 +18165,18 @@
    "upstream": "compiler/testData/codegen/box/functions/overloadByInterfaceType.kt"
   },
   "box/box/functions/prefixRecursiveCall.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='FAIL\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/functions/prefixRecursiveCall.kt"
   },
   "box/box/functions/recursiveCompareTo.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/recursiveCompareTo.kt"
   },
   "box/box/functions/recursiveIncrementCall.kt": {
    "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/recursiveIncrementCall.kt"
   },
@@ -18492,8 +18472,8 @@
    "upstream": "compiler/testData/codegen/box/increment/classWithGetSet.kt"
   },
   "box/box/increment/extOnLong.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Long$get' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/extOnLong.kt"
   },
@@ -18534,14 +18514,14 @@
    "upstream": "compiler/testData/codegen/box/increment/postfixIncrementDoubleSmartCast.kt"
   },
   "box/box/increment/postfixIncrementOnClass.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/postfixIncrementOnClass.kt"
   },
   "box/box/increment/postfixIncrementOnClassSmartCast.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/postfixIncrementOnClassSmartCast.kt"
   },
@@ -18558,26 +18538,26 @@
    "upstream": "compiler/testData/codegen/box/increment/postfixIncrementOnSmartCast.kt"
   },
   "box/box/increment/postfixNullableClassIncrement.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/postfixNullableClassIncrement.kt"
   },
   "box/box/increment/postfixNullableIncrement.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/postfixNullableIncrement.kt"
   },
   "box/box/increment/prefixIncrementOnClass.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/prefixIncrementOnClass.kt"
   },
   "box/box/increment/prefixIncrementOnClassSmartCast.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/prefixIncrementOnClassSmartCast.kt"
   },
@@ -18588,14 +18568,14 @@
    "upstream": "compiler/testData/codegen/box/increment/prefixIncrementOnSmartCast.kt"
   },
   "box/box/increment/prefixNullableClassIncrement.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/prefixNullableClassIncrement.kt"
   },
   "box/box/increment/prefixNullableIncrement.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/prefixNullableIncrement.kt"
   },
@@ -18635,8 +18615,8 @@
    "upstream": "compiler/testData/codegen/box/inference/capturedStarProjection.kt"
   },
   "box/box/inference/capturedTypeAsLambdaInputType.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/capturedTypeAsLambdaInputType.kt"
   },
@@ -19802,8 +19782,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/substituteStubTypeIntolambdaParameterDescriptor.kt"
   },
   "box/box/inference/pcla/substitutelambdaExtensionReceiverType.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "generics",
+   "detail": "expected ':' (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/substitutelambdaExtensionReceiverType.kt"
   },
@@ -20668,8 +20648,8 @@
    "upstream": "compiler/testData/codegen/box/inline/metadataForPublicFunction.kt"
   },
   "box/box/inline/multiDeclaration.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/multiDeclaration.kt"
   },
@@ -20679,8 +20659,8 @@
    "upstream": "compiler/testData/codegen/box/inline/multipleInheritanceClash.kt"
   },
   "box/box/inline/nameBasedDestructuring.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "other syntax (at 'fullId')",
+   "detail": "expected ')' (at 'fullId')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/nameBasedDestructuring.kt"
   },
@@ -21676,21 +21656,18 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMerging.kt"
   },
   "box/box/inlineClasses/callableRefClassMergingGenerics.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method W.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='FAIL n3: null\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingGenerics.kt"
   },
   "box/box/inlineClasses/callableRefClassMergingNestedValueClass.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Outer.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "exit=-11 stdout='' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingNestedValueClass.kt"
   },
   "box/box/inlineClasses/callableRefClassMergingNullable.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method W.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "exit=-11 stdout='' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingNullable.kt"
   },
   "box/box/inlineClasses/callableRefClassMergingPrimitives.kt": {
@@ -22569,15 +22546,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/customIterator.kt"
   },
   "box/box/inlineClasses/defaultFunctionsFromAnyForInlineClass.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Foo.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='Fail 4\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultFunctionsFromAnyForInlineClass.kt"
   },
   "box/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Foo$Int.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='Fail 4\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/defaultInterfaceMethodsInInlineClass.kt": {
@@ -22800,9 +22775,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/emptyConstructorForInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/equalityChecksGenericValueClassWrappingValueClass.kt": {
-   "category": "other: unknown method IntValue.equals()",
-   "detail": "unknown method IntValue.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksGenericValueClassWrappingValueClass.kt"
   },
   "box/box/inlineClasses/equalityChecksInlineClassNonNull.kt": {
@@ -23693,9 +23667,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassValuesInsideStrings.kt"
   },
   "box/box/inlineClasses/inlineClassValuesInsideStringsGeneric.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method AugmentedAndAsAny.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassValuesInsideStringsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithCustomEquals.kt": {
@@ -23711,15 +23684,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "category": "other: unknown method Z.hashCode()",
-   "detail": "unknown method Z.hashCode()",
-   "status": "UNSUPPORTED",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1878258592\\n'",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "category": "other: unknown method Z$Int.hashCode()",
-   "detail": "unknown method Z$Int.hashCode()",
-   "status": "UNSUPPORTED",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 806095904\\n'",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassesAsInlineFunParameters.kt": {
@@ -24378,8 +24349,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt45084Generic.kt"
   },
   "box/box/inlineClasses/kt45991.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: unknown type Result<Int>",
+   "detail": "unknown type Result<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt45991.kt"
   },
@@ -24763,15 +24734,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/referToUnderlyingPropertyInsideInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/referToUnderlyingPropertyOfInlineClass.kt": {
-   "category": "other: unknown method Int.hashCode()",
-   "detail": "unknown method Int.hashCode()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/referToUnderlyingPropertyOfInlineClass.kt"
   },
   "box/box/inlineClasses/referToUnderlyingPropertyOfInlineClassGeneric.kt": {
-   "category": "other: unknown method Int.hashCode()",
-   "detail": "unknown method Int.hashCode()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/referToUnderlyingPropertyOfInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/removeInInlineCollectionOfInlineClassAsInt.kt": {
@@ -25098,14 +25067,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/result.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/resultAny.kt": {
-   "category": "other syntax (at 'to')",
-   "detail": "expected end of statement (at 'to')",
+   "category": "other syntax (at 'FunIFace')",
+   "detail": "expected '(' (at 'FunIFace')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/resultAny.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/resultAnyGeneric.kt": {
-   "category": "other syntax (at 'to')",
-   "detail": "expected end of statement (at 'to')",
+   "category": "other syntax (at 'FunIFace')",
+   "detail": "expected '(' (at 'FunIFace')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/resultAnyGeneric.kt"
   },
@@ -25202,14 +25171,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/result.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/resultAny.kt": {
-   "category": "other syntax (at 'to')",
-   "detail": "expected end of statement (at 'to')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/resultAny.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/resultAnyGeneric.kt": {
-   "category": "other syntax (at 'to')",
-   "detail": "expected end of statement (at 'to')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/resultAnyGeneric.kt"
   },
@@ -26418,8 +26387,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/stringFromCollection.kt"
   },
   "box/box/intrinsics/throwableParamOrder.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: unknown type Throwable",
+   "detail": "unknown type Throwable",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/throwableParamOrder.kt"
   },
@@ -26843,8 +26812,8 @@
    "upstream": "compiler/testData/codegen/box/labels/controlLabelClashesWithFuncitonName.kt"
   },
   "box/box/labels/infixCallLabelling.kt": {
-   "category": "other syntax (at 'myMap')",
-   "detail": "expected end of statement (at 'myMap')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/labels/infixCallLabelling.kt"
   },
@@ -27032,9 +27001,8 @@
    "upstream": "compiler/testData/codegen/box/lambda/lambda_kt80285.kt"
   },
   "box/box/lambda/lambda_kt83995.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lambda/lambda_kt83995.kt"
   },
   "box/box/lateinit/globalIsInitialized.kt": {
@@ -27162,8 +27130,8 @@
    "upstream": "compiler/testData/codegen/box/lazyCodegen/optimizations/negateTrueVar.kt"
   },
   "box/box/lazyCodegen/optimizations/noOptimization.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '!!')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lazyCodegen/optimizations/noOptimization.kt"
   },
@@ -27643,8 +27611,8 @@
    "upstream": "compiler/testData/codegen/box/mixedNamedPosition/defaults.kt"
   },
   "box/box/mixedNamedPosition/simple.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/mixedNamedPosition/simple.kt"
   },
@@ -27673,8 +27641,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/SimpleVals.kt"
   },
   "box/box/multiDecl/SimpleValsExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/SimpleValsExtensions.kt"
   },
@@ -27715,8 +27683,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/VarCapturedInFunctionLiteral.kt"
   },
   "box/box/multiDecl/VarCapturedInLocalFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/VarCapturedInLocalFunction.kt"
   },
@@ -27727,8 +27695,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/VarCapturedInObjectLiteral.kt"
   },
   "box/box/multiDecl/component.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/component.kt"
   },
@@ -27739,8 +27707,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentExtensions.kt"
   },
@@ -27763,14 +27731,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -27793,8 +27761,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentExtensions.kt"
   },
@@ -27835,8 +27803,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt"
   },
@@ -27859,14 +27827,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -27883,14 +27851,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -27913,8 +27881,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt"
   },
@@ -27937,14 +27905,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -27967,8 +27935,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -27985,14 +27953,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -28009,14 +27977,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -28033,8 +28001,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/kt9828_hashMap.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "strings / templates",
+   "detail": "HashMap keys must be Int/Long/Char, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/kt9828_hashMap.kt"
   },
@@ -28045,14 +28013,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/nameBasedDestructuringFullForm.kt"
   },
   "box/box/multiDecl/nameBasedDestructuringShortForm.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/nameBasedDestructuringShortForm.kt"
   },
   "box/box/multiDecl/nameBasedDestructuringUnderscoreWithRenaming.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/nameBasedDestructuringUnderscoreWithRenaming.kt"
   },
@@ -29166,8 +29134,8 @@
    "upstream": "compiler/testData/codegen/box/multiplatform/k2/starImportOfExpectEnumWithActualTypeAlias.kt"
   },
   "box/box/nameBasedDestructuring/fakeOverridenFunctionReturnsDataClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "other syntax (at 'fullId')",
+   "detail": "expected ')' (at 'fullId')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/fakeOverridenFunctionReturnsDataClass.kt"
   },
@@ -29195,14 +29163,14 @@
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/fullFormGenericBounds.kt"
   },
   "box/box/nameBasedDestructuring/fullFormLoopsAndLambdas.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "other syntax (at 'key')",
+   "detail": "expected ')' (at 'key')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/fullFormLoopsAndLambdas.kt"
   },
   "box/box/nameBasedDestructuring/shortForm.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/shortForm.kt"
   },
@@ -29218,14 +29186,14 @@
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/shortFormFromSmartCast.kt"
   },
   "box/box/nameBasedDestructuring/shortFormGenericBounds.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/shortFormGenericBounds.kt"
   },
   "box/box/nameBasedDestructuring/shortFormLoopsAndLambdas.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ')' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/shortFormLoopsAndLambdas.kt"
   },
@@ -29672,8 +29640,8 @@
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToPropertyImportedFromObject.kt"
   },
   "box/box/objects/compoundAssignmentToPropertyWithQualifier.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToPropertyWithQualifier.kt"
   },
@@ -30038,8 +30006,8 @@
    "upstream": "compiler/testData/codegen/box/objects/thisRefToObjectInNestedClassConstructorCall.kt"
   },
   "box/box/objects/useAnonymousObjectAsIterator.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useAnonymousObjectAsIterator.kt"
   },
@@ -30081,7 +30049,7 @@
   },
   "box/box/operatorConventions/assignmentOperations.kt": {
    "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/assignmentOperations.kt"
   },
@@ -30098,8 +30066,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/comparable.kt"
   },
   "box/box/operatorConventions/compareTo/customCompareTo.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/customCompareTo.kt"
   },
@@ -30116,14 +30084,14 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/doubleLong.kt"
   },
   "box/box/operatorConventions/compareTo/extensionArray.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/extensionArray.kt"
   },
   "box/box/operatorConventions/compareTo/extensionObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'compareTo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/extensionObject.kt"
   },
@@ -30152,20 +30120,20 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/longInt.kt"
   },
   "box/box/operatorConventions/genericArrayAccessCall.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of Inv1; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/genericArrayAccessCall.kt"
   },
   "box/box/operatorConventions/incDecOnObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/incDecOnObject.kt"
   },
   "box/box/operatorConventions/infixFunctionOverBuiltinMember.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'infix')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Int$rem' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/infixFunctionOverBuiltinMember.kt"
   },
@@ -30229,8 +30197,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/overloadedSet.kt"
   },
   "box/box/operatorConventions/plusAssignWithComplexRHS.kt": {
-   "category": "other syntax (at 'to')",
-   "detail": "expected end of statement (at 'to')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusAssignWithComplexRHS.kt"
   },
@@ -30374,9 +30342,8 @@
    "upstream": "compiler/testData/codegen/box/platformTypes/primitives/equals.kt"
   },
   "box/box/platformTypes/primitives/hashCode.kt": {
-   "category": "other: unknown method Int.hashCode()",
-   "detail": "unknown method Int.hashCode()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/platformTypes/primitives/hashCode.kt"
   },
   "box/box/platformTypes/primitives/inc.kt": {
@@ -30712,14 +30679,14 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2251.kt"
   },
   "box/box/primitiveTypes/kt2269.kt": {
-   "category": "other: unknown method Byte.hashCode()",
-   "detail": "unknown method Byte.hashCode()",
+   "category": "other: unknown method Int.equals()",
+   "detail": "unknown method Int.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2269.kt"
   },
   "box/box/primitiveTypes/kt2269NotOptimizable.kt": {
-   "category": "other: unknown method Byte.hashCode()",
-   "detail": "unknown method Byte.hashCode()",
+   "category": "other: unknown method Int.equals()",
+   "detail": "unknown method Int.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2269NotOptimizable.kt"
   },
@@ -30877,8 +30844,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt753.kt"
   },
   "box/box/primitiveTypes/kt756.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt756.kt"
   },
@@ -31021,15 +30988,14 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/virtualCallToCustomNumber.kt"
   },
   "box/box/private/arrayConvention.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'get' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/private/arrayConvention.kt"
   },
   "box/box/private/kt9855.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/private/kt9855.kt"
   },
   "box/box/privateConstructors/base.kt": {
@@ -32156,14 +32122,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inCharSequence.kt"
   },
   "box/box/ranges/contains/inComparableRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inComparableRange.kt"
   },
   "box/box/ranges/contains/inCustomObjectRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inCustomObjectRange.kt"
   },
@@ -32174,8 +32140,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inDoubleRangeLiteralVsComparableRangeLiteral.kt"
   },
   "box/box/ranges/contains/inExtensionRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other: unknown type ClosedRange<Int>",
+   "detail": "unknown type ClosedRange<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inExtensionRange.kt"
   },
@@ -32244,8 +32210,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeLiteralComposition.kt"
   },
   "box/box/ranges/contains/inRangeWithCustomContains.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "interfaces",
+   "detail": "unknown interface Comparable$Value",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithCustomContains.kt"
   },
@@ -32310,8 +32276,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/intInShortRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/kt20106.kt": {
-   "category": "other syntax (at 'to')",
-   "detail": "expected end of statement (at 'to')",
+   "category": "unknown setOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'setOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/kt20106.kt"
   },
@@ -32328,8 +32294,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/nullableInPrimitiveRange.kt"
   },
   "box/box/ranges/contains/rangeContainsString.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Int, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/rangeContainsString.kt"
   },
@@ -32370,8 +32336,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/ulongInULongRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/userDefinedContainsExtension.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$ClosedRange$contains' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/userDefinedContainsExtension.kt"
   },
@@ -32776,8 +32742,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInCharSequenceLengthIncreasedInLoopBody.kt"
   },
   "box/box/ranges/forInCharSequenceWithCustomIterator.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInCharSequenceWithCustomIterator.kt"
   },
@@ -32800,8 +32766,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInCustomIterable.kt"
   },
   "box/box/ranges/forInDoubleRangeWithCustomIterator.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInDoubleRangeWithCustomIterator.kt"
   },
@@ -32847,14 +32813,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forNullableIntInDownTo.kt"
   },
   "box/box/ranges/forInFloatRangeWithCustomIterator.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInFloatRangeWithCustomIterator.kt"
   },
   "box/box/ranges/forInIndices/forInArrayListIndices.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInArrayListIndices.kt"
   },
@@ -33611,8 +33577,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleSteppedRange.kt"
   },
   "box/box/ranges/multiAssignmentIterationOverIntRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/multiAssignmentIterationOverIntRange.kt"
   },
@@ -37431,8 +37397,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt6434.kt"
   },
   "box/box/regressions/kt6434_2.kt": {
-   "category": "other syntax (at 'to')",
-   "detail": "expected end of statement (at 'to')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt6434_2.kt"
   },
@@ -37477,8 +37443,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/lambdaAsLastExpressionInLambda.kt"
   },
   "box/box/regressions/lambdaPostponeConstruction.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected top-level token (at '->')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/lambdaPostponeConstruction.kt"
   },
@@ -37934,8 +37900,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt52743.kt"
   },
   "box/box/safeCall/parenthesizedSafeCallsAndOperators.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/parenthesizedSafeCallsAndOperators.kt"
   },
@@ -38548,8 +38514,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/invokeRecieverSmartcastK1.kt"
   },
   "box/box/smartCasts/invokeRecieverSmartcastK2.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "other syntax (at 'result')",
+   "detail": "expected ')' (at 'result')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/invokeRecieverSmartcastK2.kt"
   },
@@ -39114,7 +39080,7 @@
   },
   "box/box/strings/kt889.kt": {
    "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "detail": "operator on non-numeric types Int, String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/kt889.kt"
   },
@@ -39172,8 +39138,8 @@
    "upstream": "compiler/testData/codegen/box/strings/stringPlusOnlyWorksOnString.kt"
   },
   "box/box/strings/stringPlusOverride.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/stringPlusOverride.kt"
   },
@@ -41159,8 +41125,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/kt6192.kt"
   },
   "box/box/vararg/kt796_797.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt796_797.kt"
   },
@@ -41187,8 +41153,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/varargInFunParam.kt"
   },
   "box/box/vararg/varargInTailrec.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "other syntax (at 'items')",
+   "detail": "expected ':' (at 'items')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/varargInTailrec.kt"
   },
@@ -41414,8 +41380,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/operatorGet.kt"
   },
   "box/box/versionOverloads/operatorInvoke.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected top-level token (at 'operator')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/operatorInvoke.kt"
   },
@@ -41449,8 +41415,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/suspend.kt"
   },
   "box/box/versionOverloads/tailrec.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'tailrec')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/tailrec.kt"
   },
@@ -41770,15 +41736,13 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/manyWhensWithinClass.kt"
   },
   "box/box/when/enumOptimization/nestedWhenInCondition.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ABCD.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/nestedWhenInCondition.kt"
   },
   "box/box/when/enumOptimization/nestedWhenInResult.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ABCD.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/nestedWhenInResult.kt"
   },
   "box/box/when/enumOptimization/nonConstantEnum.kt": {
