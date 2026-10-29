@@ -1,0 +1,98 @@
+{
+ "suite": "nk",
+ "bench": "closures",
+ "runs": [
+  {
+   "run": "docs-main-1",
+   "date": "2026-10-29T23:27:05+02:00",
+   "commit": "2e8e4f5b4cd3a9105050c48b1e96d5207fb1a890",
+   "dirty": false,
+   "ref": "origin/main",
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 46.02 35.77 24.59 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 84.778,
+    "raw_ns": "84672750,83685709,85974791,83514916,89213500",
+    "flags": ""
+   }
+  },
+  {
+   "run": "docs-pr-1",
+   "date": "2026-10-29T23:27:26+02:00",
+   "commit": "313f648d9dd9cdb0d9635fd7f725c8b9416bb64a",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 35.49 34.03 24.22 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 84.5,
+    "raw_ns": "85170959,84914459,83067250,85304375,83414959",
+    "flags": ""
+   }
+  },
+  {
+   "run": "docs-main-2",
+   "date": "2026-10-29T23:28:16+02:00",
+   "commit": "2e8e4f5b4cd3a9105050c48b1e96d5207fb1a890",
+   "dirty": false,
+   "ref": "origin/main",
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 27.49 31.80 23.94 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 83.34,
+    "raw_ns": "84622625,84283417,81991208,82550625,83186542",
+    "flags": ""
+   }
+  },
+  {
+   "run": "docs-pr-2",
+   "date": "2026-10-29T23:28:37+02:00",
+   "commit": "313f648d9dd9cdb0d9635fd7f725c8b9416bb64a",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 25.19 30.89 23.84 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 84.397,
+    "raw_ns": "86707291,85389041,84026500,82910792,83774000",
+    "flags": ""
+   }
+  }
+ ]
+}

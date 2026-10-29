@@ -1,0 +1,18 @@
+# docs-main-1 origin/main 2026-10-29 23:26 EET load: { 49.07 36.19 24.67 }
+sum 3.728
+alloc 75.276
+bigheap 121.04
+closures 84.778
+cycles 45.126
+dispatch 97.412
+file 51.866
+free 51.059
+hashmap 70.52
+lru 94.205
+matmul 10.137
+nbody 72.323
+recursion 6.189
+refpass 145.124
+sort 61.795
+strings 32.239
+trees 121.311
