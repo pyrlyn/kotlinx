@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 5,
   "MISCOMPILE": 39,
   "N/A": 2984,
-  "PASS": 1126,
-  "UNSUPPORTED": 4321
+  "PASS": 1130,
+  "UNSUPPORTED": 4317
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -358,8 +358,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/extensionInClass.kt"
   },
   "box/box/argumentOrder/kt17691WithEnabledFeature.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt17691WithEnabledFeature.kt"
   },
@@ -818,8 +818,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt42932.kt"
   },
   "box/box/arrays/kt4348.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ']' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt4348.kt"
   },
@@ -836,8 +836,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt47483.kt"
   },
   "box/box/arrays/kt503.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'array' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt503.kt"
   },
@@ -1000,8 +1000,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/nonNullArray.kt"
   },
   "box/box/arrays/primitiveArrays.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '*')",
+   "category": "types: BooleanArray",
+   "detail": "unknown type BooleanArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/primitiveArrays.kt"
   },
@@ -1178,8 +1178,8 @@
    "upstream": "compiler/testData/codegen/box/basics/safe_cast.kt"
   },
   "box/box/basics/spread_operator_0.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '*')",
+   "category": "other: unknown unary *",
+   "detail": "unknown unary *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/spread_operator_0.kt"
   },
@@ -1673,17 +1673,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup02znlhip/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup02znlhip/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup6p20li_c/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup6p20li_c/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupdz59f84u/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupdz59f84u/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqlw7jun2/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqlw7jun2/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqknnrhe8/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqknnrhe8/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup5tia_1r4/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup5tia_1r4/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -2614,8 +2614,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/property.kt"
   },
   "box/box/bridges/substitutionInSuperClass/simple.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other: foo expects 2 arguments",
+   "detail": "foo expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/simple.kt"
   },
@@ -2809,8 +2809,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/varargBridge1.kt"
   },
   "box/box/bridges/varargBridge2.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/varargBridge2.kt"
   },
@@ -2827,14 +2827,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedArrayOf.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedSecondArgArray.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedSecondArgArray.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedSecondArgTypeVariable.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedSecondArgTypeVariable.kt"
   },
@@ -2845,20 +2845,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedUlongArrayOf.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedVarargFunImportedFromObject.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedVarargFunImportedFromObject.kt"
   },
   "box/box/callableReference/adaptedReferences/bothWithCoercionToUnit.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/bothWithCoercionToUnit.kt"
   },
   "box/box/callableReference/adaptedReferences/boundReferences.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/boundReferences.kt"
   },
@@ -2915,8 +2915,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextTypeWithSam.kt"
   },
   "box/box/callableReference/adaptedReferences/defaultAfterVararg.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/defaultAfterVararg.kt"
   },
@@ -2927,8 +2927,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/defaultWithGenericExpectedType.kt"
   },
   "box/box/callableReference/adaptedReferences/emptyVarargAndDefault.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/emptyVarargAndDefault.kt"
   },
@@ -2985,20 +2985,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousExtensionFun.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariable.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariable.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableArrays.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableArrays.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableBoundaries.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableBoundaries.kt"
   },
@@ -3009,8 +3009,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableCallSites.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableReferencedFunctions.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other syntax (at 'val')",
+   "detail": "expected ':' (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableReferencedFunctions.kt"
   },
@@ -3058,8 +3058,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorWithVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/largeVararg.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/largeVararg.kt"
   },
@@ -3094,8 +3094,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/referenceToFakeOverrideWithTypeParameter.kt"
   },
   "box/box/callableReference/adaptedReferences/referenceToVarargWithDefaults.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/referenceToVarargWithDefaults.kt"
   },
@@ -3106,8 +3106,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/simpleDefaultArgument.kt"
   },
   "box/box/callableReference/adaptedReferences/simpleEmptyVararg.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/simpleEmptyVararg.kt"
   },
@@ -3263,8 +3263,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/suspendUnitConversion.kt"
   },
   "box/box/callableReference/adaptedReferences/unboundReferences.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/unboundReferences.kt"
   },
@@ -3281,32 +3281,32 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/unsignedArrayFactory.kt"
   },
   "box/box/callableReference/adaptedReferences/varargFromBaseClass.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargFromBaseClass.kt"
   },
   "box/box/callableReference/adaptedReferences/varargOverloads.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargOverloads.kt"
   },
   "box/box/callableReference/adaptedReferences/varargViewedAsArray.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargViewedAsArray.kt"
   },
   "box/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt"
   },
   "box/box/callableReference/adaptedReferences/varargWithDefaultValue.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargWithDefaultValue.kt"
   },
@@ -4363,8 +4363,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt37604.kt"
   },
   "box/box/callableReference/kt44483.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt44483.kt"
   },
@@ -4408,8 +4408,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt50172.kt"
   },
   "box/box/callableReference/kt51844.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt51844.kt"
   },
@@ -4674,8 +4674,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/twoRefsOneScope.kt"
   },
   "box/box/callableReference/varargOfUnsignedTypes.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/varargOfUnsignedTypes.kt"
   },
@@ -4969,8 +4969,8 @@
    "upstream": "compiler/testData/codegen/box/casts/literalExpressionAsGenericArgument/unaryExpressionCast.kt"
   },
   "box/box/casts/literalExpressionAsGenericArgument/vararg.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected ArrayList<Long>, found ArrayList<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/literalExpressionAsGenericArgument/vararg.kt"
   },
@@ -6529,8 +6529,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/arrayOperatorOf.kt"
   },
   "box/box/collectionLiterals/arraysOperatorOfSpread.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other: overloads are not supported: take",
+   "detail": "overloads are not supported: take",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/arraysOperatorOfSpread.kt"
   },
@@ -6541,20 +6541,20 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/companionBlockOf.kt"
   },
   "box/box/collectionLiterals/genericCollection.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/genericCollection.kt"
   },
   "box/box/collectionLiterals/multipleOfOverloads.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/multipleOfOverloads.kt"
   },
   "box/box/collectionLiterals/nonGenericCollection.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/nonGenericCollection.kt"
   },
@@ -6570,8 +6570,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/primitiveArraysOperatorOf.kt"
   },
   "box/box/collectionLiterals/resolvesToOperator.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other syntax (at 'myAssert')",
+   "detail": "expected end of statement (at 'myAssert')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/resolvesToOperator.kt"
   },
@@ -6581,14 +6581,14 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/sequenceOperatorOf.kt"
   },
   "box/box/collectionLiterals/stdlibCollections.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ')' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/stdlibCollections.kt"
   },
   "box/box/collectionLiterals/stdlibSequence.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/stdlibSequence.kt"
   },
@@ -15707,9 +15707,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/executionOrder.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAndSpreadOperator.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAndSpreadOperator.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAsASupertypeOfValueClass.kt": {
@@ -17711,9 +17710,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt2716.kt"
   },
   "box/box/functions/kt2739.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/kt2739.kt"
   },
   "box/box/functions/kt2929.kt": {
@@ -17722,8 +17720,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt2929.kt"
   },
   "box/box/functions/kt3214.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "unknown Unit (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt3214.kt"
   },
@@ -18276,14 +18274,14 @@
    "upstream": "compiler/testData/codegen/box/increment/classNaryGetSet.kt"
   },
   "box/box/increment/classVarargGetSet.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ']' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/classVarargGetSet.kt"
   },
   "box/box/increment/classVarargGetSetEvaluationOrder.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ']' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/classVarargGetSetEvaluationOrder.kt"
   },
@@ -18658,8 +18656,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt41164.kt"
   },
   "box/box/inference/pcla/issues/kt42139.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'select' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt42139.kt"
   },
@@ -18924,8 +18922,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt59798.kt"
   },
   "box/box/inference/pcla/issues/kt60291a.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt60291a.kt"
   },
@@ -18966,8 +18964,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt63733.kt"
   },
   "box/box/inference/pcla/issues/kt63840a.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt63840a.kt"
   },
@@ -20696,14 +20694,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClass/secondaryConstructorWithGenerics.kt"
   },
   "box/box/inlineClasses/UIntArraySortExample.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "interfaces",
+   "detail": "unknown interface Iterator$UInt",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/UIntArraySortExample.kt"
   },
   "box/box/inlineClasses/UIntArraySortExampleGeneric.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "interfaces",
+   "detail": "unknown interface Iterator$UInt$Int$$",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/UIntArraySortExampleGeneric.kt"
   },
@@ -21391,14 +21389,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/unrelatedGenericsGeneric.kt"
   },
   "box/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSet.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other: unknown unary *",
+   "detail": "unknown unary *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSet.kt"
   },
   "box/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSetGeneric.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other: unknown unary *",
+   "detail": "unknown unary *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSetGeneric.kt"
   },
@@ -23443,12 +23441,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789472\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1879837792\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1611402336\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531232\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -24259,26 +24257,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/overridingFunCallingPrivateFunGeneric.kt"
   },
   "box/box/inlineClasses/passInlineClassAsVararg.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other: unknown property UInt.value",
+   "detail": "unknown property UInt.value",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/passInlineClassAsVararg.kt"
   },
   "box/box/inlineClasses/passInlineClassAsVarargGeneric.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected UInt, found UInt$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/passInlineClassAsVarargGeneric.kt"
   },
   "box/box/inlineClasses/passInlineClassWithSpreadOperatorToVarargs.kt": {
    "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "detail": "spread mixed with other vararg arguments is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/passInlineClassWithSpreadOperatorToVarargs.kt"
   },
   "box/box/inlineClasses/passInlineClassWithSpreadOperatorToVarargsGeneric.kt": {
    "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "detail": "spread mixed with other vararg arguments is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/passInlineClassWithSpreadOperatorToVarargsGeneric.kt"
   },
@@ -27310,14 +27308,14 @@
    "upstream": "compiler/testData/codegen/box/mixedNamedPosition/simple.kt"
   },
   "box/box/mixedNamedPosition/varargs.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other: parameter 'p1' passed twice",
+   "detail": "parameter 'p1' passed twice",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/mixedNamedPosition/varargs.kt"
   },
   "box/box/mixedNamedPosition/varargsEvaluationOrder.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other: parameter 'p1' passed twice",
+   "detail": "parameter 'p1' passed twice",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/mixedNamedPosition/varargsEvaluationOrder.kt"
   },
@@ -36709,8 +36707,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt5395.kt"
   },
   "box/box/regressions/kt57487.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt57487.kt"
   },
@@ -38829,8 +38827,8 @@
    "upstream": "compiler/testData/codegen/box/suspendConversion/suspendConversionOfAliasedType.kt"
   },
   "box/box/suspendConversion/suspendConversionOnVarargElements.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/suspendConversion/suspendConversionOnVarargElements.kt"
   },
@@ -39161,8 +39159,8 @@
    "upstream": "compiler/testData/codegen/box/topLevelPrivate/syntheticAccessor.kt"
   },
   "box/box/trailingComma/noDisambiguation.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other: overloads are not supported: foo",
+   "detail": "overloads are not supported: foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/trailingComma/noDisambiguation.kt"
   },
@@ -40005,7 +40003,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupe1v49xij/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupe1v49xij/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupu9u1wu11/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupu9u1wu11/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -40067,8 +40065,8 @@
    "upstream": "compiler/testData/codegen/box/unit/nullableUnitInWhen3.kt"
   },
   "box/box/unit/sillyThings.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "unknown Unit (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/sillyThings.kt"
   },
@@ -40371,80 +40369,78 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/whenByUnsigned.kt"
   },
   "box/box/vararg/boxingArgumentsForVararg.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/boxingArgumentsForVararg.kt"
   },
   "box/box/vararg/doNotCopyImmediatelyCreatedArrays.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other syntax (at 'f')",
+   "detail": "expected ')' (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/doNotCopyImmediatelyCreatedArrays.kt"
   },
   "box/box/vararg/emptyVarArg.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/vararg/emptyVarArg.kt"
   },
   "box/box/vararg/evaluationOrder.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ']' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/evaluationOrder.kt"
   },
   "box/box/vararg/inlineClassArraysAsNamedArgumentInVararg.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "types: UShort",
+   "detail": "unknown type UShort",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/inlineClassArraysAsNamedArgumentInVararg.kt"
   },
   "box/box/vararg/kt10926.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of AllCollection; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt10926.kt"
   },
   "box/box/vararg/kt1978.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/vararg/kt1978.kt"
   },
   "box/box/vararg/kt37715.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt37715.kt"
   },
   "box/box/vararg/kt37779.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt37779.kt"
   },
   "box/box/vararg/kt581.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "unknown HashSet (stdlib API / unsupported decl)",
+   "detail": "unknown function 'HashSet'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt581.kt"
   },
   "box/box/vararg/kt6192.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "types: Float",
+   "detail": "unknown type Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt6192.kt"
   },
   "box/box/vararg/kt796_797.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Array$get' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt796_797.kt"
   },
   "box/box/vararg/referenceToContainsFromVarargParameter.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/referenceToContainsFromVarargParameter.kt"
   },
@@ -40459,20 +40455,20 @@
    "upstream": "compiler/testData/codegen/box/vararg/useSuspendFunResultAsVararg.kt"
   },
   "box/box/vararg/varargInFunParam.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '*')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected ArrayList<Int>, found IntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/varargInFunParam.kt"
   },
   "box/box/vararg/varargInTailrec.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "strings / templates",
+   "detail": "unknown function 'buildString'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/varargInTailrec.kt"
   },
   "box/box/vararg/varargsAndFunctionLiterals.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected IntArray, found ArrayList<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/varargsAndFunctionLiterals.kt"
   },
@@ -40757,8 +40753,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/varAndProtected.kt"
   },
   "box/box/versionOverloads/varargBeforeVersioned.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/varargBeforeVersioned.kt"
   },
@@ -45841,7 +45837,7 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz5xdkczf/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz5xdkczf/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup3owft90q/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup3owft90q/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },
@@ -45984,8 +45980,8 @@
    "upstream": "native/native.tests/testData/codegen/lower/tailrec.kt"
   },
   "native/native.tests/codegen/lower/vararg.kt": {
-   "category": "varargs",
-   "detail": "vararg parameters are not supported (at 'vararg')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/lower/vararg.kt"
   },

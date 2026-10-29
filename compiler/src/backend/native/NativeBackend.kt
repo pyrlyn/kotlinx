@@ -1539,12 +1539,35 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * arguments are substituted when simple) and, for methods, to members of [cls] through [recv].
      */
     private val normalized = HashMap<CallE, CallE>()
+
+    /** Packs the positional arguments of a `vararg` parameter into a list (`*xs` passes a list through). */
+    private fun packVararg(params: List<Param>, e: CallE): CallE {
+        val vi = params.indexOfFirst { it.vararg }
+        if (vi < 0) return e
+        val elemT = params[vi].type.args.single()
+        val named = e.args.filterIsInstance<NamedE>()
+        val pos = e.args.filter { it !is NamedE }
+        fun pack(items: List<E>): E {
+            if (items.size == 1 && items[0] is UnE && (items[0] as UnE).op == "*") return (items[0] as UnE).e
+            if (items.any { it is UnE && it.op == "*" }) fail("spread mixed with other vararg arguments is not supported")
+            // A generic element type (`vararg xs: T`) is inferred from the items.
+            val known = try { resolve(elemT); true } catch (x: CompileError) { false }
+            if (!known && items.isEmpty()) fail("empty generic vararg is not supported")
+            return CallE(NameE("arrayListOf").also { it.line = line }, if (known) listOf(elemT) else emptyList(), items, null).also { it.line = line }
+        }
+        val nv = named.firstOrNull { it.name == params[vi].name }
+        val newPos = if (nv != null) pos else if (pos.size <= vi) pos + pack(emptyList()) else pos.take(vi) + pack(pos.drop(vi))
+        val newNamed = named.map { if (it === nv) NamedE(it.name, pack(listOf(it.e))).also { x -> x.line = it.line } else it }
+        return CallE(e.callee, e.typeArgs, newPos + newNamed, e.lambda).also { it.line = e.line }
+    }
     private fun normalize(params: List<Param>, e: CallE, recv: E? = null, cls: ClassInfo? = null): CallE =
         normalized[e] ?: normalize0(params, e, recv, cls).also { normalized[e] = it }
 
-    private fun normalize0(params: List<Param>, e: CallE, recv: E? = null, cls: ClassInfo? = null): CallE {
+    private fun normalize0(params: List<Param>, e0: CallE, recv: E? = null, cls: ClassInfo? = null): CallE {
+        val e = packVararg(params, e0)
         val named = e.args.filterIsInstance<NamedE>()
         if (named.isEmpty() && allArgs(e).size >= params.size) return e
+        if (e !== e0 && named.isEmpty() && allArgs(e).size >= params.size) return e
         if (named.isEmpty() && params.none { it.default != null }) return e
         val slots = arrayOfNulls<E>(params.size)
         val pos = e.args.filter { it !is NamedE }
@@ -2261,7 +2284,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** Statically bound call of a class's own method. */
     private fun callMethod(r: Val, ci: ClassInfo, n: String, e0: CallE): Val {
         val ps = methodParams(ci, n)
-        if (ps != null && (e0.args.any { it is NamedE } || allArgs(e0).size < ps.size)) {
+        if (ps != null && (e0.args.any { it is NamedE } || allArgs(e0).size < ps.size || ps.any { it.vararg })) {
             if (r.v == "%this") return callMethod0(r, ci, n, normalize(ps, e0, NameE("this").also { it.line = line }, ci))
             // The receiver is visible to default arguments as `$recv` (a fixed name keeps [normalize]'s memo valid).
             scopes.add(Scope())

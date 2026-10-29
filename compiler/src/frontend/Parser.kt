@@ -478,9 +478,12 @@ class Parser(private val t: List<Tok>) {
         val params = nested(1) {
             val ps = ArrayList<Param>()
             while (!isOp(")")) {
-                while (peek().k == K.ID && (peek().s == "vararg" || peek().s == "noinline" || peek().s == "crossinline") && t[p + 1].k == K.ID) { if (peek().s == "vararg") fail("vararg parameters are not supported"); p++ }
-                val n = ident(); expectOp(":"); val ty = type()
-                ps.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); expr() } else null))
+                var va = false
+                while (peek().k == K.ID && (peek().s == "vararg" || peek().s == "noinline" || peek().s == "crossinline") && t[p + 1].k == K.ID) { if (peek().s == "vararg") va = true; p++ }
+                val n = ident(); expectOp(":"); val ty0 = type()
+                // `vararg xs: T` is a list parameter; calls pack their arguments (see the backend's normalize).
+                val ty = if (va) TypeRef("List", listOf(ty0), false) else ty0
+                ps.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); expr() } else null, va))
                 if (isOp(",")) next()
             }
             ps
@@ -756,7 +759,8 @@ class Parser(private val t: List<Tok>) {
         val a = nested(1) {
             val xs = ArrayList<E>()
             while (!isOp(")")) {
-                if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == "=") { val n = ident(); next(); xs.add(NamedE(n, expr())) } else xs.add(expr())
+                if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == "=") { val n = ident(); next(); xs.add(NamedE(n, if (isOp("*")) { val l = next().line; UnE("*", expr()).also { it.line = l } } else expr())) }
+                else if (isOp("*")) { val l = next().line; xs.add(UnE("*", expr()).also { it.line = l }) } else xs.add(expr())
                 if (isOp(",")) next()
             }
             xs
