@@ -288,11 +288,24 @@ fun <T> ArrayList<T>.withIndex(): ArrayList<IndexedValue<T>> { val r = ArrayList
 """
 private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex)\(|-=|\bin\b""")
 
+/** `indices` / `lastIndex` of lists, arrays and strings as extension properties. */
+const val INDICES = """
+val <T> ArrayList<T>.indices: IntRange get() = IntRange(0, size - 1)
+val <T> ArrayList<T>.lastIndex: Int get() = size - 1
+val <T> Array<T>.indices: IntRange get() = IntRange(0, size - 1)
+val <T> Array<T>.lastIndex: Int get() = size - 1
+val IntArray.indices: IntRange get() = IntRange(0, size - 1)
+val IntArray.lastIndex: Int get() = size - 1
+val String.indices: IntRange get() = IntRange(0, length - 1)
+val String.lastIndex: Int get() = length - 1
+"""
+private val INDICES_USE = Regex("""\.(indices|lastIndex)\b""")
+
 fun withPrelude(src: String, p: Program): Program {
-    val ranges = RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
+    val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
     val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src)
     if (!ranges && !exc && !pairs && !cmp && !lists) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "")
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (idx) INDICES else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },

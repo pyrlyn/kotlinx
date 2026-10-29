@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 40,
   "N/A": 2984,
-  "PASS": 1917,
-  "UNSUPPORTED": 3532
+  "PASS": 1941,
+  "UNSUPPORTED": 3508
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -517,9 +517,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/arraysOfInlineClass/accessArrayOfUnsigned.kt"
   },
   "box/box/arrays/arraysOfInlineClass/arrayOfInlineClassOfArrayOfInlineClass.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/arraysOfInlineClass/arrayOfInlineClassOfArrayOfInlineClass.kt"
   },
   "box/box/arrays/collectionAssignGetMultiIndex.kt": {
@@ -1304,8 +1303,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unit4.kt"
   },
   "box/box/bce/bceCases.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
+   "category": "other: unknown method IntProgression.withIndex()",
+   "detail": "unknown method IntProgression.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bce/bceCases.kt"
   },
@@ -1348,15 +1347,13 @@
    "upstream": "compiler/testData/codegen/box/bce/forEachIndexedTest.kt"
   },
   "box/box/bce/forEachIndicies.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/forEachIndicies.kt"
   },
   "box/box/bce/forIndiciesWithStep.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/forIndiciesWithStep.kt"
   },
   "box/box/bce/forRangeToSize.kt": {
@@ -9344,9 +9341,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_break_continue.kt"
   },
   "box/box/controlflow/for_loops_array_indices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_indices.kt"
   },
   "box/box/controlflow/for_loops_array_mutation.kt": {
@@ -22218,8 +22214,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/inlineClassSecondaryConstructorGeneric.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/kt26554.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
+   "category": "other: unknown method IntArray.fill()",
+   "detail": "unknown method IntArray.fill()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/kt26554.kt"
   },
@@ -23168,12 +23164,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269224992\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1878258464\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146693984\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645664\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25800,7 +25796,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1046b4def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x1047bb55f        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x102b30def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102c3755f        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -31233,9 +31229,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/evaluationOrderForUntilReversed.kt"
   },
   "box/box/ranges/contains/generated/arrayIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/arrayIndices.kt"
   },
   "box/box/ranges/contains/generated/charDownTo.kt": {
@@ -31265,9 +31260,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/charUntil.kt"
   },
   "box/box/ranges/contains/generated/collectionIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/collectionIndices.kt"
   },
   "box/box/ranges/contains/generated/doubleRangeTo.kt": {
@@ -32041,8 +32035,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInFloatRangeWithCustomIterator.kt"
   },
   "box/box/ranges/forInIndices/forInArrayListIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
+   "category": "strings / templates",
+   "detail": "HashMap keys must be Int/Long/Char, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInArrayListIndices.kt"
   },
@@ -32053,9 +32047,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCharSequenceIndices.kt"
   },
   "box/box/ranges/forInIndices/forInCharSequenceTypeParameterIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCharSequenceTypeParameterIndices.kt"
   },
   "box/box/ranges/forInIndices/forInCollectionImplicitReceiverIndices.kt": {
@@ -32065,33 +32058,28 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCollectionImplicitReceiverIndices.kt"
   },
   "box/box/ranges/forInIndices/forInCollectionIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCollectionIndices.kt"
   },
   "box/box/ranges/forInIndices/forInCollectionTypeParameterIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCollectionTypeParameterIndices.kt"
   },
   "box/box/ranges/forInIndices/forInListIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInListIndices.kt"
   },
   "box/box/ranges/forInIndices/forInListIndicesBreak.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInListIndicesBreak.kt"
   },
   "box/box/ranges/forInIndices/forInListIndicesContinue.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInListIndicesContinue.kt"
   },
   "box/box/ranges/forInIndices/forInNonOptimizedIndices.kt": {
@@ -32101,15 +32089,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInNonOptimizedIndices.kt"
   },
   "box/box/ranges/forInIndices/forInObjectArrayIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInObjectArrayIndices.kt"
   },
   "box/box/ranges/forInIndices/forInPrimitiveArrayIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInPrimitiveArrayIndices.kt"
   },
   "box/box/ranges/forInIndices/forNullableIntInArrayIndices.kt": {
@@ -32130,15 +32116,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/indexOfLast.kt"
   },
   "box/box/ranges/forInIndices/kt12983_forInGenericArrayIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInGenericArrayIndices.kt"
   },
   "box/box/ranges/forInIndices/kt12983_forInGenericCollectionIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInGenericCollectionIndices.kt"
   },
   "box/box/ranges/forInIndices/kt12983_forInSpecificArrayIndices.kt": {
@@ -32148,9 +32132,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInSpecificArrayIndices.kt"
   },
   "box/box/ranges/forInIndices/kt12983_forInSpecificCollectionIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInSpecificCollectionIndices.kt"
   },
   "box/box/ranges/forInIndices/kt13241_Array.kt": {
@@ -32160,9 +32143,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt13241_Array.kt"
   },
   "box/box/ranges/forInIndices/kt13241_CharSequence.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt13241_CharSequence.kt"
   },
   "box/box/ranges/forInIndices/kt13241_Collection.kt": {
@@ -32172,9 +32154,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt13241_Collection.kt"
   },
   "box/box/ranges/forInIndices/kt43159_ArrayUpperBound.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt43159_ArrayUpperBound.kt"
   },
   "box/box/ranges/forInIndices/kt43159_GenericArray.kt": {
@@ -32199,8 +32180,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInDownToWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInIndicesWithIndex.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
+   "category": "other: unknown method IntRange.withIndex()",
+   "detail": "unknown method IntRange.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInIndicesWithIndex.kt"
   },
@@ -32299,21 +32280,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/ForInReversedReversedRange.kt"
   },
   "box/box/ranges/forInReversed/forInReversedArrayIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedArrayIndices.kt"
   },
   "box/box/ranges/forInReversed/forInReversedCharSequenceIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedCharSequenceIndices.kt"
   },
   "box/box/ranges/forInReversed/forInReversedCollectionIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedCollectionIndices.kt"
   },
   "box/box/ranges/forInReversed/forInReversedDownTo.kt": {
@@ -32352,9 +32330,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedRangeLiteralWithNonConstBounds.kt"
   },
   "box/box/ranges/forInReversed/forInReversedReversedArrayIndices.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedReversedArrayIndices.kt"
   },
   "box/box/ranges/forInReversed/forInReversedReversedDownTo.kt": {
@@ -36087,9 +36064,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt79516.kt"
   },
   "box/box/regressions/kt998.kt": {
-   "category": "other: unknown property indices",
-   "detail": "unknown property indices",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/kt998.kt"
   },
   "box/box/regressions/lambdaAsLastExpressionInLambda.kt": {
@@ -39276,7 +39252,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8b2w9kma/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8b2w9kma/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0qm65mdr/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0qm65mdr/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
