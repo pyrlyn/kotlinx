@@ -1,0 +1,18 @@
+# docs-pr-2 working tree 2026-10-29 23:28 EET load: { 26.42 31.22 23.91 }
+sum 3.7
+alloc 76.02
+bigheap 119.622
+closures 84.397
+cycles 46.049
+dispatch 95.837
+file 51.897
+free 51.434
+hashmap 72.645
+lru 95.995
+matmul 10.336
+nbody 72.956
+recursion 6.268
+refpass 144.42
+sort 63.506
+strings 32.302
+trees 124.617

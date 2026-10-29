@@ -131,6 +131,84 @@
     "pause_max_ms": 7.821,
     "collections": 97
    }
+  },
+  {
+   "run": "micro-default",
+   "date": "2026-10-29T23:29:29+02:00",
+   "commit": "313f648d9dd9cdb0d9635fd7f725c8b9416bb64a",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 21.12 28.85 23.48 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 484.865,
+    "raw_ns": "499822375,479518208,485059291,490016292,478409625",
+    "peak_rss_mib": 25.7,
+    "pause_total_ms": 447.04,
+    "pause_max_ms": 5.527,
+    "collections": 130
+   }
+  },
+  {
+   "run": "micro-incremental",
+   "date": "2026-10-29T23:29:38+02:00",
+   "commit": "313f648d9dd9cdb0d9635fd7f725c8b9416bb64a",
+   "dirty": false,
+   "ref": null,
+   "gc": "incremental",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 21.89 28.76 23.51 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 428.134,
+    "raw_ns": "444912084,421551583,419484958,420496583,442353791",
+    "peak_rss_mib": 32.3,
+    "pause_total_ms": 393.093,
+    "pause_max_ms": 8.122,
+    "collections": 97
+   }
+  },
+  {
+   "run": "micro-rc",
+   "date": "2026-10-29T23:29:43+02:00",
+   "commit": "313f648d9dd9cdb0d9635fd7f725c8b9416bb64a",
+   "dirty": false,
+   "ref": null,
+   "gc": "rc",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 21.33 28.53 23.46 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 29.705,
+    "raw_ns": "27287875,29725875,29534500,29854458,30308625",
+    "peak_rss_mib": 166.9,
+    "pause_total_ms": 0.0,
+    "pause_max_ms": 0.0,
+    "collections": 0
+   }
   }
  ]
 }

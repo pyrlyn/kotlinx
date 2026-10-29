@@ -22,16 +22,17 @@
 typedef void (*kx_visit_fn)(void *);
 /* vtable prefix of every class: release, trace traced children, release untraced fields, free memory, is-cyclic. */
 typedef struct {
-    void (*rel)(void *);
-    void (*trav)(void *, kx_visit_fn);
-    void (*relo)(void *);
-    void (*freemem)(void *);
-    void *cyclic;
+    void (*rel)(void *);                /* drop one reference (decrement; at zero release fields and free) */
+    void (*trav)(void *, kx_visit_fn);  /* call visit on every reference field (may be NULL children) */
+    void (*relo)(void *);               /* release fields the collector does not trace (acyclic, lists...) */
+    void (*freemem)(void *);            /* return the object's memory; fields must already be released */
+    void *cyclic;                       /* non-NULL iff the class is possibly cyclic (traced) */
 } KxVTab;
 
-#define KX_CNT_MASK 0xffffffffULL
-#define KX_COLOR_SHIFT 32
-#define KX_BUF_BIT (1ULL << 34)
+/* Header word bits (see layout above). Color values: compiler/gc/common/object.inc. */
+#define KX_CNT_MASK 0xffffffffULL       /* reference count: bits 0-31 */
+#define KX_COLOR_SHIFT 32               /* color: bits 32-33 */
+#define KX_BUF_BIT (1ULL << 34)         /* in the collector's root buffer */
 
 // ---- objects ----
 void *rt_alloc(int64_t size);                 /* acyclic object (count 1 set by caller) */

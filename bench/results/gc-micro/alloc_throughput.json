@@ -131,6 +131,84 @@
     "pause_max_ms": 0.0,
     "collections": 0
    }
+  },
+  {
+   "run": "micro-default",
+   "date": "2026-10-29T23:29:23+02:00",
+   "commit": "313f648d9dd9cdb0d9635fd7f725c8b9416bb64a",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 22.09 29.17 23.56 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 80.316,
+    "raw_ns": "79320125,80463583,81020375,79462916,82876875",
+    "peak_rss_mib": 2.2,
+    "pause_total_ms": 0.0,
+    "pause_max_ms": 0.0,
+    "collections": 0
+   }
+  },
+  {
+   "run": "micro-incremental",
+   "date": "2026-10-29T23:29:32+02:00",
+   "commit": "313f648d9dd9cdb0d9635fd7f725c8b9416bb64a",
+   "dirty": false,
+   "ref": null,
+   "gc": "incremental",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 21.35 28.77 23.48 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 80.577,
+    "raw_ns": "80517291,81511625,80490375,79392875,80722792",
+    "peak_rss_mib": 2.2,
+    "pause_total_ms": 0.0,
+    "pause_max_ms": 0.0,
+    "collections": 0
+   }
+  },
+  {
+   "run": "micro-rc",
+   "date": "2026-10-29T23:29:41+02:00",
+   "commit": "313f648d9dd9cdb0d9635fd7f725c8b9416bb64a",
+   "dirty": false,
+   "ref": null,
+   "gc": "rc",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 21.89 28.76 23.51 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 79.634,
+    "raw_ns": "79362834,80309709,79047667,79228333,80657792",
+    "peak_rss_mib": 2.2,
+    "pause_total_ms": 0.0,
+    "pause_max_ms": 0.0,
+    "collections": 0
+   }
   }
  ]
 }
