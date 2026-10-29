@@ -265,9 +265,12 @@ class Parser(private val t: List<Tok>) {
                     continue
                 }
                 if (inits != null && isId("init")) { next(); skipNLOnly(); inits.add(block()); continue }
-                if (isId("companion") && t[p + 1].k == K.ID && t[p + 1].s == "object") {
-                    val cls = curClass ?: fail("companion objects are only supported in classes")
-                    next(); next()
+                if (isId("companion") && (t[p + 1].k == K.ID && t[p + 1].s == "object" || t[p + 1].k == K.OP && t[p + 1].s == "{")) {
+                    val cls = curClass ?: curIface ?: fail("companion objects are only supported in classes and interfaces")
+                    if (companionOf.containsKey(cls)) fail("multiple companion declarations are not supported")
+                    // Enum companion blocks would need the entries initialized first.
+                    if ((t[p + 1].k == K.OP && t[p + 1].s == "{") && cls in enumClasses) fail("companion blocks in enum classes are not supported")
+                    next(); if (isId("object")) next()
                     val cn = if (peek().k == K.ID) ident() else "Companion"
                     val od = objectDecl("$cls$$cn")
                     companions.add(od)
@@ -338,6 +341,9 @@ class Parser(private val t: List<Tok>) {
     /** Class name -> interfaces implemented by delegation (`: I by expr`). */
     /** Set while parsing a `by` delegate in a class header: `{` starts the class body, not a trailing lambda. */
     private var noBraceCall = false
+    /** Interface whose body is being parsed (for its companion object). */
+    private var curIface: String? = null
+    private val enumClasses = HashSet<String>()
     private val byDelegs = HashMap<String, MutableList<String>>()
 
     /** Interface name -> its default method bodies. */
@@ -530,7 +536,8 @@ class Parser(private val t: List<Tok>) {
             }
             ifaceSupers[name] = ss
         }
-        val ms = if (isOp("{")) members() else emptyList()
+        val savedIface = curIface; curIface = name
+        val ms = try { if (isOp("{")) members() else emptyList() } finally { curIface = savedIface }
         val defs = ms.filter { it.body != null || it.exprBody != null }
         if (defs.isNotEmpty() && tps.isNotEmpty()) fail("default interface methods are not supported")
         if (defs.any { it.ret == null && it.body == null }) fail("default interface methods need an explicit return type")
@@ -664,6 +671,7 @@ class Parser(private val t: List<Tok>) {
         val name = ident()
         val typeParams = typeParams()
         val fields = ArrayList<FieldD>(); val ctorParams = ArrayList<Param>(); val inits = ArrayList<Any>()
+        if (isEnum) enumClasses.add(name)
         if (isEnum) for ((n, ty) in listOf("name" to "String", "ordinal" to "Int")) {
             // Hidden constructor parameters `$name` / `$ordinal` (user parameters may be called `name`).
             val tr = TypeRef(ty, emptyList(), false); ctorParams.add(Param("$$n", tr))

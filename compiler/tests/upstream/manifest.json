@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 5,
   "MISCOMPILE": 42,
   "N/A": 2984,
-  "PASS": 1856,
-  "UNSUPPORTED": 3588
+  "PASS": 1863,
+  "UNSUPPORTED": 3581
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1658,17 +1658,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8ejf3o69/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8ejf3o69/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupju0ztxse/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupju0ztxse/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupw4c18_sf/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupw4c18_sf/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupajuwqg5i/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupajuwqg5i/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupnl58s0r_/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupnl58s0r_/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwikqzulo/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwikqzulo/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -4207,7 +4207,7 @@
   },
   "box/box/callableReference/function/referenceToStaticOrStaticLike.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "multiple companion declarations are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/referenceToStaticOrStaticLike.kt"
   },
@@ -5195,9 +5195,8 @@
    "upstream": "compiler/testData/codegen/box/classes/classObjectField.kt"
   },
   "box/box/classes/classObjectInTrait.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/classObjectInTrait.kt"
   },
   "box/box/classes/classObjectNotOfEnum.kt": {
@@ -6470,8 +6469,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/arraysOperatorOfSpread.kt"
   },
   "box/box/collectionLiterals/companionBlockOf.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/companionBlockOf.kt"
   },
@@ -6605,20 +6604,19 @@
    "upstream": "compiler/testData/codegen/box/companion/protectedConstValFromSuperCompanion.kt"
   },
   "box/box/companionBlocksAndExtensions/abstractClasses.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/abstractClasses.kt"
   },
   "box/box/companionBlocksAndExtensions/basicBlockAndExtension.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/basicBlockAndExtension.kt"
   },
   "box/box/companionBlocksAndExtensions/callableReferencesGenericCompanionBlockMembers.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "generics",
+   "detail": "unknown name 'GenericHost'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/callableReferencesGenericCompanionBlockMembers.kt"
   },
@@ -6633,14 +6631,14 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/callableReferences_extensions.kt"
   },
   "box/box/companionBlocksAndExtensions/capturedOuterClassTypeParameter.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "other syntax (at 'Outer')",
+   "detail": "expected end of statement (at 'Outer')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/capturedOuterClassTypeParameter.kt"
   },
   "box/box/companionBlocksAndExtensions/companionBlock.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "unknown func (stdlib API / unsupported decl)",
+   "detail": "unknown function 'func'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionBlock.kt"
   },
@@ -6651,7 +6649,7 @@
   },
   "box/box/companionBlocksAndExtensions/companionBlockImplicitInvoke.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "multiple companion declarations are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionBlockImplicitInvoke.kt"
   },
@@ -6681,7 +6679,7 @@
   },
   "box/box/companionBlocksAndExtensions/constProperties.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/constProperties.kt"
   },
@@ -6691,8 +6689,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/crossModuleExtensions.kt"
   },
   "box/box/companionBlocksAndExtensions/ebf.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/ebf.kt"
   },
@@ -6703,56 +6701,56 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/generics.kt"
   },
   "box/box/companionBlocksAndExtensions/inheritance.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'bazA' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/inheritance.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersBlocksAndEnum.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion blocks in enum classes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersBlocksAndEnum.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersBlocksAndEnumTriggeredByBlock.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion blocks in enum classes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersBlocksAndEnumTriggeredByBlock.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersBlocksAndObject.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "multiple companion declarations are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersBlocksAndObject.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersCompanionObjectInitMigration.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "multiple companion declarations are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersCompanionObjectInitMigration.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersEnumImplementingInterface.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion blocks in enum classes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersEnumImplementingInterface.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersEnumImplementingInterfaceWithDefaultMember.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion blocks in enum classes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersEnumImplementingInterfaceWithDefaultMember.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersEnumTriggeredByCompanionBlockMember.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion blocks in enum classes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersEnumTriggeredByCompanionBlockMember.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersExtensions.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersExtensions.kt"
   },
@@ -6762,50 +6760,50 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInParentInAnotherModule.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersInParentNotInChild.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInParentNotInChild.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersInheritance.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInheritance.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersInheritanceMixedWithObject.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "multiple companion declarations are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInheritanceMixedWithObject.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersInheritanceMultiLevel.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInheritanceMultiLevel.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersInheritanceMultipleSupertypes.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInheritanceMultipleSupertypes.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersInheritanceMultipleSupertypesMixedOrder.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInheritanceMultipleSupertypesMixedOrder.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersIsInitializedWithStaticInit.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersIsInitializedWithStaticInit.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersPropertyAccessFromNestedClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "class bodies / constructors",
+   "detail": "two nested classes named Nested are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersPropertyAccessFromNestedClass.kt"
   },
@@ -6820,20 +6818,20 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersSuperclassSeparateModule.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersTransitiveSuperInterface.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersTransitiveSuperInterface.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersTriggeredByObject.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "multiple companion declarations are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersTriggeredByObject.kt"
   },
   "box/box/companionBlocksAndExtensions/inline_block.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/inline_block.kt"
   },
@@ -6844,26 +6842,26 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/inline_extensions.kt"
   },
   "box/box/companionBlocksAndExtensions/innerClasses.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'readOuterVal' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/innerClasses.kt"
   },
   "box/box/companionBlocksAndExtensions/interfaceCompanionBlockAndObject.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "multiple companion declarations are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/interfaceCompanionBlockAndObject.kt"
   },
   "box/box/companionBlocksAndExtensions/interfaceCompanionBlockBackingField.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/interfaceCompanionBlockBackingField.kt"
   },
   "box/box/companionBlocksAndExtensions/interfaceInlineWithDefaultArgument.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/interfaceInlineWithDefaultArgument.kt"
   },
@@ -6873,20 +6871,19 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/interfacePrivatePropertiesAccessFromInline.kt"
   },
   "box/box/companionBlocksAndExtensions/interfacePrivatePropertiesFromNestedClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "class bodies / constructors",
+   "detail": "nested declarations are only supported in classes (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/interfacePrivatePropertiesFromNestedClass.kt"
   },
   "box/box/companionBlocksAndExtensions/interfaceProperties.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/interfaceProperties.kt"
   },
   "box/box/companionBlocksAndExtensions/interfaces.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/interfaces.kt"
   },
@@ -6897,7 +6894,7 @@
   },
   "box/box/companionBlocksAndExtensions/lateinit.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/lateinit.kt"
   },
@@ -6938,13 +6935,13 @@
   },
   "box/box/companionBlocksAndExtensions/lateinitIsInitializedFromOwnCompanion.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "property 'init' of OwnCompanionOwner$Companion needs an explicit type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/lateinitIsInitializedFromOwnCompanion.kt"
   },
   "box/box/companionBlocksAndExtensions/lateinitIsInitializedFromTopLevelInitializer.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "property 'init' of TopLevelInitializerOwner$Companion needs an explicit type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/lateinitIsInitializedFromTopLevelInitializer.kt"
   },
@@ -6961,25 +6958,24 @@
   },
   "box/box/companionBlocksAndExtensions/multipleBlocks.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "multiple companion declarations are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/multipleBlocks.kt"
   },
   "box/box/companionBlocksAndExtensions/nestedClasses.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/nestedClasses.kt"
   },
   "box/box/companionBlocksAndExtensions/nestedObjectDoesNotTriggerOuterInitializer.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/nestedObjectDoesNotTriggerOuterInitializer.kt"
   },
   "box/box/companionBlocksAndExtensions/propertyDelegation_block.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/propertyDelegation_block.kt"
   },
@@ -6991,13 +6987,13 @@
   },
   "box/box/companionBlocksAndExtensions/resolutionPriority.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "multiple companion declarations are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/resolutionPriority.kt"
   },
   "box/box/companionBlocksAndExtensions/staticInitializerSyntheticNameCollision.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/staticInitializerSyntheticNameCollision.kt"
   },
@@ -7013,13 +7009,13 @@
   },
   "box/box/companionBlocksAndExtensions/throwingInitializersMixedCompanions.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "multiple companion declarations are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/throwingInitializersMixedCompanions.kt"
   },
   "box/box/companionBlocksAndExtensions/topLevelInitTriggersCompanionBlock.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/topLevelInitTriggersCompanionBlock.kt"
   },
@@ -7035,9 +7031,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/varCompanionPropertyInGrandparentCrossmodule.kt"
   },
   "box/box/companionBlocksAndExtensions/visibility.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/visibility.kt"
   },
   "box/box/compatibility/privateCompanionObject.kt": {
@@ -12663,9 +12658,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/trait.kt"
   },
   "box/box/defaultArguments/hiddenCompanionBlock.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/hiddenCompanionBlock.kt"
   },
   "box/box/defaultArguments/implementedByFake.kt": {
@@ -12911,8 +12905,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt49793_companionObject.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/kt49793_interfaceCompanionObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt49793_interfaceCompanionObject.kt"
   },
@@ -15218,7 +15212,7 @@
   },
   "box/box/evaluate/intrinsicConst/companions.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/companions.kt"
   },
@@ -21840,14 +21834,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/conformToComparableAndCallInterfaceMethodGeneric.kt"
   },
   "box/box/inlineClasses/constructorCallableReference.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/constructorCallableReference.kt"
   },
   "box/box/inlineClasses/constructorCallableReferenceGeneric.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/constructorCallableReferenceGeneric.kt"
   },
@@ -23219,12 +23213,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 537660704\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 537660576\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387744\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952096\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25851,7 +25845,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x104448def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10454b357        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x10299cdef        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102a9fa37        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -28807,14 +28801,14 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/companionInitOrderWithSuperclassCrossModule.kt"
   },
   "box/box/objects/companionObjectAccess/companionObjectInitOrderWithSuperclass.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/companionObjectInitOrderWithSuperclass.kt"
   },
   "box/box/objects/companionObjectAccess/companionObjectInitOrderWithSuperinterface.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "unknown A1 (stdlib API / unsupported decl)",
+   "detail": "unknown name 'A1'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/companionObjectInitOrderWithSuperinterface.kt"
   },
@@ -28834,20 +28828,20 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/kt27117_lv13.kt"
   },
   "box/box/objects/companionObjectAccess/kt27121.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/kt27121.kt"
   },
   "box/box/objects/companionObjectAccess/kt27121_lv12.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/kt27121_lv12.kt"
   },
   "box/box/objects/companionObjectAccess/kt27121_lv13.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/kt27121_lv13.kt"
   },
@@ -28917,8 +28911,8 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/nativeCompanionInitOrderCrossModuleLegacy.kt"
   },
   "box/box/objects/companionObjectAccess/nativeCompanionInitOrderLegacy.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/nativeCompanionInitOrderLegacy.kt"
   },
@@ -29091,14 +29085,13 @@
    "upstream": "compiler/testData/codegen/box/objects/innerClassInsideAnonymousObject.kt"
   },
   "box/box/objects/interfaceCompanion.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/interfaceCompanion.kt"
   },
   "box/box/objects/interfaceCompanionObjectReference.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "other syntax (at 'localFun')",
+   "detail": "expected end of statement (at 'localFun')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/interfaceCompanionObjectReference.kt"
   },
@@ -29338,26 +29331,26 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInAnonymousObjectInSuperConstructorCall.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInConstructorBody.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInConstructorBody.kt"
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInSuperConstructorCall.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInLambdaInSuperConstructorCall.kt": {
-   "category": "objects / companion objects",
-   "detail": "companion objects are only supported in classes (at 'companion')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInLambdaInSuperConstructorCall.kt"
   },
@@ -39332,7 +39325,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup234skv4q/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup234skv4q/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup47gbfk8q/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup47gbfk8q/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -39799,8 +39792,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/callableRefDefault.kt"
   },
   "box/box/versionOverloads/companions.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/companions.kt"
   },
