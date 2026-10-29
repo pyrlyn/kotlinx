@@ -18,6 +18,8 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --leak-check         count live runtime objects; report at exit, exit 3 on a leak
   --alloc <mimalloc|malloc|pool> object allocator: mimalloc (default; found via ${'$'}NEWKOTLIN_MIMALLOC_DIR,
                        pkg-config or Homebrew), system malloc/free, or free-list pool
+  --gc <name>          memory manager, compiler/gc/<name>/gc.c (also --gc=<name>; default: ${'$'}NEWKOTLIN_GC or
+                       default): default (RC + cycle collector), rc (RC only, cycles leak), boehm (RC + bdwgc)
   -S                   only write LLVM IR to <output>"""
 
 private fun readFile(path: String): String {
@@ -128,6 +130,7 @@ fun main(args: Array<String>) {
     var input: String? = null; var output: String? = null
     var runtime = getenv("NEWKOTLIN_RUNTIME")?.toKString() ?: "compiler/runtime/runtime.c"
     var target = Target.NATIVE
+    var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() } ?: "default"
     var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false; var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
     var i = 0
     while (i < args.size) {
@@ -135,6 +138,7 @@ fun main(args: Array<String>) {
             "-o" -> output = args[++i]
             "--target" -> target = Target.parse(args[++i]) ?: run { fprintf(stderr, "unknown target: %s\n", args[i]); exit(2); return }
             "--runtime" -> runtime = args[++i]
+            "--gc" -> gc = args[++i]
             "--emit-llvm" -> emitLl = true
             "--leak-check" -> leakCheck = true
             "--alloc" -> alloc = args[++i].also { if (it != "mimalloc" && it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be mimalloc, malloc or pool\n"); exit(2) } }
@@ -144,7 +148,8 @@ fun main(args: Array<String>) {
             "--no-opt" -> noOpt = true
             "-S" -> onlyIr = true
             "-h", "--help" -> { println(USAGE); return }
-            else -> if (a.startsWith("--target=")) target = Target.parse(a.substringAfter('=')) ?: run { fprintf(stderr, "unknown target: %s\n", a); exit(2); return }
+            else -> if (a.startsWith("--gc=")) gc = a.substringAfter('=')
+            else if (a.startsWith("--target=")) target = Target.parse(a.substringAfter('=')) ?: run { fprintf(stderr, "unknown target: %s\n", a); exit(2); return }
             else if (input == null && !a.startsWith("-")) input = a else { fprintf(stderr, "unknown argument: %s\n%s\n", a, USAGE); exit(2) }
         }
         i++
@@ -156,6 +161,15 @@ fun main(args: Array<String>) {
         fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1); return
     }
     if (onlyIr) { writeFile(output, ir); return }
+    // GC implementations: <gcDir>/<name>/gc.c (+ optional config.sh printing extra clang flags), interface <gcDir>/kxgc.h.
+    val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../gc")
+    val gcSrc = "$gcDir/$gc/gc.c"
+    if (gc.isEmpty() || '/' in gc || access(gcSrc, F_OK) != 0) {
+        fprintf(stderr, "unknown --gc %s: no %s\n", gc, gcSrc); exit(2); return
+    }
+    val gcFlags = if (access("$gcDir/$gc/config.sh", F_OK) == 0) {
+        capture("sh '$gcDir/$gc/config.sh'") ?: run { fprintf(stderr, "error: %s/%s/config.sh failed\n", gcDir, gc); exit(1); return }
+    } else ""
     val ll = "$output.ll"
     writeFile(ll, ir)
     val def = (if (alloc == "pool") " -DRT_POOL" else "") + (if (alloc == "malloc") " -DRT_PLAIN_MALLOC" else "") + (if (leakCheck) " -DRT_LEAKCHECK" else "")
@@ -194,7 +208,7 @@ fun main(args: Array<String>) {
         val pipeline = if ("-flto" in cflags) "lto-pre-link<O3>" else "default<O3>"
         run1("'$opt' -passes='$pipeline' -S '$ll' -o '$linkLl'")
     }
-    val cmd = "$cc $cflags$def -Wno-override-module '$linkLl' '$runtime'$link -o '$output'"
+    val cmd = "$cc $cflags$def -Wno-override-module -I'$gcDir' $gcFlags '$linkLl' '$runtime' '$gcSrc'$link -o '$output'"
     val rc = system(cmd)
     cleanup()
     if (rc != 0) { fprintf(stderr, "clang failed (%d): %s\n", rc, cmd); exit(1) }

@@ -45,5 +45,7 @@ for t in js wasm jvm; do
 done
 # Leak tests (own tests, compiler/tests/leaks): runtime live-object count, ASan, macOS leaks.
 NKC="$NKC" compiler/tests/leaks/run.sh || fail=1
+# GC tests (compiler/gc/tests): interface unit tests + GC-agnostic Kotlin tests for every --gc implementation.
+NKC="$NKC" compiler/gc/tests/run.sh || fail=1
 rm -rf "$out"
 [ $fail = 0 ] && echo "ALL PASSED" || { echo "SOME FAILED"; exit 1; }

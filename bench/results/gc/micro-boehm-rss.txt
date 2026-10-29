@@ -1,0 +1,4 @@
+alloc_throughput 3.0
+cyclic_garbage 3.2
+live_heap_churn 41.1
+short_lived 3.0

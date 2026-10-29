@@ -7,6 +7,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "kxgc.h" /* memory manager interface; implementation in compiler/gc/<name>/gc.c (newkotlinc --gc) */
+
 // ---- leak check (newkotlinc --leak-check => -DRT_LEAKCHECK) ----------------
 // Counts live runtime objects per kind; at exit prints a report to stderr and exits with 3
 // if any object (class instance, StringBuilder, ArrayList, HashMap, array, string) is still live.
@@ -25,14 +27,23 @@ __attribute__((destructor)) static void rt_leak_report(void) {
     fprintf(stderr, "leak-check: %s\n", bad ? "FAIL" : "OK");
     if (bad) _exit(3);
 }
+void rt_leak_obj(int64_t d) { LK(LK_OBJ, d); }
 #else
 #define LK(k, d) ((void)0)
 #endif
 
 int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW); }
 
-void rt_cc_collect(void);
-void rt_exit_flush(void) { rt_cc_collect(); fflush(stdout); }
+/* At exit: final collection; KX_GC_STATS=1 prints the GC's statistics to stderr (bench/gc/micro.sh). */
+void rt_exit_flush(void) {
+    rt_gc_collect(); fflush(stdout);
+    const char *e = getenv("KX_GC_STATS");
+    if (e && *e && *e != '0') {
+        KxGcStats st; rt_gc_stats(&st);
+        fprintf(stderr, "gc-stats: gc=%s collections=%lld reclaimed=%lld pause_total=%.3f pause_max=%.3f\n", rt_gc_name(),
+                (long long)st.collections, (long long)st.reclaimed, st.pause_ns_total / 1e6, st.pause_ns_max / 1e6);
+    }
+}
 
 #ifdef RT_LEAKCHECK
 int rt_leakcheck = 1;
@@ -189,7 +200,7 @@ List *rt_list_new(release_fn rel) {
     return l;
 }
 void rt_list_add(List *l, int64_t v) {
-    if (l->len == l->cap) { l->cap = l->cap ? l->cap * 2 : 10; l->data = realloc(l->data, (size_t)l->cap * 8); }
+    if (l->len == l->cap) { l->cap = l->cap ? l->cap * 2 : 10; l->data = rt_gc_mem_realloc(l->data, (size_t)l->cap * 8); }
     l->data[l->len++] = v;
 }
 static void bounds(List *l, int64_t i) {
@@ -212,14 +223,14 @@ void rt_list_release(List *l) {
     if (!l || --l->rc > 0) return;
     LK(LK_LIST, -1);
     if (l->rel) for (int64_t i = 0; i < l->len; i++) l->rel((void *)(intptr_t)l->data[i]);
-    free(l->data); free(l);
+    rt_gc_mem_free(l->data); free(l);
 }
 
 // ---- primitive arrays: pointer to { int64 length; elements... }, refcount at -8 ----
 
 void *rt_arr_new(int64_t n, int64_t elem) {
     if (n < 0) rt_panic("NegativeArraySizeException");
-    int64_t *p = calloc(1, 16 + (size_t)n * (size_t)elem); /* { rc, length, elements } */
+    int64_t *p = rt_gc_mem_calloc(16 + (size_t)n * (size_t)elem); /* { rc, length, elements } */
     if (!p) rt_panic("OutOfMemoryError");
     p[0] = 1; p[1] = n; LK(LK_ARR, 1);
     return p + 1;
@@ -227,7 +238,7 @@ void *rt_arr_new(int64_t n, int64_t elem) {
 void rt_arr_release(void *a) {
     if (!a) return;
     int64_t *h = (int64_t *)a - 1;
-    if (--*h == 0) { LK(LK_ARR, -1); free(h); }
+    if (--*h == 0) { LK(LK_ARR, -1); rt_gc_mem_free(h); }
 }
 
 void rt_oob(int64_t i, int64_t len) {
@@ -248,7 +259,7 @@ static inline uint64_t map_hash(int64_t k) {
 Map *rt_map_new(void) {
     Map *m = malloc(sizeof *m);
     m->rc = 1; m->size = 0; m->cap = 16;
-    m->keys = malloc(16 * 8); m->vals = malloc(16 * 8); m->used = calloc(16, 1); LK(LK_MAP, 1);
+    m->keys = malloc(16 * 8); m->vals = rt_gc_mem_alloc(16 * 8); m->used = calloc(16, 1); LK(LK_MAP, 1);
     return m;
 }
 static inline int64_t map_find(Map *m, int64_t k) {
@@ -259,12 +270,12 @@ static inline int64_t map_find(Map *m, int64_t k) {
 static void map_grow(Map *m) {
     Map old = *m;
     m->cap *= 2; m->size = 0;
-    m->keys = malloc((size_t)m->cap * 8); m->vals = malloc((size_t)m->cap * 8); m->used = calloc((size_t)m->cap, 1);
+    m->keys = malloc((size_t)m->cap * 8); m->vals = rt_gc_mem_alloc((size_t)m->cap * 8); m->used = calloc((size_t)m->cap, 1);
     for (int64_t i = 0; i < old.cap; i++) if (old.used[i]) {
         int64_t j = map_find(m, old.keys[i]);
         m->used[j] = 1; m->keys[j] = old.keys[i]; m->vals[j] = old.vals[i]; m->size++;
     }
-    free(old.keys); free(old.vals); free(old.used);
+    free(old.keys); rt_gc_mem_free(old.vals); free(old.used);
 }
 void rt_map_put(Map *m, int64_t k, int64_t v) {
     if ((m->size + 1) * 4 > m->cap * 3) map_grow(m);
@@ -280,217 +291,6 @@ int64_t rt_map_get(Map *m, int64_t k) {
     return m->vals[i];
 }
 int64_t rt_map_size(Map *m) { return m->size; }
-void rt_map_release(Map *m) { if (!m || --m->rc > 0) return; LK(LK_MAP, -1); free(m->keys); free(m->vals); free(m->used); free(m); }
+void rt_map_release(Map *m) { if (!m || --m->rc > 0) return; LK(LK_MAP, -1); free(m->keys); rt_gc_mem_free(m->vals); free(m->used); free(m); }
 
-// ---- object allocation: two regions ---------------------------------------
-// The compiler classifies every class (NativeBackend.cyclic): a class whose instances can lie on a
-// reference cycle (a field cycle containing a `var` field) is "possibly cyclic"; all others are acyclic.
-//   * RC region (rt_alloc / rt_free): acyclic objects. Freed the instant their count hits zero,
-//     never buffered, never traced (escape analysis puts non-escaping ones on the stack instead).
-//   * Tracing region (rt_alloc_trace / rt_free_trace): possibly cyclic objects only. The cycle
-//     collector below runs over this region alone; it never visits an RC-region object.
-// Backing memory: RC region = the object allocator (mimalloc by default, malloc, or the pool);
-// tracing region = its own size-class slabs (64 KiB), so traced objects stay dense and apart from
-// short-lived acyclic ones. With --alloc malloc (ASan / macOS leaks builds) both regions use malloc
-// so the tools see every object.
-// --leak-check (RT_LEAKCHECK) prefixes each object with a region tag and counts, per region,
-// allocations and collector visits; any collector visit outside the tracing region fails the run.
-
-#ifdef RT_LEAKCHECK
-enum { RG_RC = 0x5243, RG_TRACE = 0x5452 };
-static int64_t rg_alloc[2], rg_free[2], cc_visits, cc_visits_outside, cc_runs;
-#define RG_PREFIX 16
-static void *rg_tag(void *raw, int64_t tag) { if (!raw) rt_panic("OutOfMemoryError"); *(int64_t *)raw = tag; return (char *)raw + RG_PREFIX; }
-static void *rg_raw(void *p, int64_t tag) {
-    char *raw = (char *)p - RG_PREFIX;
-    if (*(int64_t *)raw != tag) { fprintf(stderr, "region: object %p freed into the wrong region\n", p); abort(); }
-    *(int64_t *)raw = 0; return raw;
-}
-static int rg_is_trace(void *p) { return *(int64_t *)((char *)p - RG_PREFIX) == RG_TRACE; }
-__attribute__((destructor(200))) static void rt_region_report(void) {
-    fprintf(stderr, "region: rc allocated=%lld freed=%lld traced=0\n", (long long)rg_alloc[0], (long long)rg_free[0]);
-    fprintf(stderr, "region: trace allocated=%lld freed=%lld\n", (long long)rg_alloc[1], (long long)rg_free[1]);
-    fprintf(stderr, "region: collector runs=%lld visits=%lld outside-trace=%lld\n", (long long)cc_runs, (long long)cc_visits, (long long)cc_visits_outside);
-    if (cc_visits_outside) { fprintf(stderr, "region: FAIL collector touched RC-region objects\n"); fflush(stderr); _exit(4); }
-}
-void *rt_alloc(int64_t size) { LK(LK_OBJ, 1); rg_alloc[0]++; return rg_tag(malloc((size_t)size + RG_PREFIX), RG_RC); }
-void rt_free(void *p, int64_t size) { (void)size; LK(LK_OBJ, -1); rg_free[0]++; free(rg_raw(p, RG_RC)); }
-void *rt_alloc_trace(int64_t size) { LK(LK_OBJ, 1); rg_alloc[1]++; return rg_tag(malloc((size_t)size + RG_PREFIX), RG_TRACE); }
-void rt_free_trace(void *p, int64_t size) { (void)size; LK(LK_OBJ, -1); rg_free[1]++; free(rg_raw(p, RG_TRACE)); }
-#define CC_VISIT(p) do { cc_visits++; if (!rg_is_trace(p)) cc_visits_outside++; } while (0)
-#else
-#define CC_VISIT(p) ((void)0)
-
-/* Size-class slab pool (8-byte classes up to RT_CLASSES*8 bytes, 64 KiB slabs, larger -> malloc). */
-#define RT_CLASSES 32
-typedef struct { void *free_list[RT_CLASSES + 1]; char *ptr, *end; } Pool;
-static inline void *pool_alloc(Pool *pl, int64_t size) {
-    size_t cls = ((size_t)size + 7) >> 3;
-    if (cls > RT_CLASSES) { void *q = malloc((size_t)size); if (!q) rt_panic("OutOfMemoryError"); return q; }
-    void *p = pl->free_list[cls];
-    if (p) { pl->free_list[cls] = *(void **)p; return p; }
-    size_t bytes = cls << 3;
-    if (pl->ptr + bytes > pl->end) {
-        pl->ptr = malloc(1 << 16);
-        if (!pl->ptr) rt_panic("OutOfMemoryError");
-        pl->end = pl->ptr + (1 << 16);
-    }
-    p = pl->ptr; pl->ptr += bytes;
-    return p;
-}
-static inline void pool_free(Pool *pl, void *p, int64_t size) {
-    size_t cls = ((size_t)size + 7) >> 3;
-    if (cls > RT_CLASSES) { free(p); return; }
-    *(void **)p = pl->free_list[cls];
-    pl->free_list[cls] = p;
-}
-
-#ifdef RT_POOL
-static Pool rc_pool;
-void *rt_alloc(int64_t size) { return pool_alloc(&rc_pool, size); }
-void rt_free(void *p, int64_t size) { pool_free(&rc_pool, p, size); }
-#else
-void *rt_alloc(int64_t size) { void *p = malloc((size_t)size); if (!p) rt_panic("OutOfMemoryError"); return p; }
-void rt_free(void *p, int64_t size) { (void)size; free(p); }
-#endif
-
-#ifdef RT_PLAIN_MALLOC
-void *rt_alloc_trace(int64_t size) { return rt_alloc(size); }
-void rt_free_trace(void *p, int64_t size) { rt_free(p, size); }
-#else
-static Pool trace_pool;
-void *rt_alloc_trace(int64_t size) { return pool_alloc(&trace_pool, size); }
-void rt_free_trace(void *p, int64_t size) { pool_free(&trace_pool, p, size); }
-#endif
-#endif
-
-// ---- cycle collector (Bacon & Rajan 2001, synchronous trial deletion) -----
-// Only objects of "cyclic" classes (on a field cycle with a `var` field; vtable[4] != 0) take part.
-// Their 64-bit header word: low 32 bits = reference count, bits 32-33 = color, bit 34 = buffered.
-// A decrement to a non-zero count makes the object a possible root (purple, buffered). When the
-// buffer reaches CC_THRESHOLD, and at program exit, the collector runs MarkRoots / ScanRoots /
-// CollectRoots. Other objects (acyclic classes, lists, maps, builders) are released by plain RC.
-// Limitation: cycles that pass through an ArrayList/HashMap are not traced.
-
-typedef void (*visit_fn)(void *);
-typedef struct { void (*rel)(void *); void (*trav)(void *, visit_fn); void (*relo)(void *); void (*freemem)(void *); void *cyclic; } VTab;
-
-#define CC_THRESHOLD 10000
-/* Adaptive trigger: a collection whose trial deletion traced far more objects than it reclaimed as
- * cyclic garbage (the buffered roots were live, e.g. relinked list nodes in a cache) doubles the threshold, up to CC_MAX_THRESHOLD, so live
- * structures are not re-traced every 10k decrements; a productive collection resets it. */
-#define CC_MAX_THRESHOLD (1u << 18)
-static size_t cc_threshold = CC_THRESHOLD, cc_traced;
-#define CNT_MASK 0xffffffffULL
-#define COLOR_SHIFT 32
-#define BUF_BIT (1ULL << 34)
-enum { BLACK = 0, GRAY = 1, WHITE = 2, PURPLE = 3 };
-
-static inline VTab *vtab(void *p) { return *(VTab **)((char *)p + 8); }
-static inline uint64_t *hdr(void *p) { return (uint64_t *)p; }
-static inline int is_cyc(void *p) { return vtab(p)->cyclic != NULL; }
-static inline uint64_t cnt(void *p) { return *hdr(p) & CNT_MASK; }
-static inline int color(void *p) { return (int)((*hdr(p) >> COLOR_SHIFT) & 3); }
-static inline void set_color(void *p, int c) { *hdr(p) = (*hdr(p) & ~(3ULL << COLOR_SHIFT)) | ((uint64_t)c << COLOR_SHIFT); }
-static inline int buffered(void *p) { return (*hdr(p) & BUF_BIT) != 0; }
-
-typedef struct { void **a; size_t n, cap; } Vec;
-static void vpush(Vec *v, void *p) {
-    if (v->n == v->cap) { v->cap = v->cap ? v->cap * 2 : 256; v->a = realloc(v->a, v->cap * sizeof *v->a); if (!v->a) rt_panic("OutOfMemoryError"); }
-    v->a[v->n++] = p;
-}
-static Vec cc_roots, cc_work, cc_black, cc_garbage;
-static int cc_running;
-
-void rt_cc_collect(void);
-void rt_cc_possible_root(void *p) {
-    set_color(p, PURPLE);
-    if (!buffered(p)) {
-        *hdr(p) |= BUF_BIT;
-        vpush(&cc_roots, p);
-        if (cc_roots.n >= cc_threshold && !cc_running) rt_cc_collect();
-    }
-}
-/* Count reached zero and the children were released: free now, unless the root buffer still holds it. */
-void rt_cc_dead(void *p) {
-    set_color(p, BLACK);
-    if (!buffered(p)) vtab(p)->freemem(p);
-}
-
-static void mg_child(void *t) { if (t && is_cyc(t)) { (*hdr(t))--; vpush(&cc_work, t); } }
-static void mark_gray(void *s) {
-    size_t traced = 0;
-    vpush(&cc_work, s);
-    while (cc_work.n) {
-        void *x = cc_work.a[--cc_work.n];
-        if (color(x) != GRAY) { CC_VISIT(x); set_color(x, GRAY); traced++; vtab(x)->trav(x, mg_child); }
-    }
-    cc_traced += traced;
-}
-static void sb_child(void *t) {
-    if (t && is_cyc(t)) { (*hdr(t))++; if (color(t) != BLACK) { set_color(t, BLACK); vpush(&cc_black, t); } }
-}
-static void scan_black(void *s) {
-    set_color(s, BLACK); vpush(&cc_black, s);
-    while (cc_black.n) { void *x = cc_black.a[--cc_black.n]; vtab(x)->trav(x, sb_child); }
-}
-static void scan_child(void *t) { if (t && is_cyc(t)) vpush(&cc_work, t); }
-static void scan(void *s) {
-    vpush(&cc_work, s);
-    while (cc_work.n) {
-        void *x = cc_work.a[--cc_work.n];
-        if (color(x) != GRAY) continue;
-        if (cnt(x) > 0) scan_black(x);
-        else { set_color(x, WHITE); vtab(x)->trav(x, scan_child); }
-    }
-}
-/* Garbage objects are claimed (colored black) when pushed, so each one is freed exactly once. */
-static int cw_claim(void *t) {
-    if (color(t) != WHITE || buffered(t)) return 0;
-    set_color(t, BLACK); vpush(&cc_work, t); return 1;
-}
-static void cw_child(void *t) {
-    if (!t) return;
-    if (is_cyc(t)) cw_claim(t);
-    else vtab(t)->rel(t); /* acyclic child: drop the garbage object's reference normally */
-}
-static void collect_white(void *s) {
-    if (!cw_claim(s)) return;
-    while (cc_work.n) {
-        void *x = cc_work.a[--cc_work.n];
-        vtab(x)->trav(x, cw_child);
-        vpush(&cc_garbage, x); /* freed after all roots are processed: other garbage may still point here */
-    }
-}
-
-void rt_cc_collect(void) {
-    if (cc_running || cc_roots.n == 0) return;
-    cc_running = 1;
-#ifdef RT_LEAKCHECK
-    cc_runs++;
-#endif
-    Vec roots = cc_roots; cc_roots = (Vec){0};
-    size_t k = 0;
-    cc_traced = 0;
-    for (size_t i = 0; i < roots.n; i++) {           /* MarkRoots */
-        void *s = roots.a[i];
-        if (color(s) == PURPLE && cnt(s) > 0) { mark_gray(s); roots.a[k++] = s; }
-        else { *hdr(s) &= ~BUF_BIT; if (color(s) == BLACK && cnt(s) == 0) vtab(s)->freemem(s); }
-    }
-    roots.n = k;
-    for (size_t i = 0; i < roots.n; i++) scan(roots.a[i]);  /* ScanRoots */
-    for (size_t i = 0; i < roots.n; i++) {           /* CollectRoots */
-        void *s = roots.a[i];
-        *hdr(s) &= ~BUF_BIT;
-        collect_white(s);
-    }
-    for (size_t i = 0; i < cc_garbage.n; i++) vtab(cc_garbage.a[i])->relo(cc_garbage.a[i]);
-    for (size_t i = 0; i < cc_garbage.n; i++) vtab(cc_garbage.a[i])->freemem(cc_garbage.a[i]);
-    size_t reclaimed = cc_garbage.n;
-    cc_garbage.n = 0;
-    free(roots.a);
-    if (reclaimed * 4 < cc_traced) { if (cc_threshold < CC_MAX_THRESHOLD) cc_threshold *= 2; }
-    else cc_threshold = CC_THRESHOLD;
-    cc_running = 0;
-    if (cc_roots.n >= cc_threshold) rt_cc_collect();
-}
+// Object allocation, reference counting slow paths and the cycle collector live in compiler/gc/ (kxgc.h).

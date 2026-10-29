@@ -1,0 +1,18 @@
+# gc-boehm working tree 2026-10-29 21:03 EET load: { 8.00 13.27 16.30 }
+sum 3.656
+alloc 125.08
+bigheap 1163.164
+closures 86.663
+cycles 188.068
+dispatch 94.659
+file 53.704
+free 78.183
+hashmap 64.521
+lru 154.177
+matmul 9.921
+nbody 70.42
+recursion 6.062
+refpass 134.122
+sort 60.916
+strings 30.124
+trees 195.215
