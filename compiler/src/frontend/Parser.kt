@@ -1097,7 +1097,13 @@ class Parser(private val t: List<Tok>) {
         val r = when {
             e.n == "trimIndent" && a.isEmpty() -> text.trimIndent()
             e.n == "trimMargin" && a.isEmpty() -> text.trimMargin()
-            e.n == "trimMargin" && a.size == 1 && a[0] is StrL && (a[0] as StrL).parts.all { it is String } -> text.trimMargin((a[0] as StrL).parts.joinToString("") { it as String })
+            e.n == "trimMargin" && a.size == 1 && a[0] is StrL && (a[0] as StrL).parts.all { it is String } -> {
+                val m = (a[0] as StrL).parts.joinToString("") { it as String }
+                // A blank margin prefix throws at run time, as in Kotlin (folding must not crash the compiler).
+                if (m.isBlank()) return CallE(NameE("\$throw").also { it.line = e.line }, emptyList(), listOf(CallE(NameE("IllegalArgumentException").also { it.line = e.line }, emptyList(),
+                    listOf(StrL(listOf("marginPrefix must be non-blank string."))), null).also { it.line = e.line }), null).also { it.line = e.line }
+                text.trimMargin(m)
+            }
             else -> return null
         }
         return StrL(listOf(r))
