@@ -828,6 +828,20 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 emit("store ${t.llvm} ${v.v}, ptr ${l.slot}")
             }
             is AssignS -> {
+                // `list += x` on a mutable list calls add (or addAll for a list): plusAssign.
+                if (s.op == "+=" && s.target is NameE) {
+                    val l = lookup(s.target.n)
+                    if (l != null && l.t is Ty.ListTy) {
+                        val savedFuncs = funcs.length; val savedBody = body.length; val savedAllocas = allocas.length; val savedCur = cur; val savedTerm = term
+                        val vt = try { genExpr(s.value).t } catch (e: CompileError) { null } finally { funcs.setLength(savedFuncs); body.setLength(savedBody); allocas.setLength(savedAllocas); cur = savedCur; term = savedTerm }
+                        if (vt is Ty.ListTy) {
+                            val x = "\$pa${tmpN++}"
+                            val add = ExprS(CallE(MemberE(s.target, "add", false), emptyList(), listOf(NameE(x).also { it.line = s.line }), null).also { it.line = s.line }).also { it.line = s.line }
+                            genStmt(ForS(x, s.value, Block(listOf(add))).also { it.line = s.line })
+                        } else releaseIfOwned(genExpr(CallE(MemberE(s.target, "add", false), emptyList(), listOf(s.value), null).also { it.line = s.line }))
+                        return
+                    }
+                }
                 val value = if (s.op == "=") s.value else BinE(s.op.dropLast(1), s.target, s.value).also { it.line = s.line }
                 assign(s.target, value)
             }
@@ -1648,6 +1662,27 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 else { emit("call void @rt_panic(ptr ${m.v})"); emit("unreachable"); term = true }
                 startBlock(ok)
                 return Val("", Ty.Unit)
+            }
+            "assertTrue", "assertFalse", "assertEquals", "assertNotEquals", "assertNull", "assertNotNull" -> {
+                val a = e.args
+                val (cond, msg) = when (n) {
+                    "assertTrue" -> a[0] to StrL(listOf("Expected value to be true."))
+                    "assertFalse" -> UnE("!", a[0]) to StrL(listOf("Expected value to be false."))
+                    "assertNull" -> BinE("==", a[0], NullL()) to StrL(listOf("Expected value to be null, but was: <", a[0], ">."))
+                    "assertNotNull" -> BinE("!=", a[0], NullL()) to StrL(listOf("Expected value to be not null."))
+                    "assertEquals" -> BinE("==", a[0], a[1]) to StrL(listOf("Expected <", a[0], ">, actual <", a[1], ">."))
+                    else -> BinE("!=", a[0], a[1]) to StrL(listOf("Illegal value: <", a[1], ">."))
+                }
+                listOf(cond, msg).forEach { it.line = line }
+                val c = coerce(genExpr(cond), Ty.I1)
+                val ok = label("assert.ok"); val bad = label("assert.fail")
+                condBr(c.v, ok, bad)
+                startBlock(bad)
+                val m = coerce(genExpr(msg), Ty.Str)
+                if (excMode) throwNew("AssertionError", m)
+                else { emit("call void @rt_panic(ptr ${m.v})"); emit("unreachable"); term = true }
+                startBlock(ok)
+                return if (n == "assertNotNull") genExpr(UnE("!!", a[0]).also { it.line = line }) else Val("", Ty.Unit)
             }
             "assertFailsWith", "assertFails" -> if (excMode && e.lambda != null) {
                 val t = e.typeArgs.singleOrNull() ?: TypeRef("Throwable", emptyList(), false)

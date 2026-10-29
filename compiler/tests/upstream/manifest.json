@@ -1,11 +1,11 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "COMPILER_CRASH": 4,
-  "MISCOMPILE": 35,
+  "COMPILER_CRASH": 5,
+  "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 742,
-  "UNSUPPORTED": 4710
+  "PASS": 843,
+  "UNSUPPORTED": 4605
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -400,20 +400,19 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/varargAndDefaultParameters_ForNative.kt"
   },
   "box/box/arithmetic/basic_charConversions.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "other: unknown method Char.toDouble()",
+   "detail": "unknown method Char.toDouble()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_charConversions.kt"
   },
   "box/box/arithmetic/basic_charCornerCases.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_charCornerCases.kt"
   },
   "box/box/arithmetic/basic_compareIntToFloat.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "other: unknown method Int.compareTo()",
+   "detail": "unknown method Int.compareTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_compareIntToFloat.kt"
   },
@@ -424,20 +423,19 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_doubleBasic.kt"
   },
   "box/box/arithmetic/basic_integralToFloat.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "unknown f (stdlib API / unsupported decl)",
+   "detail": "unknown name 'f'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_integralToFloat.kt"
   },
   "box/box/arithmetic/basic_kt37412.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_kt37412.kt"
   },
   "box/box/arithmetic/basic_selfComparison.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertFalse'",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_selfComparison.kt"
   },
@@ -448,8 +446,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_shifts.kt"
   },
   "box/box/arithmetic/basic_uintTests.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_uintTests.kt"
   },
@@ -466,21 +464,19 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/divisionByZero.kt"
   },
   "box/box/arithmetic/github1856.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "other: unknown method Int.inv()",
+   "detail": "unknown method Int.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/github1856.kt"
   },
   "box/box/arrays/arrayConstructorWithNonInlineLambda.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/arrayConstructorWithNonInlineLambda.kt"
   },
   "box/box/arrays/arrayConstructorsSimple.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/arrayConstructorsSimple.kt"
   },
   "box/box/arrays/arrayGetAssignMultiIndex.kt": {
@@ -1092,8 +1088,8 @@
    "upstream": "compiler/testData/codegen/box/basics/array_to_any.kt"
   },
   "box/box/basics/canonical_name.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "strings / templates",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/canonical_name.kt"
   },
@@ -1677,17 +1673,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup2vjtu8pg/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup2vjtu8pg/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupgxhlyxgj/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupgxhlyxgj/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprcusy8gr/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprcusy8gr/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupvq2cwqkv/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupvq2cwqkv/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprayvhtm6/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprayvhtm6/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupg_u7xuv4/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupg_u7xuv4/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -1734,8 +1730,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/explicitEqualsOnDouble.kt"
   },
   "box/box/boxingOptimization/fold.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "other: unknown method LongArray.fold()",
+   "detail": "unknown method LongArray.fold()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/fold.kt"
   },
@@ -1890,9 +1886,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/simple.kt"
   },
   "box/box/boxingOptimization/simpleUninitializedMerge.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/simpleUninitializedMerge.kt"
   },
   "box/box/boxingOptimization/taintedValues.kt": {
@@ -2650,8 +2645,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test10.kt"
   },
   "box/box/bridges/test11.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "strings / templates",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test11.kt"
   },
@@ -8129,8 +8124,8 @@
    "upstream": "compiler/testData/codegen/box/contracts/functionParameter.kt"
   },
   "box/box/contracts/isNullString.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "nullable types",
+   "detail": "unknown method String.isNullOrBlank()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/isNullString.kt"
   },
@@ -8251,8 +8246,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/continueInTryBlock.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/initializerBlock.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/initializerBlock.kt"
   },
@@ -8474,9 +8469,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/emptyWhile.kt"
   },
   "box/box/controlStructures/factorialTest.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/factorialTest.kt"
   },
   "box/box/controlStructures/finallyOnEmptyReturn.kt": {
@@ -9479,9 +9473,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_indices.kt"
   },
   "box/box/controlflow/for_loops_array_mutation.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_mutation.kt"
   },
   "box/box/controlflow/for_loops_array_nested.kt": {
@@ -9555,9 +9548,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/smartcastOnThisInInitializationSection.kt"
   },
   "box/box/controlflow/unreachable1.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/unreachable1.kt"
   },
   "box/box/coroutines/32defaultParametersInSuspend.kt": {
@@ -12128,20 +12120,18 @@
    "upstream": "compiler/testData/codegen/box/correctFrontendCode/privateNestedClassInSuper.kt"
   },
   "box/box/cycles/cycle.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/cycles/cycle.kt"
   },
   "box/box/cycles/cycle_do.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/cycles/cycle_do.kt"
   },
   "box/box/cycles/cycle_for.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "unknown Array (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Array'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/cycles/cycle_for.kt"
   },
@@ -12445,9 +12435,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/unitComponent.kt"
   },
   "box/box/dataObjects/equals.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataObjects/equals.kt"
   },
   "box/box/dataObjects/hashCode.kt": {
@@ -12463,9 +12452,8 @@
    "upstream": "compiler/testData/codegen/box/dataObjects/toString.kt"
   },
   "box/box/dataflow/scope1.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataflow/scope1.kt"
   },
   "box/box/dataflow/uninitialized_val.kt": {
@@ -12475,9 +12463,8 @@
    "upstream": "compiler/testData/codegen/box/dataflow/uninitialized_val.kt"
   },
   "box/box/deadCodeElimination/emptyVariableRange.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/deadCodeElimination/emptyVariableRange.kt"
   },
   "box/box/deadCodeElimination/intersectingVariableRange.kt": {
@@ -14911,9 +14898,8 @@
    "upstream": "compiler/testData/codegen/box/enum/innerWithExistingClassObject.kt"
   },
   "box/box/enum/interfaceCallNoEntryClass.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/interfaceCallNoEntryClass.kt"
   },
   "box/box/enum/interfaceCallWithEntryClass.kt": {
@@ -15098,9 +15084,8 @@
    "upstream": "compiler/testData/codegen/box/enum/multipleModules.kt"
   },
   "box/box/enum/nested.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/nested.kt"
   },
   "box/box/enum/openMethodNoOverrides.kt": {
@@ -15167,9 +15152,8 @@
    "upstream": "compiler/testData/codegen/box/enum/test0.kt"
   },
   "box/box/enum/test1.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/test1.kt"
   },
   "box/box/enum/toString.kt": {
@@ -15178,9 +15162,8 @@
    "upstream": "compiler/testData/codegen/box/enum/toString.kt"
   },
   "box/box/enum/vCallNoEntryClass.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/vCallNoEntryClass.kt"
   },
   "box/box/enum/vCallWithEntryClass.kt": {
@@ -15190,8 +15173,8 @@
    "upstream": "compiler/testData/codegen/box/enum/vCallWithEntryClass.kt"
   },
   "box/box/enum/valueOf2.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "unknown E (stdlib API / unsupported decl)",
+   "detail": "unknown name 'E'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/valueOf2.kt"
   },
@@ -15202,8 +15185,8 @@
    "upstream": "compiler/testData/codegen/box/enum/valueof.kt"
   },
   "box/box/enum/values.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "enum classes",
+   "detail": "unknown function 'enumValues'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/values.kt"
   },
@@ -15230,9 +15213,8 @@
    "upstream": "compiler/testData/codegen/box/escapeAnalysis/recursion.kt"
   },
   "box/box/escapeAnalysis/stack_array.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertTrue'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/escapeAnalysis/stack_array.kt"
   },
   "box/box/escapeAnalysis/test1.kt": {
@@ -15241,15 +15223,13 @@
    "upstream": "compiler/testData/codegen/box/escapeAnalysis/test1.kt"
   },
   "box/box/escapeAnalysis/test10.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/escapeAnalysis/test10.kt"
   },
   "box/box/escapeAnalysis/test11.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/escapeAnalysis/test11.kt"
   },
   "box/box/escapeAnalysis/test12.kt": {
@@ -15258,9 +15238,8 @@
    "upstream": "compiler/testData/codegen/box/escapeAnalysis/test12.kt"
   },
   "box/box/escapeAnalysis/test13.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/escapeAnalysis/test13.kt"
   },
   "box/box/escapeAnalysis/test2.kt": {
@@ -15304,9 +15283,8 @@
    "upstream": "compiler/testData/codegen/box/escapeAnalysis/test9.kt"
   },
   "box/box/escapeAnalysis/zeroOutObjectOnAlloc.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/escapeAnalysis/zeroOutObjectOnAlloc.kt"
   },
   "box/box/evaluate/annotationClassWithInner.kt": {
@@ -17263,9 +17241,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaults1.kt"
   },
   "box/box/function/defaults10.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/defaults10.kt"
   },
   "box/box/function/defaults2.kt": {
@@ -17286,27 +17263,25 @@
    "upstream": "compiler/testData/codegen/box/function/defaults4.kt"
   },
   "box/box/function/defaults5.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "strings / templates",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults5.kt"
   },
   "box/box/function/defaults6.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "class bodies / constructors",
+   "detail": "constructor Foo expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults6.kt"
   },
   "box/box/function/defaults7.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/defaults7.kt"
   },
   "box/box/function/defaults8.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/defaults8.kt"
   },
   "box/box/function/defaults9.kt": {
@@ -17321,9 +17296,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaultsFromFakeOverride.kt"
   },
   "box/box/function/defaultsWithInlineClasses.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/defaultsWithInlineClasses.kt"
   },
   "box/box/function/defaultsWithVarArg1.kt": {
@@ -17345,15 +17319,13 @@
    "upstream": "compiler/testData/codegen/box/function/eqeq.kt"
   },
   "box/box/function/extension.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/extension.kt"
   },
   "box/box/function/intrinsic.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/intrinsic.kt"
   },
   "box/box/function/localFunction.kt": {
@@ -17380,15 +17352,13 @@
    "upstream": "compiler/testData/codegen/box/function/manglingImportedFromObjectWithNI.kt"
   },
   "box/box/function/minus_eq.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/minus_eq.kt"
   },
   "box/box/function/named.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/named.kt"
   },
   "box/box/function/nothingNReturningSafeCall.kt": {
@@ -17398,9 +17368,8 @@
    "upstream": "compiler/testData/codegen/box/function/nothingNReturningSafeCall.kt"
   },
   "box/box/function/plus_eq.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/plus_eq.kt"
   },
   "box/box/function/referenceBigArity.kt": {
@@ -17416,27 +17385,23 @@
    "upstream": "compiler/testData/codegen/box/function/sum.kt"
   },
   "box/box/function/sum_3const.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/sum_3const.kt"
   },
   "box/box/function/sum_foo_bar.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/sum_foo_bar.kt"
   },
   "box/box/function/sum_func.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/sum_func.kt"
   },
   "box/box/function/sum_imm.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/sum_imm.kt"
   },
   "box/box/function/sum_mixed.kt": {
@@ -19770,9 +19735,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/correctOrder2.kt"
   },
   "box/box/initializers/correctOrder3.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.IllegalStateException: Expected <1>, actual <0>.\\n'",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/initializers/correctOrder3.kt"
   },
   "box/box/initializers/files/globalInitedAfterAccessingFile.kt": {
@@ -19813,9 +19777,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/initializers2.kt"
   },
   "box/box/initializers/initializers3.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/initializers/initializers3.kt"
   },
   "box/box/initializers/initializers4.kt": {
@@ -19825,9 +19788,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/initializers4.kt"
   },
   "box/box/initializers/initializers5.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "exit=-11 stdout='' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/initializers/initializers5.kt"
   },
   "box/box/initializers/initializers7.kt": {
@@ -19868,14 +19830,14 @@
    "upstream": "compiler/testData/codegen/box/initializers/sharedVarInInitBlock.kt"
   },
   "box/box/initializers/static_arrays.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "strings / templates",
+   "detail": "unknown method IntArray.joinToString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/initializers/static_arrays.kt"
   },
   "box/box/initializers/static_list.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.joinToString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/initializers/static_list.kt"
   },
@@ -20141,9 +20103,8 @@
    "upstream": "compiler/testData/codegen/box/inline/inline17.kt"
   },
   "box/box/inline/inline19.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inline/inline19.kt"
   },
   "box/box/inline/inline2.kt": {
@@ -20511,9 +20472,8 @@
    "upstream": "compiler/testData/codegen/box/inline/metadataForPublicFunction.kt"
   },
   "box/box/inline/multiDeclaration.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inline/multiDeclaration.kt"
   },
   "box/box/inline/multipleInheritanceClash.kt": {
@@ -20729,9 +20689,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClass/customEquals.kt"
   },
   "box/box/inlineClass/defaultEquals.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertTrue'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClass/defaultEquals.kt"
   },
   "box/box/inlineClass/nestedInlineClasses.kt": {
@@ -23425,9 +23384,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInInitBlockGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassInStringTemplate.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "exit=-11 stdout='' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInStringTemplate.kt"
   },
   "box/box/inlineClasses/inlineClassInStringTemplateGeneric.kt": {
@@ -23495,12 +23453,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789728\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146694240\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -536081248\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966752\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25553,9 +25511,8 @@
    "upstream": "compiler/testData/codegen/box/inlineSizeReduction/noDuplicateVariableDeclaration.kt"
   },
   "box/box/inlineSizeReduction/oneTopLevelReturn.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineSizeReduction/oneTopLevelReturn.kt"
   },
   "box/box/inlineSizeReduction/propertyAssignment.kt": {
@@ -26246,9 +26203,8 @@
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/mutablePrimitives.kt"
   },
   "box/box/ir/enumClass.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/enumClass.kt"
   },
   "box/box/ir/enumClass2.kt": {
@@ -26264,9 +26220,8 @@
    "upstream": "compiler/testData/codegen/box/ir/enumClass3.kt"
   },
   "box/box/ir/fileClassInitializers.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/fileClassInitializers.kt"
   },
   "box/box/ir/genericCompanion.kt": {
@@ -26696,9 +26651,8 @@
    "upstream": "compiler/testData/codegen/box/lambda/lambda4.kt"
   },
   "box/box/lambda/lambda5.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lambda/lambda5.kt"
   },
   "box/box/lambda/lambda6.kt": {
@@ -26708,9 +26662,8 @@
    "upstream": "compiler/testData/codegen/box/lambda/lambda6.kt"
   },
   "box/box/lambda/lambda7.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lambda/lambda7.kt"
   },
   "box/box/lambda/lambda8.kt": {
@@ -26741,8 +26694,8 @@
    "upstream": "compiler/testData/codegen/box/lambda/lambda_kt49360_wrapBlock.kt"
   },
   "box/box/lambda/lambda_kt78666.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "other: unsupported call",
+   "detail": "unsupported call",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lambda/lambda_kt78666.kt"
   },
@@ -27253,9 +27206,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/arrays.kt"
   },
   "box/box/lower/forLoopsLowering/lists.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/lists.kt"
   },
   "box/box/lower/forLoopsLowering/listsCME.kt": {
@@ -29059,9 +29011,8 @@
    "upstream": "compiler/testData/codegen/box/object/globalInitializer.kt"
   },
   "box/box/object/init0.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/object/init0.kt"
   },
   "box/box/object/initialization.kt": {
@@ -29077,9 +29028,8 @@
    "upstream": "compiler/testData/codegen/box/object/initialization1.kt"
   },
   "box/box/object/method_call.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/object/method_call.kt"
   },
   "box/box/objectExpression/expr1.kt": {
@@ -30149,8 +30099,8 @@
    "upstream": "compiler/testData/codegen/box/platformTypes/primitives/unaryPlus.kt"
   },
   "box/box/primitiveTypes/booleanHashCode.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Boolean, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/booleanHashCode.kt"
   },
@@ -30376,9 +30326,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt1093.kt"
   },
   "box/box/primitiveTypes/kt13023.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt13023.kt"
   },
   "box/box/primitiveTypes/kt14868.kt": {
@@ -31934,14 +31883,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithCustomContains.kt"
   },
   "box/box/ranges/contains/inRangeWithImplicitReceiver.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertTrue'",
+   "category": "other: cannot build a range of Double and Double",
+   "detail": "cannot build a range of Double and Double",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithImplicitReceiver.kt"
   },
   "box/box/ranges/contains/inRangeWithNonmatchingArguments.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertTrue'",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithNonmatchingArguments.kt"
   },
@@ -32501,27 +32450,23 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forInSumDownToSum.kt"
   },
   "box/box/ranges/forInDownTo/forIntInDownTo.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forIntInDownTo.kt"
   },
   "box/box/ranges/forInDownTo/forIntInDownToWithNonConstBounds.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forIntInDownToWithNonConstBounds.kt"
   },
   "box/box/ranges/forInDownTo/forIntInNonOptimizedDownTo.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forIntInNonOptimizedDownTo.kt"
   },
   "box/box/ranges/forInDownTo/forLongInDownTo.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forLongInDownTo.kt"
   },
   "box/box/ranges/forInDownTo/forNullableIntInDownTo.kt": {
@@ -32567,8 +32512,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCollectionIndices.kt"
   },
   "box/box/ranges/forInIndices/forInCollectionTypeParameterIndices.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCollectionTypeParameterIndices.kt"
   },
@@ -32785,15 +32730,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeLiteralWithMixedTypeBounds.kt"
   },
   "box/box/ranges/forInRangeWithImplicitReceiver.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "other: unknown method Int.rangeTo()",
+   "detail": "unknown method Int.rangeTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeWithImplicitReceiver.kt"
   },
   "box/box/ranges/forInReversed/ForInReversedReversedRange.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/ForInReversedReversedRange.kt"
   },
   "box/box/ranges/forInReversed/forInReversedArrayIndices.kt": {
@@ -32815,9 +32759,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedCollectionIndices.kt"
   },
   "box/box/ranges/forInReversed/forInReversedDownTo.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedDownTo.kt"
   },
   "box/box/ranges/forInReversed/forInReversedEmptyRange.kt": {
@@ -32836,21 +32779,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedEmptyRangeLiteralWithNonConstBounds.kt"
   },
   "box/box/ranges/forInReversed/forInReversedRange.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedRange.kt"
   },
   "box/box/ranges/forInReversed/forInReversedRangeLiteral.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedRangeLiteral.kt"
   },
   "box/box/ranges/forInReversed/forInReversedRangeLiteralWithNonConstBounds.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedRangeLiteralWithNonConstBounds.kt"
   },
   "box/box/ranges/forInReversed/forInReversedReversedArrayIndices.kt": {
@@ -32860,39 +32800,33 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedReversedArrayIndices.kt"
   },
   "box/box/ranges/forInReversed/forInReversedReversedDownTo.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedReversedDownTo.kt"
   },
   "box/box/ranges/forInReversed/forInReversedReversedReversedRange.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedReversedReversedRange.kt"
   },
   "box/box/ranges/forInReversed/forInReversedReversedUntil.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedReversedUntil.kt"
   },
   "box/box/ranges/forInReversed/forInReversedReversedUntilWithNonConstBounds.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedReversedUntilWithNonConstBounds.kt"
   },
   "box/box/ranges/forInReversed/forInReversedUntil.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedUntil.kt"
   },
   "box/box/ranges/forInReversed/forInReversedUntilWithNonConstBounds.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedUntilWithNonConstBounds.kt"
   },
   "box/box/ranges/forInStringVarUpdatedInLoopBody.kt": {
@@ -33322,8 +33256,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/safeCallRangeTo.kt"
   },
   "box/box/ranges/stepped/expression/downTo/emptyProgression.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "other: unknown method ArrayList<Int>.isEmpty()",
+   "detail": "unknown method ArrayList<Int>.isEmpty()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/emptyProgression.kt"
   },
@@ -33359,14 +33293,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/maxValueToMinValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/downTo/maxValueToOneStepMaxValue.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/maxValueToOneStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/downTo/maxValueToZeroStepMaxValue.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/maxValueToZeroStepMaxValue.kt"
   },
@@ -33377,128 +33311,128 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepOneThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepThenSameStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/reversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/reversedThenStepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/stepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/stepThenReversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/downTo/singleElementStepTwo.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepNonConst.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepOne.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepToOutsideRange.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/emptyProgression.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "other: unknown method ArrayList<Int>.isEmpty()",
+   "detail": "unknown method ArrayList<Int>.isEmpty()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/emptyProgression.kt"
   },
@@ -33540,134 +33474,134 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepOneThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepThenSameStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/oneToMaxValueStepMaxValue.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/singleElementStepTwo.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepNonConst.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepToOutsideRange.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/zeroToMaxValueStepMaxValue.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
@@ -33816,8 +33750,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/emptyProgression.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "other: unknown method ArrayList<Int>.isEmpty()",
+   "detail": "unknown method ArrayList<Int>.isEmpty()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/emptyProgression.kt"
   },
@@ -33865,140 +33799,140 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepOneThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepThenSameStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/progressionToNonConst.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/progressionToNonConst.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/reversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/reversedThenStepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/stepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/stepThenReversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/until/singleElementStepTwo.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/expression/until/stepNonConst.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepNonConst.kt"
   },
   "box/box/ranges/stepped/expression/until/stepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepOne.kt"
   },
   "box/box/ranges/stepped/expression/until/stepToOutsideRange.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/expression/until/stepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/until/stepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/zeroToMaxValueStepMaxValue.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/emptyProgression.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "other: unknown method ArrayList<Int>.isEmpty()",
+   "detail": "unknown method ArrayList<Int>.isEmpty()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/emptyProgression.kt"
   },
@@ -34034,14 +33968,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/maxValueToMinValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/maxValueToOneStepMaxValue.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/maxValueToOneStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/maxValueToZeroStepMaxValue.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/maxValueToZeroStepMaxValue.kt"
   },
@@ -34052,128 +33986,128 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepOneThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepThenSameStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/reversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/reversedThenStepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/stepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/stepThenReversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/downTo/singleElementStepTwo.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepNonConst.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepOne.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepToOutsideRange.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/emptyProgression.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "other: unknown method ArrayList<Int>.isEmpty()",
+   "detail": "unknown method ArrayList<Int>.isEmpty()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/emptyProgression.kt"
   },
@@ -34215,134 +34149,134 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepOneThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepThenSameStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/oneToMaxValueStepMaxValue.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/singleElementStepTwo.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepNonConst.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepToOutsideRange.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/zeroToMaxValueStepMaxValue.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
@@ -34491,8 +34425,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/emptyProgression.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "other: unknown method ArrayList<Int>.isEmpty()",
+   "detail": "unknown method ArrayList<Int>.isEmpty()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/emptyProgression.kt"
   },
@@ -34540,134 +34474,134 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepOneThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepThenSameStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/progressionToNonConst.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/progressionToNonConst.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/reversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/reversedThenStepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/stepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/stepThenReversedThenStep.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/until/singleElementStepTwo.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/literal/until/stepNonConst.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepNonConst.kt"
   },
   "box/box/ranges/stepped/literal/until/stepOne.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepOne.kt"
   },
   "box/box/ranges/stepped/literal/until/stepToOutsideRange.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/literal/until/stepToSameLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/until/stepToSmallerLast.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/zeroToMaxValueStepMaxValue.kt": {
-   "category": "other: val 'intList' cannot be reassigned",
-   "detail": "val 'intList' cannot be reassigned",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/zeroToMaxValueStepMaxValue.kt"
   },
@@ -35362,8 +35296,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/emptyProgression.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
+   "category": "other: unknown method ArrayList<UInt>.isEmpty()",
+   "detail": "unknown method ArrayList<UInt>.isEmpty()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/emptyProgression.kt"
   },
@@ -35503,44 +35437,38 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/singleElementStepTwo.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/stepNonConst.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/stepOne.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/stepToOutsideRange.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/stepToSameLast.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/stepToSmallerLast.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/emptyProgression.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
+   "category": "other: unknown method ArrayList<UInt>.isEmpty()",
+   "detail": "unknown method ArrayList<UInt>.isEmpty()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/emptyProgression.kt"
   },
@@ -35674,39 +35602,33 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/singleElementStepTwo.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/stepNonConst.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/stepOne.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/stepToOutsideRange.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/stepToSameLast.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/stepToSmallerLast.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/zeroToMaxValueStepMaxValue.kt": {
@@ -35860,8 +35782,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/emptyProgression.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
+   "category": "other: unknown method ArrayList<UInt>.isEmpty()",
+   "detail": "unknown method ArrayList<UInt>.isEmpty()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/emptyProgression.kt"
   },
@@ -35959,9 +35881,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/progressionToNonConst.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/progressionToNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStep.kt": {
@@ -36001,39 +35922,33 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/singleElementStepTwo.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/stepNonConst.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/stepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/stepOne.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/stepToOutsideRange.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/stepToSameLast.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/stepToSmallerLast.kt": {
-   "category": "other: val 'uintList' cannot be reassigned",
-   "detail": "val 'uintList' cannot be reassigned",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/zeroToMaxValueStepMaxValue.kt": {
@@ -39852,21 +39767,18 @@
    "upstream": "compiler/testData/codegen/box/try/returnsDifferentTypes.kt"
   },
   "box/box/try/try1.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/try1.kt"
   },
   "box/box/try/try2.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/try2.kt"
   },
   "box/box/try/try3.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/try3.kt"
   },
   "box/box/try/try4.kt": {
@@ -40375,7 +40287,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup4rxsz50_/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup4rxsz50_/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup4bs4s1j2/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup4bs4s1j2/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -41351,15 +41263,13 @@
    "upstream": "compiler/testData/codegen/box/when/emptyWhen.kt"
   },
   "box/box/when/enumOptimization/bigEnum.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/bigEnum.kt"
   },
   "box/box/when/enumOptimization/duplicatingItems.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/duplicatingItems.kt"
   },
   "box/box/when/enumOptimization/enumInsideClassObject.kt": {
@@ -41369,9 +41279,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/enumInsideClassObject.kt"
   },
   "box/box/when/enumOptimization/expression.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/expression.kt"
   },
   "box/box/when/enumOptimization/functionLiteralInTopLevel.kt": {
@@ -41410,9 +41319,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt50258.kt"
   },
   "box/box/when/enumOptimization/manyWhensWithinClass.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/manyWhensWithinClass.kt"
   },
   "box/box/when/enumOptimization/nestedWhenInCondition.kt": {
@@ -41436,9 +41344,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/nullIsTheFirstEntry.kt"
   },
   "box/box/when/enumOptimization/nullability.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/nullability.kt"
   },
   "box/box/when/enumOptimization/nullableEnum.kt": {
@@ -41453,9 +41360,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/subjectAny.kt"
   },
   "box/box/when/enumOptimization/withoutElse.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/withoutElse.kt"
   },
   "box/box/when/exceptionOnNoMatch.kt": {
@@ -41668,51 +41574,43 @@
    "upstream": "compiler/testData/codegen/box/when/sealedWhenInitialization.kt"
   },
   "box/box/when/stringOptimization/duplicatingItems.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/duplicatingItems.kt"
   },
   "box/box/when/stringOptimization/duplicatingItemsSameHashCode.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/duplicatingItemsSameHashCode.kt"
   },
   "box/box/when/stringOptimization/duplicatingItemsSameHashCode2.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/duplicatingItemsSameHashCode2.kt"
   },
   "box/box/when/stringOptimization/duplicatingItemsSameHashCode3.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/duplicatingItemsSameHashCode3.kt"
   },
   "box/box/when/stringOptimization/expression.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/expression.kt"
   },
   "box/box/when/stringOptimization/nullability.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/nullability.kt"
   },
   "box/box/when/stringOptimization/sameHashCode.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/sameHashCode.kt"
   },
   "box/box/when/stringOptimization/statement.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/statement.kt"
   },
   "box/box/when/stringOptimization/temporaryVarInWhenByStringIsDisposedProperly.kt": {
@@ -46210,9 +46108,8 @@
    "upstream": "native/native.tests/testData/codegen/initializers/while3.kt"
   },
   "native/native.tests/codegen/inline/inline18.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertTrue'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/inline/inline18.kt"
   },
   "native/native.tests/codegen/inlineClass/inlineClass0.kt": {
@@ -46228,9 +46125,8 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupw1mo0ntv/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupw1mo0ntv/t.l",
+   "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },
   "native/native.tests/codegen/interop/kt61441.kt": {
@@ -46279,8 +46175,8 @@
    "upstream": "native/native.tests/testData/codegen/intrinsics/interop_sourceCodeStruct.kt"
   },
   "native/native.tests/codegen/intrinsics/isExperimentalMM.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertTrue'",
+   "category": "unknown isExperimentalMM (stdlib API / unsupported decl)",
+   "detail": "unknown function 'isExperimentalMM'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/intrinsics/isExperimentalMM.kt"
   },
@@ -46346,9 +46242,8 @@
    "upstream": "native/native.tests/testData/codegen/link/privateFakeOverridesOverride.kt"
   },
   "native/native.tests/codegen/literals/empty_string.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/literals/empty_string.kt"
   },
   "native/native.tests/codegen/literals/strdedup2.kt": {
@@ -46405,26 +46300,26 @@
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/compileTime.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkComputedField.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertTrue'",
+   "category": "other: unknown method ClassWithComputedField.isPermanent()",
+   "detail": "unknown method ClassWithComputedField.isPermanent()",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkComputedField.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkConstructor.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "class bodies / constructors",
+   "detail": "unknown method ClassWithConstructor.isPermanent()",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkConstructor.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkEmptyClass.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertTrue'",
+   "category": "other: unknown method EmptyClass.isPermanent()",
+   "detail": "unknown method EmptyClass.isPermanent()",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkEmptyClass.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkField.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertFalse'",
+   "category": "other: unknown method ClassWithField.isPermanent()",
+   "detail": "unknown method ClassWithField.isPermanent()",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkField.kt"
   },
@@ -46446,38 +46341,38 @@
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/bigClassWithMixedValues.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnArray.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "other: unknown method ArrayList<Int>.collectReferenceFieldValues()",
+   "detail": "unknown method ArrayList<Int>.collectReferenceFieldValues()",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnArray.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnPrimitive.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "other: unknown method Int.collectReferenceFieldValues()",
+   "detail": "unknown method Int.collectReferenceFieldValues()",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnPrimitive.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnPrimitiveArray.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "other: unknown method IntArray.collectReferenceFieldValues()",
+   "detail": "unknown method IntArray.collectReferenceFieldValues()",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnPrimitiveArray.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnString.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "strings / templates",
+   "detail": "unknown method String.collectReferenceFieldValues()",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnString.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnValueClass.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "other: unknown method BoxA.collectReferenceFieldValues()",
+   "detail": "unknown method BoxA.collectReferenceFieldValues()",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnValueClass.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnValueOverPrimitiveClass.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertEquals'",
+   "category": "other: unknown method BoxInt.collectReferenceFieldValues()",
+   "detail": "unknown method BoxInt.collectReferenceFieldValues()",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnValueOverPrimitiveClass.kt"
   },
