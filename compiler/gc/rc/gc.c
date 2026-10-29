@@ -5,6 +5,7 @@
 
 /* Never sets the buffered bit, so generated code frees every traced object at count zero. */
 void rt_cc_possible_root(void *p) { (void)p; }
+/* Count zero, fields already released: free immediately (vtable pointer is word 1, see kxgc.h). */
 void rt_cc_dead(void *p) { (*(KxVTab **)((char *)p + 8))->freemem(p); }
 void rt_gc_collect(void) {}
 const char *rt_gc_name(void) { return "rc"; }

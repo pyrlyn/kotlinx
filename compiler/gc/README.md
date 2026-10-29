@@ -11,6 +11,31 @@ linked into every program.
 | `rc` | [`rc/gc.c`](rc/gc.c) | leak | Same RC and regions, no cycle collector. Baseline for the collector's cost. |
 | `boehm` | [`boehm/gc.c`](boehm/gc.c) | collected | RC + [bdwgc](https://github.com/bdwgc/bdwgc) 8.2.12 (conservative mark-sweep) for unreachable cycles. bdwgc is installed by `mise install` (`conda:bdw-gc` in `mise.toml`). |
 
+Full description (object layout, RC + Perceus, regions, cycle collector, ownership rules):
+[`docs/architecture.md`](docs/architecture.md).
+
+## Layout
+
+| path | contents |
+|---|---|
+| `kxgc.h` | the interface between generated code, runtime and implementation |
+| `common/regions.inc` | RC and tracing regions, `rt_gc_mem_*` (RC implementations) |
+| `common/object.inc` | header/vtable accessors, colors, pointer stack |
+| `common/trial_deletion.inc` | MarkGray / Scan / CollectWhite passes and the adaptive threshold |
+| `<name>/gc.c`, `<name>/caps`, `<name>/config.sh` | one implementation |
+| `tests/` | unit and Kotlin tests for every implementation |
+| `docs/` | architecture, plans |
+
+## Environment variables
+
+| variable | when | effect |
+|---|---|---|
+| `NEWKOTLIN_GC` | compile | default for `--gc` |
+| `NEWKOTLIN_GC_DIR` | compile | directory with implementations |
+| `NEWKOTLIN_BDWGC_DIR` | compile | bdwgc prefix for `--gc=boehm` |
+| `KX_GC_STATS=1` | run | print GC statistics to stderr at exit |
+| `KX_GC_BUDGET_US` | run | per-step budget of `incremental` (default 500) |
+
 ## Selecting an implementation
 
 ```sh
@@ -37,7 +62,7 @@ NEWKOTLIN_GC=rc bin/newkotlinc Main.kt -o main  # default when --gc is absent
 ## Adding an implementation
 
 Create `compiler/gc/<name>/gc.c` implementing every function in `kxgc.h` (`common/regions.inc` provides
-the RC regions), a `caps` file (`cycles`, `precise`, `asan`: what the tests may expect) and, if it needs
+the RC regions, `common/object.inc` + `common/trial_deletion.inc` the cycle collector passes), a `caps` file (`cycles`, `precise`, `asan`: what the tests may expect) and, if it needs
 extra clang flags, a `config.sh` that prints them. `compiler/gc/tests/run.sh` picks it up automatically.
 
 ## Tests
