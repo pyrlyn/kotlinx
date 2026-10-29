@@ -34,6 +34,11 @@ int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
 void rt_cc_collect(void);
 void rt_exit_flush(void) { rt_cc_collect(); fflush(stdout); }
 
+void rt_bad_step(int64_t step) {
+    fflush(stdout);
+    fprintf(stderr, "Exception in thread \"main\" java.lang.IllegalArgumentException: Step must be positive, was: %" PRId64 ".\n", step);
+    exit(1);
+}
 void rt_panic(const char *msg) {
     fflush(stdout);
     fprintf(stderr, "Exception in thread \"main\" java.lang.IllegalStateException: %s\n", msg);

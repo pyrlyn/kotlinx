@@ -821,31 +821,43 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val it = s.iter
         val lc = label("for.cond"); val lb = label("for.body"); val ls = label("for.step"); val le = label("for.end")
         scopes.add(Scope())
-        if (it is BinE && (it.op == ".." || it.op == "until")) {
-            val lo0 = genExpr(it.l); val hi0 = genExpr(it.r)
-            val t = if (lo0.t == Ty.I64 || hi0.t == Ty.I64) Ty.I64 else Ty.I32
-            val lo = coerce(lo0, t); val hi = coerce(hi0, t)
+        val rng = (if (it is BinE && it.op == "step") it.l else it) as? BinE
+        if (rng != null && rng.op in setOf("..", "until", "downTo")) {
+            // Progression: lo..hi, lo until hi, hi downTo lo, each optionally `step n` (n > 0).
+            val down = rng.op == "downTo"
+            val lo0 = genExpr(rng.l); val hi0 = genExpr(rng.r)
+            val t = if (lo0.t == Ty.Char && hi0.t == Ty.Char) Ty.Char else if (lo0.t == Ty.I64 || hi0.t == Ty.I64) Ty.I64 else Ty.I32
+            val at = if (t == Ty.Char) Ty.I32 else t
+            val lo = if (t == Ty.Char) lo0 else coerce(lo0, t); val hi = if (t == Ty.Char) hi0 else coerce(hi0, t)
+            val stepV = if (it !== rng) {
+                val sv = coerce(genExpr((it as BinE).r), at)
+                val bad = label("step.bad"); val ok = label("step.ok")
+                condBr(emitT("icmp sle ${at.llvm} ${sv.v}, 0"), bad, ok)
+                startBlock(bad)
+                emit("call void @rt_bad_step(i64 ${coerce(sv, Ty.I64).v})"); emit("unreachable"); term = true
+                startBlock(ok)
+                sv.v
+            } else "1"
             val idx = declare(s.name, t, false, false)
             emit("store ${t.llvm} ${lo.v}, ptr ${idx.slot}")
-            startBlock(lc)
-            val i = emitT("load ${t.llvm}, ptr ${idx.slot}")
-            val c = emitT("icmp ${if (it.op == "..") "sle" else "slt"} ${t.llvm} $i, ${hi.v}")
-            condBr(c, lb, le)
+            val cmp = when (rng.op) { ".." -> "sle"; "until" -> "slt"; else -> "sge" }
+            condBr(emitT("icmp $cmp ${t.llvm} ${lo.v}, ${hi.v}"), lb, le)
+            // Inclusive last bound (lo < hi holds for `until` here, so hi - 1 cannot overflow).
             startBlock(lb)
             loops.add(Triple(ls, le, scopes.size))
             genBlockBody(s.body, false)
             loops.removeAt(loops.size - 1)
             startBlock(ls)
+            val last = if (rng.op == "until") emitT("sub ${t.llvm} ${hi.v}, 1") else hi.v
             val i2 = emitT("load ${t.llvm}, ptr ${idx.slot}")
-            if (it.op == "..") {
-                // avoid overflow when hi == MAX
-                val done = emitT("icmp eq ${t.llvm} $i2, ${hi.v}")
-                val inc = label("for.inc")
-                condBr(done, le, inc)
-                startBlock(inc)
-            }
-            emit("store ${t.llvm} ${emitT("add ${t.llvm} $i2, 1")}, ptr ${idx.slot}")
-            br(lc)
+            // Remaining distance to the bound (unsigned: never overflows); stop if the next step passes it.
+            val rem = if (down) emitT("sub ${t.llvm} $i2, $last") else emitT("sub ${t.llvm} $last, $i2")
+            val done = if (stepV == "1") emitT("icmp eq ${t.llvm} $rem, 0") else emitT("icmp ult ${t.llvm} $rem, $stepV")
+            val inc = label("for.inc")
+            condBr(done, le, inc)
+            startBlock(inc)
+            emit("store ${t.llvm} ${emitT("${if (down) "sub" else "add"} ${t.llvm} $i2, $stepV")}, ptr ${idx.slot}")
+            br(lb)
             startBlock(le)
         } else {
             val coll = genExpr(it)
@@ -1499,7 +1511,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 startBlock(le)
                 return if (res.size == 1) a else Val(emitT("phi ptr [ ${a.v}, %$from ], [ ${res[1].first.v}, %${res[1].second} ]"), a.t)
             }
-            "..", "until" -> fail("ranges are only supported in for loops")
+            "..", "until", "downTo", "step" -> fail("ranges are only supported in for loops")
         }
         val a = genExpr(e.l); val b = genExpr(e.r)
         if (a.t == Ty.Char || b.t == Ty.Char) return charOp(e.op, a, b)
@@ -1603,6 +1615,7 @@ declare i64 @fread(ptr, i64, i64, ptr)
 declare i32 @fclose(ptr)
 declare i64 @rt_nanos()
 declare void @rt_panic(ptr) noreturn
+declare void @rt_bad_step(i64) noreturn
 declare void @rt_exit_flush()
 declare void @rt_print_str(ptr)
 declare void @rt_print_i64(i64)

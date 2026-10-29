@@ -1,0 +1,10 @@
+10 9 8 7 6 5 4 3 2 1 
+0369
+048
+10,7,4,1,
+0
+abcdezx
+14
+71428928571
+0 5 15 
+Exception in thread "main" java.lang.IllegalArgumentException: Step must be positive, was: 0.

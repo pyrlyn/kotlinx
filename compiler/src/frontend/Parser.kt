@@ -1,7 +1,7 @@
 package newkotlin
 
 private val ASSIGN_OPS = setOf("=", "+=", "-=", "*=", "/=", "%=")
-private val INFIX_FUNS = setOf("and", "or", "xor", "shl", "shr", "ushr", "until")
+private val INFIX_FUNS = setOf("and", "or", "xor", "shl", "shr", "ushr", "until", "downTo", "step")
 private val GENERIC_CALLS = setOf("ArrayList", "mutableListOf", "arrayListOf", "HashMap", "hashMapOf", "mutableMapOf")
 private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sumOf", "count")
 

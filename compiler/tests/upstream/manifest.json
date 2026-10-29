@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 1,
   "N/A": 2984,
-  "PASS": 165,
-  "UNSUPPORTED": 5325
+  "PASS": 167,
+  "UNSUPPORTED": 5323
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1333,8 +1333,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unit4.kt"
   },
   "box/box/bce/bceCases.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bce/bceCases.kt"
   },
@@ -9638,7 +9638,7 @@
   },
   "box/box/controlflow/for_loops_empty_range.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_empty_range.kt"
   },
@@ -32166,8 +32166,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/arrayIndices.kt"
   },
   "box/box/ranges/contains/generated/charDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "unexpected top-level token (at 'downTo')",
+   "category": "other syntax (at 'in')",
+   "detail": "expected ')' (at 'in')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/charDownTo.kt"
   },
@@ -32226,8 +32226,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/floatRangeUntil.kt"
   },
   "box/box/ranges/contains/generated/intDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "unexpected top-level token (at 'downTo')",
+   "category": "other syntax (at 'in')",
+   "detail": "expected ')' (at 'in')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/intDownTo.kt"
   },
@@ -32250,8 +32250,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/intUntil.kt"
   },
   "box/box/ranges/contains/generated/longDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "unexpected top-level token (at 'downTo')",
+   "category": "other syntax (at 'in')",
+   "detail": "expected ')' (at 'in')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/longDownTo.kt"
   },
@@ -32274,8 +32274,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/longUntil.kt"
   },
   "box/box/ranges/contains/generated/uintDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "unexpected top-level token (at 'downTo')",
+   "category": "other syntax (at 'in')",
+   "detail": "expected ')' (at 'in')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/uintDownTo.kt"
   },
@@ -32298,8 +32298,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/uintUntil.kt"
   },
   "box/box/ranges/contains/generated/ulongDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "unexpected top-level token (at 'downTo')",
+   "category": "other syntax (at 'in')",
+   "detail": "expected ')' (at 'in')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/ulongDownTo.kt"
   },
@@ -32412,8 +32412,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inOptimizableLongRange.kt"
   },
   "box/box/ranges/contains/inPrimitiveProgression.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "unexpected top-level token (at 'step')",
+   "category": "other syntax (at 'in')",
+   "detail": "expected '->' (at 'in')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inPrimitiveProgression.kt"
   },
@@ -32761,7 +32761,7 @@
   },
   "box/box/ranges/expression/emptyDownto.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/emptyDownto.kt"
   },
@@ -32772,26 +32772,26 @@
    "upstream": "compiler/testData/codegen/box/ranges/expression/emptyRange.kt"
   },
   "box/box/ranges/expression/inexactDownToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/inexactDownToMinValue.kt"
   },
   "box/box/ranges/expression/inexactSteppedDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/inexactSteppedDownTo.kt"
   },
   "box/box/ranges/expression/inexactSteppedRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/inexactSteppedRange.kt"
   },
   "box/box/ranges/expression/inexactToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "category": "unknown Byte (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Byte'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/inexactToMaxValue.kt"
   },
@@ -32815,7 +32815,7 @@
   },
   "box/box/ranges/expression/oneElementDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/oneElementDownTo.kt"
   },
@@ -32839,55 +32839,55 @@
   },
   "box/box/ranges/expression/overflowZeroDownToMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/overflowZeroDownToMaxValue.kt"
   },
   "box/box/ranges/expression/overflowZeroToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/expression/progressionDownToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionDownToMinValue.kt"
   },
   "box/box/ranges/expression/progressionMaxValueMinusTwoToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "category": "unknown Byte (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Byte'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionMaxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/expression/progressionMaxValueToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "category": "unknown Byte (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Byte'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionMaxValueToMaxValue.kt"
   },
   "box/box/ranges/expression/progressionMaxValueToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionMaxValueToMinValue.kt"
   },
   "box/box/ranges/expression/progressionMinValueToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionMinValueToMinValue.kt"
   },
   "box/box/ranges/expression/reversedBackSequence.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/reversedBackSequence.kt"
   },
   "box/box/ranges/expression/reversedEmptyBackSequence.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/reversedEmptyBackSequence.kt"
   },
@@ -32899,7 +32899,7 @@
   },
   "box/box/ranges/expression/reversedInexactSteppedDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/reversedInexactSteppedDownTo.kt"
   },
@@ -32911,13 +32911,13 @@
   },
   "box/box/ranges/expression/reversedSimpleSteppedRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/reversedSimpleSteppedRange.kt"
   },
   "box/box/ranges/expression/simpleDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/simpleDownTo.kt"
   },
@@ -32935,20 +32935,19 @@
   },
   "box/box/ranges/expression/simpleSteppedDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/simpleSteppedDownTo.kt"
   },
   "box/box/ranges/expression/simpleSteppedRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/simpleSteppedRange.kt"
   },
   "box/box/ranges/forByteProgressionWithIntIncrement.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forByteProgressionWithIntIncrement.kt"
   },
   "box/box/ranges/forInCharSequenceLengthDecreasedInLoopBody.kt": {
@@ -32994,38 +32993,37 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInDoubleRangeWithCustomIterator.kt"
   },
   "box/box/ranges/forInDownTo/forInDownToWithPossibleUnderflow.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forInDownToWithPossibleUnderflow.kt"
   },
   "box/box/ranges/forInDownTo/forInSumDownToSum.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forInSumDownToSum.kt"
   },
   "box/box/ranges/forInDownTo/forIntInDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forIntInDownTo.kt"
   },
   "box/box/ranges/forInDownTo/forIntInDownToWithNonConstBounds.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'low' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forIntInDownToWithNonConstBounds.kt"
   },
   "box/box/ranges/forInDownTo/forIntInNonOptimizedDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forIntInNonOptimizedDownTo.kt"
   },
   "box/box/ranges/forInDownTo/forLongInDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forLongInDownTo.kt"
   },
@@ -33321,7 +33319,7 @@
   },
   "box/box/ranges/forInReversed/forInReversedDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedDownTo.kt"
   },
@@ -33369,7 +33367,7 @@
   },
   "box/box/ranges/forInReversed/forInReversedReversedDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedReversedDownTo.kt"
   },
@@ -33511,38 +33509,38 @@
    "upstream": "compiler/testData/codegen/box/ranges/forNullableIntInRangeWithImplicitReceiver.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInDownToCharMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInDownToCharMinValue.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInDownToCharMinValueReversed.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInDownToCharMinValueReversed.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInDownToIntMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInDownToIntMinValue.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInDownToIntMinValueReversed.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInDownToIntMinValueReversed.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInDownToLongMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInDownToLongMinValue.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInDownToLongMinValueReversed.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInDownToLongMinValueReversed.kt"
   },
@@ -33589,8 +33587,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInUntilIntMinValueReversed.kt"
   },
   "box/box/ranges/kt37370.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "class bodies / constructors",
+   "detail": "expected ')' (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/kt37370.kt"
   },
@@ -33619,8 +33617,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/kt47492b.kt"
   },
   "box/box/ranges/literal/emptyDownto.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/emptyDownto.kt"
   },
@@ -33631,26 +33629,26 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/emptyRange.kt"
   },
   "box/box/ranges/literal/inexactDownToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactDownToMinValue.kt"
   },
   "box/box/ranges/literal/inexactSteppedDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactSteppedDownTo.kt"
   },
   "box/box/ranges/literal/inexactSteppedRange.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactSteppedRange.kt"
   },
   "box/box/ranges/literal/inexactToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown Byte (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Byte'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactToMaxValue.kt"
   },
@@ -33673,8 +33671,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/maxValueToMinValue.kt"
   },
   "box/box/ranges/literal/oneElementDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/oneElementDownTo.kt"
   },
@@ -33697,56 +33695,56 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/openRangeUntil.kt"
   },
   "box/box/ranges/literal/overflowZeroDownToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/overflowZeroDownToMaxValue.kt"
   },
   "box/box/ranges/literal/overflowZeroToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/literal/progressionDownToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionDownToMinValue.kt"
   },
   "box/box/ranges/literal/progressionMaxValueMinusTwoToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown Byte (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Byte'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionMaxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/literal/progressionMaxValueToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown Byte (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Byte'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionMaxValueToMaxValue.kt"
   },
   "box/box/ranges/literal/progressionMaxValueToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionMaxValueToMinValue.kt"
   },
   "box/box/ranges/literal/progressionMinValueToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionMinValueToMinValue.kt"
   },
   "box/box/ranges/literal/reversedBackSequence.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/reversedBackSequence.kt"
   },
   "box/box/ranges/literal/reversedEmptyBackSequence.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/reversedEmptyBackSequence.kt"
   },
@@ -33758,7 +33756,7 @@
   },
   "box/box/ranges/literal/reversedInexactSteppedDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/reversedInexactSteppedDownTo.kt"
   },
@@ -33770,13 +33768,13 @@
   },
   "box/box/ranges/literal/reversedSimpleSteppedRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/reversedSimpleSteppedRange.kt"
   },
   "box/box/ranges/literal/simpleDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleDownTo.kt"
   },
@@ -33793,14 +33791,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleRangeWithNonConstantEnds.kt"
   },
   "box/box/ranges/literal/simpleSteppedDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleSteppedDownTo.kt"
   },
   "box/box/ranges/literal/simpleSteppedRange.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleSteppedRange.kt"
   },
@@ -33835,7 +33833,7 @@
   },
   "box/box/ranges/stepped/expression/downTo/emptyProgression.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/emptyProgression.kt"
   },
@@ -33871,151 +33869,151 @@
   },
   "box/box/ranges/stepped/expression/downTo/maxValueToMinValueStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/maxValueToMinValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/downTo/maxValueToOneStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/maxValueToOneStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/downTo/maxValueToZeroStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/maxValueToZeroStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/downTo/mixedTypeStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepOneThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepThenSameStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/reversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/reversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/reversedThenStepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/stepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/stepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/stepThenReversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/downTo/singleElementStepTwo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'two' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepOne.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepToOutsideRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/emptyProgression.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/emptyProgression.kt"
   },
@@ -34051,145 +34049,145 @@
   },
   "box/box/ranges/stepped/expression/rangeTo/minValueToMaxValueStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/mixedTypeStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepOneThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepThenSameStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/oneToMaxValueStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/singleElementStepTwo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'two' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepToOutsideRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/zeroToMaxValueStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
@@ -34339,13 +34337,13 @@
   },
   "box/box/ranges/stepped/expression/until/emptyProgression.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/expression/until/emptyProgressionToMinValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/emptyProgressionToMinValue.kt"
   },
@@ -34381,151 +34379,151 @@
   },
   "box/box/ranges/stepped/expression/until/minValueToMaxValueStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/until/mixedTypeStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepOneThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepThenSameStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/progressionToNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'nine' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/progressionToNonConst.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/reversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/reversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/reversedThenStepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/stepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/stepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/stepThenReversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/until/singleElementStepTwo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/expression/until/stepNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'two' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepNonConst.kt"
   },
   "box/box/ranges/stepped/expression/until/stepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepOne.kt"
   },
   "box/box/ranges/stepped/expression/until/stepToOutsideRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/expression/until/stepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/until/stepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/zeroToMaxValueStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/emptyProgression.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/emptyProgression.kt"
   },
@@ -34560,152 +34558,152 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/maxValueToMinValueStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/maxValueToMinValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/maxValueToOneStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/maxValueToOneStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/maxValueToZeroStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/maxValueToZeroStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/mixedTypeStep.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: unknown method Int.toShort()",
+   "detail": "unknown method Int.toShort()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepOneThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepThenSameStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/reversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/reversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/reversedThenStepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/stepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/stepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/stepThenReversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/downTo/singleElementStepTwo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'two' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepOne.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepOne.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepToOutsideRange.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepToSameLast.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepToSmallerLast.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/emptyProgression.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/emptyProgression.kt"
   },
@@ -34740,146 +34738,146 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/minValueToMaxValueStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/mixedTypeStep.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: unknown method Int.toShort()",
+   "detail": "unknown method Int.toShort()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepOneThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepThenSameStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/oneToMaxValueStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/singleElementStepTwo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'two' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepOne.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepToOutsideRange.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepToSameLast.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepToSmallerLast.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/zeroToMaxValueStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
@@ -35028,14 +35026,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/emptyProgression.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/literal/until/emptyProgressionToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/emptyProgressionToMinValue.kt"
   },
@@ -35070,152 +35068,152 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/literal/until/minValueToMaxValueStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/until/mixedTypeStep.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: unknown method Int.toShort()",
+   "detail": "unknown method Int.toShort()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepOneThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepThenSameStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/progressionToNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'nine' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/progressionToNonConst.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/reversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/reversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/reversedThenStepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/stepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/stepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/stepThenReversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/until/singleElementStepTwo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/literal/until/stepNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'two' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepNonConst.kt"
   },
   "box/box/ranges/stepped/literal/until/stepOne.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepOne.kt"
   },
   "box/box/ranges/stepped/literal/until/stepToOutsideRange.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/literal/until/stepToSameLast.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/until/stepToSmallerLast.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/zeroToMaxValueStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'intList' cannot be reassigned",
+   "detail": "val 'intList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/emptyProgression.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/emptyProgression.kt"
   },
@@ -35251,151 +35249,151 @@
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/maxValueToMinValueStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/maxValueToMinValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/maxValueToOneStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/maxValueToOneStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/maxValueToZeroStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/maxValueToZeroStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/mixedTypeStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepOneThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepThenSameStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSameLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/reversed/reversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/reversed/reversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/reversed/reversedThenStepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/reversed/stepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/reversed/stepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/reversed/stepThenReversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/singleElementStepTwo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/stepNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'two' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/stepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/stepToOutsideRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/stepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/stepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/emptyProgression.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/emptyProgression.kt"
   },
@@ -35431,145 +35429,145 @@
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/minValueToMaxValueStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/mixedTypeStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepOneThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepThenSameStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSameLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/oneToMaxValueStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/stepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/stepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/singleElementStepTwo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/stepNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'two' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/stepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/stepToOutsideRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/stepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/stepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/zeroToMaxValueStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
@@ -35719,13 +35717,13 @@
   },
   "box/box/ranges/stepped/unsigned/expression/until/emptyProgression.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/emptyProgressionToMinValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/emptyProgressionToMinValue.kt"
   },
@@ -35761,151 +35759,151 @@
   },
   "box/box/ranges/stepped/unsigned/expression/until/minValueToMaxValueStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/mixedTypeStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepOneThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepThenSameStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSameLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSameLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSmallerLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/progressionToNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'nine' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/progressionToNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/reversed/reversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/reversed/reversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/reversed/reversedThenStepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/reversed/stepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/reversed/stepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/reversed/stepThenReversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/singleElementStepTwo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/stepNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'two' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/stepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/stepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/stepToOutsideRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/stepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/stepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/zeroToMaxValueStepMaxValue.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/emptyProgression.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/emptyProgression.kt"
   },
@@ -35940,152 +35938,152 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/maxValueToMinValueStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/maxValueToMinValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/maxValueToOneStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/maxValueToOneStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/maxValueToZeroStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/maxValueToZeroStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/mixedTypeStep.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: unknown method Int.toUByte()",
+   "detail": "unknown method Int.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepOneThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepThenSameStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSameLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/reversed/reversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/reversed/reversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/reversed/reversedThenStepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/singleElementStepTwo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/stepNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'two' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/stepOne.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/stepToOutsideRange.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/stepToSameLast.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/stepToSmallerLast.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/emptyProgression.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/emptyProgression.kt"
   },
@@ -36120,146 +36118,146 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/minValueToMaxValueStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/mixedTypeStep.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: unknown method Int.toUByte()",
+   "detail": "unknown method Int.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepOneThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepThenSameStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSameLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/oneToMaxValueStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/singleElementStepTwo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/stepNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'two' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/stepOne.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/stepToOutsideRange.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/stepToSameLast.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/stepToSmallerLast.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/zeroToMaxValueStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
@@ -36408,14 +36406,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/emptyProgression.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/emptyProgressionToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/emptyProgressionToMinValue.kt"
   },
@@ -36450,146 +36448,146 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/minValueToMaxValueStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/mixedTypeStep.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: unknown method Int.toUByte()",
+   "detail": "unknown method Int.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepOneThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepThenSameStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSameLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSameLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepOne.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/progressionToNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'nine' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/progressionToNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversedThenStep.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversedThenStepThenReversed.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/singleElementStepTwo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/stepNonConst.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'two' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/stepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/stepOne.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/stepToOutsideRange.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/stepToSameLast.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/stepToSmallerLast.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "other: val 'uintList' cannot be reassigned",
+   "detail": "val 'uintList' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/zeroToMaxValueStepMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/zeroToMaxValueStepMaxValue.kt"
   },
@@ -36600,7 +36598,7 @@
   },
   "box/box/ranges/unsigned/expression/emptyDownto.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/emptyDownto.kt"
   },
@@ -36611,26 +36609,26 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/emptyRange.kt"
   },
   "box/box/ranges/unsigned/expression/inexactDownToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/inexactDownToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/inexactSteppedDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/inexactSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/expression/inexactSteppedRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/inexactSteppedRange.kt"
   },
   "box/box/ranges/unsigned/expression/inexactToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/inexactToMaxValue.kt"
   },
@@ -36654,7 +36652,7 @@
   },
   "box/box/ranges/unsigned/expression/oneElementDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/oneElementDownTo.kt"
   },
@@ -36677,56 +36675,56 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/openRangeUntil.kt"
   },
   "box/box/ranges/unsigned/expression/overflowZeroDownToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/overflowZeroDownToMaxValue.kt"
   },
   "box/box/ranges/unsigned/expression/overflowZeroToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/progressionDownToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/progressionDownToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/progressionMaxValueMinusTwoToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/progressionMaxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/unsigned/expression/progressionMaxValueToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/progressionMaxValueToMaxValue.kt"
   },
   "box/box/ranges/unsigned/expression/progressionMaxValueToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/progressionMaxValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/progressionMinValueToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/progressionMinValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/reversedBackSequence.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedBackSequence.kt"
   },
   "box/box/ranges/unsigned/expression/reversedEmptyBackSequence.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedEmptyBackSequence.kt"
   },
@@ -36738,7 +36736,7 @@
   },
   "box/box/ranges/unsigned/expression/reversedInexactSteppedDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedInexactSteppedDownTo.kt"
   },
@@ -36750,13 +36748,13 @@
   },
   "box/box/ranges/unsigned/expression/reversedSimpleSteppedRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedSimpleSteppedRange.kt"
   },
   "box/box/ranges/unsigned/expression/simpleDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleDownTo.kt"
   },
@@ -36774,13 +36772,13 @@
   },
   "box/box/ranges/unsigned/expression/simpleSteppedDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/expression/simpleSteppedRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected end of statement (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleSteppedRange.kt"
   },
@@ -36797,14 +36795,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt35004.kt"
   },
   "box/box/ranges/unsigned/kt36953.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt36953.kt"
   },
   "box/box/ranges/unsigned/kt36953_continue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "break / continue",
+   "detail": "unknown name 'continue'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt36953_continue.kt"
   },
@@ -36815,8 +36813,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt67383.kt"
   },
   "box/box/ranges/unsigned/literal/emptyDownto.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/emptyDownto.kt"
   },
@@ -36827,26 +36825,26 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/emptyRange.kt"
   },
   "box/box/ranges/unsigned/literal/inexactDownToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/inexactDownToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/inexactSteppedDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/inexactSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/inexactSteppedRange.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/inexactSteppedRange.kt"
   },
   "box/box/ranges/unsigned/literal/inexactToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/inexactToMaxValue.kt"
   },
@@ -36869,8 +36867,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/maxValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/oneElementDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/oneElementDownTo.kt"
   },
@@ -36893,56 +36891,56 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/openRangeUntil.kt"
   },
   "box/box/ranges/unsigned/literal/overflowZeroDownToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/overflowZeroDownToMaxValue.kt"
   },
   "box/box/ranges/unsigned/literal/overflowZeroToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "generics",
+   "detail": "unexpected operator (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/progressionDownToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/progressionDownToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/progressionMaxValueMinusTwoToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/progressionMaxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/unsigned/literal/progressionMaxValueToMaxValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/progressionMaxValueToMaxValue.kt"
   },
   "box/box/ranges/unsigned/literal/progressionMaxValueToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/progressionMaxValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/progressionMinValueToMinValue.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/progressionMinValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/reversedBackSequence.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedBackSequence.kt"
   },
   "box/box/ranges/unsigned/literal/reversedEmptyBackSequence.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedEmptyBackSequence.kt"
   },
@@ -36954,7 +36952,7 @@
   },
   "box/box/ranges/unsigned/literal/reversedInexactSteppedDownTo.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedInexactSteppedDownTo.kt"
   },
@@ -36966,13 +36964,13 @@
   },
   "box/box/ranges/unsigned/literal/reversedSimpleSteppedRange.kt": {
    "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedSimpleSteppedRange.kt"
   },
   "box/box/ranges/unsigned/literal/simpleDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleDownTo.kt"
   },
@@ -36989,14 +36987,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleRangeWithNonConstantEnds.kt"
   },
   "box/box/ranges/unsigned/literal/simpleSteppedDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/simpleSteppedRange.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'step')",
+   "category": "unknown listOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'listOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/simpleSteppedRange.kt"
   },
@@ -41100,14 +41098,14 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forEachIndexedInListOfUInts.kt"
   },
   "box/box/unsignedTypes/forInUnsignedDownTo.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "expected ')' (at 'downTo')",
+   "category": "exceptions",
+   "detail": "expected end of statement (at 'AssertionError')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedDownTo.kt"
   },
   "box/box/unsignedTypes/forInUnsignedProgression.kt": {
-   "category": "ranges (step/downTo/until, ranges as values)",
-   "detail": "unexpected top-level token (at 'downTo')",
+   "category": "exceptions",
+   "detail": "expected end of statement (at 'AssertionError')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedProgression.kt"
   },
