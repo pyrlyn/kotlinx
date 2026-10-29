@@ -200,7 +200,9 @@ private fun rewriteStatics(p: Program): Program {
     }
     val sub = Subst(emptyMap(), global)
     val classes = p.classes.map { c ->
-        val own = enums[c.name].orEmpty()
+        // Enum entry bodies (hidden subclasses `E__A`) see the entries of their enum class.
+        val en = if (c.name in enums) c.name else c.superClass?.takeIf { it in enums && c.name.startsWith("${it}__") } ?: c.name
+        val own = enums[en].orEmpty()
         val comp = comps[c.name]
         val mine = c.fields.map { it.name }.toSet() + c.methods.map { it.name } + c.ctorParams.map { it.name }
         // Inside a companion object, `C.x` is its own member: use `this` (the global is not assigned during its init).
@@ -210,7 +212,7 @@ private fun rewriteStatics(p: Program): Program {
         if (own.isEmpty() && comp == null) return@map sub.cls(c, c.name, keepTypeParams = true)
         Subst(emptyMap(), rw = { x ->
             when {
-                x is NameE && x.n in own -> NameE("${c.name}$${x.n}").also { it.line = x.line }
+                x is NameE && x.n in own -> NameE("$en$${x.n}").also { it.line = x.line }
                 x is NameE && comp != null && x.n in comp.second && x.n !in mine && comp.first != "${c.name}$${x.n}" ->
                     MemberE(NameE(comp.first), x.n, false).also { it.line = x.line }
                 else -> global(x)

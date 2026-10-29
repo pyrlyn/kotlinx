@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 40,
   "N/A": 2984,
-  "PASS": 1941,
-  "UNSUPPORTED": 3508
+  "PASS": 1951,
+  "UNSUPPORTED": 3498
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -5993,8 +5993,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInSecondaryConstructorDefaultParameter.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerEnumEntryCapturedInLambdaInInnerClass.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "unknown TEST (stdlib API / unsupported decl)",
+   "detail": "unknown name 'TEST'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerEnumEntryCapturedInLambdaInInnerClass.kt"
   },
@@ -14437,9 +14437,8 @@
    "upstream": "compiler/testData/codegen/box/elvis/withReturn.kt"
   },
   "box/box/enum/abstractMethodInEnum.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/abstractMethodInEnum.kt"
   },
   "box/box/enum/abstractNestedClass.kt": {
@@ -14476,14 +14475,14 @@
    "upstream": "compiler/testData/codegen/box/enum/constructorWithReordering.kt"
   },
   "box/box/enum/deepInnerClassInEnumEntryClass.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/deepInnerClassInEnumEntryClass.kt"
   },
   "box/box/enum/deepInnerClassInEnumEntryClass2.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/deepInnerClassInEnumEntryClass2.kt"
   },
@@ -14499,8 +14498,8 @@
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/constructorWithVararg.kt"
   },
   "box/box/enum/defaultCtor/entryClassConstructorWithDefaultArguments.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Test__OK expects 3 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/entryClassConstructorWithDefaultArguments.kt"
   },
@@ -14573,32 +14572,31 @@
    "upstream": "compiler/testData/codegen/box/enum/enumEntryMembers.kt"
   },
   "box/box/enum/enumEntryNamedLikeModifier.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryNamedLikeModifier.kt"
   },
   "box/box/enum/enumEntryReferenceFromInnerClassConstructor1.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryReferenceFromInnerClassConstructor1.kt"
   },
   "box/box/enum/enumEntryReferenceFromInnerClassConstructor2.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryReferenceFromInnerClassConstructor2.kt"
   },
   "box/box/enum/enumEntryReferenceFromInnerClassConstructor3.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryReferenceFromInnerClassConstructor3.kt"
   },
   "box/box/enum/enumInheritedFromTrait.kt": {
    "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "detail": "unknown method MyEnum.f()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumInheritedFromTrait.kt"
   },
@@ -14635,9 +14633,8 @@
    "upstream": "compiler/testData/codegen/box/enum/enumWithFieldlessCompanion.kt"
   },
   "box/box/enum/enumWithLambdaParameter.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/enumWithLambdaParameter.kt"
   },
   "box/box/enum/enum_equals.kt": {
@@ -14646,8 +14643,8 @@
    "upstream": "compiler/testData/codegen/box/enum/enum_equals.kt"
   },
   "box/box/enum/getEnumEntityByOrdinal.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/getEnumEntityByOrdinal.kt"
   },
@@ -14691,20 +14688,20 @@
    "upstream": "compiler/testData/codegen/box/enum/inner.kt"
   },
   "box/box/enum/innerClassInEnumEntryClass.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/innerClassInEnumEntryClass.kt"
   },
   "box/box/enum/innerClassMethodInEnumEntryClass.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/innerClassMethodInEnumEntryClass.kt"
   },
   "box/box/enum/innerClassMethodInEnumEntryClass2.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/innerClassMethodInEnumEntryClass2.kt"
   },
@@ -14719,9 +14716,8 @@
    "upstream": "compiler/testData/codegen/box/enum/interfaceCallNoEntryClass.kt"
   },
   "box/box/enum/interfaceCallWithEntryClass.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/interfaceCallWithEntryClass.kt"
   },
   "box/box/enum/k54079.kt": {
@@ -14731,8 +14727,8 @@
    "upstream": "compiler/testData/codegen/box/enum/k54079.kt"
   },
   "box/box/enum/kt1119.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt1119.kt"
   },
@@ -14742,20 +14738,19 @@
    "upstream": "compiler/testData/codegen/box/enum/kt18731.kt"
   },
   "box/box/enum/kt18731_2.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/kt18731_2.kt"
   },
   "box/box/enum/kt20651.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt20651.kt"
   },
   "box/box/enum/kt20651_inlineLambda.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt20651_inlineLambda.kt"
   },
@@ -14772,9 +14767,8 @@
    "upstream": "compiler/testData/codegen/box/enum/kt20651b.kt"
   },
   "box/box/enum/kt2350.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/kt2350.kt"
   },
   "box/box/enum/kt38540.kt": {
@@ -14789,14 +14783,13 @@
    "upstream": "compiler/testData/codegen/box/enum/kt38996.kt"
   },
   "box/box/enum/kt44744.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/kt44744.kt"
   },
   "box/box/enum/kt44744_innerClass.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "unknown TEST (stdlib API / unsupported decl)",
+   "detail": "unknown name 'TEST'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt44744_innerClass.kt"
   },
@@ -14806,74 +14799,74 @@
    "upstream": "compiler/testData/codegen/box/enum/kt46605.kt"
   },
   "box/box/enum/kt7257.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257.kt"
   },
   "box/box/enum/kt7257_anonObjectInit.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_anonObjectInit.kt"
   },
   "box/box/enum/kt7257_anonObjectMethod.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_anonObjectMethod.kt"
   },
   "box/box/enum/kt7257_boundReference1.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_boundReference1.kt"
   },
   "box/box/enum/kt7257_boundReference2.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_boundReference2.kt"
   },
   "box/box/enum/kt7257_boundReferenceWithImplicitReceiver.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_boundReferenceWithImplicitReceiver.kt"
   },
   "box/box/enum/kt7257_explicitReceiver.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_explicitReceiver.kt"
   },
   "box/box/enum/kt7257_fullyQualifiedReceiver.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_fullyQualifiedReceiver.kt"
   },
   "box/box/enum/kt7257_namedLocalFun.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_namedLocalFun.kt"
   },
   "box/box/enum/kt7257_notInline.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_notInline.kt"
   },
   "box/box/enum/kt9711.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt9711.kt"
   },
   "box/box/enum/kt9711_2.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "other: unknown method IssueState__FIXED.s()",
+   "detail": "unknown method IssueState__FIXED.s()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt9711_2.kt"
   },
@@ -14884,8 +14877,8 @@
    "upstream": "compiler/testData/codegen/box/enum/lambdaInDefault.kt"
   },
   "box/box/enum/loop.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'init')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/loop.kt"
   },
@@ -14915,8 +14908,8 @@
    "upstream": "compiler/testData/codegen/box/enum/ordinal.kt"
   },
   "box/box/enum/ordinalsWithEnumEntitiesOverrides.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/ordinalsWithEnumEntitiesOverrides.kt"
   },
@@ -14926,9 +14919,8 @@
    "upstream": "compiler/testData/codegen/box/enum/overloadedEnumValues.kt"
   },
   "box/box/enum/refToThis.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/refToThis.kt"
   },
   "box/box/enum/reorderedArguments.kt": {
@@ -14949,8 +14941,8 @@
    "upstream": "compiler/testData/codegen/box/enum/sortEnumEntries.kt"
   },
   "box/box/enum/superCallInEnumLiteral.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/superCallInEnumLiteral.kt"
   },
@@ -14982,9 +14974,8 @@
    "upstream": "compiler/testData/codegen/box/enum/vCallNoEntryClass.kt"
   },
   "box/box/enum/vCallWithEntryClass.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/vCallWithEntryClass.kt"
   },
   "box/box/enum/valueOf2.kt": {
@@ -23164,12 +23155,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1878258464\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267646112\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645664\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804516960\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25796,7 +25787,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x102b30def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102c3755f        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1002c8f1b        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x1003d194b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -25898,9 +25889,8 @@
    "upstream": "compiler/testData/codegen/box/ir/enumClass2.kt"
   },
   "box/box/ir/enumClass3.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/enumClass3.kt"
   },
   "box/box/ir/fileClassInitializers.kt": {
@@ -29355,8 +29345,8 @@
    "upstream": "compiler/testData/codegen/box/objects/useAnonymousObjectAsIterator.kt"
   },
   "box/box/objects/useAnonymousObjectFunction.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useAnonymousObjectFunction.kt"
   },
@@ -36879,8 +36869,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/delegationWithPrimary.kt"
   },
   "box/box/secondaryConstructors/enums.kt": {
-   "category": "enum classes",
-   "detail": "enum entries with bodies are not supported (at '{')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/enums.kt"
   },
@@ -39252,7 +39242,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0qm65mdr/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0qm65mdr/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupe1bb6j5_/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupe1bb6j5_/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },

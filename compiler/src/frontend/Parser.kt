@@ -214,13 +214,16 @@ class Parser(private val t: List<Tok>) {
         return ClassD(name, fields, supers, ms, line, emptyList(), inits, superTypeArgs = sta)
     }
 
+    /** Enum entry ("E$A") -> hidden subclass holding its body. */
+    private val enumBodies = HashMap<String, String>()
+
     /** Enum entries become top-level immortal instances `E$A` (initialized first, in order) plus the list `E$values`. */
     private fun enumGlobals(classes: List<ClassD>): List<VarS> {
         val gs = ArrayList<VarS>()
         for (c in classes) {
             val es = c.enumEntries ?: continue
             es.forEachIndexed { i, (n, args) ->
-                val call = CallE(NameE(c.name), emptyList(), listOf(StrL(listOf(n)), IntL(i.toLong(), false)) + args, null).also { it.line = c.line }
+                val call = CallE(NameE(enumBodies["${c.name}$$n"] ?: c.name), emptyList(), listOf(StrL(listOf(n)), IntL(i.toLong(), false)) + args, null).also { it.line = c.line }
                 gs.add(VarS("${c.name}$$n", false, TypeRef(c.name, emptyList(), false), call).also { it.line = c.line })
             }
             val list = CallE(NameE("arrayListOf"), listOf(TypeRef(c.name, emptyList(), false)), es.map { NameE("${c.name}$${it.first}") }, null).also { it.line = c.line }
@@ -753,7 +756,15 @@ class Parser(private val t: List<Tok>) {
             while (peek().k == K.ID) {
                 val en = ident()
                 val args = if (isOp("(")) args() else emptyList()
-                if (isOp("{")) fail("enum entries with bodies are not supported")
+                if (isOp("{")) {
+                    // Entry with a body: a hidden subclass `E__A` of the enum class that forwards the constructor arguments.
+                    val sub = "${name}__$en"
+                    val saved = curClass; curClass = sub
+                    val body = try { members() } finally { curClass = saved }
+                    val cps = ctorParams.map { Param(it.name, it.type) }
+                    hoisted.add(ClassD(sub, emptyList(), listOf(name), body, line, cps, emptyList(), cps.map { NameE(it.name) }))
+                    enumBodies["$name$$en"] = sub
+                }
                 es.add(en to args)
                 skipNL0()
                 if (isOp(",")) { next(); skipNL0() } else break
@@ -761,7 +772,11 @@ class Parser(private val t: List<Tok>) {
             entries = es
             if (isOp(";")) { next(); members(fields, inits, open = false) } else { skipNL0(); expectOp("}"); emptyList() }
         } else if (isOp("{")) members(fields, inits) else emptyList()
-        return ClassD(name, fields, supers, ms, line, ctorParams, inits, superArgs, typeParams, entries, superTypeArgs = sta)
+        // An entry body overriding toString needs a virtual base `toString(): String = name`.
+        val subs = entries.orEmpty().mapNotNull { enumBodies["$name$${it.first}"] }.toSet()
+        val ms2 = if (ms.none { it.name == "toString" } && hoisted.any { it.name in subs && it.methods.any { m -> m.name == "toString" && m.params.isEmpty() } })
+            ms + FunD("toString", emptyList(), TypeRef("String", emptyList(), false), null, NameE("name").also { it.line = line }, line) else ms
+        return ClassD(name, fields, supers, ms2, line, ctorParams, inits, superArgs, typeParams, entries, superTypeArgs = sta)
     }
 
     private fun type(): TypeRef {
