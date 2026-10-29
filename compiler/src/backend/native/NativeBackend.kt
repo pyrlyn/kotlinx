@@ -939,7 +939,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (s.e == null) { if (retTy != Ty.Unit) fail("missing return value"); runFinally(0); if (!term) { releaseAll(); emit("ret void"); term = true } }
                 else emitReturn(argFor(s.e, retTy, true))
             }
-            is ExprS -> if (s.e is TryE) { if (s.e.line != 0) line = s.e.line; genTry(s.e, false) } else releaseIfOwned(genExpr(s.e))
+            is ExprS -> if (s.e is CallE && scopeFn(s.e, true) != null) genBlockBody(scopeFn(s.e, true)!!, false).let { }
+            else if (s.e is TryE) { if (s.e.line != 0) line = s.e.line; genTry(s.e, false) } else releaseIfOwned(genExpr(s.e))
             is JumpS -> {
                 val li = if (s.label == null) loops.size - 1 else loopLabels.lastIndexOf(s.label).also { if (it < 0) fail("unknown loop label '${s.label}'") }
                 val (lc, le, depth) = loops.getOrNull(li) ?: fail("'${if (s.isBreak) "break" else "continue"}' outside a loop")
@@ -1620,11 +1621,46 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return Val(emitT("phi ptr [ null, %$from ], [ ${v.v}, %$vFrom ]"), v.t)
     }
 
+    /** Stdlib scope functions with a lambda literal (`let`, `also`, `run`, `repeat`), lowered to plain blocks. */
+    private fun scopeFn(e: CallE, stmt: Boolean = false): Block? {
+        val body = e.lambda ?: return null
+        val c = e.callee
+        fun <T : E> T.l(): T = also { it.line = e.line }
+        fun <T : S> T.l(): T = also { it.line = e.line }
+        if (c is NameE && e.typeArgs.isEmpty() && lookup(c.n) == null && !funDecls.containsKey(c.n)) {
+            if (c.n == "run" && e.args.isEmpty() && body.params.isEmpty()) return body
+            if (c.n == "repeat" && e.args.size == 1 && body.params.size <= 1) {
+                val p = body.params.firstOrNull() ?: "it"
+                val n = "\$rep${scopeN++}"
+                return Block(listOf(VarS(n, false, null, e.args[0]).l(),
+                    ForS(p, BinE("..", IntL(0, false).l(), BinE("-", NameE(n).l(), IntL(1, false).l()).l()).l(), body).l()))
+            }
+            return null
+        }
+        if (c !is MemberE || c.n !in setOf("let", "also") || e.args.isNotEmpty() || e.typeArgs.isNotEmpty() || extFuns.containsKey(c.n)) return null
+        if (body.params.size > 1) return null
+        val p = body.params.firstOrNull() ?: "it"
+        val pt = body.paramTypes.firstOrNull()
+        fun inner(recv: E): Block {
+            val ss = ArrayList<S>(); ss.add(VarS(p, false, pt, recv).l()); ss.addAll(body.stmts)
+            if (c.n == "also") ss.add(ExprS(NameE(p).l()).l())
+            return Block(ss)
+        }
+        if (!c.safe) return inner(c.recv)
+        // `x?.let { }` only as a statement (its nullable value is not supported).
+        if (!stmt) return null
+        val tn = "\$sf${scopeN++}"
+        return Block(listOf(VarS(tn, false, null, c.recv).l(),
+            ExprS(IfE(BinE("!=", NameE(tn).l(), NullL().l()).l(), inner(NameE(tn).l()), null).l()).l()))
+    }
+    private var scopeN = 0
+
     private fun genCall(e: CallE): Val {
         val callee = e.callee
         val qn = flatten(callee)
         if (qn != null && qn in NANOS) return Val(emitT("call i64 @rt_nanos()"), Ty.I64)
         if (qn != null && (qn == "kotlin.math.sqrt" || qn == "kotlin.math.abs")) return genNamedCall(qn, e)
+        scopeFn(e)?.let { return genBlockBody(it, true) }
         if (callee is NameE && lookup(callee.n)?.let { fnSig(it.t) } != null) return invokeFn(genExpr(callee), e)
         if (callee is NameE && (lookup(callee.n) == null || (callee.n in classes && scopes.none { callee.n in it.vars }))) return genNamedCall(callee.n, e)
         if (callee is MemberE) {
@@ -2902,6 +2938,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val eq = emitT("or i1 $same, ${r.v}")
             return Val(if (op == "==") eq else emitT("xor i1 $eq, true"), Ty.I1)
         }
+        if ((op == "==" || op == "!=") && (a.t is Ty.Arr) != (b.t is Ty.Arr) && (a.t.isInt || b.t.isInt)) fail("cannot compare ${a.t} and ${b.t}")
         if (a.t == Ty.I1 && b.t == Ty.I1 && (op == "==" || op == "!=")) return Val(emitT("icmp ${if (op == "==") "eq" else "ne"} i1 ${a.v}, ${b.v}"), Ty.I1)
         // `null` vs a non-nullable primitive never matches (kotlinc only warns).
         if ((a.v == "null" && b.t.llvm != "ptr") || (b.v == "null" && a.t.llvm != "ptr")) {

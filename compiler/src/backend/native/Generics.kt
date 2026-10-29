@@ -130,10 +130,23 @@ private fun boxCapturedVars(p: Program): Program {
                 else null })
         return sub.block(body)
     }
+    fun boxE(x: E): E { val b = Block(listOf(ExprS(x))); val nb = box(b); return if (nb === b) x else (nb.stmts.single() as ExprS).e }
     fun fn(f: FunD): FunD {
+        f.exprBody?.let { x -> val nx = boxE(x); return if (nx === x) f else FunD(f.name, f.params, f.ret, f.body, nx, f.line, f.typeParams, f.recv) }
         val body = f.body ?: return f
         val nb = box(body)
-        return if (nb === body) f else FunD(f.name, f.params, f.ret, nb, f.exprBody, f.line, f.typeParams)
+        return if (nb === body) f else FunD(f.name, f.params, f.ret, nb, f.exprBody, f.line, f.typeParams, f.recv)
+    }
+    /** Property initializers and `init` blocks run in the constructor; box their captured vars too. */
+    fun cls(c: ClassD): ClassD {
+        val fm = HashMap<FieldD, FieldD>()
+        val inits = c.inits.map { i -> when (i) {
+            is FieldD -> i.init?.let { x -> boxE(x).takeIf { it !== x }?.let { nx -> FieldD(i.name, i.type, i.isVar, nx, i.lateinit).also { fm[i] = it } } } ?: i
+            is Block -> box(i)
+            else -> i
+        } }
+        val fields = c.fields.map { fm[it] ?: it }
+        return ClassD(c.name, fields, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams, inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
     }
     val globals = p.globals.map { g ->
         val b = Block(listOf(ExprS(g.init)))
@@ -141,7 +154,7 @@ private fun boxCapturedVars(p: Program): Program {
         if (nb === b) g else VarS(g.name, g.isVar, g.type, (nb.stmts.single() as ExprS).e).also { it.line = g.line }
     }
     val funs = p.funs.map { fn(it) }
-    val classes = p.classes.map { c -> ClassD(c.name, c.fields, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs) }
+    val classes = p.classes.map { cls(it) }
     if (!used) return p
     val ref = ClassD("\$Ref", listOf(FieldD("v", TypeRef("T", emptyList(), false), true)), emptyList(), emptyList(), 0, typeParams = listOf("T"))
     return Program(funs, classes + ref, p.ifaces, globals, p.companions)
@@ -190,6 +203,10 @@ private fun rewriteStatics(p: Program): Program {
         val own = enums[c.name].orEmpty()
         val comp = comps[c.name]
         val mine = c.fields.map { it.name }.toSet() + c.methods.map { it.name } + c.ctorParams.map { it.name }
+        // Inside a companion object, `C.x` is its own member: use `this` (the global is not assigned during its init).
+        if (comps.values.any { it.first == c.name }) return@map Subst(emptyMap(), rw = { x ->
+            global(x)?.let { g -> if (g is MemberE && g.recv is NameE && g.recv.n == c.name) MemberE(NameE("this").also { it.line = x.line }, g.n, g.safe).also { it.line = x.line } else g }
+        }).cls(c, c.name, keepTypeParams = true)
         if (own.isEmpty() && comp == null) return@map sub.cls(c, c.name, keepTypeParams = true)
         Subst(emptyMap(), rw = { x ->
             when {

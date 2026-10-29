@@ -270,6 +270,9 @@ class Parser(private val t: List<Tok>) {
                     if (companionOf.containsKey(cls)) fail("multiple companion declarations are not supported")
                     // Enum companion blocks would need the entries initialized first.
                     if ((t[p + 1].k == K.OP && t[p + 1].s == "{") && cls in enumClasses) fail("companion blocks in enum classes are not supported")
+                    // Companion blocks initialize supertypes' companion blocks first; not modeled.
+                    if ((t[p + 1].k == K.OP && t[p + 1].s == "{") && (headerSupers[cls].orEmpty().isNotEmpty() || ifaceSupers[cls].orEmpty().isNotEmpty()))
+                        fail("companion blocks in classes with supertypes are not supported")
                     next(); if (isId("object")) next()
                     val cn = if (peek().k == K.ID) ident() else "Companion"
                     val od = objectDecl("$cls$$cn")
@@ -344,6 +347,15 @@ class Parser(private val t: List<Tok>) {
     /** Interface whose body is being parsed (for its companion object). */
     private var curIface: String? = null
     private val enumClasses = HashSet<String>()
+    /** A parameter default; trailing lambdas there are re-synthesized per call site, which the backend does not support. */
+    private fun defaultArg(): E {
+        val st = p
+        val x = expr()
+        for (k in st + 1 until p) if (t[k].k == K.OP && t[k].s == "{" && (t[k - 1].k == K.ID || t[k - 1].k == K.OP && t[k - 1].s == ")"))
+            fail("trailing lambdas in default arguments are not supported", t[k])
+        return x
+    }
+    private val headerSupers = HashMap<String, List<String>>()
     private val byDelegs = HashMap<String, MutableList<String>>()
 
     /** Interface name -> its default method bodies. */
@@ -585,7 +597,7 @@ class Parser(private val t: List<Tok>) {
                 val n = ident(); expectOp(":"); val ty0 = type()
                 // `vararg xs: T` is a list parameter; calls pack their arguments (see the backend's normalize).
                 val ty = if (va) TypeRef("List", listOf(ty0), false) else ty0
-                ps.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); expr() } else null, va))
+                ps.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); defaultArg() } else null, va))
                 if (isOp(",")) next()
             }
             ps
@@ -611,7 +623,7 @@ class Parser(private val t: List<Tok>) {
             while (!isOp(")")) {
                 if (isId("vararg")) fail("vararg constructor parameters are not supported")
                 val n = ident(); expectOp(":"); val ty = type()
-                xs.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); expr() } else null))
+                xs.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); defaultArg() } else null))
                 if (isOp(",")) next()
             }
             xs
@@ -685,7 +697,7 @@ class Parser(private val t: List<Tok>) {
                     while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) p++
                     val kw = if (isId("val") || isId("var")) next().s else null
                     val n = ident(); expectOp(":"); val ty = type()
-                    ctorParams.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); expr() } else null))
+                    ctorParams.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); defaultArg() } else null))
                     if (kw != null) fields.add(FieldD(n, ty, kw == "var"))
                     if (isOp(",")) next()
                 }
@@ -719,6 +731,7 @@ class Parser(private val t: List<Tok>) {
             }
         }
         if (isEnum && superArgs != null) fail("enum classes cannot have a superclass")
+        headerSupers[name] = supers.toList()
         val savedCls = curClass; curClass = name
         try {
             val c = classBody(name, isEnum, fields, ctorParams, inits, supers, superArgs, typeParams, line)

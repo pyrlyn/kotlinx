@@ -2,10 +2,10 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "COMPILER_CRASH": 5,
-  "MISCOMPILE": 42,
+  "MISCOMPILE": 41,
   "N/A": 2984,
-  "PASS": 1863,
-  "UNSUPPORTED": 3581
+  "PASS": 1917,
+  "UNSUPPORTED": 3528
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1658,17 +1658,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupju0ztxse/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupju0ztxse/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuppx9znt96/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuppx9znt96/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupajuwqg5i/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupajuwqg5i/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0ervn_z0/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0ervn_z0/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwikqzulo/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwikqzulo/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupmvo1zt6y/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupmvo1zt6y/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -3344,14 +3344,13 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/boundReferenceToOverloadedFunction.kt"
   },
   "box/box/callableReference/bound/captureVarInInitBlock.kt": {
-   "detail": "exit=0 stdout='fail\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/captureVarInInitBlock.kt"
   },
   "box/box/callableReference/bound/captureVarInPropertyInit.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/captureVarInPropertyInit.kt"
   },
   "box/box/callableReference/bound/coercionToUnit.kt": {
@@ -3360,9 +3359,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/coercionToUnit.kt"
   },
   "box/box/callableReference/bound/companionObjectReceiver.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/companionObjectReceiver.kt"
   },
   "box/box/callableReference/bound/companionObjectReceiverInheritsFromOuter.kt": {
@@ -3511,9 +3509,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/nullReceiver.kt"
   },
   "box/box/callableReference/bound/objectReceiver.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/objectReceiver.kt"
   },
   "box/box/callableReference/bound/primitiveReceiver.kt": {
@@ -3743,9 +3740,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/funInterfaceConstructor/funInterfaceConstructorOfImplicitKFunctionType.kt"
   },
   "box/box/callableReference/function/abstractClassMember.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$A$String.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/abstractClassMember.kt"
   },
   "box/box/callableReference/function/argumentTypes.kt": {
@@ -3767,9 +3763,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/booleanNotIntrinsic.kt"
   },
   "box/box/callableReference/function/classMemberFromClass.kt": {
-   "category": "other: unknown method $Fn$A$Int$Int.let()",
-   "detail": "unknown method $Fn$A$Int$Int.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromClass.kt"
   },
   "box/box/callableReference/function/classMemberFromCompanionObject.kt": {
@@ -3779,9 +3774,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromCompanionObject.kt"
   },
   "box/box/callableReference/function/classMemberFromExtension.kt": {
-   "category": "other: unknown method $Fn$A$Int.let()",
-   "detail": "unknown method $Fn$A$Int.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromExtension.kt"
   },
   "box/box/callableReference/function/classMemberFromTopLevelStringNoArgs.kt": {
@@ -3823,15 +3817,13 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromInnerClassWithTypeParam.kt"
   },
   "box/box/callableReference/function/constructorFromTopLevelNoArgs.kt": {
-   "category": "other: unknown method $Fn$A.let()",
-   "detail": "unknown method $Fn$A.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromTopLevelNoArgs.kt"
   },
   "box/box/callableReference/function/constructorFromTopLevelOneStringArg.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String$A.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromTopLevelOneStringArg.kt"
   },
   "box/box/callableReference/function/enumValueOfMethod.kt": {
@@ -3847,9 +3839,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/equalsIntrinsic.kt"
   },
   "box/box/callableReference/function/extensionFromClass.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'result' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromClass.kt"
   },
   "box/box/callableReference/function/extensionFromCompanion.kt": {
@@ -3859,9 +3850,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromCompanion.kt"
   },
   "box/box/callableReference/function/extensionFromExtension.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'foo' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromExtension.kt"
   },
   "box/box/callableReference/function/extensionFromTopLevelStringNoArgs.kt": {
@@ -4147,8 +4137,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/withValueArguments.kt"
   },
   "box/box/callableReference/function/nestedConstructorFromClass.kt": {
-   "category": "other: unknown method $Fn$Nested.let()",
-   "detail": "unknown method $Fn$Nested.let()",
+   "category": "other: unknown member A::Nested",
+   "detail": "unknown member A::Nested",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedConstructorFromClass.kt"
   },
@@ -4194,9 +4184,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/overloadedFunVsVal.kt"
   },
   "box/box/callableReference/function/privateClassMember.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'bar' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/privateClassMember.kt"
   },
   "box/box/callableReference/function/referenceToCompanionMember.kt": {
@@ -4223,15 +4212,13 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/specialCalls.kt"
   },
   "box/box/callableReference/function/topLevelFromClass.kt": {
-   "category": "other: unknown method $Fn$Int$Int$Int.let()",
-   "detail": "unknown method $Fn$Int$Int$Int.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromClass.kt"
   },
   "box/box/callableReference/function/topLevelFromExtension.kt": {
-   "category": "other: unknown method $Fn$Int$Int$Int.let()",
-   "detail": "unknown method $Fn$Int$Int$Int.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromExtension.kt"
   },
   "box/box/callableReference/function/topLevelFromTopLevelStringNoArgs.kt": {
@@ -4268,9 +4255,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/traitImplMethodWithClassReceiver.kt"
   },
   "box/box/callableReference/function/traitMember.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$A$String.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/traitMember.kt"
   },
   "box/box/callableReference/functionAndKFunctionSharedClassSplit.kt": {
@@ -4302,8 +4288,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/inlineArrayConstructors.kt"
   },
   "box/box/callableReference/interfaceMethodReference.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "other: callable references as Any are not supported",
+   "detail": "callable references as Any are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/interfaceMethodReference.kt"
   },
@@ -5935,15 +5921,13 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInFunctionLiteral.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInInlineLambda.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInInlineLambda.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInInlineLambda2.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInInlineLambda2.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInLambda.kt": {
@@ -6086,8 +6070,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedLocalGenericFun.kt"
   },
   "box/box/closures/capturedVarsOptimization/callableReferenceWithSwap.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "strings / templates",
+   "detail": "unsupported callable reference String::get",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/callableReferenceWithSwap.kt"
   },
@@ -6097,21 +6081,18 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/capturedInCrossinline.kt"
   },
   "box/box/closures/capturedVarsOptimization/capturedInInlineOnlyAssign.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/capturedInInlineOnlyAssign.kt"
   },
   "box/box/closures/capturedVarsOptimization/capturedInInlineOnlyCAO.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/capturedInInlineOnlyCAO.kt"
   },
   "box/box/closures/capturedVarsOptimization/capturedInInlineOnlyIncrDecr.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/capturedInInlineOnlyIncrDecr.kt"
   },
   "box/box/closures/capturedVarsOptimization/capturedInInlineOnlyIndexedCAO.kt": {
@@ -6121,9 +6102,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/capturedInInlineOnlyIndexedCAO.kt"
   },
   "box/box/closures/capturedVarsOptimization/capturedVarsOfSize2.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/capturedVarsOfSize2.kt"
   },
   "box/box/closures/capturedVarsOptimization/closureBoxedVarOptimizations.kt": {
@@ -6154,9 +6134,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/kt45446.kt"
   },
   "box/box/closures/capturedVarsOptimization/sharedSlotsWithCapturedVars.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/sharedSlotsWithCapturedVars.kt"
   },
   "box/box/closures/capturedVarsOptimization/withCoroutines.kt": {
@@ -6349,9 +6328,8 @@
    "upstream": "compiler/testData/codegen/box/closures/kt4106.kt"
   },
   "box/box/closures/kt4137.kt": {
-   "category": "other: unknown method $Fn$Int.let()",
-   "detail": "unknown method $Fn$Int.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/kt4137.kt"
   },
   "box/box/closures/kt47840.kt": {
@@ -6604,8 +6582,9 @@
    "upstream": "compiler/testData/codegen/box/companion/protectedConstValFromSuperCompanion.kt"
   },
   "box/box/companionBlocksAndExtensions/abstractClasses.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "objects / companion objects",
+   "detail": "companion blocks in classes with supertypes are not supported (at 'companion')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/abstractClasses.kt"
   },
   "box/box/companionBlocksAndExtensions/basicBlockAndExtension.kt": {
@@ -6701,8 +6680,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/generics.kt"
   },
   "box/box/companionBlocksAndExtensions/inheritance.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'bazA' needs an explicit return type",
+   "category": "objects / companion objects",
+   "detail": "companion blocks in classes with supertypes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/inheritance.kt"
   },
@@ -6760,14 +6739,14 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInParentInAnotherModule.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersInParentNotInChild.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "objects / companion objects",
+   "detail": "companion blocks in classes with supertypes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInParentNotInChild.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersInheritance.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "objects / companion objects",
+   "detail": "companion blocks in classes with supertypes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInheritance.kt"
   },
@@ -6778,26 +6757,26 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInheritanceMixedWithObject.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersInheritanceMultiLevel.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "objects / companion objects",
+   "detail": "companion blocks in classes with supertypes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInheritanceMultiLevel.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersInheritanceMultipleSupertypes.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "objects / companion objects",
+   "detail": "companion blocks in classes with supertypes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInheritanceMultipleSupertypes.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersInheritanceMultipleSupertypesMixedOrder.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "objects / companion objects",
+   "detail": "companion blocks in classes with supertypes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInheritanceMultipleSupertypesMixedOrder.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersIsInitializedWithStaticInit.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "other: unknown variable 'initLog'",
+   "detail": "unknown variable 'initLog'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersIsInitializedWithStaticInit.kt"
   },
@@ -6818,8 +6797,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersSuperclassSeparateModule.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersTransitiveSuperInterface.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "objects / companion objects",
+   "detail": "companion blocks in classes with supertypes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersTransitiveSuperInterface.kt"
   },
@@ -6963,9 +6942,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/multipleBlocks.kt"
   },
   "box/box/companionBlocksAndExtensions/nestedClasses.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/nestedClasses.kt"
   },
   "box/box/companionBlocksAndExtensions/nestedObjectDoesNotTriggerOuterInitializer.kt": {
@@ -6992,8 +6970,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/resolutionPriority.kt"
   },
   "box/box/companionBlocksAndExtensions/staticInitializerSyntheticNameCollision.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "objects / companion objects",
+   "detail": "companion blocks in classes with supertypes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/staticInitializerSyntheticNameCollision.kt"
   },
@@ -7014,9 +6992,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/throwingInitializersMixedCompanions.kt"
   },
   "box/box/companionBlocksAndExtensions/topLevelInitTriggersCompanionBlock.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/topLevelInitTriggersCompanionBlock.kt"
   },
   "box/box/companionBlocksAndExtensions/typeAlias.kt": {
@@ -8172,9 +8149,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/continueInTryBlock.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/initializerBlock.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/initializerBlock.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/inlineConstructor.kt": {
@@ -8980,9 +8956,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2577.kt"
   },
   "box/box/controlStructures/kt2597.kt": {
-   "category": "other: unknown method $Fn$Unit.let()",
-   "detail": "unknown method $Fn$Unit.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2597.kt"
   },
   "box/box/controlStructures/kt299.kt": {
@@ -9383,9 +9358,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_nested.kt"
   },
   "box/box/controlflow/for_loops_array_nullable.kt": {
-   "category": "other: unknown method ArrayList<Int>.let()",
-   "detail": "unknown method ArrayList<Int>.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_nullable.kt"
   },
   "box/box/controlflow/for_loops_array_side_effects.kt": {
@@ -9415,8 +9389,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_errors.kt"
   },
   "box/box/controlflow/for_loops_let_with_nullable.kt": {
-   "category": "other: unknown method Int.let()",
-   "detail": "unknown method Int.let()",
+   "category": "operator/infix functions",
+   "detail": "operator != on Char and CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_let_with_nullable.kt"
   },
@@ -10415,8 +10389,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/inlineClasses/direct/syntheticAccessor.kt"
   },
   "box/box/coroutines/inlineClasses/genericParameterResult.kt": {
-   "category": "other: unknown method Any.let()",
-   "detail": "unknown method Any.let()",
+   "category": "unknown suspend (stdlib API / unsupported decl)",
+   "detail": "unknown function 'suspend'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/inlineClasses/genericParameterResult.kt"
   },
@@ -12658,8 +12632,9 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/trait.kt"
   },
   "box/box/defaultArguments/hiddenCompanionBlock.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "objects / companion objects",
+   "detail": "companion blocks in classes with supertypes are not supported (at 'companion')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/hiddenCompanionBlock.kt"
   },
   "box/box/defaultArguments/implementedByFake.kt": {
@@ -13836,8 +13811,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/ifWithCallableReferenceInLazy.kt"
   },
   "box/box/delegation/inDataClass.kt": {
-   "category": "other: unknown method C.let()",
-   "detail": "unknown method C.let()",
+   "category": "strings / templates",
+   "detail": "cannot convert A to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/inDataClass.kt"
   },
@@ -14105,8 +14080,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/insideElvis.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/kt47084_lambdaInDefaultArgument.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "lambdas / function types / references",
+   "detail": "trailing lambdas in default arguments are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/kt47084_lambdaInDefaultArgument.kt"
   },
@@ -14240,9 +14215,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailCallInParentheses.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailCallInRun.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailCallInRun.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailRecursionInFinally.kt": {
@@ -14289,8 +14263,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithIs.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/whenWithLambda.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected CPointer, found Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/whenWithLambda.kt"
   },
@@ -14316,9 +14290,8 @@
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/boundMemberRef.kt"
   },
   "box/box/directInvokeOptimization/canary.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/canary.kt"
   },
   "box/box/directInvokeOptimization/capturingLambda.kt": {
@@ -19617,8 +19590,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/initializers8.kt"
   },
   "box/box/initializers/initializers9.kt": {
-   "category": "other: unknown method O.also()",
-   "detail": "unknown method O.also()",
+   "category": "unknown sb (stdlib API / unsupported decl)",
+   "detail": "unknown name 'sb'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/initializers/initializers9.kt"
   },
@@ -20139,9 +20112,8 @@
    "upstream": "compiler/testData/codegen/box/inline/kt20245.kt"
   },
   "box/box/inline/kt26117.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inline/kt26117.kt"
   },
   "box/box/inline/kt26466.kt": {
@@ -20156,9 +20128,8 @@
    "upstream": "compiler/testData/codegen/box/inline/kt26787.kt"
   },
   "box/box/inline/kt66017.kt": {
-   "category": "unknown repeat (stdlib API / unsupported decl)",
-   "detail": "unknown function 'repeat'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inline/kt66017.kt"
   },
   "box/box/inline/kt66017_inlineFromTheSameModule.kt": {
@@ -21288,9 +21259,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingPrimitives.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionFun.kt": {
-   "category": "other: unknown method $Fn$Int.let()",
-   "detail": "unknown method $Fn$Int.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionFun.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionFunGeneric.kt": {
@@ -21312,15 +21282,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassMemberFun.kt": {
-   "category": "other: unknown method $Fn$Int.let()",
-   "detail": "unknown method $Fn$Int.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassMemberFun.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassMemberFunGeneric.kt": {
-   "category": "other: unknown method $Fn$Int.let()",
-   "detail": "unknown method $Fn$Int.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassMemberFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassMemberVal.kt": {
@@ -21348,14 +21316,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassPrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/constructorWithInlineClassParameters.kt": {
-   "category": "other: unknown method $Fn$Z$Outer.let()",
-   "detail": "unknown method $Fn$Z$Outer.let()",
+   "category": "other: unknown member Outer::Inner",
+   "detail": "unknown member Outer::Inner",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/constructorWithInlineClassParameters.kt"
   },
   "box/box/inlineClasses/callableReferences/constructorWithInlineClassParametersGeneric.kt": {
-   "category": "other: unknown method $Fn$Z$Int$Outer.let()",
-   "detail": "unknown method $Fn$Z$Int$Outer.let()",
+   "category": "other: unknown member Outer::Inner",
+   "detail": "unknown member Outer::Inner",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/constructorWithInlineClassParametersGeneric.kt"
   },
@@ -21370,21 +21338,18 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/equalsHashCodeToStringGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/funWithInlineClassParameters.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$Z$L$S$String.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/funWithInlineClassParameters.kt"
   },
   "box/box/inlineClasses/callableReferences/funWithInlineClassParametersGeneric.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$Z$Int$L$Long$S$String$String.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/funWithInlineClassParametersGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionFun.kt": {
-   "category": "other: unknown method $Fn$Z$Int.let()",
-   "detail": "unknown method $Fn$Z$Int.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionFun.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionFunGeneric.kt": {
@@ -21418,9 +21383,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassInternalPrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberFun.kt": {
-   "category": "other: unknown method $Fn$Z$Int.let()",
-   "detail": "unknown method $Fn$Z$Int.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberFun.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberFunGeneric.kt": {
@@ -21920,27 +21884,23 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromCompanionGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromInlineLambda.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromInlineLambda.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromInlineLambda2.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromInlineLambda2.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromInlineLambda2Generic.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromInlineLambda2Generic.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromInlineLambdaGeneric.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromInlineLambdaGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambda.kt": {
@@ -21950,15 +21910,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambda.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambda2.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambda2.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambda2Generic.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambda2Generic.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambdaGeneric.kt": {
@@ -21968,27 +21926,23 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambdaGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInLambda.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInLambda.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInLambda2.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInLambda2.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInLambda2Generic.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInLambda2Generic.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInLambdaGeneric.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInLambdaGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInObject.kt": {
@@ -23170,15 +23124,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassPropertyReferenceGetAndSetGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassValueCapturedInInlineLambda.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassValueCapturedInInlineLambda.kt"
   },
   "box/box/inlineClasses/inlineClassValueCapturedInInlineLambdaGeneric.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassValueCapturedInInlineLambdaGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassValueCapturedInNonInlineLambda.kt": {
@@ -23213,12 +23165,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 537660576\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952160\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952096\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823200\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25845,7 +25797,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x10299cdef        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102a9fa37        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x100c60def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x100d674b7        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -26319,8 +26271,8 @@
    "upstream": "compiler/testData/codegen/box/labels/simpleLabelInlined.kt"
   },
   "box/box/lambda/ifWithReferenceAndLambda.kt": {
-   "category": "other: unknown method Int.let()",
-   "detail": "unknown method Int.let()",
+   "category": "unknown this@MethodReferenceNPE (stdlib API / unsupported decl)",
+   "detail": "unknown name 'this@MethodReferenceNPE'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lambda/ifWithReferenceAndLambda.kt"
   },
@@ -27140,9 +27092,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForValCaptured.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensions.kt": {
@@ -27151,9 +27102,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensions.kt": {
@@ -27371,9 +27321,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensions.kt": {
@@ -27394,9 +27343,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensions.kt": {
@@ -29313,8 +29261,8 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToCompanionObjectInInlineLambdaInConstructorBody.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "objects / companion objects",
+   "detail": "unknown method Test$Companion.ok()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInInlineLambdaInConstructorBody.kt"
   },
@@ -29337,8 +29285,8 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInConstructorBody.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "objects / companion objects",
+   "detail": "unknown method Test$Companion.ok()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInConstructorBody.kt"
   },
@@ -29361,8 +29309,8 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToObjectInInlineLambdaInConstructorBody.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "other: unknown method Test.ok()",
+   "detail": "unknown method Test.ok()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInInlineLambdaInConstructorBody.kt"
   },
@@ -29958,8 +29906,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/intEqualsNullableIntWithSmartCasts.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/kt42281.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "other: cannot compare Int and IntArray",
+   "detail": "cannot compare Int and IntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/kt42281.kt"
   },
@@ -31647,200 +31595,200 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/userDefinedContainsExtension.kt"
   },
   "box/box/ranges/evaluationOrder/forInDownTo.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInDownTo.kt"
   },
   "box/box/ranges/evaluationOrder/forInDownToReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInDownToReversed.kt"
   },
   "box/box/ranges/evaluationOrder/forInDownToReversedReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInDownToReversedReversed.kt"
   },
   "box/box/ranges/evaluationOrder/forInRangeLiteral.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInRangeLiteral.kt"
   },
   "box/box/ranges/evaluationOrder/forInRangeLiteralReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInRangeLiteralReversed.kt"
   },
   "box/box/ranges/evaluationOrder/forInRangeLiteralReversedReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInRangeLiteralReversedReversed.kt"
   },
   "box/box/ranges/evaluationOrder/forInUntil.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInUntil.kt"
   },
   "box/box/ranges/evaluationOrder/forInUntilReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInUntilReversed.kt"
   },
   "box/box/ranges/evaluationOrder/forInUntilReversedReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInUntilReversedReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToReversedStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToReversedStepReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToReversedStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToReversedStepReversedStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToReversedStepReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepReversedStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepReversedStepReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepReversedStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralReversedStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralReversedStepReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralReversedStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralReversedStepReversedStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralReversedStepReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepReversedStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepReversedStepReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepReversedStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilReversedStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilReversedStepReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilReversedStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilReversedStepReversedStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilReversedStepReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepReversedStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepReversedStepReversed.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepReversedStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepStep.kt": {
-   "category": "other: unknown method Int.also()",
-   "detail": "unknown method Int.also()",
+   "category": "unknown log (stdlib API / unsupported decl)",
+   "detail": "unknown name 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepStep.kt"
   },
@@ -36141,8 +36089,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt998.kt"
   },
   "box/box/regressions/lambdaAsLastExpressionInLambda.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "unknown it (stdlib API / unsupported decl)",
+   "detail": "unknown name 'it'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/lambdaAsLastExpressionInLambda.kt"
   },
@@ -38697,9 +38645,8 @@
    "upstream": "compiler/testData/codegen/box/traits/traitWithPrivateMember.kt"
   },
   "box/box/traits/traitWithPrivateMemberAccessFromLambda.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String.let()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/traitWithPrivateMemberAccessFromLambda.kt"
   },
   "box/box/try/catch3.kt": {
@@ -39325,7 +39272,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup47gbfk8q/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup47gbfk8q/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupu7prmf4w/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupu7prmf4w/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -45230,8 +45177,8 @@
    "upstream": "native/native.tests/testData/codegen/literals/strdedup2.kt"
   },
   "native/native.tests/codegen/lower/immutable_blob_in_lambda.kt": {
-   "category": "unknown run (stdlib API / unsupported decl)",
-   "detail": "unknown function 'run'",
+   "category": "unknown immutableBlobOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'immutableBlobOf'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/lower/immutable_blob_in_lambda.kt"
   },
