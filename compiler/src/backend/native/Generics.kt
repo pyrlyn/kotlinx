@@ -14,10 +14,31 @@ fun compileGenerics(p00: Program): String {
     val extraClasses = LinkedHashMap<String, ClassD>()
     val extraIfaces = LinkedHashMap<String, InterfaceD>()
     val origin = HashMap<String, Pair<String, List<TypeRef>>>()
+    val genericIfaces = p0.ifaces.filter { it.typeParams.isNotEmpty() }.associateBy { it.name }
+    val ifaceInst = LinkedHashMap<String, InterfaceD>()
+    /** Generic supertype `I<Int>` -> its instance name, instantiating it if needed. */
+    fun ensure(n: String, args0: List<TypeRef>): String {
+        val args = args0.map { canon(it) }
+        val m = mangle(n, args)
+        generic[n]?.let { cd -> if (m !in inst) { origin[m] = n to args; inst[m] = Subst(cd.typeParams.zip(args).toMap()).cls(cd, m) } }
+        genericIfaces[n]?.let { d -> if (m !in ifaceInst) { origin[m] = n to args; ifaceInst[m] = Subst(d.typeParams.zip(args).toMap()).iface(d, m) } }
+        return m
+    }
+    fun fixSupers(c: ClassD): ClassD = if (c.superTypeArgs.isEmpty()) c else
+        ClassD(c.name, c.fields, c.supers.map { s -> c.superTypeArgs[s]?.let { ensure(s, it) } ?: s }, c.methods, c.line, c.ctorParams,
+            c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue)
     while (true) {
-        val prog = Program(p0.funs, p0.classes.filter { it.typeParams.isEmpty() } + inst.values + extraClasses.values, p0.ifaces + extraIfaces.values, p0.globals)
+        var cls = (p0.classes.filter { it.typeParams.isEmpty() } + extraClasses.values).map { fixSupers(it) }
+        while (true) {
+            val before = inst.size
+            val fixed = inst.values.toList().map { fixSupers(it) }
+            fixed.forEach { inst[it.name] = it }
+            if (inst.size == before) break
+        }
+        cls = cls + inst.values
+        val prog = Program(p0.funs, cls, p0.ifaces.filter { it.typeParams.isEmpty() } + ifaceInst.values + extraIfaces.values, p0.globals)
         try {
-            return NativeBackend(prog, generic, origin).generate()
+            return NativeBackend(prog, generic, origin, genericIfaces).generate()
         } catch (n: NeedClass) {
             if (n.cd.name in extraClasses) throw CompileError("internal: class ${n.cd.name} requested twice")
             if (extraClasses.size >= 5000) throw CompileError("too many lambda classes")
@@ -27,6 +48,10 @@ fun compileGenerics(p00: Program): String {
             extraIfaces[n.d.name] = n.d
         } catch (n: NeedInstance) {
             val m = mangle(n.name, n.args)
+            if (n.name in genericIfaces) {
+                if (m in ifaceInst) throw CompileError("internal: interface instance $m requested twice")
+                ensure(n.name, n.args); continue
+            }
             if (m in inst) throw CompileError("internal: instance $m requested twice")
             if (inst.size >= 1000) throw CompileError("too many generic class instances (recursive generic type?)")
             val cd = generic.getValue(n.name)
@@ -104,7 +129,7 @@ private fun boxCapturedVars(p: Program): Program {
         if (nb === b) g else VarS(g.name, g.isVar, g.type, (nb.stmts.single() as ExprS).e).also { it.line = g.line }
     }
     val funs = p.funs.map { fn(it) }
-    val classes = p.classes.map { c -> ClassD(c.name, c.fields, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue) }
+    val classes = p.classes.map { c -> ClassD(c.name, c.fields, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs) }
     if (!used) return p
     val ref = ClassD("\$Ref", listOf(FieldD("v", TypeRef("T", emptyList(), false), true)), emptyList(), emptyList(), 0, typeParams = listOf("T"))
     return Program(funs, classes + ref, p.ifaces, globals, p.companions)
@@ -113,6 +138,10 @@ private fun boxCapturedVars(p: Program): Program {
 /** `Box` + [Int, ArrayList<String>] -> `Box$Int$ArrayList$String$$`: a valid LLVM identifier, unique per argument list. */
 fun mangle(n: String, args: List<TypeRef>): String =
     n + args.joinToString("") { "$" + it.toString().replace("<", "$").replace(">", "$$").replace(",", "$").replace("?", "_N") }
+
+/** Canonical spelling of a concrete type argument (`List<Int>` -> `ArrayList<Int>`), matching [tyRef]. */
+fun canon(t: TypeRef): TypeRef = TypeRef(when (t.name) { "List", "MutableList" -> "ArrayList"; "Map", "MutableMap" -> "HashMap"; else -> t.name },
+    t.args.map { canon(it) }, false)
 
 /** Concrete type back to a type reference (for type arguments inferred from values). */
 fun tyRef(t: Ty): TypeRef = when (t) {
@@ -173,8 +202,11 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
         val fields = c.fields.map { field(it) }
         return ClassD(name, fields, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams.map { Param(it.name, ty(it.type)) },
             c.inits.map { if (it is FieldD) field(it) else block(it as Block) }, c.superArgs?.map { e(it) },
-            if (keepTypeParams) c.typeParams else emptyList(), c.enumEntries?.map { (n, a) -> n to a.map { e(it) } }, c.isValue)
+            if (keepTypeParams) c.typeParams else emptyList(), c.enumEntries?.map { (n, a) -> n to a.map { e(it) } }, c.isValue,
+            c.superTypeArgs.mapValues { (_, a) -> a.map { ty(it) } })
     }
+
+    fun iface(d: InterfaceD, name: String): InterfaceD = InterfaceD(name, d.methods.map { fn(it) }, d.line)
 
     fun field(f: FieldD): FieldD = fieldMemo.getOrPut(f) { FieldD(f.name, f.type?.let { ty(it) }, f.isVar, f.init?.let { e(it) }) }
 

@@ -64,13 +64,15 @@ class ClassD(val name: String, val fields: List<FieldD>, val supers: List<String
              /** Enum class: entries (name, constructor arguments); `name` and `ordinal` are the first two properties. */
              val enumEntries: List<Pair<String, List<E>>>? = null,
              /** `value class`: one property; equality and toString are structural on it. */
-             val isValue: Boolean = false) {
+             val isValue: Boolean = false,
+             /** Type arguments of generic supertypes by supertype name (`: Base<String>(), I<Int>`). */
+             val superTypeArgs: Map<String, List<TypeRef>> = emptyMap()) {
     /** The superclass is the one supertype written with constructor arguments (`: Base(...)`). */
     val superClass: String? get() = if (superArgs != null) supers.first() else null
     /** Needs a constructor function (plain parameters, initializers or a superclass), not just field stores. */
     val hasCtorBody get() = inits.isNotEmpty() || ctorParams.size != fields.size || superArgs != null
 }
-class InterfaceD(val name: String, val methods: List<FunD>, val line: Int)
+class InterfaceD(val name: String, val methods: List<FunD>, val line: Int, val typeParams: List<String> = emptyList())
 /** `globals`: top-level properties, initialized in declaration order before `main`. */
 class Program(val funs: List<FunD>, val classes: List<ClassD>, val ifaces: List<InterfaceD>, val globals: List<VarS> = emptyList(),
               /** Class name -> (companion object name, names the companion object declares, incl. its own name). */

@@ -50,7 +50,8 @@ class NeedIface(val d: InterfaceD) : Exception()
 
 class NativeBackend(private val prog: Program, private val genericClasses: Map<String, ClassD> = emptyMap(),
                     /** Instance class name -> (generic class, type arguments), for inference against `Box<T>` parameters. */
-                    private val instOrigin: Map<String, Pair<String, List<TypeRef>>> = emptyMap()) {
+                    private val instOrigin: Map<String, Pair<String, List<TypeRef>>> = emptyMap(),
+                    private val genericIfaces: Map<String, InterfaceD> = emptyMap()) {
     private val globals = StringBuilder()
     private val funcs = StringBuilder()
     private val strMap = HashMap<String, String>()
@@ -132,7 +133,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "ArrayList", "MutableList", "List" -> Ty.ListTy(resolve(t.args.single()))
         "\$Fn" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()))
         "Array" -> if (t.args.singleOrNull()?.name == "String") Ty.Args else fail("unsupported type $t")
-        else -> if (t.name in genericClasses) instanceTy(t.name, t.args) else if (t.name in classes) Ty.Cls(t.name) else if (t.name in ifaces) Ty.Iface(t.name) else if (t.name.startsWith("CPointer")) Ty.RawPtr else fail("unknown type $t")
+        else -> if (t.name in genericClasses || t.name in genericIfaces) instanceTy(t.name, t.args) else if (t.name in classes) Ty.Cls(t.name) else if (t.name in ifaces) Ty.Iface(t.name) else if (t.name.startsWith("CPointer")) Ty.RawPtr else fail("unknown type $t")
     }
 
     private fun mapTy(k: Ty, v: Ty): Ty {
@@ -1373,11 +1374,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** `Box<Int>` -> the monomorphized class `Box$Int`; requests the instance if the program does not have it yet. */
     private fun instanceTy(n: String, args: List<TypeRef>): Ty {
-        val cd = genericClasses.getValue(n)
-        if (args.size != cd.typeParams.size) fail("$n expects ${cd.typeParams.size} type arguments")
+        val tps = genericClasses[n]?.typeParams ?: genericIfaces.getValue(n).typeParams
+        if (args.size != tps.size) fail("$n expects ${tps.size} type arguments")
         val concrete = args.map { tyRef(resolve(it)) }
         val m = mangle(n, concrete)
         if (m in classes) return Ty.Cls(m)
+        if (m in ifaces) return Ty.Iface(m)
         throw NeedInstance(n, concrete)
     }
 
@@ -1388,12 +1390,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             t is Ty.ListTy && ref.args.size == 1 -> unify(ref.args[0], t.elem, tps, env)
             t is Ty.MapTy && ref.args.size == 2 -> { unify(ref.args[0], t.k, tps, env); unify(ref.args[1], t.v, tps, env) }
             t is Ty.Iface && ref.name == "\$Fn" -> fnSig(t)?.let { s -> if (s.params.size + 1 == ref.args.size) { s.params.forEachIndexed { i, p -> unify(ref.args[i], p, tps, env) }; unify(ref.args.last(), s.ret, tps, env) } }
-            t is Ty.Cls -> instOrigin[t.name]?.let { (g, args) ->
-                if (g == ref.name && args.size == ref.args.size) {
+            t is Ty.Cls || t is Ty.Iface -> {
+                val n = if (t is Ty.Cls) t.name else (t as Ty.Iface).name
+                val o = instOrigin[n]
+                if (o != null && o.first == ref.name && o.second.size == ref.args.size) {
                     val saved = tenv; tenv = emptyMap()
-                    val tys = try { args.map { resolve(it) } } finally { tenv = saved }
+                    val tys = try { o.second.map { resolve(it) } } finally { tenv = saved }
                     ref.args.forEachIndexed { i, a -> unify(a, tys[i], tps, env) }
-                }
+                } else if (t is Ty.Cls) classes[n]?.supers?.forEach { s -> unify(ref, if (s in ifaces) Ty.Iface(s) else Ty.Cls(s), tps, env) }
             }
         }
     }

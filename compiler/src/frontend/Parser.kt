@@ -41,7 +41,7 @@ class Parser(private val t: List<Tok>) {
                     p++
                     val c = classDecl()
                     if (c.fields.size != 1 || c.ctorParams.size != 1) fail("a value class needs exactly one property", tk)
-                    classes.add(ClassD(c.name, c.fields, c.supers, c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true))
+                    classes.add(ClassD(c.name, c.fields, c.supers, c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true, c.superTypeArgs))
                 }
                 tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "const", "open", "final", "abstract", "sealed") -> p++
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> globals.add(stmt() as VarS)
@@ -73,13 +73,14 @@ class Parser(private val t: List<Tok>) {
         val supers = ArrayList<String>()
         if (isOp(":")) {
             next()
-            while (true) { supers.add(ident()); if (isOp("(")) fail("objects with a superclass are not supported"); if (isOp(",")) next() else break }
+            while (true) { val sn = ident(); supers.add(sn); superTypeArgs(sn); if (isOp("(")) fail("objects with a superclass are not supported"); if (isOp(",")) next() else break }
         }
         val fields = ArrayList<FieldD>(); val inits = ArrayList<Any>()
+        val sta = takeSuperArgs()
         val saved = curClass; curClass = null
         val ms = try { if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved }
         objects.add(name)
-        return ClassD(name, fields, supers, ms, line, emptyList(), inits)
+        return ClassD(name, fields, supers, ms, line, emptyList(), inits, superTypeArgs = sta)
     }
 
     /** Enum entries become top-level immortal instances `E$A` (initialized first, in order) plus the list `E$values`. */
@@ -133,12 +134,25 @@ class Parser(private val t: List<Tok>) {
         return ms
     }
 
+    /** Pending `<...>` type arguments of the supertypes of the class being parsed. */
+    private val superTA = HashMap<String, List<TypeRef>>()
+    private fun superTypeArgs(sn: String) {
+        if (!isOp("<")) return
+        next()
+        val xs = ArrayList<TypeRef>()
+        while (!isOp(">")) { xs.add(type()); if (isOp(",")) next() }
+        next()
+        superTA[sn] = xs
+    }
+    private fun takeSuperArgs(): Map<String, List<TypeRef>> = HashMap(superTA).also { superTA.clear() }
+
     private fun interfaceDecl(): InterfaceD {
         val line = next().line
         val name = ident()
+        val tps = typeParams()
         val ms = if (isOp("{")) members() else emptyList()
         if (ms.any { it.body != null || it.exprBody != null }) fail("default interface methods are not supported")
-        return InterfaceD(name, ms, line)
+        return InterfaceD(name, ms, line, tps)
     }
 
     /** `<T, reified U : Bound>`: type parameter names; upper bounds are parsed but not checked (monomorphization). */
@@ -206,6 +220,7 @@ class Parser(private val t: List<Tok>) {
             next()
             while (true) {
                 val sn = ident()
+                superTypeArgs(sn)
                 if (isOp("(")) {
                     if (superArgs != null) fail("only one superclass is allowed")
                     next()
@@ -223,6 +238,7 @@ class Parser(private val t: List<Tok>) {
 
     private fun classBody(name: String, isEnum: Boolean, fields: ArrayList<FieldD>, ctorParams: List<Param>, inits: ArrayList<Any>,
                           supers: List<String>, superArgs: List<E>?, typeParams: List<String>, line: Int): ClassD {
+        val sta = takeSuperArgs()
         var entries: List<Pair<String, List<E>>>? = null
         val ms = if (isEnum) {
             val es = ArrayList<Pair<String, List<E>>>()
@@ -239,7 +255,7 @@ class Parser(private val t: List<Tok>) {
             entries = es
             if (isOp(";")) { next(); members(fields, inits, open = false) } else { skipNL0(); expectOp("}"); emptyList() }
         } else if (isOp("{")) members(fields, inits) else emptyList()
-        return ClassD(name, fields, supers, ms, line, ctorParams, inits, superArgs, typeParams, entries)
+        return ClassD(name, fields, supers, ms, line, ctorParams, inits, superArgs, typeParams, entries, superTypeArgs = sta)
     }
 
     private fun type(): TypeRef {
