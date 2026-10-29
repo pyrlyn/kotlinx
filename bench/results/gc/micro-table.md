@@ -1,35 +1,35 @@
-| case, ms | default | incremental | rc |
-|---|---|---|---|
-| alloc_throughput | 80.316 | 80.577 | **79.634** |
-| cyclic_garbage | 56.478 | 57.196 | **15.297** |
-| live_heap_churn | 484.865 | 428.134 | **29.705** |
-| short_lived | 77.332 | **77.004** | 77.813 |
+| case, ms | default | incremental |
+|---|---|---|
+| alloc_throughput | 79.209 | **78.912** |
+| cyclic_garbage | **54.631** | 58.574 |
+| live_heap_churn | 467.52 | **413.393** |
+| short_lived | **76.772** | 78.351 |
 
-| case, peak RSS MiB | default | incremental | rc |
-|---|---|---|---|
-| alloc_throughput | **2.2** | **2.2** | **2.2** |
-| cyclic_garbage | 4.4 | **3.7** | 125 |
-| live_heap_churn | **25.7** | 32.3 | 166.9 |
-| short_lived | **2.2** | **2.2** | **2.2** |
+| case, peak RSS MiB | default | incremental |
+|---|---|---|
+| alloc_throughput | **2.2** | **2.2** |
+| cyclic_garbage | 4.4 | **3.7** |
+| live_heap_churn | **25.6** | 32.4 |
+| short_lived | **2.2** | **2.2** |
 
-| case, total GC pause ms | default | incremental | rc |
-|---|---|---|---|
-| alloc_throughput | **0** | **0** | **0** |
-| cyclic_garbage | 47.319 | 46.283 | **0** |
-| live_heap_churn | 447.04 | 393.093 | **0** |
-| short_lived | **0** | **0** | **0** |
+| case, total GC pause ms | default | incremental |
+|---|---|---|
+| alloc_throughput | **0** | **0** |
+| cyclic_garbage | **45.012** | 46.846 |
+| live_heap_churn | 413.846 | **397.829** |
+| short_lived | **0** | **0** |
 
-| case, max GC pause ms | default | incremental | rc |
-|---|---|---|---|
-| alloc_throughput | **0** | **0** | **0** |
-| cyclic_garbage | 0.542 | 0.469 | **0** |
-| live_heap_churn | 5.527 | 8.122 | **0** |
-| short_lived | **0** | **0** | **0** |
+| case, max GC pause ms | default | incremental |
+|---|---|---|
+| alloc_throughput | **0** | **0** |
+| cyclic_garbage | 0.441 | **0.428** |
+| live_heap_churn | **4.865** | 8.445 |
+| short_lived | **0** | **0** |
 
-| case, collections | default | incremental | rc |
-|---|---|---|---|
-| alloc_throughput | **0** | **0** | **0** |
-| cyclic_garbage | 250 | 250 | **0** |
-| live_heap_churn | 130 | 97 | **0** |
-| short_lived | **0** | **0** | **0** |
+| case, collections | default | incremental |
+|---|---|---|
+| alloc_throughput | **0** | **0** |
+| cyclic_garbage | **250** | **250** |
+| live_heap_churn | 130 | **97** |
+| short_lived | **0** | **0** |
 
