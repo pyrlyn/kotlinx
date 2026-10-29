@@ -34,7 +34,16 @@ void rt_leak_obj(int64_t d) { LK(LK_OBJ, d); }
 
 int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW); }
 
-void rt_exit_flush(void) { rt_gc_collect(); fflush(stdout); }
+/* At exit: final collection; KX_GC_STATS=1 prints the GC's statistics to stderr (bench/gc/micro.sh). */
+void rt_exit_flush(void) {
+    rt_gc_collect(); fflush(stdout);
+    const char *e = getenv("KX_GC_STATS");
+    if (e && *e && *e != '0') {
+        KxGcStats st; rt_gc_stats(&st);
+        fprintf(stderr, "gc-stats: gc=%s collections=%lld reclaimed=%lld pause_total=%.3f pause_max=%.3f\n", rt_gc_name(),
+                (long long)st.collections, (long long)st.reclaimed, st.pause_ns_total / 1e6, st.pause_ns_max / 1e6);
+    }
+}
 
 #ifdef RT_LEAKCHECK
 int rt_leakcheck = 1;

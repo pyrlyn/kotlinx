@@ -9,7 +9,16 @@
 
 static KxGcStats gc_st;
 
-__attribute__((constructor(101))) static void boehm_init(void) { GC_INIT(); }
+/* Every bdwgc collection (implicit or explicit) is timed through the collection event callback. */
+static int64_t ev_t0;
+static void on_event(GC_EventType e) {
+    if (e == GC_EVENT_START) ev_t0 = rt_nanos();
+    else if (e == GC_EVENT_END) {
+        int64_t dt = rt_nanos() - ev_t0;
+        gc_st.pause_ns_total += dt; if (dt > gc_st.pause_ns_max) gc_st.pause_ns_max = dt;
+    }
+}
+__attribute__((constructor(101))) static void boehm_init(void) { GC_INIT(); GC_set_on_collection_event(on_event); }
 
 static void *chk(void *p) { if (!p) rt_panic("OutOfMemoryError"); return p; }
 static inline KxVTab *vt(void *p) { return *(KxVTab **)((char *)p + 8); }
@@ -67,11 +76,8 @@ void *rt_gc_mem_realloc(void *p, size_t n) {
 void rt_gc_mem_free(void *p) { if (p) GC_FREE(p); }
 
 void rt_gc_collect(void) {
-    int64_t t0 = rt_nanos();
     GC_gcollect();
     GC_invoke_finalizers();
-    int64_t dt = rt_nanos() - t0;
-    gc_st.collections++; gc_st.pause_ns_total += dt; if (dt > gc_st.pause_ns_max) gc_st.pause_ns_max = dt;
 }
 const char *rt_gc_name(void) { return "boehm"; }
 void rt_gc_stats(KxGcStats *out) { *out = gc_st; out->collections = (int64_t)GC_get_gc_no(); }
