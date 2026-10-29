@@ -212,8 +212,8 @@
   },
   {
    "run": "micro-default",
-   "date": "2026-10-30T00:18:11+02:00",
-   "commit": "85e1b30a63080719705870af8ab4d83d73c27732",
+   "date": "2026-10-29T23:59:48+02:00",
+   "commit": "bed690b60c9cd4a0fdceee539f3b9f8a995dc0ec",
    "dirty": false,
    "ref": null,
    "gc": "default",
@@ -221,15 +221,15 @@
     "model": "Mac15,9",
     "cpu": "Apple M3 Max",
     "os": "Darwin 27.0.1",
-    "load": "{ 144.99 94.29 142.05 }"
+    "load": "{ 71.16 113.27 328.38 }"
    },
    "toolchain": {
     "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
     "opt": "LLVM version 21.1.8"
    },
    "metrics": {
-    "ms": 95.898,
-    "raw_ns": "97058958,95744333,92231667,95709334,96241333",
+    "ms": 79.209,
+    "raw_ns": "78565375,84281542,80487166,78575917,78526250",
     "peak_rss_mib": 2.2,
     "pause_total_ms": 0.0,
     "pause_max_ms": 0.0,
@@ -238,8 +238,8 @@
   },
   {
    "run": "micro-incremental",
-   "date": "2026-10-30T00:18:21+02:00",
-   "commit": "85e1b30a63080719705870af8ab4d83d73c27732",
+   "date": "2026-10-29T23:59:57+02:00",
+   "commit": "bed690b60c9cd4a0fdceee539f3b9f8a995dc0ec",
    "dirty": false,
    "ref": null,
    "gc": "incremental",
@@ -247,44 +247,18 @@
     "model": "Mac15,9",
     "cpu": "Apple M3 Max",
     "os": "Darwin 27.0.1",
-    "load": "{ 129.54 92.65 140.91 }"
+    "load": "{ 63.50 110.23 324.79 }"
    },
    "toolchain": {
     "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
     "opt": "LLVM version 21.1.8"
    },
    "metrics": {
-    "ms": 80.548,
-    "raw_ns": "79752667,85145584,80060875,81534541,80049292",
+    "ms": 78.912,
+    "raw_ns": "78823416,79465916,78628833,78984375,78927250",
     "peak_rss_mib": 2.2,
     "pause_total_ms": 0.0,
     "pause_max_ms": 0.0,
-    "collections": 0
-   }
-  },
-  {
-   "run": "micro-epoch",
-   "date": "2026-10-30T00:18:30+02:00",
-   "commit": "85e1b30a63080719705870af8ab4d83d73c27732",
-   "dirty": false,
-   "ref": null,
-   "gc": "epoch",
-   "machine": {
-    "model": "Mac15,9",
-    "cpu": "Apple M3 Max",
-    "os": "Darwin 27.0.1",
-    "load": "{ 112.09 90.13 139.45 }"
-   },
-   "toolchain": {
-    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
-    "opt": "LLVM version 21.1.8"
-   },
-   "metrics": {
-    "ms": 80.38,
-    "raw_ns": "83230375,79545917,79514375,79790375,81803083",
-    "peak_rss_mib": 2.2,
-    "pause_total_ms": 0.03,
-    "pause_max_ms": 0.03,
     "collections": 0
    }
   }
