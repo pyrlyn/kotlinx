@@ -962,7 +962,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         when (target) {
             is NameE -> {
                 val l = lookup(target.n)
-                if (l == null && owner != null && owner!!.index(target.n) >= 0) return assign(MemberE(NameE("this"), target.n, false), value)
+                if (l == null && owner != null && (owner!!.index(target.n) >= 0 || "\$set\$${target.n}" in owner!!.methods)) return assign(MemberE(NameE("this"), target.n, false), value)
                 if (l == null) fail("unknown variable '${target.n}'")
                 if (!l.isVar) fail("val '${target.n}' cannot be reassigned")
                 var v = coerce(argFor(value, l.t, true), l.t)
@@ -977,6 +977,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val r = genExpr(target.recv)
                 val ct = r.t as? Ty.Cls ?: fail("cannot assign to ${r.t}.${target.n}")
                 val ci = classes.getValue(ct.name)
+                val sm = "\$set\$${target.n}"
+                if (ci.index(target.n) < 0 && sm in ci.methods) {
+                    releaseIfOwned(callMethod(r, ci, sm, CallE(NameE(sm), emptyList(), listOf(value), null).also { it.line = line })); releaseIfOwned(r); return
+                }
                 val idx = ci.index(target.n).takeIf { it >= 0 } ?: fail("no field ${target.n} in ${ct.name}")
                 val ft = ci.fields[idx].second
                 var v = coerce(argFor(value, ft, true), ft)
@@ -1142,8 +1146,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 onceRecv(e.target) { tg ->
                     val old = genExpr(tg)
                     if (old.t.llvm == "ptr") fail("$op on ${old.t}")
-                    assign(tg, BinE(if (op == "++") "+" else "-", tg, IntL(1, false)).also { it.line = e.line })
-                    if (pre) genExpr(tg) else old
+                    // The getter runs once for the old value; prefix forms read the property again for the result.
+                    withTemps(listOf(old)) { (x) ->
+                        assign(tg, BinE(if (op == "++") "+" else "-", x, IntL(1, false)).also { it.line = e.line })
+                        genExpr(if (pre) tg else x)
+                    }
                 }
             }
             is DblL -> Val("0x" + e.v.toRawBits().toULong().toString(16).uppercase().padStart(16, '0'), Ty.F64)

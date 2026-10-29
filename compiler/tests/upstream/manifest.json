@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 1967,
-  "UNSUPPORTED": 3484
+  "PASS": 1979,
+  "UNSUPPORTED": 3472
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1194,8 +1194,8 @@
    "upstream": "compiler/testData/codegen/box/basics/superGetterCall.kt"
   },
   "box/box/basics/superSetterCall.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "property accessors / delegation",
+   "detail": "properties with a setter need an explicit type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/superSetterCall.kt"
   },
@@ -4541,8 +4541,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/overriddenInSubclass.kt"
   },
   "box/box/callableReference/property/privateSetOuterClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "other syntax (at 'D')",
+   "detail": "expected end of statement (at 'D')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/privateSetOuterClass.kt"
   },
@@ -5701,8 +5701,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt940.kt"
   },
   "box/box/classes/kt9642.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "property accessors / delegation",
+   "detail": "properties with a setter need an explicit type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt9642.kt"
   },
@@ -5771,9 +5771,8 @@
    "upstream": "compiler/testData/codegen/box/classes/privateToThis.kt"
   },
   "box/box/classes/propertyDelegation.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/propertyDelegation.kt"
   },
   "box/box/classes/propertyInInitializer.kt": {
@@ -13678,8 +13677,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationByIfExpr.kt"
   },
   "box/box/delegation/delegationByInh.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "other: no field prop in Derived",
+   "detail": "no field prop in Derived",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationByInh.kt"
   },
@@ -13689,8 +13688,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationByNewInstance.kt"
   },
   "box/box/delegation/delegationChain.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "other: no field prop in Derived",
+   "detail": "no field prop in Derived",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationChain.kt"
   },
@@ -17871,8 +17870,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/equalsFloat_properIeeeComparisons.kt"
   },
   "box/box/ieee754/equalsNaN_properIeeeComparisons.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "unknown Double (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Double'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/equalsNaN_properIeeeComparisons.kt"
   },
@@ -18034,8 +18033,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/when_properIeeeComparisons.kt"
   },
   "box/box/increment/argumentWithSideEffects.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "property accessors / delegation",
+   "detail": "properties with a setter need an explicit type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/argumentWithSideEffects.kt"
   },
@@ -23152,12 +23151,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645792\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 537660704\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966880\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1611402208\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25782,7 +25781,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x102cbcf1b        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102dc6faf        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1029bcf1b        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102ac9f67        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -29114,8 +29113,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt4086.kt"
   },
   "box/box/objects/kt45170.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "other: properties with accessors need an explicit type (at '",
+   "detail": "properties with accessors need an explicit type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt45170.kt"
   },
@@ -29438,8 +29437,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/genericArrayAccessCall.kt"
   },
   "box/box/operatorConventions/incDecOnObject.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "other: ++ on X",
+   "detail": "++ on X",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/incDecOnObject.kt"
   },
@@ -30368,14 +30367,14 @@
    "upstream": "compiler/testData/codegen/box/properties/PrivatePropertyOfGenericCovariantFunctionType.kt"
   },
   "box/box/properties/accessToPrivateProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "other: properties with accessors need an explicit type (at '",
+   "detail": "properties with accessors need an explicit type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/accessToPrivateProperty.kt"
   },
   "box/box/properties/accessToPrivateSetter.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "property accessors / delegation",
+   "detail": "properties with a setter need an explicit type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/accessToPrivateSetter.kt"
   },
@@ -30494,38 +30493,38 @@
    "upstream": "compiler/testData/codegen/box/properties/classArtificialFieldInsideNested.kt"
   },
   "box/box/properties/classFieldInsideLambda.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideLambda.kt"
   },
   "box/box/properties/classFieldInsideLocalInSetter.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "other syntax (at 'Local')",
+   "detail": "expected end of statement (at 'Local')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideLocalInSetter.kt"
   },
   "box/box/properties/classFieldInsideNested.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "detail": "only member functions are supported in class/interface bodies (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideNested.kt"
   },
   "box/box/properties/classFieldInsideNestedLambda.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideNestedLambda.kt"
   },
   "box/box/properties/classFieldInsideNestedNestedLambda.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideNestedNestedLambda.kt"
   },
   "box/box/properties/classObjectProperties.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "unknown Test (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Test'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classObjectProperties.kt"
   },
@@ -30536,20 +30535,19 @@
    "upstream": "compiler/testData/codegen/box/properties/classPrivateArtificialFieldInsideNested.kt"
   },
   "box/box/properties/companionFieldInsideLambda.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/companionFieldInsideLambda.kt"
   },
   "box/box/properties/companionPrivateField.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/companionPrivateField.kt"
   },
   "box/box/properties/companionPrivateFieldInsideLambda.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/companionPrivateFieldInsideLambda.kt"
   },
@@ -30612,9 +30610,8 @@
    "upstream": "compiler/testData/codegen/box/properties/field.kt"
   },
   "box/box/properties/fieldInClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/fieldInClass.kt"
   },
   "box/box/properties/fieldInsideField.kt": {
@@ -30683,9 +30680,8 @@
    "upstream": "compiler/testData/codegen/box/properties/initializerOfValWithNonConstExpr.kt"
   },
   "box/box/properties/kt10715.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt10715.kt"
   },
   "box/box/properties/kt10729.kt": {
@@ -30734,9 +30730,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt1892.kt"
   },
   "box/box/properties/kt2331.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt2331.kt"
   },
   "box/box/properties/kt257.kt": {
@@ -30771,9 +30766,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt3524.kt"
   },
   "box/box/properties/kt3551.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt3551.kt"
   },
   "box/box/properties/kt3556.kt": {
@@ -30782,8 +30776,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt3556.kt"
   },
   "box/box/properties/kt3930.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "property accessors / delegation",
+   "detail": "properties with a setter need an explicit type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt3930.kt"
   },
@@ -30823,14 +30817,14 @@
    "upstream": "compiler/testData/codegen/box/properties/kt4383.kt"
   },
   "box/box/properties/kt49203_lateinit.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "other: unknown method X.plus()",
+   "detail": "unknown method X.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt49203_lateinit.kt"
   },
   "box/box/properties/kt49203_var.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "other: unknown method X.plus()",
+   "detail": "unknown method X.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt49203_var.kt"
   },
@@ -30845,14 +30839,14 @@
    "upstream": "compiler/testData/codegen/box/properties/kt78962.kt"
   },
   "box/box/properties/kt8928.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "unknown App (stdlib API / unsupported decl)",
+   "detail": "unknown name 'App'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt8928.kt"
   },
   "box/box/properties/kt9603.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "property accessors / delegation",
+   "detail": "properties with a setter need an explicit type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt9603.kt"
   },
@@ -30952,26 +30946,23 @@
    "upstream": "compiler/testData/codegen/box/properties/lateinit/overrideException.kt"
   },
   "box/box/properties/lateinit/privateSetter.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/privateSetter.kt"
   },
   "box/box/properties/lateinit/privateSetterFromLambda.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/privateSetterFromLambda.kt"
   },
   "box/box/properties/lateinit/privateSetterViaSubclass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/privateSetterViaSubclass.kt"
   },
   "box/box/properties/lateinit/privateVarInCompanion.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "category": "unknown App (stdlib API / unsupported decl)",
+   "detail": "unknown name 'App'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/privateVarInCompanion.kt"
   },
@@ -31045,9 +31036,8 @@
    "upstream": "compiler/testData/codegen/box/properties/primitiveOverrideDelegateAccessor.kt"
   },
   "box/box/properties/privateAccessorOfOverriddenProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/privateAccessorOfOverriddenProperty.kt"
   },
   "box/box/properties/privatePropertyInConstructor.kt": {
@@ -37371,15 +37361,13 @@
    "upstream": "compiler/testData/codegen/box/statics/anonymousInitializerInClassObject.kt"
   },
   "box/box/statics/incInClassObject.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/statics/incInClassObject.kt"
   },
   "box/box/statics/incInObject.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/statics/incInObject.kt"
   },
   "box/box/statics/inheritedPropertyInClassObject.kt": {
@@ -38235,14 +38223,14 @@
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/kt10047.kt"
   },
   "box/box/syntheticAccessors/kt21258_indirect.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/kt21258_indirect.kt"
   },
   "box/box/syntheticAccessors/kt21258_simple.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'get')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/kt21258_simple.kt"
   },
@@ -39228,7 +39216,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupurby93uy/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupurby93uy/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz0qxf9dh/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz0qxf9dh/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },

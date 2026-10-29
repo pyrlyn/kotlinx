@@ -91,6 +91,46 @@ class Parser(private val t: List<Tok>) {
         else FunD(fname, emptyList(), rt, block(), null, line, typeParams, recv)
     }
 
+    /**
+     * Accessors after a body property with an initializer (`var x: T = v` + `get() = ...` / `set(v) { field = v }`):
+     * the backing field becomes `$bf$x`, the getter `$prop$x`, the setter `$set$x(v)`; `field` names the backing field.
+     */
+    private fun accessors(n: String, ty: TypeRef?, f: FieldD, isVar: Boolean): Pair<FieldD, List<FunD>>? {
+        val save = p
+        var get: FunD? = null; var set: FunD? = null
+        while (true) {
+            val at = p
+            while (t[p].k == K.NL) p++
+            while (peek().k == K.ID && peek().s in setOf("private", "protected", "internal", "public") && t[p + 1].k == K.ID && t[p + 1].s in setOf("get", "set")) p++
+            if (get == null && isId("get") && t[p + 1].k == K.OP && t[p + 1].s == "(") { get = getter("\$prop\$$n", ty, emptyList(), null); continue }
+            if (set == null && isId("set") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
+                val line = next().line; next()
+                val pn = ident(); if (isOp(":")) { next(); type() }
+                expectOp(")")
+                val body = if (isOp("=")) { next(); skipNLOnly(); Block(listOf(ExprS(expr()).also { it.line = line })) } else block()
+                set = FunD("\$set\$$n", listOf(Param(pn, ty ?: fail("properties with a setter need an explicit type"))), TypeRef("Unit", emptyList(), false), body, null, line)
+                continue
+            }
+            // A bare `private set` (visibility only) keeps the default setter.
+            if (set == null && isId("set") && !(t[p + 1].k == K.OP && t[p + 1].s == "(")) { val line = next().line
+                set = FunD("\$set\$$n", listOf(Param("v\$", ty ?: fail("properties with a setter need an explicit type"))), TypeRef("Unit", emptyList(), false),
+                    Block(listOf(AssignS(NameE("field"), "=", NameE("v\$")).also { it.line = line })), null, line); continue }
+            p = at; break
+        }
+        if (get == null && set == null) { p = save; return null }
+        if (set != null && !isVar) fail("val cannot have a setter")
+        val bfn = "\$bf\$$n"
+        val sub = Subst(emptyMap(), rw = { x: E -> if (x is NameE && x.n == "field") NameE(bfn).also { it.line = x.line } else null },
+            srw = { st: S -> if (st is AssignS && st.target is NameE && (st.target as NameE).n == "field") AssignS(NameE(bfn), st.op, sub0!!.e(st.value)).also { it.line = st.line } else null })
+        sub0 = sub
+        val g = get?.let { sub.fn(it) } ?: FunD("\$prop\$$n", emptyList(), ty, null, NameE(bfn), f.init?.line ?: 0)
+        val st = set?.let { sub.fn(it) } ?: if (isVar) FunD("\$set\$$n", listOf(Param("v\$", ty ?: fail("properties with accessors need an explicit type"))), TypeRef("Unit", emptyList(), false),
+            Block(listOf(AssignS(NameE(bfn), "=", NameE("v\$")))), null, g.line) else null
+        val bf = FieldD(bfn, f.type, true, f.init, f.lateinit)
+        return bf to listOfNotNull(g, st)
+    }
+    private var sub0: Subst? = null
+
     /** Extension property `val <T> Recv.name: Type get() = ...` (getter only): an extension function `$prop$name`. */
     private fun extProperty(): FunD {
         next()
@@ -266,6 +306,7 @@ class Parser(private val t: List<Tok>) {
                         if (ty == null) fail("body properties need an initializer")
                         FieldD(n, ty, true, zeroOf(ty), isLate)
                     } else { next(); skipNLOnly(); FieldD(n, ty, isVar, expr()) }
+                    accessors(n, ty, f, isVar)?.let { (bf, acc) -> props.add(bf); inits.add(bf); ms.addAll(acc); continue }
                     props.add(f); inits.add(f)
                     val constOwner = curClass ?: curObject
                     if (isConst && constOwner != null && (f.init is IntL || f.init is BoolL || f.init is CharL || f.init is DblL || (f.init is StrL && (f.init as StrL).parts.all { it is String })))
