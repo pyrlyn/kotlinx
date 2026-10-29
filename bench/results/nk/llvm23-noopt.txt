@@ -1,0 +1,18 @@
+# llvm23-noopt working tree 2026-10-29 17:05 EET load: { 21.89 31.55 38.81 }
+sum 3.734
+alloc 75.912
+bigheap 121.287
+closures 84.586
+cycles 45.13
+dispatch 95.758
+file 51.603
+free 51.59
+hashmap 68.258
+lru 94.834
+matmul 18.59
+nbody 71.907
+recursion 6.258
+refpass 131.104
+sort 64.465
+strings 32.087
+trees 121.626

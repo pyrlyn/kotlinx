@@ -1,0 +1,18 @@
+# after-opt working tree 2026-10-29 15:38 EET load: { 53.45 65.65 50.96 }
+sum 3.865
+alloc 78.766
+bigheap 124.002
+closures 108.971
+cycles 45.282
+dispatch 108.861
+file 54.003
+free 53.466
+hashmap 74.95
+lru 95.232
+matmul 37.319
+nbody 79.919
+recursion 6.269
+refpass 132.421
+sort 62.474
+strings 32.174
+trees 122.406

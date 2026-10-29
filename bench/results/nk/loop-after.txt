@@ -1,0 +1,18 @@
+# loop-after working tree 2026-10-29 16:11 EET load: { 76.24 49.94 36.55 }
+sum 3.688
+alloc 79.223
+bigheap 119.279
+closures 107.041
+cycles 44.633
+dispatch 106.717
+file 52.455
+free 52.975
+hashmap 71.674
+lru 95.876
+matmul 17.532
+nbody 74.249
+recursion 5.956
+refpass 132.413
+sort 63.997
+strings 32.082
+trees 123.042

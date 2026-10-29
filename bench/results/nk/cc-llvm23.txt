@@ -1,0 +1,18 @@
+# cc-llvm23 working tree 2026-10-29 18:29 EET load: { 55.29 44.04 37.32 }
+sum 3.707
+alloc 80.501
+bigheap 120.533
+closures 83.327
+cycles 44.64
+dispatch 95.309
+file 54.911
+free 51.253
+hashmap 70.569
+lru 105.956
+matmul 34.993
+nbody 72.109
+recursion 6.249
+refpass 149.227
+sort 62.41
+strings 32.154
+trees 122.37

@@ -1,0 +1,18 @@
+# lto-after working tree 2026-10-29 16:14 EET load: { 30.25 41.85 35.55 }
+sum 3.795
+alloc 76.27
+bigheap 119.119
+closures 82.905
+cycles 44.766
+dispatch 95.567
+file 51.535
+free 51.267
+hashmap 73.307
+lru 95.443
+matmul 17.578
+nbody 72.262
+recursion 6.178
+refpass 130.318
+sort 62.885
+strings 33.513
+trees 121.433

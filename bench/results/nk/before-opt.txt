@@ -1,0 +1,18 @@
+# before-opt main 2026-10-29 15:38 EET load: { 63.67 68.43 51.48 }
+sum 3.734
+alloc 73.915
+bigheap 135.347
+closures 84.642
+cycles 56.566
+dispatch 96.234
+file 51.403
+free 49.733
+hashmap 70.634
+lru 982.579
+matmul 17.55
+nbody 71.377
+recursion 6.267
+refpass 146.874
+sort 63.708
+strings 32.321
+trees 146.691

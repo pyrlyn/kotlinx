@@ -1,0 +1,18 @@
+# llvm21mise working tree 2026-10-29 18:19 EET load: { 26.72 29.26 33.15 }
+sum 3.781
+alloc 75.761
+bigheap 122.395
+closures 83.139
+cycles 44.853
+dispatch 96.136
+file 51.236
+free 50.2
+hashmap 68.858
+lru 90.624
+matmul 17.783
+nbody 72.838
+recursion 5.959
+refpass 129.556
+sort 63.188
+strings 32.239
+trees 123.432

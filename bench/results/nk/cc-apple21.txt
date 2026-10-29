@@ -1,0 +1,18 @@
+# cc-apple21 working tree 2026-10-29 18:30 EET load: { 43.75 42.25 36.90 }
+sum 3.836
+alloc 76.269
+bigheap 121.636
+closures 83.687
+cycles 44.733
+dispatch 94.558
+file 50.907
+free 50.667
+hashmap 72.208
+lru 94.172
+matmul 17.584
+nbody 72.351
+recursion 6.1
+refpass 131.29
+sort 62.168
+strings 31.54
+trees 122.718

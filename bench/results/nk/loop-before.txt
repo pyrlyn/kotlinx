@@ -1,0 +1,18 @@
+# loop-before origin/main 2026-10-29 16:11 EET load: { 82.17 48.80 35.77 }
+sum 3.747
+alloc 78.467
+bigheap 118.897
+closures 106.956
+cycles 44.495
+dispatch 107.94
+file 51.687
+free 53.051
+hashmap 77.116
+lru 100.692
+matmul 37.272
+nbody 78.332
+recursion 6.048
+refpass 135.899
+sort 62.865
+strings 32.425
+trees 121.668

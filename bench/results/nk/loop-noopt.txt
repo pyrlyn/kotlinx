@@ -1,0 +1,18 @@
+# loop-noopt working tree 2026-10-29 16:12 EET load: { 60.39 49.03 36.76 }
+sum 3.818
+alloc 76.594
+bigheap 117.802
+closures 83.399
+cycles 45.345
+dispatch 94.908
+file 51.833
+free 50.177
+hashmap 71.712
+lru 94.843
+matmul 17.711
+nbody 71.828
+recursion 6.154
+refpass 132.432
+sort 63.669
+strings 33.443
+trees 123.002
