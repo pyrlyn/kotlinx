@@ -131,6 +131,90 @@ fun kt_stepC(p: CharProgression, n: Int): CharProgression {
 }
 """
 
+private val UNSIGNED_PROGRESSION = """
+fun kt_diffU(a: UInt, b: UInt, c: UInt): UInt { val ac = a % c; val bc = b % c; return if (ac >= bc) ac - bc else ac - bc + c }
+fun kt_lastU(start: UInt, end: UInt, step: Int): UInt {
+    if (step > 0) { if (start >= end) return end; return end - kt_diffU(end, start, step.toUInt()) }
+    if (start <= end) return end
+    return end + kt_diffU(start, end, (0 - step).toUInt())
+}
+open class UIntProgression(val first: UInt, val last: UInt, val step: Int) {
+    fun isEmpty(): Boolean = if (step > 0) first > last else first < last
+    fun contains(x: UInt): Boolean {
+        if (isEmpty()) return false
+        if (step > 0) { if (x < first || x > last) return false; return (x - first) % step.toUInt() == 0u }
+        if (x > first || x < last) return false
+        return (first - x) % (0 - step).toUInt() == 0u
+    }
+    override fun toString(): String = if (step > 0) "" + first + ".." + last + " step " + step else "" + first + " downTo " + last + " step " + (0 - step)
+    fun reversed(): UIntProgression = UIntProgression(last, first, 0 - step)
+    fun count(): Int {
+        if (isEmpty()) return 0
+        if (step > 0) return ((last - first) / step.toUInt() + 1u).toInt()
+        return ((first - last) / (0 - step).toUInt() + 1u).toInt()
+    }
+    fun toList(): List<UInt> {
+        val r = ArrayList<UInt>()
+        for (x in this) r.add(x)
+        return r
+    }
+}
+class UIntRange(start: UInt, endInclusive: UInt) : UIntProgression(start, endInclusive, 1) {
+    val start: UInt = start
+    val endInclusive: UInt = endInclusive
+    override fun toString(): String = "" + first + ".." + last
+}
+fun kt_rangeToU(a: UInt, b: UInt): UIntRange = UIntRange(a, b)
+fun kt_untilU(a: UInt, b: UInt): UIntRange = if (b == 0u) UIntRange(1u, 0u) else UIntRange(a, b - 1u)
+fun kt_downToU(a: UInt, b: UInt): UIntProgression = UIntProgression(a, b, 0 - 1)
+fun kt_stepU(p: UIntProgression, n: Int): UIntProgression {
+    if (n <= 0) throw IllegalArgumentException("Step must be positive, was: " + n + ".")
+    val s = if (p.step > 0) n else 0 - n
+    return UIntProgression(p.first, kt_lastU(p.first, p.last, s), s)
+}
+
+fun kt_diffUL(a: ULong, b: ULong, c: ULong): ULong { val ac = a % c; val bc = b % c; return if (ac >= bc) ac - bc else ac - bc + c }
+fun kt_lastUL(start: ULong, end: ULong, step: Long): ULong {
+    if (step > 0L) { if (start >= end) return end; return end - kt_diffUL(end, start, step.toULong()) }
+    if (start <= end) return end
+    return end + kt_diffUL(start, end, (0L - step).toULong())
+}
+open class ULongProgression(val first: ULong, val last: ULong, val step: Long) {
+    fun isEmpty(): Boolean = if (step > 0L) first > last else first < last
+    fun contains(x: ULong): Boolean {
+        if (isEmpty()) return false
+        if (step > 0L) { if (x < first || x > last) return false; return (x - first) % step.toULong() == 0uL }
+        if (x > first || x < last) return false
+        return (first - x) % (0L - step).toULong() == 0uL
+    }
+    override fun toString(): String = if (step > 0L) "" + first + ".." + last + " step " + step else "" + first + " downTo " + last + " step " + (0L - step)
+    fun reversed(): ULongProgression = ULongProgression(last, first, 0L - step)
+    fun count(): Int {
+        if (isEmpty()) return 0
+        if (step > 0L) return ((last - first) / step.toULong() + 1uL).toInt()
+        return ((first - last) / (0L - step).toULong() + 1uL).toInt()
+    }
+    fun toList(): List<ULong> {
+        val r = ArrayList<ULong>()
+        for (x in this) r.add(x)
+        return r
+    }
+}
+class ULongRange(start: ULong, endInclusive: ULong) : ULongProgression(start, endInclusive, 1L) {
+    val start: ULong = start
+    val endInclusive: ULong = endInclusive
+    override fun toString(): String = "" + first + ".." + last
+}
+fun kt_rangeToUL(a: ULong, b: ULong): ULongRange = ULongRange(a, b)
+fun kt_untilUL(a: ULong, b: ULong): ULongRange = if (b == 0uL) ULongRange(1uL, 0uL) else ULongRange(a, b - 1uL)
+fun kt_downToUL(a: ULong, b: ULong): ULongProgression = ULongProgression(a, b, 0L - 1L)
+fun kt_stepUL(p: ULongProgression, n: Long): ULongProgression {
+    if (n <= 0L) throw IllegalArgumentException("Step must be positive, was: " + n + ".")
+    val s = if (p.step > 0L) n else 0L - n
+    return ULongProgression(p.first, kt_lastUL(p.first, p.last, s), s)
+}
+"""
+
 /** Standard exception classes (`message` only); a missing message argument is passed as null. */
 private val EXCEPTION_CLASSES = """
 open class Throwable(val message: String?)
@@ -156,9 +240,10 @@ open class NotImplementedError(message: String?) : Error(message)
 val PRELUDE_EXCEPTIONS = setOf("Throwable", "Exception", "Error", "RuntimeException", "IllegalStateException", "IllegalArgumentException", "UnsupportedOperationException", "ArithmeticException", "IndexOutOfBoundsException", "ArrayIndexOutOfBoundsException", "NoSuchElementException", "NullPointerException", "ClassCastException", "NumberFormatException", "ConcurrentModificationException", "AssertionError", "NotImplementedError")
 
 /** Progression class name -> element kind suffix of its `kt_*` functions (I, L, C). */
-val PROGRESSIONS = mapOf("IntProgression" to "I", "IntRange" to "I", "LongProgression" to "L", "LongRange" to "L",
+val PROGRESSIONS = mapOf("UIntProgression" to "U", "UIntRange" to "U", "ULongProgression" to "UL", "ULongRange" to "UL", "IntProgression" to "I", "IntRange" to "I", "LongProgression" to "L", "LongRange" to "L",
     "CharProgression" to "C", "CharRange" to "C")
 
+private val UNSIGNED_USE = Regex("""\bU(Int|Long)\b|\d[uU]""")
 private val RANGE_USE = Regex("""\.\.|\buntil\b|\bdownTo\b|\bstep\b|Range\b|Progression\b""")
 
 private val EXC_USE = Regex("""\btry\b|\bassertFails""")
@@ -204,7 +289,7 @@ fun withPrelude(src: String, p: Program): Program {
     val ranges = RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
     val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src)
     if (!ranges && !exc && !pairs && !cmp && !lists) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "")
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },

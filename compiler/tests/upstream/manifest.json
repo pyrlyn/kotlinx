@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 5,
   "MISCOMPILE": 39,
   "N/A": 2984,
-  "PASS": 992,
-  "UNSUPPORTED": 4455
+  "PASS": 1126,
+  "UNSUPPORTED": 4321
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1673,17 +1673,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupdnwy7gma/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupdnwy7gma/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup02znlhip/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup02znlhip/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupie0ozsrb/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupie0ozsrb/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupdz59f84u/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupdz59f84u/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup4yc4nz6j/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup4yc4nz6j/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqknnrhe8/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqknnrhe8/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -23443,12 +23443,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966880\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789472\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1611402208\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1611402336\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -31713,15 +31713,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/longUntil.kt"
   },
   "box/box/ranges/contains/generated/uintDownTo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/uintDownTo.kt"
   },
   "box/box/ranges/contains/generated/uintRangeTo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/uintRangeTo.kt"
   },
   "box/box/ranges/contains/generated/uintRangeUntil.kt": {
@@ -31731,21 +31729,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/uintRangeUntil.kt"
   },
   "box/box/ranges/contains/generated/uintUntil.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/uintUntil.kt"
   },
   "box/box/ranges/contains/generated/ulongDownTo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/ulongDownTo.kt"
   },
   "box/box/ranges/contains/generated/ulongRangeTo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/ulongRangeTo.kt"
   },
   "box/box/ranges/contains/generated/ulongRangeUntil.kt": {
@@ -31755,9 +31750,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/ulongRangeUntil.kt"
   },
   "box/box/ranges/contains/generated/ulongUntil.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/ulongUntil.kt"
   },
   "box/box/ranges/contains/genericCharInRangeLiteral.kt": {
@@ -34467,39 +34461,33 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/emptyProgression.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/illegalStepNegative.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/illegalStepNonConst.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/illegalStepThenLegalStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/illegalStepZero.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/legalStepThenIllegalStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/maxValueToMinValueStepMaxValue.kt": {
@@ -34527,159 +34515,133 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepOneThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepThenSameStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/reversed/reversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/reversed/reversedThenStepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/reversed/stepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/reversed/stepThenReversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/singleElementStepTwo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/stepNonConst.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/stepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/stepToOutsideRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/stepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/stepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/emptyProgression.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepNegative.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepNonConst.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepThenLegalStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepZero.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/legalStepThenIllegalStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/minValueToMaxValueStepMaxValue.kt": {
@@ -34695,51 +34657,43 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepOneThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepThenSameStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/oneToMaxValueStepMaxValue.kt": {
@@ -34749,75 +34703,63 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/stepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/stepThenReversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/singleElementStepTwo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/stepNonConst.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/stepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/stepToOutsideRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/stepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/stepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/rangeTo/zeroToMaxValueStepMaxValue.kt": {
@@ -34971,9 +34913,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/emptyProgression.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/emptyProgressionToMinValue.kt": {
@@ -34983,33 +34924,28 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/emptyProgressionToMinValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/illegalStepNegative.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/illegalStepNegative.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/illegalStepNonConst.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/illegalStepThenLegalStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/illegalStepZero.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/legalStepThenIllegalStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/minValueToMaxValueStepMaxValue.kt": {
@@ -35025,129 +34961,108 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepOneThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepThenSameStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/progressionToNonConst.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/progressionToNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/reversed/reversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/reversed/reversedThenStepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/reversed/stepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/reversed/stepThenReversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/singleElementStepTwo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/stepNonConst.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/stepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/stepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/stepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/stepToOutsideRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/stepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/stepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/until/zeroToMaxValueStepMaxValue.kt": {
@@ -35172,9 +35087,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/illegalStepThenLegalStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/illegalStepZero.kt": {
@@ -35183,9 +35097,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/legalStepThenIllegalStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/maxValueToMinValueStepMaxValue.kt": {
@@ -35213,87 +35126,73 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepOneThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepThenSameStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/reversed/reversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/reversed/reversedThenStepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/singleElementStepTwo.kt": {
@@ -35342,9 +35241,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepThenLegalStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepZero.kt": {
@@ -35353,9 +35251,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/legalStepThenIllegalStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/minValueToMaxValueStepMaxValue.kt": {
@@ -35371,51 +35268,43 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepOneThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepThenSameStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/oneToMaxValueStepMaxValue.kt": {
@@ -35425,39 +35314,33 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/singleElementStepTwo.kt": {
@@ -35662,9 +35545,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/illegalStepNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/illegalStepThenLegalStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/illegalStepThenLegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/illegalStepZero.kt": {
@@ -35673,9 +35555,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/illegalStepZero.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/legalStepThenIllegalStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/minValueToMaxValueStepMaxValue.kt": {
@@ -35691,51 +35572,43 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepOneThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepThenSameStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/progressionToNonConst.kt": {
@@ -35744,39 +35617,33 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/progressionToNonConst.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversedThenStep.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/singleElementStepTwo.kt": {
@@ -35821,14 +35688,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/bitShifting.kt"
   },
   "box/box/ranges/unsigned/expression/emptyDownto.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/emptyDownto.kt"
   },
   "box/box/ranges/unsigned/expression/emptyRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/emptyRange.kt"
   },
@@ -35839,14 +35706,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/inexactDownToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/inexactSteppedDownTo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/inexactSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/expression/inexactSteppedRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/inexactSteppedRange.kt"
   },
@@ -35875,20 +35742,20 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/maxValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/oneElementDownTo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/oneElementDownTo.kt"
   },
   "box/box/ranges/unsigned/expression/oneElementRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/oneElementRange.kt"
   },
   "box/box/ranges/unsigned/expression/openRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/openRange.kt"
   },
@@ -35941,68 +35808,68 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/progressionMinValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/expression/reversedBackSequence.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedBackSequence.kt"
   },
   "box/box/ranges/unsigned/expression/reversedEmptyBackSequence.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedEmptyBackSequence.kt"
   },
   "box/box/ranges/unsigned/expression/reversedEmptyRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedEmptyRange.kt"
   },
   "box/box/ranges/unsigned/expression/reversedInexactSteppedDownTo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedInexactSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/expression/reversedRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUShort()",
+   "detail": "unknown method UInt.toUShort()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedRange.kt"
   },
   "box/box/ranges/unsigned/expression/reversedSimpleSteppedRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/reversedSimpleSteppedRange.kt"
   },
   "box/box/ranges/unsigned/expression/simpleDownTo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleDownTo.kt"
   },
   "box/box/ranges/unsigned/expression/simpleRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method Int.toUByte()",
+   "detail": "unknown method Int.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleRange.kt"
   },
   "box/box/ranges/unsigned/expression/simpleRangeWithNonConstantEnds.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleRangeWithNonConstantEnds.kt"
   },
   "box/box/ranges/unsigned/expression/simpleSteppedDownTo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/expression/simpleSteppedRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/expression/simpleSteppedRange.kt"
   },
@@ -36013,9 +35880,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/inMixedUnsignedRange.kt"
   },
   "box/box/ranges/unsigned/kt35004.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt35004.kt"
   },
   "box/box/ranges/unsigned/kt36953.kt": {
@@ -36157,38 +36023,38 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/progressionMinValueToMinValue.kt"
   },
   "box/box/ranges/unsigned/literal/reversedBackSequence.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedBackSequence.kt"
   },
   "box/box/ranges/unsigned/literal/reversedEmptyBackSequence.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedEmptyBackSequence.kt"
   },
   "box/box/ranges/unsigned/literal/reversedEmptyRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedEmptyRange.kt"
   },
   "box/box/ranges/unsigned/literal/reversedInexactSteppedDownTo.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedInexactSteppedDownTo.kt"
   },
   "box/box/ranges/unsigned/literal/reversedRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUShort()",
+   "detail": "unknown method UInt.toUShort()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedRange.kt"
   },
   "box/box/ranges/unsigned/literal/reversedSimpleSteppedRange.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UInt.toUByte()",
+   "detail": "unknown method UInt.toUByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/literal/reversedSimpleSteppedRange.kt"
   },
@@ -40139,7 +40005,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupch20y6y2/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupch20y6y2/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupe1v49xij/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupe1v49xij/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -40472,8 +40338,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedLongToString.kt"
   },
   "box/box/unsignedTypes/unsignedRangeIterator.kt": {
-   "category": "other: unsigned ranges are not supported",
-   "detail": "unsigned ranges are not supported",
+   "category": "other: unknown method UIntRange.forEach()",
+   "detail": "unknown method UIntRange.forEach()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedRangeIterator.kt"
   },
@@ -45975,7 +45841,7 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuptfxq6i8z/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuptfxq6i8z/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz5xdkczf/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz5xdkczf/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },

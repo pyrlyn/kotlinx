@@ -957,7 +957,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // Progression: lo..hi, lo until hi, hi downTo lo, each optionally `step n` (n > 0).
             val down = rng.op == "downTo"
             val lo0 = genExpr(rng.l); val hi0 = genExpr(rng.r)
-            val t = if (lo0.t == Ty.Char && hi0.t == Ty.Char) Ty.Char else if (lo0.t == Ty.I64 || hi0.t == Ty.I64) Ty.I64 else Ty.I32
+            val uns = lo0.t.isUnsigned || hi0.t.isUnsigned
+            val wide = lo0.t == Ty.I64 || hi0.t == Ty.I64 || lo0.t == Ty.U64 || hi0.t == Ty.U64
+            val t = if (lo0.t == Ty.Char && hi0.t == Ty.Char) Ty.Char else if (uns) (if (wide) Ty.U64 else Ty.U32) else if (wide) Ty.I64 else Ty.I32
             val at = if (t == Ty.Char) Ty.I32 else t
             val lo = if (t == Ty.Char) lo0 else coerce(lo0, t); val hi = if (t == Ty.Char) hi0 else coerce(hi0, t)
             val stepV = if (it !== rng) {
@@ -972,7 +974,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             } else "1"
             val idx = declare(s.name, t, false, false)
             emit("store ${t.llvm} ${lo.v}, ptr ${idx.slot}")
-            val cmp = when (rng.op) { ".." -> "sle"; "until" -> "slt"; else -> "sge" }
+            val cmp = (if (uns) "u" else "s") + when (rng.op) { ".." -> "le"; "until" -> "lt"; else -> "ge" }
             condBr(emitT("icmp $cmp ${t.llvm} ${lo.v}, ${hi.v}"), lb, le)
             // Inclusive last bound (lo < hi holds for `until` here, so hi - 1 cannot overflow).
             startBlock(lb)
@@ -2488,7 +2490,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** Element kind (I, L, C) of a range built from [a] and [b]. */
     private fun rangeKind(a: Ty, b: Ty): String = when {
         a == Ty.Char && b == Ty.Char -> "C"
-        a.isUnsigned || b.isUnsigned -> fail("unsigned ranges are not supported")
+        a.isUnsigned || b.isUnsigned -> if (a == Ty.U64 || b == Ty.U64 || a == Ty.I64 || b == Ty.I64) "UL" else "U"
         a == Ty.I64 || b == Ty.I64 -> "L"
         a.isInt && b.isInt -> "I"
         else -> fail("cannot build a range of $a and $b")
@@ -2509,7 +2511,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (re is BinE && re.op in setOf("..", "until", "downTo")) {
             val x = genExpr(xe); val lo = genExpr(re.l); val hi = genExpr(re.r)
             val k = rangeKind(lo.t, hi.t)
-            val t = when (k) { "C" -> Ty.I32; "L" -> Ty.I64; else -> if (x.t == Ty.I64) Ty.I64 else Ty.I32 }
+            val t = when (k) { "C" -> Ty.I32; "L" -> Ty.I64; "U" -> Ty.U32; "UL" -> Ty.U64; else -> if (x.t == Ty.I64) Ty.I64 else Ty.I32 }
             val c = { v: Val -> if (v.t == Ty.Char) Val(v.v, Ty.I32) else coerce(v, t) }
             if (k == "C" && x.t != Ty.Char) fail("type mismatch: expected Char, found ${x.t}")
             val xv = c(x); val l = c(lo); val h = c(hi)
