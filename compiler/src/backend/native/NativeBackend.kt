@@ -2169,6 +2169,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (e.type.name == "Any" && "Any" in ifaces && (boxName(v.t) != null || v.t is Ty.Iface || v.t is Ty.Cls && v.t.name.substringBefore('$') !in genericClasses)) return coerce(v, Ty.Iface("Any"))
         val star = e.type.args.any { it.name == "*" }
         val target = if (e.type.name == "Any") v.t else if (star) (v.t.takeIf { v.t is Ty.Cls || v.t is Ty.Iface } ?: fail("unsupported cast to ${e.type.name}<*>")) else resolve(TypeRef(e.type.name, e.type.args, false))
+        if (v.v == "null" && target.llvm != "ptr") fail("unchecked cast of null to non-nullable $target is not supported")
         if (v.t.llvm != "ptr") {
             if (v.t == target) return v
             fail("unsupported cast from ${v.t} to $target")
