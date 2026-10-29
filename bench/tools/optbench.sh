@@ -1,5 +1,5 @@
 #!/bin/bash
-# Kotlin-X compiler output under explicit LLVM pipelines vs Kotlin Native, nkbench.sh method (same cases,
+# KotlinX compiler output under explicit LLVM pipelines vs Kotlin Native, nkbench.sh method (same cases,
 # warm-up + N runs), reporting the median in ms.
 #   LLVM_BIN=<dir with opt/llc/llvm-link/clang> tools/optbench.sh [runs]  -> results/optbench/<config>.txt
 # Configs (IR = newkotlinc -S output + runtime.c as unoptimized IR (clang -O3 -Xclang -disable-llvm-passes: TBAA kept, no passes run), merged with llvm-link):

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Kotlin-X compiler (default allocator; NKFLAGS adds compiler flags) on every case: warm-up + 5 runs, mean of the middle 3, in ms.
+# KotlinX compiler (default allocator; NKFLAGS adds compiler flags) on every case: warm-up + 5 runs, mean of the middle 3, in ms.
 #   ./nkbench.sh <name> [git-ref]   -> results/nk/<name>.txt  ("case ms" per line)
 # With a git ref the compiler is built from that ref (e.g. main = 'old NewKotlin' baseline);
 # otherwise the working tree compiler is used.

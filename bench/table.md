@@ -10,10 +10,10 @@
   CPU % = (user+sys)/wall over a batch of N back-to-back launches (N sized to ~2 s).
 - Same inputs and args for all. -O3-equivalent flags, no native-CPU flags:
   Rust `rustc -C opt-level=3 -C codegen-units=1`; Zig `-OReleaseFast -lc` (no bounds checks);
-  Kotlin Native `kotlinc-native -opt` (2.4.21); Kotlin-X compiler `clang -O3 -flto` (Apple clang 21).
-- Kotlin-X compiler uses system malloc/free by default (row NewKotlin). `--alloc pool` (free-list) is the extra row NewKotlinPool.
+  Kotlin Native `kotlinc-native -opt` (2.4.21); KotlinX compiler `clang -O3 -flto` (Apple clang 21).
+- KotlinX compiler uses system malloc/free by default (row NewKotlin). `--alloc pool` (free-list) is the extra row NewKotlinPool.
 - Kotlin Native includes its tracing GC and runtime (inherent; explains higher RSS and >100% CPU from the GC thread).
-- Zig `closures` is written as plain loops (Zig has no closures). Kotlin-X compiler inlines map/filter/forEach/sumOf/count.
+- Zig `closures` is written as plain loops (Zig has no closures). KotlinX compiler inlines map/filter/forEach/sumOf/count.
 - All checksums match across all 5 rows for every case.
 
 ## Tables
@@ -129,7 +129,7 @@ Best value per metric is **bold** (time, RSS, CPU: lower is better; throughput m
 | NewKotlin | **30 922 139** | **33.03** | 87.7 |
 | NewKotlinPool | 31 213 125 | **33.03** | **87.5** |
 
-## No-regression check (Kotlin-X compiler native, old table vs this round)
+## No-regression check (KotlinX compiler native, old table vs this round)
 | Case | Old (pool, -O3 -flto) | Now pool | Now malloc |
 |---|---|---|---|
 | sum | 3 695 583 | 3 683 541 | 3 683 708 |
@@ -139,7 +139,7 @@ Best value per metric is **bold** (time, RSS, CPU: lower is better; throughput m
 
 The backend split / `--target` adds no runtime cost (within noise). alloc on malloc is slower by design (equal conditions); the pool row preserves the old number.
 
-## Optimization history (Kotlin-X compiler)
+## Optimization history (KotlinX compiler)
 1. v1: -O2, malloc per object — alloc 185 243 611 ns.
 2. -O3 -flto with runtime.c in the same LTO unit; inlined RC release.
 3. Free-list pool allocator — alloc ~52.7M ns (now optional `--alloc pool`).
@@ -149,7 +149,7 @@ The backend split / `--target` adds no runtime cost (within noise). alloc on mal
 
 ## Memory benchmarks (round 2026-10-28 21:22 EET)
 
-Same conditions as above (round-robin, warm-up, middle 3 of 5). Load average 12.1 at start and 10.6 at end (other jobs running). Cases: alloc, free (three object sizes, replace and drop), refpass (argument passing plus a shared field store), trees (binary trees, depths 4..16), cycles (rings of 100 nodes). Memory handling differs by language: Rust uses Box/Rc and breaks its rings by hand; Zig frees by hand with malloc/free; Kotlin Native uses a tracing GC; Kotlin-X compiler uses Perceus RC plus the cycle collector. Best value per metric is **bold**.
+Same conditions as above (round-robin, warm-up, middle 3 of 5). Load average 12.1 at start and 10.6 at end (other jobs running). Cases: alloc, free (three object sizes, replace and drop), refpass (argument passing plus a shared field store), trees (binary trees, depths 4..16), cycles (rings of 100 nodes). Memory handling differs by language: Rust uses Box/Rc and breaks its rings by hand; Zig frees by hand with malloc/free; Kotlin Native uses a tracing GC; KotlinX compiler uses Perceus RC plus the cycle collector. Best value per metric is **bold**.
 
 ### alloc  (checksums match)
 

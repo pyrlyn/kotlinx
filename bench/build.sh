@@ -1,12 +1,12 @@
 #!/bin/bash
 # Builds every case for all rows. Outputs are git-ignored.
 #   ./build.sh [case...]      default: all cases (sum + cases/*)
-#   ONLY=newkotlin ./build.sh  only the Kotlin-X compiler rows
+#   ONLY=newkotlin ./build.sh  only the KotlinX compiler rows
 # Flag levels (equal-conditions policy: -O3-equivalent everywhere, no -march/-mcpu=native for anyone):
 #   Rust          rustc -C opt-level=3 -C codegen-units=1
 #   Zig           -OReleaseFast
 #   Kotlin Native kotlinc-native -opt
-#   Kotlin-X compiler    newkotlinc (clang -O3 -flto), system malloc; kllvm/<case>.pool = --alloc pool
+#   KotlinX compiler    newkotlinc (clang -O3 -flto), system malloc; kllvm/<case>.pool = --alloc pool
 set -e
 cd "$(dirname "$0")"
 export NEWKOTLIN_RUNTIME=${NEWKOTLIN_RUNTIME:-$PWD/../compiler/runtime/runtime.c}

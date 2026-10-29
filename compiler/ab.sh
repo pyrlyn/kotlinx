@@ -1,5 +1,5 @@
 #!/bin/bash
-# Native no-regression check: Kotlin-X compiler built from a git ref (default: main) vs the working tree.
+# Native no-regression check: KotlinX compiler built from a git ref (default: main) vs the working tree.
 # Compiles all benchmark cases with both compilers (default flags, malloc), runs them interleaved
 # (A, B, A, B, ...) 5 times after a warm-up, and prints the mean of the middle 3 (ns) and the B/A ratio.
 set -u

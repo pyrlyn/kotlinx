@@ -1,5 +1,5 @@
 #!/bin/bash
-# Allocator comparison for Kotlin-X compiler: system malloc vs jemalloc (optional) vs mimalloc, plus
+# Allocator comparison for KotlinX compiler: system malloc vs jemalloc (optional) vs mimalloc, plus
 # Kotlin Native (prebuilt bench_kn.kexe from ./build.sh, if present) in the same session.
 # Every case: warm-up + 5 runs per variant, interleaved, mean of the middle 3, in ms.
 #   ./allocbench.sh [name]   -> results/alloc/<name>.txt  ("case variant ms checksum" per line)

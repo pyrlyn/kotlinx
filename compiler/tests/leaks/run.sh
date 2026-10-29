@@ -1,5 +1,5 @@
 #!/bin/bash
-# Leak tests for Kotlin-X compiler's own memory management (not upstream / Kotlin Native tests).
+# Leak tests for KotlinX compiler's own memory management (not upstream / Kotlin Native tests).
 # For each tests/leaks/*.kt:
 #   1. --leak-check build: stdout must equal <name>.out and the runtime must report zero live
 #      reference-counted objects at exit ("leak-check: OK", exit 0).

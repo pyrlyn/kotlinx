@@ -1,10 +1,10 @@
-# Kotlin-X
+# KotlinX
 
-Kotlin-X compiler: a Kotlin -> LLVM native compiler (`newkotlinc`), written in Kotlin (Kotlin/Native),
+KotlinX compiler: a Kotlin -> LLVM native compiler (`newkotlinc`), written in Kotlin (Kotlin/Native),
 with a Perceus-style reference-counting runtime. Moved from `listepo/mini-bench` with history.
 
-- `compiler/`: the Kotlin-X compiler (sources, C runtime, tests, upstream Kotlin tests).
-- `bench/`: all benchmarks (Rust / Zig / Kotlin Native / Kotlin-X compiler), scripts and committed results.
+- `compiler/`: the KotlinX compiler (sources, C runtime, tests, upstream Kotlin tests).
+- `bench/`: all benchmarks (Rust / Zig / Kotlin Native / KotlinX compiler), scripts and committed results.
 - `bin/newkotlinc`: launcher (builds the compiler on first use).
 
 ## Requirements (macOS)
@@ -16,9 +16,9 @@ in the repo root (LLVM `opt` and matching `clang` from `mise.toml`).
 
 ```
 ./build.sh                                   # -> compiler/build/newkotlinc.kexe
-printf 'fun main() {\n    println("Hello from Kotlin-X")\n}\n' > /tmp/hello.kt
+printf 'fun main() {\n    println("Hello from KotlinX")\n}\n' > /tmp/hello.kt
 bin/newkotlinc /tmp/hello.kt -o /tmp/hello   # works from any directory
-/tmp/hello                                   # Hello from Kotlin-X
+/tmp/hello                                   # Hello from KotlinX
 ```
 
 ## Tests
@@ -33,7 +33,7 @@ python3 compiler/tests/upstream/run.py       # kept upstream Kotlin tests (unmod
 ```
 cd bench
 ./build.sh && ./round.sh && RESULTS=results/round ./summarize.sh   # all languages
-ONLY=newkotlin ./build.sh && ./run.sh && ./summarize.sh            # Kotlin-X compiler rows only
+ONLY=newkotlin ./build.sh && ./run.sh && ./summarize.sh            # KotlinX compiler rows only
 ./nkbench.sh mytest                                                 # -> bench/results/nk/mytest.txt
 ```
 
@@ -68,7 +68,7 @@ Run from `bench/` (`cd bench`); the scripts use the in-repo compiler (`../compil
 
 All scripts: warm-up + 5 runs per case, mean of the middle 3, in ms.
 
-- `./nkbench.sh <name> [git-ref]`: Kotlin-X compiler on every case → `results/nk/<name>.txt`.
+- `./nkbench.sh <name> [git-ref]`: KotlinX compiler on every case → `results/nk/<name>.txt`.
   With a ref (for example `main`) the compiler is built from that ref; without one, the working tree is used.
   `NKFLAGS="--alloc malloc" ./nkbench.sh sys` passes extra compiler flags.
 - `./allocbench.sh [name]`: system malloc vs jemalloc vs mimalloc, plus Kotlin Native (`bench_kn.kexe`

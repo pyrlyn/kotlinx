@@ -1,5 +1,5 @@
 #!/bin/bash
-# Kotlin-X compiler launcher: builds compiler/build/newkotlinc.kexe on first use, then runs it.
+# KotlinX compiler launcher: builds compiler/build/newkotlinc.kexe on first use, then runs it.
 # Usage: bin/newkotlinc Main.kt -o main && ./main
 root="$(cd "$(dirname "$0")/.." && pwd)"
 exe="$root/compiler/build/newkotlinc.kexe"

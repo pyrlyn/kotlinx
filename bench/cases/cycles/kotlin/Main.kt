@@ -1,5 +1,5 @@
 // cycles: build rings of 100 nodes (each node also points to an acyclic payload), walk them, drop them.
-// 20k rings. Kotlin Native: tracing GC; Kotlin-X compiler: cycle collector; Rust/Zig: rings broken/freed by hand.
+// 20k rings. Kotlin Native: tracing GC; KotlinX compiler: cycle collector; Rust/Zig: rings broken/freed by hand.
 @file:OptIn(kotlin.experimental.ExperimentalNativeApi::class)
 @file:Suppress("DEPRECATION_ERROR")
 

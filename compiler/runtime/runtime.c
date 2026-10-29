@@ -1,4 +1,4 @@
-// Minimal runtime for Kotlin-X compiler (newkotlinc). Linked into every program by clang.
+// Minimal runtime for KotlinX compiler (newkotlinc). Linked into every program by clang.
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
