@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 5,
   "MISCOMPILE": 42,
   "N/A": 2984,
-  "PASS": 1728,
-  "UNSUPPORTED": 3716
+  "PASS": 1746,
+  "UNSUPPORTED": 3698
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -55,8 +55,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/annotationAnnotationParam.kt"
   },
   "box/box/annotations/instances/annotationAnyDispatch.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "unknown Ann (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Ann'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/annotationAnyDispatch.kt"
   },
@@ -136,8 +136,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/differentOrder.kt"
   },
   "box/box/annotations/instances/enumAndKClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/enumAndKClass.kt"
   },
@@ -221,8 +221,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/repeatableInstantiation.kt"
   },
   "box/box/annotations/instances/typeAliasesAndGenericsInterop.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/typeAliasesAndGenericsInterop.kt"
   },
@@ -450,8 +450,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_uintTests.kt"
   },
   "box/box/arithmetic/division.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/division.kt"
   },
@@ -1022,8 +1022,8 @@
    "upstream": "compiler/testData/codegen/box/assert/alwaysEnable.kt"
   },
   "box/box/assert/assertDisabledWithFunctionReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assert'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/assert/assertDisabledWithFunctionReference.kt"
   },
@@ -1044,8 +1044,8 @@
    "upstream": "compiler/testData/codegen/box/assert/assertEnabledInlinedCrossModule.kt"
   },
   "box/box/assert/assertEnabledWithFunctionReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assert'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/assert/assertEnabledWithFunctionReference.kt"
   },
@@ -1658,17 +1658,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupefrrtsc7/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupefrrtsc7/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup94x91q5f/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup94x91q5f/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupdoteivz1/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupdoteivz1/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqh21hebh/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqh21hebh/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupr17b_32t/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupr17b_32t/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwkab5jzh/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwkab5jzh/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -2799,44 +2799,44 @@
    "upstream": "compiler/testData/codegen/box/builtinStubMethods/customReadOnlyIterator.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedArrayOf.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::arrayOf",
+   "detail": "unsupported callable reference ::arrayOf",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedArrayOf.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedSecondArgArray.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "type check of Any against ArrayList<String> is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedSecondArgArray.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedSecondArgTypeVariable.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: ArrayList<Any> cannot be used as Any",
+   "detail": "ArrayList<Any> cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedSecondArgTypeVariable.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedUlongArrayOf.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::ulongArrayOf",
+   "detail": "unsupported callable reference ::ulongArrayOf",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedUlongArrayOf.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedVarargFunImportedFromObject.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::foo",
+   "detail": "unsupported callable reference ::foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedVarargFunImportedFromObject.kt"
   },
   "box/box/callableReference/adaptedReferences/bothWithCoercionToUnit.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/bothWithCoercionToUnit.kt"
   },
   "box/box/callableReference/adaptedReferences/boundReferences.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/boundReferences.kt"
   },
@@ -2893,20 +2893,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextTypeWithSam.kt"
   },
   "box/box/callableReference/adaptedReferences/defaultAfterVararg.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/defaultAfterVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/defaultWithGenericExpectedType.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "generics",
+   "detail": "cannot infer type parameter U of call; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/defaultWithGenericExpectedType.kt"
   },
   "box/box/callableReference/adaptedReferences/emptyVarargAndDefault.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/emptyVarargAndDefault.kt"
   },
@@ -2963,20 +2963,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousExtensionFun.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariable.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: ArrayList<Any> cannot be used as Any",
+   "detail": "ArrayList<Any> cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariable.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableArrays.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '?:')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableArrays.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableBoundaries.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '?:')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableBoundaries.kt"
   },
@@ -3036,8 +3036,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorWithVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/largeVararg.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found ArrayList<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/largeVararg.kt"
   },
@@ -3054,14 +3054,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/manyDefaultsAndVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/nestedClassConstructorWithDefault.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: overloads are not supported: execute",
+   "detail": "overloads are not supported: execute",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/nestedClassConstructorWithDefault.kt"
   },
   "box/box/callableReference/adaptedReferences/noNameClashForReferencesToSameFunction.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: overloads are not supported: overload",
+   "detail": "overloads are not supported: overload",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/noNameClashForReferencesToSameFunction.kt"
   },
@@ -3072,20 +3072,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/referenceToFakeOverrideWithTypeParameter.kt"
   },
   "box/box/callableReference/adaptedReferences/referenceToVarargWithDefaults.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found ArrayList<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/referenceToVarargWithDefaults.kt"
   },
   "box/box/callableReference/adaptedReferences/simpleDefaultArgument.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected $Fn$String$String, found $Fn$String$String$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/simpleDefaultArgument.kt"
   },
   "box/box/callableReference/adaptedReferences/simpleEmptyVararg.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/simpleEmptyVararg.kt"
   },
@@ -3253,38 +3253,38 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/unitCoercionOverloads.kt"
   },
   "box/box/callableReference/adaptedReferences/unsignedArrayFactory.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::uintArrayOf",
+   "detail": "unsupported callable reference ::uintArrayOf",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/unsignedArrayFactory.kt"
   },
   "box/box/callableReference/adaptedReferences/varargFromBaseClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargFromBaseClass.kt"
   },
   "box/box/callableReference/adaptedReferences/varargOverloads.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: overloads are not supported: foo",
+   "detail": "overloads are not supported: foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargOverloads.kt"
   },
   "box/box/callableReference/adaptedReferences/varargViewedAsArray.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargViewedAsArray.kt"
   },
   "box/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown type Number",
+   "detail": "unknown type Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt"
   },
   "box/box/callableReference/adaptedReferences/varargWithDefaultValue.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargWithDefaultValue.kt"
   },
@@ -3294,14 +3294,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/arrayConstructor.kt"
   },
   "box/box/callableReference/arrayConstructorArgument.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown CharArray (stdlib API / unsupported decl)",
+   "detail": "unknown function 'CharArray'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/arrayConstructorArgument.kt"
   },
   "box/box/callableReference/arrayOf.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::arrayOf",
+   "detail": "unsupported callable reference ::arrayOf",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/arrayOf.kt"
   },
@@ -3311,32 +3311,32 @@
    "upstream": "compiler/testData/codegen/box/callableReference/arrayOfNulls.kt"
   },
   "box/box/callableReference/bound/adapted.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method Int.run()",
+   "detail": "unknown method Int.run()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/adapted.kt"
   },
   "box/box/callableReference/bound/array.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/array.kt"
   },
   "box/box/callableReference/bound/arrayConstructorArgument.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown CharArray (stdlib API / unsupported decl)",
+   "detail": "unknown function 'CharArray'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/arrayConstructorArgument.kt"
   },
   "box/box/callableReference/bound/arrayGetIntrinsic.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unsupported callable reference ArrayList<Int>::get",
+   "detail": "unsupported callable reference ArrayList<Int>::get",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/arrayGetIntrinsic.kt"
   },
   "box/box/callableReference/bound/boundPrimitiveAndReferenceReceiverSharedClassSplit.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unsupported callable reference Int::append",
+   "detail": "unsupported callable reference Int::append",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/boundPrimitiveAndReferenceReceiverSharedClassSplit.kt"
   },
@@ -3358,14 +3358,13 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/captureVarInPropertyInit.kt"
   },
   "box/box/callableReference/bound/coercionToUnit.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/coercionToUnit.kt"
   },
   "box/box/callableReference/bound/companionObjectReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/companionObjectReceiver.kt"
   },
@@ -3375,20 +3374,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/companionObjectReceiverInheritsFromOuter.kt"
   },
   "box/box/callableReference/bound/dontShareReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "strings / templates",
+   "detail": "unsupported callable reference Int::toString",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/dontShareReceiver.kt"
   },
   "box/box/callableReference/bound/emptyLHS.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class B needs an outer instance (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/emptyLHS.kt"
   },
   "box/box/callableReference/bound/enumEntryMember.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: equality of function values is not supported",
+   "detail": "equality of function values is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/enumEntryMember.kt"
   },
@@ -3398,8 +3397,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/equals/nullableReceiverInEquals.kt"
   },
   "box/box/callableReference/bound/equals/receiverInEquals.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '::')",
+   "category": "other: equality of function values is not supported",
+   "detail": "equality of function values is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/equals/receiverInEquals.kt"
   },
@@ -3409,8 +3408,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/genericBoundPropertyAsCrossinline.kt"
   },
   "box/box/callableReference/bound/genericValOnLHS.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/genericValOnLHS.kt"
   },
@@ -3421,20 +3420,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/inlineFunctionRefToAnonymousObject.kt"
   },
   "box/box/callableReference/bound/kCallableNameIntrinsic.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "strings / templates",
+   "detail": "unsupported callable reference Int::toString",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/kCallableNameIntrinsic.kt"
   },
   "box/box/callableReference/bound/kt12738.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "strings / templates",
+   "detail": "unsupported callable reference String::toString",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/kt12738.kt"
   },
   "box/box/callableReference/bound/kt15446.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unsupported callable reference IntArray::component2",
+   "detail": "unsupported callable reference IntArray::component2",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/kt15446.kt"
   },
@@ -3515,14 +3514,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/nullReceiver.kt"
   },
   "box/box/callableReference/bound/objectReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/objectReceiver.kt"
   },
   "box/box/callableReference/bound/primitiveReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "types: Float",
+   "detail": "unknown type Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/primitiveReceiver.kt"
   },
@@ -3532,32 +3531,32 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/receiverEvaluatedOnce.kt"
   },
   "box/box/callableReference/bound/simpleFunction.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "strings / templates",
+   "detail": "unsupported callable reference String::get",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/simpleFunction.kt"
   },
   "box/box/callableReference/bound/simpleProperty.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "strings / templates",
+   "detail": "unsupported callable reference String::length",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/simpleProperty.kt"
   },
   "box/box/callableReference/bound/smartCastForExtensionReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/smartCastForExtensionReceiver.kt"
   },
   "box/box/callableReference/bound/typeAliasObjectBoundReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method String.run()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/typeAliasObjectBoundReference.kt"
   },
   "box/box/callableReference/bound/valueClassAndReferenceReceiverSharedClassSplit.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "strings / templates",
+   "detail": "unsupported callable reference String::render",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/valueClassAndReferenceReceiverSharedClassSplit.kt"
   },
@@ -3598,8 +3597,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/callableReferencetoInnerAndLocal.kt"
   },
   "box/box/callableReference/charArrayOf.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::charArrayOf",
+   "detail": "unsupported callable reference ::charArrayOf",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/charArrayOf.kt"
   },
@@ -3634,14 +3633,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/equality/conversionCombinations.kt"
   },
   "box/box/callableReference/equality/equalsOnNonCallable.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/equalsOnNonCallable.kt"
   },
   "box/box/callableReference/equality/extensionFunctionEquality.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: callable references as Any are not supported",
+   "detail": "callable references as Any are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/extensionFunctionEquality.kt"
   },
@@ -3677,8 +3676,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/equality/noCoercionToUnitIfFunctionAlreadyReturnsUnit.kt"
   },
   "box/box/callableReference/equality/overloadedFunctionEquality.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: overloads are not supported: topLevelOverloaded",
+   "detail": "overloads are not supported: topLevelOverloaded",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/overloadedFunctionEquality.kt"
   },
@@ -3699,8 +3698,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/equality/suspendFunctionEquality.kt"
   },
   "box/box/callableReference/equality/unboundVsNullBoundReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/unboundVsNullBoundReceiver.kt"
   },
@@ -3747,74 +3746,70 @@
    "upstream": "compiler/testData/codegen/box/callableReference/funInterfaceConstructor/funInterfaceConstructorOfImplicitKFunctionType.kt"
   },
   "box/box/callableReference/function/abstractClassMember.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$A$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/abstractClassMember.kt"
   },
   "box/box/callableReference/function/argumentTypes.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/argumentTypes.kt"
   },
   "box/box/callableReference/function/argumentTypesNoinline.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unsupported callable reference String::extId",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/argumentTypesNoinline.kt"
   },
   "box/box/callableReference/function/booleanNotIntrinsic.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "unknown Boolean (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Boolean'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/booleanNotIntrinsic.kt"
   },
   "box/box/callableReference/function/classMemberFromClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$A$Int$Int.let()",
+   "detail": "unknown method $Fn$A$Int$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromClass.kt"
   },
   "box/box/callableReference/function/classMemberFromCompanionObject.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "only member functions are supported in class/interface bodies (at '::')",
+   "category": "other: unknown property $Fn$C$Unit.name",
+   "detail": "unknown property $Fn$C$Unit.name",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromCompanionObject.kt"
   },
   "box/box/callableReference/function/classMemberFromExtension.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$A$Int.let()",
+   "detail": "unknown method $Fn$A$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromExtension.kt"
   },
   "box/box/callableReference/function/classMemberFromTopLevelStringNoArgs.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromTopLevelStringNoArgs.kt"
   },
   "box/box/callableReference/function/classMemberFromTopLevelStringOneStringArg.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromTopLevelStringOneStringArg.kt"
   },
   "box/box/callableReference/function/classMemberFromTopLevelUnitNoArgs.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromTopLevelUnitNoArgs.kt"
   },
   "box/box/callableReference/function/classMemberFromTopLevelUnitOneStringArg.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromTopLevelUnitOneStringArg.kt"
   },
   "box/box/callableReference/function/coercionToUnit.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected $Fn$String$Unit, found $Fn$String$Boolean",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/coercionToUnit.kt"
   },
@@ -3831,44 +3826,44 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromInnerClassWithTypeParam.kt"
   },
   "box/box/callableReference/function/constructorFromTopLevelNoArgs.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method $Fn$A.let()",
+   "detail": "unknown method $Fn$A.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromTopLevelNoArgs.kt"
   },
   "box/box/callableReference/function/constructorFromTopLevelOneStringArg.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String$A.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromTopLevelOneStringArg.kt"
   },
   "box/box/callableReference/function/enumValueOfMethod.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown member E::valueOf",
+   "detail": "unknown member E::valueOf",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/enumValueOfMethod.kt"
   },
   "box/box/callableReference/function/equalsIntrinsic.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown member A::equals",
+   "detail": "unknown member A::equals",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/equalsIntrinsic.kt"
   },
   "box/box/callableReference/function/extensionFromClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'result' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromClass.kt"
   },
   "box/box/callableReference/function/extensionFromCompanion.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '::')",
+   "category": "objects / companion objects",
+   "detail": "unknown type MyClass.Companion",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromCompanion.kt"
   },
   "box/box/callableReference/function/extensionFromExtension.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromExtension.kt"
   },
@@ -3885,9 +3880,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelStringOneStringArg.kt"
   },
   "box/box/callableReference/function/extensionFromTopLevelUnitNoArgs.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelUnitNoArgs.kt"
   },
   "box/box/callableReference/function/extensionFromTopLevelUnitOneStringArg.kt": {
@@ -3951,8 +3945,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionWithTypeParam.kt"
   },
   "box/box/callableReference/function/genericCallableReferenceArgumentsNonJVM.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/genericCallableReferenceArgumentsNonJVM.kt"
   },
@@ -3972,69 +3966,68 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/genericCallableReferencesWithOverload.kt"
   },
   "box/box/callableReference/function/genericMember.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown A (stdlib API / unsupported decl)",
+   "detail": "unknown name 'A'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/genericMember.kt"
   },
   "box/box/callableReference/function/genericWithDependentType.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::Wrapper",
+   "detail": "unsupported callable reference ::Wrapper",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/genericWithDependentType.kt"
   },
   "box/box/callableReference/function/innerClassConstructorWithTwoReceivers.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unsupported callable reference B::InnerInA",
+   "detail": "unsupported callable reference B::InnerInA",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/innerClassConstructorWithTwoReceivers.kt"
   },
   "box/box/callableReference/function/innerConstructorFromClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown member A::Inner",
+   "detail": "unknown member A::Inner",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/innerConstructorFromClass.kt"
   },
   "box/box/callableReference/function/innerConstructorFromExtension.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown member A::Inner",
+   "detail": "unknown member A::Inner",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/innerConstructorFromExtension.kt"
   },
   "box/box/callableReference/function/innerConstructorFromTopLevelNoArgs.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown member A::Inner",
+   "detail": "unknown member A::Inner",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/innerConstructorFromTopLevelNoArgs.kt"
   },
   "box/box/callableReference/function/innerConstructorFromTopLevelOneStringArg.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown member A::Inner",
+   "detail": "unknown member A::Inner",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/innerConstructorFromTopLevelOneStringArg.kt"
   },
   "box/box/callableReference/function/kt21787.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method IntRange.map()",
+   "detail": "unknown method IntRange.map()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/kt21787.kt"
   },
   "box/box/callableReference/function/kt32462.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/kt32462.kt"
   },
   "box/box/callableReference/function/kt47741.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown method IntRange.iterator()",
+   "detail": "unknown method IntRange.iterator()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/kt47741.kt"
   },
   "box/box/callableReference/function/local/captureOuter.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/captureOuter.kt"
   },
   "box/box/callableReference/function/local/classMember.kt": {
@@ -4157,20 +4150,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/withValueArguments.kt"
   },
   "box/box/callableReference/function/nestedConstructorFromClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method $Fn$Nested.let()",
+   "detail": "unknown method $Fn$Nested.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedConstructorFromClass.kt"
   },
   "box/box/callableReference/function/nestedConstructorFromTopLevelNoArgs.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown member A::Nested",
+   "detail": "unknown member A::Nested",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedConstructorFromTopLevelNoArgs.kt"
   },
   "box/box/callableReference/function/nestedConstructorFromTopLevelOneStringArg.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown member A::Nested",
+   "detail": "unknown member A::Nested",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedConstructorFromTopLevelOneStringArg.kt"
   },
@@ -4193,8 +4186,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/nullableExtension.kt"
   },
   "box/box/callableReference/function/overloadedFun.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: overloads are not supported: foo",
+   "detail": "overloads are not supported: foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/overloadedFun.kt"
   },
@@ -4204,14 +4197,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/overloadedFunVsVal.kt"
   },
   "box/box/callableReference/function/privateClassMember.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'bar' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/privateClassMember.kt"
   },
   "box/box/callableReference/function/referenceToCompanionMember.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: type checks against Function0 are not supported",
+   "detail": "type checks against Function0 are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/referenceToCompanionMember.kt"
   },
@@ -4222,57 +4215,53 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/referenceToStaticOrStaticLike.kt"
   },
   "box/box/callableReference/function/sortListOfStrings.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.sortWith()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/sortListOfStrings.kt"
   },
   "box/box/callableReference/function/specialCalls.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/specialCalls.kt"
   },
   "box/box/callableReference/function/topLevelFromClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method $Fn$Int$Int$Int.let()",
+   "detail": "unknown method $Fn$Int$Int$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromClass.kt"
   },
   "box/box/callableReference/function/topLevelFromExtension.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method $Fn$Int$Int$Int.let()",
+   "detail": "unknown method $Fn$Int$Int$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromExtension.kt"
   },
   "box/box/callableReference/function/topLevelFromTopLevelStringNoArgs.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromTopLevelStringNoArgs.kt"
   },
   "box/box/callableReference/function/topLevelFromTopLevelStringOneStringArg.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromTopLevelStringOneStringArg.kt"
   },
   "box/box/callableReference/function/topLevelFromTopLevelUnitManyArgs.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: references with more than 22 parameters are not supported",
+   "detail": "references with more than 22 parameters are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromTopLevelUnitManyArgs.kt"
   },
   "box/box/callableReference/function/topLevelFromTopLevelUnitNoArgs.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromTopLevelUnitNoArgs.kt"
   },
   "box/box/callableReference/function/topLevelFromTopLevelUnitOneStringArg.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromTopLevelUnitOneStringArg.kt"
   },
   "box/box/callableReference/function/traitImplMethodWithClassReceiver.kt": {
@@ -4282,8 +4271,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/traitImplMethodWithClassReceiver.kt"
   },
   "box/box/callableReference/function/traitMember.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$A$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/traitMember.kt"
   },
@@ -4293,8 +4282,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/functionAndKFunctionSharedClassSplit.kt"
   },
   "box/box/callableReference/genericConstructorReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other syntax (at 'Local1')",
+   "detail": "expected end of statement (at 'Local1')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/genericConstructorReference.kt"
   },
@@ -4305,8 +4294,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/genericLocalClassConstructorReference.kt"
   },
   "box/box/callableReference/generticReferences.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '*')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/generticReferences.kt"
   },
@@ -4316,20 +4305,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/inlineArrayConstructors.kt"
   },
   "box/box/callableReference/interfaceMethodReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/interfaceMethodReference.kt"
   },
   "box/box/callableReference/kt21014.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "unknown IntArray (stdlib API / unsupported decl)",
+   "detail": "unknown name 'IntArray'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt21014.kt"
   },
   "box/box/callableReference/kt21092a.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$$prop$foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt21092a.kt"
   },
@@ -4340,8 +4329,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt37604.kt"
   },
   "box/box/callableReference/kt44483.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "generics",
+   "detail": "reference to generic function f is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt44483.kt"
   },
@@ -4385,14 +4374,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt50172.kt"
   },
   "box/box/callableReference/kt51844.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt51844.kt"
   },
   "box/box/callableReference/kt52270.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown Random (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Random'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt52270.kt"
   },
@@ -4402,8 +4391,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/nested.kt"
   },
   "box/box/callableReference/property/accessViaSubclass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$Base$String.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/accessViaSubclass.kt"
   },
@@ -4423,8 +4412,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/delegatedMutable.kt"
   },
   "box/box/callableReference/property/enumNameOrdinal.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$E$String.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/enumNameOrdinal.kt"
   },
@@ -4477,8 +4466,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyWithExtensionType.kt"
   },
   "box/box/callableReference/property/extensionToArray.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown Array (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Array'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionToArray.kt"
   },
@@ -4488,8 +4477,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/inEnum.kt"
   },
   "box/box/callableReference/property/inReceiverOfAnother.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::x",
+   "detail": "unsupported callable reference ::x",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/inReceiverOfAnother.kt"
   },
@@ -4500,8 +4489,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/invokePropertyReference.kt"
   },
   "box/box/callableReference/property/javaBeanConvention.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::aBcde",
+   "detail": "unsupported callable reference ::aBcde",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/javaBeanConvention.kt"
   },
@@ -4517,14 +4506,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt12044.kt"
   },
   "box/box/callableReference/property/kt12982_protectedPropertyReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "only member functions are supported in class/interface bodies (at '::')",
+   "category": "other: unknown method $Fn$Foo$Int.set()",
+   "detail": "unknown method $Fn$Foo$Int.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt12982_protectedPropertyReference.kt"
   },
   "box/box/callableReference/property/kt14330.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown method $Fn$Foo$Int.set()",
+   "detail": "unknown method $Fn$Foo$Int.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt14330.kt"
   },
@@ -4546,15 +4535,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt74104.kt"
   },
   "box/box/callableReference/property/listOfStringsMapLength.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown name 'String'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/listOfStringsMapLength.kt"
   },
   "box/box/callableReference/property/localClassVar.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/localClassVar.kt"
   },
   "box/box/callableReference/property/nullableExtensionProperty.kt": {
@@ -4564,8 +4552,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/nullableExtensionProperty.kt"
   },
   "box/box/callableReference/property/overriddenInSubclass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'foo' of Derived hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/overriddenInSubclass.kt"
   },
@@ -4591,14 +4579,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/receiverEvaluatedOnce.kt"
   },
   "box/box/callableReference/property/simpleExtension.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown name 'String'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleExtension.kt"
   },
   "box/box/callableReference/property/simpleMember.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown method $Fn$A$Int.get()",
+   "detail": "unknown method $Fn$A$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMember.kt"
   },
@@ -4609,20 +4597,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMutableExtension.kt"
   },
   "box/box/callableReference/property/simpleMutableMember.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$Box$String.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMutableMember.kt"
   },
   "box/box/callableReference/property/simpleMutableTopLevel.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::pr",
+   "detail": "unsupported callable reference ::pr",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMutableTopLevel.kt"
   },
   "box/box/callableReference/property/simpleTopLevel.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::foo",
+   "detail": "unsupported callable reference ::foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleTopLevel.kt"
   },
@@ -4633,15 +4621,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/serializability/referenceToCompanionFunction.kt"
   },
   "box/box/callableReference/starProjectionCallableReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/starProjectionCallableReference.kt"
   },
   "box/box/callableReference/staticFunctionReferenceMultiUse.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/staticFunctionReferenceMultiUse.kt"
   },
   "box/box/callableReference/twoRefsOneScope.kt": {
@@ -4651,8 +4638,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/twoRefsOneScope.kt"
   },
   "box/box/callableReference/varargOfUnsignedTypes.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/varargOfUnsignedTypes.kt"
   },
@@ -4710,8 +4697,8 @@
    "upstream": "compiler/testData/codegen/box/casts/castToDefinitelyNotNullTypeWithUpperBound.kt"
   },
   "box/box/casts/dontCreateInconsistentTypeDuringStarProjectionSubstitution.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unsupported callable reference Any::test",
+   "detail": "unsupported callable reference Any::test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/dontCreateInconsistentTypeDuringStarProjectionSubstitution.kt"
   },
@@ -4726,8 +4713,8 @@
    "upstream": "compiler/testData/codegen/box/casts/functions/asFunKSmall.kt"
   },
   "box/box/casts/functions/isFunKBig.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/functions/isFunKBig.kt"
   },
@@ -4901,8 +4888,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt81617.kt"
   },
   "box/box/casts/kt82732.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unsupported callable reference ArrayList<String>::foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt82732.kt"
   },
@@ -4985,26 +4972,26 @@
    "upstream": "compiler/testData/codegen/box/casts/mutableCollections/weirdMutableCasts.kt"
   },
   "box/box/casts/nativeCCEMessage/castAnonymousClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/nativeCCEMessage/castAnonymousClass.kt"
   },
   "box/box/casts/nativeCCEMessage/castGlobalClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/nativeCCEMessage/castGlobalClass.kt"
   },
   "box/box/casts/nativeCCEMessage/castLocalClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/nativeCCEMessage/castLocalClass.kt"
   },
   "box/box/casts/nativeCCEMessage/castToLocalClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/nativeCCEMessage/castToLocalClass.kt"
   },
@@ -5146,8 +5133,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/withBridge.kt"
   },
   "box/box/classLiteral/bareArray.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classLiteral/bareArray.kt"
   },
@@ -5157,20 +5144,20 @@
    "upstream": "compiler/testData/codegen/box/classLiteral/bound/primitives.kt"
   },
   "box/box/classLiteral/bound/sideEffect.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classLiteral/bound/sideEffect.kt"
   },
   "box/box/classLiteral/bound/simple.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classLiteral/bound/simple.kt"
   },
   "box/box/classLiteral/bound/smartCast.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classLiteral/bound/smartCast.kt"
   },
@@ -5954,8 +5941,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerAndLocalCapturedInLocalClass.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedAsImplicitThisInBoundReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::ok",
+   "detail": "unsupported callable reference ::ok",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedAsImplicitThisInBoundReference.kt"
   },
@@ -6118,8 +6105,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedLocalGenericFun.kt"
   },
   "box/box/closures/capturedVarsOptimization/callableReferenceWithSwap.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/callableReferenceWithSwap.kt"
   },
@@ -9899,8 +9886,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/deserializedSuspendFunctionProperty.kt"
   },
   "box/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt"
   },
@@ -9953,7 +9940,7 @@
   },
   "box/box/coroutines/featureIntersection/callableReference/lambdaParameterUsed.kt": {
    "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/featureIntersection/callableReference/lambdaParameterUsed.kt"
   },
@@ -14359,20 +14346,19 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/vararg/kt4172.kt"
   },
   "box/box/directInvokeOptimization/boundInnerContructorRef.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '::')",
+   "category": "other: unsupported callable reference Outer::Inner",
+   "detail": "unsupported callable reference Outer::Inner",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/boundInnerContructorRef.kt"
   },
   "box/box/directInvokeOptimization/boundMemberRef.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/boundMemberRef.kt"
   },
   "box/box/directInvokeOptimization/canary.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/canary.kt"
   },
@@ -14388,9 +14374,8 @@
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/contextParameters.kt"
   },
   "box/box/directInvokeOptimization/contructorRef.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/contructorRef.kt"
   },
   "box/box/directInvokeOptimization/kt53202.kt": {
@@ -14428,9 +14413,8 @@
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/simpleAnonymousFun.kt"
   },
   "box/box/directInvokeOptimization/simpleFunRef.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/simpleFunRef.kt"
   },
   "box/box/directInvokeOptimization/simpleLambda.kt": {
@@ -14439,14 +14423,14 @@
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/simpleLambda.kt"
   },
   "box/box/directInvokeOptimization/unboundInnerContructorRef.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown member Outer::Inner",
+   "detail": "unknown member Outer::Inner",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/unboundInnerContructorRef.kt"
   },
   "box/box/directInvokeOptimization/unboundMemberRef.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown name 'String'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/unboundMemberRef.kt"
   },
@@ -15311,8 +15295,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/kCallableName.kt"
   },
   "box/box/evaluate/intrinsicConst/kCallableNameWithSideEffect.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/kCallableNameWithSideEffect.kt"
   },
@@ -15322,8 +15306,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/kt53272.kt"
   },
   "box/box/evaluate/intrinsicConst/kt58717.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown property $Fn$Unit.name",
+   "detail": "unknown property $Fn$Unit.name",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/kt58717.kt"
   },
@@ -16842,20 +16826,20 @@
    "upstream": "compiler/testData/codegen/box/funInterface/castFromAny.kt"
   },
   "box/box/funInterface/contravariantIntersectionType.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionType.kt"
   },
   "box/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype.kt"
   },
   "box/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype2.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype2.kt"
   },
@@ -16964,8 +16948,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/kt45444_privateFunInterface.kt"
   },
   "box/box/funInterface/kt46512_indyFunInterfaceOverCallableReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown Comparable (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Comparable'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/kt46512_indyFunInterfaceOverCallableReference.kt"
   },
@@ -17260,8 +17244,8 @@
    "upstream": "compiler/testData/codegen/box/function/plus_eq.kt"
   },
   "box/box/function/referenceBigArity.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: references with more than 22 parameters are not supported",
+   "detail": "references with more than 22 parameters are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/referenceBigArity.kt"
   },
@@ -17309,20 +17293,20 @@
    "upstream": "compiler/testData/codegen/box/function/unreachableStatementAfterReturn.kt"
   },
   "box/box/functions/bigArity/function255.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: references with more than 22 parameters are not supported",
+   "detail": "references with more than 22 parameters are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/bigArity/function255.kt"
   },
   "box/box/functions/bigArity/instanceOfCallableReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: references with more than 22 parameters are not supported",
+   "detail": "references with more than 22 parameters are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/bigArity/instanceOfCallableReference.kt"
   },
   "box/box/functions/bigArity/invokeCallableReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: references with more than 22 parameters are not supported",
+   "detail": "references with more than 22 parameters are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/bigArity/invokeCallableReference.kt"
   },
@@ -17333,8 +17317,8 @@
    "upstream": "compiler/testData/codegen/box/functions/bigArity/invokeLambda.kt"
   },
   "box/box/functions/bigArity/invokeMemberCallableReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: references with more than 22 parameters are not supported",
+   "detail": "references with more than 22 parameters are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/bigArity/invokeMemberCallableReference.kt"
   },
@@ -17488,8 +17472,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt"
   },
   "box/box/functions/invoke/invoke.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/invoke.kt"
   },
@@ -18509,14 +18493,14 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/builderCallAsReturnTypeInLocalClass.kt"
   },
   "box/box/inference/pcla/callableReferenceAndCoercionToUnit.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown buildList (stdlib API / unsupported decl)",
+   "detail": "unknown function 'buildList'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/callableReferenceAndCoercionToUnit.kt"
   },
   "box/box/inference/pcla/callableReferencesProperCompletion.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/callableReferencesProperCompletion.kt"
   },
@@ -18663,8 +18647,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt51988.kt"
   },
   "box/box/inference/pcla/issues/kt52757.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt52757.kt"
   },
@@ -18954,8 +18938,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66243.kt"
   },
   "box/box/inference/pcla/issues/kt66272.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown it (stdlib API / unsupported decl)",
+   "detail": "unknown name 'it'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66272.kt"
   },
@@ -19910,8 +19894,8 @@
    "upstream": "compiler/testData/codegen/box/inline/genericFunctionReference.kt"
   },
   "box/box/inline/getClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/getClass.kt"
   },
@@ -20232,8 +20216,8 @@
    "upstream": "compiler/testData/codegen/box/inline/kt67024.kt"
   },
   "box/box/inline/kt67866.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown name 'String'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/kt67866.kt"
   },
@@ -21078,8 +21062,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/kt35234Generic.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/kt35234a.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method String.toDouble()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/kt35234a.kt"
   },
@@ -21348,74 +21332,74 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingPrimitives.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionFun.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Int.let()",
+   "detail": "unknown method $Fn$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionFun.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionFunGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unsupported callable reference Z$Int::test",
+   "detail": "unsupported callable reference Z$Int::test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionVal.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Int.get()",
+   "detail": "unknown method $Fn$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionVal.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionValGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unsupported callable reference Z$Int::xx",
+   "detail": "unsupported callable reference Z$Int::xx",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassMemberFun.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Int.let()",
+   "detail": "unknown method $Fn$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassMemberFun.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassMemberFunGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Int.let()",
+   "detail": "unknown method $Fn$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassMemberFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassMemberVal.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Int.get()",
+   "detail": "unknown method $Fn$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassMemberVal.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassMemberValGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Int.get()",
+   "detail": "unknown method $Fn$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassMemberValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassPrimaryVal.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Int.get()",
+   "detail": "unknown method $Fn$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassPrimaryVal.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassPrimaryValGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Int.get()",
+   "detail": "unknown method $Fn$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassPrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/constructorWithInlineClassParameters.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method $Fn$Z$Outer.let()",
+   "detail": "unknown method $Fn$Z$Outer.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/constructorWithInlineClassParameters.kt"
   },
   "box/box/inlineClasses/callableReferences/constructorWithInlineClassParametersGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method $Fn$Z$Int$Outer.let()",
+   "detail": "unknown method $Fn$Z$Int$Outer.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/constructorWithInlineClassParametersGeneric.kt"
   },
@@ -21430,266 +21414,266 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/equalsHashCodeToStringGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/funWithInlineClassParameters.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$Z$L$S$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/funWithInlineClassParameters.kt"
   },
   "box/box/inlineClasses/callableReferences/funWithInlineClassParametersGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$Z$Int$L$Long$S$String$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/funWithInlineClassParametersGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionFun.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Z$Int.let()",
+   "detail": "unknown method $Fn$Z$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionFun.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionFunGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown Z (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Z'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionVal.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Z$Int.get()",
+   "detail": "unknown method $Fn$Z$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionValGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown Z (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Z'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassInternalPrimaryVal.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method $Fn$Z$Int.get()",
+   "detail": "unknown method $Fn$Z$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassInternalPrimaryVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassInternalPrimaryValGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown Z (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Z'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassInternalPrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberFun.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Z$Int.let()",
+   "detail": "unknown method $Fn$Z$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberFun.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberFunGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown Z (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Z'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberVal.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Z$Int.get()",
+   "detail": "unknown method $Fn$Z$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberValGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown Z (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Z'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrimaryConstructor.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method Int.let()",
+   "detail": "unknown method Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrimaryConstructor.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrimaryConstructorGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method Int.let()",
+   "detail": "unknown method Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrimaryConstructorGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrimaryVal.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "other: unknown method $Fn$Z$Int.get()",
+   "detail": "unknown method $Fn$Z$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrimaryVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrimaryValGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown Z (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Z'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrivatePrimaryVal.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "only member functions are supported in class/interface bodies (at '::')",
+   "category": "other: unknown method $Fn$Z$Int.get()",
+   "detail": "unknown method $Fn$Z$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrivatePrimaryVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrivatePrimaryValGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown Z (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Z'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrivatePrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeBoundMemberVar.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown method $Fn$Z.get()",
+   "detail": "unknown method $Fn$Z.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeBoundMemberVar.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeBoundMemberVarGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown method $Fn$Z$Int.get()",
+   "detail": "unknown method $Fn$Z$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeBoundMemberVarGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeMemberVar.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown method $Fn$C$Z.get()",
+   "detail": "unknown method $Fn$C$Z.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeMemberVar.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeMemberVarGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown method $Fn$C$Z$Int.get()",
+   "detail": "unknown method $Fn$C$Z$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeMemberVarGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeTopLevelVar.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::topLevel",
+   "detail": "unsupported callable reference ::topLevel",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeTopLevelVar.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeTopLevelVarGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::topLevel",
+   "detail": "unsupported callable reference ::topLevel",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeTopLevelVarGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/kt37986.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected $Fn$R, found $Fn$R$R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/kt37986.kt"
   },
   "box/box/inlineClasses/callableReferences/kt37986Generic.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected $Fn$R$String, found $Fn$R$String$R$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/kt37986Generic.kt"
   },
   "box/box/inlineClasses/callableReferences/let/any.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method Value.let()",
+   "detail": "unknown method Value.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/any.kt"
   },
   "box/box/inlineClasses/callableReferences/let/anyGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method Value$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/anyGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/let/anyN.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method Value.let()",
+   "detail": "unknown method Value.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/anyN.kt"
   },
   "box/box/inlineClasses/callableReferences/let/anyNGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method Value$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/anyNGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/let/anyNGeneric2.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method Value$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/anyNGeneric2.kt"
   },
   "box/box/inlineClasses/callableReferences/let/int.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method Value.let()",
+   "detail": "unknown method Value.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/int.kt"
   },
   "box/box/inlineClasses/callableReferences/let/intGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method Value$Int.let()",
+   "detail": "unknown method Value$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/intGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/let/intN.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method Value.let()",
+   "detail": "unknown method Value.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/intN.kt"
   },
   "box/box/inlineClasses/callableReferences/let/intNGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method Value$Int.let()",
+   "detail": "unknown method Value$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/intNGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/let/intNGeneric2.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method Value$Int.let()",
+   "detail": "unknown method Value$Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/intNGeneric2.kt"
   },
   "box/box/inlineClasses/callableReferences/let/null.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "nullable types",
+   "detail": "nullable cast from Any to String is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/null.kt"
   },
   "box/box/inlineClasses/callableReferences/let/nullGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method Value$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/nullGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/let/result.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown type Result<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/result.kt"
   },
   "box/box/inlineClasses/callableReferences/let/string.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method Value.let()",
+   "detail": "unknown method Value.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/string.kt"
   },
   "box/box/inlineClasses/callableReferences/let/stringGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method Value$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/stringGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/let/stringN.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method Value.let()",
+   "detail": "unknown method Value.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/stringN.kt"
   },
   "box/box/inlineClasses/callableReferences/let/stringNGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method Value$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/stringNGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/let/stringNGeneric2.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method Value$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/stringNGeneric2.kt"
   },
@@ -22876,26 +22860,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/propertySetterWithInlineClassTypeArgumentGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/reflectionForFunctionWithMangledName.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown property $Fn$S$S.name",
+   "detail": "unknown property $Fn$S$S.name",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/reflectionForFunctionWithMangledName.kt"
   },
   "box/box/inlineClasses/functionNameMangling/reflectionForFunctionWithMangledNameGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown property $Fn$S$String$S$String.name",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/reflectionForFunctionWithMangledNameGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/reflectionForPropertyOfInlineClassType.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::prop",
+   "detail": "unsupported callable reference ::prop",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/reflectionForPropertyOfInlineClassType.kt"
   },
   "box/box/inlineClasses/functionNameMangling/reflectionForPropertyOfInlineClassTypeGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::prop",
+   "detail": "unsupported callable reference ::prop",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/reflectionForPropertyOfInlineClassTypeGeneric.kt"
   },
@@ -23189,14 +23173,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassFieldHandlingGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassFunctionInvoke.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassFunctionInvoke.kt"
   },
   "box/box/inlineClasses/inlineClassFunctionInvokeGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'fooZ' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassFunctionInvokeGeneric.kt"
   },
@@ -23227,14 +23210,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInStringTemplateGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassPropertyReferenceGetAndSet.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::f",
+   "detail": "unsupported callable reference ::f",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassPropertyReferenceGetAndSet.kt"
   },
   "box/box/inlineClasses/inlineClassPropertyReferenceGetAndSetGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::f",
+   "detail": "unsupported callable reference ::f",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassPropertyReferenceGetAndSetGeneric.kt"
   },
@@ -23282,12 +23265,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269225248\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531488\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387488\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -536081184\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25406,14 +25389,14 @@
    "upstream": "compiler/testData/codegen/box/innerClass/getOuterVal.kt"
   },
   "box/box/innerClass/inCallableReferenceLHS.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/inCallableReferenceLHS.kt"
   },
   "box/box/innerClass/inCallableReferenceLHSclassReference.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/inCallableReferenceLHSclassReference.kt"
   },
@@ -25833,14 +25816,14 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/incWithLabel.kt"
   },
   "box/box/intrinsics/kt10131.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method ArrayList<Char>.fold()",
+   "detail": "unknown method ArrayList<Char>.fold()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/kt10131.kt"
   },
   "box/box/intrinsics/kt10131a.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "unknown charArrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'charArrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/kt10131a.kt"
   },
@@ -25874,8 +25857,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt52163_doubleCompareToInt.kt"
   },
   "box/box/intrinsics/kt8666.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '::')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/kt8666.kt"
   },
@@ -25925,7 +25908,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x100eacb1b        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x100f9fb3f        kfun:newkotlin.Parser.prefix#internal + 9131 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x100474def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10056ce37        kfun:newkotlin.Parser.prefix#internal + 9395 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -26403,8 +26386,8 @@
    "upstream": "compiler/testData/codegen/box/labels/simpleLabelInlined.kt"
   },
   "box/box/lambda/ifWithReferenceAndLambda.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown method Int.let()",
+   "detail": "unknown method Int.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lambda/ifWithReferenceAndLambda.kt"
   },
@@ -26527,14 +26510,14 @@
    "upstream": "compiler/testData/codegen/box/lateinit/initialized.kt"
   },
   "box/box/lateinit/innerIsInitialized.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ')' (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown property $Fn$String.isInitialized",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lateinit/innerIsInitialized.kt"
   },
   "box/box/lateinit/isInitialized.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown property $Fn$String.isInitialized",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lateinit/isInitialized.kt"
   },
@@ -31251,9 +31234,8 @@
    "upstream": "compiler/testData/codegen/box/propertyAccess/privateClassesWithPrivateMembers.kt"
   },
   "box/box/propertyCallableReference/dynamicReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/dynamicReceiver.kt"
   },
   "box/box/propertyCallableReference/multipleModules.kt": {
@@ -31262,26 +31244,26 @@
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/multipleModules.kt"
   },
   "box/box/propertyCallableReference/valClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown method $Fn$A$Int.get()",
+   "detail": "unknown method $Fn$A$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/valClass.kt"
   },
   "box/box/propertyCallableReference/valExtension.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown method $Fn$A$Int.get()",
+   "detail": "unknown method $Fn$A$Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/valExtension.kt"
   },
   "box/box/propertyCallableReference/valModule.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::x",
+   "detail": "unsupported callable reference ::x",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/valModule.kt"
   },
   "box/box/propertyCallableReference/varClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected end of statement (at '::')",
+   "category": "other: unknown method $Fn$A$Int.set()",
+   "detail": "unknown method $Fn$A$Int.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/varClass.kt"
   },
@@ -31292,8 +31274,8 @@
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/varExtension.kt"
   },
   "box/box/propertyCallableReference/varModule.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unsupported callable reference ::x",
+   "detail": "unsupported callable reference ::x",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/varModule.kt"
   },
@@ -35610,14 +35592,14 @@
    "upstream": "compiler/testData/codegen/box/reflection/classes/qualifiedName.kt"
   },
   "box/box/reflection/classes/qualifiedNameOfStandardClasses.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reflection/classes/qualifiedNameOfStandardClasses.kt"
   },
   "box/box/reflection/classes/qualifiedNameOfStandardClassesOther.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reflection/classes/qualifiedNameOfStandardClassesOther.kt"
   },
@@ -35647,8 +35629,8 @@
    "upstream": "compiler/testData/codegen/box/reflection/functions/typeParameterInReturnType.kt"
   },
   "box/box/reflection/kClassCompanion.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "only member functions are supported in class/interface bodies (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reflection/kClassCompanion.kt"
   },
@@ -35678,8 +35660,8 @@
    "upstream": "compiler/testData/codegen/box/reflection/noReflectAtRuntime/propertyInstanceof.kt"
   },
   "box/box/reflection/noReflectAtRuntime/simpleClassLiterals.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reflection/noReflectAtRuntime/simpleClassLiterals.kt"
   },
@@ -38119,8 +38101,8 @@
    "upstream": "compiler/testData/codegen/box/super/superCallToNonGenericImplThroughGenericDefaultImpls.kt"
   },
   "box/box/super/superConstructor/kt13846.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "class bodies / constructors",
+   "detail": "nested declarations are only supported in classes (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt13846.kt"
   },
@@ -39174,8 +39156,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/abbreviationWithCapturedType.kt"
   },
   "box/box/typealias/callTypeAliasWithInnerRhsInStaticScope.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/callTypeAliasWithInnerRhsInStaticScope.kt"
   },
@@ -39427,7 +39409,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupttaw9ske/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupttaw9ske/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupvthnsinx/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupvthnsinx/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -39507,8 +39489,8 @@
    "upstream": "compiler/testData/codegen/box/unit/unitCoercionWithElvis.kt"
   },
   "box/box/unitConversion/basicUnitConversion.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected $Fn$Unit, found $Fn$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unitConversion/basicUnitConversion.kt"
   },
@@ -39848,8 +39830,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/kt796_797.kt"
   },
   "box/box/vararg/referenceToContainsFromVarargParameter.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.any()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/referenceToContainsFromVarargParameter.kt"
   },
@@ -40741,8 +40723,8 @@
    "upstream": "compiler/testData/codegen/box/when/switchBreakNoLabel.kt"
   },
   "box/box/when/switchOptimizationDense.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method IntRange.map()",
+   "detail": "unknown method IntRange.map()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationDense.kt"
   },
@@ -40752,8 +40734,8 @@
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationDuplicates.kt"
   },
   "box/box/when/switchOptimizationMultipleConditions.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method IntRange.map()",
+   "detail": "unknown method IntRange.map()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationMultipleConditions.kt"
   },
@@ -40769,8 +40751,8 @@
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationSingleStatementCase.kt"
   },
   "box/box/when/switchOptimizationSparse.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method IntRange.map()",
+   "detail": "unknown method IntRange.map()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationSparse.kt"
   },
@@ -40781,20 +40763,20 @@
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationStatement.kt"
   },
   "box/box/when/switchOptimizationTypes.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationTypes.kt"
   },
   "box/box/when/switchOptimizationUnordered.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method IntRange.map()",
+   "detail": "unknown method IntRange.map()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationUnordered.kt"
   },
   "box/box/when/switchOptimizationWithGap.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "unexpected operator (at '::')",
+   "category": "other: unknown method IntRange.map()",
+   "detail": "unknown method IntRange.map()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationWithGap.kt"
   },

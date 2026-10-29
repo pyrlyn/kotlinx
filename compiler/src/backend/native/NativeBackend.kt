@@ -5,6 +5,8 @@ class Val(val v: String, val t: Ty, val owned: Boolean = false)
 
 private class Local(val slot: String, val t: Ty, val isVar: Boolean)
 private class Scope { val vars = HashMap<String, Local>(); val refs = ArrayList<Local>() }
+/** Lambdas synthesized for callable references, per reference node; survives code-generation restarts. */
+private object RefLambdas { val map = HashMap<UnE, LambdaE>() }
 private class FunSig(val name: String, val params: List<Ty>, val ret: Ty)
 /** Object layout: { i64 refcount, ptr vtable, fields... }; vtable[0] = release function. */
 /**
@@ -177,6 +179,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** A value viewed as `Any`: objects as is, primitives and strings boxed into `AnyBox<T>` (owned). */
     private fun toAny(v: Val, t: Ty): Val {
         if (v.t is Ty.Cls && v.t.name.substringBefore('$') in genericClasses) fail("generic class ${v.t.name.substringBefore('$')} used as Any is not supported")
+        // Kotlin compares callable references structurally; ours are distinct closures, so refuse them as Any.
+        if (v.v in refVals) fail("callable references as Any are not supported")
         if (v.v == "null" || v.t is Ty.Cls || v.t is Ty.Iface) return Val(v.v, t, v.owned)
         val n = boxName(v.t) ?: fail("${v.t} cannot be used as Any")
         val b = withTemps(listOf(v)) { (x) -> genNamedCall("AnyBox$n", CallE(NameE("AnyBox$n").also { it.line = line }, emptyList(), listOf(x), null).also { it.line = line }) }
@@ -1171,6 +1175,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             is BinE -> genBin(e)
             is UnE -> {
+                if (e.op.startsWith("::")) return genRef(e, if (e.e is NullL) null else e.e, e.op.removePrefix("::"))
                 val v = genExpr(e.e)
                 if (e.op == "!!") {
                     if (v.t.llvm != "ptr") return v
@@ -2044,6 +2049,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** i1 for `v is t` (does not consume [v]). */
     private fun isCheck(v: Val, t: TypeRef): String {
+        if (Regex("Function\\d+").matches(t.name)) fail("type checks against ${t.name} are not supported")
         val star = t.args.any { it.name == "*" }
         val target = if (star) null else resolveOrNull(t)
         if (v.t.llvm != "ptr") return if (target == v.t || (target == null && t.name == "Any")) "true" else "false"
@@ -2228,6 +2234,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
         }
         dataMethod(r, n, e0)?.let { return it }
+        if (t is Ty.ListTy && n in setOf("map", "filter", "forEach", "sumOf", "count") && e0.lambda == null && e0.args.size == 1 && e0.args[0] !is NamedE) {
+            // A function value or callable reference argument becomes an inline lambda `{ f(it) }`.
+            val a = e0.args[0]
+            val it0 = NameE("it").also { it.line = line }
+            val tn = ((a as? UnE)?.e as? NameE)?.n
+            val call: E = when {
+                a is UnE && a.op.startsWith("::") && a.e is NullL && a.op.drop(2) in funDecls -> CallE(NameE(a.op.drop(2)), emptyList(), listOf(it0), null)
+                a is UnE && a.op.startsWith("::") && tn != null && lookup(tn) == null && tn in classes -> {
+                    val m = a.op.drop(2)
+                    if (m in classes.getValue(tn).methods && !m.startsWith("\$prop\$")) CallE(MemberE(it0, m, false), emptyList(), emptyList(), null) else MemberE(it0, m, false)
+                }
+                else -> CallE(a, emptyList(), listOf(it0), null)
+            }.also { it.line = line }
+            return method(r, n, CallE(e0.callee, e0.typeArgs, emptyList(), Block(listOf(ExprS(call).also { it.line = line }))).also { it.line = e0.line })
+        }
         // A trailing lambda on a built-in method that is not an inline lambda builtin is an ordinary last argument.
         val e = if (e0.lambda != null && t !is Ty.Cls && t !is Ty.Iface && !(t is Ty.ListTy && n in setOf("map", "filter", "forEach", "sumOf", "count")) && n != "usePinned")
             CallE(e0.callee, e0.typeArgs, allArgs(e0), null) else e0
@@ -2351,6 +2372,67 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * implementing the function-type interface with an `invoke` method holding the body. Captures are retained into
      * the closure and released with it, so Perceus RC and the cycle collector treat closures like any object.
      */
+    /**
+     * Callable reference `::f`, `::C` (constructor), `C::m` / `C::p` (unbound: receiver is the first parameter) and
+     * `x::m` (bound: receiver evaluated once): lowered to an equivalent lambda with typed parameters.
+     */
+
+    private val refVals = HashSet<String>()
+
+    private fun genRef(node: UnE, recv: E?, n: String): Val = genRef0(node, recv, n).also { refVals.add(it.v) }
+
+    private fun genRef0(node: UnE, recv: E?, n: String): Val {
+        // The synthesized lambda is cached per reference node so repeated (dry-run) generation reuses one closure class.
+        fun lam(params: List<TypeRef>, body: (List<E>) -> E): Val {
+            if (params.size > 22) fail("references with more than 22 parameters are not supported")
+            val le = RefLambdas.map.getOrPut(node) {
+                val names = params.indices.map { "rp\$$it" }
+                val call = body(names.map { NameE(it).also { x -> x.line = line } })
+                LambdaE(Block(listOf(ExprS(call).also { it.line = line }), names, params)).also { it.line = line }
+            }
+            return genExpr(le)
+        }
+        fun callOn(r: E, name: String, args: List<E>, isProp: Boolean): E =
+            if (isProp) MemberE(r, name, false).also { it.line = line }
+            else CallE(MemberE(r, name, false).also { it.line = line }, emptyList(), args, null).also { it.line = line }
+        fun memberParams(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? = when (t) {
+            is Ty.Cls -> classes.getValue(t.name).let { ci ->
+                ci.methods[name]?.let { m -> if (m.typeParams.isNotEmpty()) fail("reference to generic method $name is not supported"); m.params.map { it.type } to false }
+                    ?: if (ci.index(name) >= 0 || "\$prop\$$name" in ci.methods) emptyList<TypeRef>() to true else null
+            }
+            is Ty.Iface -> ifaceDecls[t.name]?.methods?.firstOrNull { it.name == name }?.let { m -> m.params.map { it.type } to false }
+                ?: ifaceDecls[t.name]?.methods?.firstOrNull { it.name == "\$prop\$$name" }?.let { emptyList<TypeRef>() to true }
+            else -> null
+        }
+        if (recv == null) {
+            funDecls[n]?.let { f ->
+                if (f.typeParams.isNotEmpty()) fail("reference to generic function $n is not supported")
+                return lam(f.params.map { it.type }) { xs -> CallE(NameE(n).also { it.line = line }, emptyList(), xs, null).also { it.line = line } }
+            }
+            classDecls[n]?.takeIf { it.typeParams.isEmpty() && it.enumEntries == null }?.let { c ->
+                return lam(c.ctorParams.map { it.type }) { xs -> CallE(NameE(n).also { it.line = line }, emptyList(), xs, null).also { it.line = line } }
+            }
+            owner?.let { o -> if (n in o.methods || o.index(n) >= 0) return genRef(node, NameE("this").also { it.line = line }, n) }
+            fail("unsupported callable reference ::$n")
+        }
+        // Unbound reference through a type name.
+        val typeName = (recv as? NameE)?.n?.takeIf { lookup(it) == null && "\$get\$$it" !in sigs && (it in classes || it in ifaces) && !(it == "this") }
+        if (typeName != null) {
+            val t = resolve(TypeRef(typeName, emptyList(), false))
+            val (ps, isProp) = memberParams(t, n) ?: fail("unknown member $typeName::$n")
+            return lam(listOf(TypeRef(typeName, emptyList(), false)) + ps) { xs -> callOn(xs[0], n, xs.drop(1), isProp) }
+        }
+        // Bound reference: the receiver is evaluated once and captured.
+        val r = genExpr(recv)
+        val (ps, isProp) = memberParams(r.t, n) ?: fail("unsupported callable reference ${r.t}::$n")
+        scopes.add(Scope())
+        val l = declare("\$refRecv", r.t, false, r.owned && r.t.isRef)
+        emit("store ${r.t.llvm} ${r.v}, ptr ${l.slot}")
+        val res = consume(lam(ps) { xs -> callOn(NameE("\$refRecv").also { it.line = line }, n, xs, isProp) })
+        releaseScope(scopes.last()); scopes.removeAt(scopes.size - 1)
+        return res
+    }
+
     private fun genLambda(e: LambdaE, ps: List<Ty>?, ret: Ty?): Val {
         val b0 = e.body
         val declared = b0.params
@@ -2739,6 +2821,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     private fun compare(op: String, a: Val, b: Val): Val {
+        if ((op == "==" || op == "!=") && a.v != "null" && b.v != "null" && listOf(a.t, b.t).any { it is Ty.Iface && it.name.startsWith("\$Fn") })
+            fail("equality of function values is not supported")
         if ((op == "==" || op == "!=") && a.t is Ty.Cls && a.v != "null" && b.v != "null" && classes.getValue(a.t.name).methods["equals"]?.params?.size == 1) {
             // User-defined equals(other: Any?): same pointer -> true, null receiver -> other is null, else a.equals(b).
             val ls = label("ueq.same"); val lc = label("ueq.call"); val ln = label("ueq.null"); val le = label("ueq.end")

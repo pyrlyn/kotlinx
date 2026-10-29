@@ -886,6 +886,8 @@ class Parser(private val t: List<Tok>) {
                 }
                 "[" -> { p++; val i = nested(1) { expr() }; expectOp("]"); IndexE(e, i) }
                 "!!" -> { p++; UnE("!!", e).also { it.line = tk.line } }
+                // Callable reference `recv::name`: UnE("::name", recv).
+                "::" -> { p++; if (isId("class")) fail("class literals are not supported"); UnE("::" + ident(), e) }
                 "++", "--" -> if (e is NameE || e is MemberE || e is IndexE) { p++; PostIncE(e, tk.s) } else break
                 "{" -> if (e is MemberE || (e is NameE && e.n !in NO_TRAILING)) CallE(e, emptyList(), emptyList(), block(lambda = true)) else break
                 else -> break
@@ -896,6 +898,12 @@ class Parser(private val t: List<Tok>) {
     }
 
     private fun primary(): E {
+        if (isOp("::")) {
+            // `::name`: a reference without receiver (NullL stands for "none").
+            val l = next().line
+            if (isId("class")) fail("class literals are not supported")
+            return UnE("::" + ident(), NullL()).also { it.line = l }
+        }
         val tk = next()
         val e: E = when (tk.k) {
             K.INT -> IntL(tk.num, tk.isLong, tk.unsigned)
