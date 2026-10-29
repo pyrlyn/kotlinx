@@ -17,6 +17,10 @@ class NameE(val n: String) : E()
 class CallE(val callee: E, val typeArgs: List<TypeRef>, val args: List<E>, val lambda: Block?) : E()
 /** Named call argument `name = e` (only `copy` of data classes accepts these). */
 class NamedE(val name: String, val e: E) : E()
+/** `e is T` / `e !is T`. */
+class IsE(val e: E, val type: TypeRef, val neg: Boolean) : E()
+/** `e as T` / `e as? T`. */
+class AsE(val e: E, val type: TypeRef, val safe: Boolean) : E()
 class MemberE(val recv: E, val n: String, val safe: Boolean) : E()
 class IndexE(val recv: E, val idx: E) : E()
 class BinE(val op: String, val l: E, val r: E) : E()

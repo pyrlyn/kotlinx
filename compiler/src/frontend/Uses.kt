@@ -45,6 +45,8 @@ object Uses {
             }
             is UnE -> expr(e.e, straight, false, out)
             is NamedE -> expr(e.e, straight, pos, out)
+            is IsE -> expr(e.e, straight, false, out)
+            is AsE -> expr(e.e, straight, pos, out)
             is IfE -> { expr(e.cond, straight, false, out); block(e.th, out); e.el?.let { block(it, out) } }
             is LambdaE -> block(e.body, out)
             is TryE -> { block(e.body, out); e.catches.forEach { block(it.body, out) }; e.fin?.let { block(it, out) } }
@@ -86,6 +88,8 @@ object Escape {
                 is BinE -> { e(x.l, x, p); e(x.r, x, p) }
                 is UnE -> e(x.e, x, p)
                 is NamedE -> e(x.e, x, p)
+                is IsE -> e(x.e, x, p)
+                is AsE -> e(x.e, x, p)
                 is IfE -> { e(x.cond, x, p); b(x.th); x.el?.let { b(it) } }
                 is WhenE -> { x.subj?.let { e(it, x, p) }; x.branches.forEach { (c, bl) -> c?.forEach { e(it, x, p) }; b(bl) } }
                 is LambdaE -> if (containsName(x.body)) good = false // captured by a closure: escapes

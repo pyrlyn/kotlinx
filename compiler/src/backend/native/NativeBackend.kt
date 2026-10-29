@@ -748,6 +748,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 }
                 genStmt(s)
             }
+            // `if (x !is T) return` narrows x for the rest of the block.
+            val ifs = (s as? ExprS)?.e as? IfE
+            if (!term && ifs != null && ifs.el == null && ifs.th.stmts.lastOrNull().let { it is RetS || it is JumpS || (it is ExprS && ((it.e as? CallE)?.callee as? NameE)?.n == "\$throw") })
+                applyCasts(smartCasts(ifs.cond, false))
             moveNodes.removeAll(mine)
             if (!term) for ((n, li) in last) {
                 if (li != i) continue
@@ -1018,6 +1022,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is MemberE -> genMember(e)
             is LambdaE -> genLambda(e, null, null)
             is NamedE -> fail("named arguments are not supported")
+            is IsE -> { val v = genExpr(e.e); val r = isCheck(v, e.type); releaseIfOwned(v); Val(if (e.neg) emitT("xor i1 $r, true") else r, Ty.I1) }
+            is AsE -> genAs(e)
             is CallE -> genCall(e)
             is IndexE -> {
                 val r = genExpr(e.recv)
@@ -1057,11 +1063,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val res = ArrayList<Pair<Val, String>>()
                 startBlock(lt)
                 if (inh.isNotEmpty()) inheritNext = inh
-                val a = genBlockBody(e.th, e.el != null)
+                scopes.add(Scope()); applyCasts(smartCasts(e.cond, true))
+                val a = try { genBlockBody(e.th, e.el != null) } finally { scopes.removeAt(scopes.size - 1) }
                 if (!term) { res.add(a to cur); br(le) }
                 startBlock(lf)
                 if (inh.isNotEmpty()) inheritNext = inh
-                val b = if (e.el != null) genBlockBody(e.el, true) else Val("", Ty.Unit)
+                scopes.add(Scope()); applyCasts(smartCasts(e.cond, false))
+                val b = try { if (e.el != null) genBlockBody(e.el, true) else Val("", Ty.Unit) } finally { scopes.removeAt(scopes.size - 1) }
                 if (!term) { res.add(b to cur); br(le) }
                 startBlock(le)
                 merge(res, e.el != null)
@@ -1261,6 +1269,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun genWhen(e: WhenE): Val {
         val subj = e.subj?.let { genExpr(it) }
+        scopes.add(Scope())
+        if (subj != null && subj.t != Ty.Unit) { val l = declare("\$subj", subj.t, false, false); emit("store ${subj.t.llvm} ${subj.v}, ptr ${l.slot}") }
+        try { return genWhenBody(e, subj) } finally { scopes.removeAt(scopes.size - 1) }
+    }
+
+    private fun isSubjCond(c: E) = (c is IsE && (c.e as? NameE)?.n == "\$subj") || (c is BinE && (c.op == "in" || c.op == "!in") && (c.l as? NameE)?.n == "\$subj")
+
+    private fun genWhenBody(e: WhenE, subj: Val?): Val {
         val le = label("when.end")
         val res = ArrayList<Pair<Val, String>>()
         var hasElse = false
@@ -1280,12 +1296,17 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val lt = label("when.then"); val ln = label("when.next")
             var c: String? = null
             for (ce in conds) {
-                val x = if (subj != null) compare("==", subj, genExpr(ce)).v else coerce(genExpr(ce), Ty.I1).v
+                val x = if (subj != null && !isSubjCond(ce)) compare("==", Val(subj.v, subj.t, false), genExpr(ce)).v else coerce(genExpr(ce), Ty.I1).v
                 c = if (c == null) x else emitT("or i1 $c, $x")
             }
             condBr(c!!, lt, ln)
             startBlock(lt)
-            val v = genBlockBody(blk, true)
+            val casts = conds.singleOrNull()?.let { ce ->
+                if (subj != null && ce is IsE && isSubjCond(ce)) listOfNotNull((e.subj as? NameE)?.let { IsE(it, ce.type, ce.neg) }, IsE(NameE("\$subj"), ce.type, ce.neg)).flatMap { smartCasts(it, true) }
+                else if (subj == null) smartCasts(ce, true) else emptyList()
+            } ?: emptyList()
+            scopes.add(Scope()); applyCasts(casts)
+            val v = try { genBlockBody(blk, true) } finally { scopes.removeAt(scopes.size - 1) }
             if (!term) { res.add(v to cur); br(le) }
             startBlock(ln)
         }
@@ -1718,6 +1739,104 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         else -> false
     }
 
+
+    /** Classes whose instances are instances of the class or interface named [n] (generic instances included for `Box<*>`). */
+    private fun instanceClasses(n: String, star: Boolean): List<String> {
+        fun impl(c: String, seen: HashSet<String> = HashSet()): Set<String> {
+            if (!seen.add(c)) return emptySet()
+            val d = classDecls[c] ?: return setOf(c)
+            return setOf(c) + d.supers.flatMap { impl(it, seen) } + (classes[c]?.ancestors ?: emptyList()).flatMap { impl(it, seen) }
+        }
+        val targets = if (star) (classes.keys + ifaces.keys).filter { it == n || it.startsWith("$n$") }.toSet() else setOf(n)
+        return classes.keys.filter { c -> impl(c).any { it in targets } }.sorted()
+    }
+
+    /** Static upcast check: is every value of type [a] a [b]? */
+    private fun statically(a: Ty, b: Ty): Boolean = a == b ||
+        (a is Ty.Cls && b is Ty.Cls && b.name in classes.getValue(a.name).ancestors) ||
+        (a is Ty.Cls && b is Ty.Iface && a.name in instanceClasses(b.name, false))
+
+    private fun resolveOrNull(t: TypeRef): Ty? = try { resolve(TypeRef(t.name, t.args, false)) } catch (_: CompileError) { null }
+
+    /** i1 for `v is t` (does not consume [v]). */
+    private fun isCheck(v: Val, t: TypeRef): String {
+        val star = t.args.any { it.name == "*" }
+        val target = if (star) null else resolveOrNull(t)
+        if (v.t.llvm != "ptr") return if (target == v.t || (target == null && t.name == "Any")) "true" else "false"
+        if (v.v == "null") return if (t.nullable) "true" else "false"
+        val nonNull = if (t.nullable) "true" else emitT("icmp ne ptr ${v.v}, null")
+        if (t.name == "Any") return nonNull
+        if (target != null && statically(v.t, target)) return nonNull
+        if (!(v.t is Ty.Cls || v.t is Ty.Iface)) return if (target == v.t) nonNull else "false"
+        val name = (target as? Ty.Cls)?.name ?: (target as? Ty.Iface)?.name ?: if (star) t.name else return "false"
+        val subs = instanceClasses(name, star)
+        if (subs.isEmpty()) return if (t.nullable) emitT("icmp eq ptr ${v.v}, null") else "false"
+        val from = cur
+        val lc = label("is.chk"); val le = label("is.end")
+        val isNull = emitT("icmp eq ptr ${v.v}, null")
+        condBr(isNull, le, lc)
+        startBlock(lc)
+        val vt = emitT("load ptr, ptr ${emitT("getelementptr i8, ptr ${v.v}, i64 8")}")
+        var r: String? = null
+        for (x in subs) { val c = emitT("icmp eq ptr $vt, @vt.$x"); r = if (r == null) c else emitT("or i1 $r, $c") }
+        val fromC = cur
+        br(le); startBlock(le)
+        return emitT("phi i1 [ ${t.nullable}, %$from ], [ $r, %$fromC ]")
+    }
+
+    private fun genAs(e: AsE): Val {
+        val v = genExpr(e.e)
+        val star = e.type.args.any { it.name == "*" }
+        val target = if (e.type.name == "Any") v.t else if (star) (v.t.takeIf { v.t is Ty.Cls || v.t is Ty.Iface } ?: fail("unsupported cast to ${e.type.name}<*>")) else resolve(TypeRef(e.type.name, e.type.args, false))
+        if (v.t.llvm != "ptr") {
+            if (v.t == target) return v
+            fail("unsupported cast from ${v.t} to $target")
+        }
+        if (v.v == "null") {
+            if (e.type.nullable || e.safe) return Val("null", target)
+        }
+        if (statically(v.t, target) && (e.type.nullable || e.safe) && v.v != "null") return Val(v.v, target, v.owned)
+        val ok = isCheck(v, e.type)
+        val lok = label("as.ok"); val lbad = label("as.bad")
+        if (e.safe) {
+            val from = cur
+            condBr(ok, lok, lbad)
+            startBlock(lbad)
+            releaseIfOwned(v)
+            val fromB = cur
+            br(lok); startBlock(lok)
+            return Val(emitT("phi ptr [ ${v.v}, %$from ], [ null, %$fromB ]"), target, v.owned)
+        }
+        condBr(ok, lok, lbad)
+        startBlock(lbad)
+        releaseIfOwned(v)
+        val msg = "class ${v.t} cannot be cast to class ${e.type.name}"
+        if (excMode) throwNew("ClassCastException", Val(cstr(msg), Ty.Str))
+        else { emit("call void @rt_panic(ptr ${cstr("ClassCastException: $msg")})"); emit("unreachable"); term = true }
+        startBlock(lok)
+        return Val(v.v, target, v.owned)
+    }
+
+    /** Smart casts implied by [cond] being true (positive) or false: local name -> narrowed type. */
+    private fun smartCasts(cond: E, positive: Boolean): List<Pair<String, TypeRef>> = when {
+        cond is IsE && cond.e is NameE && cond.neg != positive && cond.type.args.none { it.name == "*" } && cond.type.name != "Any" -> listOf(cond.e.n to cond.type)
+        cond is BinE && cond.op == "&&" && positive -> smartCasts(cond.l, true) + smartCasts(cond.r, true)
+        cond is BinE && cond.op == "||" && !positive -> smartCasts(cond.l, false) + smartCasts(cond.r, false)
+        cond is UnE && cond.op == "!" -> smartCasts(cond.e, !positive)
+        else -> emptyList()
+    }
+
+    /** Declares borrowed narrowed aliases of the [casts] locals in the current scope (skipping reassigned vars). */
+    private fun applyCasts(casts: List<Pair<String, TypeRef>>) {
+        for ((n, tr) in casts) {
+            val l = lookup(n) ?: continue
+            if (l.isVar || l.t.llvm != "ptr") continue
+            val t = resolveOrNull(tr) ?: continue
+            if (t == l.t || !(t is Ty.Cls || t is Ty.Iface)) continue
+            scopes.last().vars[n] = Local(l.slot, t, false)
+        }
+    }
+
     private fun isData(t: Ty) = t is Ty.Cls && "\$equals" in classes.getValue(t.name).methods
 
     /** Generated members (`copy`, default `equals`/`hashCode`/`toString`) and built-in `hashCode`/`componentN`; null if not one. */
@@ -2070,7 +2189,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val lr = label("logic.rhs"); val le = label("logic.end")
                 if (e.op == "&&") condBr(a.v, lr, le) else condBr(a.v, le, lr)
                 startBlock(lr)
-                val b = coerce(genExpr(e.r), Ty.I1)
+                scopes.add(Scope()); applyCasts(smartCasts(e.l, e.op == "&&"))
+                val b = try { coerce(genExpr(e.r), Ty.I1) } finally { scopes.removeAt(scopes.size - 1) }
                 val bFrom = cur
                 if (term) { startBlock(le); return Val(if (e.op == "&&") "false" else "true", Ty.I1) } // rhs never completes
                 br(le)

@@ -614,12 +614,26 @@ class Parser(private val t: List<Tok>) {
     )
 
     private fun binary(level: Int): E {
-        if (level == levels.size) return prefix()
+        if (level == levels.size) {
+            var e = prefix()
+            while (isId("as")) {
+                val ln = next().line
+                val safe = if (isOp("?")) { next(); true } else false
+                e = AsE(e, type(), safe).also { it.line = ln }
+            }
+            return e
+        }
         var l = binary(level + 1)
         while (true) {
             val tk = peek()
             if (levels[level] === IN_OPS) {
                 // `x in r` / `x !in r` (the lexer splits `!in` into `!` and `in`).
+                val negIs = tk.k == K.OP && tk.s == "!" && t[p + 1].k == K.ID && t[p + 1].s == "is"
+                if (negIs || (tk.k == K.ID && tk.s == "is")) {
+                    p += if (negIs) 2 else 1
+                    l = IsE(l, type(), negIs).also { it.line = tk.line }
+                    continue
+                }
                 val neg = tk.k == K.OP && tk.s == "!" && t[p + 1].k == K.ID && t[p + 1].s == "in"
                 if (!neg && !(tk.k == K.ID && tk.s == "in")) return l
                 p += if (neg) 2 else 1; skipNLOnly()
@@ -777,6 +791,21 @@ class Parser(private val t: List<Tok>) {
         return IfE(c, th, null)
     }
 
+    /** A `when` branch condition; with a subject, `is T`, `!is T`, `in r` and `!in r` test the subject (`$subj`). */
+    private fun whenCond(hasSubj: Boolean): E {
+        if (hasSubj) {
+            val tk = peek()
+            val neg = tk.k == K.OP && tk.s == "!" && t[p + 1].k == K.ID && (t[p + 1].s == "is" || t[p + 1].s == "in")
+            val kw = if (neg) t[p + 1].s else if (tk.k == K.ID && (tk.s == "is" || tk.s == "in")) tk.s else null
+            if (kw != null) {
+                p += if (neg) 2 else 1
+                val s = NameE("\$subj").also { it.line = tk.line }
+                return (if (kw == "is") IsE(s, type(), neg) else BinE(if (neg) "!in" else "in", s, expr())).also { it.line = tk.line }
+            }
+        }
+        return expr()
+    }
+
     private fun whenExpr(): E {
         val subj = if (isOp("(")) { next(); val s = nested(1) { expr() }; expectOp(")"); s } else null
         expectOp("{")
@@ -786,8 +815,8 @@ class Parser(private val t: List<Tok>) {
                 skipNL()
                 if (isOp("}")) break
                 val conds: List<E>? = if (isId("else")) { next(); null } else {
-                    val cs = arrayListOf(expr())
-                    while (isOp(",")) { next(); skipNLOnly(); cs.add(expr()) }
+                    val cs = arrayListOf(whenCond(subj != null))
+                    while (isOp(",")) { next(); skipNLOnly(); cs.add(whenCond(subj != null)) }
                     cs
                 }
                 expectOp("->")
