@@ -38,6 +38,7 @@ while emitting IR.
 | top-level decls | `Parser.program()` dispatch on the first token; unknown -> "unexpected top-level token" |
 | class bodies | `Parser.classDecl` / `classBody` / `members`; secondary ctors lowered by `lowerSecondaries` |
 | nested classes | parsed in class bodies, hoisted to top level with mangled names (`hoisted`, `resolveNested`; outer access through `outer$`) |
+| local declarations | `Parser.localDecl` -> `LocalDeclS`; `liftLocals` hoists non-capturing local functions (top level, or a method of the enclosing class) and local classes/objects/interfaces, and turns capturing local functions into lambda `val`s |
 | objects / companions | `objectDecl`; lazy singletons via generated `$init$N` / `$get$N` and globals `$o$N` (end of `program()`) |
 | extensions | `function()` reads `Recv.` receivers; `resolveExtensions` turns them into functions/methods; member extensions -> `mext$f` |
 | property accessors | `getter` / `accessors` -> hidden `$prop$x` methods |

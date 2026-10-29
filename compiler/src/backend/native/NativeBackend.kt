@@ -946,6 +946,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             is ExprS -> if (s.e is CallE && scopeFn(s.e, true) != null) genBlockBody(scopeFn(s.e, true)!!, false).let { }
             else if (s.e is TryE) { if (s.e.line != 0) line = s.e.line; genTry(s.e, false) } else releaseIfOwned(genExpr(s.e))
+            is LocalDeclS -> fail("local declarations are only supported in function bodies")
             is JumpS -> {
                 val li = if (s.label == null) loops.size - 1 else loopLabels.lastIndexOf(s.label).also { if (it < 0) fail("unknown loop label '${s.label}'") }
                 val (lc, le, depth) = loops.getOrNull(li) ?: fail("'${if (s.isBreak) "break" else "continue"}' outside a loop")

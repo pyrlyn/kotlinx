@@ -21,6 +21,7 @@ object Uses {
             is RetS -> s.e?.let { expr(it, straight, straight, out) }
             is ExprS -> expr(s.e, straight, false, out)
             is JumpS -> {}
+            is LocalDeclS -> {}
         }
     }
 
@@ -107,6 +108,7 @@ object Escape {
                 is RetS -> x.e?.let { e(it, null, null) }
                 is ExprS -> e(x.e, null, null)
                 is JumpS -> {}
+                is LocalDeclS -> {}
             }
         }
         fun containsName(bl: Block): Boolean { var hit = false; val w = Walker(name) { _, _ -> hit = true; true }; bl.stmts.forEach { w.s(it) }; return hit }

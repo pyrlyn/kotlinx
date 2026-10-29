@@ -47,6 +47,12 @@ class ExprS(val e: E) : S()
 /** `break` / `continue` (unlabeled: innermost loop). */
 class JumpS(val isBreak: Boolean) : S() { /** `break@l` / `continue@l`. */ var label: String? = null }
 
+/**
+ * A function, class, object or interface declared inside a block (`d` is a [FunD], [ClassD] or [InterfaceD]).
+ * Only the parser creates it; `Parser.liftLocals` replaces every one before later passes run.
+ */
+class LocalDeclS(val d: Any) : S()
+
 /** `params` are lambda parameter names (empty = implicit `it`). */
 class Block(val stmts: List<S>, val params: List<String> = emptyList(), val paramTypes: List<TypeRef?> = emptyList()) {
     /** Lambda identity, stable across code-generation restarts (assigned on first use). */
