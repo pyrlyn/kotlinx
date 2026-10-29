@@ -50,7 +50,9 @@ class ClassD(val name: String, val fields: List<FieldD>, val supers: List<String
              val ctorParams: List<Param> = fields.map { Param(it.name, it.type!!) }, val inits: List<Any> = emptyList(),
              val superArgs: List<E>? = null, val typeParams: List<String> = emptyList(),
              /** Enum class: entries (name, constructor arguments); `name` and `ordinal` are the first two properties. */
-             val enumEntries: List<Pair<String, List<E>>>? = null) {
+             val enumEntries: List<Pair<String, List<E>>>? = null,
+             /** `value class`: one property; equality and toString are structural on it. */
+             val isValue: Boolean = false) {
     /** The superclass is the one supertype written with constructor arguments (`: Base(...)`). */
     val superClass: String? get() = if (superArgs != null) supers.first() else null
     /** Needs a constructor function (plain parameters, initializers or a superclass), not just field stores. */

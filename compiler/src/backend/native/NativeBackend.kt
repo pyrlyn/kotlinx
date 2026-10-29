@@ -1085,6 +1085,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val np = emitT("load ptr, ptr ${emitT("getelementptr ${ci.llType}, ptr ${v.v}, i32 0, i32 2")}")
                 emit("call void @${prefix}str($lead ptr $np)")
             }
+            v.t is Ty.Cls && classDecls[v.t.name]?.isValue == true -> {
+                val ci = classes.getValue(v.t.name); val (fname, ft) = ci.fields[0]
+                emit("call void @${prefix}str($lead ptr ${cstr(v.t.name.substringBefore('$') + "(" + fname + "=")})")
+                appendVal(prefix, lead, Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${v.v}, i32 0, i32 2")}"), ft))
+                emit("call void @${prefix}str($lead ptr ${cstr(")")})")
+            }
             v.t is Ty.Cls -> emit("call void @${prefix}str($lead ptr ${cstr(v.t.name + "@obj")})")
             else -> fail("cannot convert ${v.t} to string")
         }
@@ -1621,6 +1627,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if ((a.v == "null" && b.t.llvm != "ptr") || (b.v == "null" && a.t.llvm != "ptr")) {
             if (op != "==" && op != "!=") fail("cannot order null")
             return Val(if (op == "==") "false" else "true", Ty.I1)
+        }
+        if (a.t is Ty.Cls && a.t == b.t && a.v != "null" && b.v != "null" && classDecls[a.t.name]?.isValue == true && (op == "==" || op == "!=")) {
+            // Value classes compare by their single property.
+            val ci = classes.getValue(a.t.name); val ft = ci.fields[0].second
+            val fa = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${a.v}, i32 0, i32 2")}"), ft)
+            val fb = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${b.v}, i32 0, i32 2")}"), ft)
+            val res = compare(op, fa, fb)
+            releaseIfOwned(a); releaseIfOwned(b)
+            return res
         }
         if (a.t.llvm == "ptr" || b.t.llvm == "ptr") {
             if (op != "==" && op != "!=") fail("cannot order references")

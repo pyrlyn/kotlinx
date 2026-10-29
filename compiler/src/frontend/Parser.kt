@@ -39,6 +39,12 @@ class Parser(private val t: List<Tok>) {
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
                 tk.k == K.ID && tk.s == "class" -> classes.add(classDecl())
                 tk.k == K.ID && tk.s == "enum" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(classDecl(true)) }
+                tk.k == K.ID && tk.s == "value" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> {
+                    p++
+                    val c = classDecl()
+                    if (c.fields.size != 1 || c.ctorParams.size != 1) fail("a value class needs exactly one property", tk)
+                    classes.add(ClassD(c.name, c.fields, c.supers, c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true))
+                }
                 tk.k == K.ID && tk.s == "interface" -> ifaces.add(interfaceDecl())
                 tk.k == K.ID && tk.s == "object" -> { next(); classes.add(objectDecl(ident())) }
                 else -> fail("unexpected top-level token")
