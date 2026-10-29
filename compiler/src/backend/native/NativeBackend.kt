@@ -181,6 +181,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if ((v.t == Ty.RawPtr || v.t == Ty.Str) && (t == Ty.RawPtr || t == Ty.Str)) return Val(v.v, t, v.owned)
         if (v.v == "null" && t.llvm == "ptr") return Val("null", t)
         if (v.t is Ty.Cls && t is Ty.Iface && t.name in classes.getValue(v.t.name).supers) return Val(v.v, t, v.owned)
+        // Interface upcast: dispatch goes through global method slots, so the object is reused as is.
+        if (v.t is Ty.Iface && t is Ty.Iface && ifaceDecls[v.t.name]?.supers?.contains(t.name) == true) return Val(v.v, t, v.owned)
         if (v.t is Ty.Cls && t is Ty.Cls && t.name in classes.getValue(v.t.name).ancestors) return Val(v.v, t, v.owned)
         fail("type mismatch: expected $t, found ${v.t}")
     }

@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 6,
   "MISCOMPILE": 50,
   "N/A": 2984,
-  "PASS": 1465,
-  "UNSUPPORTED": 3970
+  "PASS": 1477,
+  "UNSUPPORTED": 3958
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1004,8 +1004,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/primitiveArrays.kt"
   },
   "box/box/arrays/stdlib.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/stdlib.kt"
   },
@@ -1669,17 +1669,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupe3un01z9/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupe3un01z9/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupyyghd8e9/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupyyghd8e9/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprczmjvc7/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprczmjvc7/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupyqy4p4xt/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupyqy4p4xt/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupc6c5rkj1/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupc6c5rkj1/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupndt6e6y1/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupndt6e6y1/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -1994,8 +1994,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/complexTraitImpl.kt"
   },
   "box/box/bridges/covariantGenericDiamond.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/covariantGenericDiamond.kt"
   },
@@ -2030,14 +2030,14 @@
    "upstream": "compiler/testData/codegen/box/bridges/delegation.kt"
   },
   "box/box/bridges/delegationComplex.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/delegationComplex.kt"
   },
   "box/box/bridges/delegationComplexWithList.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/delegationComplexWithList.kt"
   },
@@ -2054,20 +2054,20 @@
    "upstream": "compiler/testData/codegen/box/bridges/diamond.kt"
   },
   "box/box/bridges/diamond/diamondAbstractDeclarations.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/diamond/diamondAbstractDeclarations.kt"
   },
   "box/box/bridges/diamond/diamondAbstractFakeOverridesInTheMiddle.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/diamond/diamondAbstractFakeOverridesInTheMiddle.kt"
   },
   "box/box/bridges/diamond/diamondMixedDeclarations.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/diamond/diamondMixedDeclarations.kt"
   },
@@ -2101,14 +2101,14 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeGenericCovariantOverrideWithDelegation.kt"
   },
   "box/box/bridges/fakeOverride/abstractFakeOverride.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/abstractFakeOverride.kt"
   },
   "box/box/bridges/fakeOverride/diamondFakeOverrideAbstractAndConcrete.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/diamondFakeOverrideAbstractAndConcrete.kt"
   },
@@ -2173,8 +2173,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideManyDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideMisleadingImplementation.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideMisleadingImplementation.kt"
   },
@@ -2197,8 +2197,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractFakeOverride.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideTwoDeclarationsThroughFakeOverrides.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideTwoDeclarationsThroughFakeOverrides.kt"
   },
@@ -2233,14 +2233,13 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideDifferentSignature/simpleConcreteDeclarationOverridesConcreteThroughFakeOverride.kt"
   },
   "box/box/bridges/fakeOverrideOfTraitImpl.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideOfTraitImpl.kt"
   },
   "box/box/bridges/fakeOverrideWithSeveralSuperDeclarations.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideWithSeveralSuperDeclarations.kt"
   },
@@ -2331,8 +2330,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/kt318.kt"
   },
   "box/box/bridges/kt42137.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/kt42137.kt"
   },
@@ -2385,8 +2384,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/nestedClassTypeParameters.kt"
   },
   "box/box/bridges/noBridgeOnMutableCollectionInheritance.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "strings / templates",
+   "detail": "unknown type Collection<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/noBridgeOnMutableCollectionInheritance.kt"
   },
@@ -2445,8 +2444,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesAbstractAndConcreteDeclarations.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesTwoAbstractDeclarations.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesTwoAbstractDeclarations.kt"
   },
@@ -2469,14 +2468,14 @@
    "upstream": "compiler/testData/codegen/box/bridges/propertyAccessorsWithoutBody.kt"
   },
   "box/box/bridges/propertyDiamond.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/propertyDiamond.kt"
   },
   "box/box/bridges/propertyDiamondFakeOverride.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/propertyDiamondFakeOverride.kt"
   },
@@ -2493,8 +2492,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/propertySetter.kt"
   },
   "box/box/bridges/returnTypeSignature.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/returnTypeSignature.kt"
   },
@@ -2769,8 +2768,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test9.kt"
   },
   "box/box/bridges/traitImplInheritsTraitImpl.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/traitImplInheritsTraitImpl.kt"
   },
@@ -3083,8 +3082,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/noNameClashForReferencesToSameFunction.kt"
   },
   "box/box/callableReference/adaptedReferences/referenceToFakeOverrideWithTypeParameter.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/referenceToFakeOverrideWithTypeParameter.kt"
   },
@@ -3358,8 +3357,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/boundPrimitiveAndReferenceReceiverSharedClassSplit.kt"
   },
   "box/box/callableReference/bound/boundReferenceToOverloadedFunction.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/boundReferenceToOverloadedFunction.kt"
   },
@@ -5102,8 +5101,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToInOutTypeParameters.kt"
   },
   "box/box/classDelegation/delegationToInTypeParameter.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToInTypeParameter.kt"
   },
@@ -5114,8 +5113,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToOutTypeParameter.kt"
   },
   "box/box/classDelegation/delegationToStarProjectedType.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToStarProjectedType.kt"
   },
@@ -5132,14 +5131,14 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToTypeParameterWithRecursiveBond.kt"
   },
   "box/box/classDelegation/generic.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classDelegation/generic.kt"
   },
   "box/box/classDelegation/hiddenDelegateAndLateinitVar.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classDelegation/hiddenDelegateAndLateinitVar.kt"
   },
@@ -5291,8 +5290,8 @@
    "upstream": "compiler/testData/codegen/box/classes/delegation3.kt"
   },
   "box/box/classes/delegation4.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/delegation4.kt"
   },
@@ -5315,8 +5314,8 @@
    "upstream": "compiler/testData/codegen/box/classes/delegationGenericLongArg.kt"
   },
   "box/box/classes/delegationMethodsWithArgs.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/delegationMethodsWithArgs.kt"
   },
@@ -5455,8 +5454,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1247.kt"
   },
   "box/box/classes/kt1345.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1345.kt"
   },
@@ -5538,8 +5537,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2384.kt"
   },
   "box/box/classes/kt2390.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2390.kt"
   },
@@ -5653,8 +5652,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt343.kt"
   },
   "box/box/classes/kt3546.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt3546.kt"
   },
@@ -8445,8 +8444,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/emptyDoWhile.kt"
   },
   "box/box/controlStructures/emptyFor.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/emptyFor.kt"
   },
@@ -12665,9 +12664,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/funInTrait.kt"
   },
   "box/box/defaultArguments/function/funInTraitChain.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/funInTraitChain.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunction.kt": {
@@ -12712,15 +12710,13 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971_3.kt"
   },
   "box/box/defaultArguments/function/kt36188.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt36188.kt"
   },
   "box/box/defaultArguments/function/kt36188_2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt36188_2.kt"
   },
   "box/box/defaultArguments/function/kt5232.kt": {
@@ -12761,14 +12757,14 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/implementedByFake.kt"
   },
   "box/box/defaultArguments/implementedByFake2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/implementedByFake2.kt"
   },
   "box/box/defaultArguments/implementedByFake3.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/implementedByFake3.kt"
   },
@@ -13765,14 +13761,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/varInInnerClass.kt"
   },
   "box/box/delegation/delegatedAnonymousObject_noParametersOnDelegate.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegatedAnonymousObject_noParametersOnDelegate.kt"
   },
   "box/box/delegation/delegatedAnonymousObject_someParametersOnDelegate.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegatedAnonymousObject_someParametersOnDelegate.kt"
   },
@@ -13801,8 +13797,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationByIfExpr.kt"
   },
   "box/box/delegation/delegationByInh.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationByInh.kt"
   },
@@ -13888,8 +13884,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationToIntersectionType.kt"
   },
   "box/box/delegation/delegationToIntersectionType3.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationToIntersectionType3.kt"
   },
@@ -13912,8 +13908,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationWithPrivateConstructor.kt"
   },
   "box/box/delegation/genericFunctionInGenericInterface.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/genericFunctionInGenericInterface.kt"
   },
@@ -13947,8 +13943,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/kt44199.kt"
   },
   "box/box/delegation/kt8154.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/kt8154.kt"
   },
@@ -14533,8 +14529,8 @@
    "upstream": "compiler/testData/codegen/box/elvis/kt24209.kt"
   },
   "box/box/elvis/kt6694ExactAnnotationForElvis.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown type T?",
+   "detail": "unknown type T?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/elvis/kt6694ExactAnnotationForElvis.kt"
   },
@@ -15649,8 +15645,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/classMethodCallExtensionSuper.kt"
   },
   "box/box/extensionFunctions/defaultMethodInterfaceCallExtensionSuper.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/defaultMethodInterfaceCallExtensionSuper.kt"
   },
@@ -15701,8 +15697,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsAnonymous.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAsSupertype.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsSupertype.kt"
   },
@@ -16162,9 +16158,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/topLevelLongTypeInReceiver.kt"
   },
   "box/box/fakeOverride/diamondFunction.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fakeOverride/diamondFunction.kt"
   },
   "box/box/fakeOverride/fakeOverrideOfPrivateSetter.kt": {
@@ -16179,9 +16174,8 @@
    "upstream": "compiler/testData/codegen/box/fakeOverride/fakeOverrideWithMissingClassInSignature.kt"
   },
   "box/box/fakeOverride/function.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fakeOverride/function.kt"
   },
   "box/box/fakeOverride/internalFromFriendModule.kt": {
@@ -16207,9 +16201,8 @@
    "upstream": "compiler/testData/codegen/box/fakeOverride/kt49371.kt"
   },
   "box/box/fakeOverride/methodOfAnyFromInterface.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fakeOverride/methodOfAnyFromInterface.kt"
   },
   "box/box/fakeOverride/privateFakeOverrides0.kt": {
@@ -16223,9 +16216,8 @@
    "upstream": "compiler/testData/codegen/box/fakeOverride/privateFakeOverrides1.kt"
   },
   "box/box/fakeOverride/propertyGetter.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fakeOverride/propertyGetter.kt"
   },
   "box/box/fakeOverride/propertySetter.kt": {
@@ -16910,14 +16902,14 @@
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionType.kt"
   },
   "box/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype.kt"
   },
   "box/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype2.kt"
   },
@@ -17472,14 +17464,14 @@
    "upstream": "compiler/testData/codegen/box/functions/defaultargs7.kt"
   },
   "box/box/functions/delegatedPropertyWithMultipleOverriddens_generics.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/delegatedPropertyWithMultipleOverriddens_generics.kt"
   },
   "box/box/functions/delegatedPropertyWithMultipleOverriddens_noGenerics.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "modifiers (private/const/lateinit/...)",
+   "detail": "unexpected top-level token (at 'protected')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/delegatedPropertyWithMultipleOverriddens_noGenerics.kt"
   },
@@ -17489,9 +17481,8 @@
    "upstream": "compiler/testData/codegen/box/functions/ea33909.kt"
   },
   "box/box/functions/fakeDescriptorWithSeveralOverridenOne.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/fakeDescriptorWithSeveralOverridenOne.kt"
   },
   "box/box/functions/functionExpression/functionExpression.kt": {
@@ -18357,8 +18348,8 @@
    "upstream": "compiler/testData/codegen/box/increment/prefixNullableIncrement.kt"
   },
   "box/box/inference/approximateNonTopLevelCapturedTypes.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/approximateNonTopLevelCapturedTypes.kt"
   },
@@ -18374,14 +18365,14 @@
    "upstream": "compiler/testData/codegen/box/inference/capturedSelfInsideIntersection.kt"
   },
   "box/box/inference/capturedSelfInsideIntersection2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/capturedSelfInsideIntersection2.kt"
   },
   "box/box/inference/capturedSelfInsideIntersection3.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/capturedSelfInsideIntersection3.kt"
   },
@@ -18474,8 +18465,8 @@
    "upstream": "compiler/testData/codegen/box/inference/integerLiteralTypeInLamdaReturnType.kt"
   },
   "box/box/inference/kt10822.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/kt10822.kt"
   },
@@ -18502,9 +18493,8 @@
    "upstream": "compiler/testData/codegen/box/inference/kt39824.kt"
   },
   "box/box/inference/kt42130.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/kt42130.kt"
   },
   "box/box/inference/kt45118.kt": {
@@ -19629,8 +19619,8 @@
    "upstream": "compiler/testData/codegen/box/inference/tryCatchAtAssignment.kt"
   },
   "box/box/inference/tryCatchAtAssignmentWithSmartCast.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/tryCatchAtAssignmentWithSmartCast.kt"
   },
@@ -19658,14 +19648,14 @@
    "upstream": "compiler/testData/codegen/box/inference/whenAtAssignment.kt"
   },
   "box/box/inference/whenAtAssignmentWithSmartCast.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/whenAtAssignmentWithSmartCast.kt"
   },
   "box/box/inference/whenAtAssignmentWithSmartCastInsideCapturedLambda.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/whenAtAssignmentWithSmartCastInsideCapturedLambda.kt"
   },
@@ -20997,32 +20987,32 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/boxReturnValueInDefaultMethodGenericInt.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToAny.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToAnyGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToNullableAny.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToNullableAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToNullableAnyGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToNullableAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToNullableAnyGeneric2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToNullableAnyGeneric2.kt"
   },
@@ -21099,14 +21089,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/genericOverrideGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/genericOverrideSpecialized.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/genericOverrideSpecialized.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/genericOverrideSpecializedGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/genericOverrideSpecializedGeneric.kt"
   },
@@ -21298,26 +21288,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes1bGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2a.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2a.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2aGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2aGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2b.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2b.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2bGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/relatedReturnTypes2bGeneric.kt"
   },
@@ -21368,14 +21358,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxUnboxOfInlineClassForCapturedVarsGeneric.kt"
   },
   "box/box/inlineClasses/bridgeForFunctionReturningInlineClass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeForFunctionReturningInlineClass.kt"
   },
   "box/box/inlineClasses/bridgeForFunctionReturningInlineClassGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeForFunctionReturningInlineClassGeneric.kt"
   },
@@ -21830,14 +21820,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingAfterAssertionOperatorGeneric.kt"
   },
   "box/box/inlineClasses/checkBoxingForComplexClassHierarchy.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingForComplexClassHierarchy.kt"
   },
   "box/box/inlineClasses/checkBoxingForComplexClassHierarchyGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingForComplexClassHierarchyGeneric.kt"
   },
@@ -23396,12 +23386,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146693920\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531488\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146693984\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609822944\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23989,14 +23979,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680aGeneric.kt"
   },
   "box/box/inlineClasses/kt38680b.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680b.kt"
   },
   "box/box/inlineClasses/kt38680bGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680bGeneric.kt"
   },
@@ -24067,8 +24057,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt50974_resultMultiModule.kt"
   },
   "box/box/inlineClasses/kt51157.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt51157.kt"
   },
@@ -25923,8 +25913,8 @@
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/diamond.kt"
   },
   "box/box/interfaceCallsNCasts/finalMethod.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/finalMethod.kt"
   },
@@ -25935,8 +25925,8 @@
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/interface0.kt"
   },
   "box/box/interfaceCallsNCasts/kt83308.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "class bodies / constructors",
+   "detail": "unexpected top-level token (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/kt83308.kt"
   },
@@ -26051,7 +26041,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x100f6851f        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10104a4e3        kfun:newkotlin.Parser.prefix#internal + 7535 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x10447051f        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x104554bb7        kfun:newkotlin.Parser.prefix#internal + 7535 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -29683,8 +29673,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/augmentedAssignmentWithArrayLHS.kt"
   },
   "box/box/operatorConventions/compareTo/comparable.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/comparable.kt"
   },
@@ -36473,8 +36463,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/lambdaWrongReturnType.kt"
   },
   "box/box/regressions/noAssertionsWhenNullableTypeParameterReplacedWithIntersectionType.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/noAssertionsWhenNullableTypeParameterReplacedWithIntersectionType.kt"
   },
@@ -36525,8 +36515,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/resolvedCallForGetOperator.kt"
   },
   "box/box/regressions/supertypeDepth.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/supertypeDepth.kt"
   },
@@ -36898,8 +36888,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt4733.kt"
   },
   "box/box/safeCall/kt52580.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown method Base.run()",
+   "detail": "unknown method Base.run()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/kt52580.kt"
   },
@@ -36980,8 +36970,8 @@
    "upstream": "compiler/testData/codegen/box/sam/approximation/impossibleToApproxToRepresentable.kt"
   },
   "box/box/sam/approximation/impossibleToApproxToRepresentable2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/impossibleToApproxToRepresentable2.kt"
   },
@@ -37581,8 +37571,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/multipleSmartCast.kt"
   },
   "box/box/smartCasts/negativesmartCastAugmentedAssignment.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/negativesmartCastAugmentedAssignment.kt"
   },
@@ -38200,8 +38190,8 @@
    "upstream": "compiler/testData/codegen/box/super/diamondWithGenericReturnType.kt"
   },
   "box/box/super/enclosedFun.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/enclosedFun.kt"
   },
@@ -38212,14 +38202,14 @@
    "upstream": "compiler/testData/codegen/box/super/enclosedVar.kt"
   },
   "box/box/super/innerClassLabeledSuper.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuper.kt"
   },
   "box/box/super/innerClassLabeledSuper2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuper2.kt"
   },
@@ -38332,8 +38322,8 @@
    "upstream": "compiler/testData/codegen/box/super/multipleSuperTraits.kt"
   },
   "box/box/super/superCallToNonGenericImplThroughGenericDefaultImpls.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superCallToNonGenericImplThroughGenericDefaultImpls.kt"
   },
@@ -38380,14 +38370,14 @@
    "upstream": "compiler/testData/codegen/box/super/traitproperty.kt"
   },
   "box/box/super/unqualifiedSuper.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/unqualifiedSuper.kt"
   },
   "box/box/super/unqualifiedSuperWithDeeperHierarchies.kt": {
    "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "detail": "unknown name 'super'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/unqualifiedSuperWithDeeperHierarchies.kt"
   },
@@ -38845,7 +38835,7 @@
   },
   "box/box/traits/doubleDiamond.kt": {
    "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/doubleDiamond.kt"
   },
@@ -38861,9 +38851,8 @@
    "upstream": "compiler/testData/codegen/box/traits/genericMethod.kt"
   },
   "box/box/traits/indirectlyInheritPropertyGetter.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/indirectlyInheritPropertyGetter.kt"
   },
   "box/box/traits/inheritedFun.kt": {
@@ -38908,8 +38897,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt2260.kt"
   },
   "box/box/traits/kt2399.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt2399.kt"
   },
@@ -38926,8 +38915,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt3315.kt"
   },
   "box/box/traits/kt3500.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt3500.kt"
   },
@@ -38950,7 +38939,7 @@
   },
   "box/box/traits/kt5393.kt": {
    "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "detail": "unknown name 'super'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt5393.kt"
   },
@@ -38961,8 +38950,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt5393_property.kt"
   },
   "box/box/traits/multiple.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/multiple.kt"
   },
@@ -38973,9 +38962,8 @@
    "upstream": "compiler/testData/codegen/box/traits/privateInterfaceMethod.kt"
   },
   "box/box/traits/receiverOfIntersectionType.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/receiverOfIntersectionType.kt"
   },
   "box/box/traits/sameNameMethodFromInterface.kt": {
@@ -38991,8 +38979,8 @@
    "upstream": "compiler/testData/codegen/box/traits/syntheticAccessor.kt"
   },
   "box/box/traits/traitImplDelegationWithCovariantOverride.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown type Number",
+   "detail": "unknown type Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/traitImplDelegationWithCovariantOverride.kt"
   },
@@ -39411,8 +39399,8 @@
    "upstream": "compiler/testData/codegen/box/typeMapping/nullableNothing.kt"
   },
   "box/box/typealias/abbreviationWithCapturedType.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/abbreviationWithCapturedType.kt"
   },
@@ -39671,7 +39659,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup__0_fuvt/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup__0_fuvt/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup56r63hxl/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup56r63hxl/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -45490,7 +45478,7 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuphj7wnrio/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuphj7wnrio/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup183ome9_/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup183ome9_/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },

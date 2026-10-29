@@ -159,6 +159,7 @@ class Parser(private val t: List<Tok>) {
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
         resolveNested(funs, classes, ifaces, globals)
         resolveExtensions(funs, classes)
+        flattenIfaces(classes, ifaces)
         implementIfaceProps(classes, ifaces)
         // Creating an instance of a class initializes its companion object first.
         for (i in classes.indices) {
@@ -283,6 +284,40 @@ class Parser(private val t: List<Tok>) {
      * A class implementing an interface property with a stored property (own or inherited) gets the getter
      * `$prop$name() = name`, so calls through the interface dispatch to the field.
      */
+    /** Interface name -> directly declared super-interfaces. */
+    private val ifaceSupers = HashMap<String, List<String>>()
+
+    /**
+     * Interface inheritance: each interface gets its ancestors' methods and defaults (unless redeclared) and records
+     * all ancestors; classes implementing an interface also implement its ancestors.
+     */
+    private fun flattenIfaces(classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>) {
+        if (ifaceSupers.isEmpty()) return
+        val byName = ifaces.associateBy { it.name }
+        fun anc(n: String, seen: MutableSet<String> = LinkedHashSet()): Set<String> {
+            for (s in ifaceSupers[n].orEmpty()) { if (s !in byName) fail("unknown interface $s"); if (seen.add(s)) anc(s, seen) }
+            return seen
+        }
+        val ancestors = ifaces.associate { it.name to anc(it.name).toList() }
+        for (i in ifaces.indices) {
+            val d = ifaces[i]; val a = ancestors.getValue(d.name)
+            if (a.isEmpty()) continue
+            val ms = ArrayList(d.methods)
+            val defs = ArrayList(ifaceDefaults[d.name].orEmpty())
+            for (s in a) {
+                for (m in byName.getValue(s).methods) if (ms.none { it.name == m.name }) ms.add(m)
+                for (m in ifaceDefaults[s].orEmpty()) if (defs.none { it.name == m.name } && d.methods.none { it.name == m.name }) defs.add(m)
+            }
+            if (defs.isNotEmpty()) ifaceDefaults[d.name] = defs
+            ifaces[i] = InterfaceD(d.name, ms, d.line, d.typeParams, a)
+        }
+        for (i in classes.indices) {
+            val c = classes[i]
+            val extra = c.supers.flatMap { ancestors[it].orEmpty() }.filter { it !in c.supers }.distinct()
+            if (extra.isNotEmpty()) classes[i] = ClassD(c.name, c.fields, c.supers + extra, c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
+        }
+    }
+
     /** Interface name -> its default method bodies. */
     private val ifaceDefaults = HashMap<String, List<FunD>>()
 
@@ -409,7 +444,7 @@ class Parser(private val t: List<Tok>) {
             })
             return sub
         }
-        for (i in ifaces.indices) ifaces[i] = ifaces[i].let { d -> InterfaceD(d.name, d.methods.map { keepRecv(rewriter(null, it).fn(it), it) }, d.line, d.typeParams) }
+        for (i in ifaces.indices) ifaces[i] = ifaces[i].let { d -> InterfaceD(d.name, d.methods.map { keepRecv(rewriter(null, it).fn(it), it) }, d.line, d.typeParams, d.supers) }
         for (i in globals.indices) globals[i] = rewriter(null, null).s(globals[i]) as VarS
         for (i in funs.indices) funs[i] = keepRecv(rewriter(null, funs[i]).fn(funs[i]), funs[i])
         for (i in classes.indices) {
@@ -443,6 +478,17 @@ class Parser(private val t: List<Tok>) {
         val line = next().line
         val name = ident()
         val tps = typeParams()
+        if (isOp(":")) {
+            next()
+            val ss = ArrayList<String>()
+            while (true) {
+                val st = type()
+                if (st.args.isNotEmpty()) fail("generic super-interfaces are not supported")
+                ss.add(st.name)
+                if (isOp(",")) next() else break
+            }
+            ifaceSupers[name] = ss
+        }
         val ms = if (isOp("{")) members() else emptyList()
         val defs = ms.filter { it.body != null || it.exprBody != null }
         if (defs.isNotEmpty() && tps.isNotEmpty()) fail("default interface methods are not supported")

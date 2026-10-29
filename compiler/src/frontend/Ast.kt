@@ -86,7 +86,8 @@ class ClassD(val name: String, val fields: List<FieldD>, val supers: List<String
     /** Needs a constructor function (plain parameters, initializers or a superclass), not just field stores. */
     val hasCtorBody get() = inits.isNotEmpty() || ctorParams.size != fields.size || superArgs != null
 }
-class InterfaceD(val name: String, val methods: List<FunD>, val line: Int, val typeParams: List<String> = emptyList())
+class InterfaceD(val name: String, val methods: List<FunD>, val line: Int, val typeParams: List<String> = emptyList(),
+                 /** All super-interfaces (transitively), filled by the parser. */ val supers: List<String> = emptyList())
 /** `globals`: top-level properties, initialized in declaration order before `main`. */
 class Program(val funs: List<FunD>, val classes: List<ClassD>, val ifaces: List<InterfaceD>, val globals: List<VarS> = emptyList(),
               /** Class name -> (companion object name, names the companion object declares, incl. its own name). */
