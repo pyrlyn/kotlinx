@@ -203,16 +203,23 @@ void rt_list_add(List *l, int64_t v) {
     if (l->len == l->cap) { l->cap = l->cap ? l->cap * 2 : 10; l->data = rt_gc_mem_realloc(l->data, (size_t)l->cap * 8); }
     l->data[l->len++] = v;
 }
-static void bounds(List *l, int64_t i) {
-    if (i < 0 || i >= l->len) {
-        fflush(stdout);
-        fprintf(stderr, "Exception in thread \"main\" java.lang.IndexOutOfBoundsException: Index %" PRId64 " out of bounds for length %" PRId64 "\n", i, l->len);
-        exit(1);
-    }
+/* Out-of-line, cold error path of the bounds check: keeps the hot accessors below tiny. */
+__attribute__((noinline, cold, noreturn)) static void bounds_fail(List *l, int64_t i) {
+    fflush(stdout);
+    fprintf(stderr, "Exception in thread \"main\" java.lang.IndexOutOfBoundsException: Index %" PRId64 " out of bounds for length %" PRId64 "\n", i, l->len);
+    exit(1);
 }
-int64_t rt_list_get(List *l, int64_t i) { bounds(l, i); return l->data[i]; }
-int64_t rt_list_set(List *l, int64_t i, int64_t v) { bounds(l, i); int64_t o = l->data[i]; l->data[i] = v; return o; }
-int64_t rt_list_size(List *l) { return l->len; }
+static inline void bounds(List *l, int64_t i) {
+    /* One unsigned compare covers i < 0 and i >= len. */
+    if (__builtin_expect((uint64_t)i >= (uint64_t)l->len, 0)) bounds_fail(l, i);
+}
+/* Hot accessors (called from inner loops, e.g. bench refpass): aligned to a 64-byte cache line so that
+ * their placement does not depend on the size of unrelated runtime/GC code in front of them
+ * (PR #3 shifted rt_list_get across a cache-line boundary: refpass 131.6 -> 145 ms). */
+#define RT_HOT __attribute__((hot, aligned(64)))
+RT_HOT int64_t rt_list_get(List *l, int64_t i) { bounds(l, i); return l->data[i]; }
+RT_HOT int64_t rt_list_set(List *l, int64_t i, int64_t v) { bounds(l, i); int64_t o = l->data[i]; l->data[i] = v; return o; }
+RT_HOT int64_t rt_list_size(List *l) { return l->len; }
 /* Removes and returns element i; ownership of a reference element moves to the caller. */
 int64_t rt_list_remove_at(List *l, int64_t i) {
     bounds(l, i); int64_t o = l->data[i];
