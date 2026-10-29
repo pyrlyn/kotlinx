@@ -42,6 +42,11 @@ void rt_free_trace(void *p, int64_t size);    /* possibly cyclic object whose co
 void rt_cc_possible_root(void *p);            /* traced object decremented to a non-zero count */
 void rt_cc_dead(void *p);                     /* traced object at zero count, fields already released */
 
+// ---- deferred RC (only called by code generated for GCs with the "deferred" capability, e.g. epoch) ----
+void rt_gc_log_inc(void *p);                  /* retain of a traced object */
+void rt_gc_log_dec(void *p);                  /* release of a traced object */
+void rt_gc_write_barrier(void *obj);          /* after a reference store into a field of traced obj */
+
 // ---- runtime memory that may hold object references (ArrayList storage, HashMap values, arrays) ----
 void *rt_gc_mem_alloc(size_t n);
 void *rt_gc_mem_calloc(size_t n);             /* zeroed */
