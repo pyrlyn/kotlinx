@@ -3,3 +3,5 @@
 # 21 matches Apple clang (macOS default), latest matches conda:clang.
 "conda:llvm-tools" = ["21", "latest"]
 "conda:clang" = "latest"
+# bdwgc (Boehm GC) for newkotlinc --gc=boehm (compiler/gc/boehm).
+"conda:bdw-gc" = "8.2.12"
