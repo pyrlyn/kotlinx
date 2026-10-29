@@ -11,7 +11,8 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --emit-llvm          also keep <output>.ll
   --cc <clang>         C compiler/linker (default: clang)
   --cflags "<flags>"   optimization flags for clang (default: -O3 -flto)
-  --opt <path>         LLVM opt run on the IR before linking (-passes='default<O3>'); default: ${'$'}NK_OPT,
+  --opt <path>         LLVM opt run on the IR before linking (lto-pre-link<O3> with -flto, else default<O3>);
+                       default: ${'$'}NK_OPT,
                        opt on PATH, then `xcrun --find opt`
   --no-opt             skip the opt step (clang -O3 -flto still optimizes)
   --leak-check         count live runtime objects; report at exit, exit 3 on a leak
@@ -122,7 +123,10 @@ fun main(args: Array<String>) {
             exit(1); return
         }
         linkLl = "$output.opt.ll"
-        val ocmd = "'$opt' -passes='default<O3>' -S '$ll' -o '$linkLl'"
+        // With LTO the link step runs the full O3 pipeline once; opt then runs the matching LTO pre-link pipeline
+        // (a standalone default<O3> before LTO optimizes twice and was up to 2x slower on closures/dispatch/matmul).
+        val pipeline = if ("-flto" in cflags) "lto-pre-link<O3>" else "default<O3>"
+        val ocmd = "'$opt' -passes='$pipeline' -S '$ll' -o '$linkLl'"
         val orc = system(ocmd)
         if (orc != 0) { if (!emitLl) remove(ll); remove(linkLl); fprintf(stderr, "opt failed (%d): %s\n", orc, ocmd); exit(1); return }
     }

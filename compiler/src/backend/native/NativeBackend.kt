@@ -1052,13 +1052,34 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val idx = declare(s.name, t, false, false)
             emit("store ${t.llvm} ${lo.v}, ptr ${idx.slot}")
             val cmp = (if (uns) "u" else "s") + when (rng.op) { ".." -> "le"; "until" -> "lt"; else -> "ge" }
-            condBr(emitT("icmp $cmp ${t.llvm} ${lo.v}, ${hi.v}"), lb, le)
+            val topTested = stepV == "1" && rng.op == "until"
+            if (topTested) {
+                // `lo until hi`: classic top-tested counted loop (what LLVM's loop passes and vectorizer expect).
+                startBlock(lc)
+                condBr(emitT("icmp $cmp ${t.llvm} ${emitT("load ${t.llvm}, ptr ${idx.slot}")}, ${hi.v}"), lb, le)
+            } else condBr(emitT("icmp $cmp ${t.llvm} ${lo.v}, ${hi.v}"), lb, le)
             // Inclusive last bound (lo < hi holds for `until` here, so hi - 1 cannot overflow).
             startBlock(lb)
             pushLoop(Triple(ls, le, scopes.size))
             genBlockBody(s.body, false)
             popLoop()
             startBlock(ls)
+            if (stepV == "1") {
+                // Unit step: canonical counted loop. The index stays within [lo, hi] before the step, so the
+                // increment cannot overflow (nsw), which lets LLVM widen the index and vectorize.
+                val i2 = emitT("load ${t.llvm}, ptr ${idx.slot}")
+                val inc = label("for.inc")
+                if (topTested) {
+                    emit("store ${t.llvm} ${emitT("add ${if (uns) "nuw" else "nsw"} ${t.llvm} $i2, 1")}, ptr ${idx.slot}")
+                    br(lc)
+                    startBlock(le)
+                } else {
+                    condBr(emitT("icmp eq ${t.llvm} $i2, ${hi.v}"), le, inc)
+                    startBlock(inc); emit("store ${t.llvm} ${emitT("${if (down) "sub" else "add"} ${if (uns) "nuw" else "nsw"} ${t.llvm} $i2, 1")}, ptr ${idx.slot}")
+                    br(lb)
+                    startBlock(le)
+                }
+            } else {
             val last = if (rng.op == "until") emitT("sub ${t.llvm} ${hi.v}, 1") else hi.v
             val i2 = emitT("load ${t.llvm}, ptr ${idx.slot}")
             // Remaining distance to the bound (unsigned: never overflows); stop if the next step passes it.
@@ -1070,6 +1091,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             emit("store ${t.llvm} ${emitT("${if (down) "sub" else "add"} ${t.llvm} $i2, $stepV")}, ptr ${idx.slot}")
             br(lb)
             startBlock(le)
+            }
         } else {
             val coll = genExpr(it)
             if (progKind(coll.t) != null) { iterProg(coll, s); scopes.removeAt(scopes.size - 1); return }
