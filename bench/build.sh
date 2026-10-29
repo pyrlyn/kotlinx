@@ -1,19 +1,20 @@
 #!/bin/bash
 # Builds every case for all rows. Outputs are git-ignored.
 #   ./build.sh [case...]      default: all cases (sum + cases/*)
-#   ONLY=newkotlin ./build.sh  only the New Kotlin rows
+#   ONLY=newkotlin ./build.sh  only the Kotlin-X compiler rows
 # Flag levels (equal-conditions policy: -O3-equivalent everywhere, no -march/-mcpu=native for anyone):
 #   Rust          rustc -C opt-level=3 -C codegen-units=1
 #   Zig           -OReleaseFast
 #   Kotlin Native kotlinc-native -opt
-#   New Kotlin    newkotlinc (clang -O3 -flto), system malloc; kllvm/<case>.pool = --alloc pool
+#   Kotlin-X compiler    newkotlinc (clang -O3 -flto), system malloc; kllvm/<case>.pool = --alloc pool
 set -e
 cd "$(dirname "$0")"
+export NEWKOTLIN_RUNTIME=${NEWKOTLIN_RUNTIME:-$PWD/../compiler/runtime/runtime.c}
 KN=${KONANC:-$HOME/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.21/bin/kotlinc-native}
 ALL_CASES="sum $(ls cases | tr '\n' ' ')"
 CASES=${*:-$ALL_CASES}
-KLLVM_COMPILER=${KLLVM_COMPILER:-compiler/build/newkotlinc.kexe}
-if [ "$KLLVM_COMPILER" = compiler/build/newkotlinc.kexe ] && [ ! -x "$KLLVM_COMPILER" ]; then compiler/build.sh; fi
+KLLVM_COMPILER=${KLLVM_COMPILER:-../compiler/build/newkotlinc.kexe}
+if [ "$KLLVM_COMPILER" = ../compiler/build/newkotlinc.kexe ] && [ ! -x "$KLLVM_COMPILER" ]; then ../compiler/build.sh; fi
 mkdir -p kllvm
 [ -f data/words.txt ] || python3 gen_data.py
 src_dir() { if [ "$1" = sum ]; then echo .; else echo cases/$1; fi; }

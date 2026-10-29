@@ -1,0 +1,12 @@
+#!/bin/bash
+# Kotlin-X compiler launcher: builds compiler/build/newkotlinc.kexe on first use, then runs it.
+# Usage: bin/newkotlinc Main.kt -o main && ./main
+root="$(cd "$(dirname "$0")/.." && pwd)"
+exe="$root/compiler/build/newkotlinc.kexe"
+[ -x "$exe" ] || "$root/compiler/build.sh" >&2 || exit 1
+export NEWKOTLIN_RUNTIME="${NEWKOTLIN_RUNTIME:-$root/compiler/runtime/runtime.c}"
+# Use the opt pinned by the repo mise.toml (a mise shim outside the repo has no version set).
+if [ -z "${NK_OPT:-}" ] && command -v mise >/dev/null; then
+  o=$(cd "$root" && mise which opt 2>/dev/null) && export NK_OPT="$o"
+fi
+exec "$exe" "$@"

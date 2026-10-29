@@ -4,7 +4,7 @@ import collections, json, os
 HERE = os.path.dirname(os.path.abspath(__file__))
 m = json.load(open(os.path.join(HERE, "manifest.json")))
 t = m["tests"]
-L = [f"# Upstream Kotlin tests on New Kotlin\n", f"Upstream: {m['repo']} @ `{m['commit']}`  ",
+L = [f"# Upstream Kotlin tests on Kotlin-X compiler\n", f"Upstream: {m['repo']} @ `{m['commit']}`  ",
      f"Sources: {', '.join(m['sources'])}\n", "## Counts\n", "| status | tests |", "|---|---|"]
 for k, v in sorted(m["counts"].items(), key=lambda x: -x[1]):
     L.append(f"| {k} | {v} |")
@@ -23,7 +23,7 @@ L += ["", "Scope: Native target only. Excluded by path (not copied, not counted)
       "All kept tests are byte-for-byte copies of upstream; no test is adapted or patched.\n",
       "Mechanism: per-backend path lists in our harness: `exclude-jvm.txt`, `exclude-js.txt`, `exclude-wasm.txt` "
       "(directories ending in `/` or single files, relative to the upstream repo; a future backend of that kind would not apply its own list). "
-      "Test files are never edited. Tests that New Kotlin's harness cannot run as-is (directives such as "
+      "Test files are never edited. Tests that Kotlin-X compiler's harness cannot run as-is (directives such as "
       "`IGNORE_BACKEND: NATIVE`, multi-file/module, reflection, coroutines) are still counted, as N/A, by `run.py`.\n"]
 L += ["", "## Bugs (MISCOMPILE / COMPILER_CRASH)\n", "Minimal repros in `bugs/`:\n"]
 for f in sorted(os.listdir(os.path.join(HERE, "bugs"))):

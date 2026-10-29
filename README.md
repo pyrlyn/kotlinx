@@ -1,8 +1,46 @@
-# mini-bench
+# Kotlin-X
 
-Rust / Zig / Kotlin Native / New Kotlin benchmarks. Status and full results: `STATUS.md`, `table.md`.
+Kotlin-X compiler: a Kotlin -> LLVM native compiler (`newkotlinc`), written in Kotlin (Kotlin/Native),
+with a Perceus-style reference-counting runtime. Moved from `listepo/mini-bench` with history.
 
-## New Kotlin allocator
+- `compiler/`: the Kotlin-X compiler (sources, C runtime, tests, upstream Kotlin tests).
+- `bench/`: all benchmarks (Rust / Zig / Kotlin Native / Kotlin-X compiler), scripts and committed results.
+- `bin/newkotlinc`: launcher (builds the compiler on first use).
+
+## Requirements (macOS)
+
+Kotlin/Native `kotlinc-native` 2.4.21 on PATH, Xcode clang, `brew install mimalloc`, and `mise install`
+in the repo root (LLVM `opt` from `mise.toml`).
+
+## Build and run
+
+```
+./build.sh                                   # -> compiler/build/newkotlinc.kexe
+printf 'fun main() {\n    println("Hello from Kotlin-X")\n}\n' > /tmp/hello.kt
+bin/newkotlinc /tmp/hello.kt -o /tmp/hello   # works from any directory
+/tmp/hello                                   # Hello from Kotlin-X
+```
+
+## Tests
+
+```
+compiler/test.sh                             # golden tests, benchmark checksums, leak tests
+python3 compiler/tests/upstream/run.py       # kept upstream Kotlin tests (unmodified)
+```
+
+## Benchmarks
+
+```
+cd bench
+./build.sh && ./round.sh && RESULTS=results/round ./summarize.sh   # all languages
+ONLY=newkotlin ./build.sh && ./run.sh && ./summarize.sh            # Kotlin-X compiler rows only
+./nkbench.sh mytest                                                 # -> bench/results/nk/mytest.txt
+```
+
+See `STATUS.md` and `bench/table.md`.
+
+
+## Allocator and LLVM opt
 
 `newkotlinc` links [mimalloc](https://github.com/microsoft/mimalloc) by default (`--alloc mimalloc`).
 The library directory is taken from `$NEWKOTLIN_MIMALLOC_DIR`, then `pkg-config --variable=libdir mimalloc`,
@@ -24,11 +62,13 @@ If none is found, compilation fails with an error.
 - `--alloc malloc`: system malloc/free (used for ASan and macOS `leaks` in `compiler/tests/leaks/run.sh`).
 - `--alloc pool`: built-in free-list pool.
 
-## Benchmark tooling
+## Benchmark tooling (`bench/`)
+
+Run from `bench/` (`cd bench`); the scripts use the in-repo compiler (`../compiler`).
 
 All scripts: warm-up + 5 runs per case, mean of the middle 3, in ms.
 
-- `./nkbench.sh <name> [git-ref]`: New Kotlin on every case → `results/nk/<name>.txt`.
+- `./nkbench.sh <name> [git-ref]`: Kotlin-X compiler on every case → `results/nk/<name>.txt`.
   With a ref (for example `main`) the compiler is built from that ref; without one, the working tree is used.
   `NKFLAGS="--alloc malloc" ./nkbench.sh sys` passes extra compiler flags.
 - `./allocbench.sh [name]`: system malloc vs jemalloc vs mimalloc, plus Kotlin Native (`bench_kn.kexe`
@@ -37,7 +77,7 @@ All scripts: warm-up + 5 runs per case, mean of the middle 3, in ms.
 - `compiler/ab.sh [ref]`: working tree vs a ref, ratio per case.
 
 Results kept in the repo:
-- `results/baseline-old-newkotlin.txt`: "old NewKotlin" baseline (main, malloc).
-- `results/alloc/sys-je-mi-2026-10-28.txt`: allocator comparison (system / jemalloc / mimalloc).
-- `results/alloc/mimalloc-default.txt`, `results/nk/baseline-main-session.txt`: mimalloc-default run with
+- `bench/results/baseline-old-newkotlin.txt`: "old NewKotlin" baseline (main, malloc).
+- `bench/results/alloc/sys-je-mi-2026-10-28.txt`: allocator comparison (system / jemalloc / mimalloc).
+- `bench/results/alloc/mimalloc-default.txt`, `results/nk/baseline-main-session.txt`: mimalloc-default run with
   K/N and the main baseline in the same session.

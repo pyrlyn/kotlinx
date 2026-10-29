@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds the New Kotlin compiler (newkotlinc) with Kotlin/Native into compiler/build/ (debug build;
+# Builds the Kotlin-X compiler (newkotlinc) with Kotlin/Native into compiler/build/ (debug build;
 # set NEWKOTLIN_KN_FLAGS=-opt for an optimized compiler binary).
 set -e
 cd "$(dirname "$0")"

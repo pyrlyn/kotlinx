@@ -1,14 +1,14 @@
 // lru: a real-world cyclic structure - an LRU cache (doubly linked list prev<->next + key index).
 // Capacity 50k entries, keys 0..200k (skewed LCG stream), 3M get-or-load ops; each entry owns a heap value.
 // Every live neighbour pair is a prev<->next cycle; evicted entries and the final list are cyclic garbage.
-// Kotlin Native: tracing GC; New Kotlin: RC + cycle collector; Rust: Rc/Weak; Zig: allocator create/destroy.
+// Kotlin Native: tracing GC; Kotlin-X compiler: RC + cycle collector; Rust: Rc/Weak; Zig: allocator create/destroy.
 @file:OptIn(kotlin.experimental.ExperimentalNativeApi::class)
 @file:Suppress("DEPRECATION_ERROR")
 
 class Value(val v: Long)
 class Entry(val key: Int, val value: Value, var prev: Entry?, var next: Entry?)
 
-// (New Kotlin subset: class state lives in constructor properties; index is an ArrayList<Entry?>.)
+// (Kotlin-X compiler subset: class state lives in constructor properties; index is an ArrayList<Entry?>.)
 class Lru(val capacity: Int, val index: ArrayList<Entry?>, var head: Entry?, var tail: Entry?, var size: Int) {
 
     fun unlink(e: Entry) {

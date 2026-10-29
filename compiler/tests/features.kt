@@ -1,4 +1,4 @@
-// Feature coverage for the New Kotlin subset; expected output in features.out.
+// Feature coverage for the Kotlin-X compiler subset; expected output in features.out.
 class Node(val value: Long, var next: Node?)
 class Box(var items: ArrayList<Long>, var label: String)
 

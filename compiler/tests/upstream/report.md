@@ -1,4 +1,4 @@
-# Upstream Kotlin tests on New Kotlin
+# Upstream Kotlin tests on Kotlin-X compiler
 
 Upstream: https://github.com/JetBrains/kotlin @ `19c36e179da4ff601be5043468aefb63dcb1f201`  
 Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, native/native.tests/testData, kotlin-native/backend.native/tests
@@ -78,7 +78,7 @@ Targets: only `--target=native` exists. Any remaining test whose `TARGET_BACKEND
 
 All kept tests are byte-for-byte copies of upstream; no test is adapted or patched.
 
-Mechanism: per-backend path lists in our harness: `exclude-jvm.txt`, `exclude-js.txt`, `exclude-wasm.txt` (directories ending in `/` or single files, relative to the upstream repo; a future backend of that kind would not apply its own list). Test files are never edited. Tests that New Kotlin's harness cannot run as-is (directives such as `IGNORE_BACKEND: NATIVE`, multi-file/module, reflection, coroutines) are still counted, as N/A, by `run.py`.
+Mechanism: per-backend path lists in our harness: `exclude-jvm.txt`, `exclude-js.txt`, `exclude-wasm.txt` (directories ending in `/` or single files, relative to the upstream repo; a future backend of that kind would not apply its own list). Test files are never edited. Tests that Kotlin-X compiler's harness cannot run as-is (directives such as `IGNORE_BACKEND: NATIVE`, multi-file/module, reflection, coroutines) are still counted, as N/A, by `run.py`.
 
 
 ## Bugs (MISCOMPILE / COMPILER_CRASH)

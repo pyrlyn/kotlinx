@@ -1,5 +1,5 @@
 #!/bin/bash
-# New Kotlin output under explicit LLVM pipelines vs Kotlin Native, nkbench.sh method (same cases,
+# Kotlin-X compiler output under explicit LLVM pipelines vs Kotlin Native, nkbench.sh method (same cases,
 # warm-up + N runs), reporting the median in ms.
 #   LLVM_BIN=<dir with opt/llc/llvm-link/clang> tools/optbench.sh [runs]  -> results/optbench/<config>.txt
 # Configs (IR = newkotlinc -S output + runtime.c as unoptimized IR (clang -O3 -Xclang -disable-llvm-passes: TBAA kept, no passes run), merged with llvm-link):
@@ -11,10 +11,11 @@
 # Needs an LLVM built with MLGO release models for 'mlgo' (see PR description). Link: system clang + mimalloc.
 set -eu
 cd "$(dirname "$0")/.."
+export NEWKOTLIN_RUNTIME=${NEWKOTLIN_RUNTIME:-$PWD/../compiler/runtime/runtime.c}
 L=${LLVM_BIN:?set LLVM_BIN}; RUNS=${1:-7}
-NKC=compiler/build/newkotlinc.kexe; RT=compiler/runtime/runtime.c
+NKC=../compiler/build/newkotlinc.kexe; RT=../compiler/runtime/runtime.c
 MI=${NEWKOTLIN_MIMALLOC_DIR:-/opt/homebrew/opt/mimalloc/lib}
-W=compiler/build/optbench; mkdir -p $W results/optbench
+W=../compiler/build/optbench; mkdir -p $W results/optbench
 [ -f data/words.txt ] || python3 gen_data.py >/dev/null
 "$L/clang" -isysroot "$(xcrun --show-sdk-path)" -O3 -Xclang -disable-llvm-passes -emit-llvm -S "$RT" -o $W/runtime.ll
 med() { python3 -c "import statistics,sys; v=list(map(int,sys.argv[1:])); print(round(statistics.median(v)/1e6,3))" "$@"; }

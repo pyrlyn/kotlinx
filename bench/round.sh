@@ -5,6 +5,7 @@
 # CPU % = (user+sys)/wall over N back-to-back launches per row (N chosen per case so a batch takes
 # ~2 s, 5 <= N <= 200), repeated 5x, also round-robin.
 cd "$(dirname "$0")"
+export NEWKOTLIN_RUNTIME=${NEWKOTLIN_RUNTIME:-$PWD/../compiler/runtime/runtime.c}
 OUT=${OUT:-results/round}
 mkdir -p "$OUT"
 CASES=${*:-sum $(ls cases | tr '\n' ' ')}

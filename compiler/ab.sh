@@ -1,5 +1,5 @@
 #!/bin/bash
-# Native no-regression check: New Kotlin built from a git ref (default: main) vs the working tree.
+# Native no-regression check: Kotlin-X compiler built from a git ref (default: main) vs the working tree.
 # Compiles all benchmark cases with both compilers (default flags, malloc), runs them interleaved
 # (A, B, A, B, ...) 5 times after a warm-up, and prints the mean of the middle 3 (ns) and the B/A ratio.
 set -u
@@ -10,12 +10,12 @@ old=compiler/build/ab-ref; mkdir -p "$old" compiler/build/ab
 git archive "$REF" compiler | tar -x -C "$old"
 (cd "$old/compiler" && ./build.sh >/dev/null 2>&1) || { echo "cannot build $REF"; exit 1; }
 A=$old/compiler/build/newkotlinc.kexe
-[ -f data/words.txt ] || python3 gen_data.py >/dev/null
-cat data/words.txt > /dev/null
+export BENCH_DATA=bench/data/words.txt; [ -f bench/data/words.txt ] || python3 bench/gen_data.py >/dev/null
+cat bench/data/words.txt > /dev/null
 echo "load: $(sysctl -n vm.loadavg)"
 printf "| case | %s, ns | working tree, ns | ratio |\n|---|---|---|---|\n" "$REF"
 for c in sum alloc recursion file strings hashmap sort nbody matmul dispatch closures; do
-  src=cases/$c/kotlin/Main.kt; [ $c = sum ] && src=kotlin/Main.kt
+  src=bench/cases/$c/kotlin/Main.kt; [ $c = sum ] && src=bench/kotlin/Main.kt
   "$A" --runtime "$old/compiler/runtime/runtime.c" "$src" -o compiler/build/ab/$c.a || exit 1
   "$B" "$src" -o compiler/build/ab/$c.b || exit 1
   compiler/build/ab/$c.a >/dev/null; compiler/build/ab/$c.b >/dev/null

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run upstream Kotlin tests (compiler/tests/upstream/{box,native}) on New Kotlin.
+"""Run upstream Kotlin tests (compiler/tests/upstream/{box,native}) on Kotlin-X compiler.
 
 Modes:
   box     file defines `fun box(): String`; a driver `fun main() { println(box()) }` is appended,
@@ -19,7 +19,7 @@ RUNTIME = os.path.join(REPO, "compiler", "runtime", "runtime.c")
 TMP = os.path.join(REPO, "compiler", "build", "upstream-tmp")
 DRIVER = "\nfun main() { println(box()) }\n"
 
-# Directives that make a test not applicable to New Kotlin (a native, no-reflection, no-coroutines target).
+# Directives that make a test not applicable to Kotlin-X compiler (a native, no-reflection, no-coroutines target).
 NA_PATTERNS = [
     (r"^//\s*TARGET_BACKEND:\s*(?!.*\bNATIVE\b)", "TARGET_BACKEND non-native"),
     (r"^//\s*(IGNORE_BACKEND|IGNORE_BACKEND_K2|IGNORE_NATIVE|DONT_TARGET_EXACT_BACKEND)\S*:.*\b(NATIVE|ANY)\b", "IGNORE_BACKEND NATIVE/ANY"),

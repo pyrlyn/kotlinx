@@ -1,18 +1,19 @@
 #!/bin/bash
-# Allocator comparison for New Kotlin: system malloc vs jemalloc (optional) vs mimalloc, plus
+# Allocator comparison for Kotlin-X compiler: system malloc vs jemalloc (optional) vs mimalloc, plus
 # Kotlin Native (prebuilt bench_kn.kexe from ./build.sh, if present) in the same session.
 # Every case: warm-up + 5 runs per variant, interleaved, mean of the middle 3, in ms.
 #   ./allocbench.sh [name]   -> results/alloc/<name>.txt  ("case variant ms checksum" per line)
 # jemalloc is used if found at $JEMALLOC_DIR or $(brew --prefix jemalloc)/lib; otherwise skipped.
 set -eu
 cd "$(dirname "$0")"
+export NEWKOTLIN_RUNTIME=${NEWKOTLIN_RUNTIME:-$PWD/../compiler/runtime/runtime.c}
 name=${1:-alloc-compare}
-NKC=compiler/build/newkotlinc.kexe; [ -x "$NKC" ] || compiler/build.sh >/dev/null
+NKC=../compiler/build/newkotlinc.kexe; [ -x "$NKC" ] || ../compiler/build.sh >/dev/null
 J=${JEMALLOC_DIR:-$(brew --prefix jemalloc 2>/dev/null)/lib}
 VARS="sys mi"; [ -f "$J/libjemalloc.dylib" ] || [ -f "$J/libjemalloc.so" ] && VARS="sys je mi"
 [ -f data/words.txt ] || python3 gen_data.py >/dev/null
 cat data/words.txt > /dev/null
-b=compiler/build/alloc; mkdir -p "$b" results/alloc; out=results/alloc/$name.txt
+b=../compiler/build/alloc; mkdir -p "$b" results/alloc; out=results/alloc/$name.txt
 CASES="sum $(ls cases)"
 for c in $CASES; do
   src=cases/$c/kotlin/Main.kt; [ $c = sum ] && src=kotlin/Main.kt

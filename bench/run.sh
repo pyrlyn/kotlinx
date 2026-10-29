@@ -7,6 +7,7 @@
 #                    results/cpu.txt   "case row rep launches real user sys"
 # Then: ./summarize.sh > results/summary.md
 cd "$(dirname "$0")"
+export NEWKOTLIN_RUNTIME=${NEWKOTLIN_RUNTIME:-$PWD/../compiler/runtime/runtime.c}
 KLLVM_BIN=${KLLVM_BIN:-kllvm/bench_kllvm}
 CASES=${CASES:-sum alloc recursion file}
 mkdir -p results

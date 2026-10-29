@@ -4,7 +4,7 @@
 1. Sparse, blobless, shallow fetch of JetBrains/kotlin at PINNED_COMMIT into a cache dir.
 2. Select candidate tests from SOURCES, skipping JVM-/JS-/Wasm-only tests listed in exclude-{jvm,js,wasm}.txt (path-based;
    not copied, not counted). JS/Wasm/Native tests stay candidates.
-3. Run every candidate VERBATIM on New Kotlin (run.py) and copy only PASSING tests, byte-for-byte,
+3. Run every candidate VERBATIM on Kotlin-X compiler (run.py) and copy only PASSING tests, byte-for-byte,
    into box/ and native/ (relative upstream paths preserved; golden .out files copied alongside).
    Tests are never modified: a test that would need changes to pass is not a pass.
 4. Write manifest.json: commit, every candidate with status/category/detail.

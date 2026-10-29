@@ -3,7 +3,7 @@
 // (graph -> head -> ... -> node -> owner = graph), so ~800k objects stay live in cycles.
 // 200 rounds x 50 replacements: a random graph is replaced by a new one (the old ring becomes cyclic garbage),
 // the new graph is walked, and a short-lived acyclic chain of 100 leaves is built and summed.
-// Kotlin Native: tracing GC; New Kotlin: RC + cycle collector; Rust: Rc/RefCell + Weak owner, rings broken by hand;
+// Kotlin Native: tracing GC; Kotlin-X compiler: RC + cycle collector; Rust: Rc/RefCell + Weak owner, rings broken by hand;
 // Zig: c_allocator create/destroy.
 @file:OptIn(kotlin.experimental.ExperimentalNativeApi::class)
 @file:Suppress("DEPRECATION_ERROR")

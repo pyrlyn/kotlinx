@@ -1,4 +1,4 @@
-# Upstream Kotlin tests for New Kotlin
+# Upstream Kotlin tests for Kotlin-X compiler
 
 Tests are imported automatically from JetBrains/kotlin (pinned commit) — never copied by hand.
 

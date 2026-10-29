@@ -1,7 +1,7 @@
 package newkotlin
 
 /**
- * Library code written in New Kotlin itself, merged into a program that uses it: ranges and progressions as values
+ * Library code written in Kotlin-X compiler itself, merged into a program that uses it: ranges and progressions as values
  * (`IntRange`, `IntProgression`, `LongRange`, `LongProgression`, `CharRange`, `CharProgression`).
  * Range operators outside a `for` header call the `kt_*` functions; `for` over a progression value iterates its fields.
  */
