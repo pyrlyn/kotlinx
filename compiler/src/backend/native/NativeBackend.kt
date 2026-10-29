@@ -851,7 +851,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val value = if (s.op == "=") s.value else BinE(s.op.dropLast(1), s.target, s.value).also { it.line = s.line }
                 assign(s.target, value)
             }
-            is IncS -> assign(s.target, BinE(if (s.op == "++") "+" else "-", s.target, IntL(1, false)).also { it.line = s.line })
+            is IncS -> if (extFuns.containsKey(if (s.op == "++") "inc" else "dec")) fail("custom inc/dec operators are not supported") else assign(s.target, BinE(if (s.op == "++") "+" else "-", s.target, IntL(1, false)).also { it.line = s.line })
             is WhileS -> if (s.isDo) {
                 val lc = label("do.cond"); val lb = label("do.body"); val le = label("do.end")
                 startBlock(lb)
@@ -1068,10 +1068,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 else -> Val("${e.v}", Ty.I32)
             }
             is PostIncE -> {
+                val pre = e.op.startsWith("pre")
+                val op = e.op.removePrefix("pre")
+                if (extFuns.containsKey(if (op == "++") "inc" else "dec")) fail("custom inc/dec operators are not supported")
                 val old = genExpr(e.target)
-                if (old.t.llvm == "ptr") fail("${e.op} on ${old.t}")
-                assign(e.target, BinE(if (e.op == "++") "+" else "-", e.target, IntL(1, false)).also { it.line = e.line })
-                old
+                if (old.t.llvm == "ptr") fail("$op on ${old.t}")
+                assign(e.target, BinE(if (op == "++") "+" else "-", e.target, IntL(1, false)).also { it.line = e.line })
+                if (pre) genExpr(e.target) else old
             }
             is DblL -> Val("0x" + e.v.toRawBits().toULong().toString(16).uppercase().padStart(16, '0'), Ty.F64)
             is BoolL -> Val(if (e.v) "true" else "false", Ty.I1)
@@ -1470,7 +1473,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return property(genExpr(e.recv), e.n)
     }
 
-    private val LIMITS = mapOf("Long.MAX_VALUE" to ("9223372036854775807" to Ty.I64), "Long.MIN_VALUE" to ("-9223372036854775808" to Ty.I64),
+    private val LIMITS = mapOf("Char.MIN_VALUE" to ("0" to Ty.Char), "Char.MAX_VALUE" to ("65535" to Ty.Char),
+        "Long.MAX_VALUE" to ("9223372036854775807" to Ty.I64), "Long.MIN_VALUE" to ("-9223372036854775808" to Ty.I64),
         "Int.MAX_VALUE" to ("2147483647" to Ty.I32), "Int.MIN_VALUE" to ("-2147483648" to Ty.I32),
         "Short.MAX_VALUE" to ("32767" to Ty.I32), "Short.MIN_VALUE" to ("-32768" to Ty.I32),
         "UByte.MAX_VALUE" to ("255" to Ty.U32), "UByte.MIN_VALUE" to ("0" to Ty.U32), "UShort.MAX_VALUE" to ("65535" to Ty.U32), "UShort.MIN_VALUE" to ("0" to Ty.U32),
@@ -2163,7 +2167,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 releaseIfOwned(r); return v
             }
             t == Ty.Char && (n == "toInt" || n == "code") -> Val(r.v, Ty.I32)
-            t.isInt && n == "toChar" -> Val(coerce(r, Ty.I32).v, Ty.Char)
+            t.isInt && n == "toChar" -> Val(emitT("and i32 ${coerce(r, Ty.I32).v}, 65535"), Ty.Char)
             t == Ty.SB && n == "append" -> {
                 val v = genExpr(e.args.single())
                 appendVal("rt_sb_", "ptr ${r.v}, ", v)
@@ -2602,7 +2606,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return when {
             op in setOf("==", "!=", "<", ">", "<=", ">=") && a.t == Ty.Char && b.t == Ty.Char -> compare(op, asInt(a), asInt(b))
             op == "-" && a.t == Ty.Char && b.t == Ty.Char -> arith("-", asInt(a), asInt(b))
-            (op == "+" || op == "-") && a.t == Ty.Char && b.t.isInt -> Val(arith(op, asInt(a), coerce(b, Ty.I32)).v, Ty.Char)
+            // Char arithmetic wraps modulo 2^16.
+            (op == "+" || op == "-") && a.t == Ty.Char && b.t.isInt -> Val(emitT("and i32 ${arith(op, asInt(a), coerce(b, Ty.I32)).v}, 65535"), Ty.Char)
             op == "+" && a.t == Ty.Str -> concat(a, b)
             else -> fail("operator $op on ${a.t} and ${b.t}")
         }

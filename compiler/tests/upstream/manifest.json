@@ -2,10 +2,10 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "COMPILER_CRASH": 6,
-  "MISCOMPILE": 46,
+  "MISCOMPILE": 45,
   "N/A": 2984,
-  "PASS": 1519,
-  "UNSUPPORTED": 3920
+  "PASS": 1592,
+  "UNSUPPORTED": 3848
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1181,9 +1181,8 @@
    "upstream": "compiler/testData/codegen/box/basics/spread_operator_0.kt"
   },
   "box/box/basics/statements0.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '--')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/statements0.kt"
   },
   "box/box/basics/superFunCall.kt": {
@@ -1336,9 +1335,8 @@
    "upstream": "compiler/testData/codegen/box/bce/differentObjects.kt"
   },
   "box/box/bce/forDownToSize.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/forDownToSize.kt"
   },
   "box/box/bce/forDownToWithStep.kt": {
@@ -1536,9 +1534,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/kt6747_identityEquals.kt"
   },
   "box/box/binaryOp/overflowChar.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/binaryOp/overflowChar.kt"
   },
   "box/box/binaryOp/overflowInt.kt": {
@@ -1668,17 +1665,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupaigmbq0h/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupaigmbq0h/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprxirmtkk/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuprxirmtkk/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupjdlkwj_o/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupjdlkwj_o/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupr34iqi9q/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupr34iqi9q/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupieopwy30/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupieopwy30/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuppypveld4/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuppypveld4/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -4922,9 +4919,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt82732.kt"
   },
   "box/box/casts/kt83324.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/kt83324.kt"
   },
   "box/box/casts/lambdaToUnitCast.kt": {
@@ -5667,8 +5663,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt454.kt"
   },
   "box/box/classes/kt471.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "other: ++ on MyNumber",
+   "detail": "++ on MyNumber",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt471.kt"
   },
@@ -5679,15 +5675,13 @@
    "upstream": "compiler/testData/codegen/box/classes/kt48.kt"
   },
   "box/box/classes/kt496.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt496.kt"
   },
   "box/box/classes/kt500.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt500.kt"
   },
   "box/box/classes/kt501.kt": {
@@ -5737,8 +5731,9 @@
    "upstream": "compiler/testData/codegen/box/classes/kt707.kt"
   },
   "box/box/classes/kt723.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "operator/infix functions",
+   "detail": "custom inc/dec operators are not supported",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt723.kt"
   },
   "box/box/classes/kt725.kt": {
@@ -6162,8 +6157,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/capturedInInlineOnlyCAO.kt"
   },
   "box/box/closures/capturedVarsOptimization/capturedInInlineOnlyIncrDecr.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/capturedInInlineOnlyIncrDecr.kt"
   },
@@ -6207,8 +6202,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/kt45446.kt"
   },
   "box/box/closures/capturedVarsOptimization/sharedSlotsWithCapturedVars.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/sharedSlotsWithCapturedVars.kt"
   },
@@ -8204,8 +8199,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/breakInExpr.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/breakInLoopConditions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "break / continue",
+   "detail": "unknown name 'break'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/breakInLoopConditions.kt"
   },
@@ -8369,9 +8364,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakInFinally.kt"
   },
   "box/box/controlStructures/breakInWhen.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakInWhen.kt"
   },
   "box/box/controlStructures/compareBoxedIntegerToZero.kt": {
@@ -8403,9 +8397,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInForCondition.kt"
   },
   "box/box/controlStructures/continueInWhen.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInWhen.kt"
   },
   "box/box/controlStructures/continueInWhile.kt": {
@@ -8957,8 +8950,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/inRangeConditionsInWhen.kt"
   },
   "box/box/controlStructures/kt12908.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt12908.kt"
   },
@@ -12549,7 +12542,7 @@
   },
   "box/box/defaultArguments/convention/incWithDefaultInGetter.kt": {
    "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "detail": "custom inc/dec operators are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/incWithDefaultInGetter.kt"
   },
@@ -15874,8 +15867,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3646.kt"
   },
   "box/box/extensionFunctions/kt3969.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "other: ++ on A",
+   "detail": "++ on A",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3969.kt"
   },
@@ -17935,7 +17928,7 @@
   },
   "box/box/functions/recursiveIncrementCall.kt": {
    "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "detail": "custom inc/dec operators are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/recursiveIncrementCall.kt"
   },
@@ -18302,8 +18295,9 @@
    "upstream": "compiler/testData/codegen/box/increment/postfixNullableClassIncrement.kt"
   },
   "box/box/increment/postfixNullableIncrement.kt": {
-   "detail": "exit=0 stdout='fail i = 11 j = 10\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "category": "operator/infix functions",
+   "detail": "custom inc/dec operators are not supported",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/postfixNullableIncrement.kt"
   },
   "box/box/increment/prefixIncrementOnClass.kt": {
@@ -18332,7 +18326,7 @@
   },
   "box/box/increment/prefixNullableIncrement.kt": {
    "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "detail": "custom inc/dec operators are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/prefixNullableIncrement.kt"
   },
@@ -23373,12 +23367,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645664\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387872\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789472\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952352\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23910,14 +23904,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt32793.kt"
   },
   "box/box/inlineClasses/kt33119.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "other: ++ on WrappingInt",
+   "detail": "++ on WrappingInt",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt33119.kt"
   },
   "box/box/inlineClasses/kt33119Generic.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "other: ++ on WrappingInt$Int",
+   "detail": "++ on WrappingInt$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt33119Generic.kt"
   },
@@ -26028,7 +26022,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x102a8051f        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102b6880b        kfun:newkotlin.Parser.prefix#internal + 7535 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1044c051f        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x1045a93a7        kfun:newkotlin.Parser.prefix#internal + 9131 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -26300,9 +26294,8 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/inlineEmptyFunction.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/conditionInVariable.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/conditionInVariable.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/consequentConditions.kt": {
@@ -26316,9 +26309,8 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/doWhileEvaluationOrder.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/doWhileWithContinue.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/doWhileWithContinue.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/doWhileWithNestedContinue.kt": {
@@ -26357,9 +26349,8 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/nestedConditions.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/simpleDoWhile.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/simpleDoWhile.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/simpleWhile.kt": {
@@ -27128,8 +27119,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/nested.kt"
   },
   "box/box/lower/forLoopsLowering/progressions.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
+   "category": "other: unknown type Iterable<Int>",
+   "detail": "unknown type Iterable<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/progressions.kt"
   },
@@ -29217,8 +29208,8 @@
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToArrayAccessToExtensionPropertyImportedFromObject.kt"
   },
   "box/box/objects/compoundAssignmentToArrayAccessToPropertyImportedFromObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToArrayAccessToPropertyImportedFromObject.kt"
   },
@@ -29234,8 +29225,8 @@
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToObjectFromCall.kt"
   },
   "box/box/objects/compoundAssignmentToPropertyImportedFromObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "other: unknown variable 'x'",
+   "detail": "unknown variable 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToPropertyImportedFromObject.kt"
   },
@@ -29635,8 +29626,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/annotatedAssignment.kt"
   },
   "box/box/operatorConventions/assignToDotQualifiedWithSideEffect.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/assignToDotQualifiedWithSideEffect.kt"
   },
@@ -29909,9 +29900,8 @@
    "upstream": "compiler/testData/codegen/box/platformTypes/primitives/compareTo.kt"
   },
   "box/box/platformTypes/primitives/dec.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '--')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/platformTypes/primitives/dec.kt"
   },
   "box/box/platformTypes/primitives/div.kt": {
@@ -29930,9 +29920,8 @@
    "upstream": "compiler/testData/codegen/box/platformTypes/primitives/hashCode.kt"
   },
   "box/box/platformTypes/primitives/inc.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/platformTypes/primitives/inc.kt"
   },
   "box/box/platformTypes/primitives/minus.kt": {
@@ -30196,9 +30185,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalsHashCodeToString.kt"
   },
   "box/box/primitiveTypes/incrementByteCharShort.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/incrementByteCharShort.kt"
   },
   "box/box/primitiveTypes/intLiteralIsNotNull.kt": {
@@ -30252,9 +30240,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt16732.kt"
   },
   "box/box/primitiveTypes/kt2251.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2251.kt"
   },
   "box/box/primitiveTypes/kt2269.kt": {
@@ -31124,8 +31111,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt49203_var.kt"
   },
   "box/box/properties/kt613.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt613.kt"
   },
@@ -31444,9 +31431,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/capturedLoopVar.kt"
   },
   "box/box/ranges/contains/charInCharRangeWithPossibleOverflow.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/charInCharRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/comparisonWithRangeBoundEliminated.kt": {
@@ -31690,9 +31676,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inFloatingPointRangeWithNaNBound.kt"
   },
   "box/box/ranges/contains/inIntRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inIntRange.kt"
   },
   "box/box/ranges/contains/inIterable.kt": {
@@ -31708,8 +31693,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inNonMatchingRange.kt"
   },
   "box/box/ranges/contains/inOptimizableDoubleRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "other: unknown type ClosedRange<Double>",
+   "detail": "unknown type ClosedRange<Double>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inOptimizableDoubleRange.kt"
   },
@@ -31720,14 +31705,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inOptimizableFloatRange.kt"
   },
   "box/box/ranges/contains/inOptimizableIntRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "other: unknown type ClosedRange<Int>",
+   "detail": "unknown type ClosedRange<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inOptimizableIntRange.kt"
   },
   "box/box/ranges/contains/inOptimizableLongRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "other: unknown type ClosedRange<Long>",
+   "detail": "unknown type ClosedRange<Long>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inOptimizableLongRange.kt"
   },
@@ -31777,21 +31762,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inUntil.kt"
   },
   "box/box/ranges/contains/inUntilMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inUntilMaxValue.kt"
   },
   "box/box/ranges/contains/inUntilMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inUntilMinValue.kt"
   },
   "box/box/ranges/contains/inUntilMinValueNonConst.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inUntilMinValueNonConst.kt"
   },
   "box/box/ranges/contains/intInByteRangeWithPossibleOverflow.kt": {
@@ -32079,9 +32061,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/expression/emptyRange.kt"
   },
   "box/box/ranges/expression/inexactDownToMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/inexactDownToMinValue.kt"
   },
   "box/box/ranges/expression/inexactSteppedDownTo.kt": {
@@ -32095,27 +32076,23 @@
    "upstream": "compiler/testData/codegen/box/ranges/expression/inexactSteppedRange.kt"
   },
   "box/box/ranges/expression/inexactToMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/inexactToMaxValue.kt"
   },
   "box/box/ranges/expression/maxValueMinusTwoToMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/maxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/expression/maxValueToMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/maxValueToMaxValue.kt"
   },
   "box/box/ranges/expression/maxValueToMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/maxValueToMinValue.kt"
   },
   "box/box/ranges/expression/oneElementDownTo.kt": {
@@ -32149,33 +32126,28 @@
    "upstream": "compiler/testData/codegen/box/ranges/expression/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/expression/progressionDownToMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionDownToMinValue.kt"
   },
   "box/box/ranges/expression/progressionMaxValueMinusTwoToMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionMaxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/expression/progressionMaxValueToMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionMaxValueToMaxValue.kt"
   },
   "box/box/ranges/expression/progressionMaxValueToMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionMaxValueToMinValue.kt"
   },
   "box/box/ranges/expression/progressionMinValueToMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionMinValueToMinValue.kt"
   },
   "box/box/ranges/expression/reversedBackSequence.kt": {
@@ -32281,9 +32253,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInDoubleRangeWithCustomIterator.kt"
   },
   "box/box/ranges/forInDownTo/forInDownToWithPossibleUnderflow.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forInDownToWithPossibleUnderflow.kt"
   },
   "box/box/ranges/forInDownTo/forInSumDownToSum.kt": {
@@ -32682,21 +32653,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilChar.kt"
   },
   "box/box/ranges/forInUntil/forInUntilCharMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilCharMaxValue.kt"
   },
   "box/box/ranges/forInUntil/forInUntilCharMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilCharMinValue.kt"
   },
   "box/box/ranges/forInUntil/forInUntilCharMinValueNonConst.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilCharMinValueNonConst.kt"
   },
   "box/box/ranges/forInUntil/forInUntilInt.kt": {
@@ -32753,9 +32721,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forIntInIntUntilSmartcastInt.kt"
   },
   "box/box/ranges/forInUntil/kt42533.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/kt42533.kt"
   },
   "box/box/ranges/forIntRange.kt": {
@@ -32771,81 +32738,68 @@
    "upstream": "compiler/testData/codegen/box/ranges/forNullableIntInRangeWithImplicitReceiver.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInDownToCharMinValue.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInDownToCharMinValue.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInDownToCharMinValueReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInDownToCharMinValueReversed.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInDownToIntMinValue.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInDownToIntMinValue.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInDownToIntMinValueReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInDownToIntMinValueReversed.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInDownToLongMinValue.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInDownToLongMinValue.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInDownToLongMinValueReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInDownToLongMinValueReversed.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInRangeToCharMaxValue.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInRangeToCharMaxValue.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInRangeToCharMaxValueReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInRangeToCharMaxValueReversed.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInRangeToIntMaxValue.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInRangeToIntMaxValue.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInRangeToIntMaxValueReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInRangeToIntMaxValueReversed.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInRangeToLongMaxValue.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInRangeToLongMaxValue.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInRangeToLongMaxValueReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInRangeToLongMaxValueReversed.kt"
   },
   "box/box/ranges/forWithPossibleOverflow/forInUntilIntMinValueReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInUntilIntMinValueReversed.kt"
   },
   "box/box/ranges/kt37370.kt": {
@@ -32889,9 +32843,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/emptyRange.kt"
   },
   "box/box/ranges/literal/inexactDownToMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactDownToMinValue.kt"
   },
   "box/box/ranges/literal/inexactSteppedDownTo.kt": {
@@ -32905,27 +32858,23 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactSteppedRange.kt"
   },
   "box/box/ranges/literal/inexactToMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactToMaxValue.kt"
   },
   "box/box/ranges/literal/maxValueMinusTwoToMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/maxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/literal/maxValueToMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/maxValueToMaxValue.kt"
   },
   "box/box/ranges/literal/maxValueToMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/maxValueToMinValue.kt"
   },
   "box/box/ranges/literal/oneElementDownTo.kt": {
@@ -32959,33 +32908,28 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/literal/progressionDownToMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionDownToMinValue.kt"
   },
   "box/box/ranges/literal/progressionMaxValueMinusTwoToMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionMaxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/literal/progressionMaxValueToMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionMaxValueToMaxValue.kt"
   },
   "box/box/ranges/literal/progressionMaxValueToMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionMaxValueToMinValue.kt"
   },
   "box/box/ranges/literal/progressionMinValueToMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionMinValueToMinValue.kt"
   },
   "box/box/ranges/literal/reversedBackSequence.kt": {
@@ -33102,21 +33046,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/maxValueToMinValueStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/maxValueToMinValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/downTo/maxValueToOneStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/maxValueToOneStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/downTo/maxValueToZeroStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/maxValueToZeroStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/downTo/mixedTypeStep.kt": {
@@ -33255,9 +33196,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/minValueToMaxValueStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/mixedTypeStep.kt": {
@@ -33306,9 +33246,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/oneToMaxValueStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStep.kt": {
@@ -33372,9 +33311,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/zeroToMaxValueStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/rangeUntil/emptyProgression.kt": {
@@ -33503,9 +33441,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/expression/until/emptyProgressionToMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/emptyProgressionToMinValue.kt"
   },
   "box/box/ranges/stepped/expression/until/illegalStepNegative.kt": {
@@ -33649,9 +33586,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/zeroToMaxValueStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/emptyProgression.kt": {
@@ -33685,21 +33621,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/maxValueToMinValueStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/maxValueToMinValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/maxValueToOneStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/maxValueToOneStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/maxValueToZeroStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/maxValueToZeroStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/mixedTypeStep.kt": {
@@ -33838,9 +33771,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/minValueToMaxValueStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/mixedTypeStep.kt": {
@@ -33889,9 +33821,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/oneToMaxValueStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStep.kt": {
@@ -33955,9 +33886,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/zeroToMaxValueStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/rangeUntil/emptyProgression.kt": {
@@ -34086,9 +34016,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/literal/until/emptyProgressionToMinValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/emptyProgressionToMinValue.kt"
   },
   "box/box/ranges/stepped/literal/until/illegalStepNegative.kt": {
@@ -34232,9 +34161,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/zeroToMaxValueStepMaxValue.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Char'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/expression/downTo/emptyProgression.kt": {
@@ -35570,8 +35498,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt36953_continue.kt"
   },
   "box/box/ranges/unsigned/kt67383.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<Int>.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt67383.kt"
   },
@@ -36879,8 +36807,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt52743.kt"
   },
   "box/box/safeCall/parenthesizedSafeCallsAndOperators.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "other: unknown method Foo.plus()",
+   "detail": "unknown method Foo.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/parenthesizedSafeCallsAndOperators.kt"
   },
@@ -37751,14 +37679,14 @@
    "upstream": "compiler/testData/codegen/box/statics/anonymousInitializerInClassObject.kt"
   },
   "box/box/statics/incInClassObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/incInClassObject.kt"
   },
   "box/box/statics/incInObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/incInObject.kt"
   },
@@ -39621,7 +39549,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqm2m7plx/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqm2m7plx/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxbvwy2_s/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxbvwy2_s/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -41011,8 +40939,8 @@
    "upstream": "compiler/testData/codegen/box/when/whenArgumentIsEvaluatedOnlyOnce.kt"
   },
   "box/box/when/whenSafeCallSubjectEvaluatedOnce.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'test' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/whenSafeCallSubjectEvaluatedOnce.kt"
   },
@@ -45440,7 +45368,7 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupjbfddx0q/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupjbfddx0q/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupywgu58mp/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupywgu58mp/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },
@@ -45730,8 +45658,8 @@
    "upstream": "native/native.tests/testData/codegen/serialization/no_type_map.kt"
   },
   "native/native.tests/codegen/variables/var1.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '++')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/variables/var1.kt"
   },

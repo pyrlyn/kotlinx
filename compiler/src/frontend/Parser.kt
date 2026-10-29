@@ -827,6 +827,13 @@ class Parser(private val t: List<Tok>) {
     }
 
     private fun prefix(): E {
+        // Prefix `++x` / `--x`: a PostIncE whose op is "pre++"/"pre--" (yields the new value).
+        if (t[p].k == K.OP && (t[p].s == "++" || t[p].s == "--")) {
+            val tk = next()
+            val e = prefix()
+            if (e !is NameE && e !is MemberE && e !is IndexE) fail("${tk.s} needs an assignable operand", tk)
+            return PostIncE(e, "pre" + tk.s).also { it.line = tk.line }
+        }
         val tk = peek()
         if (tk.k == K.OP && (tk.s == "-" || tk.s == "!" || tk.s == "+")) {
             p++
