@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 5,
   "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 843,
-  "UNSUPPORTED": 4605
+  "PASS": 965,
+  "UNSUPPORTED": 4483
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1673,17 +1673,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupgxhlyxgj/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupgxhlyxgj/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuptuyvncp2/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuptuyvncp2/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupvq2cwqkv/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupvq2cwqkv/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupfl9b_s4d/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupfl9b_s4d/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupg_u7xuv4/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupg_u7xuv4/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxjtjrm0w/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxjtjrm0w/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -23453,12 +23453,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146694240\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -536081120\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966752\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804516768\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -33311,123 +33311,103 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepOneThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepThenSameStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/reversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/reversedThenStepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/stepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/stepThenReversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/downTo/singleElementStepTwo.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepNonConst.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepOne.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepToOutsideRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/downTo/stepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/emptyProgression.kt": {
@@ -33474,51 +33454,43 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepOneThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepThenSameStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/oneToMaxValueStepMaxValue.kt": {
@@ -33528,75 +33500,63 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/singleElementStepTwo.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepNonConst.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepOne.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepToOutsideRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/stepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/zeroToMaxValueStepMaxValue.kt": {
@@ -33799,129 +33759,108 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepOneThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepThenSameStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/progressionToNonConst.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/progressionToNonConst.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/reversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/reversedThenStepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/stepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/stepThenReversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/expression/until/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/expression/until/singleElementStepTwo.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/expression/until/stepNonConst.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepNonConst.kt"
   },
   "box/box/ranges/stepped/expression/until/stepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepOne.kt"
   },
   "box/box/ranges/stepped/expression/until/stepToOutsideRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/expression/until/stepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/expression/until/stepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/zeroToMaxValueStepMaxValue.kt": {
@@ -33986,123 +33925,103 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepOneThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepThenSameStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/reversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/reversedThenStepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/stepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/stepThenReversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/downTo/singleElementStepTwo.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepNonConst.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepOne.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepToOutsideRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/downTo/stepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/emptyProgression.kt": {
@@ -34149,51 +34068,43 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepOneThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepThenSameStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/oneToMaxValueStepMaxValue.kt": {
@@ -34203,75 +34114,63 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/oneToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/singleElementStepTwo.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepNonConst.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepNonConst.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepOne.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepToOutsideRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/stepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/zeroToMaxValueStepMaxValue.kt": {
@@ -34474,129 +34373,108 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepOneThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepOneThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepThenSameStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepThenSameStep.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSameLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepOne.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/nestedStep/stepToSmallerLastThenStepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/progressionToNonConst.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/progressionToNonConst.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/reversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/reversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/reversedThenStepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/reversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/reversedThenStepThenReversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/reversedThenStepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/stepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/stepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/stepThenReversedThenStep.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/stepThenReversedThenStep.kt"
   },
   "box/box/ranges/stepped/literal/until/reversed/stepThenReversedThenStepThenReversed.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/reversed/stepThenReversedThenStepThenReversed.kt"
   },
   "box/box/ranges/stepped/literal/until/singleElementStepTwo.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/singleElementStepTwo.kt"
   },
   "box/box/ranges/stepped/literal/until/stepNonConst.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepNonConst.kt"
   },
   "box/box/ranges/stepped/literal/until/stepOne.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepOne.kt"
   },
   "box/box/ranges/stepped/literal/until/stepToOutsideRange.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepToOutsideRange.kt"
   },
   "box/box/ranges/stepped/literal/until/stepToSameLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepToSameLast.kt"
   },
   "box/box/ranges/stepped/literal/until/stepToSmallerLast.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/zeroToMaxValueStepMaxValue.kt": {
@@ -40287,7 +40165,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup4bs4s1j2/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup4bs4s1j2/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuptni7r6sp/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuptni7r6sp/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -46125,7 +46003,7 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupw1mo0ntv/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupw1mo0ntv/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupa9n151nk/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupa9n151nk/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },

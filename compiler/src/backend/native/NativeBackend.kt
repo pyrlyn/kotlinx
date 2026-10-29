@@ -2616,7 +2616,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             startBlock(lb)
             val ea = Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${a.v}, i64 $i)"), a.t.elem), a.t.elem)
             val eb = Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${b.v}, i64 $i)"), b.t.elem), b.t.elem)
-            val eq = compare("==", ea, eb)
+            val asInt = { v: Val -> if (v.t == Ty.Char) Val(v.v, Ty.I32) else v }
+            val eq = compare("==", asInt(ea), asInt(eb))
             emit("store i64 ${emitT("add i64 $i, 1")}, ptr $idx")
             condBr(eq.v, lc, le)
             startBlock(lt)
