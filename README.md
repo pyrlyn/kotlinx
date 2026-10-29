@@ -87,3 +87,5 @@ Results kept in the repo:
 - `bench/results/alloc/sys-je-mi-2026-10-28.txt`: allocator comparison (system / jemalloc / mimalloc).
 - `bench/results/alloc/mimalloc-default.txt`, `results/nk/baseline-main-session.txt`: mimalloc-default run with
   K/N and the main baseline in the same session.
+
+Contributors and agents: see [`compiler/docs/ARCHITECTURE.md`](compiler/docs/ARCHITECTURE.md) and the feature roadmap [#22](https://github.com/pyrlyn/kotlinx/issues/22).
