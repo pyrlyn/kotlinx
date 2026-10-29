@@ -20,6 +20,8 @@ class IndexE(val recv: E, val idx: E) : E()
 class BinE(val op: String, val l: E, val r: E) : E()
 class UnE(val op: String, val e: E) : E()
 class IfE(val cond: E, val th: Block, val el: Block?) : E()
+/** Lambda literal used as a value (function-typed); compiled to a closure object implementing a `$Fn...` interface. */
+class LambdaE(val body: Block) : E()
 /** `conds == null` is the else branch. */
 class WhenE(val subj: E?, val branches: List<Pair<List<E>?, Block>>) : E()
 
@@ -35,7 +37,17 @@ class ExprS(val e: E) : S()
 class JumpS(val isBreak: Boolean) : S()
 
 /** `params` are lambda parameter names (empty = implicit `it`). */
-class Block(val stmts: List<S>, val params: List<String> = emptyList())
+class Block(val stmts: List<S>, val params: List<String> = emptyList(), val paramTypes: List<TypeRef?> = emptyList()) {
+    /** Lambda identity, stable across code-generation restarts (assigned on first use). */
+    var lamId = -1
+    /** Memoized rewrite of this lambda body (outer `this` capture), so the rewritten body keeps stable identities. */
+    var rewritten: Block? = null
+}
+
+object LamIds {
+    private var next = 0
+    fun id(b: Block): Int { if (b.lamId < 0) b.lamId = next++; return b.lamId }
+}
 class Param(val name: String, val type: TypeRef)
 /** `typeParams`: generic type parameters (`fun <T> f(...)`); generic functions are monomorphized per type-argument list. */
 class FunD(val name: String, val params: List<Param>, val ret: TypeRef?, val body: Block?, val exprBody: E?, val line: Int,

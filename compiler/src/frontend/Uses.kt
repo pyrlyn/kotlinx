@@ -45,6 +45,7 @@ object Uses {
             }
             is UnE -> expr(e.e, straight, false, out)
             is IfE -> { expr(e.cond, straight, false, out); block(e.th, out); e.el?.let { block(it, out) } }
+            is LambdaE -> block(e.body, out)
             is WhenE -> {
                 e.subj?.let { expr(it, straight, false, out) }
                 e.branches.forEachIndexed { i, (conds, b) ->
@@ -84,6 +85,7 @@ object Escape {
                 is UnE -> e(x.e, x, p)
                 is IfE -> { e(x.cond, x, p); b(x.th); x.el?.let { b(it) } }
                 is WhenE -> { x.subj?.let { e(it, x, p) }; x.branches.forEach { (c, bl) -> c?.forEach { e(it, x, p) }; b(bl) } }
+                is LambdaE -> if (containsName(x.body)) good = false // captured by a closure: escapes
                 else -> {}
             }
         }
@@ -99,6 +101,7 @@ object Escape {
                 is JumpS -> {}
             }
         }
+        fun containsName(bl: Block): Boolean { var hit = false; val w = Walker(name) { _, _ -> hit = true; true }; bl.stmts.forEach { w.s(it) }; return hit }
         fun b(bl: Block) { if (name in bl.params) good = false; bl.stmts.forEach { s(it) } }
     }
 

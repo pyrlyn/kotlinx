@@ -5,6 +5,9 @@ private val INFIX_FUNS = setOf("and", "or", "xor", "shl", "shr", "ushr", "until"
 private val GENERIC_CALLS = setOf("ArrayList", "mutableListOf", "arrayListOf", "listOf", "HashMap", "hashMapOf", "mutableMapOf")
 private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sumOf", "count")
 
+/** Names after which `{` does not start a trailing lambda. */
+private val NO_TRAILING = setOf("try", "do", "else", "finally", "init", "object", "catch", "return", "this")
+
 private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix")
 
 class Parser(private val t: List<Tok>) {
@@ -240,6 +243,14 @@ class Parser(private val t: List<Tok>) {
     }
 
     private fun type(): TypeRef {
+        if (isOp("(")) {
+            // Function type `(A, B) -> R` (TypeRef "$Fn" with args = params + return), or a parenthesized type.
+            next()
+            val ps = nested(1) { val xs = ArrayList<TypeRef>(); while (!isOp(")")) { if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == ":") { p += 2 }; xs.add(type()); if (isOp(",")) next() }; xs }
+            expectOp(")")
+            val fn = if (isOp("->")) { next(); TypeRef("\$Fn", ps + type(), false) } else ps.singleOrNull() ?: fail("expected '->'")
+            return if (isOp("?")) { next(); TypeRef(fn.name, fn.args, true) } else fn
+        }
         var name = ident()
         while (isOp(".")) { next(); name += "." + ident() }
         val args = ArrayList<TypeRef>()
@@ -254,17 +265,21 @@ class Parser(private val t: List<Tok>) {
 
     private fun block(lambda: Boolean = false): Block {
         expectOp("{")
-        val params = ArrayList<String>()
+        val params = ArrayList<String>(); val ptypes = ArrayList<TypeRef?>()
         val stmts = nested(0) {
             if (lambda) {
-                var q = p
-                while (t[q].k == K.NL) q++
-                val ps = ArrayList<String>()
-                while (t[q].k == K.ID) {
-                    ps.add(t[q].s); q++
-                    if (t[q].k == K.OP && t[q].s == ",") q++ else break
-                }
-                if (ps.isNotEmpty() && t[q].k == K.OP && t[q].s == "->") { params.addAll(ps); p = q + 1 }
+                // `x, y: T ->` parameter list (backtracks if it is not one).
+                val save = p
+                val ps = ArrayList<String>(); val ts = ArrayList<TypeRef?>()
+                try {
+                    skipNL0()
+                    while (peek().k == K.ID) {
+                        ps.add(ident())
+                        ts.add(if (isOp(":")) { next(); type() } else null)
+                        if (isOp(",")) next() else break
+                    }
+                    if (ps.isNotEmpty() && isOp("->")) { next(); params.addAll(ps); ptypes.addAll(ts) } else p = save
+                } catch (_: CompileError) { p = save }
             }
             val ss = ArrayList<S>()
             while (true) {
@@ -277,7 +292,7 @@ class Parser(private val t: List<Tok>) {
             ss
         }
         expectOp("}")
-        return Block(stmts, params)
+        return Block(stmts, params, ptypes)
     }
 
     private fun controlBody(): Block { skipNLOnly(); return if (isOp("{")) block() else Block(listOf(stmt())) }
@@ -381,7 +396,7 @@ class Parser(private val t: List<Tok>) {
                 "[" -> { p++; val i = nested(1) { expr() }; expectOp("]"); IndexE(e, i) }
                 "!!" -> { p++; e }
                 "++", "--" -> if (e is NameE || e is MemberE || e is IndexE) { p++; PostIncE(e, tk.s) } else break
-                "{" -> if (e is MemberE && e.n in LAMBDA_METHODS) CallE(e, emptyList(), emptyList(), block(lambda = true)) else break
+                "{" -> if (e is MemberE || (e is NameE && e.n !in NO_TRAILING)) CallE(e, emptyList(), emptyList(), block(lambda = true)) else break
                 else -> break
             }
             e.line = line
@@ -415,7 +430,7 @@ class Parser(private val t: List<Tok>) {
                     } else explicitTypeArgs()?.let { ta -> CallE(NameE(tk.s).also { it.line = tk.line }, ta, args(), null) } ?: NameE(tk.s)
                 }
             }
-            K.OP -> if (tk.s == "(") { val x = nested(1) { expr() }; expectOp(")"); x } else fail("unexpected operator", tk)
+            K.OP -> if (tk.s == "{") { p--; LambdaE(block(lambda = true)) } else if (tk.s == "(") { val x = nested(1) { expr() }; expectOp(")"); x } else fail("unexpected operator", tk)
             else -> fail("unexpected token", tk)
         }
         if (e.line == 0) e.line = tk.line

@@ -43,6 +43,10 @@ private val OP_FUNS = mapOf("+" to "plus", "-" to "minus", "*" to "times", "/" t
 /** Native target: typed LLVM IR generation (linked by clang with runtime/runtime.c). */
 /** Thrown when code needs an instance of a generic class that is not in the program yet; [compileGenerics] adds it and retries. */
 class NeedInstance(val name: String, val args: List<TypeRef>) : Exception()
+/** Code needs a synthesized class (a lambda's closure class); [compileGenerics] adds it and retries. */
+class NeedClass(val cd: ClassD) : Exception()
+/** Code needs a function-type interface `$Fn<params..., ret>`; [compileGenerics] adds it and retries. */
+class NeedIface(val d: InterfaceD) : Exception()
 
 class NativeBackend(private val prog: Program, private val genericClasses: Map<String, ClassD> = emptyMap(),
                     /** Instance class name -> (generic class, type arguments), for inference against `Box<T>` parameters. */
@@ -126,6 +130,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "StringBuilder" -> Ty.SB
         "HashMap", "MutableMap", "Map" -> mapTy(resolve(t.args[0]), resolve(t.args[1]))
         "ArrayList", "MutableList", "List" -> Ty.ListTy(resolve(t.args.single()))
+        "\$Fn" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()))
         "Array" -> if (t.args.singleOrNull()?.name == "String") Ty.Args else fail("unsupported type $t")
         else -> if (t.name in genericClasses) instanceTy(t.name, t.args) else if (t.name in classes) Ty.Cls(t.name) else if (t.name in ifaces) Ty.Iface(t.name) else if (t.name.startsWith("CPointer")) Ty.RawPtr else fail("unknown type $t")
     }
@@ -307,8 +312,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val edges = HashMap<String, List<Pair<String, Boolean>>>()
         for (c in prog.classes) {
             val ci = classes.getValue(c.name)
+            // A closure can capture `this` while the object is being constructed (a val property holding a lambda
+            // that captures it), so closure captures count like var edges: such cycles can exist.
+            val closure = c.name.startsWith("\$Lam")
             edges[c.name] = generateSequence(c) { x -> x.superClass?.let { classDecls[it] } }.toList()
-                .flatMap { x -> x.fields }.flatMap { f -> targets(ci.fields[ci.index(f.name)].second).map { it to f.isVar } }
+                .flatMap { x -> x.fields }.flatMap { f -> targets(ci.fields[ci.index(f.name)].second).map { it to (f.isVar || closure) } }
         }
         fun reach(from: String): Set<String> {
             val seen = HashSet<String>(); val work = ArrayList<String>(); work.add(from)
@@ -408,7 +416,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             emit("store ${t.llvm} %a.${p.name}, ptr ${l.slot}")
         }
         if (f.exprBody != null) {
-            val v = genExpr(f.exprBody)
+            val v = argFor(f.exprBody, retTy)
             if (!term) emitReturn(v)
         } else {
             genBlockBody(f.body!!, false)
@@ -544,7 +552,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         for (f in c.fields) if (f.init == null) store(f.name, genArg(NameE(f.name).also { it.line = c.line }))
         for (x in c.inits) {
-            if (x is FieldD) store(x.name, genArg(x.init!!))
+            if (x is FieldD) store(x.name, argFor(x.init!!, ci.fields[ci.index(x.name)].second, true))
             else {
                 genBlockBody(x as Block, false)
                 if (term) fail("return is not allowed in an init block of ${c.name}")
@@ -740,7 +748,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         line = s.line
         when (s) {
             is VarS -> {
-                val v0 = genArg(s.init)
+                val v0 = if (s.init is LambdaE && s.type != null) argFor(s.init, resolve(s.type)) else genArg(s.init)
                 if (v0.t == Ty.Nothing) return
                 val t = s.type?.let { resolve(it) } ?: v0.t
                 if (t == Ty.Unit) fail("cannot store Unit in '${s.name}'")
@@ -769,7 +777,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is ForS -> genFor(s)
             is RetS -> {
                 if (s.e == null) { if (retTy != Ty.Unit) fail("missing return value"); releaseAll(); emit("ret void"); term = true }
-                else emitReturn(genArg(s.e))
+                else emitReturn(argFor(s.e, retTy, true))
             }
             is ExprS -> releaseIfOwned(genExpr(s.e))
             is JumpS -> {
@@ -787,7 +795,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (l == null && owner != null && owner!!.index(target.n) >= 0) return assign(MemberE(NameE("this"), target.n, false), value)
                 if (l == null) fail("unknown variable '${target.n}'")
                 if (!l.isVar) fail("val '${target.n}' cannot be reassigned")
-                var v = coerce(genArg(value), l.t)
+                var v = coerce(argFor(value, l.t, true), l.t)
                 if (l.t.isRef) {
                     v = consume(v)
                     val old = emitT("load ptr, ptr ${l.slot}")
@@ -801,7 +809,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val ci = classes.getValue(ct.name)
                 val idx = ci.index(target.n).takeIf { it >= 0 } ?: fail("no field ${target.n} in ${ct.name}")
                 val ft = ci.fields[idx].second
-                var v = coerce(genArg(value), ft)
+                var v = coerce(argFor(value, ft, true), ft)
                 val ptr = emitT("getelementptr ${ci.llType}, ptr ${r.v}, i32 0, i32 ${idx + 2}")
                 if (ft.isRef) {
                     v = consume(v)
@@ -954,6 +962,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 }
             }
             is MemberE -> genMember(e)
+            is LambdaE -> genLambda(e, null, null)
             is CallE -> genCall(e)
             is IndexE -> {
                 val r = genExpr(e.recv)
@@ -1150,15 +1159,19 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val qn = flatten(callee)
         if (qn != null && qn in NANOS) return Val(emitT("call i64 @rt_nanos()"), Ty.I64)
         if (qn != null && (qn == "kotlin.math.sqrt" || qn == "kotlin.math.abs")) return genNamedCall(qn, e)
+        if (callee is NameE && lookup(callee.n)?.let { fnSig(it.t) } != null) return invokeFn(genExpr(callee), e)
         if (callee is NameE && (lookup(callee.n) == null || (callee.n in classes && scopes.none { callee.n in it.vars }))) return genNamedCall(callee.n, e)
         if (callee is MemberE) {
             if (callee.safe) return safe(callee.recv) { r -> method(r, callee.n, e) }
             return method(genExpr(callee.recv), callee.n, e)
         }
+        val f = genExpr(callee)
+        if (fnSig(f.t) != null) return invokeFn(f, e)
         fail("unsupported call")
     }
 
     private fun genNamedCall(n: String, e: CallE): Val {
+        owner?.let { o -> val i = o.index(n); if (i >= 0 && n !in o.methods && fnSig(o.fields[i].second) != null) return invokeFn(property(Val("%this", Ty.Cls(o.name)), n), e) }
         owner?.let { o -> if (n in o.methods) return callMethod(Val("%this", Ty.Cls(o.name)), o, n, e) }
         // User-declared functions and classes shadow the built-in ones (e.g. a user `fun check`).
         if (n !in sigs && n !in classes) when (n) {
@@ -1261,14 +1274,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         classes[n]?.let { ci ->
             val cd = classDecls.getValue(n)
             if (cd.hasCtorBody) {
-                if (e.args.size != cd.ctorParams.size) fail("constructor $n expects ${cd.ctorParams.size} arguments")
-                val vals = e.args.mapIndexed { i, a -> coerce(genExpr(a), resolve(cd.ctorParams[i].type)) }
+                val all = allArgs(e)
+                if (all.size != cd.ctorParams.size) fail("constructor $n expects ${cd.ctorParams.size} arguments")
+                val vals = all.mapIndexed { i, a -> resolve(cd.ctorParams[i].type).let { pt -> coerce(argFor(a, pt), pt) } }
                 val res = Val(emitT("call ptr @ctor.$n(${vals.joinToString(", ") { "${it.t.llvm} ${it.v}" }})"), Ty.Cls(n), true)
                 vals.forEach { releaseIfOwned(it) }
                 return res
             }
-            if (e.args.size != ci.fields.size) fail("constructor $n expects ${ci.fields.size} arguments")
-            val vals = e.args.mapIndexed { i, a -> consume(coerce(genArg(a), ci.fields[i].second)) }
+            val all = allArgs(e)
+            if (all.size != ci.fields.size) fail("constructor $n expects ${ci.fields.size} arguments")
+            val vals = all.mapIndexed { i, a -> consume(coerce(argFor(a, ci.fields[i].second, true), ci.fields[i].second)) }
             val szp = emitT("getelementptr ${ci.llType}, ptr null, i32 1")
             val size = emitT("ptrtoint ptr $szp to i64")
             val tok = reuseFor.remove(e)?.takeIf { l -> scopes.any { it.vars.containsValue(l) && it.refs.remove(l) } }
@@ -1302,8 +1317,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         genericFuns[n]?.let { return genGenericCall(it, e) }
         val sig = sigs[n] ?: fail("unknown function '$n'")
-        if (sig.params.size != e.args.size) fail("$n expects ${sig.params.size} arguments")
-        val vals = e.args.mapIndexed { i, a -> coerce(genExpr(a), sig.params[i]) }
+        val all = allArgs(e)
+        if (sig.params.size != all.size) fail("$n expects ${sig.params.size} arguments")
+        val vals = all.mapIndexed { i, a -> coerce(argFor(a, sig.params[i]), sig.params[i]) }
         val args = vals.filter { it.t != Ty.Args }.joinToString(", ") { "${it.t.llvm} ${it.v}" }
         val call = "call ${sig.ret.llvm} @k.$n($args)"
         val res = if (sig.ret == Ty.Unit) { emit(call); Val("", Ty.Unit) } else Val(emitT(call), sig.ret, sig.ret.isRef)
@@ -1317,14 +1333,27 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * Monomorphization keeps primitives unboxed and every instance's RC code exact for its concrete types.
      */
     private fun genGenericCall(f: FunD, e: CallE, cls: ClassInfo? = null, recv: Val? = null): Val {
-        if (f.params.size != e.args.size) fail("${f.name} expects ${f.params.size} arguments")
+        if (f.params.size != allArgs(e).size) fail("${f.name} expects ${f.params.size} arguments")
         val env = LinkedHashMap<String, Ty>()
         if (e.typeArgs.isNotEmpty()) {
             if (e.typeArgs.size != f.typeParams.size) fail("${f.name} expects ${f.typeParams.size} type arguments")
             f.typeParams.forEachIndexed { i, tp -> env[tp] = resolve(e.typeArgs[i]) }
         }
-        val raw = e.args.map { genExpr(it) }
-        if (e.typeArgs.isEmpty()) f.params.forEachIndexed { i, p -> unify(p.type, raw[i].t, f.typeParams, env) }
+        // Non-lambda arguments first (they bind type parameters), then lambdas typed from the partially bound signature.
+        val all = allArgs(e)
+        val rawN = arrayOfNulls<Val>(all.size)
+        all.forEachIndexed { i, a -> if (a !is LambdaE) { rawN[i] = genExpr(a); if (e.typeArgs.isEmpty()) unify(f.params[i].type, rawN[i]!!.t, f.typeParams, env) } }
+        all.forEachIndexed { i, a ->
+            if (a !is LambdaE) return@forEachIndexed
+            val pt = f.params[i].type
+            fun isBound(r: TypeRef): Boolean = (r.name !in f.typeParams || r.name in env) && r.args.all { isBound(it) }
+            fun res(r: TypeRef): Ty? = if (!isBound(r)) null else { val sv = tenv; tenv = sv + env; try { resolve(r) } finally { tenv = sv } }
+            val lps = if (pt.name == "\$Fn") pt.args.dropLast(1).map { res(it) }.takeIf { l -> l.all { it != null } }?.map { it!! } else null
+            val lrt = if (pt.name == "\$Fn") res(pt.args.last()) else null
+            rawN[i] = genLambda(a, lps, lrt)
+            unify(pt, rawN[i]!!.t, f.typeParams, env)
+        }
+        val raw = rawN.map { it!! }
         for (tp in f.typeParams) if (tp !in env) fail("cannot infer type parameter $tp of ${f.name}; pass it explicitly")
         val bound = f.typeParams.associateWith { env.getValue(it) }
         val sym = "\"${if (cls != null) "m.${cls.name}." else "k."}${f.name}<${f.typeParams.joinToString(",") { bound.getValue(it).toString() }}>\""
@@ -1358,6 +1387,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         when {
             t is Ty.ListTy && ref.args.size == 1 -> unify(ref.args[0], t.elem, tps, env)
             t is Ty.MapTy && ref.args.size == 2 -> { unify(ref.args[0], t.k, tps, env); unify(ref.args[1], t.v, tps, env) }
+            t is Ty.Iface && ref.name == "\$Fn" -> fnSig(t)?.let { s -> if (s.params.size + 1 == ref.args.size) { s.params.forEachIndexed { i, p -> unify(ref.args[i], p, tps, env) }; unify(ref.args.last(), s.ret, tps, env) } }
             t is Ty.Cls -> instOrigin[t.name]?.let { (g, args) ->
                 if (g == ref.name && args.size == ref.args.size) {
                     val saved = tenv; tenv = emptyMap()
@@ -1368,8 +1398,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
     }
 
-    private fun method(r: Val, n: String, e: CallE): Val {
+    private fun method(r: Val, n: String, e0: CallE): Val {
         val t = r.t
+        // A trailing lambda on a built-in method that is not an inline lambda builtin is an ordinary last argument.
+        val e = if (e0.lambda != null && t !is Ty.Cls && t !is Ty.Iface && !(t is Ty.ListTy && n in setOf("map", "filter", "forEach", "sumOf", "count")) && n != "usePinned")
+            CallE(e0.callee, e0.typeArgs, allArgs(e0), null) else e0
         val res: Val = when {
             t.isNum && n in setOf("toInt", "toUInt", "toLong", "toULong", "toByte", "toDouble", "toString") -> {
                 if (n == "toString") { val sb = emitT("call ptr @rt_sb_new()"); appendVal("rt_sb_", "ptr $sb, ", r); return Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str, true) }
@@ -1386,7 +1419,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val i = coerce(genExpr(e.args.single()), Ty.I64)
                 Val(emitT("getelementptr i8, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 8")}, i64 ${i.v}"), Ty.RawPtr)
             }
-            (t is Ty.Cls || t is Ty.Iface) && e.lambda == null -> {
+            t is Ty.Cls && n !in classes.getValue(t.name).methods && classes.getValue(t.name).index(n) >= 0 && fnSig(classes.getValue(t.name).let { c -> c.fields[c.index(n)].second }) != null -> {
+                return invokeFn(property(r, n), e) // property() takes over an owned receiver
+            }
+            t is Ty.Cls || t is Ty.Iface -> {
                 val v = if (t is Ty.Cls) callMethod(r, classes.getValue(t.name), n, e) else callIface(r, ifaces.getValue((t as Ty.Iface).name), n, e)
                 releaseIfOwned(r); return v
             }
@@ -1418,7 +1454,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 v
             }
             t is Ty.ListTy && n == "add" -> {
-                val v = consume(coerce(genArg(e.args.single()), t.elem))
+                val v = consume(coerce(argFor(e.args.single(), t.elem, true), t.elem))
                 emit("call void @rt_list_add(ptr ${r.v}, i64 ${toSlot(v)})")
                 Val("true", Ty.I1)
             }
@@ -1438,8 +1474,99 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     private fun methodArgs(sig: FunSig, e: CallE): List<Val> {
-        if (sig.params.size != e.args.size) fail("${sig.name} expects ${sig.params.size} arguments")
-        return e.args.mapIndexed { i, a -> coerce(genExpr(a), sig.params[i]) }
+        val all = allArgs(e)
+        if (sig.params.size != all.size) fail("${sig.name} expects ${sig.params.size} arguments")
+        return all.mapIndexed { i, a -> coerce(argFor(a, sig.params[i]), sig.params[i]) }
+    }
+
+    /** Call arguments including a trailing lambda (`f(x) { ... }`). */
+    private fun allArgs(e: CallE): List<E> = if (e.lambda != null) e.args + LambdaE(e.lambda) else e.args
+
+    /** An argument with a known parameter type: lambdas get their parameter/return types from a function type. */
+    private fun argFor(a: E, t: Ty, own: Boolean = false): Val =
+        if (a is LambdaE) fnSig(t).let { s -> genLambda(a, s?.params, s?.ret) } else if (own) genArg(a) else genExpr(a)
+
+    /** The `invoke` signature if [t] is a function type. */
+    private fun fnSig(t: Ty): FunSig? = (t as? Ty.Iface)?.takeIf { it.name.startsWith("\$Fn") }?.let { ifaces[it.name]?.methods?.get("invoke") }
+
+    /** Function type `(ps) -> r`: the interface `$Fn$...` with one `invoke` method (requested if not in the program yet). */
+    private fun fnTy(ps: List<Ty>, r: Ty): Ty.Iface {
+        val name = mangle("\$Fn", (ps + r).map { tyRef(it) })
+        if (name in ifaces) return Ty.Iface(name)
+        throw NeedIface(InterfaceD(name, listOf(FunD("invoke", ps.mapIndexed { i, t -> Param("p$i", tyRef(t)) }, tyRef(r), null, null, 0)), 0))
+    }
+
+    private fun invokeFn(f: Val, e: CallE): Val {
+        val ii = ifaces.getValue((f.t as Ty.Iface).name)
+        val v = callIface(f, ii, "invoke", e)
+        releaseIfOwned(f)
+        return v
+    }
+
+    /**
+     * Lambda literal -> closure object: a synthesized class `$Lam<id>$<types>` whose fields are the captured locals
+     * (by value; captured `var`s were boxed into `$Ref` cells by the frontend) and, inside a class, `$outer` (`this`),
+     * implementing the function-type interface with an `invoke` method holding the body. Captures are retained into
+     * the closure and released with it, so Perceus RC and the cycle collector treat closures like any object.
+     */
+    private fun genLambda(e: LambdaE, ps: List<Ty>?, ret: Ty?): Val {
+        val b0 = e.body
+        val declared = b0.params
+        val ptys: List<Ty> = if (declared.isEmpty()) {
+            if (ps == null || ps.size <= 1) ps ?: emptyList() else fail("lambda needs ${ps.size} parameters")
+        } else declared.mapIndexed { i, n -> b0.paramTypes.getOrNull(i)?.let { resolve(it) } ?: ps?.getOrNull(i) ?: fail("cannot infer the type of lambda parameter '$n'") }
+        if (ps != null && ps.size != ptys.size) fail("lambda expects ${ps.size} parameters, has ${ptys.size}")
+        val pnames = if (declared.isEmpty()) (if (ptys.size == 1) listOf("it") else emptyList()) else declared.mapIndexed { i, n -> if (n == "_") "\$_$i" else n }
+        val free = LinkedHashSet<String>()
+        for (s in b0.stmts) for (u in Uses.ofStmt(s)) free.add(u.node.n)
+        val caps = ArrayList<Pair<String, Ty>>()
+        var outer = false
+        val o = owner
+        for (n in free) {
+            if (n in pnames) continue
+            val l = scopes.reversed().firstNotNullOfOrNull { it.vars[n] }
+            if (l != null) {
+                if (l.t == Ty.Args || l.t == Ty.Pinned) fail("cannot capture '$n' in a lambda")
+                caps.add(n to l.t); continue
+            }
+            if (o != null && (n == "this" || o.index(n) >= 0 || n in o.methods)) outer = true
+        }
+        val capNames = caps.map { it.first }.toSet()
+        val lamBody = if (!outer) b0 else b0.rewritten ?: run {
+            val oc = o!!
+            Subst(emptyMap(), { x ->
+                when {
+                    x is NameE && x.n == "this" -> NameE("\$outer")
+                    x is NameE && x.n !in pnames && x.n !in capNames && (oc.index(x.n) >= 0 || x.n in oc.methods) -> MemberE(NameE("\$outer"), x.n, false)
+                    else -> null
+                }?.also { it.line = x.line }
+            }).block(b0)
+        }.also { b0.rewritten = it }
+        if (outer) caps.add("\$outer" to Ty.Cls(o!!.name))
+        val rt = when {
+            ret == Ty.Unit -> Ty.Unit
+            ret != null -> ret
+            else -> {
+                // Probe the body's type in the current context; the probe's IR is rolled back.
+                val sb = body.length; val sa = allocas.length; val sc = cur; val st = term; val sm = HashSet(moveNodes)
+                scopes.add(Scope())
+                pnames.forEachIndexed { i, n -> declare(n, ptys[i], false, false) }
+                val t = try { genBlockBody(b0, true).t } finally {
+                    scopes.removeAt(scopes.size - 1)
+                    body.setLength(sb); allocas.setLength(sa); cur = sc; term = st; moveNodes.clear(); moveNodes.addAll(sm)
+                }
+                if (t == Ty.Nothing) Ty.Unit else t
+            }
+        }
+        val fnT = fnTy(ptys, rt)
+        val name = mangle("\$Lam${LamIds.id(b0)}", (caps.map { it.second } + ptys + rt).map { tyRef(it) })
+        if (name !in classes) {
+            val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i])) }, tyRef(rt), null,
+                WhenE(null, listOf(null to lamBody)).also { it.line = line }, line)
+            throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name), listOf(m), line))
+        }
+        val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "this" else n).also { it.line = line } }, null))
+        return Val(v.v, fnT, v.owned)
     }
 
     private fun finishCall(call: String, ret: Ty, args: List<Val>): Val {
