@@ -40,12 +40,12 @@ class VarS(val name: String, val isVar: Boolean, val type: TypeRef?, val init: E
 class AssignS(val target: E, val op: String, val value: E) : S()
 class IncS(val target: E, val op: String) : S()
 /** `isDo`: `do { body } while (cond)` (the body runs before the first test). */
-class WhileS(val cond: E, val body: Block, val isDo: Boolean = false) : S()
-class ForS(val name: String, val iter: E, val body: Block) : S()
+class WhileS(val cond: E, val body: Block, val isDo: Boolean = false) : S() { var label: String? = null }
+class ForS(val name: String, val iter: E, val body: Block) : S() { var label: String? = null }
 class RetS(val e: E?) : S()
 class ExprS(val e: E) : S()
 /** `break` / `continue` (unlabeled: innermost loop). */
-class JumpS(val isBreak: Boolean) : S()
+class JumpS(val isBreak: Boolean) : S() { /** `break@l` / `continue@l`. */ var label: String? = null }
 
 /** `params` are lambda parameter names (empty = implicit `it`). */
 class Block(val stmts: List<S>, val params: List<String> = emptyList(), val paramTypes: List<TypeRef?> = emptyList()) {

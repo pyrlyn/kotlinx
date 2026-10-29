@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 5,
   "MISCOMPILE": 42,
   "N/A": 2984,
-  "PASS": 1849,
-  "UNSUPPORTED": 3595
+  "PASS": 1856,
+  "UNSUPPORTED": 3588
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1658,17 +1658,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup956yc8jv/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup956yc8jv/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8ejf3o69/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8ejf3o69/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz8jgbzzv/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz8jgbzzv/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupw4c18_sf/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupw4c18_sf/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwwxlgxbd/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwwxlgxbd/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupnl58s0r_/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupnl58s0r_/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -8359,8 +8359,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInWhile.kt"
   },
   "box/box/controlStructures/continueToLabelInFor.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
+   "category": "nullable types",
+   "detail": "unknown function 'arrayOfNulls'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/continueToLabelInFor.kt"
   },
@@ -9351,9 +9351,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/break.kt"
   },
   "box/box/controlflow/break1.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/break1.kt"
   },
   "box/box/controlflow/callOnSmarcastedNothing.kt": {
@@ -9383,8 +9382,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_mutation.kt"
   },
   "box/box/controlflow/for_loops_array_nested.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected ArrayList<Int>, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_nested.kt"
   },
@@ -9427,9 +9426,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_let_with_nullable.kt"
   },
   "box/box/controlflow/for_loops_nested.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_nested.kt"
   },
   "box/box/controlflow/for_loops_overflow.kt": {
@@ -23221,12 +23219,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823136\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 537660704\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 537660704\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387744\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25853,7 +25851,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x100754def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x1008563bf        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x104448def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10454b357        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -26149,9 +26147,8 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/doWhileWithNestedContinue.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/inLabeledBlock.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/inLabeledBlock.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/inNestedLoop.kt": {
@@ -26161,15 +26158,13 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/inNestedLoop.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/labeledBreak.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/labeledBreak.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/labeledContinueInNestedLoop.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/labeledContinueInNestedLoop.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/nestedConditions.kt": {
@@ -26248,9 +26243,8 @@
    "upstream": "compiler/testData/codegen/box/ktype/nonReified_reifiedUpperBound.kt"
   },
   "box/box/labels/controlLabelClashesWithFuncitonName.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/labels/controlLabelClashesWithFuncitonName.kt"
   },
   "box/box/labels/infixCallLabelling.kt": {
@@ -36148,8 +36142,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt79516.kt"
   },
   "box/box/regressions/kt998.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt998.kt"
   },
@@ -37231,8 +37225,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/kt19100.kt"
   },
   "box/box/smartCasts/kt44804.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '->')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44804.kt"
   },
@@ -39338,7 +39332,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupu3gv3hc6/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupu3gv3hc6/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup234skv4q/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup234skv4q/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -40368,9 +40362,8 @@
    "upstream": "compiler/testData/codegen/box/when/exceptionOnNoMatch.kt"
   },
   "box/box/when/exhaustiveBreakContinue.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/exhaustiveBreakContinue.kt"
   },
   "box/box/when/exhaustiveWhenInitialization.kt": {
@@ -40644,8 +40637,8 @@
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationMultipleMixedConditions.kt"
   },
   "box/box/when/switchOptimizationSingleStatementCase.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
+   "category": "unknown Unit (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationSingleStatementCase.kt"
   },

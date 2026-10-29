@@ -797,6 +797,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun releaseScope(s: Scope) { for (l in s.refs) release(Val(emitT("load ptr, ptr ${l.slot}"), l.t)) }
     /** Innermost-last: (continue target, break target, scope depth at loop entry). */
     private val loops = ArrayList<Triple<String, String, Int>>()
+    /** Label of each entry in [loops]; [pendingLabel] is taken by the next loop pushed. */
+    private val loopLabels = ArrayList<String?>()
+    private var pendingLabel: String? = null
+    private fun pushLoop(x: Triple<String, String, Int>) { loops.add(x); loopLabels.add(pendingLabel); pendingLabel = null }
+    private fun popLoop() { loops.removeAt(loops.size - 1); loopLabels.removeAt(loopLabels.size - 1) }
     private fun releaseAll() { for (s in scopes.reversed()) releaseScope(s) }
 
     private fun emitReturn(v0: Val) {
@@ -905,35 +910,39 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             is IncS -> if (extFuns.containsKey(if (s.op == "++") "inc" else "dec")) fail("custom inc/dec operators are not supported") else onceRecv(s.target) { tg -> assign(tg, BinE(if (s.op == "++") "+" else "-", tg, IntL(1, false)).also { it.line = s.line }); Val("", Ty.Unit) }
             is WhileS -> if (s.isDo) {
+                pendingLabel = s.label ?: pendingLabel
                 val lc = label("do.cond"); val lb = label("do.body"); val le = label("do.end")
                 startBlock(lb)
-                loops.add(Triple(lc, le, scopes.size))
+                pushLoop(Triple(lc, le, scopes.size))
                 genBlockBody(s.body, false)
-                loops.removeAt(loops.size - 1)
+                popLoop()
                 startBlock(lc)
                 val c = coerce(genExpr(s.cond), Ty.I1)
                 condBr(c.v, lb, le)
                 startBlock(le)
             } else {
                 val lc = label("while.cond"); val lb = label("while.body"); val le = label("while.end")
+                val wl = s.label
                 startBlock(lc)
                 val c = coerce(genExpr(s.cond), Ty.I1)
                 condBr(c.v, lb, le)
                 startBlock(lb)
-                loops.add(Triple(lc, le, scopes.size))
+                pendingLabel = wl ?: pendingLabel
+                pushLoop(Triple(lc, le, scopes.size))
                 genBlockBody(s.body, false)
-                loops.removeAt(loops.size - 1)
+                popLoop()
                 if (!term) br(lc)
                 startBlock(le)
             }
-            is ForS -> genFor(s)
+            is ForS -> { pendingLabel = s.label; genFor(s); pendingLabel = null }
             is RetS -> {
                 if (s.e == null) { if (retTy != Ty.Unit) fail("missing return value"); runFinally(0); if (!term) { releaseAll(); emit("ret void"); term = true } }
                 else emitReturn(argFor(s.e, retTy, true))
             }
             is ExprS -> if (s.e is TryE) { if (s.e.line != 0) line = s.e.line; genTry(s.e, false) } else releaseIfOwned(genExpr(s.e))
             is JumpS -> {
-                val (lc, le, depth) = loops.lastOrNull() ?: fail("'${if (s.isBreak) "break" else "continue"}' outside a loop")
+                val li = if (s.label == null) loops.size - 1 else loopLabels.lastIndexOf(s.label).also { if (it < 0) fail("unknown loop label '${s.label}'") }
+                val (lc, le, depth) = loops.getOrNull(li) ?: fail("'${if (s.isBreak) "break" else "continue"}' outside a loop")
                 runFinally(depth)
                 if (term) return
                 for (k in scopes.size - 1 downTo depth) releaseScope(scopes[k])
@@ -1041,9 +1050,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             condBr(emitT("icmp $cmp ${t.llvm} ${lo.v}, ${hi.v}"), lb, le)
             // Inclusive last bound (lo < hi holds for `until` here, so hi - 1 cannot overflow).
             startBlock(lb)
-            loops.add(Triple(ls, le, scopes.size))
+            pushLoop(Triple(ls, le, scopes.size))
             genBlockBody(s.body, false)
-            loops.removeAt(loops.size - 1)
+            popLoop()
             startBlock(ls)
             val last = if (rng.op == "until") emitT("sub ${t.llvm} ${hi.v}, 1") else hi.v
             val i2 = emitT("load ${t.llvm}, ptr ${idx.slot}")
@@ -1076,9 +1085,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             else if (coll.t == Ty.Str) emitT("zext i8 ${emitT("load i8, ptr ${emitT("getelementptr i8, ptr ${coll.v}, i64 $i")}")} to i32")
             else fromSlot(emitT("call i64 @rt_list_get(ptr ${coll.v}, i64 $i)"), elemT)
             emit("store ${elemT.llvm} $e, ptr ${v.slot}")
-            loops.add(Triple(ls, le, scopes.size))
+            pushLoop(Triple(ls, le, scopes.size))
             genBlockBody(s.body, false)
-            loops.removeAt(loops.size - 1)
+            popLoop()
             startBlock(ls)
             emit("store i64 ${emitT("add i64 ${emitT("load i64, ptr $idx")}, 1")}, ptr $idx")
             br(lc)

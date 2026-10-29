@@ -831,6 +831,13 @@ class Parser(private val t: List<Tok>) {
     private fun stmt(): S {
         val line = peek().line
         val s: S = when {
+            // Loop label `name@ for/while/do`.
+            peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == "@" && t[p + 2].k == K.ID && t[p + 2].s in setOf("for", "while", "do") -> {
+                val l = next().s; next()
+                val x = stmt()
+                when (x) { is WhileS -> x.label = l; is ForS -> x.label = l; else -> fail("label on a non-loop") }
+                return x
+            }
             isId("val") || isId("var") -> {
                 val isVar = next().s == "var"
                 if (isOp("(")) {
@@ -881,7 +888,9 @@ class Parser(private val t: List<Tok>) {
                 val pre = names.mapIndexedNotNull { i, x -> if (x == "_") null else destructVar(n, x, i, false, line) }
                 ForS(n, it, if (pre.isEmpty()) body else Block(pre + body.stmts, body.params, body.paramTypes))
             }
-            isId("break") || isId("continue") -> JumpS(next().s == "break")
+            isId("break") || isId("continue") -> JumpS(next().s == "break").also { j ->
+                if (t[p].k == K.OP && t[p].s == "@" && t[p + 1].k == K.ID) { next(); j.label = next().s }
+            }
             isId("return") -> {
                 next()
                 val tk = t[p]

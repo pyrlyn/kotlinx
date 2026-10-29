@@ -232,11 +232,11 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
         is VarS -> VarS(x.name, x.isVar, x.type?.let { ty(it) }, e(x.init))
         is AssignS -> AssignS(e(x.target), x.op, e(x.value))
         is IncS -> IncS(e(x.target), x.op)
-        is WhileS -> WhileS(e(x.cond), block(x.body), x.isDo)
-        is ForS -> ForS(x.name, e(x.iter), block(x.body))
+        is WhileS -> WhileS(e(x.cond), block(x.body), x.isDo).also { it.label = x.label }
+        is ForS -> ForS(x.name, e(x.iter), block(x.body)).also { it.label = x.label }
         is RetS -> RetS(x.e?.let { e(it) })
         is ExprS -> ExprS(e(x.e))
-        is JumpS -> JumpS(x.isBreak)
+        is JumpS -> JumpS(x.isBreak).also { it.label = x.label }
     }.also { it.line = x.line }
 
     fun e(x: E): E = rw?.invoke(x) ?: when (x) {
