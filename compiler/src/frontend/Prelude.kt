@@ -179,12 +179,18 @@ infix fun <A, B> A.to(that: B): Pair<A, B> = Pair(this, that)
 """
 private val PAIR_USE = Regex("\\bPair\\b|\\bTriple\\b|\\bto\\b")
 
+const val COMPARABLE = """
+interface Comparable<T> { fun compareTo(other: T): Int }
+"""
+private val COMPARABLE_USE = Regex("\\bComparable\\b")
+
 fun withPrelude(src: String, p: Program): Program {
     val ranges = RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
-    if (!ranges && !exc && !pairs) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "")
+    val cmp = COMPARABLE_USE.containsMatchIn(src)
+    if (!ranges && !exc && !pairs && !cmp) return p
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },
-        p.ifaces + lib.ifaces, p.globals + lib.globals, p.companions + lib.companions)
+        p.ifaces + lib.ifaces.filter { i -> p.ifaces.none { it.name == i.name } }, p.globals + lib.globals, p.companions + lib.companions)
 }

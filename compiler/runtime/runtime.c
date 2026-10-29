@@ -120,6 +120,13 @@ int32_t rt_double_hash(double d) {
     if (d != d) b = 0x7ff8000000000000ULL; else { if (d == 0.0 && !__builtin_signbit(d)) d = 0.0; memcpy(&b, &d, 8); }
     return (int32_t)(b ^ (b >> 32));
 }
+/* Kotlin String.compareTo: difference of the first differing chars, else of the lengths (bytewise for non-ASCII). */
+int32_t rt_str_cmp(const char *a, const char *b) {
+    const unsigned char *x = (const unsigned char *)(a ? a : ""), *y = (const unsigned char *)(b ? b : "");
+    while (*x && *x == *y) { x++; y++; }
+    if (*x && *y) return (int32_t)*x - (int32_t)*y;
+    return (int32_t)strlen((const char *)x) - (int32_t)strlen((const char *)y);
+}
 int32_t rt_str_eq(const char *a, const char *b) { return a == b || (a && b && strcmp(a, b) == 0); }
 void rt_print_bool(_Bool b) { fputs(b ? "true" : "false", stdout); }
 void rt_newline(void) { putchar('\n'); }

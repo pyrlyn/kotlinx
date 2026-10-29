@@ -96,7 +96,7 @@ class Parser(private val t: List<Tok>) {
         next()
         val tps = typeParams()
         val rt = type()
-        val (recv, name) = if (isOp(".")) { next(); rt to ident() }
+        val (recv, name) = if (isOp("?.")) { next(); TypeRef(rt.name, rt.args, true) to ident() } else if (isOp(".")) { next(); rt to ident() }
             else if (rt.args.isEmpty() && rt.name.contains('.')) TypeRef(rt.name.substringBeforeLast('.'), emptyList(), false) to rt.name.substringAfterLast('.')
             else fail("expected extension property")
         val ty = if (isOp(":")) { next(); type() } else null
@@ -379,10 +379,11 @@ class Parser(private val t: List<Tok>) {
         val save = p
         ident()
         var recv: TypeRef? = null
-        val name = if (isOp(".") || isOp("<") || isOp("?")) {
+        val name = if (isOp(".") || isOp("<") || isOp("?") || isOp("?.")) {
             p = save
             val rt = type()
-            if (isOp(".")) { next(); recv = rt; ident() }
+            if (isOp("?.")) { next(); recv = TypeRef(rt.name, rt.args, true); ident() }
+            else if (isOp(".")) { next(); recv = rt; ident() }
             else if (rt.args.isEmpty() && rt.name.contains('.')) { recv = TypeRef(rt.name.substringBeforeLast('.'), emptyList(), false); rt.name.substringAfterLast('.') }
             else fail("expected '('")
         } else { p = save; ident() }
@@ -691,7 +692,7 @@ class Parser(private val t: List<Tok>) {
                     CallE(e, emptyList(), a, lam)
                 }
                 "[" -> { p++; val i = nested(1) { expr() }; expectOp("]"); IndexE(e, i) }
-                "!!" -> { p++; e }
+                "!!" -> { p++; UnE("!!", e).also { it.line = tk.line } }
                 "++", "--" -> if (e is NameE || e is MemberE || e is IndexE) { p++; PostIncE(e, tk.s) } else break
                 "{" -> if (e is MemberE || (e is NameE && e.n !in NO_TRAILING)) CallE(e, emptyList(), emptyList(), block(lambda = true)) else break
                 else -> break

@@ -2,10 +2,10 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "COMPILER_CRASH": 3,
-  "MISCOMPILE": 24,
+  "MISCOMPILE": 26,
   "N/A": 2984,
-  "PASS": 518,
-  "UNSUPPORTED": 4946
+  "PASS": 549,
+  "UNSUPPORTED": 4913
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1680,17 +1680,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupm_kjswlj/t.ll:154:11: error: null must be a pointer type\n  154 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupm_kjswlj/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupux_pzph4/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupux_pzph4/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8jwyzidt/t.ll:180:11: error: null must be a pointer type\n  180 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8jwyzidt/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupv3_nuj03/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupv3_nuj03/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupv8r3qzfv/t.ll:168:11: error: null must be a pointer type\n  168 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupv8r3qzfv/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup_wc11faz/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup_wc11faz/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -3742,8 +3742,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/equality/suspendFunctionEquality.kt"
   },
   "box/box/callableReference/equality/unboundVsNullBoundReceiver.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/unboundVsNullBoundReceiver.kt"
   },
@@ -4231,8 +4231,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/newArray.kt"
   },
   "box/box/callableReference/function/nullableExtension.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/nullableExtension.kt"
   },
@@ -5374,9 +5374,8 @@
    "upstream": "compiler/testData/codegen/box/classes/funDelegation.kt"
   },
   "box/box/classes/implementComparableInSubclass.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface Comparable$Derived",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/implementComparableInSubclass.kt"
   },
   "box/box/classes/implementingInterfaceByParentClass.kt": {
@@ -5673,9 +5672,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt3001.kt"
   },
   "box/box/classes/kt3114.kt": {
-   "category": "other: cannot order references",
-   "detail": "cannot order references",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt3114.kt"
   },
   "box/box/classes/kt3414.kt": {
@@ -5778,14 +5776,13 @@
    "upstream": "compiler/testData/codegen/box/classes/kt707.kt"
   },
   "box/box/classes/kt723.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt723.kt"
   },
   "box/box/classes/kt725.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Int$inc' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt725.kt"
   },
@@ -12976,9 +12973,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/signature/kt2789.kt"
   },
   "box/box/defaultArguments/signature/kt9428.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/signature/kt9428.kt"
   },
   "box/box/defaultArguments/signature/kt9924.kt": {
@@ -13153,20 +13149,20 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToCastReceiver.kt"
   },
   "box/box/delegatedProperty/delegateToConst/delegateToConst.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConst/delegateToConst.kt"
   },
   "box/box/delegatedProperty/delegateToConst/delegateToConstProperty.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConst/delegateToConstProperty.kt"
   },
   "box/box/delegatedProperty/delegateToConst/delegateToNull.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConst/delegateToNull.kt"
   },
@@ -13201,20 +13197,20 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/delegateToFinalInstanceProperty.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/delegateToFinalObjectProperty.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/delegateToFinalObjectProperty.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/delegateToFinalProperty.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/delegateToFinalProperty.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/finalPropertyInAnotherFile.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/finalPropertyInAnotherFile.kt"
   },
@@ -13271,8 +13267,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsFromFileClass.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffectsToEnum.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsToEnum.kt"
   },
@@ -15531,9 +15527,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/kt55912.kt"
   },
   "box/box/evaluate/kt56215.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/evaluate/kt56215.kt"
   },
   "box/box/evaluate/kt9443.kt": {
@@ -15854,8 +15849,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionClassLevelLocal.kt"
   },
   "box/box/extensionFunctions/extensionFunctionDifferentReceivers.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "other: unknown type Nothing",
+   "detail": "unknown type Nothing",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionDifferentReceivers.kt"
   },
@@ -16061,8 +16056,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt865.kt"
   },
   "box/box/extensionFunctions/memberExtensionEqualsHashCodeToStringInInterface.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/memberExtensionEqualsHashCodeToStringInInterface.kt"
   },
@@ -16409,8 +16404,8 @@
    "upstream": "compiler/testData/codegen/box/finally/continueAndOuterFinally.kt"
   },
   "box/box/finally/decrementInFinally.kt": {
-   "detail": "exit=-5 stdout='' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/finally/decrementInFinally.kt"
   },
   "box/box/finally/finallyAndFinally.kt": {
@@ -17642,9 +17637,8 @@
    "upstream": "compiler/testData/codegen/box/functions/delegatedPropertyWithMultipleOverriddens_noGenerics.kt"
   },
   "box/box/functions/ea33909.kt": {
-   "category": "other: unknown method Int.compareTo()",
-   "detail": "unknown method Int.compareTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/ea33909.kt"
   },
   "box/box/functions/fakeDescriptorWithSeveralOverridenOne.kt": {
@@ -17778,8 +17772,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt1038.kt"
   },
   "box/box/functions/kt1199.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt1199.kt"
   },
@@ -17838,9 +17832,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt2739.kt"
   },
   "box/box/functions/kt2929.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.compareTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/kt2929.kt"
   },
   "box/box/functions/kt3214.kt": {
@@ -18482,15 +18475,14 @@
    "upstream": "compiler/testData/codegen/box/increment/postfixIncrementOnSmartCast.kt"
   },
   "box/box/increment/postfixNullableClassIncrement.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/postfixNullableClassIncrement.kt"
   },
   "box/box/increment/postfixNullableIncrement.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail i = 11 j = 10\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/increment/postfixNullableIncrement.kt"
   },
   "box/box/increment/prefixIncrementOnClass.kt": {
@@ -18512,14 +18504,14 @@
    "upstream": "compiler/testData/codegen/box/increment/prefixIncrementOnSmartCast.kt"
   },
   "box/box/increment/prefixNullableClassIncrement.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/prefixNullableClassIncrement.kt"
   },
   "box/box/increment/prefixNullableIncrement.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/prefixNullableIncrement.kt"
   },
@@ -18686,8 +18678,8 @@
    "upstream": "compiler/testData/codegen/box/inference/kt49838.kt"
   },
   "box/box/inference/kt65882.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "other: unknown method CPointer.unsafeCast()",
+   "detail": "unknown method CPointer.unsafeCast()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/kt65882.kt"
   },
@@ -22163,14 +22155,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/computablePropertyInsideInlineClass.kt"
   },
   "box/box/inlineClasses/conformToComparableAndCallInterfaceMethod.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface Comparable$Foo",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/conformToComparableAndCallInterfaceMethod.kt"
   },
   "box/box/inlineClasses/conformToComparableAndCallInterfaceMethodGeneric.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface Comparable$Foo$Int$$",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Comparable$Foo$Int, found Foo$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/conformToComparableAndCallInterfaceMethodGeneric.kt"
   },
@@ -23075,14 +23066,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/anonymousObjectInFunctionWithMangledNameGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClash.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClash.kt"
   },
   "box/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClashGeneric.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClashGeneric.kt"
   },
@@ -23620,12 +23611,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789728\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966688\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645984\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1611402080\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23972,8 +23963,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt26103.kt"
   },
   "box/box/inlineClasses/kt26103_contravariantUnderlyingType.kt": {
-   "category": "strings / templates",
-   "detail": "unknown type Comparable<String>",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt26103_contravariantUnderlyingType.kt"
   },
@@ -23990,39 +23981,33 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt26103_original.kt"
   },
   "box/box/inlineClasses/kt27096.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096.kt"
   },
   "box/box/inlineClasses/kt27096Generic.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096Generic.kt"
   },
   "box/box/inlineClasses/kt27096_enum.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_enum.kt"
   },
   "box/box/inlineClasses/kt27096_enumGeneric.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_enumGeneric.kt"
   },
   "box/box/inlineClasses/kt27096_functional.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_functional.kt"
   },
   "box/box/inlineClasses/kt27096_functionalGeneric.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_functionalGeneric.kt"
   },
   "box/box/inlineClasses/kt27096_innerClass.kt": {
@@ -24032,63 +24017,53 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_innerClass.kt"
   },
   "box/box/inlineClasses/kt27096_nullablePrimitive.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_nullablePrimitive.kt"
   },
   "box/box/inlineClasses/kt27096_nullablePrimitiveGeneric.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_nullablePrimitiveGeneric.kt"
   },
   "box/box/inlineClasses/kt27096_nullablePrimitiveGeneric2.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_nullablePrimitiveGeneric2.kt"
   },
   "box/box/inlineClasses/kt27096_nullableReference.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_nullableReference.kt"
   },
   "box/box/inlineClasses/kt27096_nullableReferenceGeneric.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_nullableReferenceGeneric.kt"
   },
   "box/box/inlineClasses/kt27096_nullableReferenceGeneric2.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_nullableReferenceGeneric2.kt"
   },
   "box/box/inlineClasses/kt27096_primitive.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_primitive.kt"
   },
   "box/box/inlineClasses/kt27096_primitiveGeneric.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_primitiveGeneric.kt"
   },
   "box/box/inlineClasses/kt27096_reference.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_reference.kt"
   },
   "box/box/inlineClasses/kt27096_referenceGeneric.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_referenceGeneric.kt"
   },
   "box/box/inlineClasses/kt27113.kt": {
@@ -24892,14 +24867,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/toStringCallingPrivateFunGeneric.kt"
   },
   "box/box/inlineClasses/toStringOfUnboxedNullable.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/toStringOfUnboxedNullable.kt"
   },
   "box/box/inlineClasses/toStringOfUnboxedNullableGeneric.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/toStringOfUnboxedNullableGeneric.kt"
   },
@@ -29152,7 +29127,7 @@
   },
   "box/box/nothingValue/nothingValueException.kt": {
    "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "detail": "unexpected operator (at '?:')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nothingValue/nothingValueException.kt"
   },
@@ -29986,8 +29961,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/comparable.kt"
   },
   "box/box/operatorConventions/compareTo/customCompareTo.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Long, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/customCompareTo.kt"
   },
@@ -30240,9 +30215,8 @@
    "upstream": "compiler/testData/codegen/box/platformTypes/primitives/assign.kt"
   },
   "box/box/platformTypes/primitives/compareTo.kt": {
-   "category": "other: unknown method Int.compareTo()",
-   "detail": "unknown method Int.compareTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/platformTypes/primitives/compareTo.kt"
   },
   "box/box/platformTypes/primitives/dec.kt": {
@@ -30646,9 +30620,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2794.kt"
   },
   "box/box/primitiveTypes/kt3078.kt": {
-   "category": "other: unknown method Int.compareTo()",
-   "detail": "unknown method Int.compareTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt3078.kt"
   },
   "box/box/primitiveTypes/kt3517.kt": {
@@ -30750,27 +30723,24 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt711.kt"
   },
   "box/box/primitiveTypes/kt737.kt": {
-   "category": "other: unknown method Int.compareTo()",
-   "detail": "unknown method Int.compareTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt737.kt"
   },
   "box/box/primitiveTypes/kt753.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
-   "status": "UNSUPPORTED",
+   "detail": "run timeout",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt753.kt"
   },
   "box/box/primitiveTypes/kt756.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "other: unknown method Int.inv()",
+   "detail": "unknown method Int.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt756.kt"
   },
   "box/box/primitiveTypes/kt757.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
-   "status": "UNSUPPORTED",
+   "detail": "run timeout",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt757.kt"
   },
   "box/box/primitiveTypes/kt79977.kt": {
@@ -30800,8 +30770,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt882.kt"
   },
   "box/box/primitiveTypes/kt887.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface Comparable$Book",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'compareTo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt887.kt"
   },
@@ -32127,7 +32097,7 @@
   },
   "box/box/ranges/contains/inRangeWithCustomContains.kt": {
    "category": "interfaces",
-   "detail": "unknown interface Comparable$Value",
+   "detail": "unknown interface ClosedRange$Value",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithCustomContains.kt"
   },
@@ -37555,8 +37525,8 @@
    "upstream": "compiler/testData/codegen/box/reified/isString.kt"
   },
   "box/box/reified/isTNullable.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ')')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/isTNullable.kt"
   },
@@ -37815,8 +37785,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt52743.kt"
   },
   "box/box/safeCall/parenthesizedSafeCallsAndOperators.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/parenthesizedSafeCallsAndOperators.kt"
   },
@@ -38392,14 +38362,14 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/implicitCastOnAssignment.kt"
   },
   "box/box/smartCasts/implicitExtensionReceiver.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/implicitExtensionReceiver.kt"
   },
   "box/box/smartCasts/implicitMemberReceiver.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/implicitMemberReceiver.kt"
   },
@@ -38498,8 +38468,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/negativesmartCastAugmentedAssignment.kt"
   },
   "box/box/smartCasts/nullSmartCast.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/nullSmartCast.kt"
   },
@@ -39051,8 +39021,8 @@
    "upstream": "compiler/testData/codegen/box/strings/stringPlusOnlyWorksOnString.kt"
   },
   "box/box/strings/stringPlusOverride.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/stringPlusOverride.kt"
   },
@@ -40605,9 +40575,8 @@
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
   "box/box/unit/ifElse.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unit/ifElse.kt"
   },
   "box/box/unit/kt3634.kt": {
@@ -40883,9 +40852,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedInStringInterpolation.kt"
   },
   "box/box/unsignedTypes/unsignedIntCompare.kt": {
-   "category": "other: unknown method UInt.compareTo()",
-   "detail": "unknown method UInt.compareTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedIntCompare.kt"
   },
   "box/box/unsignedTypes/unsignedIntDivide.kt": {
@@ -40915,9 +40883,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedLiteralsWithSignedOverflow.kt"
   },
   "box/box/unsignedTypes/unsignedLongCompare.kt": {
-   "category": "other: unknown method ULong.compareTo()",
-   "detail": "unknown method ULong.compareTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedLongCompare.kt"
   },
   "box/box/unsignedTypes/unsignedLongDivide.kt": {
@@ -41036,8 +41003,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/kt6192.kt"
   },
   "box/box/vararg/kt796_797.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt796_797.kt"
   },
@@ -41629,8 +41596,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt14802.kt"
   },
   "box/box/when/enumOptimization/kt15806.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/kt15806.kt"
   },
@@ -46762,20 +46729,20 @@
    "upstream": "native/native.tests/testData/codegen/variables/var1.kt"
   },
   "native/native.tests/codegen/variables/var2.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/variables/var2.kt"
   },
   "native/native.tests/codegen/variables/var3.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/variables/var3.kt"
   },
   "native/native.tests/codegen/variables/var4.kt": {
-   "category": "nullable types",
-   "detail": "expected '(' (at '?.')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/variables/var4.kt"
   },

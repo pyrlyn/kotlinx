@@ -1042,6 +1042,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is BinE -> genBin(e)
             is UnE -> {
                 val v = genExpr(e.e)
+                if (e.op == "!!") {
+                    if (v.t.llvm != "ptr") return v
+                    val ok = label("nn.ok"); val bad = label("nn.null")
+                    condBr(emitT("icmp ne ptr ${v.v}, null"), ok, bad)
+                    startBlock(bad)
+                    if (excMode) throwNew("NullPointerException", Val("null", Ty.Str))
+                    else { emit("call void @rt_panic(ptr ${cstr("NullPointerException")})"); emit("unreachable"); term = true }
+                    startBlock(ok)
+                    return if (v.v == "null") Val("null", v.t) else v
+                }
                 if (v.t is Ty.Cls || v.t is Ty.Iface) return method(v, if (e.op == "-") "unaryMinus" else "not", opCall("", null))
                 when (e.op) {
                     "!" -> Val(emitT("xor i1 ${coerce(v, Ty.I1).v}, true"), Ty.I1)
@@ -1246,9 +1256,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** Joins branch results with a phi when every live branch produced a value of the same type. */
     private fun merge(res: List<Pair<Val, String>>, exhaustive: Boolean): Val {
         if (res.isEmpty()) { emit("unreachable"); term = true; return Val("undef", Ty.Nothing) }
-        var t = res[0].first.t
-        if (exhaustive && res.any { it.first.t != t }) commonIface(res.map { it.first.t })?.let { t = it }
-        if (!exhaustive || t == Ty.Unit || res.any { it.first.t != t && !((t is Ty.Iface || t is Ty.Cls) && it.first.t is Ty.Cls) }) {
+        // A `null` branch takes the type of the other (reference) branches.
+        val typed = res.filter { it.first.v != "null" }.ifEmpty { res }
+        var t = typed[0].first.t
+        if (exhaustive && typed.any { it.first.t != t }) commonIface(typed.map { it.first.t })?.let { t = it }
+        if (!exhaustive || t == Ty.Unit || res.any { it.first.t != t && !(it.first.v == "null" && t.llvm == "ptr") && !((t is Ty.Iface || t is Ty.Cls) && it.first.t is Ty.Cls) }) {
             for ((v, _) in res) if (v.t.isRef && v.owned) fail("if/when branches yield references of different types; assign the result or make the types match")
             return Val("", Ty.Unit)
         }
@@ -1926,6 +1938,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 "toString" -> return sbMsg(r)
             }
         }
+        if (n == "compareTo" && e.args.size == 1 && (t == Ty.Str || t.isNum || t == Ty.Char)) {
+            val o = genExpr(e.args[0])
+            if (t == Ty.Str) { val c = emitT("call i32 @rt_str_cmp(ptr ${r.v}, ptr ${coerce(o, Ty.Str).v})"); releaseIfOwned(r); releaseIfOwned(o); return Val(c, Ty.I32) }
+            val lt = coerce(compare("<", r, o), Ty.I1).v; val gt = coerce(compare(">", r, o), Ty.I1).v
+            return Val(emitT("select i1 $lt, i32 -1, i32 ${emitT("zext i1 $gt to i32")}"), Ty.I32)
+        }
         if (n == "hashCode" && e.args.isEmpty()) when {
             t == Ty.Str -> { val v = Val(emitT("call i32 @rt_str_hash(ptr ${r.v})"), Ty.I32); releaseIfOwned(r); return v }
             t == Ty.I1 -> return Val(emitT("select i1 ${r.v}, i32 1231, i32 1237"), Ty.I32)
@@ -2523,6 +2541,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             releaseIfOwned(a); releaseIfOwned(b)
             return Val(if (op == "==") r else emitT("xor i1 $r, true"), Ty.I1)
         }
+        if (a.t == Ty.Str && b.t == Ty.Str && op in setOf("<", ">", "<=", ">=")) {
+            val c = emitT("call i32 @rt_str_cmp(ptr ${a.v}, ptr ${b.v})")
+            releaseIfOwned(a); releaseIfOwned(b)
+            return compare(op, Val(c, Ty.I32), Val("0", Ty.I32))
+        }
+        if (a.t is Ty.Cls && op in setOf("<", ">", "<=", ">=") && "compareTo" in classes.getValue(a.t.name).methods) {
+            val c = withTemps(listOf(a, b)) { (x, y) -> genExpr(CallE(MemberE(x, "compareTo", false).also { it.line = line }, emptyList(), listOf(y), null).also { it.line = line }) }
+            return compare(op, c, Val("0", Ty.I32))
+        }
         if (a.t.llvm == "ptr" || b.t.llvm == "ptr") {
             if (op != "==" && op != "!=") fail("cannot order references")
             val res = if (a.t == Ty.Str && b.t == Ty.Str) {
@@ -2591,6 +2618,7 @@ declare void @rt_print_u64(i64)
 declare void @rt_sb_u64(ptr, i64)
 declare i32 @rt_str_eq(ptr, ptr)
 declare i32 @rt_str_hash(ptr)
+declare i32 @rt_str_cmp(ptr, ptr)
 declare i32 @rt_double_hash(double)
 declare void @rt_sb_char(ptr, i32)
 declare ptr @rt_sb_tostring(ptr)
