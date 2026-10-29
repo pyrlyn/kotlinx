@@ -1,0 +1,18 @@
+# gc-epoch working tree 2026-10-30 00:17 EET load: { 104.40 81.22 142.16 }
+sum 5.664
+alloc 111.587
+bigheap 239.386
+closures 116.249
+cycles 193.827
+dispatch 114.671
+file 62.813
+free 76.88
+hashmap 109.299
+lru 713.451
+matmul 14.806
+nbody 110.599
+recursion 8.569
+refpass 194.879
+sort 117.338
+strings 46.871
+trees 183.092
