@@ -9,8 +9,12 @@ export NEWKOTLIN_RUNTIME=${NEWKOTLIN_RUNTIME:-$PWD/../compiler/runtime/runtime.c
 name=$1; ref=${2:-}
 mkdir -p results/nk ../compiler/build/nk
 if [ -n "$ref" ]; then
-  d=../compiler/build/nk-ref-$ref; mkdir -p "$d"; git archive "$ref" :/compiler | tar -x -C "$d"
-  (cd "$d/compiler" && ./build.sh >/dev/null 2>&1)
+  # Any commit-ish (branch, remote ref like origin/main, tag, SHA); archived from the repo root so the
+  # path does not depend on the current directory. The directory name is the resolved short SHA.
+  sha=$(git rev-parse --verify --quiet "$ref^{commit}") || { echo "nkbench: unknown git ref: $ref" >&2; exit 2; }
+  d=../compiler/build/nk-ref-$(git rev-parse --short "$sha"); rm -rf "$d"; mkdir -p "$d"
+  git -C "$(git rev-parse --show-toplevel)" archive "$sha" compiler | tar -x -C "$d"
+  (cd "$d/compiler" && ./build.sh >/dev/null 2>&1) || { echo "nkbench: building the compiler at $ref failed" >&2; exit 1; }
   NKC=$d/compiler/build/newkotlinc.kexe; RT=$d/compiler/runtime/runtime.c
 else
   [ -x ../compiler/build/newkotlinc.kexe ] || ../compiler/build.sh >/dev/null
