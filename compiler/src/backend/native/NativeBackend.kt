@@ -247,13 +247,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     if (c.name in poly || c.superClass != null) fail("generic method '${m.name}' in an open class hierarchy is not supported")
                     continue
                 }
-                val ret = m.ret?.let { resolve(it) } ?: if (m.exprBody == null) Ty.Unit else fail("method '${m.name}' needs an explicit return type")
+                if (m.ret == null && m.exprBody != null) { inferPending.add(m to c); continue }
+                val ret = m.ret?.let { resolve(it) } ?: Ty.Unit
                 val sig = FunSig(m.name, m.params.map { resolve(it.type) }, ret)
                 c.superClass?.let { s -> methodSigs["$s.${m.name}"]?.let { if (it.params != sig.params || it.ret != sig.ret) fail("override of '${m.name}' in ${c.name} changes its signature") } }
                 methodSigs["${c.name}.${m.name}"] = sig
             }
             val ci = classes.getValue(c.name)
-            for (n in ci.methods.keys) if (ci.methods.getValue(n).typeParams.isEmpty() && "${c.name}.$n" !in methodSigs) methodSigs["${c.name}.$n"] = methodSigs.getValue("${ci.ancestors.first()}.$n")
+            inheritSigs(c.name)
         }
         for (f in prog.funs) {
             line = f.line
@@ -263,8 +264,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 genericFuns[f.name] = f; continue
             }
             if (f.name in genericFuns) fail("overloads are not supported: ${f.name}")
-            val ret = f.ret?.let { resolve(it) } ?: if (f.body != null) Ty.Unit else fail("expression-bodied function '${f.name}' needs an explicit return type")
-            if (f.name in sigs) fail("overloads are not supported: ${f.name}")
+            if (f.name in sigs || inferPending.any { it.second == null && it.first.name == f.name }) fail("overloads are not supported: ${f.name}")
+            if (f.ret == null && f.body == null) { inferPending.add(f to null); continue }
+            val ret = f.ret?.let { resolve(it) } ?: Ty.Unit
             mainParams = f.name == "main"
             sigs[f.name] = FunSig(f.name, f.params.map { resolve(it.type) }, ret)
             mainParams = false
@@ -275,6 +277,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             c.superClass?.let { s -> val fs = classes.getValue(c.name).fields as MutableList<Pair<String, Ty>>; classes.getValue(s).fields.forEachIndexed { i, f -> fs[i] = f } }
             inferFields(c)
         }
+        inferReturnTypes()
         computeCyclic()
         for (c in classes.values) genClass(c)
         val main = sigs["main"] ?: throw CompileError("no main function")
@@ -516,6 +519,53 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             fs[ci.index(f.name)] = f.name to t
         }
         funcs.setLength(savedFuncs)
+    }
+
+    /** Expression-bodied functions/methods without a declared return type, with their class (null for top-level). */
+    private val inferPending = ArrayList<Pair<FunD, ClassD?>>()
+
+    private fun inheritSigs(cn: String) {
+        val ci = classes.getValue(cn)
+        for (n in ci.methods.keys) if (ci.methods.getValue(n).typeParams.isEmpty() && "$cn.$n" !in methodSigs)
+            methodSigs["${ci.ancestors.firstOrNull() ?: continue}.$n"]?.let { methodSigs["$cn.$n"] = it }
+    }
+
+    /**
+     * Infers return types of expression-bodied functions without one by generating (and discarding) their bodies.
+     * Repeats while progress is made, so such functions may call each other in dependency order.
+     */
+    private fun inferReturnTypes() {
+        while (inferPending.isNotEmpty()) {
+            var progress = false
+            var lastErr: CompileError? = null
+            for (it in ArrayList(inferPending)) {
+                val (f, c) = it
+                val ci = c?.let { classes.getValue(it.name) }
+                val params = f.params.map { resolve(it.type) }
+                val savedFuncs = funcs.length; val savedLine = line
+                val t = try {
+                    beginBody(ci, Ty.Unit); line = f.line
+                    f.params.forEachIndexed { i, p -> declare(p.name, params[i], false, false) }
+                    genExpr(f.exprBody!!).t
+                } catch (e: CompileError) { lastErr = e; null } finally { funcs.setLength(savedFuncs); line = savedLine }
+                if (t == null) continue
+                line = f.line
+                if (t == Ty.RawPtr || t == Ty.Args) fail("expression-bodied function '${f.name}' needs an explicit return type")
+                val sig = FunSig(f.name, params, t)
+                if (c == null) sigs[f.name] = sig
+                else {
+                    c.superClass?.let { s -> methodSigs["$s.${f.name}"]?.let { if (it.params != sig.params || it.ret != sig.ret) fail("override of '${f.name}' in ${c.name} changes its signature") } }
+                    methodSigs["${c.name}.${f.name}"] = sig
+                    for (d in classOrder) inheritSigs(d.name)
+                }
+                inferPending.remove(it); progress = true
+            }
+            if (!progress) {
+                val (f, c) = inferPending.first(); line = f.line
+                if (lastErr != null && inferPending.size == 1) throw lastErr!!
+                fail(if (c == null) "expression-bodied function '${f.name}' needs an explicit return type" else "method '${f.name}' needs an explicit return type")
+            }
+        }
     }
 
     /** Classes with subclasses: static type may hold a subclass, so release and method calls dispatch through the vtable. */
