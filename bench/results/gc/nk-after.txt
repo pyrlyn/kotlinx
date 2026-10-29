@@ -1,0 +1,18 @@
+# gc-after working tree 2026-10-29 21:17 EET load: { 39.22 37.98 28.82 }
+sum 3.723
+alloc 75.967
+bigheap 121.046
+closures 82.961
+cycles 45.602
+dispatch 95.91
+file 50.799
+free 50.753
+hashmap 73.561
+lru 99.533
+matmul 10.285
+nbody 71.488
+recursion 6.177
+refpass 145.018
+sort 61.429
+strings 31.937
+trees 124.376

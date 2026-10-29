@@ -1,0 +1,18 @@
+# gc-before2 working tree 2026-10-29 21:17 EET load: { 40.96 38.29 28.77 }
+sum 3.792
+alloc 76.258
+bigheap 122.738
+closures 84.495
+cycles 45.284
+dispatch 95.592
+file 52.036
+free 51.386
+hashmap 73.888
+lru 101.546
+matmul 10.187
+nbody 72.164
+recursion 6.093
+refpass 131.599
+sort 61.965
+strings 31.583
+trees 122.164

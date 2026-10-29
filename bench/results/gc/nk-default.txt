@@ -1,0 +1,18 @@
+# gc-default working tree 2026-10-29 21:03 EET load: { 8.19 13.57 16.46 }
+sum 3.659
+alloc 74.448
+bigheap 114.115
+closures 81.742
+cycles 44.581
+dispatch 94.228
+file 51.479
+free 49.136
+hashmap 64.214
+lru 87.233
+matmul 10.022
+nbody 71.213
+recursion 6.02
+refpass 144.342
+sort 60.798
+strings 31.608
+trees 121.989

@@ -157,6 +157,10 @@ fun main(args: Array<String>) {
     val cc = ccArg ?: findCc()
     if (!target.implemented) { fprintf(stderr, "target %s is not supported yet\n", target.flag); exit(1); return }
     if (input == null || output == null) { fprintf(stderr, "%s\n", USAGE); exit(2); return }
+    val ir = try { compileToIr(readFile(input)) } catch (e: CompileError) {
+        fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1); return
+    }
+    if (onlyIr) { writeFile(output, ir); return }
     // GC implementations: <gcDir>/<name>/gc.c (+ optional config.sh printing extra clang flags), interface <gcDir>/kxgc.h.
     val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../gc")
     val gcSrc = "$gcDir/$gc/gc.c"
@@ -166,10 +170,6 @@ fun main(args: Array<String>) {
     val gcFlags = if (access("$gcDir/$gc/config.sh", F_OK) == 0) {
         capture("sh '$gcDir/$gc/config.sh'") ?: run { fprintf(stderr, "error: %s/%s/config.sh failed\n", gcDir, gc); exit(1); return }
     } else ""
-    val ir = try { compileToIr(readFile(input)) } catch (e: CompileError) {
-        fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1); return
-    }
-    if (onlyIr) { writeFile(output, ir); return }
     val ll = "$output.ll"
     writeFile(ll, ir)
     val def = (if (alloc == "pool") " -DRT_POOL" else "") + (if (alloc == "malloc") " -DRT_PLAIN_MALLOC" else "") + (if (leakCheck) " -DRT_LEAKCHECK" else "")
