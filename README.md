@@ -9,8 +9,8 @@ with a Perceus-style reference-counting runtime. Moved from `listepo/mini-bench`
 
 ## Requirements (macOS)
 
-Kotlin/Native `kotlinc-native` 2.4.21 on PATH, Xcode clang, `brew install mimalloc`, and `mise install`
-in the repo root (LLVM `opt` from `mise.toml`).
+Kotlin/Native `kotlinc-native` 2.4.21 on PATH, Xcode command line tools, `brew install mimalloc`, and `mise install`
+in the repo root (LLVM `opt` and matching `clang` from `mise.toml`).
 
 ## Build and run
 
