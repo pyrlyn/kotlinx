@@ -2,10 +2,10 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "COMPILER_CRASH": 6,
-  "MISCOMPILE": 50,
+  "MISCOMPILE": 46,
   "N/A": 2984,
-  "PASS": 1477,
-  "UNSUPPORTED": 3958
+  "PASS": 1519,
+  "UNSUPPORTED": 3920
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -49,14 +49,14 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/AnnotationInstantiationWithArray.kt"
   },
   "box/box/annotations/instances/annotationAnnotationParam.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown A (stdlib API / unsupported decl)",
+   "detail": "unknown function 'A'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/annotationAnnotationParam.kt"
   },
   "box/box/annotations/instances/annotationAnyDispatch.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/annotationAnyDispatch.kt"
   },
@@ -96,8 +96,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/annotationToString.kt"
   },
   "box/box/annotations/instances/annotationToStringDefaultsAndEmptyArrays.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown B (stdlib API / unsupported decl)",
+   "detail": "unknown function 'B'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/annotationToStringDefaultsAndEmptyArrays.kt"
   },
@@ -108,13 +108,13 @@
   },
   "box/box/annotations/instances/annotationsUnsignedTypes.kt": {
    "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "detail": "unknown function 'AnnotationWithSignedArray'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/annotationsUnsignedTypes.kt"
   },
   "box/box/annotations/instances/arrayContentEqAny.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown A (stdlib API / unsupported decl)",
+   "detail": "unknown function 'A'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/arrayContentEqAny.kt"
   },
@@ -124,26 +124,26 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/arraysAndKClass.kt"
   },
   "box/box/annotations/instances/differentAnnotationTypes.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown A (stdlib API / unsupported decl)",
+   "detail": "unknown function 'A'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/differentAnnotationTypes.kt"
   },
   "box/box/annotations/instances/differentOrder.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown C (stdlib API / unsupported decl)",
+   "detail": "unknown function 'C'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/differentOrder.kt"
   },
   "box/box/annotations/instances/enumAndKClass.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/enumAndKClass.kt"
   },
   "box/box/annotations/instances/enumArray.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "enum classes",
+   "detail": "unknown function 'WithEnum'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/enumArray.kt"
   },
@@ -159,8 +159,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/innerAnnotationInstantiation.kt"
   },
   "box/box/annotations/instances/instanceEquality.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "other syntax (at 'I')",
+   "detail": "expected '(' (at 'I')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/instanceEquality.kt"
   },
@@ -185,62 +185,62 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/multiplatformInstantiation.kt"
   },
   "box/box/annotations/instances/naNAndZero.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown A (stdlib API / unsupported decl)",
+   "detail": "unknown function 'A'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/naNAndZero.kt"
   },
   "box/box/annotations/instances/nested.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/nested.kt"
   },
   "box/box/annotations/instances/nestedAnnotationInstances.kt": {
    "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "detail": "unknown type NestedAnnotation",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/nestedAnnotationInstances.kt"
   },
   "box/box/annotations/instances/nestedDefaults.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/nestedDefaults.kt"
   },
   "box/box/annotations/instances/rearrangedArgumentsInAnnotationCall.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/rearrangedArgumentsInAnnotationCall.kt"
   },
   "box/box/annotations/instances/repeatableInstantiation.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown Rep (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Rep'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/repeatableInstantiation.kt"
   },
   "box/box/annotations/instances/typeAliasesAndGenericsInterop.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/typeAliasesAndGenericsInterop.kt"
   },
   "box/box/annotations/instances/unsignedAndBooleanArrays.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown AnnBool (stdlib API / unsupported decl)",
+   "detail": "unknown function 'AnnBool'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/unsignedAndBooleanArrays.kt"
   },
   "box/box/annotations/instances/varargInAnnotationParameterInstantiation.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "other syntax (at 'val')",
+   "detail": "expected ':' (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/varargInAnnotationParameterInstantiation.kt"
   },
   "box/box/annotations/instances/withDefaults.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown C (stdlib API / unsupported decl)",
+   "detail": "unknown function 'C'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/withDefaults.kt"
   },
@@ -250,14 +250,14 @@
    "upstream": "compiler/testData/codegen/box/annotations/intrinsicConstEvaluationInSources.kt"
   },
   "box/box/annotations/nestedAnnotation.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'annotation')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/nestedAnnotation.kt"
   },
   "box/box/annotations/nestedClassesInAnnotations.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown Foo (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Foo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/nestedClassesInAnnotations.kt"
   },
@@ -267,14 +267,14 @@
    "upstream": "compiler/testData/codegen/box/annotations/platformDependent.kt"
   },
   "box/box/annotations/recursiveAnnotationWithVarargAndDefaultValue.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "other syntax (at 'val')",
+   "detail": "expected ':' (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/recursiveAnnotationWithVarargAndDefaultValue.kt"
   },
   "box/box/annotations/recursiveAnnotationWithVarargAndWithoutDefaultValue.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "other syntax (at 'val')",
+   "detail": "expected ':' (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/recursiveAnnotationWithVarargAndWithoutDefaultValue.kt"
   },
@@ -286,19 +286,19 @@
   },
   "box/box/annotations/selfReferentialAnnotation.kt": {
    "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/selfReferentialAnnotation.kt"
   },
   "box/box/annotations/spreadOperatorInAnnotationArguments.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "other syntax (at 'val')",
+   "detail": "expected ':' (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/spreadOperatorInAnnotationArguments.kt"
   },
   "box/box/annotations/spreadOperatorInArrayOf.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/spreadOperatorInArrayOf.kt"
   },
@@ -986,8 +986,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/arrays/nonLocalReturnArrayConstructor.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "unknown ArrayS (stdlib API / unsupported decl)",
+   "detail": "unknown function 'ArrayS'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/nonLocalReturnArrayConstructor.kt"
   },
@@ -1086,9 +1086,8 @@
    "upstream": "compiler/testData/codegen/box/basics/array_to_any.kt"
   },
   "box/box/basics/canonical_name.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/canonical_name.kt"
   },
   "box/box/basics/cast_null.kt": {
@@ -1206,8 +1205,8 @@
    "upstream": "compiler/testData/codegen/box/basics/superSetterCall.kt"
   },
   "box/box/basics/typealias1.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "unknown Bar (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Bar'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/typealias1.kt"
   },
@@ -1669,17 +1668,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupyyghd8e9/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupyyghd8e9/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupaigmbq0h/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupaigmbq0h/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupyqy4p4xt/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupyqy4p4xt/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupjdlkwj_o/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupjdlkwj_o/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupndt6e6y1/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupndt6e6y1/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupieopwy30/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupieopwy30/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -2631,14 +2630,13 @@
    "upstream": "compiler/testData/codegen/box/bridges/test1.kt"
   },
   "box/box/bridges/test10.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/test10.kt"
   },
   "box/box/bridges/test11.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
+   "category": "unknown Unit (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test11.kt"
   },
@@ -2655,9 +2653,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test13.kt"
   },
   "box/box/bridges/test14.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/test14.kt"
   },
   "box/box/bridges/test15.kt": {
@@ -3566,8 +3563,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/smartCastForExtensionReceiver.kt"
   },
   "box/box/callableReference/bound/typeAliasObjectBoundReference.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/typeAliasObjectBoundReference.kt"
   },
@@ -3603,8 +3600,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/callableReferenceOfObjectMethod.kt"
   },
   "box/box/callableReference/callableReferenceOnObjectTypealias.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/callableReferenceOnObjectTypealias.kt"
   },
@@ -7080,8 +7077,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/topLevelInitTriggersCompanionBlock.kt"
   },
   "box/box/companionBlocksAndExtensions/typeAlias.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/typeAlias.kt"
   },
@@ -7852,8 +7849,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/kt51863.kt"
   },
   "box/box/contextParameters/kt51951.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "other syntax (at 'context')",
+   "detail": "unexpected top-level token (at 'context')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt51951.kt"
   },
@@ -7880,8 +7877,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/kt52459.kt"
   },
   "box/box/contextParameters/kt52967.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "other syntax (at '(')",
+   "detail": "unexpected top-level token (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt52967.kt"
   },
@@ -7902,8 +7899,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/kt63430.kt"
   },
   "box/box/contextParameters/kt65953.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt65953.kt"
   },
@@ -9426,9 +9423,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/callOnSmarcastedNothing.kt"
   },
   "box/box/controlflow/for_loops.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops.kt"
   },
   "box/box/controlflow/for_loops_array_break_continue.kt": {
@@ -9467,9 +9463,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_array_side_effects.kt"
   },
   "box/box/controlflow/for_loops_call_order.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_call_order.kt"
   },
   "box/box/controlflow/for_loops_coroutines.kt": {
@@ -9501,15 +9496,13 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_nested.kt"
   },
   "box/box/controlflow/for_loops_overflow.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_overflow.kt"
   },
   "box/box/controlflow/for_loops_types.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_types.kt"
   },
   "box/box/controlflow/smartcastOnThisInInitializationSection.kt": {
@@ -12469,14 +12462,14 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/complexInheritance.kt"
   },
   "box/box/defaultArguments/constructor/annotation.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown test1 (stdlib API / unsupported decl)",
+   "detail": "unknown function 'test1'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/annotation.kt"
   },
   "box/box/defaultArguments/constructor/annotationWithEmptyArray.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown test1 (stdlib API / unsupported decl)",
+   "detail": "unknown function 'test1'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/annotationWithEmptyArray.kt"
   },
@@ -13967,8 +13960,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/smartCastedDelegation.kt"
   },
   "box/box/delegation/viaTypeAlias.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/viaTypeAlias.kt"
   },
@@ -15237,8 +15230,8 @@
    "upstream": "compiler/testData/codegen/box/escapeAnalysis/zeroOutObjectOnAlloc.kt"
   },
   "box/box/evaluate/annotationClassWithInner.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "unknown a (stdlib API / unsupported decl)",
+   "detail": "unknown name 'a'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/annotationClassWithInner.kt"
   },
@@ -15388,9 +15381,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/nullableEnumName.kt"
   },
   "box/box/evaluate/kt55912.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/evaluate/kt55912.kt"
   },
   "box/box/evaluate/kt56215.kt": {
@@ -15418,7 +15410,7 @@
   },
   "box/box/evaluate/objectConstValInAnnotationArgument.kt": {
    "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/objectConstValInAnnotationArgument.kt"
   },
@@ -15570,15 +15562,13 @@
    "upstream": "compiler/testData/codegen/box/evaluate/ushortOperations.kt"
   },
   "box/box/exceptions/catch1.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/exceptions/catch1.kt"
   },
   "box/box/exceptions/catch2.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/exceptions/catch2.kt"
   },
   "box/box/exceptions/catch7.kt": {
@@ -16387,8 +16377,8 @@
    "upstream": "compiler/testData/codegen/box/fir/anonymousOverrideWithDefaultInOverridden.kt"
   },
   "box/box/fir/classCanNotBeCastedToVoid.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "annotations",
+   "detail": "expected end of statement (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/classCanNotBeCastedToVoid.kt"
   },
@@ -17206,9 +17196,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaults4.kt"
   },
   "box/box/function/defaults5.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/defaults5.kt"
   },
   "box/box/function/defaults6.kt": {
@@ -17250,8 +17239,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaultsWithVarArg1.kt"
   },
   "box/box/function/defaultsWithVarArg2.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected ArrayList<Int>, found IntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaultsWithVarArg2.kt"
   },
@@ -17395,8 +17384,8 @@
    "upstream": "compiler/testData/codegen/box/functions/bigArity/invokeMemberCallableReference.kt"
   },
   "box/box/functions/bigArity/nestedBigArityFunCalls.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/bigArity/nestedBigArityFunCalls.kt"
   },
@@ -18395,8 +18384,8 @@
    "upstream": "compiler/testData/codegen/box/inference/capturedTypeWhenSubject.kt"
   },
   "box/box/inference/capturedTypesSubstitutionIntoAbbreviation.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/capturedTypesSubstitutionIntoAbbreviation.kt"
   },
@@ -19607,8 +19596,8 @@
    "upstream": "compiler/testData/codegen/box/inference/safeCastWithElvis.kt"
   },
   "box/box/inference/suspendExtensionRecevierFromConstraint.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "local / extension functions",
+   "detail": "unexpected top-level token (at 'ExtensionReceiver')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/suspendExtensionRecevierFromConstraint.kt"
   },
@@ -19706,9 +19695,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/initializers1.kt"
   },
   "box/box/initializers/initializers2.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/initializers/initializers2.kt"
   },
   "box/box/initializers/initializers3.kt": {
@@ -20457,9 +20445,8 @@
    "upstream": "compiler/testData/codegen/box/inline/privateProperty.kt"
   },
   "box/box/inline/propertyAccessorInline.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inline/propertyAccessorInline.kt"
   },
   "box/box/inline/redundantCoercionsCleaner.kt": {
@@ -20659,14 +20646,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/UIntSafeAsInt.kt"
   },
   "box/box/inlineClasses/annotatedMemberExtensionProperty.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/annotatedMemberExtensionProperty.kt"
   },
   "box/box/inlineClasses/annotatedMemberExtensionPropertyGeneric.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/annotatedMemberExtensionPropertyGeneric.kt"
   },
@@ -23386,12 +23373,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531488\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645664\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609822944\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789472\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -26041,7 +26028,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x10447051f        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x104554bb7        kfun:newkotlin.Parser.prefix#internal + 7535 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x102a8051f        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102b6880b        kfun:newkotlin.Parser.prefix#internal + 7535 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -26535,21 +26522,18 @@
    "upstream": "compiler/testData/codegen/box/lambda/lambda1.kt"
   },
   "box/box/lambda/lambda10.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lambda/lambda10.kt"
   },
   "box/box/lambda/lambda11.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lambda/lambda11.kt"
   },
   "box/box/lambda/lambda12.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lambda/lambda12.kt"
   },
   "box/box/lambda/lambda13.kt": {
@@ -26574,9 +26558,8 @@
    "upstream": "compiler/testData/codegen/box/lambda/lambda3.kt"
   },
   "box/box/lambda/lambda4.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lambda/lambda4.kt"
   },
   "box/box/lambda/lambda5.kt": {
@@ -26585,9 +26568,8 @@
    "upstream": "compiler/testData/codegen/box/lambda/lambda5.kt"
   },
   "box/box/lambda/lambda6.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lambda/lambda6.kt"
   },
   "box/box/lambda/lambda7.kt": {
@@ -26596,15 +26578,13 @@
    "upstream": "compiler/testData/codegen/box/lambda/lambda7.kt"
   },
   "box/box/lambda/lambda8.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lambda/lambda8.kt"
   },
   "box/box/lambda/lambda9.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lambda/lambda9.kt"
   },
   "box/box/lambda/lambda_kt49360_trivial.kt": {
@@ -26697,9 +26677,8 @@
    "upstream": "compiler/testData/codegen/box/lateinit/localNotInitialized.kt"
   },
   "box/box/lateinit/notInitialized.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lateinit/notInitialized.kt"
   },
   "box/box/lazyCodegen/exceptionInFieldInitializer.kt": {
@@ -29644,14 +29623,14 @@
    "upstream": "compiler/testData/codegen/box/objects/useImportedMemberFromCompanion.kt"
   },
   "box/box/operatorConventions/BoundedGenericValueInRangeCheck.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "other syntax (at 'where')",
+   "detail": "unexpected top-level token (at 'where')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/BoundedGenericValueInRangeCheck.kt"
   },
   "box/box/operatorConventions/annotatedAssignment.kt": {
    "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/annotatedAssignment.kt"
   },
@@ -30024,8 +30003,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/booleanHashCode.kt"
   },
   "box/box/primitiveTypes/charToByte.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "other: unknown method Char.toByte()",
+   "detail": "unknown method Char.toByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/charToByte.kt"
   },
@@ -31185,13 +31164,13 @@
    "upstream": "compiler/testData/codegen/box/properties/lateinit/accessorExceptionPublic.kt"
   },
   "box/box/properties/lateinit/exceptionField.kt": {
-   "detail": "exit=0 stdout='FAIL\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/exceptionField.kt"
   },
   "box/box/properties/lateinit/exceptionGetter.kt": {
-   "detail": "exit=0 stdout='FAIL\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/exceptionGetter.kt"
   },
   "box/box/properties/lateinit/kt30548.kt": {
@@ -31258,8 +31237,8 @@
    "upstream": "compiler/testData/codegen/box/properties/lateinit/override.kt"
   },
   "box/box/properties/lateinit/overrideException.kt": {
-   "detail": "exit=0 stdout='FAIL\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/overrideException.kt"
   },
   "box/box/properties/lateinit/privateSetter.kt": {
@@ -31374,8 +31353,8 @@
    "upstream": "compiler/testData/codegen/box/properties/privatePropertyWithoutBackingField.kt"
   },
   "box/box/properties/twoAnnotatedExtensionPropertiesWithoutBackingFields.kt": {
-   "category": "annotations",
-   "detail": "unexpected top-level token (at 'annotation')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/twoAnnotatedExtensionPropertiesWithoutBackingFields.kt"
   },
@@ -36859,8 +36838,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/genericNull.kt"
   },
   "box/box/safeCall/kt1572.kt": {
-   "detail": "exit=0 stdout='fail\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/safeCall/kt1572.kt"
   },
   "box/box/safeCall/kt245.kt": {
@@ -38479,8 +38458,8 @@
    "upstream": "compiler/testData/codegen/box/suspendConversion/suspendConversionNullableNpe2.kt"
   },
   "box/box/suspendConversion/suspendConversionOfAliasedType.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/suspendConversion/suspendConversionOfAliasedType.kt"
   },
@@ -39014,51 +38993,43 @@
    "upstream": "compiler/testData/codegen/box/traits/traitWithPrivateMemberAccessFromLambda.kt"
   },
   "box/box/try/catch3.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/catch3.kt"
   },
   "box/box/try/catch4.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/catch4.kt"
   },
   "box/box/try/catch5.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/catch5.kt"
   },
   "box/box/try/catch6.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/catch6.kt"
   },
   "box/box/try/catch8.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/catch8.kt"
   },
   "box/box/try/finally1.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally1.kt"
   },
   "box/box/try/finally10.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally10.kt"
   },
   "box/box/try/finally11.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally11.kt"
   },
   "box/box/try/finally12.kt": {
@@ -39086,51 +39057,43 @@
    "upstream": "compiler/testData/codegen/box/try/finally15.kt"
   },
   "box/box/try/finally2.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally2.kt"
   },
   "box/box/try/finally3.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally3.kt"
   },
   "box/box/try/finally4.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally4.kt"
   },
   "box/box/try/finally5.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally5.kt"
   },
   "box/box/try/finally6.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally6.kt"
   },
   "box/box/try/finally7.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally7.kt"
   },
   "box/box/try/finally8.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally8.kt"
   },
   "box/box/try/finally9.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/finally9.kt"
   },
   "box/box/try/returnsDifferentTypes.kt": {
@@ -39154,9 +39117,8 @@
    "upstream": "compiler/testData/codegen/box/try/try3.kt"
   },
   "box/box/try/try4.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.appendLine()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/try/try4.kt"
   },
   "box/box/try/try5.kt": {
@@ -39416,8 +39378,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/deserializedAbbreviationWithRedundantArgument.kt"
   },
   "box/box/typealias/enumEntryQualifier.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "unknown MyAlias (stdlib API / unsupported decl)",
+   "detail": "unknown name 'MyAlias'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/enumEntryQualifier.kt"
   },
@@ -39427,20 +39389,20 @@
    "upstream": "compiler/testData/codegen/box/typealias/extensionFunction.kt"
   },
   "box/box/typealias/genericTypeAliasConstructor.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "strings / templates",
+   "detail": "unknown function 'StringCell'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/genericTypeAliasConstructor.kt"
   },
   "box/box/typealias/genericTypeAliasConstructor2.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt"
   },
   "box/box/typealias/genericTypeAliasConstructor_implicitTypeArguments.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/genericTypeAliasConstructor_implicitTypeArguments.kt"
   },
@@ -39455,26 +39417,26 @@
    "upstream": "compiler/testData/codegen/box/typealias/incorrectTypeOfTypealiasForSuspendFTMM.kt"
   },
   "box/box/typealias/incorrectTypeOfTypealiasForSuspendFunctionalType.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "other syntax (at '(')",
+   "detail": "unexpected top-level token (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/incorrectTypeOfTypealiasForSuspendFunctionalType.kt"
   },
   "box/box/typealias/innerClassTypeAliasConstructor.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "other: unknown method Outer.OI()",
+   "detail": "unknown method Outer.OI()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/innerClassTypeAliasConstructor.kt"
   },
   "box/box/typealias/innerClassTypeAliasConstructorInSupertypes.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown superclass OIB",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/innerClassTypeAliasConstructorInSupertypes.kt"
   },
   "box/box/typealias/kt15109.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/kt15109.kt"
   },
@@ -39499,8 +39461,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/nestedTypeAliasesAndTypeArguments.kt"
   },
   "box/box/typealias/objectLiteralConstructor.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/objectLiteralConstructor.kt"
   },
@@ -39510,26 +39472,26 @@
    "upstream": "compiler/testData/codegen/box/typealias/privateInKlib.kt"
   },
   "box/box/typealias/simple.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/simple.kt"
   },
   "box/box/typealias/typeAliasAsBareType.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasAsBareType.kt"
   },
   "box/box/typealias/typeAliasCompanion.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "unknown Alias (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Alias'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasCompanion.kt"
   },
   "box/box/typealias/typeAliasConstructor.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "unknown Alias (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Alias'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasConstructor.kt"
   },
@@ -39540,38 +39502,38 @@
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasConstructorAccessor.kt"
   },
   "box/box/typealias/typeAliasConstructorForArray.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasConstructorForArray.kt"
   },
   "box/box/typealias/typeAliasConstructorInSuperCall.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasConstructorInSuperCall.kt"
   },
   "box/box/typealias/typeAliasFunction.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasFunction.kt"
   },
   "box/box/typealias/typeAliasInAnonymousObjectType.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasInAnonymousObjectType.kt"
   },
   "box/box/typealias/typeAliasObject.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "unknown OHolderAlias (stdlib API / unsupported decl)",
+   "detail": "unknown name 'OHolderAlias'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasObject.kt"
   },
   "box/box/typealias/typeAliasObjectCallable.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "unknown A (stdlib API / unsupported decl)",
+   "detail": "unknown function 'A'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasObjectCallable.kt"
   },
@@ -39592,8 +39554,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasUsedAcrossModules.kt"
   },
   "box/box/typealias/typeArgumentsMappingForTopLevelTAWithInnerRHS.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeArgumentsMappingForTopLevelTAWithInnerRHS.kt"
   },
@@ -39659,7 +39621,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup56r63hxl/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup56r63hxl/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqm2m7plx/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqm2m7plx/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -40771,8 +40733,8 @@
    "upstream": "compiler/testData/codegen/box/when/implicitExhaustiveAndReturn.kt"
   },
   "box/box/when/inferredTypeParameters.kt": {
-   "category": "typealias",
-   "detail": "unexpected top-level token (at 'typealias')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/inferredTypeParameters.kt"
   },
@@ -45478,7 +45440,7 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup183ome9_/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup183ome9_/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupjbfddx0q/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupjbfddx0q/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },

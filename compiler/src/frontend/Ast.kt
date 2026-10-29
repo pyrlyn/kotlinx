@@ -67,7 +67,7 @@ class FunD(val name: String, val params: List<Param>, val ret: TypeRef?, val bod
            /** Extension receiver type (`fun Recv.name(...)`); resolved away by [Parser.program]. */
            val recv: TypeRef? = null)
 /** `type == null` (inferred) only for body properties, which have `init`. */
-class FieldD(val name: String, val type: TypeRef?, val isVar: Boolean, val init: E? = null)
+class FieldD(val name: String, val type: TypeRef?, val isVar: Boolean, val init: E? = null, val lateinit: Boolean = false)
 /**
  * `fields`: constructor properties, then body properties. `ctorParams`: the primary constructor's parameters in order
  * (properties and plain parameters). `inits`: body properties (FieldD) and `init` blocks (Block) in declaration order.

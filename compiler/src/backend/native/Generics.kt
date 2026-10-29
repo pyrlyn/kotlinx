@@ -70,14 +70,21 @@ private val INLINE_LAMBDAS = setOf("map", "filter", "forEach", "sumOf", "count",
 private fun boxCapturedVars(p: Program): Program {
     var used = false
     /** Lambda nesting depth of each `var` declaration (min) and of assignments to each name (max). */
-    fun names(b: Block, out: MutableMap<String, Int>, decl: MutableMap<String, Int>) {
+    fun names(b: Block, out: MutableMap<String, Int>, decl: MutableMap<String, Int>, reads: MutableMap<String, Int>) {
         val w = object {
+            /** Names shadowed inside the current lambda (its parameters and local declarations). */
+            val shadow = ArrayList<String>()
+            fun lam(bl: Block, d: Int) {
+                val names = bl.params.ifEmpty { listOf("it") } + bl.stmts.filterIsInstance<VarS>().map { it.name }
+                shadow.addAll(names); blk(bl, d); repeat(names.size) { shadow.removeAt(shadow.size - 1) }
+            }
             fun asg(t: E, d: Int) { if (t is NameE) out[t.n] = maxOf(out[t.n] ?: -1, d) }
             fun e(x: E, d: Int) {
                 when (x) {
+                    is NameE -> if (x.n !in shadow) reads[x.n] = maxOf(reads[x.n] ?: -1, d)
                     is PostIncE -> { asg(x.target, d); e(x.target, d) }
                     is StrL -> x.parts.forEach { if (it is E) e(it, d) }
-                    is CallE -> { e(x.callee, d); x.args.forEach { e(it, d) }; x.lambda?.let { blk(it, if (x.callee is MemberE && x.callee.n in INLINE_LAMBDAS) d else d + 1) } }
+                    is CallE -> { e(x.callee, d); x.args.forEach { e(it, d) }; x.lambda?.let { lam(it, if (x.callee is MemberE && x.callee.n in INLINE_LAMBDAS) d else d + 1) } }
                     is MemberE -> e(x.recv, d)
                     is IndexE -> { e(x.recv, d); e(x.idx, d) }
                     is BinE -> { e(x.l, d); e(x.r, d) }
@@ -87,7 +94,7 @@ private fun boxCapturedVars(p: Program): Program {
                     is AsE -> e(x.e, d)
                     is IfE -> { e(x.cond, d); blk(x.th, d); x.el?.let { blk(it, d) } }
                     is WhenE -> { x.subj?.let { e(it, d) }; x.branches.forEach { (c, bl) -> c?.forEach { e(it, d) }; blk(bl, d) } }
-                    is LambdaE -> blk(x.body, d + 1)
+                    is LambdaE -> lam(x.body, d + 1)
                     is TryE -> { blk(x.body, d); x.catches.forEach { blk(it.body, d) }; x.fin?.let { blk(it, d) } }
                     else -> {}
                 }
@@ -110,9 +117,10 @@ private fun boxCapturedVars(p: Program): Program {
         w.blk(b, 0)
     }
     fun box(body: Block): Block {
-        val assigned = HashMap<String, Int>(); val decl = HashMap<String, Int>()
-        names(body, assigned, decl)
-        val boxed = decl.filter { (n, d) -> (assigned[n] ?: -1) > d }.keys
+        val assigned = HashMap<String, Int>(); val decl = HashMap<String, Int>(); val reads = HashMap<String, Int>()
+        names(body, assigned, decl, reads)
+        // Box a var assigned inside a closure, or read by a closure and reassigned anywhere (the closure must see it).
+        val boxed = decl.filter { (n, d) -> (assigned[n] ?: -1) > d || (reads[n] ?: -1) > d && n in assigned }.keys
         if (boxed.isEmpty()) return body
         used = true
         lateinit var sub: Subst

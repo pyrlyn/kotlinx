@@ -1,0 +1,4 @@
+caught: lateinit property s has not been initialized
+set
+original!
+changed!

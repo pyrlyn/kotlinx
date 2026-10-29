@@ -35,7 +35,8 @@ private const val VT_HEADER = 5
 /** Standard exception types `throw` accepts, with the qualified name printed for an uncaught exception. */
 private val EXCEPTIONS = listOf("AssertionError", "Error", "Exception", "RuntimeException", "IllegalStateException",
     "IllegalArgumentException", "UnsupportedOperationException", "ArithmeticException", "IndexOutOfBoundsException",
-    "NullPointerException", "ClassCastException", "NumberFormatException", "ConcurrentModificationException")
+    "NullPointerException", "ClassCastException", "NumberFormatException", "ConcurrentModificationException",
+    "UninitializedPropertyAccessException")
     .associateWith { "java.lang.$it" } + mapOf("NoSuchElementException" to "java.util.NoSuchElementException")
 /** Binary operators that call an `operator fun` on class/interface operands. */
 private val OP_FUNS = mapOf("+" to "plus", "-" to "minus", "*" to "times", "/" to "div", "%" to "rem")
@@ -1476,6 +1477,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "UInt.MAX_VALUE" to ("4294967295" to Ty.U32), "UInt.MIN_VALUE" to ("0" to Ty.U32), "ULong.MAX_VALUE" to ("-1" to Ty.U64), "ULong.MIN_VALUE" to ("0" to Ty.U64),
         "Byte.MAX_VALUE" to ("127" to Ty.I8), "Byte.MIN_VALUE" to ("-128" to Ty.I8))
 
+    private val lateinitFields by lazy { prog.classes.flatMap { c -> c.fields.filter { it.lateinit }.map { "${c.name}.${it.name}" } }.toSet() }
+
     private fun property(r: Val, n: String): Val {
         // Property getters (`val x: T get() = ...`) of classes and extension properties: `$prop$x` functions.
         val pm = "\$prop\$$n"
@@ -1491,7 +1494,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val ci = classes.getValue(t.name)
                 val idx = ci.index(n).takeIf { it >= 0 } ?: fail("no field $n in ${t.name}")
                 val ft = ci.fields[idx].second
-                Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${r.v}, i32 0, i32 ${idx + 2}")}"), ft)
+                val fv = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${r.v}, i32 0, i32 ${idx + 2}")}"), ft)
+                // Reading an unassigned `lateinit` reference property throws.
+                if (ft.llvm == "ptr" && (listOf(t.name) + ci.ancestors).any { "$it.$n" in lateinitFields }) {
+                    val ok = label("li.ok"); val bad = label("li.unset")
+                    condBr(emitT("icmp ne ptr ${fv.v}, null"), ok, bad)
+                    startBlock(bad)
+                    val msg = "lateinit property $n has not been initialized"
+                    if (excMode) throwNew("UninitializedPropertyAccessException", sbMsg(msg))
+                    else { emit("call void @rt_panic(ptr ${cstr("UninitializedPropertyAccessException: $msg")})"); emit("unreachable"); term = true }
+                    startBlock(ok)
+                }
+                fv
             }
             is Ty.ListTy -> if (n == "size") Val(emitT("trunc i64 ${emitT("call i64 @rt_list_size(ptr ${r.v})")} to i32"), Ty.I32) else fail("unknown property $n")
             is Ty.Arr -> if (n == "size") Val(emitT("trunc i64 ${emitT("load i64, ptr ${r.v}")} to i32"), Ty.I32) else fail("unknown property $n")
@@ -1567,7 +1581,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return CallE(NameE("arrayListOf").also { it.line = line }, if (known) listOf(elemT) else emptyList(), items, null).also { it.line = line }
         }
         val nv = named.firstOrNull { it.name == params[vi].name }
-        val newPos = if (nv != null) pos else if (pos.size <= vi) pos + pack(emptyList()) else pos.take(vi) + pack(pos.drop(vi))
+        val newPos = if (nv != null) pos else if (pos.size <= vi) (if (params[vi].default != null) pos else pos + pack(emptyList())) else pos.take(vi) + pack(pos.drop(vi))
         val newNamed = named.map { if (it === nv) NamedE(it.name, pack(listOf(it.e))).also { x -> x.line = it.line } else it }
         return CallE(e.callee, e.typeArgs, newPos + newNamed, e.lambda).also { it.line = e.line }
     }
@@ -2155,6 +2169,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 appendVal("rt_sb_", "ptr ${r.v}, ", v)
                 Val(r.v, Ty.SB, false)
             }
+            t == Ty.SB && n == "appendLine" && e.args.size <= 1 -> {
+                if (e.args.isNotEmpty()) appendVal("rt_sb_", "ptr ${r.v}, ", genExpr(e.args[0]))
+                appendVal("rt_sb_", "ptr ${r.v}, ", Val("10", Ty.Char))
+                Val(r.v, Ty.SB, false)
+            }
             t == Ty.SB && n == "toString" -> Val(emitT("call ptr @rt_sb_tostring(ptr ${r.v})"), Ty.Str, true)
             t is Ty.MapTy && (n == "containsKey" || n == "get" || n == "put" || n == "getOrDefault") -> {
                 val k = mapKey(genExpr(e.args[0]), t)
@@ -2430,16 +2449,26 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             "?:" -> {
                 val a = genExpr(e.l)
                 if (a.t.llvm != "ptr") return a
-                val from = cur
-                val lr = label("elvis.rhs"); val le = label("elvis.end")
-                condBr(emitT("icmp ne ptr ${a.v}, null"), le, lr)
+                val lr = label("elvis.rhs"); val ln = label("elvis.lhs"); val le = label("elvis.end")
+                condBr(emitT("icmp ne ptr ${a.v}, null"), ln, lr)
                 startBlock(lr)
                 val b0 = genExpr(e.r)
-                val res = ArrayList<Pair<Val, String>>()
-                res.add(a to from)
-                if (!term) { val b = coerce(b0, a.t); res.add(b to cur); br(le) }
+                var b: Val? = null
+                if (!term) {
+                    b = coerce(b0, a.t)
+                    // Both arms must agree on ownership: the result is owned if either side is.
+                    if (a.owned && !b.owned && b.v != "null" && a.t.isRef) retain(b.v, a.t)
+                    b = Val(b.v, b.t, b.owned)
+                }
+                val rhsEnd = cur
+                if (b != null) br(le)
+                startBlock(ln)
+                val owned = a.owned || (b?.owned == true && a.t.isRef)
+                if (owned && !a.owned) retain(a.v, a.t)
+                val lhsEnd = cur
+                br(le)
                 startBlock(le)
-                return if (res.size == 1) a else Val(emitT("phi ptr [ ${a.v}, %$from ], [ ${res[1].first.v}, %${res[1].second} ]"), a.t)
+                return if (b == null) Val(a.v, a.t, a.owned) else Val(emitT("phi ptr [ ${a.v}, %$lhsEnd ], [ ${b.v}, %$rhsEnd ]"), a.t, owned)
             }
             "..", "until", "downTo", "step" -> return rangeValue(e)
             "in", "!in" -> {

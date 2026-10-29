@@ -129,12 +129,17 @@ class Parser(private val t: List<Tok>) {
 
     fun program(): Program {
         val globals = ArrayList<VarS>(); val funs = ArrayList<FunD>(); val classes = ArrayList<ClassD>(); val ifaces = ArrayList<InterfaceD>()
+        collectAliases()
         while (true) {
             skipNL()
             val tk = peek()
             when {
                 tk.k == K.EOF -> break
                 tk.k == K.OP && tk.s == "@" -> skipLine()
+                tk.k == K.ID && tk.s == "typealias" && t[p + 1].k == K.ID && t[p + 2].k == K.OP && t[p + 2].s == "=" -> { p += 3; type() }
+                tk.k == K.ID && tk.s == "typealias" -> fail("generic type aliases are not supported", tk)
+                // Annotation declarations have no runtime effect here.
+                tk.k == K.ID && tk.s == "annotation" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classDecl() }
                 tk.k == K.ID && (tk.s == "import" || tk.s == "package") -> skipLine()
                 tk.k == K.ID && (tk.s == "value" || tk.s == "inline") && t[p + 1].k == K.ID && t[p + 1].s == "class" -> {
                     p++
@@ -231,8 +236,8 @@ class Parser(private val t: List<Tok>) {
             while (true) {
                 skipNL()
                 if (isOp("}")) break
-                var isConst = false
-                while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) { if (peek().s == "const") isConst = true; p++ }
+                var isConst = false; var isLate = false
+                while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) { if (peek().s == "const") isConst = true; if (peek().s == "lateinit") isLate = true; p++ }
                 if (props != null && inits != null && (isId("val") || isId("var"))) {
                     val isVar = next().s == "var"
                     val n = ident()
@@ -242,7 +247,7 @@ class Parser(private val t: List<Tok>) {
                     // the type's zero value (null for references) and is assignable during construction.
                     val f = if (!isOp("=")) {
                         if (ty == null) fail("body properties need an initializer")
-                        FieldD(n, ty, true, zeroOf(ty))
+                        FieldD(n, ty, true, zeroOf(ty), isLate)
                     } else { next(); skipNLOnly(); FieldD(n, ty, isVar, expr()) }
                     props.add(f); inits.add(f)
                     val constOwner = curClass ?: curObject
@@ -639,7 +644,29 @@ class Parser(private val t: List<Tok>) {
             next()
         }
         val nullable = if (isOp("?")) { next(); true } else false
+        aliases[name]?.let { a -> if (args.isEmpty()) return TypeRef(a.name, a.args, a.nullable || nullable) }
         return TypeRef(name, args, nullable)
+    }
+
+    /** Non-generic `typealias N = T`, collected before parsing so aliases may be used before their declaration. */
+    private val aliases = HashMap<String, TypeRef>()
+
+    private fun collectAliases() {
+        val save = p
+        var depth = 0
+        while (peek().k != K.EOF) {
+            val tk = peek()
+            if (tk.k == K.OP && (tk.s == "{" || tk.s == "(")) depth++
+            if (tk.k == K.OP && (tk.s == "}" || tk.s == ")")) depth--
+            if (depth == 0 && tk.k == K.ID && tk.s == "typealias" && t[p + 1].k == K.ID && t[p + 2].k == K.OP && t[p + 2].s == "=") {
+                p += 3
+                val name = t[p - 2].s
+                aliases[name] = type()
+                continue
+            }
+            p++
+        }
+        p = save
     }
 
     private fun block(lambda: Boolean = false): Block {
