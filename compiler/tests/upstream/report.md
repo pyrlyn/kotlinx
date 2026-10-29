@@ -7,46 +7,46 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| UNSUPPORTED | 5348 |
+| UNSUPPORTED | 5340 |
 | N/A | 2984 |
-| PASS | 143 |
+| PASS | 151 |
 
-Kept in tree (re-runnable with `run.py`): 143
+Kept in tree (re-runnable with `run.py`): 151
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| generics | 799 |
-| inline/value classes | 565 |
+| generics | 838 |
+| inline/value classes | 571 |
 | ranges (step/downTo/until, ranges as values) | 423 |
-| interfaces | 420 |
-| operator/infix functions | 342 |
-| class bodies / constructors | 288 |
-| lambdas / function types / references | 269 |
-| objects / companion objects | 249 |
-| inheritance (open/abstract/sealed) | 181 |
-| enum classes | 166 |
-| type checks / casts (is, as) | 112 |
+| interfaces | 421 |
+| operator/infix functions | 346 |
+| class bodies / constructors | 291 |
+| lambdas / function types / references | 282 |
+| objects / companion objects | 253 |
+| enum classes | 167 |
+| type checks / casts (is, as) | 120 |
 | strings / templates | 95 |
-| exceptions | 77 |
+| exceptions | 78 |
+| extension functions | 73 |
 | annotations | 72 |
-| extension functions | 71 |
+| type inference (expression bodies) | 71 |
 | destructuring declarations | 64 |
-| type inference (expression bodies) | 62 |
-| default arguments | 52 |
+| default arguments | 55 |
+| inheritance (open/abstract/sealed) | 54 |
 | property accessors / delegation | 52 |
 | stdlib: kotlin.test asserts | 45 |
-| modifiers (private/const/lateinit/...) | 44 |
+| modifiers (private/const/lateinit/...) | 45 |
+| types: Any | 43 |
+| other: body properties need an initializer (at ' | 43 |
 | other syntax (at '.') | 42 |
 | other syntax (at 'context') | 40 |
+| other syntax (at ':') | 37 |
 | other syntax (at 'in') | 36 |
-| other syntax (at ':') | 34 |
+| other syntax (at '=') | 32 |
 | other syntax (at 'f') | 31 |
-| other syntax (at '=') | 31 |
-| other: body properties need an initializer (at ' | 30 |
 | other syntax (at ',') | 28 |
-| types: Any | 27 |
 | other: expected '=' (at ' | 27 |
 | nullable types | 23 |
 | other syntax (at '!') | 18 |

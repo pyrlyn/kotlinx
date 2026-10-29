@@ -33,7 +33,7 @@ class Parser(private val t: List<Tok>) {
                 tk.k == K.EOF -> break
                 tk.k == K.OP && tk.s == "@" -> skipLine()
                 tk.k == K.ID && (tk.s == "import" || tk.s == "package") -> skipLine()
-                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "const", "open", "final") -> p++
+                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "const", "open", "final", "abstract", "sealed") -> p++
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> globals.add(stmt() as VarS)
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
                 tk.k == K.ID && tk.s == "class" -> classes.add(classDecl())
@@ -117,13 +117,23 @@ class Parser(private val t: List<Tok>) {
             }
             expectOp(")")
         }
-        val supers = ArrayList<String>()
+        val supers = ArrayList<String>(); var superArgs: List<E>? = null
         if (isOp(":")) {
             next()
-            while (true) { supers.add(ident()); if (isOp("(")) { next(); expectOp(")") }; if (isOp(",")) next() else break }
+            while (true) {
+                val sn = ident()
+                if (isOp("(")) {
+                    if (superArgs != null) fail("only one superclass is allowed")
+                    next()
+                    superArgs = nested(1) { val xs = ArrayList<E>(); while (!isOp(")")) { xs.add(expr()); if (isOp(",")) next() }; xs }
+                    expectOp(")")
+                    supers.add(0, sn)
+                } else supers.add(sn)
+                if (isOp(",")) next() else break
+            }
         }
         val ms = if (isOp("{")) members(fields, inits) else emptyList()
-        return ClassD(name, fields, supers, ms, line, ctorParams, inits)
+        return ClassD(name, fields, supers, ms, line, ctorParams, inits, superArgs)
     }
 
     private fun type(): TypeRef {

@@ -45,9 +45,12 @@ class FieldD(val name: String, val type: TypeRef?, val isVar: Boolean, val init:
  * (properties and plain parameters). `inits`: body properties (FieldD) and `init` blocks (Block) in declaration order.
  */
 class ClassD(val name: String, val fields: List<FieldD>, val supers: List<String>, val methods: List<FunD>, val line: Int,
-             val ctorParams: List<Param> = fields.map { Param(it.name, it.type!!) }, val inits: List<Any> = emptyList()) {
-    /** Needs a constructor function (plain parameters or initializers), not just field stores. */
-    val hasCtorBody get() = inits.isNotEmpty() || ctorParams.size != fields.size
+             val ctorParams: List<Param> = fields.map { Param(it.name, it.type!!) }, val inits: List<Any> = emptyList(),
+             val superArgs: List<E>? = null) {
+    /** The superclass is the one supertype written with constructor arguments (`: Base(...)`). */
+    val superClass: String? get() = if (superArgs != null) supers.first() else null
+    /** Needs a constructor function (plain parameters, initializers or a superclass), not just field stores. */
+    val hasCtorBody get() = inits.isNotEmpty() || ctorParams.size != fields.size || superArgs != null
 }
 class InterfaceD(val name: String, val methods: List<FunD>, val line: Int)
 /** `globals`: top-level properties, initialized in declaration order before `main`. */

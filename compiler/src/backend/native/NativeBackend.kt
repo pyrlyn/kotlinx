@@ -7,7 +7,12 @@ private class Local(val slot: String, val t: Ty, val isVar: Boolean)
 private class Scope { val vars = HashMap<String, Local>(); val refs = ArrayList<Local>() }
 private class FunSig(val name: String, val params: List<Ty>, val ret: Ty)
 /** Object layout: { i64 refcount, ptr vtable, fields... }; vtable[0] = release function. */
-private class ClassInfo(val name: String, val fields: List<Pair<String, Ty>>, val supers: List<String> = emptyList(), val methods: Map<String, FunD> = emptyMap()) {
+/**
+ * `fields`: inherited fields first (prefix layout), then own. `supers`: all superclasses and interfaces (transitive).
+ * `ancestors`: superclass chain. `impl`: method name -> class whose body implements it (absent = abstract).
+ */
+private class ClassInfo(val name: String, val fields: List<Pair<String, Ty>>, val supers: List<String> = emptyList(), val methods: Map<String, FunD> = emptyMap(),
+                        val ancestors: List<String> = emptyList(), val impl: Map<String, String> = methods.keys.associateWith { name }) {
     val llType = "%C.$name"
     fun index(f: String) = fields.indexOfFirst { it.first == f }
 }
@@ -111,7 +116,7 @@ class NativeBackend(private val prog: Program) {
     }
 
     private fun releaseFn(t: Ty): String? = when (t) {
-        is Ty.Cls -> "@rel.${t.name}"
+        is Ty.Cls -> if (t.name in poly) "@rt_release_dyn" else "@rel.${t.name}"
         is Ty.ListTy -> "@rt_list_release"
         is Ty.MapTy -> "@rt_map_release"
         is Ty.Iface -> "@rt_release_dyn"
@@ -144,6 +149,7 @@ class NativeBackend(private val prog: Program) {
         if ((v.t == Ty.RawPtr || v.t == Ty.Str) && (t == Ty.RawPtr || t == Ty.Str)) return Val(v.v, t, v.owned)
         if (v.v == "null" && t.llvm == "ptr") return Val("null", t)
         if (v.t is Ty.Cls && t is Ty.Iface && t.name in classes.getValue(v.t.name).supers) return Val(v.v, t, v.owned)
+        if (v.t is Ty.Cls && t is Ty.Cls && t.name in classes.getValue(v.t.name).ancestors) return Val(v.v, t, v.owned)
         fail("type mismatch: expected $t, found ${v.t}")
     }
 
@@ -186,15 +192,32 @@ class NativeBackend(private val prog: Program) {
             ifaces[i.name] = IfaceInfo(i.name, i.methods.associate { m -> m.name to FunSig(m.name, m.params.map { resolve(it.type) }, m.ret?.let { resolve(it) } ?: Ty.Unit) })
             for (m in i.methods) if (m.name !in slots) slots.add(m.name)
         }
-        for (c in prog.classes) {
+        for (c in classOrder) {
             line = c.line
-            for (sup in c.supers) if (sup !in ifaces) fail("unknown interface $sup (class inheritance is not supported)")
-            classes[c.name] = ClassInfo(c.name, c.fields.map { f -> f.name to (f.type?.let { resolve(it) } ?: Ty.Unit) }, c.supers, c.methods.associateBy { it.name })
+            val bi = c.superClass?.let { s -> if (s !in classDecls) fail("unknown superclass $s"); classes.getValue(s) }
+            for (sup in c.supers.drop(if (bi != null) 1 else 0)) if (sup !in ifaces) fail("unknown interface $sup")
+            val fields = ArrayList(bi?.fields ?: emptyList())
+            for (f in c.fields) {
+                if (fields.any { it.first == f.name }) fail("property '${f.name}' of ${c.name} hides an inherited property")
+                fields.add(f.name to (f.type?.let { resolve(it) } ?: Ty.Unit))
+            }
+            val methods = HashMap(bi?.methods ?: emptyMap()); val impl = HashMap(bi?.impl ?: emptyMap())
+            for (m in c.methods) { methods[m.name] = m; if (m.body != null || m.exprBody != null) impl[m.name] = c.name else impl.remove(m.name) }
+            classes[c.name] = ClassInfo(c.name, fields, (c.supers + (bi?.supers ?: emptyList())).distinct(), methods,
+                if (bi != null) listOf(bi.name) + bi.ancestors else emptyList(), impl)
         }
-        for (c in prog.classes) for (m in c.methods) {
-            line = m.line
-            val ret = m.ret?.let { resolve(it) } ?: if (m.body != null) Ty.Unit else fail("method '${m.name}' needs an explicit return type")
-            methodSigs["${c.name}.${m.name}"] = FunSig(m.name, m.params.map { resolve(it.type) }, ret)
+        for (c in classes.values) for (a in c.ancestors) poly.add(a)
+        for (c in classes.values) if (c.name in poly || c.ancestors.isNotEmpty()) for (m in c.methods.keys) if (m !in slots) slots.add(m)
+        for (c in classOrder) {
+            for (m in c.methods) {
+                line = m.line
+                val ret = m.ret?.let { resolve(it) } ?: if (m.exprBody == null) Ty.Unit else fail("method '${m.name}' needs an explicit return type")
+                val sig = FunSig(m.name, m.params.map { resolve(it.type) }, ret)
+                c.superClass?.let { s -> methodSigs["$s.${m.name}"]?.let { if (it.params != sig.params || it.ret != sig.ret) fail("override of '${m.name}' in ${c.name} changes its signature") } }
+                methodSigs["${c.name}.${m.name}"] = sig
+            }
+            val ci = classes.getValue(c.name)
+            for (n in ci.methods.keys) if ("${c.name}.$n" !in methodSigs) methodSigs["${c.name}.$n"] = methodSigs.getValue("${ci.ancestors.first()}.$n")
         }
         for (f in prog.funs) {
             line = f.line
@@ -202,13 +225,17 @@ class NativeBackend(private val prog: Program) {
             if (f.name in sigs) fail("overloads are not supported: ${f.name}")
             sigs[f.name] = FunSig(f.name, f.params.map { resolve(it.type) }, ret)
         }
-        for (c in prog.classes) inferFields(c)
+        for (c in classOrder) {
+            c.superClass?.let { s -> val fs = classes.getValue(c.name).fields as MutableList<Pair<String, Ty>>; classes.getValue(s).fields.forEachIndexed { i, f -> fs[i] = f } }
+            inferFields(c)
+        }
         computeCyclic()
         for (c in classes.values) genClass(c)
         val main = sigs["main"] ?: throw CompileError("no main function")
         genGlobals()
         for (f in prog.funs) genFun(f, null)
-        for (c in prog.classes) for (m in c.methods) genFun(m, classes.getValue(c.name))
+        for (c in prog.classes) for (m in c.methods) if (m.body != null || m.exprBody != null) genFun(m, classes.getValue(c.name))
+        for (c in prog.classes) if (c.hasCtorBody || c.name in poly) genInit(c, classes.getValue(c.name))
         for (c in prog.classes) if (c.hasCtorBody) genCtor(c, classes.getValue(c.name))
         val sb = StringBuilder()
         sb.append("; generated by newkotlinc\n").append(PRELUDE).append(globals).append('\n').append(funcs)
@@ -229,14 +256,15 @@ class NativeBackend(private val prog: Program) {
      */
     private fun computeCyclic() {
         fun targets(t: Ty): List<String> = when (t) {
-            is Ty.Cls -> listOf(t.name)
+            is Ty.Cls -> classes.values.filter { it.name == t.name || t.name in it.ancestors }.map { it.name }
             is Ty.Iface -> classes.values.filter { t.name in it.supers }.map { it.name }
             else -> emptyList()
         }
         val edges = HashMap<String, List<Pair<String, Boolean>>>()
         for (c in prog.classes) {
             val ci = classes.getValue(c.name)
-            edges[c.name] = c.fields.flatMap { f -> targets(ci.fields[ci.index(f.name)].second).map { it to f.isVar } }
+            edges[c.name] = generateSequence(c) { x -> x.superClass?.let { classDecls[it] } }.toList()
+                .flatMap { x -> x.fields }.flatMap { f -> targets(ci.fields[ci.index(f.name)].second).map { it to f.isVar } }
         }
         fun reach(from: String): Set<String> {
             val seen = HashSet<String>(); val work = ArrayList<String>(); work.add(from)
@@ -249,6 +277,8 @@ class NativeBackend(private val prog: Program) {
             // var edge a -> b lies on a cycle: every class on a cycle through it is cyclic.
             for (c in classes.keys) if ((c == b || c in r.getValue(b)) && (c == a || a in r.getValue(c))) cyclic.add(c)
         }
+        // A subclass carries its superclasses' fields, so it is cyclic whenever one of them is.
+        for (c in classes.values) if (c.ancestors.any { it in cyclic }) cyclic.add(c.name)
     }
 
     private fun isTraced(t: Ty) = t is Ty.Cls || t is Ty.Iface
@@ -258,7 +288,7 @@ class NativeBackend(private val prog: Program) {
         // vtable: [release, trace children, release untraced fields, free memory, is-cyclic, interface methods...]
         val vt = listOf("ptr @rel.${c.name}", "ptr @trav.${c.name}", "ptr @relo.${c.name}", "ptr @free.${c.name}",
             "ptr ${if (c.name in cyclic) "inttoptr (i64 1 to ptr)" else "null"}") +
-            slots.map { if (it in c.methods) "ptr @m.${c.name}.$it" else "ptr null" }
+            slots.map { m -> c.impl[m]?.let { "ptr @m.$it.$m" } ?: "ptr null" }
         globals.append("@vt.${c.name} = internal constant [${vt.size} x ptr] [${vt.joinToString(", ")}]\n")
         val f = StringBuilder()
         val cyc = c.name in cyclic
@@ -417,44 +447,80 @@ class NativeBackend(private val prog: Program) {
         funcs.setLength(savedFuncs)
     }
 
-    /** Constructor function for classes with plain parameters, body properties or init blocks: returns an owned object. */
-    private fun genCtor(c: ClassD, ci: ClassInfo) {
-        beginBody(ci, Ty.Cls(ci.name)); line = c.line
-        val params = ArrayList<String>()
+    /** Classes with subclasses: static type may hold a subclass, so release and method calls dispatch through the vtable. */
+    private val poly = HashSet<String>()
+
+    /** Classes with superclasses first. */
+    private val classOrder: List<ClassD> by lazy {
+        val out = LinkedHashMap<String, ClassD>()
+        fun visit(c: ClassD, path: Set<String>) {
+            if (c.name in out) return
+            if (c.name in path) fail("cyclic inheritance involving ${c.name}")
+            c.superClass?.let { s -> classDecls[s]?.let { visit(it, path + c.name) } }
+            out[c.name] = c
+        }
+        prog.classes.forEach { visit(it, emptySet()) }
+        out.values.toList()
+    }
+
+    /**
+     * `@init.C(this, ctor params)`: runs the superclass initializer with the super-call arguments, stores the own
+     * constructor properties, then the body property initializers and init blocks in order.
+     */
+    private fun genInit(c: ClassD, ci: ClassInfo) {
+        beginBody(ci, Ty.Unit); line = c.line
+        val params = arrayListOf("ptr %this")
         for (p in c.ctorParams) {
             val t = resolve(p.type)
             params.add("${t.llvm} %a.${p.name}")
             val l = declare(p.name, t, false, false)
             emit("store ${t.llvm} %a.${p.name}, ptr ${l.slot}")
         }
-        val size = emitT("ptrtoint ptr ${emitT("getelementptr ${ci.llType}, ptr null, i32 1")} to i64")
-        emit("%this = call ptr ${allocFn(ci.name)}(i64 $size)")
-        val ctorProps = c.fields.filter { it.init == null }.map { it.name }.toSet()
-        val vals = ci.fields.map { (n, t) ->
-            if (n in ctorProps) consume(coerce(genArg(NameE(n).also { it.line = c.line }), t))
-            else Val(if (t.llvm == "ptr") "null" else "zeroinitializer", t)
+        c.superClass?.let { s ->
+            val bd = classDecls.getValue(s)
+            val args = c.superArgs!!
+            if (args.size != bd.ctorParams.size) fail("constructor $s expects ${bd.ctorParams.size} arguments")
+            val vals = args.mapIndexed { i, a -> coerce(genExpr(a), resolve(bd.ctorParams[i].type)) }
+            emit("call void @init.$s(ptr %this${vals.joinToString("") { ", ${it.t.llvm} ${it.v}" }})")
+            vals.forEach { releaseIfOwned(it) }
         }
-        initObj(ci, "%this", vals)
+        fun store(n: String, v0: Val) {
+            val idx = ci.index(n); val ft = ci.fields[idx].second
+            val v = consume(coerce(v0, ft))
+            emit("store ${ft.llvm} ${v.v}, ptr ${emitT("getelementptr ${ci.llType}, ptr %this, i32 0, i32 ${idx + 2}")}")
+        }
+        for (f in c.fields) if (f.init == null) store(f.name, genArg(NameE(f.name).also { it.line = c.line }))
         for (x in c.inits) {
-            if (x is FieldD) {
-                val ft = ci.fields[ci.index(x.name)].second
-                val v = consume(coerce(genArg(x.init!!), ft))
-                emit("store ${ft.llvm} ${v.v}, ptr ${emitT("getelementptr ${ci.llType}, ptr %this, i32 0, i32 ${ci.index(x.name) + 2}")}")
-            } else {
+            if (x is FieldD) store(x.name, genArg(x.init!!))
+            else {
                 genBlockBody(x as Block, false)
                 if (term) fail("return is not allowed in an init block of ${c.name}")
             }
         }
         releaseAll()
-        emit("ret ptr %this")
-        funcs.append("define internal ptr @ctor.${ci.name}(${params.joinToString(", ")}) nounwind {\nentry:\n").append(allocas).append(body).append("}\n\n")
+        emit("ret void")
+        funcs.append("define internal void @init.${ci.name}(${params.joinToString(", ")}) nounwind {\nentry:\n").append(allocas).append(body).append("}\n\n")
+    }
+
+    /** Constructor function for classes with plain parameters, initializers or a superclass: returns an owned object. */
+    private fun genCtor(c: ClassD, ci: ClassInfo) {
+        val ps = c.ctorParams.map { "${resolve(it.type).llvm} %a.${it.name}" }
+        val f = StringBuilder("define internal ptr @ctor.${ci.name}(${ps.joinToString(", ")}) nounwind {\nentry:\n")
+        f.append("  %sz = ptrtoint ptr getelementptr (${ci.llType}, ptr null, i32 1) to i64\n")
+        f.append("  %this = call ptr ${allocFn(ci.name)}(i64 %sz)\n  store i64 1, ptr %this\n")
+        f.append("  %vt = getelementptr ${ci.llType}, ptr %this, i32 0, i32 1\n  store ptr @vt.${ci.name}, ptr %vt\n")
+        ci.fields.forEachIndexed { i, (_, t) ->
+            f.append("  %f$i = getelementptr ${ci.llType}, ptr %this, i32 0, i32 ${i + 2}\n  store ${t.llvm} ${if (t.llvm == "ptr") "null" else "zeroinitializer"}, ptr %f$i\n")
+        }
+        f.append("  call void @init.${ci.name}(ptr %this${if (ps.isEmpty()) "" else ", " + ps.joinToString(", ")})\n  ret ptr %this\n}\n\n")
+        funcs.append(f)
     }
 
     private fun ctorClass(e: E?): ClassInfo? {
         if (e !is CallE || e.lambda != null || e.typeArgs.isNotEmpty()) return null
         val n = (e.callee as? NameE)?.n ?: return null
         if (lookup(n) != null) return null
-        if (classDecls[n]?.hasCtorBody == true) return null
+        if (classDecls[n]?.hasCtorBody == true || n in poly) return null
         return classes[n]
     }
 
@@ -514,6 +580,7 @@ class NativeBackend(private val prog: Program) {
             if (l !in scope.refs) continue
             val t = l.t as? Ty.Cls ?: continue
             val old = classes[t.name] ?: continue
+            if (old.name in poly || ci.name in poly || old.ancestors.isNotEmpty()) continue // static type may not be the dynamic one
             if (old.fields.map { it.second.llvm } != layout) continue
             if ((old.name in cyclic) != (ci.name in cyclic)) continue // reuse stays within one region
             if (uses[i].any { it.node.n == n && it.node !in inArgs }) continue
@@ -873,7 +940,7 @@ class NativeBackend(private val prog: Program) {
         if (res.isEmpty()) { emit("unreachable"); term = true; return Val("undef", Ty.Nothing) }
         var t = res[0].first.t
         if (exhaustive && res.any { it.first.t != t }) commonIface(res.map { it.first.t })?.let { t = it }
-        if (!exhaustive || t == Ty.Unit || res.any { it.first.t != t && !(t is Ty.Iface && it.first.t is Ty.Cls) }) {
+        if (!exhaustive || t == Ty.Unit || res.any { it.first.t != t && !((t is Ty.Iface || t is Ty.Cls) && it.first.t is Ty.Cls) }) {
             for ((v, _) in res) if (v.t.isRef && v.owned) fail("if/when branches yield references of different types; assign the result or make the types match")
             return Val("", Ty.Unit)
         }
@@ -885,8 +952,10 @@ class NativeBackend(private val prog: Program) {
     /** The single interface all branch types (classes or that interface) implement, if any; Cls -> Iface is free. */
     private fun commonIface(ts: List<Ty>): Ty? {
         if (ts.any { it !is Ty.Cls && it !is Ty.Iface }) return null
-        val sets = ts.map { t -> if (t is Ty.Iface) setOf(t.name) else classes.getValue((t as Ty.Cls).name).supers.toSet() }
+        val sets = ts.map { t -> if (t is Ty.Iface) setOf(t.name) else classes.getValue((t as Ty.Cls).name).let { it.supers.toSet() + it.name } }
         val common = sets.reduce { a, b -> a intersect b }
+        // Most derived common superclass first, else the single common interface.
+        common.filter { it in classes }.maxByOrNull { classes.getValue(it).ancestors.size }?.let { return Ty.Cls(it) }
         return common.singleOrNull()?.let { Ty.Iface(it) }
     }
 
@@ -1202,7 +1271,13 @@ class NativeBackend(private val prog: Program) {
     private fun callMethod(r: Val, ci: ClassInfo, n: String, e: CallE): Val {
         val sig = methodSigs["${ci.name}.$n"] ?: fail("unknown method ${ci.name}.$n()")
         val args = methodArgs(sig, e)
-        return finishCall("call ${sig.ret.llvm} @m.${ci.name}.$n(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args)
+        if (ci.name in poly) {
+            val vt = emitT("load ptr, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 8")}")
+            val fp = emitT("load ptr, ptr ${emitT("getelementptr ptr, ptr $vt, i64 ${slots.indexOf(n) + VT_HEADER}")}")
+            return finishCall("call ${sig.ret.llvm} $fp(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args)
+        }
+        val impl = ci.impl[n] ?: fail("abstract method ${ci.name}.$n() cannot be called")
+        return finishCall("call ${sig.ret.llvm} @m.$impl.$n(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args)
     }
 
     /** Interface call through the object's vtable (slot = global interface-method index + VT_HEADER). */

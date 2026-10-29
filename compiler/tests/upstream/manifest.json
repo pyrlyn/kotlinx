@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 143,
-  "UNSUPPORTED": 5348
+  "PASS": 151,
+  "UNSUPPORTED": 5340
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -318,8 +318,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/argumentOrderInObjectSuperCall.kt"
   },
   "box/box/argumentOrder/argumentOrderInSuperCall.kt": {
-   "category": "other syntax (at 'k')",
-   "detail": "expected ')' (at 'k')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/argumentOrderInSuperCall.kt"
   },
@@ -672,8 +672,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexReversed.kt"
   },
   "box/box/arrays/genericArrayInObjectLiteralConstructor.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/genericArrayInObjectLiteralConstructor.kt"
   },
@@ -2027,8 +2027,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/complexMultiInheritance.kt"
   },
   "box/box/bridges/complexTraitImpl.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/complexTraitImpl.kt"
   },
@@ -2039,14 +2039,14 @@
    "upstream": "compiler/testData/codegen/box/bridges/covariantGenericDiamond.kt"
   },
   "box/box/bridges/declarationDifferentSignature/simpleAbstractDeclarationDifferentSignature.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/declarationDifferentSignature/simpleAbstractDeclarationDifferentSignature.kt"
   },
   "box/box/bridges/declarationDifferentSignature/simpleAbstractDeclarationOverridesConcreteDifferentSignature.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/declarationDifferentSignature/simpleAbstractDeclarationOverridesConcreteDifferentSignature.kt"
   },
@@ -2057,8 +2057,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/declarationDifferentSignature/simpleConcreteDeclarationDifferentSignature.kt"
   },
   "box/box/bridges/declarationDifferentSignature/simpleConcreteDeclarationOverridesAbstractDifferentSignature.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/declarationDifferentSignature/simpleConcreteDeclarationOverridesAbstractDifferentSignature.kt"
   },
@@ -2111,8 +2111,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/diamond/diamondMixedDeclarations.kt"
   },
   "box/box/bridges/doubleOverride/concreteDeclarationOverridesAbstractDeclarationOverridingConcrete.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/doubleOverride/concreteDeclarationOverridesAbstractDeclarationOverridingConcrete.kt"
   },
@@ -2159,8 +2159,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/diamondFakeOverrideAbstractFakeAndConcrete.kt"
   },
   "box/box/bridges/fakeOverride/diamondFakeOverrideAbstractOverridesConcrete.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface A (class inheritance is not supported)",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/diamondFakeOverrideAbstractOverridesConcrete.kt"
   },
@@ -2171,8 +2171,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideAbstractAndConcreteDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideDiamondWithExtraAbstract.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface A (class inheritance is not supported)",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideDiamondWithExtraAbstract.kt"
   },
@@ -2231,8 +2231,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractDeclaration.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractFakeOverride.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractFakeOverride.kt"
   },
@@ -2249,26 +2249,26 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/longTreeOfFakeOverrideBridgeInheritance.kt"
   },
   "box/box/bridges/fakeOverrideDifferentSignature/simpleAbstractDeclarationOverridesAbstractThroughFakeOverride.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideDifferentSignature/simpleAbstractDeclarationOverridesAbstractThroughFakeOverride.kt"
   },
   "box/box/bridges/fakeOverrideDifferentSignature/simpleAbstractDeclarationOverridesConcreteThroughFakeOverride.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideDifferentSignature/simpleAbstractDeclarationOverridesConcreteThroughFakeOverride.kt"
   },
   "box/box/bridges/fakeOverrideDifferentSignature/simpleConcreteDeclarationOverridesAbstractThroughFakeOverride.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideDifferentSignature/simpleConcreteDeclarationOverridesAbstractThroughFakeOverride.kt"
   },
   "box/box/bridges/fakeOverrideDifferentSignature/simpleConcreteDeclarationOverridesConcreteThroughFakeOverride.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideDifferentSignature/simpleConcreteDeclarationOverridesConcreteThroughFakeOverride.kt"
   },
@@ -2285,8 +2285,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideWithSeveralSuperDeclarations.kt"
   },
   "box/box/bridges/fakeOverrideWithSynthesizedImplementation.kt": {
-   "category": "inline/value classes",
-   "detail": "expected ')' (at 'value')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideWithSynthesizedImplementation.kt"
   },
@@ -2334,8 +2334,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/kt12416.kt"
   },
   "box/box/bridges/kt1939.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/kt1939.kt"
   },
@@ -2386,8 +2386,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/kt46389.kt"
   },
   "box/box/bridges/kt74377.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/kt74377.kt"
   },
@@ -2438,8 +2438,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/noBridgeOnMutableCollectionInheritance.kt"
   },
   "box/box/bridges/noBridges/oneVertexAbstract.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/noBridges/oneVertexAbstract.kt"
   },
@@ -2449,38 +2449,34 @@
    "upstream": "compiler/testData/codegen/box/bridges/noBridges/oneVertexConcrete.kt"
   },
   "box/box/bridges/noBridges/simpleAbstractDeclarationOverridesConcreteSameSignature.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/noBridges/simpleAbstractDeclarationOverridesConcreteSameSignature.kt"
   },
   "box/box/bridges/noBridges/simpleAbstractDeclarationSameSignature.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/noBridges/simpleAbstractDeclarationSameSignature.kt"
   },
   "box/box/bridges/noBridges/simpleDeclarationSameSignature.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface A (class inheritance is not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/noBridges/simpleDeclarationSameSignature.kt"
   },
   "box/box/bridges/noBridges/simpleFakeOverrideSameSignature.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface A (class inheritance is not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/noBridges/simpleFakeOverrideSameSignature.kt"
   },
   "box/box/bridges/overrideAbstractProperty.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overrideAbstractProperty.kt"
   },
   "box/box/bridges/overrideReturnType.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface C (class inheritance is not supported)",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overrideReturnType.kt"
   },
@@ -2491,8 +2487,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/overrideWithValueClassReturn.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesAbstractAndConcreteDeclarations.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesAbstractAndConcreteDeclarations.kt"
   },
@@ -2611,8 +2607,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/strListContains.kt"
   },
   "box/box/bridges/substitutionInSuperClass/abstractFun.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/abstractFun.kt"
   },
@@ -2677,8 +2673,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/upperBound.kt"
   },
   "box/box/bridges/test0.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface A (class inheritance is not supported)",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test0.kt"
   },
@@ -2695,14 +2691,14 @@
    "upstream": "compiler/testData/codegen/box/bridges/test10.kt"
   },
   "box/box/bridges/test11.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test11.kt"
   },
   "box/box/bridges/test12.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test12.kt"
   },
@@ -2725,8 +2721,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test15.kt"
   },
   "box/box/bridges/test16.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'bar' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test16.kt"
   },
@@ -2737,8 +2733,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test17.kt"
   },
   "box/box/bridges/test18.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface A (class inheritance is not supported)",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test18.kt"
   },
@@ -2748,8 +2744,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test19.kt"
   },
   "box/box/bridges/test2.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface A (class inheritance is not supported)",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test2.kt"
   },
@@ -2779,8 +2775,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test24.kt"
   },
   "box/box/bridges/test25.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test25.kt"
   },
@@ -2821,8 +2817,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test8.kt"
   },
   "box/box/bridges/test9.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test9.kt"
   },
@@ -3334,8 +3330,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/unsignedArrayFactory.kt"
   },
   "box/box/callableReference/adaptedReferences/varargFromBaseClass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other syntax (at 's')",
+   "detail": "expected ':' (at 's')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargFromBaseClass.kt"
   },
@@ -3823,8 +3819,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/funInterfaceConstructor/funInterfaceConstructorOfImplicitKFunctionType.kt"
   },
   "box/box/callableReference/function/abstractClassMember.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/abstractClassMember.kt"
   },
@@ -4060,8 +4056,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/genericWithDependentType.kt"
   },
   "box/box/callableReference/function/innerClassConstructorWithTwoReceivers.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/innerClassConstructorWithTwoReceivers.kt"
   },
@@ -4462,8 +4458,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt50172.kt"
   },
   "box/box/callableReference/kt51844.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt51844.kt"
   },
@@ -4479,8 +4475,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/nested.kt"
   },
   "box/box/callableReference/property/accessViaSubclass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/accessViaSubclass.kt"
   },
@@ -4704,8 +4700,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleTopLevel.kt"
   },
   "box/box/callableReference/serializability/referenceToCompanionFunction.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/serializability/referenceToCompanionFunction.kt"
   },
@@ -4913,14 +4909,14 @@
    "upstream": "compiler/testData/codegen/box/casts/kt22714.kt"
   },
   "box/box/casts/kt48927_privateMethodOnDerivedCastToBase.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt48927_privateMethodOnDerivedCastToBase.kt"
   },
   "box/box/casts/kt50577.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt50577.kt"
   },
@@ -4986,8 +4982,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt82732.kt"
   },
   "box/box/casts/kt83324.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt83324.kt"
   },
@@ -5390,8 +5386,8 @@
    "upstream": "compiler/testData/codegen/box/classes/delegationMethodsWithArgs.kt"
   },
   "box/box/classes/exceptionConstructor.kt": {
-   "category": "other syntax (at 'msg')",
-   "detail": "expected ')' (at 'msg')",
+   "category": "exceptions",
+   "detail": "unknown superclass Exception",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/exceptionConstructor.kt"
   },
@@ -5408,14 +5404,13 @@
    "upstream": "compiler/testData/codegen/box/classes/extensionOnNamedClassObject.kt"
   },
   "box/box/classes/funDelegation.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface Base (class inheritance is not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/funDelegation.kt"
   },
   "box/box/classes/implementComparableInSubclass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/implementComparableInSubclass.kt"
   },
@@ -5442,9 +5437,8 @@
    "upstream": "compiler/testData/codegen/box/classes/inheritedInnerClass.kt"
   },
   "box/box/classes/inheritedMethod.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface Foo (class inheritance is not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/inheritedMethod.kt"
   },
   "box/box/classes/initializerBlock.kt": {
@@ -5645,8 +5639,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2477.kt"
   },
   "box/box/classes/kt2480.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2480.kt"
   },
@@ -5950,8 +5944,8 @@
    "upstream": "compiler/testData/codegen/box/classes/quotedClassName.kt"
   },
   "box/box/classes/rightHandOverride.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface Right (class inheritance is not supported)",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'f' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/rightHandOverride.kt"
   },
@@ -5968,9 +5962,8 @@
    "upstream": "compiler/testData/codegen/box/classes/simpleBox.kt"
   },
   "box/box/classes/superConstructorCallWithComplexArg.kt": {
-   "category": "other syntax (at '\"...\"')",
-   "detail": "expected ')' (at '\"...\"')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/superConstructorCallWithComplexArg.kt"
   },
   "box/box/classes/typedDelegation.kt": {
@@ -6069,14 +6062,14 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/localFunctionCapturedInLambda.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerAndLocalCapturedInLocalClass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerAndLocalCapturedInLocalClass.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedAsImplicitThisInBoundReference.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedAsImplicitThisInBoundReference.kt"
   },
@@ -6123,8 +6116,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInLambdaInSubExpression.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInLocalClass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInLocalClass.kt"
   },
@@ -6165,8 +6158,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInSecondaryConstructorDefaultParameter.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerEnumEntryCapturedInLambdaInInnerClass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerEnumEntryCapturedInLambdaInInnerClass.kt"
   },
@@ -6213,14 +6206,14 @@
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/inPropertyDeepObjectChain.kt"
   },
   "box/box/closures/captureOuterProperty/inPropertyFromSuperClass.kt": {
-   "category": "other syntax (at '\"...\"')",
-   "detail": "expected ')' (at '\"...\"')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/inPropertyFromSuperClass.kt"
   },
   "box/box/closures/captureOuterProperty/inPropertyFromSuperSuperClass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/inPropertyFromSuperSuperClass.kt"
   },
@@ -6710,8 +6703,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/unsignedArraysOperatorOfReferences.kt"
   },
   "box/box/collections/addCollectionStubWithCovariantOverride.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collections/addCollectionStubWithCovariantOverride.kt"
   },
@@ -6727,8 +6720,8 @@
    "upstream": "compiler/testData/codegen/box/collections/inSetWithSmartCast.kt"
   },
   "box/box/collections/inheritFromAbstractMutableListInt.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collections/inheritFromAbstractMutableListInt.kt"
   },
@@ -6771,8 +6764,8 @@
    "upstream": "compiler/testData/codegen/box/companion/protectedConstValFromSuperCompanion.kt"
   },
   "box/box/companionBlocksAndExtensions/abstractClasses.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/abstractClasses.kt"
   },
@@ -8009,8 +8002,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/kt58476.kt"
   },
   "box/box/contextParameters/kt63430.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'context')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt63430.kt"
   },
@@ -8156,7 +8149,7 @@
   },
   "box/box/contextParameters/withExtensionReceiverInSupertype.kt": {
    "category": "other syntax (at 'C')",
-   "detail": "expected ')' (at 'C')",
+   "detail": "unexpected top-level token (at 'C')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/withExtensionReceiverInSupertype.kt"
   },
@@ -8235,8 +8228,8 @@
    "upstream": "compiler/testData/codegen/box/contracts/kt39374.kt"
   },
   "box/box/contracts/kt45236.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/kt45236.kt"
   },
@@ -9305,8 +9298,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt870.kt"
   },
   "box/box/controlStructures/kt88544.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'data')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt88544.kt"
   },
@@ -9503,8 +9496,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/kt9644try.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/multipleCatchBlocks.kt": {
-   "category": "other syntax (at 'msg')",
-   "detail": "expected ')' (at 'msg')",
+   "category": "class bodies / constructors",
+   "detail": "unexpected top-level token (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/multipleCatchBlocks.kt"
   },
@@ -9561,8 +9554,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryInsideCatch.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryInsideTry.kt": {
-   "category": "other syntax (at 'message')",
-   "detail": "expected ')' (at 'message')",
+   "category": "class bodies / constructors",
+   "detail": "unexpected top-level token (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryInsideTry.kt"
   },
@@ -9762,8 +9755,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/bridges/lambdaWithMultipleParameters.kt"
   },
   "box/box/coroutines/bridges/mapSuspendAbstractClear.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/bridges/mapSuspendAbstractClear.kt"
   },
@@ -12313,8 +12306,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/constructorWithDefaultParam.kt"
   },
   "box/box/dataClasses/copy/copyInObjectNestedDataClass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/copyInObjectNestedDataClass.kt"
   },
@@ -12521,14 +12514,14 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/multiDeclarationFor.kt"
   },
   "box/box/dataClasses/nonTrivialFinalMemberInSuperClass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'toString' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/nonTrivialFinalMemberInSuperClass.kt"
   },
   "box/box/dataClasses/nonTrivialMemberInSuperClass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'toString' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/nonTrivialMemberInSuperClass.kt"
   },
@@ -12764,8 +12757,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/kt3060.kt"
   },
   "box/box/defaultArguments/constructor/objectExpressionDelegatingToSecondaryConstructor.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/objectExpressionDelegatingToSecondaryConstructor.kt"
   },
@@ -12811,8 +12804,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/defaultArgumentsInFunctionWithExpressionAsBody.kt"
   },
   "box/box/defaultArguments/function/abstractClass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/abstractClass.kt"
   },
@@ -13122,14 +13115,14 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/signature/kt2789.kt"
   },
   "box/box/defaultArguments/signature/kt9428.kt": {
-   "category": "other syntax (at 'name')",
-   "detail": "expected ')' (at 'name')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/signature/kt9428.kt"
   },
   "box/box/defaultArguments/signature/kt9924.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/signature/kt9924.kt"
   },
@@ -14295,8 +14288,8 @@
    "upstream": "compiler/testData/codegen/box/devirtualization/inline_getter.kt"
   },
   "box/box/devirtualization/kt67218c.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface A (class inheritance is not supported)",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/devirtualization/kt67218c.kt"
   },
@@ -14984,8 +14977,8 @@
    "upstream": "compiler/testData/codegen/box/enum/enumEntryNamedLikeModifier.kt"
   },
   "box/box/enum/enumEntryReferenceFromInnerClassConstructor1.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "enum classes",
+   "detail": "unexpected top-level token (at 'enum')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryReferenceFromInnerClassConstructor1.kt"
   },
@@ -15701,8 +15694,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/kt56215.kt"
   },
   "box/box/evaluate/kt9443.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'to')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/kt9443.kt"
   },
@@ -15891,14 +15884,14 @@
    "upstream": "compiler/testData/codegen/box/exceptions/catch7.kt"
   },
   "box/box/exceptions/extend0.kt": {
-   "category": "other syntax (at '\"...\"')",
-   "detail": "expected ')' (at '\"...\"')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/exceptions/extend0.kt"
   },
   "box/box/exceptions/kt69534.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/exceptions/kt69534.kt"
   },
@@ -16480,8 +16473,8 @@
    "upstream": "compiler/testData/codegen/box/fakeOverride/diamondFunction.kt"
   },
   "box/box/fakeOverride/fakeOverrideOfPrivateSetter.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fakeOverride/fakeOverrideOfPrivateSetter.kt"
   },
@@ -16507,8 +16500,8 @@
    "upstream": "compiler/testData/codegen/box/fakeOverride/intersectionInLocal.kt"
   },
   "box/box/fakeOverride/intersectionOverrideBetweenValAndVar.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fakeOverride/intersectionOverrideBetweenValAndVar.kt"
   },
@@ -16699,8 +16692,8 @@
    "upstream": "compiler/testData/codegen/box/finally/returnNullFromInlined.kt"
   },
   "box/box/finally/someStuff.kt": {
-   "category": "other syntax (at '\"...\"')",
-   "detail": "expected ')' (at '\"...\"')",
+   "category": "other syntax (at 'Baz')",
+   "detail": "expected end of statement (at 'Baz')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/finally/someStuff.kt"
   },
@@ -16741,8 +16734,8 @@
    "upstream": "compiler/testData/codegen/box/fir/contextSensitiveResolution/basicExampleWithEnumAndWhens.kt"
   },
   "box/box/fir/contextSensitiveResolution/eitherInTypePosition.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/contextSensitiveResolution/eitherInTypePosition.kt"
   },
@@ -16764,14 +16757,14 @@
    "upstream": "compiler/testData/codegen/box/fir/deserializedOptInDeprecated.kt"
   },
   "box/box/fir/falsePositiveBoundSmartcast.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/falsePositiveBoundSmartcast.kt"
   },
   "box/box/fir/functionsDifferInTypeParameterBounds.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "expected identifier (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/functionsDifferInTypeParameterBounds.kt"
   },
@@ -17038,8 +17031,8 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/basicSyntax.kt"
   },
   "box/box/fullValueClasses/construction.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/construction.kt"
   },
@@ -17054,14 +17047,14 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/crossModuleRepresentationControlFlow.kt"
   },
   "box/box/fullValueClasses/customEqualsThroughHierarchiesAndFields.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/customEqualsThroughHierarchiesAndFields.kt"
   },
   "box/box/fullValueClasses/fakeOverrides.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/fakeOverrides.kt"
   },
@@ -17072,8 +17065,8 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/inapplicableTypes.kt"
   },
   "box/box/fullValueClasses/initializationOrderWithAbstractProperty.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/initializationOrderWithAbstractProperty.kt"
   },
@@ -17135,38 +17128,38 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/nonFinal.kt"
   },
   "box/box/fullValueClasses/nonFinalDelegationSideEffects.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/nonFinalDelegationSideEffects.kt"
   },
   "box/box/fullValueClasses/nonFinalMultiFieldSideEffects.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/nonFinalMultiFieldSideEffects.kt"
   },
   "box/box/fullValueClasses/nonFinalRegularClassInheritsSideEffects.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/nonFinalRegularClassInheritsSideEffects.kt"
   },
   "box/box/fullValueClasses/nonFinalSecondaryConstructorSideEffects.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/nonFinalSecondaryConstructorSideEffects.kt"
   },
   "box/box/fullValueClasses/nonFinalSingleFieldSideEffects.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/nonFinalSingleFieldSideEffects.kt"
   },
   "box/box/fullValueClasses/nonFinalThisInInitSideEffects.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "inline/value classes",
+   "detail": "unexpected top-level token (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/nonFinalThisInInitSideEffects.kt"
   },
@@ -17241,8 +17234,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/castFromAny.kt"
   },
   "box/box/funInterface/contravariantIntersectionType.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ')')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionType.kt"
   },
@@ -17780,8 +17773,8 @@
    "upstream": "compiler/testData/codegen/box/functions/coerceVoidToObject.kt"
   },
   "box/box/functions/defaultargs.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs.kt"
   },
@@ -17810,8 +17803,8 @@
    "upstream": "compiler/testData/codegen/box/functions/defaultargs4.kt"
   },
   "box/box/functions/defaultargs5.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs5.kt"
   },
@@ -18770,8 +18763,8 @@
    "upstream": "compiler/testData/codegen/box/inference/capturedTypeAsLambdaInputType.kt"
   },
   "box/box/inference/capturedTypeWhenSubject.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/capturedTypeWhenSubject.kt"
   },
@@ -18880,8 +18873,8 @@
    "upstream": "compiler/testData/codegen/box/inference/kt42130.kt"
   },
   "box/box/inference/kt45118.kt": {
-   "category": "other syntax (at 'false')",
-   "detail": "expected ')' (at 'false')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/kt45118.kt"
   },
@@ -21131,20 +21124,20 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInitBlockGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverride.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverride.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverrideGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverrideGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverrideGeneric2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverrideGeneric2.kt"
   },
@@ -23393,26 +23386,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/mixedSignatureFunctionsDoNotClashGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass.kt"
   },
   "box/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass2.kt"
   },
   "box/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass2Generic.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/overridingMethodInGenericClass2Generic.kt"
   },
   "box/box/inlineClasses/functionNameMangling/overridingMethodInGenericClassGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/overridingMethodInGenericClassGeneric.kt"
   },
@@ -26239,8 +26232,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/kt3132.kt"
   },
   "box/box/innerNested/kt3927.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/kt3927.kt"
   },
@@ -26352,14 +26345,14 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/innerExtendsInnerWithProperOuterCapture.kt"
   },
   "box/box/innerNested/superConstructorCall/kt11833_1.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/kt11833_1.kt"
   },
   "box/box/innerNested/superConstructorCall/kt11833_2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/kt11833_2.kt"
   },
@@ -27433,14 +27426,14 @@
    "upstream": "compiler/testData/codegen/box/localClass/noPrimaryConstructor.kt"
   },
   "box/box/localClass/objectExpressionInInitializer.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/objectExpressionInInitializer.kt"
   },
   "box/box/localClass/objectExpressionInProperty.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/objectExpressionInProperty.kt"
   },
@@ -27457,8 +27450,8 @@
    "upstream": "compiler/testData/codegen/box/localClass/tryCatch.kt"
   },
   "box/box/localClass/virtualCallFromConstructor.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/virtualCallFromConstructor.kt"
   },
@@ -27790,14 +27783,14 @@
    "upstream": "compiler/testData/codegen/box/mangling/internal.kt"
   },
   "box/box/mangling/internalOverride.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface A (class inheritance is not supported)",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'field' of Z hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/mangling/internalOverride.kt"
   },
   "box/box/mangling/internalOverrideSuperCall.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface A (class inheritance is not supported)",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'field' of Z hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/mangling/internalOverrideSuperCall.kt"
   },
@@ -27812,14 +27805,14 @@
    "upstream": "compiler/testData/codegen/box/mangling/parentheses.kt"
   },
   "box/box/mangling/publicOverride.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface A (class inheritance is not supported)",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'field' of Z hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/mangling/publicOverride.kt"
   },
   "box/box/mangling/publicOverrideSuperCall.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface A (class inheritance is not supported)",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'field' of Z hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/mangling/publicOverrideSuperCall.kt"
   },
@@ -29370,8 +29363,8 @@
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/fullFormExtraPropType.kt"
   },
   "box/box/nameBasedDestructuring/fullFormFromSmartCast.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/fullFormFromSmartCast.kt"
   },
@@ -29399,8 +29392,8 @@
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/shortFormExtraPropType.kt"
   },
   "box/box/nameBasedDestructuring/shortFormFromSmartCast.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/shortFormFromSmartCast.kt"
   },
@@ -29533,8 +29526,8 @@
    "upstream": "compiler/testData/codegen/box/object/init0.kt"
   },
   "box/box/object/initialization.kt": {
-   "category": "other syntax (at 'c')",
-   "detail": "expected ')' (at 'c')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/object/initialization.kt"
   },
@@ -29872,8 +29865,8 @@
    "upstream": "compiler/testData/codegen/box/objects/dceRemoveUnusedEagerlyInitializedObject.kt"
   },
   "box/box/objects/flist.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/flist.kt"
   },
@@ -29932,8 +29925,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt1186.kt"
   },
   "box/box/objects/kt1600.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt1600.kt"
   },
@@ -29998,8 +29991,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt3684.kt"
   },
   "box/box/objects/kt4086.kt": {
-   "category": "objects / companion objects",
-   "detail": "expected ')' (at 'object')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt4086.kt"
   },
@@ -30010,8 +30003,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt45170.kt"
   },
   "box/box/objects/kt46136.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt46136.kt"
   },
@@ -30146,14 +30139,14 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInInlineLambdaInConstructorBody.kt"
   },
   "box/box/objects/selfReferenceToCompanionObjectInInlineLambdaInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInInlineLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToCompanionObjectInLambdaInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInLambdaInSuperConstructorCall.kt"
   },
@@ -30170,14 +30163,14 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInConstructorBody.kt"
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInLambdaInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInLambdaInSuperConstructorCall.kt"
   },
@@ -30194,14 +30187,14 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInInlineLambdaInConstructorBody.kt"
   },
   "box/box/objects/selfReferenceToObjectInInlineLambdaInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInInlineLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToObjectInLambdaInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInLambdaInSuperConstructorCall.kt"
   },
@@ -31138,26 +31131,26 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/numberEqualsHashCodeToString.kt"
   },
   "box/box/primitiveTypes/numberToChar/abstractMethodInSuperinterface.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface Number (class inheritance is not supported)",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown superclass Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/numberToChar/abstractMethodInSuperinterface.kt"
   },
   "box/box/primitiveTypes/numberToChar/fakeOverride.kt": {
-   "category": "inline/value classes",
-   "detail": "expected ')' (at 'value')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown superclass Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/numberToChar/fakeOverride.kt"
   },
   "box/box/primitiveTypes/numberToChar/simple.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface Number (class inheritance is not supported)",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown superclass Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/numberToChar/simple.kt"
   },
   "box/box/primitiveTypes/numberToChar/superCallToClass.kt": {
-   "category": "inline/value classes",
-   "detail": "expected ')' (at 'value')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown superclass Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/numberToChar/superCallToClass.kt"
   },
@@ -31168,8 +31161,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/numberToChar/superCallToInterface.kt"
   },
   "box/box/primitiveTypes/numberToChar/superCallToNumber.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface Number (class inheritance is not supported)",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown superclass Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/numberToChar/superCallToNumber.kt"
   },
@@ -31436,8 +31429,8 @@
    "upstream": "compiler/testData/codegen/box/properties/backingField/typeCheckSupertypeWithValueClassExplicitBackingField.kt"
   },
   "box/box/properties/classArtificialFieldInsideNested.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classArtificialFieldInsideNested.kt"
   },
@@ -31454,8 +31447,8 @@
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideLocalInSetter.kt"
   },
   "box/box/properties/classFieldInsideNested.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideNested.kt"
   },
@@ -31478,8 +31471,8 @@
    "upstream": "compiler/testData/codegen/box/properties/classObjectProperties.kt"
   },
   "box/box/properties/classPrivateArtificialFieldInsideNested.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classPrivateArtificialFieldInsideNested.kt"
   },
@@ -31567,8 +31560,8 @@
    "upstream": "compiler/testData/codegen/box/properties/fieldInClass.kt"
   },
   "box/box/properties/fieldInsideField.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/fieldInsideField.kt"
   },
@@ -31579,8 +31572,8 @@
    "upstream": "compiler/testData/codegen/box/properties/fieldInsideLambda.kt"
   },
   "box/box/properties/fieldInsideNested.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/fieldInsideNested.kt"
   },
@@ -31645,32 +31638,32 @@
    "upstream": "compiler/testData/codegen/box/properties/kt10729.kt"
   },
   "box/box/properties/kt1165.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt1165.kt"
   },
   "box/box/properties/kt1168.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt1168.kt"
   },
   "box/box/properties/kt1170.kt": {
    "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "detail": "property 'kind' of Subclass hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt1170.kt"
   },
   "box/box/properties/kt1398.kt": {
-   "category": "other syntax (at 'bar')",
-   "detail": "expected ')' (at 'bar')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'something' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt1398.kt"
   },
   "box/box/properties/kt1417.kt": {
-   "category": "inline/value classes",
-   "detail": "expected ')' (at 'value')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'toString' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt1417.kt"
   },
@@ -31741,8 +31734,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt3556.kt"
   },
   "box/box/properties/kt3930.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt3930.kt"
   },
@@ -32992,7 +32985,7 @@
   },
   "box/box/ranges/forInCharSequenceWithMultipleGetFunctions.kt": {
    "category": "interfaces",
-   "detail": "unknown interface CharSequence (class inheritance is not supported)",
+   "detail": "unknown interface CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInCharSequenceWithMultipleGetFunctions.kt"
   },
@@ -33152,26 +33145,26 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/indexOfLast.kt"
   },
   "box/box/ranges/forInIndices/kt12983_forInGenericArrayIndices.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInGenericArrayIndices.kt"
   },
   "box/box/ranges/forInIndices/kt12983_forInGenericCollectionIndices.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInGenericCollectionIndices.kt"
   },
   "box/box/ranges/forInIndices/kt12983_forInSpecificArrayIndices.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInSpecificArrayIndices.kt"
   },
   "box/box/ranges/forInIndices/kt12983_forInSpecificCollectionIndices.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInSpecificCollectionIndices.kt"
   },
@@ -37508,8 +37501,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt1845.kt"
   },
   "box/box/regressions/kt18779.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt18779.kt"
   },
@@ -37619,8 +37612,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt4142.kt"
   },
   "box/box/regressions/kt4281.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt4281.kt"
   },
@@ -38212,8 +38205,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallEqPrimitive.kt"
   },
   "box/box/safeCall/safeCallIOnUninitializedNonNullValue.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallIOnUninitializedNonNullValue.kt"
   },
@@ -38399,14 +38392,14 @@
    "upstream": "compiler/testData/codegen/box/sameFileInSourceAndDependencies/nestedClassDeclaration.kt"
   },
   "box/box/sealed/delegatingConstructor.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sealed/delegatingConstructor.kt"
   },
   "box/box/sealed/kt49752.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sealed/kt49752.kt"
   },
@@ -38426,20 +38419,20 @@
    "upstream": "compiler/testData/codegen/box/sealed/multipleFiles_enabled.kt"
   },
   "box/box/sealed/objects.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sealed/objects.kt"
   },
   "box/box/sealed/sealedInSameFile.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sealed/sealedInSameFile.kt"
   },
   "box/box/sealed/simple.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sealed/simple.kt"
   },
@@ -38522,8 +38515,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/defaultParametersNotDuplicated.kt"
   },
   "box/box/secondaryConstructors/delegateWithComplexExpression.kt": {
-   "category": "other syntax (at 's')",
-   "detail": "expected ')' (at 's')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/delegateWithComplexExpression.kt"
   },
@@ -38581,14 +38574,14 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/localClasses.kt"
   },
   "box/box/secondaryConstructors/superCallPrimary.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "modifiers (private/const/lateinit/...)",
+   "detail": "unexpected top-level token (at 'protected')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/superCallPrimary.kt"
   },
   "box/box/secondaryConstructors/superCallSecondary.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/superCallSecondary.kt"
   },
@@ -38722,8 +38715,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/avoidSmartCastToDerivedForPrivate.kt"
   },
   "box/box/smartCasts/complexExplicitReceiver.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "expected identifier (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/complexExplicitReceiver.kt"
   },
@@ -38757,8 +38750,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/genericSet.kt"
   },
   "box/box/smartCasts/implicitCastOnAssignment.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/implicitCastOnAssignment.kt"
   },
@@ -38816,32 +38809,32 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/kt19100.kt"
   },
   "box/box/smartCasts/kt44804.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other syntax (at '=')",
+   "detail": "default arguments are not supported (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44804.kt"
   },
   "box/box/smartCasts/kt44814.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44814.kt"
   },
   "box/box/smartCasts/kt44932.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44932.kt"
   },
   "box/box/smartCasts/kt44942.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44942.kt"
   },
   "box/box/smartCasts/kt52432.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other syntax (at 'Derived')",
+   "detail": "expected '->' (at 'Derived')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt52432.kt"
   },
@@ -38986,8 +38979,8 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/maps.kt"
   },
   "box/box/specialBuiltins/noSpecialBridgeInSuperClass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/noSpecialBridgeInSuperClass.kt"
   },
@@ -39130,8 +39123,8 @@
    "upstream": "compiler/testData/codegen/box/storeStackBeforeInline/withLambda.kt"
   },
   "box/box/strictEquals/abstractBound.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/abstractBound.kt"
   },
@@ -39613,8 +39606,8 @@
    "upstream": "compiler/testData/codegen/box/super/kt4173_3.kt"
   },
   "box/box/super/kt4982.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt4982.kt"
   },
@@ -39637,8 +39630,8 @@
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt13846.kt"
   },
   "box/box/super/superConstructor/kt17464_arrayOf.kt": {
-   "category": "other syntax (at 'arrayOf')",
-   "detail": "expected ')' (at 'arrayOf')",
+   "category": "other: unsupported type Array<Any>",
+   "detail": "unsupported type Array<Any>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt17464_arrayOf.kt"
   },
@@ -39649,8 +39642,8 @@
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt18356.kt"
   },
   "box/box/super/superConstructor/kt18356_2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "other syntax (at 'ints')",
+   "detail": "expected ':' (at 'ints')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt18356_2.kt"
   },
@@ -39685,8 +39678,8 @@
    "upstream": "compiler/testData/codegen/box/super/unqualifiedSuperWithDeeperHierarchies.kt"
   },
   "box/box/super/unqualifiedSuperWithMethodsOfAny.kt": {
-   "category": "interfaces",
-   "detail": "unknown interface ClassWithToString (class inheritance is not supported)",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown name 'super'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/unqualifiedSuperWithMethodsOfAny.kt"
   },
@@ -40813,8 +40806,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/nestedTypeAliasesAndTypeArguments.kt"
   },
   "box/box/typealias/objectLiteralConstructor.kt": {
-   "category": "other syntax (at 's')",
-   "detail": "expected ')' (at 's')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/objectLiteralConstructor.kt"
   },
@@ -41061,8 +41054,8 @@
    "upstream": "compiler/testData/codegen/box/unitConversion/basicUnitConversion.kt"
   },
   "box/box/unitConversion/unitConversionForSubtype.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unitConversion/unitConversionForSubtype.kt"
   },
@@ -42117,8 +42110,8 @@
    "upstream": "compiler/testData/codegen/box/when/exhaustiveness/exhaustiveWithNegativeEnum.kt"
   },
   "box/box/when/exhaustiveness/exhaustiveWithNegativeSealed.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/exhaustiveness/exhaustiveWithNegativeSealed.kt"
   },
@@ -42134,8 +42127,8 @@
    "upstream": "compiler/testData/codegen/box/when/implicitExhaustiveAndReturn.kt"
   },
   "box/box/when/inferredTypeParameters.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/inferredTypeParameters.kt"
   },
@@ -42292,8 +42285,8 @@
    "upstream": "compiler/testData/codegen/box/when/range.kt"
   },
   "box/box/when/sealedWhenInitialization.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'sealed')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/sealedWhenInitialization.kt"
   },
@@ -46514,15 +46507,14 @@
    "upstream": "native/native.tests/testData/codegen/bridges/nativePointed.kt"
   },
   "native/native.tests/codegen/classes/abstract_super.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/classes/abstract_super.kt"
   },
   "native/native.tests/codegen/classes/vtable1.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at 'abstract')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/classes/vtable1.kt"
   },
   "native/native.tests/codegen/classes/vtable_any.kt": {
@@ -47133,8 +47125,8 @@
    "upstream": "native/native.tests/testData/codegen/reflection/objc/protocol.kt"
   },
   "native/native.tests/codegen/serialization/deserialized_fields.kt": {
-   "category": "other syntax (at '\"...\"')",
-   "detail": "expected ')' (at '\"...\"')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown superclass Throwable",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/serialization/deserialized_fields.kt"
   },
