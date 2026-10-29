@@ -1468,6 +1468,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         (r.t as? Ty.Cls)?.let { t -> val ci = classes.getValue(t.name)
             if (ci.index(n) < 0 && pm in ci.methods) { val v = callMethod(r, ci, pm, CallE(NameE(pm), emptyList(), emptyList(), null)); releaseIfOwned(r); return v }
         }
+        (r.t as? Ty.Iface)?.let { t -> ifaces[t.name]?.takeIf { pm in it.methods }?.let { ii -> val v = callIface(r, ii, pm, CallE(NameE(pm), emptyList(), emptyList(), null).also { it.line = line }); releaseIfOwned(r); return v } }
         if (!hasMember(r.t, n)) extFuns[pm]?.firstOrNull { extMatches(r.t, it.params[0].type, it.typeParams) }?.let { f ->
             return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), emptyList(), listOf(x), null).also { it.line = line }) }
         }

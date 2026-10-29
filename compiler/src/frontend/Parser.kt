@@ -159,6 +159,7 @@ class Parser(private val t: List<Tok>) {
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
         resolveNested(funs, classes, ifaces, globals)
         resolveExtensions(funs, classes)
+        implementIfaceProps(classes, ifaces)
         // Creating an instance of a class initializes its companion object first.
         for (i in classes.indices) {
             val c = classes[i]
@@ -245,6 +246,15 @@ class Parser(private val t: List<Tok>) {
                         { constVals["$constOwner.$n"] = f.init!!; if ('$' in constOwner) constVals["${constOwner.substringBefore('$')}.$n"] = f.init!! }
                     continue
                 }
+                if (props == null && (isId("val") || isId("var"))) {
+                    // Interface property: an abstract getter `$prop$name` (or a default getter).
+                    val line = next().line
+                    val n = ident()
+                    if (!isOp(":")) fail("interface properties need a type")
+                    next(); val ty = type()
+                    ms.add(getter("\$prop\$$n", ty, emptyList(), null) ?: FunD("\$prop\$$n", emptyList(), ty, null, null, line))
+                    continue
+                }
                 if (inits != null && isId("init")) { next(); skipNLOnly(); inits.add(block()); continue }
                 if (isId("companion") && t[p + 1].k == K.ID && t[p + 1].s == "object") {
                     val cls = curClass ?: fail("companion objects are only supported in classes")
@@ -264,6 +274,29 @@ class Parser(private val t: List<Tok>) {
         }
         expectOp("}")
         return ms
+    }
+
+    /**
+     * A class implementing an interface property with a stored property (own or inherited) gets the getter
+     * `$prop$name() = name`, so calls through the interface dispatch to the field.
+     */
+    private fun implementIfaceProps(classes: MutableList<ClassD>, ifaces: List<InterfaceD>) {
+        val byName = classes.associateBy { it.name }
+        fun chain(c: ClassD): List<ClassD> = generateSequence(c) { x -> x.superClass?.let { byName[it] } }.toList()
+        for (i in classes.indices) {
+            val c = classes[i]
+            val ch = chain(c)
+            val props = ch.flatMap { it.supers }.mapNotNull { s -> ifaces.firstOrNull { it.name == s } }
+                .flatMap { it.methods }.filter { it.name.startsWith("\$prop\$") && it.params.isEmpty() }
+            val add = ArrayList<FunD>()
+            for (m in props) {
+                val n = m.name.removePrefix("\$prop\$")
+                if (ch.any { x -> x.methods.any { it.name == m.name } } || add.any { it.name == m.name }) continue
+                if (ch.none { x -> x.fields.any { it.name == n } }) continue
+                add.add(FunD(m.name, emptyList(), m.ret, null, NameE(n).also { it.line = c.line }, c.line))
+            }
+            if (add.isNotEmpty()) classes[i] = ClassD(c.name, c.fields, c.supers, c.methods + add, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
+        }
     }
 
     /** `const val`s of objects and companions with literal values ("Obj.name" -> literal); uses do not initialize the object. */

@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 5,
   "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 965,
-  "UNSUPPORTED": 4483
+  "PASS": 974,
+  "UNSUPPORTED": 4474
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1006,8 +1006,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/primitiveArrays.kt"
   },
   "box/box/arrays/stdlib.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/stdlib.kt"
   },
@@ -1150,8 +1150,8 @@
    "upstream": "compiler/testData/codegen/box/basics/k42000_crossmodule.kt"
   },
   "box/box/basics/kt75483.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "other: unknown type OptionType",
+   "detail": "unknown type OptionType",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/kt75483.kt"
   },
@@ -1673,17 +1673,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuptuyvncp2/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuptuyvncp2/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup7o2o2z47/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup7o2o2z47/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupfl9b_s4d/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupfl9b_s4d/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupfnfc8uzm/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupfnfc8uzm/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxjtjrm0w/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxjtjrm0w/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0yti2kg0/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0yti2kg0/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -1998,8 +1998,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/complexTraitImpl.kt"
   },
   "box/box/bridges/covariantGenericDiamond.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/covariantGenericDiamond.kt"
   },
@@ -2046,8 +2046,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/delegationComplexWithList.kt"
   },
   "box/box/bridges/delegationProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/delegationProperty.kt"
   },
@@ -2255,9 +2255,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideWithSynthesizedImplementation.kt"
   },
   "box/box/bridges/genericProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/genericProperty.kt"
   },
   "box/box/bridges/innerClassTypeParameters.kt": {
@@ -2319,14 +2318,13 @@
    "upstream": "compiler/testData/codegen/box/bridges/kt2702.kt"
   },
   "box/box/bridges/kt2833.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/kt2833.kt"
   },
   "box/box/bridges/kt2920.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/kt2920.kt"
   },
@@ -2337,8 +2335,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/kt318.kt"
   },
   "box/box/bridges/kt42137.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/kt42137.kt"
   },
@@ -2476,26 +2474,26 @@
    "upstream": "compiler/testData/codegen/box/bridges/propertyAccessorsWithoutBody.kt"
   },
   "box/box/bridges/propertyDiamond.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/propertyDiamond.kt"
   },
   "box/box/bridges/propertyDiamondFakeOverride.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/propertyDiamondFakeOverride.kt"
   },
   "box/box/bridges/propertyInConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/propertyInConstructor.kt"
   },
   "box/box/bridges/propertySetter.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/propertySetter.kt"
   },
@@ -2551,8 +2549,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/special.kt"
   },
   "box/box/bridges/specialGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "other: unknown type Set<Any>",
+   "detail": "unknown type Set<Any>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/specialGeneric.kt"
   },
@@ -2669,8 +2667,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test14.kt"
   },
   "box/box/bridges/test15.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'size' of D hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test15.kt"
   },
@@ -2735,8 +2733,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test25.kt"
   },
   "box/box/bridges/test3.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "type inference / mismatch",
+   "detail": "cannot assign to C.size",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test3.kt"
   },
@@ -2747,8 +2745,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test4.kt"
   },
   "box/box/bridges/test5.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "type inference / mismatch",
+   "detail": "cannot assign to C.size",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test5.kt"
   },
@@ -2759,14 +2757,14 @@
    "upstream": "compiler/testData/codegen/box/bridges/test6.kt"
   },
   "box/box/bridges/test7.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test7.kt"
   },
   "box/box/bridges/test8.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test8.kt"
   },
@@ -4087,9 +4085,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/constructorWithInitializer.kt"
   },
   "box/box/callableReference/function/local/enumExtendsTrait.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/enumExtendsTrait.kt"
   },
   "box/box/callableReference/function/local/equalsHashCode.kt": {
@@ -5147,8 +5144,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/generic.kt"
   },
   "box/box/classDelegation/hiddenDelegateAndLateinitVar.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classDelegation/hiddenDelegateAndLateinitVar.kt"
   },
@@ -5164,8 +5161,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/multipleModules.kt"
   },
   "box/box/classDelegation/property.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classDelegation/property.kt"
   },
@@ -5368,8 +5365,8 @@
    "upstream": "compiler/testData/codegen/box/classes/inheritSetAndHashSet.kt"
   },
   "box/box/classes/inheritance.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/inheritance.kt"
   },
@@ -5554,8 +5551,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2390.kt"
   },
   "box/box/classes/kt2391.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "unknown logger (stdlib API / unsupported decl)",
+   "detail": "unknown name 'logger'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2391.kt"
   },
@@ -5567,7 +5564,7 @@
   },
   "box/box/classes/kt2477.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2477.kt"
   },
@@ -5596,7 +5593,7 @@
   },
   "box/box/classes/kt2532.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2532.kt"
   },
@@ -5643,8 +5640,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt285.kt"
   },
   "box/box/classes/kt3001.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt3001.kt"
   },
@@ -5730,8 +5727,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt5347.kt"
   },
   "box/box/classes/kt6136.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt6136.kt"
   },
@@ -5891,8 +5888,8 @@
    "upstream": "compiler/testData/codegen/box/classes/superConstructorCallWithComplexArg.kt"
   },
   "box/box/classes/typedDelegation.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/typedDelegation.kt"
   },
@@ -5902,8 +5899,8 @@
    "upstream": "compiler/testData/codegen/box/closures/anonymousObjectAsLastExpressionInLambda.kt"
   },
   "box/box/closures/captureExtensionReceiver.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureExtensionReceiver.kt"
   },
@@ -12787,20 +12784,20 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/hiddenCompanionBlock.kt"
   },
   "box/box/defaultArguments/implementedByFake.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "unknown prop (stdlib API / unsupported decl)",
+   "detail": "unknown name 'prop'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/implementedByFake.kt"
   },
   "box/box/defaultArguments/implementedByFake2.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/implementedByFake2.kt"
   },
   "box/box/defaultArguments/implementedByFake3.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/implementedByFake3.kt"
   },
@@ -13279,8 +13276,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/extensionDelegatesWithSameNames.kt"
   },
   "box/box/delegatedProperty/extensionPropertyAndExtensionGetValue.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "property accessors / delegation",
+   "detail": "extension properties need a getter (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/extensionPropertyAndExtensionGetValue.kt"
   },
@@ -13725,13 +13722,13 @@
   },
   "box/box/delegatedProperty/referenceEnclosingClassFieldInReceiver.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "detail": "only member functions are supported in class/interface bodies (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/referenceEnclosingClassFieldInReceiver.kt"
   },
   "box/box/delegatedProperty/referenceEnclosingClassFieldInReceiver2.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/referenceEnclosingClassFieldInReceiver2.kt"
   },
@@ -13809,8 +13806,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegatedAnonymousObject_someParametersOnDelegate.kt"
   },
   "box/box/delegation/delegationByArg.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationByArg.kt"
   },
@@ -13833,8 +13830,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationByIfExpr.kt"
   },
   "box/box/delegation/delegationByInh.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationByInh.kt"
   },
@@ -13846,7 +13843,7 @@
   },
   "box/box/delegation/delegationChain.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationChain.kt"
   },
@@ -13892,7 +13889,7 @@
   },
   "box/box/delegation/delegationExtProp.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "detail": "interface properties need a type (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationExtProp.kt"
   },
@@ -13950,8 +13947,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/genericFunctionInGenericInterface.kt"
   },
   "box/box/delegation/genericProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "generics",
+   "detail": "expected identifier (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/genericProperty.kt"
   },
@@ -13968,8 +13965,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/ifWithCallableReferenceInLazy.kt"
   },
   "box/box/delegation/inDataClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/inDataClass.kt"
   },
@@ -14084,8 +14081,8 @@
    "upstream": "compiler/testData/codegen/box/devirtualization/getter_looking_as_box_function.kt"
   },
   "box/box/devirtualization/inline_getter.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "strings / templates",
+   "detail": "unknown method Base.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/devirtualization/inline_getter.kt"
   },
@@ -15117,8 +15114,8 @@
    "upstream": "compiler/testData/codegen/box/enum/refToThis.kt"
   },
   "box/box/enum/reorderedArguments.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/reorderedArguments.kt"
   },
@@ -16189,7 +16186,7 @@
   },
   "box/box/extensionProperties/nonAbstractInInterface.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "interface properties need a type (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/nonAbstractInInterface.kt"
   },
@@ -16272,14 +16269,14 @@
    "upstream": "compiler/testData/codegen/box/fakeOverride/privateFakeOverrides1.kt"
   },
   "box/box/fakeOverride/propertyGetter.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fakeOverride/propertyGetter.kt"
   },
   "box/box/fakeOverride/propertySetter.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fakeOverride/propertySetter.kt"
   },
@@ -16524,8 +16521,8 @@
    "upstream": "compiler/testData/codegen/box/fir/listAssignmentInWhen.kt"
   },
   "box/box/fir/localInvokeExtension.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/localInvokeExtension.kt"
   },
@@ -16809,7 +16806,7 @@
   },
   "box/box/fullValueClasses/kt70461.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/kt70461.kt"
   },
@@ -17522,14 +17519,14 @@
    "upstream": "compiler/testData/codegen/box/functions/defaultargs7.kt"
   },
   "box/box/functions/delegatedPropertyWithMultipleOverriddens_generics.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/delegatedPropertyWithMultipleOverriddens_generics.kt"
   },
   "box/box/functions/delegatedPropertyWithMultipleOverriddens_noGenerics.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/delegatedPropertyWithMultipleOverriddens_noGenerics.kt"
   },
@@ -17681,15 +17678,13 @@
    "upstream": "compiler/testData/codegen/box/functions/kt1413.kt"
   },
   "box/box/functions/kt1649_1.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/kt1649_1.kt"
   },
   "box/box/functions/kt1649_2.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/kt1649_2.kt"
   },
   "box/box/functions/kt2270.kt": {
@@ -18439,8 +18434,8 @@
    "upstream": "compiler/testData/codegen/box/inference/capturedSelfInsideIntersection3.kt"
   },
   "box/box/inference/capturedStarProjection.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/capturedStarProjection.kt"
   },
@@ -18549,8 +18544,8 @@
    "upstream": "compiler/testData/codegen/box/inference/kt38664.kt"
   },
   "box/box/inference/kt39824.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "data classes",
+   "detail": "nested declarations are only supported in classes (at 'data')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/kt39824.kt"
   },
@@ -19570,8 +19565,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/posptonedPCLACallInsideStringInterpolation.kt"
   },
   "box/box/inference/pcla/propagateInferenceSessionIntoDeclarationAnalyzers.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/propagateInferenceSessionIntoDeclarationAnalyzers.kt"
   },
@@ -20320,8 +20315,8 @@
    "upstream": "compiler/testData/codegen/box/inline/iteratorOnInlineFunctionResult.kt"
   },
   "box/box/inline/kt20245.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/kt20245.kt"
   },
@@ -23453,12 +23448,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -536081120\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531296\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804516768\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267646048\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23544,13 +23539,13 @@
   },
   "box/box/inlineClasses/interfaceDelegation/interfaceImplementationByDelegation.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/interfaceImplementationByDelegation.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/interfaceImplementationByDelegationGeneric.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/interfaceImplementationByDelegationGeneric.kt"
   },
@@ -23568,19 +23563,19 @@
   },
   "box/box/inlineClasses/interfaceDelegation/memberExtValDelegationWithInlineClassParameterTypes.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "interface properties need a type (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberExtValDelegationWithInlineClassParameterTypes.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberExtValDelegationWithInlineClassParameterTypesGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "generics",
+   "detail": "interface properties need a type (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberExtValDelegationWithInlineClassParameterTypesGeneric.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberExtVarDelegationWithInlineClassParameterTypes.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "detail": "interface properties need a type (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberExtVarDelegationWithInlineClassParameterTypes.kt"
   },
@@ -24008,8 +24003,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt34268.kt"
   },
   "box/box/inlineClasses/kt34902.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "data classes",
+   "detail": "nested declarations are only supported in classes (at 'data')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt34902.kt"
   },
@@ -24155,7 +24150,7 @@
   },
   "box/box/inlineClasses/kt70461.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt70461.kt"
   },
@@ -24253,8 +24248,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableWrapperEqualityGeneric2.kt"
   },
   "box/box/inlineClasses/overrideReturnNothing.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "other: unknown type Nothing?",
+   "detail": "unknown type Nothing?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/overrideReturnNothing.kt"
   },
@@ -29824,7 +29819,7 @@
   },
   "box/box/operatorConventions/kt14201.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "only member functions are supported in class/interface bodies (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt14201.kt"
   },
@@ -30861,7 +30856,7 @@
   },
   "box/box/properties/backingField/overrideWithExplicitBackingField.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/overrideWithExplicitBackingField.kt"
   },
@@ -31114,9 +31109,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt1417.kt"
   },
   "box/box/properties/kt1714_minimal.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt1714_minimal.kt"
   },
   "box/box/properties/kt1892.kt": {
@@ -31143,8 +31137,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt2655.kt"
   },
   "box/box/properties/kt2786.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt2786.kt"
   },
@@ -31207,8 +31201,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt4340.kt"
   },
   "box/box/properties/kt4373.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt4373.kt"
   },
@@ -31343,14 +31337,14 @@
    "upstream": "compiler/testData/codegen/box/properties/lateinit/nameClash.kt"
   },
   "box/box/properties/lateinit/override.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/override.kt"
   },
   "box/box/properties/lateinit/overrideException.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/overrideException.kt"
   },
@@ -31438,8 +31432,8 @@
    "upstream": "compiler/testData/codegen/box/properties/lazyInitializationSplitPerModule.kt"
   },
   "box/box/properties/primitiveOverrideDefaultAccessor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/primitiveOverrideDefaultAccessor.kt"
   },
@@ -31450,7 +31444,7 @@
   },
   "box/box/properties/privateAccessorOfOverriddenProperty.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/privateAccessorOfOverriddenProperty.kt"
   },
@@ -36687,7 +36681,7 @@
   },
   "box/box/regressions/kt13381.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt13381.kt"
   },
@@ -36829,9 +36823,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt39088.kt"
   },
   "box/box/regressions/kt4142.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/kt4142.kt"
   },
   "box/box/regressions/kt4281.kt": {
@@ -36979,9 +36972,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/nullabilityForCommonCapturedSupertypes.kt"
   },
   "box/box/regressions/nullableAfterExclExcl.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/nullableAfterExclExcl.kt"
   },
   "box/box/regressions/objectCaptureOuterConstructorProperty.kt": {
@@ -37382,8 +37374,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt4733.kt"
   },
   "box/box/safeCall/kt52580.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/kt52580.kt"
   },
@@ -38066,8 +38058,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/multipleSmartCast.kt"
   },
   "box/box/smartCasts/negativesmartCastAugmentedAssignment.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/negativesmartCastAugmentedAssignment.kt"
   },
@@ -38125,7 +38117,7 @@
   },
   "box/box/specialBuiltins/bridges.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/bridges.kt"
   },
@@ -38158,9 +38150,8 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/entrySetSOE.kt"
   },
   "box/box/specialBuiltins/enumAsOrdinaled.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/enumAsOrdinaled.kt"
   },
   "box/box/specialBuiltins/exceptionCause.kt": {
@@ -38715,14 +38706,14 @@
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuper2.kt"
   },
   "box/box/super/innerClassLabeledSuperProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuperProperty.kt"
   },
   "box/box/super/innerClassLabeledSuperProperty2.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuperProperty2.kt"
   },
@@ -38734,7 +38725,7 @@
   },
   "box/box/super/innerClassQualifiedPropertyAccess.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassQualifiedPropertyAccess.kt"
   },
@@ -38764,7 +38755,7 @@
   },
   "box/box/super/kt14243_prop.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt14243_prop.kt"
   },
@@ -38788,7 +38779,7 @@
   },
   "box/box/super/kt3492TraitProperty.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt3492TraitProperty.kt"
   },
@@ -38866,7 +38857,7 @@
   },
   "box/box/super/traitproperty.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/traitproperty.kt"
   },
@@ -38878,7 +38869,7 @@
   },
   "box/box/super/unqualifiedSuperWithDeeperHierarchies.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/unqualifiedSuperWithDeeperHierarchies.kt"
   },
@@ -39331,13 +39322,13 @@
   },
   "box/box/traits/diamondPropertyAccessors.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/diamondPropertyAccessors.kt"
   },
   "box/box/traits/doubleDiamond.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/doubleDiamond.kt"
   },
@@ -39348,13 +39339,13 @@
   },
   "box/box/traits/genericMethod.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/genericMethod.kt"
   },
   "box/box/traits/indirectlyInheritPropertyGetter.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/indirectlyInheritPropertyGetter.kt"
   },
@@ -39366,7 +39357,7 @@
   },
   "box/box/traits/inheritedVar.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/inheritedVar.kt"
   },
@@ -39449,7 +39440,7 @@
   },
   "box/box/traits/kt5393_property.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'var')",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt5393_property.kt"
   },
@@ -39509,13 +39500,13 @@
   },
   "box/box/traits/traitWithPrivateMember.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/traitWithPrivateMember.kt"
   },
   "box/box/traits/traitWithPrivateMemberAccessFromLambda.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/traitWithPrivateMemberAccessFromLambda.kt"
   },
@@ -39832,8 +39823,8 @@
    "upstream": "compiler/testData/codegen/box/typeErasure/twoFunWithTypeParametersWithUpperBoundsInlineFunWithReifiedTypeParameters.kt"
   },
   "box/box/typeInfo/ifOrWhenSpecialCall.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'val')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typeInfo/ifOrWhenSpecialCall.kt"
   },
@@ -40165,7 +40156,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuptni7r6sp/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuptni7r6sp/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8lk02aue/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8lk02aue/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -46003,7 +45994,7 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupa9n151nk/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupa9n151nk/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkups2fomlrk/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkups2fomlrk/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },
