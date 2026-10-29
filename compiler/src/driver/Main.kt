@@ -19,7 +19,8 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --alloc <mimalloc|malloc|pool> object allocator: mimalloc (default; found via ${'$'}NEWKOTLIN_MIMALLOC_DIR,
                        pkg-config or Homebrew), system malloc/free, or free-list pool
   --gc <name>          memory manager, compiler/gc/<name>/gc.c (also --gc=<name>; default: ${'$'}NEWKOTLIN_GC or
-                       default): default (RC + cycle collector), rc (RC only, cycles leak), boehm (RC + bdwgc)
+                       default): default (RC + cycle collector), incremental (budgeted
+                       cycle collector steps), rc (RC only, cycles leak), boehm (RC + bdwgc)
   -S                   only write LLVM IR to <output>"""
 
 private fun readFile(path: String): String {
