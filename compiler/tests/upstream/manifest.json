@@ -1,10 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "MISCOMPILE": 1,
+  "MISCOMPILE": 3,
   "N/A": 2984,
-  "PASS": 178,
-  "UNSUPPORTED": 5312
+  "PASS": 193,
+  "UNSUPPORTED": 5295
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -474,8 +474,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/divisionByZero.kt"
   },
   "box/box/arithmetic/github1856.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'packFast' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/github1856.kt"
   },
@@ -1131,8 +1131,8 @@
    "upstream": "compiler/testData/codegen/box/basics/check_type.kt"
   },
   "box/box/basics/companion.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/companion.kt"
   },
@@ -2564,8 +2564,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/simpleGenericMethod.kt"
   },
   "box/box/bridges/simpleObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/simpleObject.kt"
   },
@@ -2588,8 +2588,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/simpleUpperBound.kt"
   },
   "box/box/bridges/special.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/special.kt"
   },
@@ -3118,8 +3118,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/localFunctionWithDefault.kt"
   },
   "box/box/callableReference/adaptedReferences/manyDefaultsAndVararg.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/manyDefaultsAndVararg.kt"
   },
@@ -3435,8 +3435,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/coercionToUnit.kt"
   },
   "box/box/callableReference/bound/companionObjectReceiver.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/companionObjectReceiver.kt"
   },
@@ -3586,8 +3586,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/nullReceiver.kt"
   },
   "box/box/callableReference/bound/objectReceiver.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/objectReceiver.kt"
   },
@@ -3621,8 +3621,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/smartCastForExtensionReceiver.kt"
   },
   "box/box/callableReference/bound/typeAliasObjectBoundReference.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/typeAliasObjectBoundReference.kt"
   },
@@ -3658,8 +3658,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/callableReferenceOfObjectMethod.kt"
   },
   "box/box/callableReference/callableReferenceOnObjectTypealias.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/callableReferenceOnObjectTypealias.kt"
   },
@@ -3848,8 +3848,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromClass.kt"
   },
   "box/box/callableReference/function/classMemberFromCompanionObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "lambdas / function types / references",
+   "detail": "only member functions are supported in class/interface bodies (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromCompanionObject.kt"
   },
@@ -3932,8 +3932,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromClass.kt"
   },
   "box/box/callableReference/function/extensionFromCompanion.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromCompanion.kt"
   },
@@ -4282,8 +4282,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/privateClassMember.kt"
   },
   "box/box/callableReference/function/referenceToCompanionMember.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/referenceToCompanionMember.kt"
   },
@@ -4388,8 +4388,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/inlineArrayConstructors.kt"
   },
   "box/box/callableReference/interfaceMethodReference.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/interfaceMethodReference.kt"
   },
@@ -4699,8 +4699,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleTopLevel.kt"
   },
   "box/box/callableReference/serializability/referenceToCompanionFunction.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/serializability/referenceToCompanionFunction.kt"
   },
@@ -5263,8 +5263,8 @@
    "upstream": "compiler/testData/codegen/box/classLiteral/primitiveClassEquality.kt"
   },
   "box/box/classes/boxPrimitiveTypeInClinitOfClassObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "types: Float",
+   "detail": "unknown type Float?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/boxPrimitiveTypeInClinitOfClassObject.kt"
   },
@@ -5274,8 +5274,8 @@
    "upstream": "compiler/testData/codegen/box/classes/classNamedAsOldPackageFacade.kt"
   },
   "box/box/classes/classObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/classObject.kt"
   },
@@ -5286,38 +5286,37 @@
    "upstream": "compiler/testData/codegen/box/classes/classObjectAsExtensionReceiver.kt"
   },
   "box/box/classes/classObjectAsStaticInitializer.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail1: global = ABC\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/classes/classObjectAsStaticInitializer.kt"
   },
   "box/box/classes/classObjectField.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/classObjectField.kt"
   },
   "box/box/classes/classObjectInTrait.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/classObjectInTrait.kt"
   },
   "box/box/classes/classObjectNotOfEnum.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'values' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/classObjectNotOfEnum.kt"
   },
   "box/box/classes/classObjectWithPrivateGenericMember.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/classObjectWithPrivateGenericMember.kt"
   },
   "box/box/classes/classObjectsWithParentClasses.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/classObjectsWithParentClasses.kt"
   },
@@ -5394,8 +5393,8 @@
    "upstream": "compiler/testData/codegen/box/classes/extensionFunWithDefaultParam.kt"
   },
   "box/box/classes/extensionOnNamedClassObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/extensionOnNamedClassObject.kt"
   },
@@ -5504,14 +5503,14 @@
    "upstream": "compiler/testData/codegen/box/classes/innerClass.kt"
   },
   "box/box/classes/kt1018.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "other: unsupported type Array<Int?>",
+   "detail": "unsupported type Array<Int?>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1018.kt"
   },
   "box/box/classes/kt1157.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1157.kt"
   },
@@ -5605,9 +5604,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2224.kt"
   },
   "box/box/classes/kt2384.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt2384.kt"
   },
   "box/box/classes/kt2390.kt": {
@@ -5652,8 +5650,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2485.kt"
   },
   "box/box/classes/kt249.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt249.kt"
   },
@@ -5682,8 +5680,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2607.kt"
   },
   "box/box/classes/kt2626.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "class bodies / constructors",
+   "detail": "unexpected top-level token (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2626.kt"
   },
@@ -5694,8 +5692,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2711.kt"
   },
   "box/box/classes/kt2784.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2784.kt"
   },
@@ -5736,8 +5734,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt3546.kt"
   },
   "box/box/classes/kt40332.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt40332.kt"
   },
@@ -5778,9 +5776,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt501.kt"
   },
   "box/box/classes/kt504.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt504.kt"
   },
   "box/box/classes/kt508.kt": {
@@ -5856,8 +5853,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt9642.kt"
   },
   "box/box/classes/namedClassObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'create' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/namedClassObject.kt"
   },
@@ -6630,20 +6627,20 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/companionBlockOf.kt"
   },
   "box/box/collectionLiterals/genericCollection.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/genericCollection.kt"
   },
   "box/box/collectionLiterals/multipleOfOverloads.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/multipleOfOverloads.kt"
   },
   "box/box/collectionLiterals/nonGenericCollection.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/nonGenericCollection.kt"
   },
@@ -6659,8 +6656,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/primitiveArraysOperatorOf.kt"
   },
   "box/box/collectionLiterals/resolvesToOperator.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/resolvesToOperator.kt"
   },
@@ -6811,7 +6808,7 @@
   },
   "box/box/companionBlocksAndExtensions/companionExtensionImplicitInvoke.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionExtensionImplicitInvoke.kt"
   },
@@ -7132,14 +7129,14 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/nestedObjectDoesNotTriggerOuterInitializer.kt"
   },
   "box/box/companionBlocksAndExtensions/propertyDelegation_block.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/propertyDelegation_block.kt"
   },
   "box/box/companionBlocksAndExtensions/propertyDelegation_extensions.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/propertyDelegation_extensions.kt"
   },
@@ -7195,8 +7192,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/visibility.kt"
   },
   "box/box/compatibility/privateCompanionObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'res' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/compatibility/privateCompanionObject.kt"
   },
@@ -7520,9 +7517,8 @@
    "upstream": "compiler/testData/codegen/box/constants/divisionByZero.kt"
   },
   "box/box/constants/doNotTriggerInit.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='FAIL 2\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/constants/doNotTriggerInit.kt"
   },
   "box/box/constants/float.kt": {
@@ -7542,8 +7538,8 @@
    "upstream": "compiler/testData/codegen/box/constants/foldingBinaryOpsUnsignedConst.kt"
   },
   "box/box/constants/kt9532.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/constants/kt9532.kt"
   },
@@ -7595,8 +7591,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/adaptations.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/companion.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'context')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/companion.kt"
   },
@@ -7709,8 +7705,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/shapes.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/simple.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'context')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/simple.kt"
   },
@@ -7732,8 +7728,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/choosingTheNearestContext.kt"
   },
   "box/box/contextParameters/classCastException.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'context')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/classCastException.kt"
   },
@@ -7750,8 +7746,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/classMemberAndTopLevelWithContext.kt"
   },
   "box/box/contextParameters/companionObjectInContext.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/companionObjectInContext.kt"
   },
@@ -8335,8 +8331,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/continueInTryBlock.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/initializerBlock.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/initializerBlock.kt"
   },
@@ -9352,8 +9348,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/inlineMethod.kt"
   },
   "box/box/controlStructures/returnsNothing/propertyGetter.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/propertyGetter.kt"
   },
@@ -10099,8 +10095,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/deserializedSuspendFunctionProperty.kt"
   },
   "box/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt"
   },
@@ -12591,20 +12587,20 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/unitComponent.kt"
   },
   "box/box/dataObjects/equals.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataObjects/equals.kt"
   },
   "box/box/dataObjects/hashCode.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'data')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataObjects/hashCode.kt"
   },
   "box/box/dataObjects/toString.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'data')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataObjects/toString.kt"
   },
@@ -12851,14 +12847,14 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionDoubleTwoArgs.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionInClassObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionInClassObject.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionInObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionInObject.kt"
   },
@@ -13269,14 +13265,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/simple.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/withSideEffects.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/withSideEffects.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/withSideEffectsFromFileClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/withSideEffectsFromFileClass.kt"
   },
@@ -13305,8 +13301,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConst/delegateToNull.kt"
   },
   "box/box/delegatedProperty/delegateToConstVal.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConstVal.kt"
   },
@@ -13335,8 +13331,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/delegateToFinalInstanceProperty.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/delegateToFinalObjectProperty.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/delegateToFinalObjectProperty.kt"
   },
@@ -13358,14 +13354,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/initializeContainerOfTopLevelProperties.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndImportFromObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other syntax (at '.')",
+   "detail": "body properties need an initializer (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndImportFromObject.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndLocalDelegatedProperty.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other syntax (at '.')",
+   "detail": "body properties need an initializer (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndLocalDelegatedProperty.kt"
   },
@@ -13388,25 +13384,25 @@
   },
   "box/box/delegatedProperty/delegateToSingleton/noInitializationOfOuterClass.kt": {
    "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "detail": "only member functions are supported in class/interface bodies (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/noInitializationOfOuterClass.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffects.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffects.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffectsFromFileClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsFromFileClass.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffectsToEnum.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsToEnum.kt"
   },
@@ -13458,14 +13454,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedOverride.kt"
   },
   "box/box/delegatedProperty/delegatedPropertyInEnum.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedPropertyInEnum.kt"
   },
   "box/box/delegatedProperty/extensionDelegatesWithSameNames.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/extensionDelegatesWithSameNames.kt"
   },
@@ -13562,8 +13558,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt6722.kt"
   },
   "box/box/delegatedProperty/kt9712.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt9712.kt"
   },
@@ -13632,8 +13628,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt13557.kt"
   },
   "box/box/delegatedProperty/local/kt16864.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt16864.kt"
   },
@@ -13783,8 +13779,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/protectedVarWithPrivateSet.kt"
   },
   "box/box/delegatedProperty/provideDelegate/commonCaseForInference.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'interface')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/commonCaseForInference.kt"
   },
@@ -13840,8 +13836,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/inClass.kt"
   },
   "box/box/delegatedProperty/provideDelegate/inferenceFromReceiver2.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'interface')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/inferenceFromReceiver2.kt"
   },
@@ -13888,8 +13884,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/localDifferentReceivers.kt"
   },
   "box/box/delegatedProperty/provideDelegate/memberExtension.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/memberExtension.kt"
   },
@@ -14093,8 +14089,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationExtensionPropertyDelegated.kt"
   },
   "box/box/delegation/delegationOnObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationOnObject.kt"
   },
@@ -14306,8 +14302,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/inference/kt6176.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnClassObject1.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnClassObject1.kt"
   },
@@ -14354,14 +14350,14 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnImportedEnum2.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnObject1.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnObject1.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnObject2.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnObject2.kt"
   },
@@ -14597,14 +14593,14 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailRecursionInFinally.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailrecWithExplicitCompanionObjectDispatcher.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "generics",
+   "detail": "only member functions are supported in class/interface bodies (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailrecWithExplicitCompanionObjectDispatcher.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailrecWithExplicitObjectDispatcher.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'tailrec')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailrecWithExplicitObjectDispatcher.kt"
   },
@@ -14841,20 +14837,20 @@
    "upstream": "compiler/testData/codegen/box/enum/asReturnExpression.kt"
   },
   "box/box/enum/companionAccessingEnumValue.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/companionAccessingEnumValue.kt"
   },
   "box/box/enum/companionObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/companionObject.kt"
   },
   "box/box/enum/companionObjectInEnum.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/companionObjectInEnum.kt"
   },
@@ -14932,7 +14928,7 @@
   },
   "box/box/enum/enumCompanionInit.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "only member functions are supported in class/interface bodies (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumCompanionInit.kt"
   },
@@ -14942,8 +14938,8 @@
    "upstream": "compiler/testData/codegen/box/enum/enumConstructorParameterClashWithDefaults.kt"
   },
   "box/box/enum/enumEntriesInCompanion.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntriesInCompanion.kt"
   },
@@ -15022,8 +15018,8 @@
    "upstream": "compiler/testData/codegen/box/enum/enumValueOf.kt"
   },
   "box/box/enum/enumWithFieldlessCompanion.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'ok' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumWithFieldlessCompanion.kt"
   },
@@ -15057,20 +15053,20 @@
    "upstream": "compiler/testData/codegen/box/enum/inclassobj.kt"
   },
   "box/box/enum/initEntriesInCompanionObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEntriesInCompanionObject.kt"
   },
   "box/box/enum/initEntriesInCompanionObject2.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEntriesInCompanionObject2.kt"
   },
   "box/box/enum/initEntriesInValueOf.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEntriesInValueOf.kt"
   },
@@ -15105,8 +15101,8 @@
    "upstream": "compiler/testData/codegen/box/enum/innerClassMethodInEnumEntryClass2.kt"
   },
   "box/box/enum/innerWithExistingClassObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "enum classes",
+   "detail": "only member functions are supported in class/interface bodies (at 'enum')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/innerWithExistingClassObject.kt"
   },
@@ -15573,14 +15569,14 @@
    "upstream": "compiler/testData/codegen/box/evaluate/importAlias.kt"
   },
   "box/box/evaluate/inJavaLangPackage.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "unknown kotlin (stdlib API / unsupported decl)",
+   "detail": "unknown name 'kotlin'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/inJavaLangPackage.kt"
   },
   "box/box/evaluate/inJavaPackage.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'getConst' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/inJavaPackage.kt"
   },
@@ -15656,8 +15652,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/kt53272.kt"
   },
   "box/box/evaluate/intrinsicConst/kt58717.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/kt58717.kt"
   },
@@ -15680,8 +15676,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/kt55912.kt"
   },
   "box/box/evaluate/kt56215.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/kt56215.kt"
   },
@@ -15798,8 +15794,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/stringConcatenation.kt"
   },
   "box/box/evaluate/stringConcatenationWithObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/stringConcatenationWithObject.kt"
   },
@@ -15810,14 +15806,14 @@
    "upstream": "compiler/testData/codegen/box/evaluate/stringOperations.kt"
   },
   "box/box/evaluate/thisPlusString.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "strings / templates",
+   "detail": "unknown method String.startsWith()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/thisPlusString.kt"
   },
   "box/box/evaluate/thisPlusStringWithObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "strings / templates",
+   "detail": "unknown method Test.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/thisPlusStringWithObject.kt"
   },
@@ -15846,8 +15842,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/unsignedConst.kt"
   },
   "box/box/evaluate/useCorrectToString.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/useCorrectToString.kt"
   },
@@ -16117,8 +16113,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/functionWithTheSameDispatchAndExtensionReceiver.kt"
   },
   "box/box/extensionFunctions/kt1061.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1061.kt"
   },
@@ -16171,8 +16167,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3285.kt"
   },
   "box/box/extensionFunctions/kt3298.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3298.kt"
   },
@@ -16189,8 +16185,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3969.kt"
   },
   "box/box/extensionFunctions/kt4228.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt4228.kt"
   },
@@ -16423,8 +16419,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/kt46952.kt"
   },
   "box/box/extensionProperties/kt9897.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other syntax (at '.')",
+   "detail": "body properties need an initializer (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/kt9897.kt"
   },
@@ -16542,9 +16538,8 @@
    "upstream": "compiler/testData/codegen/box/fakeOverride/varianceOverload.kt"
   },
   "box/box/fieldRename/constructorAndClassObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fieldRename/constructorAndClassObject.kt"
   },
   "box/box/fieldRename/delegates.kt": {
@@ -16738,8 +16733,8 @@
    "upstream": "compiler/testData/codegen/box/fir/contextSensitiveResolution/otherExpressionKindsPosition.kt"
   },
   "box/box/fir/copyOnObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'copy' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/copyOnObject.kt"
   },
@@ -16862,8 +16857,8 @@
    "upstream": "compiler/testData/codegen/box/fir/toLong.kt"
   },
   "box/box/fir/unnamedLocalVariable.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/unnamedLocalVariable.kt"
   },
@@ -17741,8 +17736,8 @@
    "upstream": "compiler/testData/codegen/box/functions/bigArity/invokeMemberCallableReference.kt"
   },
   "box/box/functions/bigArity/nestedBigArityFunCalls.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/bigArity/nestedBigArityFunCalls.kt"
   },
@@ -17885,8 +17880,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/extensionInvokeOnExpr.kt"
   },
   "box/box/functions/invoke/implicitInvokeInCompanionObjectWithFunctionalArgument.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeInCompanionObjectWithFunctionalArgument.kt"
   },
@@ -18392,8 +18387,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/equalsFloat_properIeeeComparisons.kt"
   },
   "box/box/ieee754/equalsNaN_properIeeeComparisons.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/equalsNaN_properIeeeComparisons.kt"
   },
@@ -18581,14 +18576,14 @@
    "upstream": "compiler/testData/codegen/box/increment/augmentedAssignmentWithComplexRhs.kt"
   },
   "box/box/increment/classNaryGetSet.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/classNaryGetSet.kt"
   },
   "box/box/increment/classVarargGetSet.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/classVarargGetSet.kt"
   },
@@ -18623,8 +18618,8 @@
    "upstream": "compiler/testData/codegen/box/increment/kt36956.kt"
   },
   "box/box/increment/memberExtOnLong.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/memberExtOnLong.kt"
   },
@@ -18995,8 +18990,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt44241.kt"
   },
   "box/box/inference/pcla/issues/kt45083.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt45083.kt"
   },
@@ -20072,9 +20067,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/initializers0.kt"
   },
   "box/box/initializers/initializers1.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/initializers/initializers1.kt"
   },
   "box/box/initializers/initializers2.kt": {
@@ -20096,14 +20090,14 @@
    "upstream": "compiler/testData/codegen/box/initializers/initializers4.kt"
   },
   "box/box/initializers/initializers5.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/initializers/initializers5.kt"
   },
   "box/box/initializers/initializers7.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other: property 'b2' of B needs an explicit type",
+   "detail": "property 'b2' of B needs an explicit type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/initializers/initializers7.kt"
   },
@@ -20113,8 +20107,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/initializers8.kt"
   },
   "box/box/initializers/initializers9.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "class bodies / constructors",
+   "detail": "unexpected top-level token (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/initializers/initializers9.kt"
   },
@@ -22131,8 +22125,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/nullGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/let/result.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/result.kt"
   },
@@ -22382,13 +22376,13 @@
   },
   "box/box/inlineClasses/constructorCallableReference.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/constructorCallableReference.kt"
   },
   "box/box/inlineClasses/constructorCallableReferenceGeneric.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/constructorCallableReferenceGeneric.kt"
   },
@@ -24786,14 +24780,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateClassVarToInlineClassWithProvideDelegateGeneric.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateCompanionVarToInlineClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateCompanionVarToInlineClass.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateCompanionVarToInlineClassGeneric.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateCompanionVarToInlineClassGeneric.kt"
   },
@@ -24810,26 +24804,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateLocalVarToInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateObjectVarToInlineClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateObjectVarToInlineClass.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateObjectVarToInlineClassGeneric.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateObjectVarToInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegatePrivateCompanionVarToInlineClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegatePrivateCompanionVarToInlineClass.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegatePrivateCompanionVarToInlineClassGeneric.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegatePrivateCompanionVarToInlineClassGeneric.kt"
   },
@@ -26140,8 +26134,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/createdNestedInOuterMember.kt"
   },
   "box/box/innerNested/extenderNestedClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/extenderNestedClass.kt"
   },
@@ -26248,8 +26242,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/kt6804.kt"
   },
   "box/box/innerNested/nestedClassInObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/nestedClassInObject.kt"
   },
@@ -26285,7 +26279,7 @@
   },
   "box/box/innerNested/nestedObjects.kt": {
    "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "detail": "only member functions are supported in class/interface bodies (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/nestedObjects.kt"
   },
@@ -26743,9 +26737,8 @@
    "upstream": "compiler/testData/codegen/box/ir/lambdaWithLoop.kt"
   },
   "box/box/ir/objectClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/objectClass.kt"
   },
   "box/box/ir/primitiveNumberComparisons/comparableToDouble.kt": {
@@ -28217,8 +28210,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/nameBasedDestructuringShortForm.kt"
   },
   "box/box/multiDecl/nameBasedDestructuringUnderscoreWithRenaming.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/nameBasedDestructuringUnderscoreWithRenaming.kt"
   },
@@ -29500,8 +29493,8 @@
    "upstream": "compiler/testData/codegen/box/object/fields2.kt"
   },
   "box/box/object/globalInitializer.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/object/globalInitializer.kt"
   },
@@ -29577,15 +29570,14 @@
    "upstream": "compiler/testData/codegen/box/objects/anonymousObjectReturnsFromTopLevelFun.kt"
   },
   "box/box/objects/classCallsProtectedInheritedByCompanion.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/classCallsProtectedInheritedByCompanion.kt"
   },
   "box/box/objects/classCompanion.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/classCompanion.kt"
   },
   "box/box/objects/companionObjectAccess/companionInitOrderWithSuperclassCrossModule.kt": {
@@ -29595,13 +29587,13 @@
   },
   "box/box/objects/companionObjectAccess/companionObjectInitOrderWithSuperclass.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/companionObjectInitOrderWithSuperclass.kt"
   },
   "box/box/objects/companionObjectAccess/companionObjectInitOrderWithSuperinterface.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/companionObjectInitOrderWithSuperinterface.kt"
   },
@@ -29622,19 +29614,19 @@
   },
   "box/box/objects/companionObjectAccess/kt27121.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/kt27121.kt"
   },
   "box/box/objects/companionObjectAccess/kt27121_lv12.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/kt27121_lv12.kt"
   },
   "box/box/objects/companionObjectAccess/kt27121_lv13.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/kt27121_lv13.kt"
   },
@@ -29705,7 +29697,7 @@
   },
   "box/box/objects/companionObjectAccess/nativeCompanionInitOrderLegacy.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/nativeCompanionInitOrderLegacy.kt"
   },
@@ -29752,20 +29744,20 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/shortCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromAnonymousObjectInNestedClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromAnonymousObjectInNestedClass.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromInitBlock.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromInitBlock.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromInitBlockOfNestedClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromInitBlockOfNestedClass.kt"
   },
@@ -29786,44 +29778,44 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromMethodInlinedInNestedClass.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromNestedClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromNestedClass.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromNestedClassSeveralTimes.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromNestedClassSeveralTimes.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectUsedInNestedClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectUsedInNestedClass.kt"
   },
   "box/box/objects/companionObjectAccess/protectedCompanionObjectAccessedFromNestedClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/protectedCompanionObjectAccessedFromNestedClass.kt"
   },
   "box/box/objects/compoundAssignmentToArrayAccessToExtensionPropertyImportedFromObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other syntax (at '.')",
+   "detail": "body properties need an initializer (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToArrayAccessToExtensionPropertyImportedFromObject.kt"
   },
   "box/box/objects/compoundAssignmentToArrayAccessToPropertyImportedFromObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToArrayAccessToPropertyImportedFromObject.kt"
   },
   "box/box/objects/compoundAssignmentToExtensionPropertyImportedFromObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other syntax (at '.')",
+   "detail": "body properties need an initializer (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToExtensionPropertyImportedFromObject.kt"
   },
@@ -29833,8 +29825,8 @@
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToObjectFromCall.kt"
   },
   "box/box/objects/compoundAssignmentToPropertyImportedFromObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToPropertyImportedFromObject.kt"
   },
@@ -29845,8 +29837,8 @@
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToPropertyWithQualifier.kt"
   },
   "box/box/objects/dceRemoveUnusedEagerlyInitializedObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'unusedTrivialMarker' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/dceRemoveUnusedEagerlyInitializedObject.kt"
   },
@@ -29857,14 +29849,14 @@
    "upstream": "compiler/testData/codegen/box/objects/flist.kt"
   },
   "box/box/objects/initializationOrder.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "unknown result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/initializationOrder.kt"
   },
   "box/box/objects/initializationOrderConsts.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/initializationOrderConsts.kt"
   },
@@ -29882,20 +29874,19 @@
   },
   "box/box/objects/interfaceCompanion.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/interfaceCompanion.kt"
   },
   "box/box/objects/interfaceCompanionObjectReference.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/interfaceCompanionObjectReference.kt"
   },
   "box/box/objects/kt1047a.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/kt1047a.kt"
   },
   "box/box/objects/kt11117.kt": {
@@ -29917,8 +29908,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt1600.kt"
   },
   "box/box/objects/kt18982.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'test' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt18982.kt"
   },
@@ -29947,8 +29938,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt2675.kt"
   },
   "box/box/objects/kt2719.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt2719.kt"
   },
@@ -29983,8 +29974,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt4086.kt"
   },
   "box/box/objects/kt45170.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt45170.kt"
   },
@@ -30012,33 +30003,32 @@
    "upstream": "compiler/testData/codegen/box/objects/kt694.kt"
   },
   "box/box/objects/localFunctionInObjectInitializer_kt4516.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other syntax (at 'doStuff')",
+   "detail": "expected end of statement (at 'doStuff')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/localFunctionInObjectInitializer_kt4516.kt"
   },
   "box/box/objects/methodOnObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'result' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/methodOnObject.kt"
   },
   "box/box/objects/nestedDerivedClassCallsProtectedFromCompanion.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/nestedDerivedClassCallsProtectedFromCompanion.kt"
   },
   "box/box/objects/nestedObjectWithSuperclass.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/nestedObjectWithSuperclass.kt"
   },
   "box/box/objects/object.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/object.kt"
   },
   "box/box/objects/objectExtendsInnerAndReferencesOuterMember.kt": {
@@ -30054,8 +30044,8 @@
    "upstream": "compiler/testData/codegen/box/objects/objectInLocalAnonymousObject.kt"
   },
   "box/box/objects/objectInitialization_kt5523.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/objectInitialization_kt5523.kt"
   },
@@ -30077,8 +30067,8 @@
    "upstream": "compiler/testData/codegen/box/objects/objectVsClassInitialization_kt5291.kt"
   },
   "box/box/objects/objectWithSuperclass.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/objectWithSuperclass.kt"
   },
@@ -30107,9 +30097,8 @@
    "upstream": "compiler/testData/codegen/box/objects/receiverInConstructor.kt"
   },
   "box/box/objects/safeAccess.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/safeAccess.kt"
   },
   "box/box/objects/selfReferenceToCompanionObjectInAnonymousObjectInSuperConstructorCall.kt": {
@@ -30119,8 +30108,8 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToCompanionObjectInInlineLambdaInConstructorBody.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInInlineLambdaInConstructorBody.kt"
   },
@@ -30144,7 +30133,7 @@
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInConstructorBody.kt": {
    "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInConstructorBody.kt"
   },
@@ -30167,8 +30156,8 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToObjectInInlineLambdaInConstructorBody.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInInlineLambdaInConstructorBody.kt"
   },
@@ -30185,9 +30174,8 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/simpleObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/simpleObject.kt"
   },
   "box/box/objects/substitutionFunctionFromSuper.kt": {
@@ -30203,8 +30191,8 @@
    "upstream": "compiler/testData/codegen/box/objects/thisInConstructor.kt"
   },
   "box/box/objects/thisRefToObjectInNestedClassConstructorCall.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/thisRefToObjectInNestedClassConstructorCall.kt"
   },
@@ -30370,8 +30358,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt44647.kt"
   },
   "box/box/operatorConventions/kt45022.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt45022.kt"
   },
@@ -30382,20 +30370,20 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt4987.kt"
   },
   "box/box/operatorConventions/nestedMaps.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/nestedMaps.kt"
   },
   "box/box/operatorConventions/operatorSetLambda.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/operatorSetLambda.kt"
   },
   "box/box/operatorConventions/overloadedSet.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/overloadedSet.kt"
   },
@@ -30944,8 +30932,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt3517.kt"
   },
   "box/box/primitiveTypes/kt3576.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "types: Float",
+   "detail": "unknown type Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt3576.kt"
   },
@@ -31199,8 +31187,8 @@
    "upstream": "compiler/testData/codegen/box/private/arrayConvention.kt"
   },
   "box/box/private/kt9855.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/private/kt9855.kt"
   },
@@ -31450,8 +31438,8 @@
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideNestedNestedLambda.kt"
   },
   "box/box/properties/classObjectProperties.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classObjectProperties.kt"
   },
@@ -31468,8 +31456,8 @@
    "upstream": "compiler/testData/codegen/box/properties/companionFieldInsideLambda.kt"
   },
   "box/box/properties/companionPrivateField.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/companionPrivateField.kt"
   },
@@ -31491,9 +31479,8 @@
    "upstream": "compiler/testData/codegen/box/properties/const/anotherFile.kt"
   },
   "box/box/properties/const/constPropertyAccessor.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/const/constPropertyAccessor.kt"
   },
   "box/box/properties/const/intermoduleInlineConst.kt": {
@@ -31736,8 +31723,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt4252.kt"
   },
   "box/box/properties/kt4252_2.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt4252_2.kt"
   },
@@ -31783,8 +31770,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt78962.kt"
   },
   "box/box/properties/kt8928.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt8928.kt"
   },
@@ -31795,8 +31782,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt9603.kt"
   },
   "box/box/properties/lateinit/accessor.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'lateinit')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/accessor.kt"
   },
@@ -31825,8 +31812,8 @@
    "upstream": "compiler/testData/codegen/box/properties/lateinit/exceptionGetter.kt"
   },
   "box/box/properties/lateinit/kt30548.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'lateinit')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/kt30548.kt"
   },
@@ -31915,8 +31902,8 @@
    "upstream": "compiler/testData/codegen/box/properties/lateinit/privateSetterViaSubclass.kt"
   },
   "box/box/properties/lateinit/privateVarInCompanion.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'lateinit')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/privateVarInCompanion.kt"
   },
@@ -37099,8 +37086,8 @@
    "upstream": "compiler/testData/codegen/box/reflection/functions/typeParameterInReturnType.kt"
   },
   "box/box/reflection/kClassCompanion.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "lambdas / function types / references",
+   "detail": "only member functions are supported in class/interface bodies (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reflection/kClassCompanion.kt"
   },
@@ -37546,8 +37533,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt33638.kt"
   },
   "box/box/regressions/kt3421.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt3421.kt"
   },
@@ -37616,8 +37603,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt51927.kt"
   },
   "box/box/regressions/kt5395.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt5395.kt"
   },
@@ -37640,8 +37627,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt5953.kt"
   },
   "box/box/regressions/kt6153.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other: expected '->' (at '",
+   "detail": "expected '->' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt6153.kt"
   },
@@ -38418,8 +38405,8 @@
    "upstream": "compiler/testData/codegen/box/sealed/simple.kt"
   },
   "box/box/secondaryConstructors/accessToCompanion.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/accessToCompanion.kt"
   },
@@ -38891,8 +38878,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/whenSmartCast.kt"
   },
   "box/box/specialBuiltins/bridgeNotEmptyMap.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/bridgeNotEmptyMap.kt"
   },
@@ -38908,20 +38895,20 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/commonBridgesTarget.kt"
   },
   "box/box/specialBuiltins/emptyList.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/emptyList.kt"
   },
   "box/box/specialBuiltins/emptyMap.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/emptyMap.kt"
   },
   "box/box/specialBuiltins/emptyStringMap.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/emptyStringMap.kt"
   },
@@ -38966,14 +38953,14 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/noSpecialBridgeInSuperClass.kt"
   },
   "box/box/specialBuiltins/notEmptyListAny.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/notEmptyListAny.kt"
   },
   "box/box/specialBuiltins/notEmptyMap.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/notEmptyMap.kt"
   },
@@ -39025,44 +39012,44 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableImplWithSecondaryConstructor.kt"
   },
   "box/box/specialBuiltins/valuesInsideEnum.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/valuesInsideEnum.kt"
   },
   "box/box/statics/anonymousInitializerIObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/anonymousInitializerIObject.kt"
   },
   "box/box/statics/anonymousInitializerInClassObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/anonymousInitializerInClassObject.kt"
   },
   "box/box/statics/incInClassObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/incInClassObject.kt"
   },
   "box/box/statics/incInObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/incInObject.kt"
   },
   "box/box/statics/inheritedPropertyInClassObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "generics",
+   "detail": "only member functions are supported in class/interface bodies (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/inheritedPropertyInClassObject.kt"
   },
   "box/box/statics/inheritedPropertyInObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "generics",
+   "detail": "unexpected top-level token (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/inheritedPropertyInObject.kt"
   },
@@ -39074,7 +39061,7 @@
   },
   "box/box/statics/syntheticAccessor.kt": {
    "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "detail": "only member functions are supported in class/interface bodies (at 'object')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/syntheticAccessor.kt"
   },
@@ -39121,8 +39108,8 @@
    "upstream": "compiler/testData/codegen/box/strictEquals/dataClass.kt"
   },
   "box/box/strictEquals/dataObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/dataObject.kt"
   },
@@ -39979,8 +39966,8 @@
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/protectedMemberReferenceAccessor/kt46597_property.kt"
   },
   "box/box/syntheticAccessors/superCallFromMultipleSubclasses.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/superCallFromMultipleSubclasses.kt"
   },
@@ -40704,8 +40691,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/deserializedAbbreviationWithRedundantArgument.kt"
   },
   "box/box/typealias/enumEntryQualifier.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/enumEntryQualifier.kt"
   },
@@ -40810,8 +40797,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasAsBareType.kt"
   },
   "box/box/typealias/typeAliasCompanion.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasCompanion.kt"
   },
@@ -40852,14 +40839,14 @@
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasInAnonymousObjectType.kt"
   },
   "box/box/typealias/typeAliasObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasObject.kt"
   },
   "box/box/typealias/typeAliasObjectCallable.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasObjectCallable.kt"
   },
@@ -40977,8 +40964,8 @@
    "upstream": "compiler/testData/codegen/box/unit/kt4265.kt"
   },
   "box/box/unit/kt51036.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/kt51036.kt"
   },
@@ -41634,8 +41621,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/namedArgumentGap.kt"
   },
   "box/box/versionOverloads/objectMembers.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/objectMembers.kt"
   },
@@ -41791,9 +41778,8 @@
    "upstream": "compiler/testData/codegen/box/volatile/volatileString.kt"
   },
   "box/box/wasmStringSwitch/callSubjectIfChain.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/wasmStringSwitch/callSubjectIfChain.kt"
   },
   "box/box/wasmStringSwitch/elseIfDifferentVariablesNoBraces.kt": {
@@ -41855,9 +41841,8 @@
    "upstream": "compiler/testData/codegen/box/wasmStringSwitch/typeOperatorSafeCast.kt"
   },
   "box/box/wasmStringSwitch/variableSubject.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/wasmStringSwitch/variableSubject.kt"
   },
   "box/box/wasmStringSwitch/whenFunctionCall.kt": {
@@ -41882,9 +41867,8 @@
    "upstream": "compiler/testData/codegen/box/wasmStringSwitch/whenMemberFunctionCall.kt"
   },
   "box/box/wasmStringSwitch/whenOnVariable.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/wasmStringSwitch/whenOnVariable.kt"
   },
   "box/box/wasmStringSwitch/whenPropertyAccess.kt": {
@@ -41951,8 +41935,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/duplicatingItems.kt"
   },
   "box/box/when/enumOptimization/enumInsideClassObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
+   "category": "enum classes",
+   "detail": "only member functions are supported in class/interface bodies (at 'enum')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/enumInsideClassObject.kt"
   },
@@ -42198,9 +42182,8 @@
    "upstream": "compiler/testData/codegen/box/when/multipleEntries.kt"
   },
   "box/box/when/noCachingFunctionCallBetweenIfBranches.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/noCachingFunctionCallBetweenIfBranches.kt"
   },
   "box/box/when/noElseCoerceToUnit.kt": {
@@ -47000,38 +46983,38 @@
    "upstream": "native/native.tests/testData/codegen/object/fields2_2.kt"
   },
   "native/native.tests/codegen/objectDeclaration/compileTime.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/compileTime.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkComputedField.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkComputedField.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkConstructor.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkConstructor.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkEmptyClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertTrue'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkEmptyClass.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkField.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertFalse'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkField.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkInit.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'object')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkInit.kt"
   },

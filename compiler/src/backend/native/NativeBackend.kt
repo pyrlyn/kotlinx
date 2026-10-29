@@ -1131,7 +1131,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val qn = flatten(callee)
         if (qn != null && qn in NANOS) return Val(emitT("call i64 @rt_nanos()"), Ty.I64)
         if (qn != null && (qn == "kotlin.math.sqrt" || qn == "kotlin.math.abs")) return genNamedCall(qn, e)
-        if (callee is NameE && lookup(callee.n) == null) return genNamedCall(callee.n, e)
+        if (callee is NameE && (lookup(callee.n) == null || (callee.n in classes && scopes.none { callee.n in it.vars }))) return genNamedCall(callee.n, e)
         if (callee is MemberE) {
             if (callee.safe) return safe(callee.recv) { r -> method(r, callee.n, e) }
             return method(genExpr(callee.recv), callee.n, e)

@@ -58,4 +58,6 @@ class ClassD(val name: String, val fields: List<FieldD>, val supers: List<String
 }
 class InterfaceD(val name: String, val methods: List<FunD>, val line: Int)
 /** `globals`: top-level properties, initialized in declaration order before `main`. */
-class Program(val funs: List<FunD>, val classes: List<ClassD>, val ifaces: List<InterfaceD>, val globals: List<VarS> = emptyList())
+class Program(val funs: List<FunD>, val classes: List<ClassD>, val ifaces: List<InterfaceD>, val globals: List<VarS> = emptyList(),
+              /** Class name -> (companion object name, names the companion object declares, incl. its own name). */
+              val companions: Map<String, Pair<String, Set<String>>> = emptyMap())

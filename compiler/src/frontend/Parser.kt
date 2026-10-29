@@ -5,7 +5,7 @@ private val INFIX_FUNS = setOf("and", "or", "xor", "shl", "shr", "ushr", "until"
 private val GENERIC_CALLS = setOf("ArrayList", "mutableListOf", "arrayListOf", "listOf", "HashMap", "hashMapOf", "mutableMapOf")
 private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sumOf", "count")
 
-private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract")
+private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const")
 
 class Parser(private val t: List<Tok>) {
     private var p = 0
@@ -40,10 +40,37 @@ class Parser(private val t: List<Tok>) {
                 tk.k == K.ID && tk.s == "class" -> classes.add(classDecl())
                 tk.k == K.ID && tk.s == "enum" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(classDecl(true)) }
                 tk.k == K.ID && tk.s == "interface" -> ifaces.add(interfaceDecl())
+                tk.k == K.ID && tk.s == "object" -> { next(); classes.add(objectDecl(ident())) }
                 else -> fail("unexpected top-level token")
             }
         }
-        return Program(funs, classes, ifaces, enumGlobals(classes) + globals)
+        classes.addAll(companions)
+        val objGlobals = objects.map { n -> VarS(n, false, TypeRef(n, emptyList(), false), CallE(NameE(n), emptyList(), emptyList(), null)) }
+        return Program(funs, classes, ifaces, enumGlobals(classes) + globals + objGlobals, companionOf)
+    }
+
+    /**
+     * Object declarations (singletons): each is a class plus a top-level instance of the same name, initialized
+     * eagerly after the other top-level properties (Kotlin initializes objects lazily on first access).
+     */
+    private val objects = ArrayList<String>()
+    private val companions = ArrayList<ClassD>()
+    /** Class name -> (companion object name, companion member names). */
+    private val companionOf = HashMap<String, Pair<String, Set<String>>>()
+    private var curClass: String? = null
+
+    private fun objectDecl(name: String): ClassD {
+        val line = t[p - 1].line
+        val supers = ArrayList<String>()
+        if (isOp(":")) {
+            next()
+            while (true) { supers.add(ident()); if (isOp("(")) fail("objects with a superclass are not supported"); if (isOp(",")) next() else break }
+        }
+        val fields = ArrayList<FieldD>(); val inits = ArrayList<Any>()
+        val saved = curClass; curClass = null
+        val ms = try { if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved }
+        objects.add(name)
+        return ClassD(name, fields, supers, ms, line, emptyList(), inits)
     }
 
     /** Enum entries become top-level immortal instances `E$A` (initialized first, in order) plus the list `E$values`. */
@@ -80,6 +107,15 @@ class Parser(private val t: List<Tok>) {
                     continue
                 }
                 if (inits != null && isId("init")) { next(); skipNLOnly(); inits.add(block()); continue }
+                if (isId("companion") && t[p + 1].k == K.ID && t[p + 1].s == "object") {
+                    val cls = curClass ?: fail("companion objects are only supported in classes")
+                    next(); next()
+                    val cn = if (peek().k == K.ID) ident() else "Companion"
+                    val od = objectDecl("$cls$$cn")
+                    companions.add(od)
+                    companionOf[cls] = od.name to (od.fields.map { it.name } + od.methods.map { it.name }).toSet() + cn
+                    continue
+                }
                 if (!isId("fun")) fail("only member functions are supported in class/interface bodies")
                 ms.add(function())
             }
@@ -172,6 +208,12 @@ class Parser(private val t: List<Tok>) {
             }
         }
         if (isEnum && superArgs != null) fail("enum classes cannot have a superclass")
+        val savedCls = curClass; curClass = name
+        try { return classBody(name, isEnum, fields, ctorParams, inits, supers, superArgs, typeParams, line) } finally { curClass = savedCls }
+    }
+
+    private fun classBody(name: String, isEnum: Boolean, fields: ArrayList<FieldD>, ctorParams: List<Param>, inits: ArrayList<Any>,
+                          supers: List<String>, superArgs: List<E>?, typeParams: List<String>, line: Int): ClassD {
         var entries: List<Pair<String, List<E>>>? = null
         val ms = if (isEnum) {
             val es = ArrayList<Pair<String, List<E>>>()
