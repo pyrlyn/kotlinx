@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 1991,
-  "UNSUPPORTED": 3460
+  "PASS": 1997,
+  "UNSUPPORTED": 3454
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2054,20 +2054,20 @@
    "upstream": "compiler/testData/codegen/box/bridges/diamond/diamondAbstractFakeOverridesInTheMiddle.kt"
   },
   "box/box/bridges/diamond/diamondMixedDeclarations.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override B.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/diamond/diamondMixedDeclarations.kt"
   },
   "box/box/bridges/doubleOverride/concreteDeclarationOverridesAbstractDeclarationOverridingConcrete.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "other: override of 'foo' in B changes its signature",
+   "detail": "override of 'foo' in B changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/doubleOverride/concreteDeclarationOverridesAbstractDeclarationOverridingConcrete.kt"
   },
   "box/box/bridges/doubleOverride/concreteDeclarationOverridesTwoInheritingDeclarations.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override B.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/doubleOverride/concreteDeclarationOverridesTwoInheritingDeclarations.kt"
   },
@@ -2089,68 +2089,68 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeGenericCovariantOverrideWithDelegation.kt"
   },
   "box/box/bridges/fakeOverride/abstractFakeOverride.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override D.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/abstractFakeOverride.kt"
   },
   "box/box/bridges/fakeOverride/diamondFakeOverrideAbstractAndConcrete.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/diamondFakeOverrideAbstractAndConcrete.kt"
   },
   "box/box/bridges/fakeOverride/diamondFakeOverrideAbstractFakeAndConcrete.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override B.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/diamondFakeOverrideAbstractFakeAndConcrete.kt"
   },
   "box/box/bridges/fakeOverride/diamondFakeOverrideAbstractOverridesConcrete.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "other: override of 'foo' in B changes its signature",
+   "detail": "override of 'foo' in B changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/diamondFakeOverrideAbstractOverridesConcrete.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideAbstractAndConcreteDeclarations.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideAbstractAndConcreteDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideDiamondWithExtraAbstract.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "other: override of 'foo' in C changes its signature",
+   "detail": "override of 'foo' in C changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideDiamondWithExtraAbstract.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritingDeclarations.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override B.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritingDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritingDeclarationsAndAbstract.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override E.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritingDeclarationsAndAbstract.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritsBridgeFromDeclaration.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "other: override of 'foo' in C changes its signature",
+   "detail": "override of 'foo' in C changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritsBridgeFromDeclaration.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritsBridgeFromFakeOverride.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritsBridgeFromFakeOverride.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritsBridgesAndAbstract.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritsBridgesAndAbstract.kt"
   },
@@ -2161,8 +2161,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideManyDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideMisleadingImplementation.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override F.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideMisleadingImplementation.kt"
   },
@@ -2178,20 +2178,18 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractDeclaration.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractFakeOverride.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractFakeOverride.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideTwoDeclarationsThroughFakeOverrides.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideTwoDeclarationsThroughFakeOverrides.kt"
   },
   "box/box/bridges/fakeOverride/longTreeOfFakeOverrideBridgeInheritance.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override D.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/longTreeOfFakeOverrideBridgeInheritance.kt"
   },
@@ -2423,26 +2421,26 @@
    "upstream": "compiler/testData/codegen/box/bridges/overrideWithValueClassReturn.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesAbstractAndConcreteDeclarations.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override D.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesAbstractAndConcreteDeclarations.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesTwoAbstractDeclarations.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override D.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesTwoAbstractDeclarations.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesAbstractAndConcreteDeclarations.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesAbstractAndConcreteDeclarations.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesTwoAbstractDeclarations.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesTwoAbstractDeclarations.kt"
   },
@@ -3280,8 +3278,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt"
   },
   "box/box/callableReference/adaptedReferences/varargWithDefaultValue.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargWithDefaultValue.kt"
   },
@@ -8580,20 +8578,20 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSeqWithIndexStops.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceTypeParameterWithIndex.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "unknown method String.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceTypeParameterWithIndex.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndex.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "unknown method String.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndex.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexBreakAndContinue.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "strings / templates",
+   "detail": "unknown method String.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexBreakAndContinue.kt"
   },
@@ -12489,15 +12487,13 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/complexInheritance.kt"
   },
   "box/box/defaultArguments/function/covariantOverride.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/covariantOverride.kt"
   },
   "box/box/defaultArguments/function/covariantOverrideGeneric.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/covariantOverrideGeneric.kt"
   },
   "box/box/defaultArguments/function/defaultLambdaInline.kt": {
@@ -23144,12 +23140,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531424\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1878258400\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 537660384\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952160\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25772,7 +25768,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x10084cf1b        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10095ac2b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x102f190a3        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10302827b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -31208,9 +31204,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/charRangeUntil.kt"
   },
   "box/box/ranges/contains/generated/charSequenceIndices.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/charSequenceIndices.kt"
   },
   "box/box/ranges/contains/generated/charUntil.kt": {
@@ -32000,9 +31995,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInArrayListIndices.kt"
   },
   "box/box/ranges/forInIndices/forInCharSequenceIndices.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCharSequenceIndices.kt"
   },
   "box/box/ranges/forInIndices/forInCharSequenceTypeParameterIndices.kt": {
@@ -37485,8 +37479,8 @@
    "upstream": "compiler/testData/codegen/box/strictEquals/referenceEqualityGuard.kt"
   },
   "box/box/strictEquals/simple.kt": {
-   "category": "types: CharSequence",
-   "detail": "unknown type CharSequence",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'x' of A hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/simple.kt"
   },
@@ -39206,7 +39200,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8z3kpfk9/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8z3kpfk9/t.l",
+   "detail": "/Users/listepo/Grok/nk-opt-mlgo/build/bin/opt: /Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupj9nftgig/t.ll:167:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\nopt failed (256): '/Users/listepo/Grok/nk-opt-mlgo/build/bin/opt' -passes='default<O3>' -S '/Users/listepo/grok/mini-bench-wt-co",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },

@@ -873,6 +873,8 @@ class Parser(private val t: List<Tok>) {
     private val aliases = HashMap<String, TypeRef>()
 
     private fun collectAliases() {
+        // CharSequence: only String implements it here (StringBuilder is not a CharSequence value), so it is String.
+        aliases["CharSequence"] = TypeRef("String", emptyList(), false)
         val save = p
         var depth = 0
         while (peek().k != K.EOF) {
