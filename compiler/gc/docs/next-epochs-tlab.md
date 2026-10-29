@@ -1,6 +1,6 @@
-# Next step (task, not implemented): epoch-based background cycle reclamation + TLABs
+# Next step: epoch-based background cycle reclamation + TLABs
 
-Status: plan only. Follows `--gc=incremental` (PR "incremental cycle collector"), whose limit is that one
+Status: section 1 implemented as `--gc=epoch` (see `architecture.md` section 7); TLABs (section 2) not started. Follows `--gc=incremental` (PR "incremental cycle collector"), whose limit is that one
 trial-deletion slice is atomic and re-traces any large live graph reachable from its roots
 (`live_heap_churn`, `bigheap`: max pause stays 9-13 ms).
 

@@ -49,8 +49,7 @@
 #define UNPOISON(p, n) ((void)0)
 #endif
 
-typedef KxVTab VTab;
-static inline VTab *vtab(void *p) { return *(VTab **)((char *)p + 8); }
+#include "../common/object.inc"
 
 // ---- statistics / leak check ----
 static KxGcStats gc_st;
@@ -124,20 +123,16 @@ static void *page_alloc(size_t bytes) {
     return p;
 }
 // ---- small vector ----
-typedef struct { void **a; size_t n, cap; } Vec;
-static void vpush(Vec *v, void *p) {
-    if (v->n == v->cap) { v->cap = v->cap ? v->cap * 2 : 4; v->a = realloc(v->a, v->cap * sizeof *v->a); if (!v->a) rt_panic("OutOfMemoryError"); }
-    v->a[v->n++] = p;
-}
-static void vappend(Vec *v, Vec *w) { for (size_t i = 0; i < w->n; i++) vpush(v, w->a[i]); w->n = 0; }
+/* Moves every pointer of `from` onto `to`. */
+static void stack_move(PtrStack *to, PtrStack *from) { for (size_t i = 0; i < from->len; i++) stack_push(to, from->items[i]); from->len = 0; }
 
 static int64_t dbg_bp_ns, dbg_bp_max, dbg_exit_ns, dbg_bmax;
-static Vec ret_local; static size_t ret_pos;       /* mutator: dead objects returned by the collector */
+static PtrStack ret_local; static size_t ret_pos;       /* mutator: dead objects returned by the collector */
 static void free_returned(void *p);
 void *rt_alloc_trace(int64_t size) {
     /* Lazy freeing: every traced allocation frees up to two returned dead objects, so reclamation keeps
      * pace with allocation without a pause. */
-    for (int k = 0; k < 2 && ret_pos < ret_local.n; k++) free_returned(ret_local.a[ret_pos++]);
+    for (int k = 0; k < 2 && ret_pos < ret_local.len; k++) free_returned(ret_local.items[ret_pos++]);
     LEAK(1);
 #ifdef RT_LEAKCHECK
     rg_alloc[1]++;
@@ -182,7 +177,7 @@ static Log *cur;                                   /* mutator */
 static Log *q_head, *q_tail, *log_pool;            /* guarded by mu */
 static size_t q_len;
 static uint64_t handed, applied;                   /* guarded by mu */
-static Vec ret_shared;                             /* dead objects for the mutator, guarded by mu */
+static PtrStack ret_shared;                             /* dead objects for the mutator, guarded by mu */
 static int full_req, coll_quiet, shutting;         /* guarded by mu */
 static uint64_t full_done;
 static pthread_mutex_t mu = PTHREAD_MUTEX_INITIALIZER;
@@ -213,7 +208,7 @@ static void handoff(void) {
         pthread_cond_signal(&cv_work);
     }
     if (q_len > MAX_QUEUED) { int64_t w0 = rt_nanos(); while (q_len > MAX_QUEUED) pthread_cond_wait(&cv_done, &mu); int64_t d = rt_nanos() - w0; dbg_bp_ns += d; if (d > dbg_bp_max) dbg_bp_max = d; }
-    vappend(&ret_local, &ret_shared);
+    stack_move(&ret_local, &ret_shared);
     if (!cur) cur = log_new();
     pthread_mutex_unlock(&mu);
 }
@@ -225,16 +220,13 @@ static void free_returned(void *p) {
     vtab(p)->freemem(p);
 }
 static void process_returns(int64_t budget_ns, int64_t t0) {
-    while (ret_pos < ret_local.n) {
-        free_returned(ret_local.a[ret_pos++]);
+    while (ret_pos < ret_local.len) {
+        free_returned(ret_local.items[ret_pos++]);
         if (budget_ns >= 0 && (ret_pos & 31) == 0 && rt_nanos() - t0 > budget_ns) break;
     }
-    if (ret_pos == ret_local.n) { ret_local.n = 0; ret_pos = 0; }
+    if (ret_pos == ret_local.len) { ret_local.len = 0; ret_pos = 0; }
 }
-static void note_pause(int64_t t0) {
-    int64_t dt = rt_nanos() - t0;
-    gc_st.pause_ns_total += dt; if (dt > gc_st.pause_ns_max) gc_st.pause_ns_max = dt;
-}
+static void note_pause(int64_t t0) { stats_add_pause(&gc_st, rt_nanos() - t0); }
 __attribute__((noinline)) static void boundary(void) {
     if (in_boundary) { /* log filled while freeing returned objects: just hand it over */
         pthread_mutex_lock(&mu);
@@ -264,27 +256,30 @@ void rt_gc_log_dec(void *p) { if (p) log_op((uintptr_t)p | OP_DEC); }
 void rt_gc_write_barrier(void *obj) { log_op((uintptr_t)obj | OP_MOD); }
 
 // ---- collector (background thread): header bits are collector-owned for traced objects ----
-#define CNT_MASK 0xffffffffULL
-#define COLOR_SHIFT 32
-#define BUF_BIT (1ULL << 34)
+// Header word of a traced object under epoch (bits 0-34 as in object.inc; the rest is collector-owned):
+//
+//   63         40 39   38      37     36     35      34        33  32   31                 0
+//   +------------+----+-------+------+------+-------+----------+-------+-------------------+
+//   | CRC / set  | -  | zombie| dead | cand | dirty | buffered | color |  reference count  |
+//   +------------+----+-------+------+------+-------+----------+-------+-------------------+
+//
+//   dirty:  touched by an RC operation or write barrier since the last MarkGray visit (Delta test)
+//   cand:   member of a candidate cycle; the CRC field then holds the cycle's set id
+//   dead:   count reached zero while buffered or a candidate; freed by whoever removes it from there
+//   zombie: freed cycle member still in the root buffer; returned when the buffer is next drained
 #define DIRTY_BIT (1ULL << 35)
 #define CAND_BIT (1ULL << 36)
 #define DEAD_BIT (1ULL << 37)
 #define ZOMBIE_BIT (1ULL << 38)   /* freed cycle member still referenced by the root buffer */
 #define CRC_SHIFT 40
 #define CRC_MAX 0xffffffULL
-enum { BLACK = 0, GRAY = 1, WHITE = 2, PURPLE = 3 };
-static inline uint64_t *hdr(void *p) { return (uint64_t *)p; }
-static inline uint64_t cnt(void *p) { return *hdr(p) & CNT_MASK; }
-static inline int color(void *p) { return (int)((*hdr(p) >> COLOR_SHIFT) & 3); }
-static inline void set_color(void *p, int c) { *hdr(p) = (*hdr(p) & ~(3ULL << COLOR_SHIFT)) | ((uint64_t)c << COLOR_SHIFT); }
-static inline int has(void *p, uint64_t b) { return (*hdr(p) & b) != 0; }
-static inline void set_bit(void *p, uint64_t b) { *hdr(p) |= b; }
-static inline void clr_bit(void *p, uint64_t b) { *hdr(p) &= ~b; }
-static inline uint64_t crc(void *p) { return *hdr(p) >> CRC_SHIFT; }
-static inline void set_crc(void *p, uint64_t c) { *hdr(p) = (*hdr(p) & ((1ULL << CRC_SHIFT) - 1)) | (c << CRC_SHIFT); }
+static inline int has(void *p, uint64_t b) { return (*header(p) & b) != 0; }
+static inline void set_bit(void *p, uint64_t b) { *header(p) |= b; }
+static inline void clr_bit(void *p, uint64_t b) { *header(p) &= ~b; }
+static inline uint64_t crc(void *p) { return *header(p) >> CRC_SHIFT; }
+static inline void set_crc(void *p, uint64_t c) { *header(p) = (*header(p) & ((1ULL << CRC_SHIFT) - 1)) | (c << CRC_SHIFT); }
 
-static Vec c_roots, c_work, c_ret;                 /* collector-local */
+static PtrStack c_roots, c_work, c_ret;                 /* collector-local */
 static size_t c_threshold = 10000;
 #define C_MAX_THRESHOLD (1u << 18)
 typedef struct Cand { struct Cand *next; uint64_t id, valid_after; struct { size_t n; void *a[]; } m; } Cand;
@@ -298,24 +293,24 @@ static void release_dead_child(void *t) { if (t && is_traced(t)) dec_apply(t); }
 static void release_dead(void *p) {
     dbg_dead++;
     set_color(p, BLACK);
-    vpush(&c_ret, p);
+    stack_push(&c_ret, p);
     vtab(p)->trav(p, release_dead_child);
 }
 static void possible_root(void *p) {
     set_color(p, PURPLE);
-    if (!has(p, BUF_BIT)) { set_bit(p, BUF_BIT); vpush(&c_roots, p); }
+    if (!has(p, KX_BUF_BIT)) { set_bit(p, KX_BUF_BIT); stack_push(&c_roots, p); }
 }
 static void dec_apply(void *p) {
-    uint64_t h = *hdr(p);
-    if ((h & CNT_MASK) == 0) rt_panic("epoch GC: reference count underflow");
-    *hdr(p) = (h - 1) | DIRTY_BIT;
-    if (cnt(p) == 0) { if (has(p, BUF_BIT | CAND_BIT)) set_bit(p, DEAD_BIT); else release_dead(p); }
+    uint64_t h = *header(p);
+    if ((h & KX_CNT_MASK) == 0) rt_panic("epoch GC: reference count underflow");
+    *header(p) = (h - 1) | DIRTY_BIT;
+    if (ref_count(p) == 0) { if (has(p, KX_BUF_BIT | CAND_BIT)) set_bit(p, DEAD_BIT); else release_dead(p); }
     else possible_root(p);
 }
 static void apply_log(Log *l) {
     for (size_t i = 0; i < l->n; i++) {
         uintptr_t e = l->a[i]; void *p = (void *)(e & ~(uintptr_t)3);
-        if ((e & 3) == OP_INC) *hdr(p) = (*hdr(p) + 1) | DIRTY_BIT;
+        if ((e & 3) == OP_INC) *header(p) = (*header(p) + 1) | DIRTY_BIT;
         else if ((e & 3) == OP_MOD) set_bit(p, DIRTY_BIT);
     }
     for (size_t i = 0; i < l->n; i++) {
@@ -330,68 +325,68 @@ static void mg_child(void *t) {
     VISIT(); c_traversed++;
     if (color(t) != GRAY) {
         set_color(t, GRAY); clr_bit(t, DIRTY_BIT);
-        uint64_t c = cnt(t); set_crc(t, c > CRC_MAX ? CRC_MAX : c);
-        vpush(&c_work, t);
+        uint64_t c = ref_count(t); set_crc(t, c > CRC_MAX ? CRC_MAX : c);
+        stack_push(&c_work, t);
     }
     if (crc(t) > 0 && crc(t) < CRC_MAX) set_crc(t, crc(t) - 1);
 }
 static void mark_gray(void *s) {
     if (color(s) == GRAY) return;
     set_color(s, GRAY); clr_bit(s, DIRTY_BIT);
-    uint64_t c = cnt(s); set_crc(s, c > CRC_MAX ? CRC_MAX : c);
-    vpush(&c_work, s);
-    while (c_work.n) { void *x = c_work.a[--c_work.n]; vtab(x)->trav(x, mg_child); }
+    uint64_t c = ref_count(s); set_crc(s, c > CRC_MAX ? CRC_MAX : c);
+    stack_push(&c_work, s);
+    while (c_work.len) { void *x = c_work.items[--c_work.len]; vtab(x)->trav(x, mg_child); }
 }
-static Vec c_black;
+static PtrStack c_black;
 static void sb_child(void *t) {
-    if (t && is_traced(t) && !has(t, CAND_BIT) && color(t) != BLACK) { set_color(t, BLACK); vpush(&c_black, t); }
+    if (t && is_traced(t) && !has(t, CAND_BIT) && color(t) != BLACK) { set_color(t, BLACK); stack_push(&c_black, t); }
 }
-static void scan_child(void *t) { if (t && is_traced(t) && !has(t, CAND_BIT)) vpush(&c_work, t); }
+static void scan_child(void *t) { if (t && is_traced(t) && !has(t, CAND_BIT)) stack_push(&c_work, t); }
 static void scan(void *s) {
-    vpush(&c_work, s);
-    while (c_work.n) {
-        void *x = c_work.a[--c_work.n];
+    stack_push(&c_work, s);
+    while (c_work.len) {
+        void *x = c_work.items[--c_work.len];
         if (color(x) != GRAY) continue;
         if (crc(x) > 0) {
-            set_color(x, BLACK); vpush(&c_black, x);
-            while (c_black.n) { void *y = c_black.a[--c_black.n]; vtab(y)->trav(y, sb_child); }
+            set_color(x, BLACK); stack_push(&c_black, x);
+            while (c_black.len) { void *y = c_black.items[--c_black.len]; vtab(y)->trav(y, sb_child); }
         } else { set_color(x, WHITE); vtab(x)->trav(x, scan_child); }
     }
 }
-static Vec cw_m; static uint64_t cw_id;
+static PtrStack cw_m; static uint64_t cw_id;
 static void cw_child(void *t) {
     if (t && is_traced(t) && !has(t, CAND_BIT) && color(t) == WHITE) {
-        set_bit(t, CAND_BIT); set_crc(t, cw_id & CRC_MAX); vpush(&cw_m, t); vpush(&c_work, t);
+        set_bit(t, CAND_BIT); set_crc(t, cw_id & CRC_MAX); stack_push(&cw_m, t); stack_push(&c_work, t);
     }
 }
 static void collect_white(void *s) {
     if (color(s) != WHITE || has(s, CAND_BIT)) return;
     cw_id = next_set_id++; if ((cw_id & CRC_MAX) == 0) cw_id = next_set_id++;
-    cw_m.n = 0;
-    set_bit(s, CAND_BIT); set_crc(s, cw_id & CRC_MAX); vpush(&cw_m, s); vpush(&c_work, s);
-    while (c_work.n) { void *x = c_work.a[--c_work.n]; vtab(x)->trav(x, cw_child); }
-    Cand *c = malloc(sizeof *c + cw_m.n * sizeof(void *)); if (!c) rt_panic("OutOfMemoryError");
-    c->id = cw_id; c->valid_after = 0; c->m.n = cw_m.n; memcpy(c->m.a, cw_m.a, cw_m.n * sizeof(void *));
+    cw_m.len = 0;
+    set_bit(s, CAND_BIT); set_crc(s, cw_id & CRC_MAX); stack_push(&cw_m, s); stack_push(&c_work, s);
+    while (c_work.len) { void *x = c_work.items[--c_work.len]; vtab(x)->trav(x, cw_child); }
+    Cand *c = malloc(sizeof *c + cw_m.len * sizeof(void *)); if (!c) rt_panic("OutOfMemoryError");
+    c->id = cw_id; c->valid_after = 0; c->m.n = cw_m.len; memcpy(c->m.a, cw_m.items, cw_m.len * sizeof(void *));
     c->next = cands; cands = c; dbg_sets++; dbg_members += (int64_t)c->m.n;
 }
 static uint64_t c_valid_after;                      /* hand-off count when the current detection ended */
 static void detect(void) {
     ep_detections++;
-    Vec roots = c_roots; c_roots = (Vec){0};
+    PtrStack roots = c_roots; c_roots = (PtrStack){0};
     size_t k = 0;
-    for (size_t i = 0; i < roots.n; i++) {
-        void *s = roots.a[i];
-        clr_bit(s, BUF_BIT);
-        if (has(s, ZOMBIE_BIT)) { vpush(&c_ret, s); continue; }
+    for (size_t i = 0; i < roots.len; i++) {
+        void *s = roots.items[i];
+        clr_bit(s, KX_BUF_BIT);
+        if (has(s, ZOMBIE_BIT)) { stack_push(&c_ret, s); continue; }
         if (has(s, DEAD_BIT)) { if (!has(s, CAND_BIT)) { clr_bit(s, DEAD_BIT); release_dead(s); } continue; }
         if (has(s, CAND_BIT)) continue;
-        if (color(s) == PURPLE && cnt(s) > 0) { mark_gray(s); roots.a[k++] = s; }
+        if (color(s) == PURPLE && ref_count(s) > 0) { mark_gray(s); roots.items[k++] = s; }
         else if (color(s) == PURPLE) set_color(s, BLACK);   /* already gray: reached from an earlier root */
     }
-    for (size_t i = 0; i < k; i++) scan(roots.a[i]);
+    for (size_t i = 0; i < k; i++) scan(roots.items[i]);
     Cand *old = cands;
-    for (size_t i = 0; i < k; i++) collect_white(roots.a[i]);
-    free(roots.a);
+    for (size_t i = 0; i < k; i++) collect_white(roots.items[i]);
+    free(roots.items);
     pthread_mutex_lock(&mu); uint64_t h = handed; pthread_mutex_unlock(&mu);
     for (Cand *c = cands; c != old; c = c->next) c->valid_after = h;
 }
@@ -407,20 +402,20 @@ static size_t validate(Cand *c) {
     if (!ok) dbg_fail_delta++;
     if (ok) {                                                                                        /* Sigma */
         int64_t ext = 0; v_internal = 0;
-        for (size_t i = 0; i < c->m.n; i++) { void *x = c->m.a[i]; ext += (int64_t)cnt(x); vtab(x)->trav(x, count_child); }
+        for (size_t i = 0; i < c->m.n; i++) { void *x = c->m.a[i]; ext += (int64_t)ref_count(x); vtab(x)->trav(x, count_child); }
         if (ext - v_internal != 0) { ok = 0; sig_fail = 1; dbg_fail_sigma++; }
     }
     size_t freed = 0;
     if (ok) {
         for (size_t i = 0; i < c->m.n; i++) { void *x = c->m.a[i]; vtab(x)->trav(x, free_cycle_child); }
-        for (size_t i = 0; i < c->m.n; i++) { void *x = c->m.a[i]; clr_bit(x, CAND_BIT); set_color(x, BLACK); if (has(x, BUF_BIT)) set_bit(x, ZOMBIE_BIT); else vpush(&c_ret, x); }
+        for (size_t i = 0; i < c->m.n; i++) { void *x = c->m.a[i]; clr_bit(x, CAND_BIT); set_color(x, BLACK); if (has(x, KX_BUF_BIT)) set_bit(x, ZOMBIE_BIT); else stack_push(&c_ret, x); }
         freed = c->m.n; dbg_pass++;
     } else {
         for (size_t i = 0; i < c->m.n; i++) {
             void *x = c->m.a[i];
             clr_bit(x, CAND_BIT); set_color(x, BLACK);
-            if (has(x, DEAD_BIT)) { if (!has(x, BUF_BIT)) { clr_bit(x, DEAD_BIT); release_dead(x); } }
-            else if (cnt(x) > 0) possible_root(x);
+            if (has(x, DEAD_BIT)) { if (!has(x, KX_BUF_BIT)) { clr_bit(x, DEAD_BIT); release_dead(x); } }
+            else if (ref_count(x) > 0) possible_root(x);
         }
     }
     free(c);
@@ -437,16 +432,16 @@ static size_t validate_ready(uint64_t upto, int force) {
     return freed;
 }
 static void publish_returns(void) {
-    if (!c_ret.n) return;
-    pthread_mutex_lock(&mu); vappend(&ret_shared, &c_ret); pthread_mutex_unlock(&mu);
+    if (!c_ret.len) return;
+    pthread_mutex_lock(&mu); stack_move(&ret_shared, &c_ret); pthread_mutex_unlock(&mu);
 }
 /* Stop-the-world drain (mutator waits): detect and validate until no garbage is left. */
 static void full_cycle(void) {
     for (;;) {
         size_t freed = validate_ready(0, 1);
-        if (c_roots.n) { detect(); freed += validate_ready(0, 1); }
+        if (c_roots.len) { detect(); freed += validate_ready(0, 1); }
         gc_st.reclaimed += (int64_t)freed;
-        if (!freed && !c_roots.n && !cands) break;
+        if (!freed && !c_roots.len && !cands) break;
     }
 }
 static void *collector_main(void *arg) {
@@ -461,8 +456,8 @@ static void *collector_main(void *arg) {
             pthread_mutex_unlock(&mu);
             apply_log(l); dbg_logs++;
             size_t freed = validate_ready(l->seq, 0);
-            if (c_roots.n >= c_threshold) {
-                size_t nroots = c_roots.n;
+            if (c_roots.len >= c_threshold) {
+                size_t nroots = c_roots.len;
                 int64_t m0 = dbg_members, w0 = c_traversed;
                 detect();
                 gc_st.collections++;
@@ -507,9 +502,9 @@ void rt_gc_collect(void) {
         while (q_head) pthread_cond_wait(&cv_done, &mu);
         uint64_t want = full_done + 1; full_req = 1; pthread_cond_signal(&cv_work);
         while (full_done < want) pthread_cond_wait(&cv_done, &mu);
-        vappend(&ret_local, &ret_shared);
+        stack_move(&ret_local, &ret_shared);
         pthread_mutex_unlock(&mu);
-        size_t returned = ret_local.n - ret_pos;
+        size_t returned = ret_local.len - ret_pos;
         process_returns(-1, t0);
         if (!had_ops && !returned && !(cur && cur->n)) break;
     }

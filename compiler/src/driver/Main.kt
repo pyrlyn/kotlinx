@@ -20,7 +20,8 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
                        pkg-config or Homebrew), system malloc/free, or free-list pool
   --gc <name>          memory manager, compiler/gc/<name>/gc.c (also --gc=<name>; default: ${'$'}NEWKOTLIN_GC or
                        default): default (RC + cycle collector), incremental (budgeted
-                       cycle collector steps), rc (RC only, cycles leak), boehm (RC + bdwgc)
+                       cycle collector steps), epoch (deferred RC + background cycle
+                       collection), rc (RC only, cycles leak), boehm (RC + bdwgc)
   -S                   only write LLVM IR to <output>"""
 
 private fun readFile(path: String): String {
