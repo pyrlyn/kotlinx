@@ -9,7 +9,7 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --target <t>         native (default; LLVM, native binary), js, wasm, jvm (only native is implemented)
   --runtime <file.c>   C runtime to link (default: ${'$'}NEWKOTLIN_RUNTIME or compiler/runtime/runtime.c)
   --emit-llvm          also keep <output>.ll
-  --cc <clang>         C compiler/linker (default: clang)
+  --cc <clang>         C compiler/linker (default: ${'$'}NK_CC, newest mise conda:clang, else clang)
   --cflags "<flags>"   optimization flags for clang (default: -O3 -flto)
   --opt <path>         LLVM opt run on the IR before linking (lto-pre-link<O3> with -flto, else default<O3>);
                        default: ${'$'}NK_OPT, opt on PATH, `xcrun --find opt`, ${'$'}CONDA_PREFIX/bin, Homebrew llvm
@@ -70,6 +70,17 @@ private fun captureAll(cmd: String): List<String> {
     return out.lines().map { it.trim() }.filter { it.isNotEmpty() }
 }
 
+/**
+ * C compiler/linker when --cc is absent: ${'$'}NK_CC, then the newest mise `conda:clang` (same LLVM as the repo's
+ * mise opt, so it can read opt's IR), else `clang` (Apple clang on macOS).
+ */
+private fun findCc(): String {
+    getenv("NK_CC")?.toKString()?.let { return it }
+    val home = getenv("HOME")?.toKString() ?: ""
+    return captureAll("ls -d '$home'/.local/share/mise/installs/conda-clang/*/bin/clang 2>/dev/null | grep -v /latest/ | sort -rV")
+        .firstOrNull { access(it, X_OK) == 0 } ?: "clang"
+}
+
 private fun findOpt(explicit: String?, cc: String): String? {
     (explicit ?: getenv("NK_OPT")?.toKString())?.let { return if (access(it, X_OK) == 0) it else null }
     capture("command -v opt 2>/dev/null")?.let { if (access(it, X_OK) == 0) return it }
@@ -103,7 +114,7 @@ fun main(args: Array<String>) {
     var input: String? = null; var output: String? = null
     var runtime = getenv("NEWKOTLIN_RUNTIME")?.toKString() ?: "compiler/runtime/runtime.c"
     var target = Target.NATIVE
-    var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false; var cc = "clang"; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
+    var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false; var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
     var i = 0
     while (i < args.size) {
         when (val a = args[i]) {
@@ -113,7 +124,7 @@ fun main(args: Array<String>) {
             "--emit-llvm" -> emitLl = true
             "--leak-check" -> leakCheck = true
             "--alloc" -> alloc = args[++i].also { if (it != "mimalloc" && it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be mimalloc, malloc or pool\n"); exit(2) } }
-            "--cc" -> cc = args[++i]
+            "--cc" -> ccArg = args[++i]
             "--cflags" -> cflags = args[++i]
             "--opt" -> optPath = args[++i]
             "--no-opt" -> noOpt = true
@@ -124,6 +135,7 @@ fun main(args: Array<String>) {
         }
         i++
     }
+    val cc = ccArg ?: findCc()
     if (!target.implemented) { fprintf(stderr, "target %s is not supported yet\n", target.flag); exit(1); return }
     if (input == null || output == null) { fprintf(stderr, "%s\n", USAGE); exit(2); return }
     val ir = try { compileToIr(readFile(input)) } catch (e: CompileError) {
