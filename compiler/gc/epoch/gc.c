@@ -27,7 +27,11 @@
 //      failing members go back to the root buffer.
 // Traced objects live in 64 KiB-aligned size-class slabs registered in a page bitmap, so the
 // collector recognizes traced pointers without dereferencing (acyclic objects may be freed concurrently).
-// Program exit / rt_gc_collect: stop-the-world drain until nothing is left (all garbage reclaimed).
+// Generations: objects found externally referenced by a scan become stable (old) until touched; minor
+// detections do not trace them, major detections (amortized against the stable population) do.
+// Trial deletion's MarkGray/Scan run in parallel on KX_GC_THREADS threads for large major detections.
+// Program exit drains the queue only for --leak-check / --alloc malloc builds or KX_GC_EXIT_DRAIN=1.
+// See compiler/gc/docs/architecture.md, section 7.
 #include <pthread.h>
 #include <stdatomic.h>
 #include <stdint.h>

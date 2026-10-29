@@ -37,6 +37,9 @@ Full description (object layout, RC + Perceus, regions, cycle collector, ownersh
 | `KX_GC_STATS=1` | run | print GC statistics to stderr at exit |
 | `KX_GC_BUDGET_US` | run | per-step budget of `incremental` (default 500) |
 | `KX_GC_FREE_BUDGET_US` | run | `epoch`: freeing budget per epoch boundary (default 200) |
+| `KX_GC_THREADS` | run | `epoch`: collector threads (default min(cores, 4)) |
+| `KX_GC_MAX_QUEUED` | run | `epoch`: logs the collector may lag before the program waits (default 32) |
+| `KX_GC_EXIT_DRAIN` | run | `epoch`: `1` drains the queue at exit in any build |
 
 ## Selecting an implementation
 
