@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 5,
   "MISCOMPILE": 42,
   "N/A": 2984,
-  "PASS": 1780,
-  "UNSUPPORTED": 3664
+  "PASS": 1810,
+  "UNSUPPORTED": 3634
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1658,17 +1658,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz3ca8nuw/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz3ca8nuw/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup1l0f8z7t/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup1l0f8z7t/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupth9e54gf/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupth9e54gf/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupbj4vkz6i/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupbj4vkz6i/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuplzqige4y/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuplzqige4y/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0zfets_o/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0zfets_o/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -2013,9 +2013,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/declarationDifferentSignature/simpleConcreteDeclarationOverridesAbstractDifferentSignature.kt"
   },
   "box/box/bridges/delegation.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/delegation.kt"
   },
   "box/box/bridges/delegationComplex.kt": {
@@ -2031,8 +2030,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/delegationComplexWithList.kt"
   },
   "box/box/bridges/delegationProperty.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/delegationProperty.kt"
   },
@@ -2552,9 +2551,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/boundedTypeArguments.kt"
   },
   "box/box/bridges/substitutionInSuperClass/delegation.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/delegation.kt"
   },
   "box/box/bridges/substitutionInSuperClass/differentErasureInSuperClass.kt": {
@@ -4940,8 +4938,8 @@
    "upstream": "compiler/testData/codegen/box/casts/mutableCollections/asWithMutable.kt"
   },
   "box/box/casts/mutableCollections/isWithMutable.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "other syntax (at '.')",
+   "detail": "unexpected top-level token (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/mutableCollections/isWithMutable.kt"
   },
@@ -5061,9 +5059,8 @@
    "upstream": "compiler/testData/codegen/box/checkcastOptimization/reifiedShouldNotBeOptimized.kt"
   },
   "box/box/classDelegation/delegationToInOutTypeParameters.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToInOutTypeParameters.kt"
   },
   "box/box/classDelegation/delegationToInTypeParameter.kt": {
@@ -5073,9 +5070,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToInTypeParameter.kt"
   },
   "box/box/classDelegation/delegationToOutTypeParameter.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToOutTypeParameter.kt"
   },
   "box/box/classDelegation/delegationToStarProjectedType.kt": {
@@ -5085,15 +5081,13 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToStarProjectedType.kt"
   },
   "box/box/classDelegation/delegationToTypeParameter.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToTypeParameter.kt"
   },
   "box/box/classDelegation/delegationToTypeParameterWithRecursiveBond.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToTypeParameterWithRecursiveBond.kt"
   },
   "box/box/classDelegation/generic.kt": {
@@ -5109,9 +5103,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/hiddenDelegateAndLateinitVar.kt"
   },
   "box/box/classDelegation/method.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classDelegation/method.kt"
   },
   "box/box/classDelegation/multipleModules.kt": {
@@ -5120,9 +5113,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/multipleModules.kt"
   },
   "box/box/classDelegation/property.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classDelegation/property.kt"
   },
   "box/box/classDelegation/withBridge.kt": {
@@ -5243,44 +5235,41 @@
    "upstream": "compiler/testData/codegen/box/classes/delegateConstructorCallWithKeywords.kt"
   },
   "box/box/classes/delegation2.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/delegation2.kt"
   },
   "box/box/classes/delegation3.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/delegation3.kt"
   },
   "box/box/classes/delegation4.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/delegation4.kt"
   },
   "box/box/classes/delegationGenericArg.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/delegationGenericArg.kt"
   },
   "box/box/classes/delegationGenericArgUpperBound.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/delegationGenericArgUpperBound.kt"
   },
   "box/box/classes/delegationGenericLongArg.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/delegationGenericLongArg.kt"
   },
   "box/box/classes/delegationMethodsWithArgs.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "strings / templates",
+   "detail": "unknown method String.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/delegationMethodsWithArgs.kt"
   },
@@ -5323,9 +5312,8 @@
    "upstream": "compiler/testData/codegen/box/classes/inheritSetAndHashSet.kt"
   },
   "box/box/classes/inheritance.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/inheritance.kt"
   },
   "box/box/classes/inheritedInnerClass.kt": {
@@ -5544,8 +5532,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt249.kt"
   },
   "box/box/classes/kt2532.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2532.kt"
   },
@@ -5592,9 +5580,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt285.kt"
   },
   "box/box/classes/kt3001.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt3001.kt"
   },
   "box/box/classes/kt3114.kt": {
@@ -5603,8 +5590,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt3114.kt"
   },
   "box/box/classes/kt3414.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt3414.kt"
   },
@@ -5614,9 +5601,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt343.kt"
   },
   "box/box/classes/kt3546.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt3546.kt"
   },
   "box/box/classes/kt40332.kt": {
@@ -5838,8 +5824,8 @@
    "upstream": "compiler/testData/codegen/box/classes/superConstructorCallWithComplexArg.kt"
   },
   "box/box/classes/typedDelegation.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "other: no field zzzValue in X",
+   "detail": "no field zzzValue in X",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/typedDelegation.kt"
   },
@@ -11143,8 +11129,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/kt44221.kt"
   },
   "box/box/coroutines/kt44710.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/kt44710.kt"
   },
@@ -13708,27 +13694,24 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegatedAnonymousObject_someParametersOnDelegate.kt"
   },
   "box/box/delegation/delegationByArg.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "other: no field prop in Derived",
+   "detail": "no field prop in Derived",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationByArg.kt"
   },
   "box/box/delegation/delegationByExprWithArgs.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationByExprWithArgs.kt"
   },
   "box/box/delegation/delegationByFunExpr.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationByFunExpr.kt"
   },
   "box/box/delegation/delegationByIfExpr.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationByIfExpr.kt"
   },
   "box/box/delegation/delegationByInh.kt": {
@@ -13738,9 +13721,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationByInh.kt"
   },
   "box/box/delegation/delegationByNewInstance.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationByNewInstance.kt"
   },
   "box/box/delegation/delegationChain.kt": {
@@ -13750,9 +13732,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationChain.kt"
   },
   "box/box/delegation/delegationComplex.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationComplex.kt"
   },
   "box/box/delegation/delegationDifferentModule.kt": {
@@ -13766,15 +13747,13 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationDifferentModule2.kt"
   },
   "box/box/delegation/delegationEvaluationOrder1.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationEvaluationOrder1.kt"
   },
   "box/box/delegation/delegationEvaluationOrder2.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationEvaluationOrder2.kt"
   },
   "box/box/delegation/delegationExtFun1.kt": {
@@ -13831,8 +13810,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationToSAMInterface.kt"
   },
   "box/box/delegation/delegationToVar.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationToVar.kt"
   },
@@ -13867,8 +13846,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/ifWithCallableReferenceInLazy.kt"
   },
   "box/box/delegation/inDataClass.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "other: unknown method C.let()",
+   "detail": "unknown method C.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/inDataClass.kt"
   },
@@ -13908,8 +13887,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/viaTypeAlias.kt"
   },
   "box/box/delegation/withDefaultParameters.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/withDefaultParameters.kt"
   },
@@ -16411,8 +16390,8 @@
    "upstream": "compiler/testData/codegen/box/fir/missingDependencyClassInTypeArguments.kt"
   },
   "box/box/fir/multipleDefaultsFalsePositiveDelegation.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/multipleDefaultsFalsePositiveDelegation.kt"
   },
@@ -21027,14 +21006,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/kt28483Generic2.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/kt31585.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "interfaces",
+   "detail": "only interfaces can be delegated with 'by' (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/kt31585.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/kt31585Generic.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "interfaces",
+   "detail": "only interfaces can be delegated with 'by' (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/kt31585Generic.kt"
   },
@@ -22320,38 +22299,38 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultWithInlineClassArgumentGeneric.kt"
   },
   "box/box/inlineClasses/delegationByUnderlyingType/default.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/delegationByUnderlyingType/default.kt"
   },
   "box/box/inlineClasses/delegationByUnderlyingType/defaultArgument.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/delegationByUnderlyingType/defaultArgument.kt"
   },
   "box/box/inlineClasses/delegationByUnderlyingType/defaultArgumentGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/delegationByUnderlyingType/defaultArgumentGeneric.kt"
   },
   "box/box/inlineClasses/delegationByUnderlyingType/defaultGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/delegationByUnderlyingType/defaultGeneric.kt"
   },
   "box/box/inlineClasses/delegationByUnderlyingType/simple.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/delegationByUnderlyingType/simple.kt"
   },
   "box/box/inlineClasses/delegationByUnderlyingType/simpleGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/delegationByUnderlyingType/simpleGeneric.kt"
   },
@@ -23126,8 +23105,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineMapOfInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassCollection/inlineMutableCollectionBulkAdd.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineMutableCollectionBulkAdd.kt"
   },
@@ -23246,12 +23225,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789600\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342967008\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645792\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823072\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23336,15 +23315,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineValueClassSyntaxWithFvcOn.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/interfaceImplementationByDelegation.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/interfaceImplementationByDelegation.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/interfaceImplementationByDelegationGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/interfaceImplementationByDelegationGeneric.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/kt38337.kt": {
@@ -23378,27 +23355,23 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberExtVarDelegationWithInlineClassParameterTypes.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegatedToInlineClassInt.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegatedToInlineClassInt.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegatedToInlineClassIntGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegatedToInlineClassIntGeneric.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegatedToInlineClassLong.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegatedToInlineClassLong.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegatedToInlineClassLongGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegatedToInlineClassLongGeneric.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypes.kt": {
@@ -25886,7 +25859,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x10088cdef        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10098b2c7        kfun:newkotlin.Parser.prefix#internal + 9395 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1000f0def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x1001f172b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -30865,15 +30838,13 @@
    "upstream": "compiler/testData/codegen/box/properties/kt257.kt"
   },
   "box/box/properties/kt2655.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt2655.kt"
   },
   "box/box/properties/kt2786.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt2786.kt"
   },
   "box/box/properties/kt2892.kt": {
@@ -30934,8 +30905,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt4340.kt"
   },
   "box/box/properties/kt4373.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt4373.kt"
   },
@@ -36996,9 +36967,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/delegatedThisWithLambda.kt"
   },
   "box/box/secondaryConstructors/delegationWithPrimary.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/delegationWithPrimary.kt"
   },
   "box/box/secondaryConstructors/enums.kt": {
@@ -37677,14 +37647,14 @@
    "upstream": "compiler/testData/codegen/box/strings/MultiDollarInterpolation.kt"
   },
   "box/box/strings/charSequenceGet.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "interfaces",
+   "detail": "only interfaces can be delegated with 'by' (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/charSequenceGet.kt"
   },
   "box/box/strings/charSequenceSubSequence.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "interfaces",
+   "detail": "only interfaces can be delegated with 'by' (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/charSequenceSubSequence.kt"
   },
@@ -37764,8 +37734,8 @@
    "upstream": "compiler/testData/codegen/box/strings/kt2592.kt"
   },
   "box/box/strings/kt3571.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'by')",
+   "category": "interfaces",
+   "detail": "only interfaces can be delegated with 'by' (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/kt3571.kt"
   },
@@ -39377,7 +39347,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxo6z9htd/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxo6z9htd/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupn2edw9ls/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupn2edw9ls/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },

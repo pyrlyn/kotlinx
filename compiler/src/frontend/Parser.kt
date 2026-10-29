@@ -335,6 +335,11 @@ class Parser(private val t: List<Tok>) {
         }
     }
 
+    /** Class name -> interfaces implemented by delegation (`: I by expr`). */
+    /** Set while parsing a `by` delegate in a class header: `{` starts the class body, not a trailing lambda. */
+    private var noBraceCall = false
+    private val byDelegs = HashMap<String, MutableList<String>>()
+
     /** Interface name -> its default method bodies. */
     private val ifaceDefaults = HashMap<String, List<FunD>>()
 
@@ -352,6 +357,25 @@ class Parser(private val t: List<Tok>) {
                 if (ch.any { x -> x.methods.any { it.name == m.name } } || add.any { it.name == m.name }) continue
                 if (ch.none { x -> x.fields.any { it.name == n } }) continue
                 add.add(FunD(m.name, emptyList(), m.ret, null, NameE(n).also { it.line = c.line }, c.line))
+            }
+            for (s in byDelegs[c.name].orEmpty()) {
+                val iface = ifaces.firstOrNull { it.name == s } ?: fail("only interfaces can be delegated with 'by'")
+                val targs = c.superTypeArgs[s].orEmpty()
+                val tmap = iface.typeParams.zip(targs).toMap()
+                fun st(t: TypeRef): TypeRef = tmap[t.name]?.let { r -> if (t.nullable && !r.nullable) TypeRef(r.name, r.args, true) else r }
+                    ?: TypeRef(t.name, t.args.map { st(it) }, t.nullable)
+                if (iface.typeParams.isNotEmpty() && targs.size != iface.typeParams.size) fail("delegated generic interface needs type arguments")
+                val recv = NameE("\$by\$$s")
+                for (m in iface.methods) {
+                    if (ch.any { x -> x.methods.any { it.name == m.name && (it.body != null || it.exprBody != null) } } || add.any { it.name == m.name }) continue
+                    if (m.typeParams.isNotEmpty()) fail("delegating generic interface methods is not supported")
+                    val ps = m.params.map { Param(it.name, st(it.type), it.default, it.vararg) }
+                    if (m.params.any { it.vararg }) fail("delegating vararg methods is not supported")
+                    val body: E = if (m.name.startsWith("\$prop\$") && m.params.isEmpty()) MemberE(recv, m.name.removePrefix("\$prop\$"), false)
+                        else CallE(MemberE(recv, m.name, false), emptyList(), ps.map { NameE(it.name) }, null)
+                    body.line = c.line
+                    add.add(FunD(m.name, ps, st(m.ret ?: TypeRef("Unit", emptyList(), false)), null, body, c.line))
+                }
             }
             for (s in ch.flatMap { it.supers }.distinct()) for (d in ifaceDefaults[s].orEmpty()) {
                 if (ch.any { x -> x.methods.any { it.name == d.name && (it.body != null || it.exprBody != null) } } || add.any { it.name == d.name }) continue
@@ -666,7 +690,17 @@ class Parser(private val t: List<Tok>) {
             while (true) {
                 val sn = ident()
                 superTypeArgs(sn)
-                if (isOp("(")) {
+                if (isId("by")) {
+                    // Class delegation `I by expr`: a hidden field holding the delegate; forwarders are added later.
+                    next()
+                    noBraceCall = true
+                    val de = try { expr() } finally { noBraceCall = false }
+                    val fn = "\$by\$$sn"
+                    val f = FieldD(fn, TypeRef(sn, superTA[sn].orEmpty(), false), false, de)
+                    fields.add(f); inits.add(f)
+                    byDelegs.getOrPut(name) { ArrayList() }.add(sn)
+                    supers.add(sn)
+                } else if (isOp("(")) {
                     if (superArgs != null) fail("only one superclass is allowed")
                     next()
                     superArgs = nested(1) { val xs = ArrayList<E>(); while (!isOp(")")) { xs.add(expr()); if (isOp(",")) next() }; xs }
@@ -969,7 +1003,7 @@ class Parser(private val t: List<Tok>) {
                 ".", "?." -> { p++; skipNLOnly(); MemberE(e, ident(), tk.s == "?.") }
                 "(" -> {
                     val a = args()
-                    val lam = if (t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
+                    val lam = if (!noBraceCall && t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
                     foldStr(e, a, lam) ?: CallE(e, emptyList(), a, lam)
                 }
                 "[" -> { p++; val i = nested(1) { expr() }; expectOp("]"); IndexE(e, i) }
@@ -977,7 +1011,7 @@ class Parser(private val t: List<Tok>) {
                 // Callable reference `recv::name`: UnE("::name", recv).
                 "::" -> { p++; if (isId("class")) fail("class literals are not supported"); UnE("::" + ident(), e) }
                 "++", "--" -> if (e is NameE || e is MemberE || e is IndexE) { p++; PostIncE(e, tk.s) } else break
-                "{" -> if (e is MemberE || (e is NameE && e.n !in NO_TRAILING)) CallE(e, emptyList(), emptyList(), block(lambda = true)) else break
+                "{" -> if (!noBraceCall && (e is MemberE || (e is NameE && e.n !in NO_TRAILING))) CallE(e, emptyList(), emptyList(), block(lambda = true)) else break
                 else -> break
             }
             e.line = line
@@ -1019,7 +1053,7 @@ class Parser(private val t: List<Tok>) {
                     } else explicitTypeArgs()?.let { ta ->
                         // `f<T>(args) { lambda }` or `f<T> { lambda }`
                         val a = if (isOp("(")) args() else emptyList()
-                        val lam = if (t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
+                        val lam = if (!noBraceCall && t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
                         CallE(NameE(tk.s).also { it.line = tk.line }, ta, a, lam)
                     } ?: NameE(tk.s)
                 }
