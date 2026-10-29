@@ -9,7 +9,7 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --target <t>         native (default; LLVM, native binary), js, wasm, jvm (only native is implemented)
   --runtime <file.c>   C runtime to link (default: ${'$'}NEWKOTLIN_RUNTIME or compiler/runtime/runtime.c)
   --emit-llvm          also keep <output>.ll
-  --cc <clang>         C compiler/linker (default: ${'$'}NK_CC, newest mise conda:clang, else clang)
+  --cc <clang>         C compiler/linker (default: ${'$'}NK_CC, Apple clang, newest mise conda:clang, else clang)
   --cflags "<flags>"   optimization flags for clang (default: -O3 -flto)
   --opt <path>         LLVM opt run on the IR before linking (lto-pre-link<O3> with -flto, else default<O3>);
                        default: ${'$'}NK_OPT, opt on PATH, `xcrun --find opt`, ${'$'}CONDA_PREFIX/bin, Homebrew llvm
@@ -56,7 +56,15 @@ private fun capture(cmd: String): String? {
 
 /** LLVM `opt`: --opt <path>, ${'$'}NK_OPT, `opt` on PATH, `xcrun --find opt`, then common install locations. */
 /** Major LLVM version from `<tool> --version` ("LLVM version 23.1.4", "clang version 21.0.0"), or null. */
-private fun majorVersion(tool: String): Int? {
+private val majorCache = HashMap<String, Int?>()
+
+/** Memoized; mise install paths (".../conda-llvm-tools/21.1.8/bin/opt") give it without running the tool (~0.15 s each). */
+private fun majorVersion(tool: String): Int? = majorCache.getOrPut(tool) {
+    Regex("/mise/installs/conda-(?:llvm-tools|clang)/(\\d+)[^/]*/bin/").find(tool)?.let { return@getOrPut it.groupValues[1].toInt() }
+    majorVersionRun(tool)
+}
+
+private fun majorVersionRun(tool: String): Int? {
     val out = capture("'$tool' --version 2>/dev/null | grep -oE '(LLVM|clang) version [0-9]+' | head -1") ?: return null
     return out.substringAfterLast(' ').toIntOrNull()
 }
@@ -71,11 +79,15 @@ private fun captureAll(cmd: String): List<String> {
 }
 
 /**
- * C compiler/linker when --cc is absent: ${'$'}NK_CC, then the newest mise `conda:clang` (same LLVM as the repo's
- * mise opt, so it can read opt's IR), else `clang` (Apple clang on macOS).
+ * C compiler/linker when --cc is absent: ${'$'}NK_CC, then Apple clang (/usr/bin/clang, macOS), then the newest
+ * mise `conda:clang`, else `clang`. Apple clang's LTO measured faster than conda clang 23 (matmul 10 vs 16 ms,
+ * refpass 130 vs 148 ms) and its link step about 2x faster; findOpt then picks an opt its LLVM can read.
  */
 private fun findCc(): String {
     getenv("NK_CC")?.toKString()?.let { return it }
+    if (access("/usr/bin/clang", X_OK) == 0) capture("/usr/bin/clang --version 2>/dev/null")?.let { v ->
+        if (v.startsWith("Apple")) { majorCache["/usr/bin/clang"] = Regex("version (\\d+)").find(v)?.groupValues?.get(1)?.toIntOrNull(); return "/usr/bin/clang" }
+    }
     val home = getenv("HOME")?.toKString() ?: ""
     return captureAll("ls -d '$home'/.local/share/mise/installs/conda-clang/*/bin/clang 2>/dev/null | grep -v /latest/ | sort -rV")
         .firstOrNull { access(it, X_OK) == 0 } ?: "clang"
@@ -83,8 +95,10 @@ private fun findCc(): String {
 
 private fun findOpt(explicit: String?, cc: String): String? {
     (explicit ?: getenv("NK_OPT")?.toKString())?.let { return if (access(it, X_OK) == 0) it else null }
-    capture("command -v opt 2>/dev/null")?.let { if (access(it, X_OK) == 0) return it }
-    capture("xcrun --find opt 2>/dev/null")?.let { if (access(it, X_OK) == 0) return it }
+    // mise shims (also returned by xcrun, which searches PATH) cost ~0.4 s per call and pick the version by the
+    // current directory; skip them and use the mise installs below.
+    capture("command -v opt 2>/dev/null")?.let { if ("/mise/shims/" !in it && access(it, X_OK) == 0) return it }
+    capture("xcrun --find opt 2>/dev/null")?.let { if ("/mise/shims/" !in it && access(it, X_OK) == 0) return it }
     // Common LLVM install locations: conda env, Homebrew llvm (unversioned, then newest llvm@N), mise.
     val home = getenv("HOME")?.toKString() ?: ""
     val fixed = listOfNotNull(getenv("CONDA_PREFIX")?.toKString()?.let { "$it/bin/opt" },

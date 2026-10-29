@@ -1,4 +1,5 @@
 [tools]
 # LLVM opt + matching clang for newkotlinc, found automatically (no activation needed): run `mise install`.
-"conda:llvm-tools" = "latest"
+# 21 matches Apple clang (macOS default), latest matches conda:clang.
+"conda:llvm-tools" = ["21", "latest"]
 "conda:clang" = "latest"

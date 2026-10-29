@@ -238,10 +238,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         else -> emitT("trunc i64 $s to ${t.llvm}")
     }
 
+    /** TBAA tags: array length, array elements and object fields never alias each other. */
+    private fun tbLen() = ", !tbaa !21"
+    private fun tbElem(t: String) = TB_TYS.indexOf(t).let { if (it < 0) "" else ", !tbaa !${30 + it}" }
+    private fun tbField(t: String) = TB_TYS.indexOf(t).let { if (it < 0) "" else ", !tbaa !${50 + it}" }
+
     /** Bounds-checked element pointer of a typed array ({ i64 length; elements }). */
     private fun elemPtr(r: Val, i: Val): String {
         val et = (r.t as Ty.Arr).elem
-        val len = emitT("load i64, ptr ${r.v}")
+        val len = emitT("load i64, ptr ${r.v}${tbLen()}")
         val ok = label("idx.ok"); val bad = label("idx.bad")
         emit("br i1 ${emitT("icmp ult i64 ${i.v}, $len")}, label %$ok, label %$bad, !prof !0"); term = true
         startBlock(bad)
@@ -657,7 +662,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         fun store(n: String, v0: Val) {
             val idx = ci.index(n); val ft = ci.fields[idx].second
             val v = consume(coerce(v0, ft))
-            emit("store ${ft.llvm} ${v.v}, ptr ${emitT("getelementptr ${ci.llType}, ptr %this, i32 0, i32 ${idx + 2}")}")
+            emit("store ${ft.llvm} ${v.v}, ptr ${emitT("getelementptr ${ci.llType}, ptr %this, i32 0, i32 ${idx + 2}")}${tbField(ft.llvm)}")
         }
         for (f in c.fields) if (f.init == null) store(f.name, genArg(NameE(f.name).also { it.line = c.line }))
         for (x in c.inits) {
@@ -732,7 +737,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun initObj(ci: ClassInfo, p: String, vals: List<Val>) {
         emit("store i64 1, ptr $p")
         emit("store ptr @vt.${ci.name}, ptr ${emitT("getelementptr ${ci.llType}, ptr $p, i32 0, i32 1")}")
-        vals.forEachIndexed { i, v -> emit("store ${v.t.llvm} ${v.v}, ptr ${emitT("getelementptr ${ci.llType}, ptr $p, i32 0, i32 ${i + 2}")}") }
+        vals.forEachIndexed { i, v -> emit("store ${v.t.llvm} ${v.v}, ptr ${emitT("getelementptr ${ci.llType}, ptr $p, i32 0, i32 ${i + 2}")}${tbField(v.t.llvm)}") }
     }
 
     /**
@@ -987,10 +992,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val ptr = emitT("getelementptr ${ci.llType}, ptr ${r.v}, i32 0, i32 ${idx + 2}")
                 if (ft.isRef) {
                     v = consume(v)
-                    val old = emitT("load ptr, ptr $ptr")
-                    emit("store ptr ${v.v}, ptr $ptr")
+                    val old = emitT("load ptr, ptr $ptr${tbField("ptr")}")
+                    emit("store ptr ${v.v}, ptr $ptr${tbField("ptr")}")
                     release(Val(old, ft))
-                } else emit("store ${ft.llvm} ${v.v}, ptr $ptr")
+                } else emit("store ${ft.llvm} ${v.v}, ptr $ptr${tbField(ft.llvm)}")
                 releaseIfOwned(r)
             }
             is IndexE -> {
@@ -1005,7 +1010,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     is Ty.Arr -> {
                         val q = elemPtr(r, i)
                         val v = coerce(genExpr(value), rt.elem)
-                        emit("store ${rt.elem.llvm} ${v.v}, ptr $q")
+                        emit("store ${rt.elem.llvm} ${v.v}, ptr $q${tbElem(rt.elem.llvm)}")
                     }
                     is Ty.MapTy -> {
                         val v = coerce(genExpr(value), rt.v)
@@ -1102,13 +1107,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             emit("store i64 0, ptr $idx")
             val v = declare(s.name, elemT, false, false)
             val data = if (arr != null) emitT("getelementptr i8, ptr ${coll.v}, i64 8") else ""
-            val len = if (arr != null) emitT("load i64, ptr ${coll.v}") else if (coll.t == Ty.Str) emitT("call i64 @strlen(ptr ${coll.v})") else ""
+            val len = if (arr != null) emitT("load i64, ptr ${coll.v}${tbLen()}") else if (coll.t == Ty.Str) emitT("call i64 @strlen(ptr ${coll.v})") else ""
             startBlock(lc)
             val i = emitT("load i64, ptr $idx")
             val n = if (len != "") len else emitT("call i64 @rt_list_size(ptr ${coll.v})")
             condBr(emitT("icmp slt i64 $i, $n"), lb, le)
             startBlock(lb)
-            val e = if (arr != null) emitT("load ${elemT.llvm}, ptr ${emitT("getelementptr ${elemT.llvm}, ptr $data, i64 $i")}")
+            val e = if (arr != null) emitT("load ${elemT.llvm}, ptr ${emitT("getelementptr ${elemT.llvm}, ptr $data, i64 $i")}${tbElem(elemT.llvm)}")
             else if (coll.t == Ty.Str) emitT("zext i8 ${emitT("load i8, ptr ${emitT("getelementptr i8, ptr ${coll.v}, i64 $i")}")} to i32")
             else fromSlot(emitT("call i64 @rt_list_get(ptr ${coll.v}, i64 $i)"), elemT)
             emit("store ${elemT.llvm} $e, ptr ${v.slot}")
@@ -1211,7 +1216,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val i0 = genExpr(e.idx)
                 val i = if (r.t is Ty.MapTy) i0 else coerce(i0, Ty.I64)
                 val res = when (val rt = r.t) {
-                    is Ty.Arr -> Val(emitT("load ${rt.elem.llvm}, ptr ${elemPtr(r, i)}"), rt.elem)
+                    is Ty.Arr -> Val(emitT("load ${rt.elem.llvm}, ptr ${elemPtr(r, i)}${tbElem(rt.elem.llvm)}"), rt.elem)
                     is Ty.MapTy -> Val(fromSlot(emitT("call i64 @rt_map_get(ptr ${r.v}, i64 ${mapKey(i0, rt)})"), rt.v), rt.v)
                     Ty.Str -> Val(emitT("zext i8 ${emitT("load i8, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 ${i.v}")}")} to i32"), Ty.Char)
                     is Ty.ListTy -> { listIdx(r, i); Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${r.v}, i64 ${i.v})"), rt.elem), rt.elem) }
@@ -1619,7 +1624,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val ci = classes.getValue(t.name)
                 val idx = ci.index(n).takeIf { it >= 0 } ?: fail("no field $n in ${t.name}")
                 val ft = ci.fields[idx].second
-                val fv = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${r.v}, i32 0, i32 ${idx + 2}")}"), ft)
+                val fv = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${r.v}, i32 0, i32 ${idx + 2}")}${tbField(ft.llvm)}"), ft)
                 // Reading an unassigned `lateinit` reference property throws.
                 if (ft.llvm == "ptr" && (listOf(t.name) + ci.ancestors).any { "$it.$n" in lateinitFields }) {
                     val ok = label("li.ok"); val bad = label("li.unset")
@@ -1633,7 +1638,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 fv
             }
             is Ty.ListTy -> if (n == "size") Val(emitT("trunc i64 ${emitT("call i64 @rt_list_size(ptr ${r.v})")} to i32"), Ty.I32) else fail("unknown property $n")
-            is Ty.Arr -> if (n == "size") Val(emitT("trunc i64 ${emitT("load i64, ptr ${r.v}")} to i32"), Ty.I32) else fail("unknown property $n")
+            is Ty.Arr -> if (n == "size") Val(emitT("trunc i64 ${emitT("load i64, ptr ${r.v}${tbLen()}")} to i32"), Ty.I32) else fail("unknown property $n")
             is Ty.MapTy -> if (n == "size") Val(emitT("trunc i64 ${emitT("call i64 @rt_map_size(ptr ${r.v})")} to i32"), Ty.I32) else fail("unknown property $n")
             Ty.SB -> if (n == "length") Val(emitT("trunc i64 ${emitT("call i64 @rt_sb_len(ptr ${r.v})")} to i32"), Ty.I32) else fail("unknown property $n")
             Ty.Char -> if (n == "code") Val(r.v, Ty.I32) else fail("unknown property $n")
@@ -3104,6 +3109,17 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 }
 
+private val TB_TYS = listOf("i1", "i8", "i16", "i32", "i64", "float", "double", "ptr")
+
+/** Scalar TBAA type tree rooted at "kx": length, elem.<ty>, field.<ty> are disjoint siblings. */
+private fun tbaaMeta(): String = buildString {
+    append("!20 = !{!\"kx tbaa\"}\n!19 = !{!\"kx.len\", !20, i64 0}\n!21 = !{!19, !19, i64 0}\n")
+    TB_TYS.forEachIndexed { i, t ->
+        append("!${70 + i} = !{!\"kx.elem.$t\", !20, i64 0}\n!${30 + i} = !{!${70 + i}, !${70 + i}, i64 0}\n")
+        append("!${90 + i} = !{!\"kx.field.$t\", !20, i64 0}\n!${50 + i} = !{!${90 + i}, !${90 + i}, i64 0}\n")
+    }
+}
+
 private val PRELUDE = """
 target triple = "arm64-apple-macosx14.0.0"
 @rt_argc = global i32 0
@@ -3166,7 +3182,7 @@ declare double @llvm.sqrt.f64(double)
 declare double @llvm.fabs.f64(double)
 !0 = !{!"branch_weights", i32 2000, i32 1}
 !1 = !{!"branch_weights", i32 1, i32 2000}
-
+${tbaaMeta()}
 define internal void @rt_release_dyn(ptr %p) {
 entry:
   %isnull = icmp eq ptr %p, null
@@ -3205,3 +3221,4 @@ done:
 }
 
 """
+
