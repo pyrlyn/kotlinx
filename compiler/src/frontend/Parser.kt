@@ -237,9 +237,12 @@ class Parser(private val t: List<Tok>) {
                     val n = ident()
                     val ty = if (isOp(":")) { next(); type() } else null
                     getter("\$prop\$$n", ty, emptyList(), null)?.let { ms.add(it); continue }
-                    if (!isOp("=")) fail("body properties need an initializer")
-                    next(); skipNLOnly()
-                    val f = FieldD(n, ty, isVar, expr())
+                    // Without an initializer (`lateinit var x: T`, or assigned in an `init` block) the property starts at
+                    // the type's zero value (null for references) and is assignable during construction.
+                    val f = if (!isOp("=")) {
+                        if (ty == null) fail("body properties need an initializer")
+                        FieldD(n, ty, true, zeroOf(ty))
+                    } else { next(); skipNLOnly(); FieldD(n, ty, isVar, expr()) }
                     props.add(f); inits.add(f)
                     val constOwner = curClass ?: curObject
                     if (isConst && constOwner != null && (f.init is IntL || f.init is BoolL || f.init is CharL || f.init is DblL || (f.init is StrL && (f.init as StrL).parts.all { it is String })))
@@ -307,6 +310,11 @@ class Parser(private val t: List<Tok>) {
             }
             if (add.isNotEmpty()) classes[i] = ClassD(c.name, c.fields, c.supers, c.methods + add, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
         }
+    }
+
+    private fun zeroOf(t: TypeRef): E = if (t.nullable) NullL() else when (t.name) {
+        "Int", "Short", "Byte" -> IntL(0, false); "Long" -> IntL(0, true); "UInt" -> IntL(0, false, true); "ULong" -> IntL(0, true, true)
+        "Double", "Float" -> DblL(0.0); "Boolean" -> BoolL(false); "Char" -> CharL(0); else -> NullL()
     }
 
     /** `const val`s of objects and companions with literal values ("Obj.name" -> literal); uses do not initialize the object. */

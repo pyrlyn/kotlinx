@@ -2,10 +2,10 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "COMPILER_CRASH": 5,
-  "MISCOMPILE": 39,
+  "MISCOMPILE": 48,
   "N/A": 2984,
-  "PASS": 1130,
-  "UNSUPPORTED": 4317
+  "PASS": 1146,
+  "UNSUPPORTED": 4292
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1673,17 +1673,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup6p20li_c/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup6p20li_c/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxmrn69q6/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxmrn69q6/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqlw7jun2/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqlw7jun2/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup7raqojmw/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup7raqojmw/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup5tia_1r4/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup5tia_1r4/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup97z1p53t/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup97z1p53t/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -2426,9 +2426,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/noBridges/simpleFakeOverrideSameSignature.kt"
   },
   "box/box/bridges/overrideAbstractProperty.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='null\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/bridges/overrideAbstractProperty.kt"
   },
   "box/box/bridges/overrideReturnType.kt": {
@@ -3369,9 +3368,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/boundReferenceToOverloadedFunction.kt"
   },
   "box/box/callableReference/bound/captureVarInInitBlock.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/captureVarInInitBlock.kt"
   },
   "box/box/callableReference/bound/captureVarInPropertyInit.kt": {
@@ -4865,8 +4863,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt48927_privateMethodOnDerivedCastToBase.kt"
   },
   "box/box/casts/kt50577.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt50577.kt"
   },
@@ -5144,8 +5142,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/generic.kt"
   },
   "box/box/classDelegation/hiddenDelegateAndLateinitVar.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classDelegation/hiddenDelegateAndLateinitVar.kt"
   },
@@ -5382,9 +5380,8 @@
    "upstream": "compiler/testData/codegen/box/classes/inheritedMethod.kt"
   },
   "box/box/classes/initializerBlock.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/initializerBlock.kt"
   },
   "box/box/classes/initializerBlockDImpl.kt": {
@@ -5568,9 +5565,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2477.kt"
   },
   "box/box/classes/kt2480.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='null\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/classes/kt2480.kt"
   },
   "box/box/classes/kt2482.kt": {
@@ -6277,8 +6273,8 @@
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/varAsFunInsideLocalFun.kt"
   },
   "box/box/closures/closureInsideConstrucor.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "other syntax (at 'relativePath')",
+   "detail": "expected end of statement (at 'relativePath')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideConstrucor.kt"
   },
@@ -6450,8 +6446,8 @@
    "upstream": "compiler/testData/codegen/box/closures/localClassLambdaClosure.kt"
   },
   "box/box/closures/localFunInInit.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "other syntax (at 'getFlag')",
+   "detail": "expected end of statement (at 'getFlag')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/localFunInInit.kt"
   },
@@ -8131,8 +8127,8 @@
    "upstream": "compiler/testData/codegen/box/contracts/kt39374.kt"
   },
   "box/box/contracts/kt45236.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "other syntax (at 'implies')",
+   "detail": "expected end of statement (at 'implies')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/kt45236.kt"
   },
@@ -9538,8 +9534,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_types.kt"
   },
   "box/box/controlflow/smartcastOnThisInInitializationSection.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlflow/smartcastOnThisInInitializationSection.kt"
   },
@@ -12479,9 +12475,8 @@
    "upstream": "compiler/testData/codegen/box/deadCodeElimination/kt14357.kt"
   },
   "box/box/defaultArguments/callDefaultFromInitializer.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/callDefaultFromInitializer.kt"
   },
   "box/box/defaultArguments/captureInTailrec.kt": {
@@ -13018,8 +13013,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/custom.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/kt49793_companionObject.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt49793_companionObject.kt"
   },
@@ -13030,8 +13025,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt49793_interfaceCompanionObject.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/kt49793_object.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt49793_object.kt"
   },
@@ -13060,8 +13055,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/mutable.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/openProperty.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/openProperty.kt"
   },
@@ -13132,8 +13127,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/chain.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/delegateToFinalInstanceProperty.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/delegateToFinalInstanceProperty.kt"
   },
@@ -13179,8 +13174,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/delegateToEnum.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/delegateToEnumInAClass.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/delegateToEnumInAClass.kt"
   },
@@ -13196,8 +13191,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/noInitializationOfOuterClass.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffects.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffects.kt"
   },
@@ -13220,26 +13215,26 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSmartCastReceiver.kt"
   },
   "box/box/delegatedProperty/delegateToThis/delegateToOuterThis.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToThis/delegateToOuterThis.kt"
   },
   "box/box/delegatedProperty/delegateToThis/delegateToThis.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToThis/delegateToThis.kt"
   },
   "box/box/delegatedProperty/delegateToThis/delegateToThisByExtension.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToThis/delegateToThisByExtension.kt"
   },
   "box/box/delegatedProperty/delegateWithPrivateSet.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateWithPrivateSet.kt"
   },
@@ -13365,8 +13360,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt6722.kt"
   },
   "box/box/delegatedProperty/kt9712.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt9712.kt"
   },
@@ -13494,8 +13489,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/localDelegatedBoundValueWithSideEffect.kt"
   },
   "box/box/delegatedProperty/map.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/map.kt"
   },
@@ -13580,8 +13575,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/privateVar.kt"
   },
   "box/box/delegatedProperty/protectedVarWithPrivateSet.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/protectedVarWithPrivateSet.kt"
   },
@@ -13724,8 +13719,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/referenceEnclosingClassFieldInReceiver.kt"
   },
   "box/box/delegatedProperty/referenceEnclosingClassFieldInReceiver2.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/referenceEnclosingClassFieldInReceiver2.kt"
   },
@@ -14689,8 +14684,8 @@
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/entryClassConstructorWithVarargs.kt"
   },
   "box/box/enum/defaultCtor/noPrimaryConstructor.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/noPrimaryConstructor.kt"
   },
@@ -16236,8 +16231,8 @@
    "upstream": "compiler/testData/codegen/box/fakeOverride/intersectionInLocal.kt"
   },
   "box/box/fakeOverride/intersectionOverrideBetweenValAndVar.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'x' of D hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fakeOverride/intersectionOverrideBetweenValAndVar.kt"
   },
@@ -16759,14 +16754,14 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/crossModuleRepresentationControlFlow.kt"
   },
   "box/box/fullValueClasses/customEqualsThroughHierarchiesAndFields.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/customEqualsThroughHierarchiesAndFields.kt"
   },
   "box/box/fullValueClasses/fakeOverrides.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/fakeOverrides.kt"
   },
@@ -16777,8 +16772,8 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/inapplicableTypes.kt"
   },
   "box/box/fullValueClasses/initializationOrderWithAbstractProperty.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/initializationOrderWithAbstractProperty.kt"
   },
@@ -16833,8 +16828,8 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/nestedEquals.kt"
   },
   "box/box/fullValueClasses/nonFinal.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/nonFinal.kt"
   },
@@ -17903,8 +17898,8 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/localExtensionOnNullableParameter.kt"
   },
   "box/box/functions/localFunctions/localFunctionInConstructor.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "other syntax (at 'local')",
+   "detail": "expected end of statement (at 'local')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/localFunctionInConstructor.kt"
   },
@@ -18463,8 +18458,8 @@
    "upstream": "compiler/testData/codegen/box/inference/coerctionToUnitForLastExpressionWithStarProjection.kt"
   },
   "box/box/inference/eagerLambdaAnalysisOnConstructorCall.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/eagerLambdaAnalysisOnConstructorCall.kt"
   },
@@ -19711,15 +19706,13 @@
    "upstream": "compiler/testData/codegen/box/inference/whenAtAssignmentWithSmartCastInsideCapturedLambda.kt"
   },
   "box/box/initializers/correctOrder1.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/initializers/correctOrder1.kt"
   },
   "box/box/initializers/correctOrder2.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/initializers/correctOrder2.kt"
   },
   "box/box/initializers/correctOrder3.kt": {
@@ -23360,15 +23353,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassHashCodeOverride.kt"
   },
   "box/box/inlineClasses/inlineClassInInitBlock.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='null\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInInitBlock.kt"
   },
   "box/box/inlineClasses/inlineClassInInitBlockGeneric.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='null\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInInitBlockGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassInStringTemplate.kt": {
@@ -23441,12 +23432,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1879837792\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804516704\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531232\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966752\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25589,8 +25580,8 @@
    "upstream": "compiler/testData/codegen/box/innerClass/inCallableReferenceLHSclassReference.kt"
   },
   "box/box/innerClass/inCallableReferenceLHSwithGenericFun.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/inCallableReferenceLHSwithGenericFun.kt"
   },
@@ -25627,8 +25618,8 @@
    "upstream": "compiler/testData/codegen/box/innerClass/qualifiedThis.kt"
   },
   "box/box/innerClass/secondaryConstructor.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/secondaryConstructor.kt"
   },
@@ -26139,9 +26130,8 @@
    "upstream": "compiler/testData/codegen/box/ir/anonymousObjectInsideElvis.kt"
   },
   "box/box/ir/classInitializers.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/classInitializers.kt"
   },
   "box/box/ir/closureConversion/closureConversion1.kt": {
@@ -26704,20 +26694,18 @@
    "upstream": "compiler/testData/codegen/box/lateinit/globalIsInitialized.kt"
   },
   "box/box/lateinit/inBaseClass.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lateinit/inBaseClass.kt"
   },
   "box/box/lateinit/initialized.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lateinit/initialized.kt"
   },
   "box/box/lateinit/innerIsInitialized.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lateinit/innerIsInitialized.kt"
   },
@@ -26758,8 +26746,8 @@
    "upstream": "compiler/testData/codegen/box/lateinit/localNotInitialized.kt"
   },
   "box/box/lateinit/notInitialized.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "strings / templates",
+   "detail": "unknown method StringBuilder.appendLine()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lateinit/notInitialized.kt"
   },
@@ -26906,8 +26894,8 @@
    "upstream": "compiler/testData/codegen/box/localClass/noPrimaryConstructor.kt"
   },
   "box/box/localClass/objectExpressionInInitializer.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/objectExpressionInInitializer.kt"
   },
@@ -29248,14 +29236,13 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromAnonymousObjectInNestedClass.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromInitBlock.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromInitBlock.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromInitBlockOfNestedClass.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "unknown result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromInitBlockOfNestedClass.kt"
   },
@@ -29340,8 +29327,8 @@
    "upstream": "compiler/testData/codegen/box/objects/dceRemoveUnusedEagerlyInitializedObject.kt"
   },
   "box/box/objects/flist.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/flist.kt"
   },
@@ -29485,8 +29472,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt52540.kt"
   },
   "box/box/objects/kt535.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "nullable types",
+   "detail": "expected end of statement (at '?')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt535.kt"
   },
@@ -30783,14 +30770,14 @@
    "upstream": "compiler/testData/codegen/box/properties/augmentedAssignmentsAndIncrements.kt"
   },
   "box/box/properties/backingField/anyPropertyWithValueClassExplicitBackingField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/anyPropertyWithValueClassExplicitBackingField.kt"
   },
   "box/box/properties/backingField/anySupertypeValueClassAnyMethodsWithExplicitBackingField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/anySupertypeValueClassAnyMethodsWithExplicitBackingField.kt"
   },
@@ -30801,8 +30788,8 @@
    "upstream": "compiler/testData/codegen/box/properties/backingField/backingFieldAndPropertyWithTheSameName.kt"
   },
   "box/box/properties/backingField/backingFieldInitializedInInit.kt": {
-   "category": "other syntax (at 'field')",
-   "detail": "body properties need an initializer (at 'field')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/backingFieldInitializedInInit.kt"
   },
@@ -30813,8 +30800,8 @@
    "upstream": "compiler/testData/codegen/box/properties/backingField/backingFieldWithSmartTypeParameters.kt"
   },
   "box/box/properties/backingField/equalsHashCodeWithValueClassExplicitBackingFieldAndSupertype.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/equalsHashCodeWithValueClassExplicitBackingFieldAndSupertype.kt"
   },
@@ -30824,50 +30811,50 @@
    "upstream": "compiler/testData/codegen/box/properties/backingField/explicitFieldCallableReference.kt"
   },
   "box/box/properties/backingField/genericSupertypeWithValueClassExplicitBackingField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/genericSupertypeWithValueClassExplicitBackingField.kt"
   },
   "box/box/properties/backingField/multipleInterfacesExplicitBackingField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/multipleInterfacesExplicitBackingField.kt"
   },
   "box/box/properties/backingField/nullableAnySupertypeWithValueClassExplicitBackingField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/nullableAnySupertypeWithValueClassExplicitBackingField.kt"
   },
   "box/box/properties/backingField/nullableSupertypeWithValueClassExplicitBackingField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/nullableSupertypeWithValueClassExplicitBackingField.kt"
   },
   "box/box/properties/backingField/overrideWithExplicitBackingField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/overrideWithExplicitBackingField.kt"
   },
   "box/box/properties/backingField/supertypePropertyWithValueClassExplicitBackingField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/supertypePropertyWithValueClassExplicitBackingField.kt"
   },
   "box/box/properties/backingField/typeCheckSupertypeWithValueClassExplicitBackingField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/typeCheckSupertypeWithValueClassExplicitBackingField.kt"
   },
   "box/box/properties/classArtificialFieldInsideNested.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classArtificialFieldInsideNested.kt"
   },
@@ -30884,8 +30871,8 @@
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideLocalInSetter.kt"
   },
   "box/box/properties/classFieldInsideNested.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideNested.kt"
   },
@@ -30908,8 +30895,8 @@
    "upstream": "compiler/testData/codegen/box/properties/classObjectProperties.kt"
   },
   "box/box/properties/classPrivateArtificialFieldInsideNested.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classPrivateArtificialFieldInsideNested.kt"
   },
@@ -30996,8 +30983,8 @@
    "upstream": "compiler/testData/codegen/box/properties/fieldInClass.kt"
   },
   "box/box/properties/fieldInsideField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/fieldInsideField.kt"
   },
@@ -31008,8 +30995,8 @@
    "upstream": "compiler/testData/codegen/box/properties/fieldInsideLambda.kt"
   },
   "box/box/properties/fieldInsideNested.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/fieldInsideNested.kt"
   },
@@ -31073,14 +31060,13 @@
    "upstream": "compiler/testData/codegen/box/properties/kt10729.kt"
   },
   "box/box/properties/kt1165.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt1165.kt"
   },
   "box/box/properties/kt1168.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'kind' of Subclass hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt1168.kt"
   },
@@ -31182,8 +31168,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt4252.kt"
   },
   "box/box/properties/kt4252_2.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "other: property 'a' of Foo needs an explicit type",
+   "detail": "property 'a' of Foo needs an explicit type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt4252_2.kt"
   },
@@ -31205,8 +31191,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt4383.kt"
   },
   "box/box/properties/kt49203_lateinit.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt49203_lateinit.kt"
   },
@@ -31240,39 +31226,35 @@
    "upstream": "compiler/testData/codegen/box/properties/kt9603.kt"
   },
   "box/box/properties/lateinit/accessor.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/accessor.kt"
   },
   "box/box/properties/lateinit/accessorException.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "objects / companion objects",
+   "detail": "unknown name 'Companion'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/accessorException.kt"
   },
   "box/box/properties/lateinit/accessorExceptionPublic.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/accessorExceptionPublic.kt"
   },
   "box/box/properties/lateinit/exceptionField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='FAIL\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/exceptionField.kt"
   },
   "box/box/properties/lateinit/exceptionGetter.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='FAIL\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/exceptionGetter.kt"
   },
   "box/box/properties/lateinit/kt30548.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout=\"'Test.foo()' should throw\\n\" stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/kt30548.kt"
   },
   "box/box/properties/lateinit/local/capturedLocalLateinit.kt": {
@@ -31324,51 +31306,47 @@
    "upstream": "compiler/testData/codegen/box/properties/lateinit/localClass.kt"
   },
   "box/box/properties/lateinit/nameClash.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/nameClash.kt"
   },
   "box/box/properties/lateinit/override.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/override.kt"
   },
   "box/box/properties/lateinit/overrideException.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='FAIL\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/overrideException.kt"
   },
   "box/box/properties/lateinit/privateSetter.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/privateSetter.kt"
   },
   "box/box/properties/lateinit/privateSetterFromLambda.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/privateSetterFromLambda.kt"
   },
   "box/box/properties/lateinit/privateSetterViaSubclass.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/privateSetterViaSubclass.kt"
   },
   "box/box/properties/lateinit/privateVarInCompanion.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'set')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/privateVarInCompanion.kt"
   },
   "box/box/properties/lateinit/simpleVar.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/simpleVar.kt"
   },
   "box/box/properties/lateinit/topLevel/accessorException.kt": {
@@ -31466,8 +31444,8 @@
    "upstream": "compiler/testData/codegen/box/properties/typeInferredFromGetter.kt"
   },
   "box/box/properties/unreachableUninitializedProperty.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "other: return is not allowed in an init block of Foo",
+   "detail": "return is not allowed in an init block of Foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/unreachableUninitializedProperty.kt"
   },
@@ -36604,14 +36582,14 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt2470.kt"
   },
   "box/box/regressions/kt24913.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "other syntax (at 'Inner')",
+   "detail": "expected end of statement (at 'Inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt24913.kt"
   },
   "box/box/regressions/kt2509.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'foo' of A hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt2509.kt"
   },
@@ -36621,8 +36599,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt3107.kt"
   },
   "box/box/regressions/kt32949.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt32949.kt"
   },
@@ -37562,8 +37540,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/dataClasses.kt"
   },
   "box/box/secondaryConstructors/defaultArgs.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/defaultArgs.kt"
   },
@@ -37615,14 +37593,14 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/inlineIntoTwoConstructors.kt"
   },
   "box/box/secondaryConstructors/innerClasses.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/innerClasses.kt"
   },
   "box/box/secondaryConstructors/innerClassesInheritance.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/innerClassesInheritance.kt"
   },
@@ -37639,14 +37617,14 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/superCallPrimary.kt"
   },
   "box/box/secondaryConstructors/superCallSecondary.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/superCallSecondary.kt"
   },
   "box/box/secondaryConstructors/varargs.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/varargs.kt"
   },
@@ -37656,14 +37634,14 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/withNonLocalReturn.kt"
   },
   "box/box/secondaryConstructors/withReturn.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/withReturn.kt"
   },
   "box/box/secondaryConstructors/withReturnUnit.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/withReturnUnit.kt"
   },
@@ -37744,9 +37722,8 @@
    "upstream": "compiler/testData/codegen/box/size/removeUnusedOverride.kt"
   },
   "box/box/smartCasts/NullableFunctionTypeAsMemberImmutableProperty.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/smartCasts/NullableFunctionTypeAsMemberImmutableProperty.kt"
   },
   "box/box/smartCasts/NullableFunctionTypeAsMemberImmutablePropertyFromConstructor.kt": {
@@ -37868,14 +37845,14 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44804.kt"
   },
   "box/box/smartCasts/kt44814.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '?:')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44814.kt"
   },
   "box/box/smartCasts/kt44932.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'parent' of KtNameReferenceExpression hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44932.kt"
   },
@@ -37920,8 +37897,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/nullSmartCast.kt"
   },
   "box/box/smartCasts/propertyInitializationAfterSmartCast.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/propertyInitializationAfterSmartCast.kt"
   },
@@ -38087,8 +38064,8 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableImpl.kt"
   },
   "box/box/specialBuiltins/throwableImplWithSecondaryConstructor.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableImplWithSecondaryConstructor.kt"
   },
@@ -38099,15 +38076,13 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/valuesInsideEnum.kt"
   },
   "box/box/statics/anonymousInitializerIObject.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/statics/anonymousInitializerIObject.kt"
   },
   "box/box/statics/anonymousInitializerInClassObject.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/statics/anonymousInitializerInClassObject.kt"
   },
   "box/box/statics/incInClassObject.kt": {
@@ -38135,8 +38110,8 @@
    "upstream": "compiler/testData/codegen/box/statics/inheritedPropertyInObject.kt"
   },
   "box/box/statics/kt8089.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/kt8089.kt"
   },
@@ -38172,8 +38147,8 @@
    "upstream": "compiler/testData/codegen/box/storeStackBeforeInline/withLambda.kt"
   },
   "box/box/strictEquals/abstractBound.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/abstractBound.kt"
   },
@@ -40003,7 +39978,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupu9u1wu11/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupu9u1wu11/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupag619xmk/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupag619xmk/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -40574,8 +40549,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/genericCallableReferences.kt"
   },
   "box/box/versionOverloads/genericInnerSecondaryConstructor.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/genericInnerSecondaryConstructor.kt"
   },
@@ -40603,8 +40578,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/inlineTrailingLambda.kt"
   },
   "box/box/versionOverloads/innerSecondaryConstructor.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/innerSecondaryConstructor.kt"
   },
@@ -40706,8 +40681,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/privateDeclarations.kt"
   },
   "box/box/versionOverloads/secondaryConstructor.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/secondaryConstructor.kt"
   },
@@ -45837,7 +45812,7 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup3owft90q/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup3owft90q/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupmzpcge9s/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupmzpcge9s/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },
