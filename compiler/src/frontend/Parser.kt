@@ -1,6 +1,7 @@
 package newkotlin
 
 private val ASSIGN_OPS = setOf("=", "+=", "-=", "*=", "/=", "%=")
+private val IN_OPS = setOf("in", "!in")
 private val INFIX_FUNS = setOf("and", "or", "xor", "shl", "shr", "ushr", "until", "downTo", "step")
 private val GENERIC_CALLS = setOf("ArrayList", "mutableListOf", "arrayListOf", "listOf", "HashMap", "hashMapOf", "mutableMapOf")
 private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sumOf", "count")
@@ -359,7 +360,7 @@ class Parser(private val t: List<Tok>) {
 
     // Precedence levels, lowest first.
     private val levels: List<Set<String>> = listOf(
-        setOf("||"), setOf("&&"), setOf("==", "!="), setOf("<", ">", "<=", ">="),
+        setOf("||"), setOf("&&"), setOf("==", "!="), setOf("<", ">", "<=", ">="), IN_OPS,
         setOf("?:"), INFIX_FUNS, setOf(".."), setOf("+", "-"), setOf("*", "/", "%"),
     )
 
@@ -368,6 +369,14 @@ class Parser(private val t: List<Tok>) {
         var l = binary(level + 1)
         while (true) {
             val tk = peek()
+            if (levels[level] === IN_OPS) {
+                // `x in r` / `x !in r` (the lexer splits `!in` into `!` and `in`).
+                val neg = tk.k == K.OP && tk.s == "!" && t[p + 1].k == K.ID && t[p + 1].s == "in"
+                if (!neg && !(tk.k == K.ID && tk.s == "in")) return l
+                p += if (neg) 2 else 1; skipNLOnly()
+                l = BinE(if (neg) "!in" else "in", l, binary(level + 1)).also { it.line = tk.line }
+                continue
+            }
             val ok = if (levels[level] === INFIX_FUNS) tk.k == K.ID && tk.s in INFIX_FUNS else tk.k == K.OP && tk.s in levels[level]
             if (!ok) return l
             p++; skipNLOnly()

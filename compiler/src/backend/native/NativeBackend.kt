@@ -895,6 +895,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             startBlock(le)
         } else {
             val coll = genExpr(it)
+            if (progKind(coll.t) != null) { iterProg(coll, s); scopes.removeAt(scopes.size - 1); return }
             val elemT = when (val ct = coll.t) { is Ty.Arr -> ct.elem; Ty.Str -> Ty.Char; is Ty.ListTy -> ct.elem; else -> fail("cannot iterate over ${coll.t}") }
             val arr = coll.t as? Ty.Arr
             val idx = "%l.idx.${tmpN++}"
@@ -922,6 +923,27 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             releaseIfOwned(coll)
         }
         scopes.removeAt(scopes.size - 1)
+    }
+
+    /**
+     * `for (x in p)` over a progression value: `var n = p.first; var go = !p.isEmpty()
+     * while (go) { val x = n; if (x == p.last) go = false else n = x + p.step; body }` (never steps past `last`).
+     */
+    private fun iterProg(v: Val, s: ForS) {
+        val ln = s.line
+        fun <T : E> T.l(): T = also { x -> x.line = ln }
+        fun <T : S> T.l(): T = also { x -> x.line = ln }
+        withTemps(listOf(v)) { (p) ->
+            val n = "\$n${tmpN++}"; val go = "\$go${tmpN++}"
+            val mem = { f: String -> MemberE(p, f, false).l() }
+            genStmt(VarS(n, true, null, mem("first")).l())
+            genStmt(VarS(go, true, null, UnE("!", CallE(mem("isEmpty"), emptyList(), emptyList(), null).l()).l()).l())
+            val adv = ExprS(IfE(BinE("==", NameE(s.name).l(), mem("last")).l(),
+                Block(listOf(AssignS(NameE(go).l(), "=", BoolL(false).l()).l())),
+                Block(listOf(AssignS(NameE(n).l(), "=", BinE("+", NameE(s.name).l(), mem("step")).l()).l()))).l()).l()
+            genStmt(WhileS(NameE(go).l(), Block(listOf(VarS(s.name, false, null, NameE(n).l()).l(), adv) + s.body.stmts)).l())
+            Val("", Ty.Unit)
+        }
     }
 
     // ---------------------------------------------------------------- expressions
@@ -1095,6 +1117,33 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             v.t.isInt -> emit("call void @${prefix}i64($lead i64 ${coerce(v, Ty.I64).v})")
             v.t == Ty.F64 -> emit("call void @${prefix}f64($lead double ${v.v})")
             v.t == Ty.I1 -> emit("call void @${prefix}bool($lead i1 ${v.v})")
+            v.t is Ty.Cls && classes.getValue(v.t.name).methods["toString"]?.params?.isEmpty() == true -> {
+                val sv = callMethod(Val(v.v, v.t), classes.getValue(v.t.name), "toString", CallE(NameE("toString"), emptyList(), emptyList(), null))
+                appendVal(prefix, lead, coerce(sv, Ty.Str))
+            }
+            v.t is Ty.ListTy -> {
+                // "[a, b, c]"
+                emit("call void @${prefix}str($lead ptr ${cstr("[")})")
+                val idx = "%l.ts.${tmpN++}"
+                allocas.append("  $idx = alloca i64\n")
+                emit("store i64 0, ptr $idx")
+                val lc = label("lts.cond"); val lb = label("lts.body"); val ls = label("lts.sep"); val lv = label("lts.val"); val le = label("lts.end")
+                startBlock(lc)
+                val i = emitT("load i64, ptr $idx")
+                condBr(emitT("icmp slt i64 $i, ${emitT("call i64 @rt_list_size(ptr ${v.v})")}"), lb, le)
+                startBlock(lb)
+                condBr(emitT("icmp eq i64 $i, 0"), lv, ls)
+                startBlock(ls)
+                emit("call void @${prefix}str($lead ptr ${cstr(", ")})")
+                br(lv)
+                startBlock(lv)
+                val et = v.t.elem
+                appendVal(prefix, lead, Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${v.v}, i64 $i)"), et), et))
+                emit("store i64 ${emitT("add i64 $i, 1")}, ptr $idx")
+                br(lc)
+                startBlock(le)
+                emit("call void @${prefix}str($lead ptr ${cstr("]")})")
+            }
             v.t is Ty.Cls && classDecls[v.t.name]?.enumEntries != null -> {
                 val ci = classes.getValue(v.t.name)
                 val np = emitT("load ptr, ptr ${emitT("getelementptr ${ci.llType}, ptr ${v.v}, i32 0, i32 2")}")
@@ -1705,7 +1754,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 startBlock(le)
                 return if (res.size == 1) a else Val(emitT("phi ptr [ ${a.v}, %$from ], [ ${res[1].first.v}, %${res[1].second} ]"), a.t)
             }
-            "..", "until", "downTo", "step" -> fail("ranges are only supported in for loops")
+            "..", "until", "downTo", "step" -> return rangeValue(e)
+            "in", "!in" -> {
+                val v = inRange(e.l, e.r)
+                return if (e.op == "in") v else Val(emitT("xor i1 ${v.v}, true"), Ty.I1)
+            }
         }
         val a = genExpr(e.l)
         if (a.t is Ty.Cls || a.t is Ty.Iface) {
@@ -1735,6 +1788,59 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             else -> fail("unknown operator ${e.op}")
         }
+    }
+
+    /** Binds already computed values to fresh hidden locals for the duration of [f] (owned references are released after). */
+    private fun withTemps(vals: List<Val>, f: (List<E>) -> Val): Val {
+        scopes.add(Scope())
+        val names = vals.map { v ->
+            val n = "\$tmp${tmpN++}"
+            val l = declare(n, v.t, false, v.owned && v.t.isRef)
+            emit("store ${v.t.llvm} ${v.v}, ptr ${l.slot}")
+            NameE(n).also { it.line = line } as E
+        }
+        val r = consume(f(names))
+        releaseScope(scopes.last()); scopes.removeAt(scopes.size - 1)
+        return r
+    }
+
+    /** Element kind (I, L, C) of a range built from [a] and [b]. */
+    private fun rangeKind(a: Ty, b: Ty): String = when {
+        a == Ty.Char && b == Ty.Char -> "C"
+        a.isUnsigned || b.isUnsigned -> fail("unsigned ranges are not supported")
+        a == Ty.I64 || b == Ty.I64 -> "L"
+        a.isInt && b.isInt -> "I"
+        else -> fail("cannot build a range of $a and $b")
+    }
+
+    private fun progKind(t: Ty): String? = (t as? Ty.Cls)?.let { PROGRESSIONS[it.name] }
+
+    /** `a..b`, `a until b`, `a downTo b`, `p step n` as values: progression objects from the prelude. */
+    private fun rangeValue(e: BinE): Val {
+        val a = genExpr(e.l); val b = genExpr(e.r)
+        val k = if (e.op == "step") progKind(a.t) ?: fail("step on ${a.t}") else rangeKind(a.t, b.t)
+        val fn = "kt_" + mapOf(".." to "rangeTo", "until" to "until", "downTo" to "downTo", "step" to "step").getValue(e.op) + k
+        return withTemps(listOf(a, b)) { (x, y) -> genNamedCall(fn, CallE(NameE(fn), emptyList(), listOf(x, y), null)) }
+    }
+
+    /** `x in r`: range literals compare against their bounds directly; other values call `contains`. */
+    private fun inRange(xe: E, re: E): Val {
+        if (re is BinE && re.op in setOf("..", "until", "downTo")) {
+            val x = genExpr(xe); val lo = genExpr(re.l); val hi = genExpr(re.r)
+            val k = rangeKind(lo.t, hi.t)
+            val t = when (k) { "C" -> Ty.I32; "L" -> Ty.I64; else -> if (x.t == Ty.I64) Ty.I64 else Ty.I32 }
+            val c = { v: Val -> if (v.t == Ty.Char) Val(v.v, Ty.I32) else coerce(v, t) }
+            if (k == "C" && x.t != Ty.Char) fail("type mismatch: expected Char, found ${x.t}")
+            val xv = c(x); val l = c(lo); val h = c(hi)
+            val (p, q) = when (re.op) {
+                ".." -> compare("<=", l, xv) to compare("<=", xv, h)
+                "until" -> compare("<=", l, xv) to compare("<", xv, h)
+                else -> compare("<=", h, xv) to compare("<=", xv, l)
+            }
+            return Val(emitT("and i1 ${p.v}, ${q.v}"), Ty.I1)
+        }
+        val r = genExpr(re)
+        return withTemps(listOf(r)) { (rv) -> genExpr(CallE(MemberE(rv, "contains", false).also { it.line = line }, emptyList(), listOf(xe), null).also { it.line = line }) }
     }
 
     private fun charOp(op: String, a: Val, b: Val): Val {
@@ -1796,6 +1902,38 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             br(le)
             startBlock(le)
             val r = emitT("phi i1 [ true, %$from ], [ false, %$fromC ], [ ${eq.v}, %$fromF ]")
+            releaseIfOwned(a); releaseIfOwned(b)
+            return Val(if (op == "==") r else emitT("xor i1 $r, true"), Ty.I1)
+        }
+        if (a.t is Ty.ListTy && b.t is Ty.ListTy && (op == "==" || op == "!=")) {
+            // Structural list equality: same size and pairwise-equal elements (null-safe).
+            val res = "%l.leq.${tmpN++}"; val idx = "%l.leqi.${tmpN++}"
+            allocas.append("  $res = alloca i1\n  $idx = alloca i64\n")
+            emit("store i1 false, ptr $res"); emit("store i64 0, ptr $idx")
+            val lt = label("leq.true"); val le = label("leq.end"); val ln = label("leq.nn"); val ls = label("leq.size")
+            val lc = label("leq.cond"); val lb = label("leq.body")
+            emit("store i1 true, ptr $res")
+            condBr(emitT("icmp eq ptr ${a.v}, ${b.v}"), le, ln)
+            startBlock(ln)
+            emit("store i1 false, ptr $res")
+            condBr(emitT("or i1 ${emitT("icmp eq ptr ${a.v}, null")}, ${emitT("icmp eq ptr ${b.v}, null")}"), le, ls)
+            startBlock(ls)
+            val n = emitT("call i64 @rt_list_size(ptr ${a.v})")
+            condBr(emitT("icmp eq i64 $n, ${emitT("call i64 @rt_list_size(ptr ${b.v})")}"), lc, le)
+            startBlock(lc)
+            val i = emitT("load i64, ptr $idx")
+            condBr(emitT("icmp slt i64 $i, $n"), lb, lt)
+            startBlock(lb)
+            val ea = Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${a.v}, i64 $i)"), a.t.elem), a.t.elem)
+            val eb = Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${b.v}, i64 $i)"), b.t.elem), b.t.elem)
+            val eq = compare("==", ea, eb)
+            emit("store i64 ${emitT("add i64 $i, 1")}, ptr $idx")
+            condBr(eq.v, lc, le)
+            startBlock(lt)
+            emit("store i1 true, ptr $res")
+            br(le)
+            startBlock(le)
+            val r = emitT("load i1, ptr $res")
             releaseIfOwned(a); releaseIfOwned(b)
             return Val(if (op == "==") r else emitT("xor i1 $r, true"), Ty.I1)
         }
