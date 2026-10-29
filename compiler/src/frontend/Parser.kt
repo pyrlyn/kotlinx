@@ -29,6 +29,59 @@ class Parser(private val t: List<Tok>) {
     private fun skipLine() { while (t[p].k != K.NL && t[p].k != K.EOF) p++ }
     private inline fun <T> nested(d: Int, f: () -> T): T { depth.add(d); try { return f() } finally { depth.removeAt(depth.size - 1) } }
 
+    /**
+     * Extension functions on a (non-generic, or generic with the extension's own type parameters as arguments) class
+     * of this program become methods of that class (member semantics for `this` and implicit receivers); others become
+     * top-level functions `ext$Recv$name(this: Recv, ...)`, which the backend calls for `recv.name(...)`.
+     */
+    /** `get() = e` / `get() { ... }` after a property declaration (possibly on the next line): the getter as a function. */
+    private fun getter(fname: String, ty: TypeRef?, typeParams: List<String>, recv: TypeRef?): FunD? {
+        val save = p
+        while (t[p].k == K.NL) p++
+        if (!(isId("get") && t[p + 1].k == K.OP && t[p + 1].s == "(")) { p = save; return null }
+        val line = next().line
+        expectOp("("); expectOp(")")
+        val rt = if (isOp(":")) { next(); type() } else ty
+        return if (isOp("=")) { next(); skipNLOnly(); FunD(fname, emptyList(), rt, null, expr(), line, typeParams, recv) }
+        else FunD(fname, emptyList(), rt, block(), null, line, typeParams, recv)
+    }
+
+    /** Extension property `val <T> Recv.name: Type get() = ...` (getter only): an extension function `$prop$name`. */
+    private fun extProperty(): FunD {
+        next()
+        val tps = typeParams()
+        val rt = type()
+        val (recv, name) = if (isOp(".")) { next(); rt to ident() }
+            else if (rt.args.isEmpty() && rt.name.contains('.')) TypeRef(rt.name.substringBeforeLast('.'), emptyList(), false) to rt.name.substringAfterLast('.')
+            else fail("expected extension property")
+        val ty = if (isOp(":")) { next(); type() } else null
+        return getter("\$prop\$$name", ty, tps, recv) ?: fail("extension properties need a getter")
+    }
+
+    private fun resolveExtensions(funs: MutableList<FunD>, classes: MutableList<ClassD>) {
+        for (f in funs.filter { it.recv != null }) {
+            val recv = f.recv!!
+            funs.remove(f)
+            val ci = classes.indexOfFirst { it.name == recv.name }
+            val cd = if (ci >= 0) classes[ci] else null
+            val asMethod: FunD? = when {
+                cd == null -> null
+                cd.typeParams.isEmpty() && recv.args.isEmpty() -> FunD(f.name, f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams)
+                cd.typeParams.size == recv.args.size && recv.args.all { it.name in f.typeParams && it.args.isEmpty() } && recv.args.map { it.name }.toSet().size == recv.args.size -> {
+                    val m = recv.args.mapIndexed { i, a -> a.name to TypeRef(cd.typeParams[i], emptyList(), false) }.toMap()
+                    Subst(m).fn(FunD(f.name, f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams.filter { it !in m }))
+                }
+                else -> null
+            }
+            if (cd != null && asMethod != null) {
+                if (cd.methods.none { it.name == f.name }) classes[ci] = ClassD(cd.name, cd.fields, cd.supers, cd.methods + asMethod, cd.line, cd.ctorParams,
+                    cd.inits, cd.superArgs, cd.typeParams, cd.enumEntries, cd.isValue, cd.superTypeArgs)
+                continue
+            }
+            funs.add(FunD("ext$" + recv.name.replace('.', '_') + "$" + f.name, listOf(Param("this", recv)) + f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams))
+        }
+    }
+
     fun program(): Program {
         val globals = ArrayList<VarS>(); val funs = ArrayList<FunD>(); val classes = ArrayList<ClassD>(); val ifaces = ArrayList<InterfaceD>()
         while (true) {
@@ -45,6 +98,8 @@ class Parser(private val t: List<Tok>) {
                     classes.add(ClassD(c.name, c.fields, c.supers, c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true, c.superTypeArgs))
                 }
                 tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "const", "open", "final", "abstract", "sealed") -> p++
+                tk.k == K.ID && (tk.s == "val" || tk.s == "var") && (t[p + 1].k == K.OP && t[p + 1].s == "<" ||
+                    t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> funs.add(extProperty())
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> globals.add(stmt() as VarS)
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
                 tk.k == K.ID && tk.s == "class" -> classes.add(classDecl())
@@ -55,6 +110,7 @@ class Parser(private val t: List<Tok>) {
             }
         }
         classes.addAll(companions)
+        resolveExtensions(funs, classes)
         val objGlobals = objects.map { n -> VarS(n, false, TypeRef(n, emptyList(), false), CallE(NameE(n), emptyList(), emptyList(), null)) }
         return Program(funs, classes, ifaces, enumGlobals(classes) + globals + objGlobals, companionOf)
     }
@@ -111,6 +167,7 @@ class Parser(private val t: List<Tok>) {
                     val isVar = next().s == "var"
                     val n = ident()
                     val ty = if (isOp(":")) { next(); type() } else null
+                    getter("\$prop\$$n", ty, emptyList(), null)?.let { ms.add(it); continue }
                     if (!isOp("=")) fail("body properties need an initializer")
                     next(); skipNLOnly()
                     val f = FieldD(n, ty, isVar, expr())
@@ -128,7 +185,9 @@ class Parser(private val t: List<Tok>) {
                     continue
                 }
                 if (!isId("fun")) fail("only member functions are supported in class/interface bodies")
-                ms.add(function())
+                val f = function()
+                if (f.recv != null) fail("member extension functions are not supported")
+                ms.add(f)
             }
         }
         expectOp("}")
@@ -174,7 +233,17 @@ class Parser(private val t: List<Tok>) {
     private fun function(): FunD {
         val line = next().line
         val typeParams = typeParams()
-        val name = ident()
+        // Extension receiver: `fun Recv.name`, `fun Box<T>.name`, `fun String?.name`.
+        val save = p
+        ident()
+        var recv: TypeRef? = null
+        val name = if (isOp(".") || isOp("<") || isOp("?")) {
+            p = save
+            val rt = type()
+            if (isOp(".")) { next(); recv = rt; ident() }
+            else if (rt.args.isEmpty() && rt.name.contains('.')) { recv = TypeRef(rt.name.substringBeforeLast('.'), emptyList(), false); rt.name.substringAfterLast('.') }
+            else fail("expected '('")
+        } else { p = save; ident() }
         expectOp("(")
         val params = nested(1) {
             val ps = ArrayList<Param>()
@@ -186,9 +255,9 @@ class Parser(private val t: List<Tok>) {
         }
         expectOp(")")
         val ret = if (isOp(":")) { next(); type() } else null
-        return if (isOp("=")) { next(); skipNLOnly(); FunD(name, params, ret, null, expr(), line, typeParams) }
-        else if (isOp("{")) FunD(name, params, ret, block(), null, line, typeParams)
-        else FunD(name, params, ret, null, null, line, typeParams) // abstract (interface) member
+        return if (isOp("=")) { next(); skipNLOnly(); FunD(name, params, ret, null, expr(), line, typeParams, recv) }
+        else if (isOp("{")) FunD(name, params, ret, block(), null, line, typeParams, recv)
+        else FunD(name, params, ret, null, null, line, typeParams, recv) // abstract (interface) member
     }
 
     private fun classDecl(isEnum: Boolean = false): ClassD {

@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 7,
   "N/A": 2984,
-  "PASS": 400,
-  "UNSUPPORTED": 5084
+  "PASS": 411,
+  "UNSUPPORTED": 5073
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -325,8 +325,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/argumentOrderInSuperCall.kt"
   },
   "box/box/argumentOrder/arguments.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/arguments.kt"
   },
@@ -355,8 +355,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/extension.kt"
   },
   "box/box/argumentOrder/extensionInClass.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/extensionInClass.kt"
   },
@@ -784,8 +784,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/iteratorShortArray.kt"
   },
   "box/box/arrays/kt1291.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt1291.kt"
   },
@@ -807,8 +807,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt33.kt"
   },
   "box/box/arrays/kt34291_16dimensions.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Array$dimensions' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt34291_16dimensions.kt"
   },
@@ -819,8 +819,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt3771.kt"
   },
   "box/box/arrays/kt4118.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "other syntax (at 'Z2')",
+   "detail": "expected end of statement (at 'Z2')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt4118.kt"
   },
@@ -878,8 +878,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt7288.kt"
   },
   "box/box/arrays/kt779.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt779.kt"
   },
@@ -920,14 +920,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -950,14 +950,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -990,14 +990,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -1038,8 +1038,8 @@
    "upstream": "compiler/testData/codegen/box/assert/alwaysEnable.kt"
   },
   "box/box/assert/assertDisabledWithFunctionReference.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/assert/assertDisabledWithFunctionReference.kt"
   },
@@ -1060,8 +1060,8 @@
    "upstream": "compiler/testData/codegen/box/assert/assertEnabledInlinedCrossModule.kt"
   },
   "box/box/assert/assertEnabledWithFunctionReference.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/assert/assertEnabledWithFunctionReference.kt"
   },
@@ -1421,9 +1421,8 @@
    "upstream": "compiler/testData/codegen/box/bce/inheritance.kt"
   },
   "box/box/bce/withGetter.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/withGetter.kt"
   },
   "box/box/binaryOp/bitwiseOp.kt": {
@@ -1537,8 +1536,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/kt11163_properIeee754comparisons.kt"
   },
   "box/box/binaryOp/kt23030_properIeee754comparisons.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/kt23030_properIeee754comparisons.kt"
   },
@@ -1625,8 +1624,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing13.kt"
   },
   "box/box/boxing/boxing14.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$println' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing14.kt"
   },
@@ -2573,8 +2572,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/simpleUpperBound.kt"
   },
   "box/box/bridges/special.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/special.kt"
   },
@@ -2585,8 +2584,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/specialGeneric.kt"
   },
   "box/box/bridges/strListContains.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "unknown interface List$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/strListContains.kt"
   },
@@ -2687,8 +2686,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test12.kt"
   },
   "box/box/bridges/test13.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test13.kt"
   },
@@ -2759,8 +2758,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test24.kt"
   },
   "box/box/bridges/test25.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test25.kt"
   },
@@ -2831,8 +2830,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithTheSameMethodOneBridge.kt"
   },
   "box/box/bridges/typeParameterInExtensionReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/typeParameterInExtensionReceiver.kt"
   },
@@ -2848,8 +2847,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/varargBridge2.kt"
   },
   "box/box/builtinStubMethods/customReadOnlyIterator.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "unknown interface Collection$Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/builtinStubMethods/customReadOnlyIterator.kt"
   },
@@ -3006,14 +3005,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyToFun.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousContextFun.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousContextFun.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousExtensionFun.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousExtensionFun.kt"
   },
@@ -3349,8 +3348,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/arrayConstructor.kt"
   },
   "box/box/callableReference/arrayConstructorArgument.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/arrayConstructorArgument.kt"
   },
@@ -3390,8 +3389,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/arrayGetIntrinsic.kt"
   },
   "box/box/callableReference/bound/boundPrimitiveAndReferenceReceiverSharedClassSplit.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/boundPrimitiveAndReferenceReceiverSharedClassSplit.kt"
   },
@@ -3437,8 +3436,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/dontShareReceiver.kt"
   },
   "box/box/callableReference/bound/emptyLHS.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/emptyLHS.kt"
   },
@@ -3500,8 +3499,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/kt44636_localExtension.kt"
   },
   "box/box/callableReference/bound/multiCase.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiCase.kt"
   },
@@ -3577,8 +3576,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/objectReceiver.kt"
   },
   "box/box/callableReference/bound/primitiveReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/primitiveReceiver.kt"
   },
@@ -3600,8 +3599,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/simpleProperty.kt"
   },
   "box/box/callableReference/bound/smartCastForExtensionReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'B')",
+   "detail": "expected '->' (at 'B')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/smartCastForExtensionReceiver.kt"
   },
@@ -3612,8 +3611,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/typeAliasObjectBoundReference.kt"
   },
   "box/box/callableReference/bound/valueClassAndReferenceReceiverSharedClassSplit.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/valueClassAndReferenceReceiverSharedClassSplit.kt"
   },
@@ -3696,8 +3695,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/equality/equalsOnNonCallable.kt"
   },
   "box/box/callableReference/equality/extensionFunctionEquality.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/extensionFunctionEquality.kt"
   },
@@ -3809,14 +3808,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/abstractClassMember.kt"
   },
   "box/box/callableReference/function/argumentTypes.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/argumentTypes.kt"
   },
   "box/box/callableReference/function/argumentTypesNoinline.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/argumentTypesNoinline.kt"
   },
@@ -3839,8 +3838,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromCompanionObject.kt"
   },
   "box/box/callableReference/function/classMemberFromExtension.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromExtension.kt"
   },
@@ -3917,14 +3916,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromClass.kt"
   },
   "box/box/callableReference/function/extensionFromCompanion.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected top-level token (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromCompanion.kt"
   },
   "box/box/callableReference/function/extensionFromExtension.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromExtension.kt"
   },
@@ -3941,8 +3940,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelStringOneStringArg.kt"
   },
   "box/box/callableReference/function/extensionFromTopLevelUnitNoArgs.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelUnitNoArgs.kt"
   },
@@ -3995,14 +3994,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionPassedToDelegatedSam.kt"
   },
   "box/box/callableReference/function/extensionWithNestedFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionWithNestedFunction.kt"
   },
   "box/box/callableReference/function/extensionWithTypeParam.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionWithTypeParam.kt"
   },
@@ -4267,8 +4266,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/privateClassMember.kt"
   },
   "box/box/callableReference/function/referenceToCompanionMember.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/referenceToCompanionMember.kt"
   },
@@ -4297,8 +4296,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromClass.kt"
   },
   "box/box/callableReference/function/topLevelFromExtension.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromExtension.kt"
   },
@@ -4356,14 +4355,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/genericConstructorReference.kt"
   },
   "box/box/callableReference/genericLocalClassConstructorReference.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "other syntax (at 'FLocal')",
+   "detail": "expected end of statement (at 'FLocal')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/genericLocalClassConstructorReference.kt"
   },
   "box/box/callableReference/generticReferences.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/generticReferences.kt"
   },
@@ -4385,8 +4384,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt21014.kt"
   },
   "box/box/callableReference/kt21092a.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt21092a.kt"
   },
@@ -4419,8 +4418,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt49526.kt"
   },
   "box/box/callableReference/kt49526_sam.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'KFun')",
+   "detail": "expected '(' (at 'KFun')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt49526_sam.kt"
   },
@@ -4442,8 +4441,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt50172.kt"
   },
   "box/box/callableReference/kt51844.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'xs')",
+   "detail": "expected ':' (at 'xs')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt51844.kt"
   },
@@ -4486,8 +4485,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/enumNameOrdinal.kt"
   },
   "box/box/callableReference/property/extensionProperty.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionProperty.kt"
   },
@@ -4510,14 +4509,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyPassedToDelegatedSam.kt"
   },
   "box/box/callableReference/property/extensionPropertyReferenceWithExplicitType.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "type checks / casts (is, as)",
+   "detail": "unexpected top-level token (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyReferenceWithExplicitType.kt"
   },
   "box/box/callableReference/property/extensionPropertyReferenceWithTypeParameter.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "unexpected top-level token (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyReferenceWithTypeParameter.kt"
   },
@@ -4528,14 +4527,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyWithExtensionReceiver.kt"
   },
   "box/box/callableReference/property/extensionPropertyWithExtensionType.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyWithExtensionType.kt"
   },
   "box/box/callableReference/property/extensionToArray.kt": {
-   "category": "generics",
-   "detail": "expected '=' (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionToArray.kt"
   },
@@ -4586,8 +4585,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt14330.kt"
   },
   "box/box/callableReference/property/kt14330_2.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt14330_2.kt"
   },
@@ -4603,8 +4602,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt74104.kt"
   },
   "box/box/callableReference/property/listOfStringsMapLength.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/listOfStringsMapLength.kt"
   },
@@ -4648,8 +4647,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/receiverEvaluatedOnce.kt"
   },
   "box/box/callableReference/property/simpleExtension.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleExtension.kt"
   },
@@ -4660,8 +4659,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMember.kt"
   },
   "box/box/callableReference/property/simpleMutableExtension.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMutableExtension.kt"
   },
@@ -4857,8 +4856,8 @@
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeMultipleBounds.kt"
   },
   "box/box/casts/intersectionTypeMultipleBoundsImplicitReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'where')",
+   "detail": "unexpected top-level token (at 'where')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeMultipleBoundsImplicitReceiver.kt"
   },
@@ -4869,14 +4868,14 @@
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeSmartcast.kt"
   },
   "box/box/casts/intersectionTypeWithMultipleBoundsAsReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'where')",
+   "detail": "unexpected top-level token (at 'where')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeWithMultipleBoundsAsReceiver.kt"
   },
   "box/box/casts/intersectionTypeWithoutGenericsAsReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'where')",
+   "detail": "unexpected top-level token (at 'where')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeWithoutGenericsAsReceiver.kt"
   },
@@ -4887,8 +4886,8 @@
    "upstream": "compiler/testData/codegen/box/casts/isNullablePrimitive.kt"
   },
   "box/box/casts/kt22714.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt22714.kt"
   },
@@ -4960,8 +4959,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt81617.kt"
   },
   "box/box/casts/kt82732.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt82732.kt"
   },
@@ -5264,8 +5263,8 @@
    "upstream": "compiler/testData/codegen/box/classes/classObject.kt"
   },
   "box/box/classes/classObjectAsExtensionReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/classObjectAsExtensionReceiver.kt"
   },
@@ -5311,8 +5310,8 @@
    "upstream": "compiler/testData/codegen/box/classes/comanionObjectFieldVsClassField.kt"
   },
   "box/box/classes/defaultObjectSameNamesAsInOuter.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'a' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/defaultObjectSameNamesAsInOuter.kt"
   },
@@ -5371,14 +5370,14 @@
    "upstream": "compiler/testData/codegen/box/classes/exceptionConstructor.kt"
   },
   "box/box/classes/extensionFunWithDefaultParam.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/extensionFunWithDefaultParam.kt"
   },
   "box/box/classes/extensionOnNamedClassObject.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$C_Foo$create' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/extensionOnNamedClassObject.kt"
   },
@@ -5879,8 +5878,8 @@
    "upstream": "compiler/testData/codegen/box/classes/overloadUnaryOperator.kt"
   },
   "box/box/classes/privateOuterFunctions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/privateOuterFunctions.kt"
   },
@@ -5897,8 +5896,8 @@
    "upstream": "compiler/testData/codegen/box/classes/privateToThis.kt"
   },
   "box/box/classes/propertyDelegation.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/propertyDelegation.kt"
   },
@@ -5954,8 +5953,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureExtensionReceiver.kt"
   },
   "box/box/closures/captureExtensionReceiverX2.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "strings / templates",
+   "detail": "expected end of statement (at 'String')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureExtensionReceiverX2.kt"
   },
@@ -6308,8 +6307,8 @@
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/localFunInsideLocalFunDifferentSignatures.kt"
   },
   "box/box/closures/closureInsideClosure/propertyAndFunctionNameClash.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/propertyAndFunctionNameClash.kt"
   },
@@ -6637,14 +6636,14 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/sequenceOperatorOf.kt"
   },
   "box/box/collectionLiterals/stdlibCollections.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "other syntax (at 'es')",
+   "detail": "expected ':' (at 'es')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/stdlibCollections.kt"
   },
   "box/box/collectionLiterals/stdlibSequence.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "other syntax (at 'es')",
+   "detail": "expected ':' (at 'es')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/stdlibSequence.kt"
   },
@@ -6665,8 +6664,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/unsignedArraysOperatorOfReferences.kt"
   },
   "box/box/collections/addCollectionStubWithCovariantOverride.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type checks / casts (is, as)",
+   "detail": "unexpected top-level token (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collections/addCollectionStubWithCovariantOverride.kt"
   },
@@ -6688,8 +6687,8 @@
    "upstream": "compiler/testData/codegen/box/collections/inheritFromAbstractMutableListInt.kt"
   },
   "box/box/collections/internalRemove.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "interfaces",
+   "detail": "unknown interface Collection$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collections/internalRemove.kt"
   },
@@ -6710,8 +6709,8 @@
    "upstream": "compiler/testData/codegen/box/companion/delegatedPropertyOnCompanion.kt"
   },
   "box/box/companion/genericLambdaOnStringCompanion.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'fu1' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companion/genericLambdaOnStringCompanion.kt"
   },
@@ -8764,8 +8763,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexBreakAndContinue.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexCheckSideEffects.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexCheckSideEffects.kt"
   },
@@ -8776,14 +8775,14 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNameBasedDestructuringShortForm.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNoElementVarCheckSideEffects.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNoElementVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNoIndexVarCheckSideEffects.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNoIndexVarCheckSideEffects.kt"
   },
@@ -8992,20 +8991,20 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSmartCastToArray.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionAll.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionAll.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionHasNext.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionHasNext.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionNext.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionNext.kt"
   },
@@ -9139,8 +9138,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2597.kt"
   },
   "box/box/controlStructures/kt299.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "unknown interface ClosedRange$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt299.kt"
   },
@@ -9190,14 +9189,14 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt47245.kt"
   },
   "box/box/controlStructures/kt513.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt513.kt"
   },
   "box/box/controlStructures/kt628.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt628.kt"
   },
@@ -9279,8 +9278,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/parameterWithNameForFunctionType.kt"
   },
   "box/box/controlStructures/quicksort.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$IntArray$quicksort' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/quicksort.kt"
   },
@@ -9296,8 +9295,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/inlineMethod.kt"
   },
   "box/box/controlStructures/returnsNothing/propertyGetter.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/propertyGetter.kt"
   },
@@ -11308,8 +11307,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/kt45377.kt"
   },
   "box/box/coroutines/kt46813.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/kt46813.kt"
   },
@@ -12407,14 +12406,14 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/short.kt"
   },
   "box/box/dataClasses/kt49715.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/kt49715.kt"
   },
   "box/box/dataClasses/kt49715_behaviorChange.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/kt49715_behaviorChange.kt"
   },
@@ -12752,44 +12751,44 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/defaultLambdaInline.kt"
   },
   "box/box/defaultArguments/function/extensionFunctionManyArgs.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extensionFunctionManyArgs.kt"
   },
   "box/box/defaultArguments/function/extentionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunction.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionDouble.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionDouble.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionDoubleTwoArgs.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionDoubleTwoArgs.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionInClassObject.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionInClassObject.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionInObject.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionInObject.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionWithOneDefArg.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionWithOneDefArg.kt"
   },
@@ -12806,26 +12805,26 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/funInTraitChain.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/innerExtentionFunction.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunctionDouble.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/innerExtentionFunctionDouble.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunctionDoubleTwoArgs.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/innerExtentionFunctionDoubleTwoArgs.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunctionManyArgs.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/innerExtentionFunctionManyArgs.kt"
   },
@@ -12978,8 +12977,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt59326.kt"
   },
   "box/box/defaultArguments/kt6382.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt6382.kt"
   },
@@ -12989,8 +12988,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/clashingNames.kt"
   },
   "box/box/defaultArguments/private/memberExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/memberExtensionFunction.kt"
   },
@@ -13182,8 +13181,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/mutable.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/openProperty.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/openProperty.kt"
   },
@@ -13995,14 +13994,14 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationEvaluationOrder2.kt"
   },
   "box/box/delegation/delegationExtFun1.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationExtFun1.kt"
   },
   "box/box/delegation/delegationExtFun2.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationExtFun2.kt"
   },
@@ -15183,8 +15182,8 @@
    "upstream": "compiler/testData/codegen/box/enum/kt7257_namedLocalFun.kt"
   },
   "box/box/enum/kt7257_notInline.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "enum classes",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_notInline.kt"
   },
@@ -15247,8 +15246,8 @@
    "upstream": "compiler/testData/codegen/box/enum/ordinalsWithEnumEntitiesOverrides.kt"
   },
   "box/box/enum/overloadedEnumValues.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/overloadedEnumValues.kt"
   },
@@ -15449,20 +15448,20 @@
    "upstream": "compiler/testData/codegen/box/evaluate/annotationClassWithInner.kt"
   },
   "box/box/evaluate/booleanOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/booleanOperations.kt"
   },
   "box/box/evaluate/byteOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/byteOperations.kt"
   },
   "box/box/evaluate/charOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "expected ')' (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/charOperations.kt"
   },
@@ -15473,8 +15472,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/complexBooleanConstant.kt"
   },
   "box/box/evaluate/doubleOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/doubleOperations.kt"
   },
@@ -15484,8 +15483,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/enumWithDifferentFileOrder.kt"
   },
   "box/box/evaluate/floatOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/floatOperations.kt"
   },
@@ -15507,26 +15506,26 @@
    "upstream": "compiler/testData/codegen/box/evaluate/inJavaPackage.kt"
   },
   "box/box/evaluate/intOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intOperations.kt"
   },
   "box/box/evaluate/intrinsicConst/bitwiseOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/bitwiseOperations.kt"
   },
   "box/box/evaluate/intrinsicConst/charConstructor.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/charConstructor.kt"
   },
   "box/box/evaluate/intrinsicConst/companions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "objects / companion objects",
+   "detail": "only member functions are supported in class/interface bodies (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/companions.kt"
   },
@@ -15537,38 +15536,38 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/constTrim.kt"
   },
   "box/box/evaluate/intrinsicConst/enumName.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/enumName.kt"
   },
   "box/box/evaluate/intrinsicConst/enumNameWithInit.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/enumNameWithInit.kt"
   },
   "box/box/evaluate/intrinsicConst/equals_after.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/equals_after.kt"
   },
   "box/box/evaluate/intrinsicConst/incDec.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/incDec.kt"
   },
   "box/box/evaluate/intrinsicConst/kCallableName.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/kCallableName.kt"
   },
   "box/box/evaluate/intrinsicConst/kCallableNameWithSideEffect.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/kCallableNameWithSideEffect.kt"
   },
@@ -15584,14 +15583,14 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/kt58717.kt"
   },
   "box/box/evaluate/intrinsicConst/lowerAndUpperCase.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/lowerAndUpperCase.kt"
   },
   "box/box/evaluate/intrinsicConst/nullableEnumName.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/nullableEnumName.kt"
   },
@@ -15614,8 +15613,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/kt9443.kt"
   },
   "box/box/evaluate/longOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/longOperations.kt"
   },
@@ -15702,20 +15701,20 @@
    "upstream": "compiler/testData/codegen/box/evaluate/serialization/typeAnnotation.kt"
   },
   "box/box/evaluate/shortOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/shortOperations.kt"
   },
   "box/box/evaluate/stdlibConst.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/stdlibConst.kt"
   },
   "box/box/evaluate/stringConcatenation.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/stringConcatenation.kt"
   },
@@ -15726,8 +15725,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/stringConcatenationWithObject.kt"
   },
   "box/box/evaluate/stringOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/stringOperations.kt"
   },
@@ -15744,38 +15743,38 @@
    "upstream": "compiler/testData/codegen/box/evaluate/thisPlusStringWithObject.kt"
   },
   "box/box/evaluate/ubyteOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/ubyteOperations.kt"
   },
   "box/box/evaluate/uintOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/uintOperations.kt"
   },
   "box/box/evaluate/ulongOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/ulongOperations.kt"
   },
   "box/box/evaluate/unsignedConst.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/unsignedConst.kt"
   },
   "box/box/evaluate/useCorrectToString.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/useCorrectToString.kt"
   },
   "box/box/evaluate/ushortOperations.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'f')",
+   "detail": "unexpected top-level token (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/ushortOperations.kt"
   },
@@ -15802,8 +15801,8 @@
    "upstream": "compiler/testData/codegen/box/exceptions/extend0.kt"
   },
   "box/box/exceptions/kt69534.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'Sas2')",
+   "detail": "expected '->' (at 'Sas2')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/exceptions/kt69534.kt"
   },
@@ -15849,14 +15848,14 @@
    "upstream": "compiler/testData/codegen/box/expression/evaluationOrder/dangerousInline.kt"
   },
   "box/box/extensionFunctions/classMethodCallExtensionSuper.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Top$getString' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/classMethodCallExtensionSuper.kt"
   },
   "box/box/extensionFunctions/defaultMethodInterfaceCallExtensionSuper.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/defaultMethodInterfaceCallExtensionSuper.kt"
   },
@@ -15872,8 +15871,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/executionOrder.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAndSpreadOperator.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "strings / templates",
+   "detail": "expected ':' (at 'strings')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAndSpreadOperator.kt"
   },
@@ -15926,8 +15925,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionClassLevelLocal.kt"
   },
   "box/box/extensionFunctions/extensionFunctionDifferentReceivers.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionDifferentReceivers.kt"
   },
@@ -15974,14 +15973,14 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionLocal.kt"
   },
   "box/box/extensionFunctions/extensionFunctionNestedInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionNestedInExtensionFunction.kt"
   },
   "box/box/extensionFunctions/extensionFunctionOverride.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionOverride.kt"
   },
@@ -16015,8 +16014,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionWithReceiverConflict.kt"
   },
   "box/box/extensionFunctions/extensionMemberWithTypeParameter.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionMemberWithTypeParameter.kt"
   },
@@ -16026,8 +16025,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionReceiverIsNotInlined.kt"
   },
   "box/box/extensionFunctions/functionWithTheSameDispatchAndExtensionReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "annotations",
+   "detail": "expected end of statement (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/functionWithTheSameDispatchAndExtensionReceiver.kt"
   },
@@ -16067,8 +16066,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1953.kt"
   },
   "box/box/extensionFunctions/kt1953_class.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1953_class.kt"
   },
@@ -16085,8 +16084,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3285.kt"
   },
   "box/box/extensionFunctions/kt3298.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3298.kt"
   },
@@ -16109,14 +16108,14 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt4228.kt"
   },
   "box/box/extensionFunctions/kt475.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt475.kt"
   },
   "box/box/extensionFunctions/kt5467.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'Int')",
+   "detail": "expected end of statement (at 'Int')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt5467.kt"
   },
@@ -16127,8 +16126,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt606.kt"
   },
   "box/box/extensionFunctions/kt865.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt865.kt"
   },
@@ -16156,8 +16155,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/shared.kt"
   },
   "box/box/extensionFunctions/simple.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/simple.kt"
   },
@@ -16177,14 +16176,14 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/suspendConversionForExtensionFunAsASuperType.kt"
   },
   "box/box/extensionFunctions/thisMethodInObjectLiteral.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "class bodies / constructors",
+   "detail": "member extension functions are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/thisMethodInObjectLiteral.kt"
   },
   "box/box/extensionFunctions/virtual.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/virtual.kt"
   },
@@ -16212,8 +16211,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyDelegated.kt"
   },
   "box/box/extensionProperties/extensionPropertyDifferentReceiver.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "nullable types",
+   "detail": "expected '=' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyDifferentReceiver.kt"
   },
@@ -16236,20 +16235,20 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyInSAMInterface.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithAnonymoesExtensionWithALabel.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithAnonymoesExtensionWithALabel.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithAnonymousExtensionFun.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithAnonymousExtensionFun.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithAnonymousExtensionFunWithTypeParam.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithAnonymousExtensionFunWithTypeParam.kt"
   },
@@ -16260,20 +16259,20 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithExtensionAsReceiver.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithExtensionNestedType.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithExtensionNestedType.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithInline.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "property accessors / delegation",
+   "detail": "extension properties need a getter (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithInline.kt"
   },
   "box/box/extensionProperties/extensionProperyWithExtensionType.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionProperyWithExtensionType.kt"
   },
@@ -16283,14 +16282,14 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/genericContextOverride.kt"
   },
   "box/box/extensionProperties/genericValForPrimitiveType.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/genericValForPrimitiveType.kt"
   },
   "box/box/extensionProperties/genericVarForPrimitiveType.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/genericVarForPrimitiveType.kt"
   },
@@ -16331,8 +16330,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/inClassWithSetter.kt"
   },
   "box/box/extensionProperties/kt46952.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/kt46952.kt"
   },
@@ -16343,8 +16342,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/kt9897.kt"
   },
   "box/box/extensionProperties/kt9897_topLevel.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/kt9897_topLevel.kt"
   },
@@ -16361,14 +16360,13 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/propertyWithExtensionNestedType.kt"
   },
   "box/box/extensionProperties/topLevel.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/topLevel.kt"
   },
   "box/box/extensionProperties/topLevelLongTypeInReceiver.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/topLevelLongTypeInReceiver.kt"
   },
@@ -16739,8 +16737,8 @@
    "upstream": "compiler/testData/codegen/box/fir/sourceBinarySource.kt"
   },
   "box/box/fir/starProjectionLambdaNullReturn.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/starProjectionLambdaNullReturn.kt"
   },
@@ -16944,8 +16942,8 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/fakeOverrides.kt"
   },
   "box/box/fullValueClasses/inapplicableTypes.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other: unknown type Nothing",
+   "detail": "unknown type Nothing",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/inapplicableTypes.kt"
   },
@@ -17413,8 +17411,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaults10.kt"
   },
   "box/box/function/defaults2.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults2.kt"
   },
@@ -17491,8 +17489,8 @@
    "upstream": "compiler/testData/codegen/box/function/eqeq.kt"
   },
   "box/box/function/extension.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/extension.kt"
   },
@@ -17538,8 +17536,8 @@
    "upstream": "compiler/testData/codegen/box/function/named.kt"
   },
   "box/box/function/nothingNReturningSafeCall.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other: unknown type Nothing?",
+   "detail": "unknown type Nothing?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/nothingNReturningSafeCall.kt"
   },
@@ -17663,8 +17661,8 @@
    "upstream": "compiler/testData/codegen/box/functions/defaultargs.kt"
   },
   "box/box/functions/defaultargs1.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs1.kt"
   },
@@ -17675,8 +17673,8 @@
    "upstream": "compiler/testData/codegen/box/functions/defaultargs2.kt"
   },
   "box/box/functions/defaultargs3.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs3.kt"
   },
@@ -17735,14 +17733,14 @@
    "upstream": "compiler/testData/codegen/box/functions/functionExpression/functionExpression.kt"
   },
   "box/box/functions/functionExpression/functionExpressionWithThisReference.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at '=')",
+   "detail": "unexpected top-level token (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/functionExpression/functionExpressionWithThisReference.kt"
   },
   "box/box/functions/functionExpression/functionLiteralExpression.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/functionExpression/functionLiteralExpression.kt"
   },
@@ -17771,8 +17769,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/castFunctionToExtension.kt"
   },
   "box/box/functions/invoke/extensionInvokeOnExpr.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/extensionInvokeOnExpr.kt"
   },
@@ -17806,8 +17804,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3189.kt"
   },
   "box/box/functions/invoke/kt3190.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3190.kt"
   },
@@ -17943,8 +17941,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt3724.kt"
   },
   "box/box/functions/kt395.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt395.kt"
   },
@@ -17982,8 +17980,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt873.kt"
   },
   "box/box/functions/localFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'local')",
+   "detail": "expected end of statement (at 'local')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunction.kt"
   },
@@ -18512,8 +18510,8 @@
    "upstream": "compiler/testData/codegen/box/increment/kt36956.kt"
   },
   "box/box/increment/memberExtOnLong.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/memberExtOnLong.kt"
   },
@@ -18637,8 +18635,8 @@
    "upstream": "compiler/testData/codegen/box/inference/capturedStarProjection.kt"
   },
   "box/box/inference/capturedTypeAsLambdaInputType.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/capturedTypeAsLambdaInputType.kt"
   },
@@ -18661,8 +18659,8 @@
    "upstream": "compiler/testData/codegen/box/inference/coercionToUnitWithLastLambdaExpression.kt"
   },
   "box/box/inference/coerctionToUnitForLastExpressionWithStarProjection.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/coerctionToUnitForLastExpressionWithStarProjection.kt"
   },
@@ -18867,8 +18865,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt42139.kt"
   },
   "box/box/inference/pcla/issues/kt43710.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt43710.kt"
   },
@@ -18878,8 +18876,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt43710b.kt"
   },
   "box/box/inference/pcla/issues/kt44241.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt44241.kt"
   },
@@ -19048,20 +19046,20 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53740b.kt"
   },
   "box/box/inference/pcla/issues/kt54400a.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt54400a.kt"
   },
   "box/box/inference/pcla/issues/kt54400b.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt54400b.kt"
   },
   "box/box/inference/pcla/issues/kt54400c.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt54400c.kt"
   },
@@ -19163,8 +19161,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt61310.kt"
   },
   "box/box/inference/pcla/issues/kt63733.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt63733.kt"
   },
@@ -19661,8 +19659,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutableExtensionPropertiesMaterializeCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutableExtensionPropertiesYieldCase.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "unexpected top-level token (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutableExtensionPropertiesYieldCase.kt"
   },
@@ -19781,8 +19779,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/receiverUsesOuterTVButReturnTypeIsProper.kt"
   },
   "box/box/inference/pcla/specialCallsWithCallableReferencesDontRewriteAtSlice.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "unexpected top-level token (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/specialCallsWithCallableReferencesDontRewriteAtSlice.kt"
   },
@@ -20557,8 +20555,8 @@
    "upstream": "compiler/testData/codegen/box/inline/kt67024.kt"
   },
   "box/box/inline/kt67866.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/kt67866.kt"
   },
@@ -20906,14 +20904,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClass/secondaryConstructorWithGenerics.kt"
   },
   "box/box/inlineClasses/UIntArraySortExample.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "other syntax (at 'u')",
+   "detail": "expected ':' (at 'u')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/UIntArraySortExample.kt"
   },
   "box/box/inlineClasses/UIntArraySortExampleGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "other syntax (at 'u')",
+   "detail": "expected ':' (at 'u')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/UIntArraySortExampleGeneric.kt"
   },
@@ -21320,14 +21318,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToPrimitiveGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideListVsMutableList.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "other syntax (at '!')",
+   "detail": "expected ')' (at '!')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideListVsMutableList.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideListVsMutableListGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "other syntax (at '!')",
+   "detail": "expected ')' (at '!')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideListVsMutableListGeneric.kt"
   },
@@ -21603,14 +21601,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/unrelatedGenericsGeneric.kt"
   },
   "box/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSet.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'elements')",
+   "detail": "expected ':' (at 'elements')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSet.kt"
   },
   "box/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSetGeneric.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'elements')",
+   "detail": "expected ':' (at 'elements')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSetGeneric.kt"
   },
@@ -21655,20 +21653,20 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeGenerationWithInlineClassOverAnyGeneric2.kt"
   },
   "box/box/inlineClasses/bridgesWhenInlineClassImplementsGenericInterface.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgesWhenInlineClassImplementsGenericInterface.kt"
   },
   "box/box/inlineClasses/bridgesWhenInlineClassImplementsGenericInterfaceGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgesWhenInlineClassImplementsGenericInterfaceGeneric.kt"
   },
   "box/box/inlineClasses/callComputablePropertyInsideInlineClass.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type inference (expression bodies)",
+   "detail": "method '$prop$size' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callComputablePropertyInsideInlineClass.kt"
   },
@@ -21702,26 +21700,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingPrimitives.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionFun.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionFun.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionFunGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionVal.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionVal.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionValGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '=' (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionValGeneric.kt"
   },
@@ -21738,14 +21736,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassMemberFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassMemberVal.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassMemberVal.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassMemberValGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassMemberValGeneric.kt"
   },
@@ -21796,26 +21794,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/funWithInlineClassParametersGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionFun.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionFun.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionFunGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionVal.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionValGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '=' (at '<')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionValGeneric.kt"
   },
@@ -21844,14 +21842,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberVal.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "lambdas / function types / references",
+   "detail": "expected ')' (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberValGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberValGeneric.kt"
   },
@@ -22115,14 +22113,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingForNonLocalAndLabeledReturnsGeneric.kt"
   },
   "box/box/inlineClasses/checkBoxingFromReturnTypeForInlineClasses.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'asResult' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingFromReturnTypeForInlineClasses.kt"
   },
   "box/box/inlineClasses/checkBoxingFromReturnTypeForInlineClassesGeneric.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'asResult' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingFromReturnTypeForInlineClassesGeneric.kt"
   },
@@ -22240,8 +22238,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/companionObjectFieldClash.kt"
   },
   "box/box/inlineClasses/computablePropertyInsideInlineClass.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type inference (expression bodies)",
+   "detail": "method '$prop$size' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/computablePropertyInsideInlineClass.kt"
   },
@@ -22583,14 +22581,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/defaultInterfaceMethodsInInlineClass.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultInterfaceMethodsInInlineClass.kt"
   },
   "box/box/inlineClasses/defaultInterfaceMethodsInInlineClassGeneric.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultInterfaceMethodsInInlineClassGeneric.kt"
   },
@@ -22711,8 +22709,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/inlineClassSecondaryConstructorGeneric.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/kt26554.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/kt26554.kt"
   },
@@ -23029,26 +23027,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsOperatorWithGenericCallGeneric.kt"
   },
   "box/box/inlineClasses/extLambdaInInlineClassFun.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/extLambdaInInlineClassFun.kt"
   },
   "box/box/inlineClasses/extLambdaInInlineClassFun2.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/extLambdaInInlineClassFun2.kt"
   },
   "box/box/inlineClasses/extLambdaInInlineClassFun2Generic.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/extLambdaInInlineClassFun2Generic.kt"
   },
   "box/box/inlineClasses/extLambdaInInlineClassFunGeneric.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/extLambdaInInlineClassFunGeneric.kt"
   },
@@ -23165,14 +23163,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/anonymousObjectInFunctionWithMangledNameGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClash.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClash.kt"
   },
   "box/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClashGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClashGeneric.kt"
   },
@@ -23548,38 +23546,38 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassAsLastExpressionInInLambdaGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassCollection/inlineCollectionOfInlineClass.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineCollectionOfInlineClass.kt"
   },
   "box/box/inlineClasses/inlineClassCollection/inlineCollectionOfInlineClassGeneric.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineCollectionOfInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassCollection/inlineListOfInlineClass.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineListOfInlineClass.kt"
   },
   "box/box/inlineClasses/inlineClassCollection/inlineListOfInlineClassGeneric.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineListOfInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassCollection/inlineMapOfInlineClass.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineMapOfInlineClass.kt"
   },
   "box/box/inlineClasses/inlineClassCollection/inlineMapOfInlineClassGeneric.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineMapOfInlineClassGeneric.kt"
   },
@@ -23871,26 +23869,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegatedToInlineClassLongGeneric.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypes.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypes.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypesGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypesGeneric.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationWithInlineClassParameterTypes.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegationWithInlineClassParameterTypes.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationWithInlineClassParameterTypesGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegationWithInlineClassParameterTypesGeneric.kt"
   },
@@ -23929,14 +23927,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverrideGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCall.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCallGeneric.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCallGeneric.kt"
   },
@@ -23953,14 +23951,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCall.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCallGeneric.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCallGeneric.kt"
   },
@@ -24505,14 +24503,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/nestedInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/noAssertionsOnInlineClassBasedOnNullableType.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/noAssertionsOnInlineClassBasedOnNullableType.kt"
   },
   "box/box/inlineClasses/noAssertionsOnInlineClassBasedOnNullableTypeGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/noAssertionsOnInlineClassBasedOnNullableTypeGeneric.kt"
   },
@@ -24777,8 +24775,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/referToUnderlyingPropertyOfInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/removeInInlineCollectionOfInlineClassAsInt.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "interfaces",
+   "detail": "unknown interface MutableCollection$Z",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/removeInInlineCollectionOfInlineClassAsInt.kt"
   },
@@ -24789,20 +24787,20 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/directCall1.kt"
   },
   "box/box/inlineClasses/result/directCall2.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "other: unknown type Result<Any>",
+   "detail": "unknown type Result<Any>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/directCall2.kt"
   },
   "box/box/inlineClasses/result/doubleOverride.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "strings / templates",
+   "detail": "unknown type Result<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/doubleOverride.kt"
   },
   "box/box/inlineClasses/result/extensionOverride.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/extensionOverride.kt"
   },
@@ -24813,8 +24811,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/inlineMethodOnResult.kt"
   },
   "box/box/inlineClasses/result/lambdaTakesResultThroughBridge.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'test' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/lambdaTakesResultThroughBridge.kt"
   },
@@ -25006,8 +25004,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/toStringOfUnboxedNullable.kt"
   },
   "box/box/inlineClasses/toStringOfUnboxedNullableGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/toStringOfUnboxedNullableGeneric.kt"
   },
@@ -25028,8 +25026,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/any.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/anyGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "other syntax (at 'FunIFace')",
+   "detail": "expected '(' (at 'FunIFace')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/anyGeneric.kt"
   },
@@ -25124,8 +25122,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt"
   },
@@ -25136,9 +25134,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/any.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/anyGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/anyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/anyN.kt": {
@@ -25148,15 +25145,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/anyN.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/anyNGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/anyNGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/anyNGeneric2.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/anyNGeneric2.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/iface.kt": {
@@ -25196,9 +25191,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/primitive.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/primitiveGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/primitiveGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/result.kt": {
@@ -25226,9 +25220,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/string.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/stringGeneric.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/any.kt": {
@@ -25431,20 +25424,20 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxValueFromPlatformTypeGeneric.kt"
   },
   "box/box/inlineClasses/unboxValueOfAnyBeforeMethodInvocation.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxValueOfAnyBeforeMethodInvocation.kt"
   },
   "box/box/inlineClasses/unboxValueOfAnyBeforeMethodInvocationGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxValueOfAnyBeforeMethodInvocationGeneric.kt"
   },
   "box/box/inlineClasses/unboxValueOfAnyBeforeMethodInvocationGeneric2.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxValueOfAnyBeforeMethodInvocationGeneric2.kt"
   },
@@ -25510,14 +25503,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/valueClassInstanceOfNumberAndComparableInInlineFunction.kt"
   },
   "box/box/inlineClasses/whenWithSubject.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "other syntax (at 'subject')",
+   "detail": "expected ')' (at 'subject')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/whenWithSubject.kt"
   },
   "box/box/inlineClasses/whenWithSubjectGeneric.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "other syntax (at 'subject')",
+   "detail": "expected ')' (at 'subject')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/whenWithSubjectGeneric.kt"
   },
@@ -26431,8 +26424,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/throwableParamOrder.kt"
   },
   "box/box/intrinsics/tostring.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
@@ -26502,8 +26495,8 @@
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/closureConversion3.kt"
   },
   "box/box/ir/closureConversion/closureConversion4.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'bar')",
+   "detail": "expected end of statement (at 'bar')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/closureConversion4.kt"
   },
@@ -26882,26 +26875,26 @@
    "upstream": "compiler/testData/codegen/box/labels/nestedLabelsInlinedClashingAtFunctionsWithClosure.kt"
   },
   "box/box/labels/propertyAccessor.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "annotations",
+   "detail": "expected end of statement (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessor.kt"
   },
   "box/box/labels/propertyAccessorFunctionLiteral.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "annotations",
+   "detail": "expected end of statement (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessorFunctionLiteral.kt"
   },
   "box/box/labels/propertyAccessorInnerExtensionFun.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessorInnerExtensionFun.kt"
   },
   "box/box/labels/propertyAccessorObject.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessorObject.kt"
   },
@@ -27283,8 +27276,8 @@
    "upstream": "compiler/testData/codegen/box/localClass/virtualCallFromConstructor.kt"
   },
   "box/box/localClasses/anonymousObjectInExtension.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/anonymousObjectInExtension.kt"
   },
@@ -27337,20 +27330,20 @@
    "upstream": "compiler/testData/codegen/box/localClasses/inCallableReferenceLHS.kt"
   },
   "box/box/localClasses/inExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'B')",
+   "detail": "expected end of statement (at 'B')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/inExtensionFunction.kt"
   },
   "box/box/localClasses/inExtensionProperty.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "other syntax (at 'B')",
+   "detail": "expected end of statement (at 'B')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/inExtensionProperty.kt"
   },
   "box/box/localClasses/inLocalExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'B')",
+   "detail": "expected end of statement (at 'B')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/inLocalExtensionFunction.kt"
   },
@@ -27367,8 +27360,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/innerClassInLocalClass.kt"
   },
   "box/box/localClasses/innerOfLocalCaptureExtensionReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/innerOfLocalCaptureExtensionReceiver.kt"
   },
@@ -27433,8 +27426,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/localClass.kt"
   },
   "box/box/localClasses/localClassCaptureExtensionReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at 'Local')",
+   "detail": "expected end of statement (at 'Local')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localClassCaptureExtensionReceiver.kt"
   },
@@ -27668,8 +27661,8 @@
    "upstream": "compiler/testData/codegen/box/mixedNamedPosition/varargsEvaluationOrder.kt"
   },
   "box/box/multiDecl/ComplexInitializer.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/ComplexInitializer.kt"
   },
@@ -27752,14 +27745,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27782,14 +27775,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27806,14 +27799,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27848,14 +27841,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27878,14 +27871,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27902,14 +27895,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27926,14 +27919,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27956,14 +27949,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27980,14 +27973,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -28004,14 +27997,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -28028,14 +28021,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -28058,8 +28051,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/nameBasedDestructuringShortForm.kt"
   },
   "box/box/multiDecl/nameBasedDestructuringUnderscoreWithRenaming.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/nameBasedDestructuringUnderscoreWithRenaming.kt"
   },
@@ -29400,8 +29393,8 @@
    "upstream": "compiler/testData/codegen/box/objectIntrinsics/objects.kt"
   },
   "box/box/objects/anonymousObjectAndContrvariantProjection.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/anonymousObjectAndContrvariantProjection.kt"
   },
@@ -29550,8 +29543,8 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/nativeCompanionInitOrderLegacy.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/byteCompanionObject.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/byteCompanionObject.kt"
   },
@@ -29562,32 +29555,32 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/charCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/doubleCompanionObject.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/doubleCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/floatCompanionObject.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/floatCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/intCompanionObject.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/intCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/longCompanionObject.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/longCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/shortCompanionObject.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/shortCompanionObject.kt"
   },
@@ -29738,8 +29731,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt1047a.kt"
   },
   "box/box/objects/kt11117.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt11117.kt"
   },
@@ -29880,8 +29873,8 @@
    "upstream": "compiler/testData/codegen/box/objects/object.kt"
   },
   "box/box/objects/objectExtendsInnerAndReferencesOuterMember.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/objectExtendsInnerAndReferencesOuterMember.kt"
   },
@@ -29939,8 +29932,8 @@
    "upstream": "compiler/testData/codegen/box/objects/privateFunctionFromClosureInInitializer_kt5582.kt"
   },
   "box/box/objects/receiverInConstructor.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/receiverInConstructor.kt"
   },
@@ -30057,14 +30050,14 @@
    "upstream": "compiler/testData/codegen/box/objects/useAnonymousObjectFunction.kt"
   },
   "box/box/objects/useImportedMember.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useImportedMember.kt"
   },
   "box/box/objects/useImportedMemberFromCompanion.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useImportedMemberFromCompanion.kt"
   },
@@ -30183,8 +30176,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt14201.kt"
   },
   "box/box/operatorConventions/kt14201_2.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt14201_2.kt"
   },
@@ -30667,9 +30660,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/intLiteralIsNotNull.kt"
   },
   "box/box/primitiveTypes/kt1054.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt1054.kt"
   },
   "box/box/primitiveTypes/kt1055.kt": {
@@ -31405,7 +31397,7 @@
   },
   "box/box/properties/generalAccess.kt": {
    "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "detail": "body properties need an initializer (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/generalAccess.kt"
   },
@@ -31415,9 +31407,8 @@
    "upstream": "compiler/testData/codegen/box/properties/genericPropertyMultiModule.kt"
   },
   "box/box/properties/genericWithSameName.kt": {
-   "category": "generics",
-   "detail": "expected identifier (at '<')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/genericWithSameName.kt"
   },
   "box/box/properties/initOrderMultiModule.kt": {
@@ -31494,8 +31485,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt1714_minimal.kt"
   },
   "box/box/properties/kt1892.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt1892.kt"
   },
@@ -31523,15 +31514,14 @@
    "upstream": "compiler/testData/codegen/box/properties/kt2786.kt"
   },
   "box/box/properties/kt2892.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type checks / casts (is, as)",
+   "detail": "only member functions are supported in class/interface bodies (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt2892.kt"
   },
   "box/box/properties/kt3118.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt3118.kt"
   },
   "box/box/properties/kt3524.kt": {
@@ -31547,8 +31537,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt3551.kt"
   },
   "box/box/properties/kt3556.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt3556.kt"
   },
@@ -31606,8 +31596,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt49203_var.kt"
   },
   "box/box/properties/kt613.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt613.kt"
   },
@@ -31838,8 +31828,8 @@
    "upstream": "compiler/testData/codegen/box/properties/privatePropertyInConstructor.kt"
   },
   "box/box/properties/privatePropertyWithoutBackingField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/privatePropertyWithoutBackingField.kt"
   },
@@ -31885,8 +31875,8 @@
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/valClass.kt"
   },
   "box/box/propertyCallableReference/valExtension.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/valExtension.kt"
   },
@@ -31903,8 +31893,8 @@
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/varClass.kt"
   },
   "box/box/propertyCallableReference/varExtension.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/varExtension.kt"
   },
@@ -32260,8 +32250,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithCustomContains.kt"
   },
   "box/box/ranges/contains/inRangeWithImplicitReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertTrue'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithImplicitReceiver.kt"
   },
@@ -32804,8 +32794,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInCustomCharSequence.kt"
   },
   "box/box/ranges/forInCustomIterable.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInCustomIterable.kt"
   },
@@ -32881,8 +32871,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCharSequenceTypeParameterIndices.kt"
   },
   "box/box/ranges/forInIndices/forInCollectionImplicitReceiverIndices.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "other: unknown type Collection<Int>",
+   "detail": "unknown type Collection<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInCollectionImplicitReceiverIndices.kt"
   },
@@ -33111,8 +33101,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeLiteralWithMixedTypeBounds.kt"
   },
   "box/box/ranges/forInRangeWithImplicitReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeWithImplicitReceiver.kt"
   },
@@ -33322,8 +33312,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forIntRange.kt"
   },
   "box/box/ranges/forNullableIntInRangeWithImplicitReceiver.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at ':')",
+   "detail": "expected identifier (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forNullableIntInRangeWithImplicitReceiver.kt"
   },
@@ -36577,8 +36567,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/inMixedUnsignedRange.kt"
   },
   "box/box/ranges/unsigned/kt35004.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other syntax (at '0U')",
+   "detail": "expected '->' (at '0U')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt35004.kt"
   },
@@ -37151,8 +37141,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/commonSupertypeContravariant2.kt"
   },
   "box/box/regressions/dataClassInInlineFunctionWithTypeParameters.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/dataClassInInlineFunctionWithTypeParameters.kt"
   },
@@ -37175,8 +37165,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/directInvokeNameBasedDestructuring.kt"
   },
   "box/box/regressions/dontCaptureTypesWithTypeVariables.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/dontCaptureTypesWithTypeVariables.kt"
   },
@@ -37199,8 +37189,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/functionLiteralAsLastExpressionInBlock.kt"
   },
   "box/box/regressions/generic.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "other: unknown property findAll",
+   "detail": "unknown property findAll",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/generic.kt"
   },
@@ -37261,8 +37251,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt1779.kt"
   },
   "box/box/regressions/kt1800.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'toString' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt1800.kt"
   },
@@ -37376,8 +37366,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt39088.kt"
   },
   "box/box/regressions/kt4142.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt4142.kt"
   },
@@ -37429,8 +37419,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt5953.kt"
   },
   "box/box/regressions/kt6153.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt6153.kt"
   },
@@ -37516,8 +37506,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/noCapturingForTypesWithTypeVariables.kt"
   },
   "box/box/regressions/noResolutionRecursion.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$at' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/noResolutionRecursion.kt"
   },
@@ -37700,8 +37690,8 @@
    "upstream": "compiler/testData/codegen/box/reified/kt36237.kt"
   },
   "box/box/reified/kt39256_privateInlineWithAnonymousObject.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/kt39256_privateInlineWithAnonymousObject.kt"
   },
@@ -37950,26 +37940,26 @@
    "upstream": "compiler/testData/codegen/box/safeCall/parenthesizedSafeCallsAndOperators.kt"
   },
   "box/box/safeCall/primitive.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Int$foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/primitive.kt"
   },
   "box/box/safeCall/primitiveEqSafeCall.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '!!')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/primitiveEqSafeCall.kt"
   },
   "box/box/safeCall/primitiveNotEqSafeCall.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'doSimple' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/primitiveNotEqSafeCall.kt"
   },
   "box/box/safeCall/safeCallEqPrimitive.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '!!')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallEqPrimitive.kt"
   },
@@ -37980,8 +37970,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallIOnUninitializedNonNullValue.kt"
   },
   "box/box/safeCall/safeCallNotEqPrimitive.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'doSimple' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallNotEqPrimitive.kt"
   },
@@ -37992,8 +37982,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallOnLong.kt"
   },
   "box/box/safeCall/safeCallWithElvisFolding.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'test' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallWithElvisFolding.kt"
   },
@@ -38378,8 +38368,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/withReturnUnit.kt"
   },
   "box/box/secondaryConstructors/withoutPrimarySimple.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/withoutPrimarySimple.kt"
   },
@@ -38488,8 +38478,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/complexExplicitReceiver.kt"
   },
   "box/box/smartCasts/complexImplicitReceiver.kt": {
-   "category": "generics",
-   "detail": "expected '(' (at '<')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/complexImplicitReceiver.kt"
   },
@@ -38564,8 +38554,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/invokeRecieverSmartcastK2.kt"
   },
   "box/box/smartCasts/kt17725.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt17725.kt"
   },
@@ -38594,8 +38584,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44932.kt"
   },
   "box/box/smartCasts/kt44942.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44942.kt"
   },
@@ -38677,8 +38667,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/whenSmartCast.kt"
   },
   "box/box/specialBuiltins/bridgeNotEmptyMap.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/bridgeNotEmptyMap.kt"
   },
@@ -38694,20 +38684,20 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/commonBridgesTarget.kt"
   },
   "box/box/specialBuiltins/emptyList.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/emptyList.kt"
   },
   "box/box/specialBuiltins/emptyMap.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/emptyMap.kt"
   },
   "box/box/specialBuiltins/emptyStringMap.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/emptyStringMap.kt"
   },
@@ -38734,32 +38724,32 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/explicitSuperCall.kt"
   },
   "box/box/specialBuiltins/irrelevantRemoveAtOverride.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/irrelevantRemoveAtOverride.kt"
   },
   "box/box/specialBuiltins/maps.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "interfaces",
+   "detail": "unknown interface Map$String$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/maps.kt"
   },
   "box/box/specialBuiltins/noSpecialBridgeInSuperClass.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "unknown interface Map$String$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/noSpecialBridgeInSuperClass.kt"
   },
   "box/box/specialBuiltins/notEmptyListAny.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/notEmptyListAny.kt"
   },
   "box/box/specialBuiltins/notEmptyMap.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected end of statement (at 'as')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/notEmptyMap.kt"
   },
@@ -39044,9 +39034,8 @@
    "upstream": "compiler/testData/codegen/box/strings/constInStringTemplate.kt"
   },
   "box/box/strings/ea35743.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/ea35743.kt"
   },
   "box/box/strings/forInString.kt": {
@@ -39107,8 +39096,8 @@
    "upstream": "compiler/testData/codegen/box/strings/kt5389_stringBuilderGet.kt"
   },
   "box/box/strings/kt5956.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'get')",
+   "category": "interfaces",
+   "detail": "unknown interface CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/kt5956.kt"
   },
@@ -39230,8 +39219,8 @@
    "upstream": "compiler/testData/codegen/box/super/basicmethodSuperTrait.kt"
   },
   "box/box/super/basicproperty.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'b' of N hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/basicproperty.kt"
   },
@@ -39433,14 +39422,14 @@
    "upstream": "compiler/testData/codegen/box/super/traitproperty.kt"
   },
   "box/box/super/unqualifiedSuper.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/unqualifiedSuper.kt"
   },
   "box/box/super/unqualifiedSuperWithDeeperHierarchies.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/unqualifiedSuperWithDeeperHierarchies.kt"
   },
@@ -40064,8 +40053,8 @@
    "upstream": "compiler/testData/codegen/box/traits/traitImplGenericDelegation.kt"
   },
   "box/box/traits/traitWithPrivateExtension.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/traitWithPrivateExtension.kt"
   },
@@ -40403,8 +40392,8 @@
    "upstream": "compiler/testData/codegen/box/typeInfo/ifOrWhenSpecialCall.kt"
   },
   "box/box/typeInfo/implicitSmartCastThis.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "type checks / casts (is, as)",
+   "detail": "expected ')' (at 'is')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typeInfo/implicitSmartCastThis.kt"
   },
@@ -40757,14 +40746,14 @@
    "upstream": "compiler/testData/codegen/box/unit/kt4212.kt"
   },
   "box/box/unit/kt4265.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/kt4265.kt"
   },
   "box/box/unit/kt51036.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/kt51036.kt"
   },
@@ -40916,8 +40905,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedUntil.kt"
   },
   "box/box/unsignedTypes/generic.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/generic.kt"
   },
@@ -42086,8 +42075,8 @@
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/statement.kt"
   },
   "box/box/when/stringOptimization/temporaryVarInWhenByStringIsDisposedProperly.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$String$$prop$name' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/temporaryVarInWhenByStringIsDisposedProperly.kt"
   },
@@ -42169,8 +42158,8 @@
    "upstream": "compiler/testData/codegen/box/when/whenArgumentIsEvaluatedOnlyOnce.kt"
   },
   "box/box/when/whenSafeCallSubjectEvaluatedOnce.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/whenSafeCallSubjectEvaluatedOnce.kt"
   },
@@ -46297,8 +46286,8 @@
    "upstream": "native/native.tests/testData/codegen/controlflow/castsOptimizationAliasCycle.kt"
   },
   "native/native.tests/codegen/controlflow/for_loops_array.kt": {
-   "category": "extension functions",
-   "detail": "expected '(' (at '.')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/controlflow/for_loops_array.kt"
   },
@@ -46778,8 +46767,8 @@
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/compileTime.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkComputedField.kt": {
-   "category": "other: body properties need an initializer (at '",
-   "detail": "body properties need an initializer (at '",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertTrue'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkComputedField.kt"
   },

@@ -1008,8 +1008,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     l != null && l.t == Ty.Args -> Val("null", Ty.Args)
                     l != null -> Val(emitT("load ${l.t.llvm}, ptr ${l.slot}"), l.t)
                     e.n == "this" && owner != null -> Val("%this", Ty.Cls(owner!!.name))
-                    owner != null && owner!!.index(e.n) >= 0 -> property(Val("%this", Ty.Cls(owner!!.name)), e.n)
+                    owner != null && (owner!!.index(e.n) >= 0 || "\$prop\$${e.n}" in owner!!.methods) -> property(Val("%this", Ty.Cls(owner!!.name)), e.n)
                     e.n in CONSTS -> Val("${CONSTS.getValue(e.n)}", Ty.I32)
+                    // Implicit receiver of a top-level extension function.
+                    lookup("this") != null -> property(genExpr(NameE("this").also { it.line = e.line }), e.n)
                     else -> fail("unknown name '${e.n}'")
                 }
             }
@@ -1362,6 +1364,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     private fun property(r: Val, n: String): Val {
+        // Property getters (`val x: T get() = ...`) of classes and extension properties: `$prop$x` functions.
+        val pm = "\$prop\$$n"
+        (r.t as? Ty.Cls)?.let { t -> val ci = classes.getValue(t.name)
+            if (ci.index(n) < 0 && pm in ci.methods) { val v = callMethod(r, ci, pm, CallE(NameE(pm), emptyList(), emptyList(), null)); releaseIfOwned(r); return v }
+        }
+        if (!hasMember(r.t, n)) extFuns[pm]?.firstOrNull { extMatches(r.t, it.params[0].type, it.typeParams) }?.let { f ->
+            return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), emptyList(), listOf(x), null).also { it.line = line }) }
+        }
         val res = when (val t = r.t) {
             is Ty.Cls -> {
                 val ci = classes.getValue(t.name)
@@ -1590,6 +1600,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return Val(p, Ty.Cls(n), true)
         }
         genericFuns[n]?.let { return genGenericCall(it, e) }
+        if (n !in sigs) {
+            // Extension (or member) call on the implicit receiver.
+            if (lookup("this") != null) return method(genExpr(NameE("this").also { it.line = line }), n, e)
+            owner?.let { o -> if (extFuns[n] != null) return method(Val("%this", Ty.Cls(o.name)), n, e) }
+        }
         val sig = sigs[n] ?: fail("unknown function '$n'")
         val all = allArgs(e)
         if (sig.params.size != all.size) fail("$n expects ${sig.params.size} arguments")
@@ -1676,8 +1691,37 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
     }
 
+    /** Top-level extension functions (`ext$Recv$name`) by name. */
+    private val extFuns: Map<String, List<FunD>> by lazy { prog.funs.filter { it.name.startsWith("ext$") }.groupBy { it.name.removePrefix("ext$").substringAfter("$") } }
+    private val LISTY = setOf("List", "MutableList", "ArrayList", "Array", "Collection", "MutableCollection", "Iterable")
+
+    /** Does extension receiver type [recv] (with the extension's type parameters [tps]) accept a value of type [t]? */
+    private fun extMatches(t: Ty, recv: TypeRef, tps: List<String>): Boolean {
+        if (recv.name in tps) return true
+        return when (t) {
+            is Ty.ListTy -> recv.name in LISTY
+            is Ty.MapTy -> recv.name in setOf("Map", "MutableMap", "HashMap")
+            is Ty.Cls -> {
+                val ci = classes.getValue(t.name)
+                val names = (listOf(t.name) + ci.ancestors + ci.supers)
+                recv.name in names || names.any { instOrigin[it]?.first == recv.name }
+            }
+            is Ty.Iface -> recv.name == t.name || instOrigin[t.name]?.first == recv.name
+            else -> recv.args.isEmpty() && (try { resolve(recv) } catch (_: CompileError) { null }) == t
+        }
+    }
+
+    private fun hasMember(t: Ty, n: String): Boolean = when (t) {
+        is Ty.Cls -> classes.getValue(t.name).let { n in it.methods || it.index(n) >= 0 }
+        is Ty.Iface -> ifaces[t.name]?.methods?.containsKey(n) == true
+        else -> false
+    }
+
     private fun method(r: Val, n: String, e0: CallE): Val {
         val t = r.t
+        if (!hasMember(t, n)) extFuns[n]?.firstOrNull { extMatches(t, it.params[0].type, it.typeParams) }?.let { f ->
+            return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
+        }
         // A trailing lambda on a built-in method that is not an inline lambda builtin is an ordinary last argument.
         val e = if (e0.lambda != null && t !is Ty.Cls && t !is Ty.Iface && !(t is Ty.ListTy && n in setOf("map", "filter", "forEach", "sumOf", "count")) && n != "usePinned")
             CallE(e0.callee, e0.typeArgs, allArgs(e0), null) else e0
@@ -1808,7 +1852,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (l.t == Ty.Args || l.t == Ty.Pinned) fail("cannot capture '$n' in a lambda")
                 caps.add(n to l.t); continue
             }
-            if (o != null && (n == "this" || o.index(n) >= 0 || n in o.methods)) outer = true
+            if (o != null && (n == "this" || o.index(n) >= 0 || n in o.methods || "\$prop\$$n" in o.methods)) outer = true
         }
         val capNames = caps.map { it.first }.toSet()
         val lamBody = if (!outer) b0 else b0.rewritten ?: run {
@@ -1816,7 +1860,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             Subst(emptyMap(), { x ->
                 when {
                     x is NameE && x.n == "this" -> NameE("\$outer")
-                    x is NameE && x.n !in pnames && x.n !in capNames && (oc.index(x.n) >= 0 || x.n in oc.methods) -> MemberE(NameE("\$outer"), x.n, false)
+                    x is NameE && x.n !in pnames && x.n !in capNames && (oc.index(x.n) >= 0 || "\$prop\$${x.n}" in oc.methods) -> MemberE(NameE("\$outer"), x.n, false)
+                    x is NameE && x.n !in pnames && x.n !in capNames && x.n in oc.methods -> MemberE(NameE("\$outer"), x.n, false)
                     else -> null
                 }?.also { it.line = x.line }
             }).block(b0)
