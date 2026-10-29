@@ -280,6 +280,9 @@ class Parser(private val t: List<Tok>) {
      * A class implementing an interface property with a stored property (own or inherited) gets the getter
      * `$prop$name() = name`, so calls through the interface dispatch to the field.
      */
+    /** Interface name -> its default method bodies. */
+    private val ifaceDefaults = HashMap<String, List<FunD>>()
+
     private fun implementIfaceProps(classes: MutableList<ClassD>, ifaces: List<InterfaceD>) {
         val byName = classes.associateBy { it.name }
         fun chain(c: ClassD): List<ClassD> = generateSequence(c) { x -> x.superClass?.let { byName[it] } }.toList()
@@ -294,6 +297,13 @@ class Parser(private val t: List<Tok>) {
                 if (ch.any { x -> x.methods.any { it.name == m.name } } || add.any { it.name == m.name }) continue
                 if (ch.none { x -> x.fields.any { it.name == n } }) continue
                 add.add(FunD(m.name, emptyList(), m.ret, null, NameE(n).also { it.line = c.line }, c.line))
+            }
+            for (s in ch.flatMap { it.supers }.distinct()) for (d in ifaceDefaults[s].orEmpty()) {
+                if (ch.any { x -> x.methods.any { it.name == d.name && (it.body != null || it.exprBody != null) } } || add.any { it.name == d.name }) continue
+                // Only the topmost class in the chain needs the copy; subclasses inherit it.
+                val top = ch.last { x -> s in x.supers }
+                if (top !== c) continue
+                add.add(FunD(d.name, d.params, d.ret ?: TypeRef("Unit", emptyList(), false), d.body, d.exprBody, d.line, d.typeParams))
             }
             if (add.isNotEmpty()) classes[i] = ClassD(c.name, c.fields, c.supers, c.methods + add, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
         }
@@ -426,8 +436,12 @@ class Parser(private val t: List<Tok>) {
         val name = ident()
         val tps = typeParams()
         val ms = if (isOp("{")) members() else emptyList()
-        if (ms.any { it.body != null || it.exprBody != null }) fail("default interface methods are not supported")
-        return InterfaceD(name, ms, line, tps)
+        val defs = ms.filter { it.body != null || it.exprBody != null }
+        if (defs.isNotEmpty() && tps.isNotEmpty()) fail("default interface methods are not supported")
+        if (defs.any { it.ret == null && it.body == null }) fail("default interface methods need an explicit return type")
+        if (defs.isNotEmpty()) ifaceDefaults[name] = defs
+        // The interface keeps abstract signatures; implementing classes get copies of the default bodies.
+        return InterfaceD(name, ms.map { if (it in defs) FunD(it.name, it.params, it.ret ?: TypeRef("Unit", emptyList(), false), null, null, it.line, it.typeParams) else it }, line, tps)
     }
 
     /** `<T, reified U : Bound>`: type parameter names; upper bounds are parsed but not checked (monomorphization). */
