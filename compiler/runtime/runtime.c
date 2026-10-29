@@ -39,6 +39,12 @@ int rt_leakcheck = 1;
 #else
 int rt_leakcheck = 0;
 #endif
+void rt_throw(const char *cls, const char *msg) {
+    fflush(stdout);
+    if (msg) fprintf(stderr, "Exception in thread \"main\" %s: %s\n", cls, msg);
+    else fprintf(stderr, "Exception in thread \"main\" %s\n", cls);
+    exit(1);
+}
 void rt_bad_step(int64_t step) {
     fflush(stdout);
     fprintf(stderr, "Exception in thread \"main\" java.lang.IllegalArgumentException: Step must be positive, was: %" PRId64 ".\n", step);

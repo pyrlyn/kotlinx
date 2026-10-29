@@ -35,4 +35,15 @@ fun main() {
     val xs = ArrayList<Meters>()
     xs.add(Meters(1.0)); xs.add(Meters(2.0))
     println(total(xs).v)
+    nested()
+}
+
+inline class Z(val x: Int)
+inline class NZ(val z: Z?)
+
+fun nested() {
+    println(NZ(null) == NZ(null))
+    println(NZ(Z(1)) == NZ(Z(1)))
+    println(NZ(null) == NZ(Z(1)))
+    println(NZ(Z(2)) != NZ(null))
 }

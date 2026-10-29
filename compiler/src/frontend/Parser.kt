@@ -34,17 +34,17 @@ class Parser(private val t: List<Tok>) {
                 tk.k == K.EOF -> break
                 tk.k == K.OP && tk.s == "@" -> skipLine()
                 tk.k == K.ID && (tk.s == "import" || tk.s == "package") -> skipLine()
-                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "const", "open", "final", "abstract", "sealed") -> p++
-                tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> globals.add(stmt() as VarS)
-                tk.k == K.ID && tk.s == "fun" -> funs.add(function())
-                tk.k == K.ID && tk.s == "class" -> classes.add(classDecl())
-                tk.k == K.ID && tk.s == "enum" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(classDecl(true)) }
-                tk.k == K.ID && tk.s == "value" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> {
+                tk.k == K.ID && (tk.s == "value" || tk.s == "inline") && t[p + 1].k == K.ID && t[p + 1].s == "class" -> {
                     p++
                     val c = classDecl()
                     if (c.fields.size != 1 || c.ctorParams.size != 1) fail("a value class needs exactly one property", tk)
                     classes.add(ClassD(c.name, c.fields, c.supers, c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true))
                 }
+                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "const", "open", "final", "abstract", "sealed") -> p++
+                tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> globals.add(stmt() as VarS)
+                tk.k == K.ID && tk.s == "fun" -> funs.add(function())
+                tk.k == K.ID && tk.s == "class" -> classes.add(classDecl())
+                tk.k == K.ID && tk.s == "enum" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(classDecl(true)) }
                 tk.k == K.ID && tk.s == "interface" -> ifaces.add(interfaceDecl())
                 tk.k == K.ID && tk.s == "object" -> { next(); classes.add(objectDecl(ident())) }
                 else -> fail("unexpected top-level token")
@@ -404,6 +404,7 @@ class Parser(private val t: List<Tok>) {
                 "null" -> NullL()
                 "if" -> ifExpr()
                 "when" -> whenExpr()
+                "throw" -> CallE(NameE("\$throw").also { it.line = tk.line }, emptyList(), listOf(expr()), null)
                 else -> {
                     if (tk.s in GENERIC_CALLS && t[p].k == K.OP && t[p].s == "<") {
                         p++

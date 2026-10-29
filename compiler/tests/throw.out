@@ -1,0 +1,4 @@
+8
+yes
+three
+Exception in thread "main" java.lang.IllegalArgumentException: negative: -1

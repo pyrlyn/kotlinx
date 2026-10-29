@@ -32,6 +32,11 @@ private val NANOS = setOf("kotlin.system.getTimeNanos", "getTimeNanos", "System.
 
 /** vtable entries before the interface-method slots (see genClass). */
 private const val VT_HEADER = 5
+/** Standard exception types `throw` accepts, with the qualified name printed for an uncaught exception. */
+private val EXCEPTIONS = listOf("AssertionError", "Error", "Exception", "RuntimeException", "IllegalStateException",
+    "IllegalArgumentException", "UnsupportedOperationException", "ArithmeticException", "IndexOutOfBoundsException",
+    "NullPointerException", "ClassCastException", "NumberFormatException", "ConcurrentModificationException")
+    .associateWith { "java.lang.$it" } + mapOf("NoSuchElementException" to "java.util.NoSuchElementException")
 /** Binary operators that call an `operator fun` on class/interface operands. */
 private val OP_FUNS = mapOf("+" to "plus", "-" to "minus", "*" to "times", "/" to "div", "%" to "rem")
 
@@ -1191,6 +1196,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (n == "println") emit("call void @rt_newline()")
                 return Val("", Ty.Unit)
             }
+            "\$throw" -> {
+                // No exception handling yet: `throw E(msg)` of a standard exception type terminates like an uncaught exception.
+                val x = e.args.single()
+                val en = ((x as? CallE)?.callee as? NameE)?.n
+                if (en == null || en !in EXCEPTIONS || x.args.size > 1) fail("only throwing standard exceptions (e.g. IllegalStateException(msg)) is supported")
+                val m = x.args.singleOrNull()?.let { a ->
+                    val v = genExpr(a)
+                    if (v.t == Ty.Str) v else { val sb = emitT("call ptr @rt_sb_new()"); appendVal("rt_sb_", "ptr $sb, ", v); Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str) }
+                }
+                emit("call void @rt_throw(ptr ${cstr(EXCEPTIONS.getValue(en))}, ptr ${m?.v ?: "null"})"); emit("unreachable"); term = true
+                return Val("undef", Ty.Nothing)
+            }
             "error", "TODO" -> {
                 val m = if (e.args.isEmpty()) Val(cstr("An operation is not implemented."), Ty.Str) else coerce(genExpr(e.args[0]), Ty.Str)
                 emit("call void @rt_panic(ptr ${m.v})"); emit("unreachable"); term = true
@@ -1538,6 +1555,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 startBlock(lr)
                 val b = coerce(genExpr(e.r), Ty.I1)
                 val bFrom = cur
+                if (term) { startBlock(le); return Val(if (e.op == "&&") "false" else "true", Ty.I1) } // rhs never completes
                 br(le)
                 startBlock(le)
                 return Val(emitT("phi i1 [ ${if (e.op == "&&") "false" else "true"}, %$from ], [ ${b.v}, %$bFrom ]"), Ty.I1)
@@ -1629,13 +1647,26 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return Val(if (op == "==") "false" else "true", Ty.I1)
         }
         if (a.t is Ty.Cls && a.t == b.t && a.v != "null" && b.v != "null" && classDecls[a.t.name]?.isValue == true && (op == "==" || op == "!=")) {
-            // Value classes compare by their single property.
+            // Value classes compare by their single property (null-safe: same pointer -> equal, one null -> different).
             val ci = classes.getValue(a.t.name); val ft = ci.fields[0].second
+            val same = emitT("icmp eq ptr ${a.v}, ${b.v}")
+            val anyNull = emitT("or i1 ${emitT("icmp eq ptr ${a.v}, null")}, ${emitT("icmp eq ptr ${b.v}, null")}")
+            val from = cur
+            val lf = label("veq.fields"); val le = label("veq.end"); val lc = label("veq.chk")
+            condBr(same, le, lc)
+            startBlock(lc)
+            val fromC = cur
+            condBr(anyNull, le, lf)
+            startBlock(lf)
             val fa = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${a.v}, i32 0, i32 2")}"), ft)
             val fb = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${b.v}, i32 0, i32 2")}"), ft)
-            val res = compare(op, fa, fb)
+            val eq = coerce(compare("==", fa, fb), Ty.I1)
+            val fromF = cur
+            br(le)
+            startBlock(le)
+            val r = emitT("phi i1 [ true, %$from ], [ false, %$fromC ], [ ${eq.v}, %$fromF ]")
             releaseIfOwned(a); releaseIfOwned(b)
-            return res
+            return Val(if (op == "==") r else emitT("xor i1 $r, true"), Ty.I1)
         }
         if (a.t.llvm == "ptr" || b.t.llvm == "ptr") {
             if (op != "==" && op != "!=") fail("cannot order references")
@@ -1676,6 +1707,7 @@ declare i32 @fclose(ptr)
 declare i64 @rt_nanos()
 declare void @rt_panic(ptr) noreturn
 declare void @rt_bad_step(i64) noreturn
+declare void @rt_throw(ptr, ptr) noreturn
 @rt_leakcheck = external global i32
 declare void @rt_exit_flush()
 declare void @rt_print_str(ptr)

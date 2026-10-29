@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 3,
   "N/A": 2984,
-  "PASS": 210,
-  "UNSUPPORTED": 5278
+  "PASS": 230,
+  "UNSUPPORTED": 5258
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -521,20 +521,20 @@
    "upstream": "compiler/testData/codegen/box/arrays/arrayRangeCheckAccessors.kt"
   },
   "box/box/arrays/arraysOfInlineClass/accessArrayOfInlineClass.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown Array (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Array'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/arraysOfInlineClass/accessArrayOfInlineClass.kt"
   },
   "box/box/arrays/arraysOfInlineClass/accessArrayOfUnsigned.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown Array (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Array'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/arraysOfInlineClass/accessArrayOfUnsigned.kt"
   },
   "box/box/arrays/arraysOfInlineClass/arrayOfInlineClassOfArrayOfInlineClass.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: unsupported type Array<UInt>",
+   "detail": "unsupported type Array<UInt>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/arraysOfInlineClass/arrayOfInlineClassOfArrayOfInlineClass.kt"
   },
@@ -1113,8 +1113,8 @@
    "upstream": "compiler/testData/codegen/box/basics/canonical_name.kt"
   },
   "box/box/basics/cast_null.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'Error')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/cast_null.kt"
   },
@@ -1181,9 +1181,8 @@
    "upstream": "compiler/testData/codegen/box/basics/kt7972.kt"
   },
   "box/box/basics/local_variable.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'Error')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/local_variable.kt"
   },
   "box/box/basics/null_check.kt": {
@@ -1485,26 +1484,26 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/divisionByZero.kt"
   },
   "box/box/binaryOp/eqNullableDoubles.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eq_double_doubleN' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableDoubles.kt"
   },
   "box/box/binaryOp/eqNullableDoublesToInt.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eq_double_any' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableDoublesToInt.kt"
   },
   "box/box/binaryOp/eqNullableDoublesToIntWithTP.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eq_double_any' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableDoublesToIntWithTP.kt"
   },
   "box/box/binaryOp/eqNullableDoublesWithTP.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eq_double_doubleN' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableDoublesWithTP.kt"
   },
@@ -1987,8 +1986,8 @@
    "upstream": "compiler/testData/codegen/box/branching/when6.kt"
   },
   "box/box/branching/when7.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'Error')",
+   "category": "unknown emptyArray (stdlib API / unsupported decl)",
+   "detail": "unknown function 'emptyArray'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/branching/when7.kt"
   },
@@ -3711,8 +3710,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/equality/equalsOnNonCallable.kt"
   },
   "box/box/callableReference/equality/extensionFunctionEquality.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/extensionFunctionEquality.kt"
   },
@@ -3737,8 +3736,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/equality/kpropertyWithCapturingInequality.kt"
   },
   "box/box/callableReference/equality/lambdaNonEquality.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/lambdaNonEquality.kt"
   },
@@ -3748,8 +3747,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/equality/noCoercionToUnitIfFunctionAlreadyReturnsUnit.kt"
   },
   "box/box/callableReference/equality/overloadedFunctionEquality.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/overloadedFunctionEquality.kt"
   },
@@ -3764,14 +3763,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/equality/suspendConversion.kt"
   },
   "box/box/callableReference/equality/suspendFunctionEquality.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other syntax (at 'suspend')",
+   "detail": "unexpected top-level token (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/suspendFunctionEquality.kt"
   },
   "box/box/callableReference/equality/unboundVsNullBoundReceiver.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "nullable types",
+   "detail": "expected '(' (at '?.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/unboundVsNullBoundReceiver.kt"
   },
@@ -3884,8 +3883,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromTopLevelUnitOneStringArg.kt"
   },
   "box/box/callableReference/function/coercionToUnit.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/coercionToUnit.kt"
   },
@@ -5770,8 +5769,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt500.kt"
   },
   "box/box/classes/kt501.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'Exception')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt501.kt"
   },
@@ -9194,15 +9193,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt3087.kt"
   },
   "box/box/controlStructures/kt3203_1.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt3203_1.kt"
   },
   "box/box/controlStructures/kt3203_2.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt3203_2.kt"
   },
   "box/box/controlStructures/kt3273.kt": {
@@ -9301,9 +9298,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt9022Return.kt"
   },
   "box/box/controlStructures/kt9022Throw.kt": {
-   "category": "exceptions",
-   "detail": "expected ')' (at 'RuntimeException')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt9022Throw.kt"
   },
   "box/box/controlStructures/kt910.kt": {
@@ -9515,14 +9511,14 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryAfterTry.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryAndBreak.kt": {
-   "category": "exceptions",
-   "detail": "unexpected top-level token (at 'Exception')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryAndBreak.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryAndContinue.kt": {
-   "category": "exceptions",
-   "detail": "unexpected top-level token (at 'Exception')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryAndContinue.kt"
   },
@@ -9533,8 +9529,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryCatchAfterWhileTrue.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryFinallyOfTypeUnit.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryFinallyOfTypeUnit.kt"
   },
@@ -13389,14 +13385,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/noInitializationOfOuterClass.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffects.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'RuntimeException')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffects.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffectsFromFileClass.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'RuntimeException')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsFromFileClass.kt"
   },
@@ -14248,8 +14244,8 @@
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/stdlibUsages.kt"
   },
   "box/box/destructuringDeclInLambdaParam/underscoreNames.kt": {
-   "category": "exceptions",
-   "detail": "only member functions are supported in class/interface bodies (at 'RuntimeException')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/underscoreNames.kt"
   },
@@ -15890,9 +15886,8 @@
    "upstream": "compiler/testData/codegen/box/exceptions/rethrow.kt"
   },
   "box/box/exceptions/throw0.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'RuntimeException')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/exceptions/throw0.kt"
   },
   "box/box/exceptions/throw_from_catch.kt": {
@@ -15914,8 +15909,8 @@
    "upstream": "compiler/testData/codegen/box/exclExcl/kt48440.kt"
   },
   "box/box/exclExcl/kt48440_2.kt": {
-   "category": "other syntax (at 'id')",
-   "detail": "expected end of statement (at 'id')",
+   "category": "class bodies / constructors",
+   "detail": "unexpected top-level token (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/exclExcl/kt48440_2.kt"
   },
@@ -16608,8 +16603,8 @@
    "upstream": "compiler/testData/codegen/box/finally/kt3706.kt"
   },
   "box/box/finally/kt3867.kt": {
-   "category": "exceptions",
-   "detail": "unexpected top-level token (at 'RuntimeException')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/finally/kt3867.kt"
   },
@@ -16662,8 +16657,8 @@
    "upstream": "compiler/testData/codegen/box/finally/nestedFinallyAndNonFinallyTry4.kt"
   },
   "box/box/finally/notChainCatch.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'UnsupportedOperationException')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/finally/notChainCatch.kt"
   },
@@ -16679,14 +16674,14 @@
    "upstream": "compiler/testData/codegen/box/finally/returnNullFromInlined.kt"
   },
   "box/box/finally/someStuff.kt": {
-   "category": "other syntax (at 'Baz')",
-   "detail": "expected end of statement (at 'Baz')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/finally/someStuff.kt"
   },
   "box/box/finally/tryFinally.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'UnsupportedOperationException')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/finally/tryFinally.kt"
   },
@@ -17254,8 +17249,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/equality/lambdaRuntimeConversion.kt"
   },
   "box/box/funInterface/equality/localFunctionReferences.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "interfaces",
+   "detail": "expected '(' (at 'FunInterface')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/equality/localFunctionReferences.kt"
   },
@@ -17487,9 +17482,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/typealiasedFunInterface.kt"
   },
   "box/box/function/arithmetic.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'Error')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/arithmetic.kt"
   },
   "box/box/function/boolean.kt": {
@@ -17659,8 +17653,8 @@
    "upstream": "compiler/testData/codegen/box/function/referenceBigArity.kt"
   },
   "box/box/function/sum.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'Error')",
+   "category": "other syntax (at 'f')",
+   "detail": "expected ')' (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/sum.kt"
   },
@@ -17706,8 +17700,8 @@
    "upstream": "compiler/testData/codegen/box/function/unreachableStatementAfterReturn.kt"
   },
   "box/box/functions/bigArity/function255.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "lambdas / function types / references",
+   "detail": "expected end of statement (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/bigArity/function255.kt"
   },
@@ -17724,8 +17718,8 @@
    "upstream": "compiler/testData/codegen/box/functions/bigArity/invokeCallableReference.kt"
   },
   "box/box/functions/bigArity/invokeLambda.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/bigArity/invokeLambda.kt"
   },
@@ -17748,14 +17742,14 @@
    "upstream": "compiler/testData/codegen/box/functions/bigArity/subclass.kt"
   },
   "box/box/functions/coerceVoidToArray.kt": {
-   "category": "exceptions",
-   "detail": "unexpected top-level token (at 'Exception')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/coerceVoidToArray.kt"
   },
   "box/box/functions/coerceVoidToObject.kt": {
-   "category": "exceptions",
-   "detail": "unexpected top-level token (at 'Exception')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/coerceVoidToObject.kt"
   },
@@ -21127,38 +21121,38 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverrideGeneric2.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingType.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingType.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric2.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric2.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric2.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric2.kt"
   },
@@ -21595,50 +21589,47 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyNull.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullAny.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullAnyGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAny.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyGeneric2.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyNull.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyNull.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyNullGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected X$String, found X$CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyNullGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyNullGeneric2.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected X$String, found X$CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideNullableInlineClassWithNonNullNullableAnyNullGeneric2.kt"
   },
@@ -22561,14 +22552,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/inlineLambdaInInlineClassFunGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/kt26858.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'dx' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/kt26858.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/kt26858Generic.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown intArrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'intArrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/kt26858Generic.kt"
   },
@@ -23049,14 +23040,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksPrimitiveUnboxed.kt"
   },
   "box/box/inlineClasses/equalityForBoxesOfNullableValuesOfInlineClass.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityForBoxesOfNullableValuesOfInlineClass.kt"
   },
   "box/box/inlineClasses/equalityForBoxesOfNullableValuesOfInlineClassGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityForBoxesOfNullableValuesOfInlineClassGeneric.kt"
   },
@@ -23079,14 +23070,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsCallsLeftArgumentGeneric.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderInlineClass.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'IllegalStateException')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderInlineClass.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderInlineClassGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'IllegalStateException')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderInlineClassGeneric.kt"
   },
@@ -23293,26 +23284,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClashGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/functionsWithDifferentNullabilityDoNotClash.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: overloads are not supported: test",
+   "detail": "overloads are not supported: test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/functionsWithDifferentNullabilityDoNotClash.kt"
   },
   "box/box/inlineClasses/functionNameMangling/functionsWithDifferentNullabilityDoNotClashGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: overloads are not supported: test",
+   "detail": "overloads are not supported: test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/functionsWithDifferentNullabilityDoNotClashGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/genericFunctionsDoNotClash.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: overloads are not supported: test",
+   "detail": "overloads are not supported: test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/genericFunctionsDoNotClash.kt"
   },
   "box/box/inlineClasses/functionNameMangling/genericFunctionsDoNotClashGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: overloads are not supported: test",
+   "detail": "overloads are not supported: test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/genericFunctionsDoNotClashGeneric.kt"
   },
@@ -23329,38 +23320,38 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/localClassInFunctionWithMangledNameGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/mangledFunctionsCanBeOverridden.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/mangledFunctionsCanBeOverridden.kt"
   },
   "box/box/inlineClasses/functionNameMangling/mangledFunctionsCanBeOverriddenGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/mangledFunctionsCanBeOverriddenGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/mangledFunctionsDoNotClash.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: overloads are not supported: test",
+   "detail": "overloads are not supported: test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/mangledFunctionsDoNotClash.kt"
   },
   "box/box/inlineClasses/functionNameMangling/mangledFunctionsDoNotClashGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: overloads are not supported: test",
+   "detail": "overloads are not supported: test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/mangledFunctionsDoNotClashGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/mixedSignatureFunctionsDoNotClash.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: overloads are not supported: test",
+   "detail": "overloads are not supported: test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/mixedSignatureFunctionsDoNotClash.kt"
   },
   "box/box/inlineClasses/functionNameMangling/mixedSignatureFunctionsDoNotClashGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: overloads are not supported: test",
+   "detail": "overloads are not supported: test",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/mixedSignatureFunctionsDoNotClashGeneric.kt"
   },
@@ -23708,14 +23699,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineMutableCollectionBulkAdd.kt"
   },
   "box/box/inlineClasses/inlineClassEqualityShouldUseTotalOrderForFloatingPointData.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Float",
+   "detail": "unknown type Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassEqualityShouldUseTotalOrderForFloatingPointData.kt"
   },
   "box/box/inlineClasses/inlineClassEqualityShouldUseTotalOrderForFloatingPointDataGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "class bodies / constructors",
+   "detail": "constructor InlineFloat expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassEqualityShouldUseTotalOrderForFloatingPointDataGeneric.kt"
   },
@@ -23832,14 +23823,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: unknown method Z.hashCode()",
+   "detail": "unknown method Z.hashCode()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: unknown method Z$Int.hashCode()",
+   "detail": "unknown method Z$Int.hashCode()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -24189,8 +24180,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt25771.kt"
   },
   "box/box/inlineClasses/kt26103.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'testValueParameter' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt26103.kt"
   },
@@ -24201,14 +24192,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt26103_contravariantUnderlyingType.kt"
   },
   "box/box/inlineClasses/kt26103_covariantUnderlyingType.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt26103_covariantUnderlyingType.kt"
   },
   "box/box/inlineClasses/kt26103_original.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt26103_original.kt"
   },
@@ -24225,14 +24216,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096Generic.kt"
   },
   "box/box/inlineClasses/kt27096_enum.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_enum.kt"
   },
   "box/box/inlineClasses/kt27096_enumGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_enumGeneric.kt"
   },
@@ -24255,62 +24246,62 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_innerClass.kt"
   },
   "box/box/inlineClasses/kt27096_nullablePrimitive.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_nullablePrimitive.kt"
   },
   "box/box/inlineClasses/kt27096_nullablePrimitiveGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_nullablePrimitiveGeneric.kt"
   },
   "box/box/inlineClasses/kt27096_nullablePrimitiveGeneric2.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_nullablePrimitiveGeneric2.kt"
   },
   "box/box/inlineClasses/kt27096_nullableReference.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_nullableReference.kt"
   },
   "box/box/inlineClasses/kt27096_nullableReferenceGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_nullableReferenceGeneric.kt"
   },
   "box/box/inlineClasses/kt27096_nullableReferenceGeneric2.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_nullableReferenceGeneric2.kt"
   },
   "box/box/inlineClasses/kt27096_primitive.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_primitive.kt"
   },
   "box/box/inlineClasses/kt27096_primitiveGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_primitiveGeneric.kt"
   },
   "box/box/inlineClasses/kt27096_reference.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_reference.kt"
   },
   "box/box/inlineClasses/kt27096_referenceGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_referenceGeneric.kt"
   },
@@ -24321,15 +24312,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27113.kt"
   },
   "box/box/inlineClasses/kt27113a.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27113a.kt"
   },
   "box/box/inlineClasses/kt27113aGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27113aGeneric.kt"
   },
   "box/box/inlineClasses/kt27132.kt": {
@@ -24345,14 +24335,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27132Generic.kt"
   },
   "box/box/inlineClasses/kt27140.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'toByteArray' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27140.kt"
   },
   "box/box/inlineClasses/kt27140Generic.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'toByteArray' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27140Generic.kt"
   },
@@ -24381,8 +24371,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27706Generic.kt"
   },
   "box/box/inlineClasses/kt28405.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "types: UIntArray",
+   "detail": "unknown type UIntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt28405.kt"
   },
@@ -24404,14 +24394,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt32793.kt"
   },
   "box/box/inlineClasses/kt33119.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt33119.kt"
   },
   "box/box/inlineClasses/kt33119Generic.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt33119Generic.kt"
   },
@@ -24428,14 +24418,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt34902.kt"
   },
   "box/box/inlineClasses/kt37998.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt37998.kt"
   },
   "box/box/inlineClasses/kt37998Generic.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt37998Generic.kt"
   },
@@ -24643,14 +24633,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/noAssertionsOnInlineClassBasedOnNullableTypeGeneric.kt"
   },
   "box/box/inlineClasses/nullableEqeqNonNull.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eq' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableEqeqNonNull.kt"
   },
   "box/box/inlineClasses/nullableEqeqNonNullGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eq' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableEqeqNonNullGeneric.kt"
   },
@@ -24661,20 +24651,20 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableGenericUnderlyingNull.kt"
   },
   "box/box/inlineClasses/nullableWrapperEquality.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eq' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableWrapperEquality.kt"
   },
   "box/box/inlineClasses/nullableWrapperEqualityGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eq' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableWrapperEqualityGeneric.kt"
   },
   "box/box/inlineClasses/nullableWrapperEqualityGeneric2.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eq' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableWrapperEqualityGeneric2.kt"
   },
@@ -24731,14 +24721,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/privateConstructorFunInterfaceMultiModuleGeneric.kt"
   },
   "box/box/inlineClasses/propertyDelegation/captureLocalVarDelegatedToInlineClass.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/captureLocalVarDelegatedToInlineClass.kt"
   },
   "box/box/inlineClasses/propertyDelegation/captureLocalVarDelegatedToInlineClassGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/captureLocalVarDelegatedToInlineClassGeneric.kt"
   },
@@ -24779,14 +24769,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateCompanionVarToInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateLocalVarToInlineClass.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateLocalVarToInlineClass.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateLocalVarToInlineClassGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateLocalVarToInlineClassGeneric.kt"
   },
@@ -25460,14 +25450,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingType.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '?')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingType.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '?')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt"
   },
@@ -25484,8 +25474,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullableInlineClassUnderlyingTypeGWI2.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingType.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '?')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingType.kt"
   },
@@ -25502,20 +25492,20 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGWI2.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '?')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGeneric.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '?')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '?')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt"
   },
@@ -26529,8 +26519,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/nonShortCircuitAnd.kt"
   },
   "box/box/intrinsics/nullPlusString.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'splus' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/nullPlusString.kt"
   },
@@ -26558,8 +26548,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/throwableParamOrder.kt"
   },
   "box/box/intrinsics/tostring.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
@@ -27243,8 +27233,8 @@
    "upstream": "compiler/testData/codegen/box/lateinit/notInitialized.kt"
   },
   "box/box/lazyCodegen/exceptionInFieldInitializer.kt": {
-   "category": "exceptions",
-   "detail": "only member functions are supported in class/interface bodies (at 'RuntimeException')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lazyCodegen/exceptionInFieldInitializer.kt"
   },
@@ -27965,8 +27955,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/UnderscoreNames.kt"
   },
   "box/box/multiDecl/forRange/UnderscoreNamesDontCallComponent.kt": {
-   "category": "exceptions",
-   "detail": "only member functions are supported in class/interface bodies (at 'RuntimeException')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/UnderscoreNamesDontCallComponent.kt"
   },
@@ -29399,8 +29389,8 @@
    "upstream": "compiler/testData/codegen/box/nonLocalReturns/suspendConversion.kt"
   },
   "box/box/nothingValue/inNestedCall.kt": {
-   "category": "exceptions",
-   "detail": "unexpected top-level token (at 'NullPointerException')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'nestedNothing' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nothingValue/inNestedCall.kt"
   },
@@ -29685,8 +29675,8 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/nativeCompanionInitOrderLegacy.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/byteCompanionObject.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/byteCompanionObject.kt"
   },
@@ -29697,32 +29687,32 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/charCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/doubleCompanionObject.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/doubleCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/floatCompanionObject.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/floatCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/intCompanionObject.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/intCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/longCompanionObject.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/longCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/shortCompanionObject.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/shortCompanionObject.kt"
   },
@@ -30365,8 +30355,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/operatorSetLambda.kt"
   },
   "box/box/operatorConventions/overloadedSet.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'Exception')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'get' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/overloadedSet.kt"
   },
@@ -30778,8 +30768,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/whenIntAsNullableAny.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/whenNullableBoxed.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'doTestInt' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/whenNullableBoxed.kt"
   },
@@ -30891,8 +30881,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt248.kt"
   },
   "box/box/primitiveTypes/kt2768.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: unknown method Int.toShort()",
+   "detail": "unknown method Int.toShort()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2768.kt"
   },
@@ -31081,8 +31071,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/nullableCharBoolean.kt"
   },
   "box/box/primitiveTypes/numberEqualsHashCodeToString.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'Error')",
+   "category": "other: unknown type Number",
+   "detail": "unknown type Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/numberEqualsHashCodeToString.kt"
   },
@@ -31140,8 +31130,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/smartCastOnNullableDoubleIdentityEquals.kt"
   },
   "box/box/primitiveTypes/stringEqualsHashCodeToString.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'Error')",
+   "category": "strings / templates",
+   "detail": "unknown method String.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/stringEqualsHashCodeToString.kt"
   },
@@ -33244,8 +33234,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/kt42909.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/kt42909.kt"
   },
@@ -33292,20 +33282,20 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedDownTo.kt"
   },
   "box/box/ranges/forInReversed/forInReversedEmptyRange.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'intRange' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedEmptyRange.kt"
   },
   "box/box/ranges/forInReversed/forInReversedEmptyRangeLiteral.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "ranges (step/downTo/until, ranges as values)",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedEmptyRangeLiteral.kt"
   },
   "box/box/ranges/forInReversed/forInReversedEmptyRangeLiteralWithNonConstBounds.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'intLow' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInReversed/forInReversedEmptyRangeLiteralWithNonConstBounds.kt"
   },
@@ -33381,20 +33371,20 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilChar.kt"
   },
   "box/box/ranges/forInUntil/forInUntilCharMaxValue.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilCharMaxValue.kt"
   },
   "box/box/ranges/forInUntil/forInUntilCharMinValue.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilCharMinValue.kt"
   },
   "box/box/ranges/forInUntil/forInUntilCharMinValueNonConst.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilCharMinValueNonConst.kt"
   },
@@ -33405,27 +33395,25 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilInt.kt"
   },
   "box/box/ranges/forInUntil/forInUntilIntMaxValue.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilIntMaxValue.kt"
   },
   "box/box/ranges/forInUntil/forInUntilIntMinValue.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilIntMinValue.kt"
   },
   "box/box/ranges/forInUntil/forInUntilIntMinValueNonConst.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilIntMinValueNonConst.kt"
   },
   "box/box/ranges/forInUntil/forInUntilLesserInt.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilLesserInt.kt"
   },
   "box/box/ranges/forInUntil/forInUntilLong.kt": {
@@ -33435,20 +33423,19 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilLong.kt"
   },
   "box/box/ranges/forInUntil/forInUntilLongMaxValue.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilLongMaxValue.kt"
   },
   "box/box/ranges/forInUntil/forInUntilLongMinValue.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown Long (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Long'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilLongMinValue.kt"
   },
   "box/box/ranges/forInUntil/forInUntilLongMinValueNonConst.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown Long (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Long'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilLongMinValueNonConst.kt"
   },
@@ -37610,8 +37597,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt5953.kt"
   },
   "box/box/regressions/kt6153.kt": {
-   "category": "other: expected '->' (at '",
-   "detail": "expected '->' (at '",
+   "category": "extension functions",
+   "detail": "expected '(' (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt6153.kt"
   },
@@ -38096,8 +38083,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt245.kt"
   },
   "box/box/safeCall/kt247.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/kt247.kt"
   },
@@ -38126,8 +38113,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt52743.kt"
   },
   "box/box/safeCall/parenthesizedSafeCallsAndOperators.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'RuntimeException')",
+   "category": "operator/infix functions",
+   "detail": "unexpected top-level token (at 'operator')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/parenthesizedSafeCallsAndOperators.kt"
   },
@@ -39291,8 +39278,8 @@
    "upstream": "compiler/testData/codegen/box/strings/kt5389_stringBuilderGet.kt"
   },
   "box/box/strings/kt5956.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'UnsupportedOperationException')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/kt5956.kt"
   },
@@ -40617,14 +40604,14 @@
    "upstream": "compiler/testData/codegen/box/typeInfo/smartCastThis.kt"
   },
   "box/box/typeMapping/kt2831.kt": {
-   "category": "exceptions",
-   "detail": "unexpected top-level token (at 'Exception')",
+   "category": "strings / templates",
+   "detail": "expected '->' (at 'String')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typeMapping/kt2831.kt"
   },
   "box/box/typeMapping/kt3286.kt": {
-   "category": "exceptions",
-   "detail": "unexpected top-level token (at 'RuntimeException')",
+   "category": "other: unknown type Nothing",
+   "detail": "unknown type Nothing",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typeMapping/kt3286.kt"
   },
@@ -41035,8 +41022,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/boxConstValOfUnsignedType.kt"
   },
   "box/box/unsignedTypes/boxedUnsignedEqualsZero.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isZeroUInt' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/boxedUnsignedEqualsZero.kt"
   },
@@ -41053,9 +41040,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/defaultArguments.kt"
   },
   "box/box/unsignedTypes/equalsImplForInlineClassWrappingNullableInlineClass.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/equalsImplForInlineClassWrappingNullableInlineClass.kt"
   },
   "box/box/unsignedTypes/forEachIndexedInListOfUInts.kt": {
@@ -41065,38 +41051,38 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forEachIndexedInListOfUInts.kt"
   },
   "box/box/unsignedTypes/forInUnsignedDownTo.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedDownTo.kt"
   },
   "box/box/unsignedTypes/forInUnsignedProgression.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedProgression.kt"
   },
   "box/box/unsignedTypes/forInUnsignedRange.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedRange.kt"
   },
   "box/box/unsignedTypes/forInUnsignedRangeLiteral.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedRangeLiteral.kt"
   },
   "box/box/unsignedTypes/forInUnsignedRangeWithCoercion.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown UByte (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UByte'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedRangeWithCoercion.kt"
   },
   "box/box/unsignedTypes/forInUnsignedUntil.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "unknown UInt (stdlib API / unsupported decl)",
+   "detail": "unknown name 'UInt'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedUntil.kt"
   },
@@ -41168,8 +41154,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/kt61418.kt"
   },
   "box/box/unsignedTypes/literalEqualsNullableUnsigned.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isZeroUInt' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/literalEqualsNullableUnsigned.kt"
   },
@@ -41180,8 +41166,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/nullableSmartcastUnsignedArray.kt"
   },
   "box/box/unsignedTypes/nullableUnsignedEqualsLiteral.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isZeroUInt' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/nullableUnsignedEqualsLiteral.kt"
   },
@@ -41202,27 +41188,24 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedInStringInterpolation.kt"
   },
   "box/box/unsignedTypes/unsignedIntCompare.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: unknown method UInt.compareTo()",
+   "detail": "unknown method UInt.compareTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedIntCompare.kt"
   },
   "box/box/unsignedTypes/unsignedIntDivide.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedIntDivide.kt"
   },
   "box/box/unsignedTypes/unsignedIntRemainder.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedIntRemainder.kt"
   },
   "box/box/unsignedTypes/unsignedIntToString.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedIntToString.kt"
   },
   "box/box/unsignedTypes/unsignedLiteralsForMaxLongValue.kt": {
@@ -41237,32 +41220,29 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedLiteralsWithSignedOverflow.kt"
   },
   "box/box/unsignedTypes/unsignedLongCompare.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "other: unknown method ULong.compareTo()",
+   "detail": "unknown method ULong.compareTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedLongCompare.kt"
   },
   "box/box/unsignedTypes/unsignedLongDivide.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedLongDivide.kt"
   },
   "box/box/unsignedTypes/unsignedLongRemainder.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedLongRemainder.kt"
   },
   "box/box/unsignedTypes/unsignedLongToString.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedLongToString.kt"
   },
   "box/box/unsignedTypes/unsignedRangeIterator.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "ranges (step/downTo/until, ranges as values)",
+   "detail": "ranges are only supported in for loops",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedRangeIterator.kt"
   },
@@ -41289,8 +41269,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/varargsOfUnsignedTypes.kt"
   },
   "box/box/unsignedTypes/whenByUnsigned.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'testUInt' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/whenByUnsigned.kt"
   },
@@ -42018,8 +41998,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/withoutElse.kt"
   },
   "box/box/when/exceptionOnNoMatch.kt": {
-   "category": "other: expected '->' (at '",
-   "detail": "expected '->' (at '",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/exceptionOnNoMatch.kt"
   },
@@ -42047,8 +42027,8 @@
    "upstream": "compiler/testData/codegen/box/when/exhaustiveness/exhaustiveWithNegativeBoolean.kt"
   },
   "box/box/when/exhaustiveness/exhaustiveWithNegativeEnum.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'AssertionError')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/exhaustiveness/exhaustiveWithNegativeEnum.kt"
   },
@@ -42120,8 +42100,8 @@
    "upstream": "compiler/testData/codegen/box/when/kt5448.kt"
   },
   "box/box/when/kt55993.kt": {
-   "category": "exceptions",
-   "detail": "expected end of statement (at 'IllegalArgumentException')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/kt55993.kt"
   },
