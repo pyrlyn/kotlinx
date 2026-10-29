@@ -1,0 +1,75 @@
+{
+ "suite": "refpass-layout",
+ "bench": "refpass",
+ "runs": [
+  {
+   "run": "interleaved-base1-01b8c06",
+   "date": "2026-10-30T00:13:37+02:00",
+   "commit": "e34e6d123268bf24a553e42fd69e8f5298f072c5",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 66.07 48.49 148.82 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 130.539,
+    "stat": "median",
+    "raw_ns": "126579000,133265792,129595333,132937000,130155000,131226792,131142833,129758417,130539000,128601583,127396750,127019500,135038291,134847750,131139042"
+   }
+  },
+  {
+   "run": "interleaved-main-eb0a7f9",
+   "date": "2026-10-30T00:13:39+02:00",
+   "commit": "e34e6d123268bf24a553e42fd69e8f5298f072c5",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 66.07 48.49 148.82 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 142.716,
+    "stat": "median",
+    "raw_ns": "144238084,141245959,147598167,145446125,141611125,141852083,142250083,142331542,141518375,138675208,142715875,144914791,150710792,146178917,144997916"
+   }
+  },
+  {
+   "run": "interleaved-pr-working",
+   "date": "2026-10-30T00:13:41+02:00",
+   "commit": "e34e6d123268bf24a553e42fd69e8f5298f072c5",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 66.07 48.49 148.82 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 128.761,
+    "stat": "median",
+    "raw_ns": "131215917,130825250,129824042,127776875,127354708,130660834,128627708,125790333,128350625,127363417,128761333,131997791,130392917,130069625,125653583"
+   }
+  }
+ ]
+}
