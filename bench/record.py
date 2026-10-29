@@ -35,7 +35,7 @@ def main():
         "run": a.run,
         "date": a.date or datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
         "commit": commit,
-        "dirty": bool(sh("git", "-C", HERE, "status", "--porcelain", "--untracked-files=no")) if not a.commit else False,
+        "dirty": bool(sh("git", "-C", HERE, "status", "--porcelain", "--untracked-files=no", "--", ".", ":(exclude)results")) if not a.commit else False,
         "ref": a.ref,
         "gc": a.gc,
         "machine": {"model": sh("sysctl", "-n", "hw.model"), "cpu": sh("sysctl", "-n", "machdep.cpu.brand_string") or platform.processor(),
