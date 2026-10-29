@@ -160,7 +160,7 @@ class Parser(private val t: List<Tok>) {
                 else -> fail("unexpected top-level token")
             }
         }
-        classes.addAll(companions)
+        classes.addAll(companions); funs.addAll(ctorFactories)
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
         resolveNested(funs, classes, ifaces, globals)
         resolveExtensions(funs, classes)
@@ -275,6 +275,7 @@ class Parser(private val t: List<Tok>) {
                     continue
                 }
                 if (nestedDecl()) continue
+                if (isId("constructor") && curClass != null && props != null) { secondaryCtor(); continue }
                 if (!isId("fun")) fail("only member functions are supported in class/interface bodies")
                 val f = function()
                 if (f.recv != null) fail("member extension functions are not supported")
@@ -554,6 +555,75 @@ class Parser(private val t: List<Tok>) {
         else FunD(name, params, ret, null, null, line, typeParams, recv) // abstract (interface) member
     }
 
+    /** A secondary constructor: parameters, delegation (`this`/`super`/none) with its arguments, optional body. */
+    private class SecCtor(val params: List<Param>, val kind: String?, val args: List<E>, val body: Block?, val line: Int)
+    private val secCtors = HashMap<String, ArrayList<SecCtor>>()
+    /** Factory functions `C$sec$k` for secondary constructors (call sites pick them by argument count and types). */
+    private val ctorFactories = ArrayList<FunD>()
+
+    private fun secondaryCtor() {
+        val line = next().line
+        expectOp("(")
+        val ps = nested(1) {
+            val xs = ArrayList<Param>()
+            while (!isOp(")")) {
+                if (isId("vararg")) fail("vararg constructor parameters are not supported")
+                val n = ident(); expectOp(":"); val ty = type()
+                xs.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); expr() } else null))
+                if (isOp(",")) next()
+            }
+            xs
+        }
+        expectOp(")")
+        var kind: String? = null; var args: List<E> = emptyList()
+        if (isOp(":")) {
+            next()
+            kind = ident()
+            if (kind != "this" && kind != "super") fail("expected this(...) or super(...)")
+            args = args()
+        }
+        skipNLOnly()
+        val body = if (isOp("{")) block() else null
+        secCtors.getOrPut(curClass!!) { ArrayList() }.add(SecCtor(ps, kind, args, body, line))
+    }
+
+    /** Turns secondary constructors into a primary (if there is none) plus factory functions. */
+    private fun lowerSecondaries(name: String, hasPrimary: Boolean, fields: List<FieldD>, ctorParams: MutableList<Param>, inits: MutableList<Any>,
+                                 supers: MutableList<String>, superArgs0: List<E>?, typeParams: List<String>, ms: List<FunD>): List<E>? {
+        val secs = secCtors.remove(name) ?: return superArgs0
+        if (typeParams.isNotEmpty()) fail("secondary constructors of generic classes are not supported")
+        var superArgs = superArgs0
+        val rest = ArrayList(secs)
+        if (!hasPrimary) {
+            val prim = secs.firstOrNull { it.kind != "this" } ?: fail("a class without a primary constructor needs a non-delegating constructor")
+            rest.remove(prim)
+            ctorParams.addAll(prim.params)
+            prim.body?.let { inits.add(it) }
+            if (prim.kind == "super") {
+                if (supers.isEmpty()) fail("super(...) without a superclass")
+                superArgs = prim.args
+            }
+        }
+        for ((k, sc) in rest.withIndex()) {
+            if (sc.kind != "this") fail("secondary constructors must delegate to this(...)")
+            val self = NameE("\$self")
+            val members = (fields.map { it.name } + ms.map { it.name }).toSet() - sc.params.map { it.name }.toSet()
+            val sub = Subst(emptyMap(), rw = { x ->
+                when {
+                    x is NameE && x.n == "this" -> NameE("\$self").also { it.line = x.line }
+                    x is NameE && x.n in members -> MemberE(NameE("\$self").also { it.line = x.line }, x.n, false).also { it.line = x.line }
+                    else -> null
+                }
+            }, srw = { x -> if (x is RetS && x.e == null) RetS(NameE("\$self").also { it.line = x.line }).also { it.line = x.line } else null })
+            val stmts = ArrayList<S>()
+            stmts.add(VarS("\$self", false, null, CallE(NameE(name).also { it.line = sc.line }, emptyList(), sc.args, null).also { it.line = sc.line }).also { it.line = sc.line })
+            sc.body?.let { stmts.addAll(sub.block(it).stmts) }
+            stmts.add(RetS(self.also { it.line = sc.line }).also { it.line = sc.line })
+            ctorFactories.add(FunD("$name\$sec\$$k", sc.params, TypeRef(name, emptyList(), false), Block(stmts), null, sc.line))
+        }
+        return superArgs
+    }
+
     private fun classDecl(isEnum: Boolean = false): ClassD {
         val line = next().line
         val name = ident()
@@ -564,6 +634,7 @@ class Parser(private val t: List<Tok>) {
             val tr = TypeRef(ty, emptyList(), false); ctorParams.add(Param("$$n", tr))
             val f = FieldD(n, tr, false, NameE("$$n")); fields.add(f); inits.add(f)
         }
+        val hasPrimary = isOp("(")
         if (isOp("(")) {
             next()
             nested(1) {
@@ -596,7 +667,13 @@ class Parser(private val t: List<Tok>) {
         }
         if (isEnum && superArgs != null) fail("enum classes cannot have a superclass")
         val savedCls = curClass; curClass = name
-        try { return classBody(name, isEnum, fields, ctorParams, inits, supers, superArgs, typeParams, line) } finally { curClass = savedCls }
+        try {
+            val c = classBody(name, isEnum, fields, ctorParams, inits, supers, superArgs, typeParams, line)
+            if (!secCtors.containsKey(name)) return c
+            val cps = ArrayList(c.ctorParams); val ins = ArrayList(c.inits); val sups = ArrayList(c.supers)
+            val sa = lowerSecondaries(name, hasPrimary, c.fields, cps, ins, sups, c.superArgs, c.typeParams, c.methods)
+            return ClassD(c.name, c.fields, sups, c.methods, c.line, cps, ins, sa, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
+        } finally { curClass = savedCls }
     }
 
     private fun classBody(name: String, isEnum: Boolean, fields: ArrayList<FieldD>, ctorParams: List<Param>, inits: ArrayList<Any>,

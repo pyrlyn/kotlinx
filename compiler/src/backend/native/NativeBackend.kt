@@ -1713,7 +1713,40 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return own
     }
 
+    /** Type of [e] without emitting code (generation is rolled back), or null if it does not compile. */
+    private fun probeType(e: E): Ty? {
+        val sf = funcs.length; val sb = body.length; val sa = allocas.length; val sc = cur; val st = term; val sm = HashSet(moveNodes); val sr = HashSet(refVals)
+        return try { genExpr(e).t } catch (x: CompileError) { null } finally {
+            funcs.setLength(sf); body.setLength(sb); allocas.setLength(sa); cur = sc; term = st
+            moveNodes.clear(); moveNodes.addAll(sm); refVals.clear(); refVals.addAll(sr)
+        }
+    }
+
+    private val secondaryCache = HashMap<CallE, String>()
+
+    /** The secondary-constructor factory `C$sec$k` a constructor call resolves to, or null for the primary constructor. */
+    private fun secondaryFor(n: String, e: CallE): String? {
+        val facs = funDecls.keys.filter { it.startsWith("$n\$sec\$") }
+        if (facs.isEmpty() || e.args.any { it is NamedE }) return null
+        secondaryCache[e]?.let { return it.ifEmpty { null } }
+        val args = allArgs(e)
+        val cands = (listOf(n to classDecls.getValue(n).ctorParams) + facs.map { it to funDecls.getValue(it).params })
+            .filter { (_, ps) -> args.size in ps.count { it.default == null }..ps.size }
+        val pick = if (cands.size <= 1) cands.firstOrNull()?.first ?: n else {
+            val ats = args.map { probeType(it) }
+            fun fits(ps: List<Param>, exact: Boolean) = ats.indices.all { i ->
+                val pt = resolveOrNull(ps[i].type); val at = ats[i]
+                at == null || pt == null || at == pt || at == Ty.Nothing || (!exact && (statically(at, pt) || at.isInt && pt.isInt && pt.rank >= at.rank || (at.v0isNull() && pt.llvm == "ptr")))
+            }
+            cands.firstOrNull { fits(it.second, true) }?.first ?: cands.firstOrNull { fits(it.second, false) }?.first ?: n
+        }
+        secondaryCache[e] = if (pick == n) "" else pick
+        return if (pick == n) null else pick
+    }
+    private fun Ty.v0isNull() = this == Ty.RawPtr
+
     private fun genNamedCall(n: String, e0: CallE): Val {
+        if (n in classDecls && lookup(n) == null) secondaryFor(n, e0)?.let { return genNamedCall(it, e0) }
         owner?.let { o -> val i = o.index(n); if (i >= 0 && n !in o.methods && fnSig(o.fields[i].second) != null) return invokeFn(property(Val("%this", Ty.Cls(o.name)), n), e0) }
         owner?.let { o -> if (n in o.methods) return callMethod(Val("%this", Ty.Cls(o.name)), o, n, e0) }
         val e = (funDecls[n]?.params ?: classDecls[n]?.ctorParams)?.let { normalize(it, e0) } ?: e0

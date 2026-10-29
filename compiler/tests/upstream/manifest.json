@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 5,
   "MISCOMPILE": 42,
   "N/A": 2984,
-  "PASS": 1746,
-  "UNSUPPORTED": 3698
+  "PASS": 1773,
+  "UNSUPPORTED": 3671
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1658,17 +1658,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup94x91q5f/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup94x91q5f/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupiphbuwtt/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupiphbuwtt/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqh21hebh/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupqh21hebh/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupjay6vasf/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupjay6vasf/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwkab5jzh/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwkab5jzh/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0_qcs64p/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0_qcs64p/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -3018,14 +3018,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/inlineVarargInts.kt"
   },
   "box/box/callableReference/adaptedReferences/innerConstructorToExtensionFun.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorToExtensionFun.kt"
   },
   "box/box/callableReference/adaptedReferences/innerConstructorToExtensionWithTypeParam.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "generics",
+   "detail": "secondary constructors of generic classes are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorToExtensionWithTypeParam.kt"
   },
@@ -3814,14 +3814,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/coercionToUnit.kt"
   },
   "box/box/callableReference/function/constructorFromInnerClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromInnerClass.kt"
   },
   "box/box/callableReference/function/constructorFromInnerClassWithTypeParam.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "generics",
+   "detail": "secondary constructors of generic classes are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromInnerClassWithTypeParam.kt"
   },
@@ -5239,9 +5239,8 @@
    "upstream": "compiler/testData/codegen/box/classes/defaultObjectSameNamesAsInOuter.kt"
   },
   "box/box/classes/delegateConstructorCallWithKeywords.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/delegateConstructorCallWithKeywords.kt"
   },
   "box/box/classes/delegation2.kt": {
@@ -5976,9 +5975,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInLambda2.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInLambdaInSecondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInLambdaInSecondaryConstructor.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInLambdaInSubExpression.kt": {
@@ -6022,8 +6020,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInPrimaryConstructorDefaultParameter.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInSecondaryConstructorDefaultParameter.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class Inner needs an outer instance (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInSecondaryConstructorDefaultParameter.kt"
   },
@@ -6291,9 +6289,8 @@
    "upstream": "compiler/testData/codegen/box/closures/extensionClosure.kt"
   },
   "box/box/closures/kt10044.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/kt10044.kt"
   },
   "box/box/closures/kt11634.kt": {
@@ -12110,9 +12107,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/withGenericParameter.kt"
   },
   "box/box/dataClasses/copy/withSecondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/withSecondaryConstructor.kt"
   },
   "box/box/dataClasses/dataClassWithManyFields.kt": {
@@ -12481,8 +12477,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/kt2852.kt"
   },
   "box/box/defaultArguments/constructor/kt30517.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/kt30517.kt"
   },
@@ -12493,8 +12489,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/kt3060.kt"
   },
   "box/box/defaultArguments/constructor/objectExpressionDelegatingToSecondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/objectExpressionDelegatingToSecondaryConstructor.kt"
   },
@@ -12801,9 +12797,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/primaryConstructor.kt"
   },
   "box/box/defaultArguments/private/secondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/secondaryConstructor.kt"
   },
   "box/box/defaultArguments/protected.kt": {
@@ -14580,26 +14575,26 @@
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/entryClassConstructorWithVarargs.kt"
   },
   "box/box/enum/defaultCtor/noPrimaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Test expects 3 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/noPrimaryConstructor.kt"
   },
   "box/box/enum/defaultCtor/secondaryConstructorWithDefaultArguments.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Test expects 4 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/secondaryConstructorWithDefaultArguments.kt"
   },
   "box/box/enum/defaultCtor/secondaryConstructorWithVararg.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "varargs",
+   "detail": "vararg constructor parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/secondaryConstructorWithVararg.kt"
   },
   "box/box/enum/emptyConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "class bodies / constructors",
+   "detail": "constructor My expects 3 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/emptyConstructor.kt"
   },
@@ -17156,8 +17151,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaults8.kt"
   },
   "box/box/function/defaults9.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class Bar needs an outer instance (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults9.kt"
   },
@@ -18336,8 +18331,8 @@
    "upstream": "compiler/testData/codegen/box/inference/coerctionToUnitForLastExpressionWithStarProjection.kt"
   },
   "box/box/inference/eagerLambdaAnalysisOnConstructorCall.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/eagerLambdaAnalysisOnConstructorCall.kt"
   },
@@ -20555,8 +20550,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClass/nestedInlineClasses.kt"
   },
   "box/box/inlineClass/secondaryConstructorWithGenerics.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "generics",
+   "detail": "secondary constructors of generic classes are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClass/secondaryConstructorWithGenerics.kt"
   },
@@ -21920,26 +21915,25 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassCompanionMethodGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassConstructorFromCompanion.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassConstructorFromCompanion.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassConstructorFromCompanionGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "generics",
+   "detail": "secondary constructors of generic classes are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassConstructorFromCompanionGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassConstructorFromLambda.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "strings / templates",
+   "detail": "unknown method String.subSequence()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassConstructorFromLambda.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassConstructorFromLambdaGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "generics",
+   "detail": "secondary constructors of generic classes are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassConstructorFromLambdaGeneric.kt"
   },
@@ -22295,14 +22289,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/inlineClassPrimaryConstructorWithInlineClassValueGeneric.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/inlineClassSecondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/inlineClassSecondaryConstructor.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/inlineClassSecondaryConstructorGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "generics",
+   "detail": "secondary constructors of generic classes are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/inlineClassSecondaryConstructorGeneric.kt"
   },
@@ -22944,8 +22937,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericUnderlyingValue/upperBound.kt"
   },
   "box/box/inlineClasses/genericVararg2ndConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "varargs",
+   "detail": "vararg constructor parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/genericVararg2ndConstructor.kt"
   },
@@ -22990,27 +22983,23 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/delegatingSuperConstructorCallGeneric.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/delegatingSuperConstructorCallInSecondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/delegatingSuperConstructorCallInSecondaryConstructor.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/delegatingSuperConstructorCallInSecondaryConstructorGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/delegatingSuperConstructorCallInSecondaryConstructorGeneric.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/delegatingThisConstructorCall.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/delegatingThisConstructorCall.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/delegatingThisConstructorCallGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/delegatingThisConstructorCallGeneric.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/enumClassConstructor.kt": {
@@ -23072,15 +23061,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/sealedClassConstructorGeneric.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/secondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/secondaryConstructor.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/secondaryConstructorGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/secondaryConstructorGeneric.kt"
   },
   "box/box/inlineClasses/initBlock.kt": {
@@ -23265,12 +23252,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531488\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146693856\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -536081184\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269224992\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23900,14 +23887,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt45991.kt"
   },
   "box/box/inlineClasses/kt46554.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt46554.kt"
   },
   "box/box/inlineClasses/kt46554Generic.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "generics",
+   "detail": "secondary constructors of generic classes are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt46554Generic.kt"
   },
@@ -24406,62 +24392,60 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/samWrapperDifferentModuleGeneric.kt"
   },
   "box/box/inlineClasses/secondaryConstructorVisibilies.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Z expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/secondaryConstructorVisibilies.kt"
   },
   "box/box/inlineClasses/secondaryConstructorWithVararg.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "varargs",
+   "detail": "vararg constructor parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/secondaryConstructorWithVararg.kt"
   },
   "box/box/inlineClasses/secondaryConstructorWithVarargGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "varargs",
+   "detail": "vararg constructor parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/secondaryConstructorWithVarargGeneric.kt"
   },
   "box/box/inlineClasses/secondaryConstructorsInsideInlineClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/secondaryConstructorsInsideInlineClass.kt"
   },
   "box/box/inlineClasses/secondaryConstructorsInsideInlineClassGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "generics",
+   "detail": "secondary constructors of generic classes are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/secondaryConstructorsInsideInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/secondaryConstructorsInsideInlineClassWithPrimitiveCarrierType.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/secondaryConstructorsInsideInlineClassWithPrimitiveCarrierType.kt"
   },
   "box/box/inlineClasses/secondaryConstructorsInsideInlineClassWithPrimitiveCarrierTypeGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "generics",
+   "detail": "secondary constructors of generic classes are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/secondaryConstructorsInsideInlineClassWithPrimitiveCarrierTypeGeneric.kt"
   },
   "box/box/inlineClasses/secondaryConstructorsWithBody.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/secondaryConstructorsWithBody.kt"
   },
   "box/box/inlineClasses/simpleSecondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "unknown Unit (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/simpleSecondaryConstructor.kt"
   },
   "box/box/inlineClasses/simpleSecondaryConstructorGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "generics",
+   "detail": "secondary constructors of generic classes are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/simpleSecondaryConstructorGeneric.kt"
   },
@@ -25427,8 +25411,8 @@
    "upstream": "compiler/testData/codegen/box/innerClass/multipleModules.kt"
   },
   "box/box/innerClass/noPrimaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/noPrimaryConstructor.kt"
   },
@@ -25439,8 +25423,8 @@
    "upstream": "compiler/testData/codegen/box/innerClass/qualifiedThis.kt"
   },
   "box/box/innerClass/secondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class InnerInner needs an outer instance (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/secondaryConstructor.kt"
   },
@@ -25728,7 +25712,7 @@
   },
   "box/box/innerNested/superConstructorCall/objectExtendsInnerWithDelegatingConstructor.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "detail": "only member functions are supported in class/interface bodies (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInnerWithDelegatingConstructor.kt"
   },
@@ -25908,7 +25892,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x100474def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10056ce37        kfun:newkotlin.Parser.prefix#internal + 9395 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x104ca8def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x104da6013        kfun:newkotlin.Parser.prefix#internal + 9395 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -26004,8 +25988,8 @@
    "upstream": "compiler/testData/codegen/box/ir/enumClass.kt"
   },
   "box/box/ir/enumClass2.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "enum classes",
+   "detail": "constructor TestEnumClass expects 3 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/enumClass2.kt"
   },
@@ -26975,8 +26959,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/withclosure.kt"
   },
   "box/box/localEscapeAnalysis/arraysFieldWrite.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "strings / templates",
+   "detail": "unknown method IntArray.contentToString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localEscapeAnalysis/arraysFieldWrite.kt"
   },
@@ -28756,9 +28740,8 @@
    "upstream": "compiler/testData/codegen/box/nullCheckOptimization/trivialInstanceOf.kt"
   },
   "box/box/object/constructor0.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/object/constructor0.kt"
   },
   "box/box/object/fields.kt": {
@@ -28768,9 +28751,8 @@
    "upstream": "compiler/testData/codegen/box/object/fields.kt"
   },
   "box/box/object/fields1.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/object/fields1.kt"
   },
   "box/box/object/fields2.kt": {
@@ -28790,14 +28772,14 @@
    "upstream": "compiler/testData/codegen/box/object/init0.kt"
   },
   "box/box/object/initialization.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "other: overloads are not supported: foo",
+   "detail": "overloads are not supported: foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/object/initialization.kt"
   },
   "box/box/object/initialization1.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "unknown sb (stdlib API / unsupported decl)",
+   "detail": "unknown name 'sb'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/object/initialization1.kt"
   },
@@ -36891,8 +36873,8 @@
    "upstream": "compiler/testData/codegen/box/sameFileInSourceAndDependencies/nestedClassDeclaration.kt"
   },
   "box/box/sealed/delegatingConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Sealed expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sealed/delegatingConstructor.kt"
   },
@@ -36924,8 +36906,8 @@
    "upstream": "compiler/testData/codegen/box/sealed/objects.kt"
   },
   "box/box/sealed/sealedInSameFile.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sealed/sealedInSameFile.kt"
   },
@@ -36936,33 +36918,30 @@
    "upstream": "compiler/testData/codegen/box/sealed/simple.kt"
   },
   "box/box/secondaryConstructors/accessToCompanion.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "unknown foo (stdlib API / unsupported decl)",
+   "detail": "unknown function 'foo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/accessToCompanion.kt"
   },
   "box/box/secondaryConstructors/accessToNestedObject.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/accessToNestedObject.kt"
   },
   "box/box/secondaryConstructors/basicNoPrimaryManySinks.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/basicNoPrimaryManySinks.kt"
   },
   "box/box/secondaryConstructors/basicNoPrimaryOneSink.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/basicNoPrimaryOneSink.kt"
   },
   "box/box/secondaryConstructors/basicPrimary.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/basicPrimary.kt"
   },
   "box/box/secondaryConstructors/callFromLocalSubClass.kt": {
@@ -36972,57 +36951,55 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/callFromLocalSubClass.kt"
   },
   "box/box/secondaryConstructors/callFromPrimaryWithNamedArgs.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/callFromPrimaryWithNamedArgs.kt"
   },
   "box/box/secondaryConstructors/callFromPrimaryWithOptionalArgs.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/callFromPrimaryWithOptionalArgs.kt"
   },
   "box/box/secondaryConstructors/callFromSubClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "class bodies / constructors",
+   "detail": "constructor A expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/callFromSubClass.kt"
   },
   "box/box/secondaryConstructors/clashingDefaultConstructors.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/clashingDefaultConstructors.kt"
   },
   "box/box/secondaryConstructors/dataClasses.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "class bodies / constructors",
+   "detail": "unexpected top-level token (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/dataClasses.kt"
   },
   "box/box/secondaryConstructors/defaultArgs.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/defaultArgs.kt"
   },
   "box/box/secondaryConstructors/defaultParametersNotDuplicated.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "unknown global (stdlib API / unsupported decl)",
+   "detail": "unknown name 'global'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/defaultParametersNotDuplicated.kt"
   },
   "box/box/secondaryConstructors/delegateWithComplexExpression.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/delegateWithComplexExpression.kt"
   },
   "box/box/secondaryConstructors/delegatedThisWithLambda.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/delegatedThisWithLambda.kt"
   },
   "box/box/secondaryConstructors/delegationWithPrimary.kt": {
@@ -37038,14 +37015,14 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/enums.kt"
   },
   "box/box/secondaryConstructors/fieldInitializerOptimization.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "other syntax (at 'f')",
+   "detail": "expected end of statement (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/fieldInitializerOptimization.kt"
   },
   "box/box/secondaryConstructors/generics.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "generics",
+   "detail": "secondary constructors of generic classes are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/generics.kt"
   },
@@ -37055,14 +37032,14 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/inlineIntoTwoConstructors.kt"
   },
   "box/box/secondaryConstructors/innerClasses.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/innerClasses.kt"
   },
   "box/box/secondaryConstructors/innerClassesInheritance.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/innerClassesInheritance.kt"
   },
@@ -37079,14 +37056,14 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/superCallPrimary.kt"
   },
   "box/box/secondaryConstructors/superCallSecondary.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/superCallSecondary.kt"
   },
   "box/box/secondaryConstructors/varargs.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "varargs",
+   "detail": "vararg constructor parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/varargs.kt"
   },
@@ -37096,20 +37073,19 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/withNonLocalReturn.kt"
   },
   "box/box/secondaryConstructors/withReturn.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/withReturn.kt"
   },
   "box/box/secondaryConstructors/withReturnUnit.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "unknown Unit (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Unit'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/withReturnUnit.kt"
   },
   "box/box/secondaryConstructors/withoutPrimarySimple.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "unknown field (stdlib API / unsupported decl)",
+   "detail": "unknown name 'field'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/withoutPrimarySimple.kt"
   },
@@ -37199,9 +37175,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/NullableFunctionTypeAsPrimaryConstructorParameter.kt"
   },
   "box/box/smartCasts/NullableFunctionTypeAsSecondaryConstructorParameter.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/smartCasts/NullableFunctionTypeAsSecondaryConstructorParameter.kt"
   },
   "box/box/smartCasts/avoidSmartCastToDerivedForPrivate.kt": {
@@ -37443,8 +37418,8 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/enumAsOrdinaled.kt"
   },
   "box/box/specialBuiltins/exceptionCause.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/exceptionCause.kt"
   },
@@ -37525,8 +37500,8 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableImpl.kt"
   },
   "box/box/specialBuiltins/throwableImplWithSecondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "other: no field cause in MyThrowable",
+   "detail": "no field cause in MyThrowable",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableImplWithSecondaryConstructor.kt"
   },
@@ -39332,8 +39307,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasOnTypeAlias.kt"
   },
   "box/box/typealias/typeAliasSecondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "unknown Alias (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Alias'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasSecondaryConstructor.kt"
   },
@@ -39409,7 +39384,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupvthnsinx/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupvthnsinx/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupw8z7xp10/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupw8z7xp10/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -39965,8 +39940,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/genericCallableReferences.kt"
   },
   "box/box/versionOverloads/genericInnerSecondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/genericInnerSecondaryConstructor.kt"
   },
@@ -39994,8 +39969,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/inlineTrailingLambda.kt"
   },
   "box/box/versionOverloads/innerSecondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/innerSecondaryConstructor.kt"
   },
@@ -40097,8 +40072,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/privateDeclarations.kt"
   },
   "box/box/versionOverloads/secondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/secondaryConstructor.kt"
   },
@@ -40132,8 +40107,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/valueClassParameters.kt"
   },
   "box/box/versionOverloads/valueClassSecondaryConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/valueClassSecondaryConstructor.kt"
   },
@@ -45207,15 +45182,13 @@
    "upstream": "native/native.tests/testData/codegen/inline/inline18.kt"
   },
   "native/native.tests/codegen/inlineClass/inlineClass0.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/inlineClass/inlineClass0.kt"
   },
   "native/native.tests/codegen/inlineClass/valueClass0.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
