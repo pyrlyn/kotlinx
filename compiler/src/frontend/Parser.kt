@@ -330,7 +330,7 @@ class Parser(private val t: List<Tok>) {
             val o = innerOf[c.name]
             val of = if (o != null) listOf(FieldD("outer\$", TypeRef(o, emptyList(), false), false)) else emptyList()
             val op = if (o != null) listOf(Param("outer\$", TypeRef(o, emptyList(), false))) else emptyList()
-            classes[i] = ClassD(c.name, of + fields, c.supers.map { qualified[it]?.name ?: it }, ms, c.line, op + c.ctorParams.map { Param(it.name, sub.ty(it.type)) }, inits, c.superArgs?.map { sub.e(it) }, c.typeParams,
+            classes[i] = ClassD(c.name, of + fields, c.supers.map { qualified[it]?.name ?: it }, ms, c.line, op + c.ctorParams.map { Param(it.name, sub.ty(it.type), it.default?.let { d -> sub.e(d) }) }, inits, c.superArgs?.map { sub.e(it) }, c.typeParams,
                 c.enumEntries?.map { (n, a) -> n to a.map { sub.e(it) } }, c.isValue, c.superTypeArgs)
         }
     }
@@ -390,7 +390,9 @@ class Parser(private val t: List<Tok>) {
         val params = nested(1) {
             val ps = ArrayList<Param>()
             while (!isOp(")")) {
-                val n = ident(); expectOp(":"); ps.add(Param(n, type()))
+                while (peek().k == K.ID && (peek().s == "vararg" || peek().s == "noinline" || peek().s == "crossinline") && t[p + 1].k == K.ID) { if (peek().s == "vararg") fail("vararg parameters are not supported"); p++ }
+                val n = ident(); expectOp(":"); val ty = type()
+                ps.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); expr() } else null))
                 if (isOp(",")) next()
             }
             ps
@@ -419,8 +421,7 @@ class Parser(private val t: List<Tok>) {
                     while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) p++
                     val kw = if (isId("val") || isId("var")) next().s else null
                     val n = ident(); expectOp(":"); val ty = type()
-                    if (isOp("=")) fail("default arguments are not supported")
-                    ctorParams.add(Param(n, ty))
+                    ctorParams.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); expr() } else null))
                     if (kw != null) fields.add(FieldD(n, ty, kw == "var"))
                     if (isOp(",")) next()
                 }

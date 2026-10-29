@@ -204,7 +204,7 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
 
     fun cls(c: ClassD, name: String, keepTypeParams: Boolean = false): ClassD {
         val fields = c.fields.map { field(it) }
-        return ClassD(name, fields, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams.map { Param(it.name, ty(it.type)) },
+        return ClassD(name, fields, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams.map { Param(it.name, ty(it.type), it.default?.let { d -> e(d) }) },
             c.inits.map { if (it is FieldD) field(it) else block(it as Block) }, c.superArgs?.map { e(it) },
             if (keepTypeParams) c.typeParams else emptyList(), c.enumEntries?.map { (n, a) -> n to a.map { e(it) } }, c.isValue,
             c.superTypeArgs.mapValues { (_, a) -> a.map { ty(it) } })
@@ -214,7 +214,7 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
 
     fun field(f: FieldD): FieldD = fieldMemo.getOrPut(f) { FieldD(f.name, f.type?.let { ty(it) }, f.isVar, f.init?.let { e(it) }) }
 
-    fun fn(f: FunD): FunD = FunD(f.name, f.params.map { Param(it.name, ty(it.type)) }, f.ret?.let { ty(it) },
+    fun fn(f: FunD): FunD = FunD(f.name, f.params.map { Param(it.name, ty(it.type), it.default?.let { d -> e(d) }) }, f.ret?.let { ty(it) },
         f.body?.let { block(it) }, f.exprBody?.let { e(it) }, f.line, f.typeParams)
 
     fun block(b: Block): Block = Block(b.stmts.map { s(it) }, b.params, b.paramTypes.map { it?.let { t -> ty(t) } })

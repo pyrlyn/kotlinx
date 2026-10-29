@@ -1446,9 +1446,75 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         fail("unsupported call")
     }
 
-    private fun genNamedCall(n: String, e: CallE): Val {
-        owner?.let { o -> val i = o.index(n); if (i >= 0 && n !in o.methods && fnSig(o.fields[i].second) != null) return invokeFn(property(Val("%this", Ty.Cls(o.name)), n), e) }
-        owner?.let { o -> if (n in o.methods) return callMethod(Val("%this", Ty.Cls(o.name)), o, n, e) }
+    private val funDecls by lazy { prog.funs.associateBy { it.name } }
+    private val ifaceDecls by lazy { prog.ifaces.associateBy { it.name } }
+
+    /** Simple argument expressions that can be duplicated into default arguments. */
+    private fun simpleArg(a: E) = a is NameE || a is IntL || a is BoolL || a is CharL || a is DblL || a is NullL || (a is StrL && a.parts.all { it is String })
+
+    /**
+     * Positional arguments for a call of a function with [params]: named arguments are put in place (evaluated in
+     * parameter order) and missing ones filled from defaults. A default may refer to earlier parameters (their
+     * arguments are substituted when simple) and, for methods, to members of [cls] through [recv].
+     */
+    private val normalized = HashMap<CallE, CallE>()
+    private fun normalize(params: List<Param>, e: CallE, recv: E? = null, cls: ClassInfo? = null): CallE =
+        normalized[e] ?: normalize0(params, e, recv, cls).also { normalized[e] = it }
+
+    private fun normalize0(params: List<Param>, e: CallE, recv: E? = null, cls: ClassInfo? = null): CallE {
+        val named = e.args.filterIsInstance<NamedE>()
+        if (named.isEmpty() && allArgs(e).size >= params.size) return e
+        if (named.isEmpty() && params.none { it.default != null }) return e
+        val slots = arrayOfNulls<E>(params.size)
+        val pos = e.args.filter { it !is NamedE }
+        if (pos.size > params.size) return e
+        pos.forEachIndexed { i, a -> slots[i] = a }
+        for (na in named) {
+            val i = params.indexOfFirst { it.name == na.name }
+            if (i < 0) fail("unknown parameter '${na.name}'")
+            if (slots[i] != null) fail("parameter '${na.name}' passed twice")
+            slots[i] = na.e
+        }
+        if (e.lambda != null) { if (slots[params.lastIndex] != null) fail("too many arguments"); slots[params.lastIndex] = LambdaE(e.lambda).also { it.line = line } }
+        for (i in params.indices) if (slots[i] == null) {
+            val d = params[i].default ?: fail("missing argument '${params[i].name}'")
+            lateinit var sub: Subst
+            sub = Subst(emptyMap(), rw = { x ->
+                val pi = if (x is NameE) params.indexOfFirst { it.name == x.n } else -1
+                when {
+                    x is LambdaE -> x // keeps the closure's identity stable across compile restarts
+                    x is NameE && pi >= 0 -> {
+                        val a = slots[pi] ?: fail("default argument refers to a later parameter")
+                        if (!simpleArg(a)) fail("default argument referring to a non-trivial argument is not supported")
+                        a
+                    }
+                    x is NameE && recv != null && cls != null && (cls.index(x.n) >= 0 || "\$prop\$${x.n}" in cls.methods) -> MemberE(recv, x.n, false).also { it.line = line }
+                    x is NameE && x.n == "this" && recv != null -> recv
+                    x is CallE && x.callee is NameE && recv != null && cls != null && x.callee.n in cls.methods ->
+                        CallE(MemberE(recv, x.callee.n, false).also { it.line = line }, x.typeArgs, x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = line }
+                    else -> null
+                }
+            })
+            slots[i] = sub.e(d)
+        }
+        return CallE(e.callee, e.typeArgs, slots.map { it!! }, null).also { it.line = e.line }
+    }
+
+    /** Parameters (with defaults) of the method [n] as declared in [ci] or the nearest supertype declaring defaults. */
+    private fun methodParams(ci: ClassInfo, n: String): List<Param>? {
+        val own = ci.methods[n]?.params ?: return null
+        if (own.any { it.default != null }) return own
+        for (s in ci.ancestors + ci.supers) {
+            classes[s]?.methods?.get(n)?.params?.takeIf { ps -> ps.any { it.default != null } }?.let { return it }
+            ifaceDecls[s]?.methods?.firstOrNull { it.name == n }?.params?.takeIf { ps -> ps.any { it.default != null } }?.let { return it }
+        }
+        return own
+    }
+
+    private fun genNamedCall(n: String, e0: CallE): Val {
+        owner?.let { o -> val i = o.index(n); if (i >= 0 && n !in o.methods && fnSig(o.fields[i].second) != null) return invokeFn(property(Val("%this", Ty.Cls(o.name)), n), e0) }
+        owner?.let { o -> if (n in o.methods) return callMethod(Val("%this", Ty.Cls(o.name)), o, n, e0) }
+        val e = (funDecls[n]?.params ?: classDecls[n]?.ctorParams)?.let { normalize(it, e0) } ?: e0
         // User-declared functions and classes shadow the built-in ones (e.g. a user `fun check`).
         if (n !in sigs && n !in classes) when (n) {
             "sqrt", "kotlin.math.sqrt", "abs", "kotlin.math.abs" -> {
@@ -2085,7 +2151,20 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     /** Statically bound call of a class's own method. */
-    private fun callMethod(r: Val, ci: ClassInfo, n: String, e: CallE): Val {
+    private fun callMethod(r: Val, ci: ClassInfo, n: String, e0: CallE): Val {
+        val ps = methodParams(ci, n)
+        if (ps != null && (e0.args.any { it is NamedE } || allArgs(e0).size < ps.size)) {
+            if (r.v == "%this") return callMethod0(r, ci, n, normalize(ps, e0, NameE("this").also { it.line = line }, ci))
+            // The receiver is visible to default arguments as `$recv` (a fixed name keeps [normalize]'s memo valid).
+            scopes.add(Scope())
+            val l = declare("\$recv", r.t, false, false)
+            emit("store ptr ${r.v}, ptr ${l.slot}")
+            try { return callMethod0(r, ci, n, normalize(ps, e0, NameE("\$recv").also { it.line = line }, ci)) } finally { scopes.removeAt(scopes.size - 1) }
+        }
+        return callMethod0(r, ci, n, e0)
+    }
+
+    private fun callMethod0(r: Val, ci: ClassInfo, n: String, e: CallE): Val {
         ci.methods[n]?.takeIf { it.typeParams.isNotEmpty() }?.let { f ->
             val impl = ci.impl[n] ?: fail("abstract method ${ci.name}.$n() cannot be called")
             return genGenericCall(f, e, classes.getValue(impl), r)
@@ -2102,8 +2181,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     /** Interface call through the object's vtable (slot = global interface-method index + VT_HEADER). */
-    private fun callIface(r: Val, ii: IfaceInfo, n: String, e: CallE): Val {
+    private fun callIface(r: Val, ii: IfaceInfo, n: String, e0: CallE): Val {
         val sig = ii.methods[n] ?: fail("unknown method ${ii.name}.$n()")
+        val e = ifaceDecls[ii.name]?.methods?.firstOrNull { it.name == n }?.let { normalize(it.params, e0) } ?: e0
         val args = methodArgs(sig, e)
         val vt = emitT("load ptr, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 8")}")
         val fp = emitT("load ptr, ptr ${emitT("getelementptr ptr, ptr $vt, i64 ${slots.indexOf(n) + VT_HEADER}")}")

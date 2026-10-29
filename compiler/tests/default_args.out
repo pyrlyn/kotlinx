@@ -1,0 +1,20 @@
+Hello, Ann!
+Hi, Bob!
+Hello, Cy?
+Hello, Di.
+10
+10
+3
+[z, z]
+[1, 1, 1]
+[1] boot
+[5] x
+6
+18
+rect:15
+rect=12
+Opt(a=1, b=x, c=false)
+Opt(a=1, b=y, c=false)
+Opt(a=2, b=x, c=true)
+40
+5

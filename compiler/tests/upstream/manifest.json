@@ -2,10 +2,10 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "COMPILER_CRASH": 3,
-  "MISCOMPILE": 17,
+  "MISCOMPILE": 24,
   "N/A": 2984,
-  "PASS": 476,
-  "UNSUPPORTED": 4995
+  "PASS": 518,
+  "UNSUPPORTED": 4946
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -326,33 +326,29 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/argumentOrderInSuperCall.kt"
   },
   "box/box/argumentOrder/arguments.kt": {
-   "category": "other: named arguments are not supported",
-   "detail": "named arguments are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail1: 132 != 123 or xab != xab\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/argumentOrder/arguments.kt"
   },
   "box/box/argumentOrder/captured.kt": {
-   "category": "other: named arguments are not supported",
-   "detail": "named arguments are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail 1: 0_1_9 != 1_0_9 or 0_1_9 != 0_1_9\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/argumentOrder/captured.kt"
   },
   "box/box/argumentOrder/capturedInExtension.kt": {
-   "category": "other: named arguments are not supported",
-   "detail": "named arguments are not supported",
+   "category": "strings / templates",
+   "detail": "unknown method $Lam12$Double$Int$Long$$Fn$String$String.toInt()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/capturedInExtension.kt"
   },
   "box/box/argumentOrder/defaults.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail: xOyK != KOxy or 1OK1 != 1OK1\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/argumentOrder/defaults.kt"
   },
   "box/box/argumentOrder/extension.kt": {
-   "category": "other: named arguments are not supported",
-   "detail": "named arguments are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail 1: 0_1_L != 1_0_L or 1_0_1_L != 1_0_1_L\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/argumentOrder/extension.kt"
   },
   "box/box/argumentOrder/extensionInClass.kt": {
@@ -362,8 +358,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/extensionInClass.kt"
   },
   "box/box/argumentOrder/kt17691WithEnabledFeature.kt": {
-   "category": "other syntax (at 'x')",
-   "detail": "expected ':' (at 'x')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt17691WithEnabledFeature.kt"
   },
@@ -374,33 +370,28 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt9277.kt"
   },
   "box/box/argumentOrder/lambdaMigration.kt": {
-   "category": "other: named arguments are not supported",
-   "detail": "named arguments are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/lambdaMigration.kt"
   },
   "box/box/argumentOrder/lambdaMigrationInClass.kt": {
-   "category": "other: named arguments are not supported",
-   "detail": "named arguments are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/lambdaMigrationInClass.kt"
   },
   "box/box/argumentOrder/simple.kt": {
-   "category": "other: named arguments are not supported",
-   "detail": "named arguments are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail 1: OKL != KOL or OKL != OKL\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simple.kt"
   },
   "box/box/argumentOrder/simpleInClass.kt": {
-   "category": "other: named arguments are not supported",
-   "detail": "named arguments are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail 1: OKL != KOL or OKLZ != OKLZ\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simpleInClass.kt"
   },
   "box/box/argumentOrder/singleSideEffect.kt": {
-   "category": "other: named arguments are not supported",
-   "detail": "named arguments are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail: cba != abc\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/argumentOrder/singleSideEffect.kt"
   },
   "box/box/argumentOrder/varargAndDefaultParameters_ForNative.kt": {
@@ -832,8 +823,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt42932.kt"
   },
   "box/box/arrays/kt4348.kt": {
-   "category": "inline/value classes",
-   "detail": "expected ':' (at 'value')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt4348.kt"
   },
@@ -850,8 +841,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt47483.kt"
   },
   "box/box/arrays/kt503.kt": {
-   "category": "other syntax (at 'a')",
-   "detail": "expected ':' (at 'a')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt503.kt"
   },
@@ -1689,17 +1680,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup5sf8gk7c/t.ll:154:11: error: null must be a pointer type\n  154 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup5sf8gk7c/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupm_kjswlj/t.ll:154:11: error: null must be a pointer type\n  154 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupm_kjswlj/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkups33ftjx8/t.ll:180:11: error: null must be a pointer type\n  180 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkups33ftjx8/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8jwyzidt/t.ll:180:11: error: null must be a pointer type\n  180 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8jwyzidt/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupx33e_uik/t.ll:168:11: error: null must be a pointer type\n  168 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupx33e_uik/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupv8r3qzfv/t.ll:168:11: error: null must be a pointer type\n  168 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupv8r3qzfv/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -1919,8 +1910,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/taintedValuesBox.kt"
   },
   "box/box/boxingOptimization/unsafeRemoving.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/unsafeRemoving.kt"
   },
@@ -2390,8 +2381,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/methodFromTrait.kt"
   },
   "box/box/bridges/methodWithDefaultParameter.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/methodWithDefaultParameter.kt"
   },
@@ -2641,8 +2632,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/property.kt"
   },
   "box/box/bridges/substitutionInSuperClass/simple.kt": {
-   "category": "other syntax (at 'xs')",
-   "detail": "expected ':' (at 'xs')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/simple.kt"
   },
@@ -2838,8 +2829,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/varargBridge1.kt"
   },
   "box/box/bridges/varargBridge2.kt": {
-   "category": "other syntax (at 'x')",
-   "detail": "expected ':' (at 'x')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/varargBridge2.kt"
   },
@@ -2856,14 +2847,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedArrayOf.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedSecondArgArray.kt": {
-   "category": "other syntax (at 'args')",
-   "detail": "expected ':' (at 'args')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedSecondArgArray.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedSecondArgTypeVariable.kt": {
-   "category": "other syntax (at 'args')",
-   "detail": "expected ':' (at 'args')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedSecondArgTypeVariable.kt"
   },
@@ -2874,20 +2865,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedUlongArrayOf.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedVarargFunImportedFromObject.kt": {
-   "category": "other syntax (at 'x')",
-   "detail": "expected ':' (at 'x')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedVarargFunImportedFromObject.kt"
   },
   "box/box/callableReference/adaptedReferences/bothWithCoercionToUnit.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/bothWithCoercionToUnit.kt"
   },
   "box/box/callableReference/adaptedReferences/boundReferences.kt": {
-   "category": "other syntax (at 's')",
-   "detail": "expected ':' (at 's')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/boundReferences.kt"
   },
@@ -2944,20 +2935,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextTypeWithSam.kt"
   },
   "box/box/callableReference/adaptedReferences/defaultAfterVararg.kt": {
-   "category": "other syntax (at 'a')",
-   "detail": "expected ':' (at 'a')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/defaultAfterVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/defaultWithGenericExpectedType.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/defaultWithGenericExpectedType.kt"
   },
   "box/box/callableReference/adaptedReferences/emptyVarargAndDefault.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/emptyVarargAndDefault.kt"
   },
@@ -3014,20 +3005,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousExtensionFun.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariable.kt": {
-   "category": "other syntax (at 'xs')",
-   "detail": "expected ':' (at 'xs')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariable.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableArrays.kt": {
-   "category": "other syntax (at 'xs')",
-   "detail": "expected ':' (at 'xs')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableArrays.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableBoundaries.kt": {
-   "category": "other syntax (at 'xs')",
-   "detail": "expected ':' (at 'xs')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableBoundaries.kt"
   },
@@ -3038,8 +3029,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableCallSites.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableReferencedFunctions.kt": {
-   "category": "other syntax (at 'xs')",
-   "detail": "expected ':' (at 'xs')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableReferencedFunctions.kt"
   },
@@ -3087,8 +3078,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorWithVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/largeVararg.kt": {
-   "category": "other syntax (at 'args')",
-   "detail": "expected ':' (at 'args')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/largeVararg.kt"
   },
@@ -3105,8 +3096,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/manyDefaultsAndVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/nestedClassConstructorWithDefault.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/nestedClassConstructorWithDefault.kt"
   },
@@ -3123,20 +3114,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/referenceToFakeOverrideWithTypeParameter.kt"
   },
   "box/box/callableReference/adaptedReferences/referenceToVarargWithDefaults.kt": {
-   "category": "other syntax (at 'xs')",
-   "detail": "expected ':' (at 'xs')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/referenceToVarargWithDefaults.kt"
   },
   "box/box/callableReference/adaptedReferences/simpleDefaultArgument.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/simpleDefaultArgument.kt"
   },
   "box/box/callableReference/adaptedReferences/simpleEmptyVararg.kt": {
-   "category": "other syntax (at 'y')",
-   "detail": "expected ':' (at 'y')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/simpleEmptyVararg.kt"
   },
@@ -3292,8 +3283,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/suspendUnitConversion.kt"
   },
   "box/box/callableReference/adaptedReferences/unboundReferences.kt": {
-   "category": "other syntax (at 's')",
-   "detail": "expected ':' (at 's')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/unboundReferences.kt"
   },
@@ -3310,32 +3301,32 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/unsignedArrayFactory.kt"
   },
   "box/box/callableReference/adaptedReferences/varargFromBaseClass.kt": {
-   "category": "other syntax (at 's')",
-   "detail": "expected ':' (at 's')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargFromBaseClass.kt"
   },
   "box/box/callableReference/adaptedReferences/varargOverloads.kt": {
-   "category": "other syntax (at 'ii')",
-   "detail": "expected ':' (at 'ii')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargOverloads.kt"
   },
   "box/box/callableReference/adaptedReferences/varargViewedAsArray.kt": {
-   "category": "other syntax (at 'y')",
-   "detail": "expected ':' (at 'y')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargViewedAsArray.kt"
   },
   "box/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt": {
-   "category": "other syntax (at 'args')",
-   "detail": "expected ':' (at 'args')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt"
   },
   "box/box/callableReference/adaptedReferences/varargWithDefaultValue.kt": {
-   "category": "other syntax (at 'y')",
-   "detail": "expected ':' (at 'y')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargWithDefaultValue.kt"
   },
@@ -3362,8 +3353,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/arrayOfNulls.kt"
   },
   "box/box/callableReference/bound/adapted.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/adapted.kt"
   },
@@ -3467,8 +3458,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/genericValOnLHS.kt"
   },
   "box/box/callableReference/bound/inlineFunctionRefToAnonymousObject.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected ':' (at 'lambda')",
+   "category": "class bodies / constructors",
+   "detail": "unexpected top-level token (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/inlineFunctionRefToAnonymousObject.kt"
   },
@@ -4066,8 +4057,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/innerConstructorFromTopLevelOneStringArg.kt"
   },
   "box/box/callableReference/function/kt21787.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/kt21787.kt"
   },
@@ -4387,14 +4378,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt21092a.kt"
   },
   "box/box/callableReference/kt37604.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "other syntax (at 'x')",
+   "detail": "expected ':' (at 'x')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt37604.kt"
   },
   "box/box/callableReference/kt44483.kt": {
-   "category": "other syntax (at 'p')",
-   "detail": "expected ':' (at 'p')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt44483.kt"
   },
@@ -4438,8 +4429,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt50172.kt"
   },
   "box/box/callableReference/kt51844.kt": {
-   "category": "other syntax (at 'xs')",
-   "detail": "expected ':' (at 'xs')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt51844.kt"
   },
@@ -4704,8 +4695,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/twoRefsOneScope.kt"
   },
   "box/box/callableReference/varargOfUnsignedTypes.kt": {
-   "category": "other syntax (at 'xs')",
-   "detail": "expected ':' (at 'xs')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/varargOfUnsignedTypes.kt"
   },
@@ -4841,8 +4832,8 @@
    "upstream": "compiler/testData/codegen/box/casts/genericLambdaBridgeCast.kt"
   },
   "box/box/casts/genericReturnCast.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/genericReturnCast.kt"
   },
@@ -4999,8 +4990,8 @@
    "upstream": "compiler/testData/codegen/box/casts/literalExpressionAsGenericArgument/unaryExpressionCast.kt"
   },
   "box/box/casts/literalExpressionAsGenericArgument/vararg.kt": {
-   "category": "other syntax (at 'z')",
-   "detail": "expected ':' (at 'z')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/literalExpressionAsGenericArgument/vararg.kt"
   },
@@ -5121,8 +5112,8 @@
    "upstream": "compiler/testData/codegen/box/checkcastOptimization/kt47851.kt"
   },
   "box/box/checkcastOptimization/kt50215.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/checkcastOptimization/kt50215.kt"
   },
@@ -5366,8 +5357,8 @@
    "upstream": "compiler/testData/codegen/box/classes/exceptionConstructor.kt"
   },
   "box/box/classes/extensionFunWithDefaultParam.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/extensionFunWithDefaultParam.kt"
   },
@@ -5451,8 +5442,8 @@
    "upstream": "compiler/testData/codegen/box/classes/inner/instantiateInDerivedLabeled.kt"
   },
   "box/box/classes/inner/instantiateInSameClass.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/inner/instantiateInSameClass.kt"
   },
@@ -5498,8 +5489,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1247.kt"
   },
   "box/box/classes/kt1345.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1345.kt"
   },
@@ -5776,14 +5767,13 @@
    "upstream": "compiler/testData/codegen/box/classes/kt633.kt"
   },
   "box/box/classes/kt6816.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt6816.kt"
   },
   "box/box/classes/kt707.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "other: unknown property head",
+   "detail": "unknown property head",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt707.kt"
   },
@@ -6107,8 +6097,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInObject2.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInPrimaryConstructorDefaultParameter.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInPrimaryConstructorDefaultParameter.kt"
   },
@@ -6248,8 +6238,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/kt17200.kt"
   },
   "box/box/closures/capturedVarsOptimization/kt17588.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Boolean, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/kt17588.kt"
   },
@@ -6576,8 +6566,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/arrayOperatorOf.kt"
   },
   "box/box/collectionLiterals/arraysOperatorOfSpread.kt": {
-   "category": "other syntax (at 'elements')",
-   "detail": "expected ':' (at 'elements')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/arraysOperatorOfSpread.kt"
   },
@@ -6588,20 +6578,20 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/companionBlockOf.kt"
   },
   "box/box/collectionLiterals/genericCollection.kt": {
-   "category": "other syntax (at 'strs')",
-   "detail": "expected ':' (at 'strs')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/genericCollection.kt"
   },
   "box/box/collectionLiterals/multipleOfOverloads.kt": {
-   "category": "other syntax (at 'strs')",
-   "detail": "expected ':' (at 'strs')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/multipleOfOverloads.kt"
   },
   "box/box/collectionLiterals/nonGenericCollection.kt": {
-   "category": "other syntax (at 'strs')",
-   "detail": "expected ':' (at 'strs')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/nonGenericCollection.kt"
   },
@@ -6617,8 +6607,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/primitiveArraysOperatorOf.kt"
   },
   "box/box/collectionLiterals/resolvesToOperator.kt": {
-   "category": "other syntax (at 'es')",
-   "detail": "expected ':' (at 'es')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/resolvesToOperator.kt"
   },
@@ -6628,14 +6618,14 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/sequenceOperatorOf.kt"
   },
   "box/box/collectionLiterals/stdlibCollections.kt": {
-   "category": "other syntax (at 'es')",
-   "detail": "expected ':' (at 'es')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/stdlibCollections.kt"
   },
   "box/box/collectionLiterals/stdlibSequence.kt": {
-   "category": "other syntax (at 'es')",
-   "detail": "expected ':' (at 'es')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/stdlibSequence.kt"
   },
@@ -8116,8 +8106,8 @@
    "upstream": "compiler/testData/codegen/box/contracts/constructorArgument.kt"
   },
   "box/box/contracts/contractForCast.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "other syntax (at 'implies')",
+   "detail": "expected end of statement (at 'implies')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/contractForCast.kt"
   },
@@ -8224,8 +8214,8 @@
    "upstream": "compiler/testData/codegen/box/contracts/referenceToGenericInDeserializedContract.kt"
   },
   "box/box/contracts/require.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "other syntax (at 'implies')",
+   "detail": "expected end of statement (at 'implies')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/require.kt"
   },
@@ -11281,8 +11271,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/kt44221.kt"
   },
   "box/box/coroutines/kt44710.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/kt44710.kt"
   },
@@ -12215,9 +12205,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/components/kt49936.kt"
   },
   "box/box/dataClasses/copy/constructorWithDefaultParam.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/constructorWithDefaultParam.kt"
   },
   "box/box/dataClasses/copy/copyInObjectNestedDataClass.kt": {
@@ -12253,9 +12242,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/withSecondaryConstructor.kt"
   },
   "box/box/dataClasses/dataClassWithManyFields.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/dataClassWithManyFields.kt"
   },
   "box/box/dataClasses/dnnInPropertyType.kt": {
@@ -12306,8 +12294,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/nullother.kt"
   },
   "box/box/dataClasses/equals/sameinstance.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/sameinstance.kt"
   },
@@ -12544,14 +12532,14 @@
    "upstream": "compiler/testData/codegen/box/deadCodeElimination/kt14357.kt"
   },
   "box/box/defaultArguments/callDefaultFromInitializer.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "other: body properties need an initializer (at '",
+   "detail": "body properties need an initializer (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/callDefaultFromInitializer.kt"
   },
   "box/box/defaultArguments/captureInTailrec.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "unknown bar (stdlib API / unsupported decl)",
+   "detail": "unknown function 'bar'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/captureInTailrec.kt"
   },
@@ -12578,57 +12566,48 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/anonymousObjectAsDefaultParam.kt"
   },
   "box/box/defaultArguments/constructor/defArgs1.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/defArgs1.kt"
   },
   "box/box/defaultArguments/constructor/defArgs1InnerClass.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/defArgs1InnerClass.kt"
   },
   "box/box/defaultArguments/constructor/defArgs2.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/defArgs2.kt"
   },
   "box/box/defaultArguments/constructor/doubleDefArgs1InnerClass.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/doubleDefArgs1InnerClass.kt"
   },
   "box/box/defaultArguments/constructor/enum.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/enum.kt"
   },
   "box/box/defaultArguments/constructor/enumWithOneDefArg.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/enumWithOneDefArg.kt"
   },
   "box/box/defaultArguments/constructor/enumWithTwoDefArgs.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/enumWithTwoDefArgs.kt"
   },
   "box/box/defaultArguments/constructor/enumWithTwoDoubleDefArgs.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/enumWithTwoDoubleDefArgs.kt"
   },
   "box/box/defaultArguments/constructor/innerClass32Args.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/innerClass32Args.kt"
   },
   "box/box/defaultArguments/constructor/kt2852.kt": {
@@ -12656,38 +12635,38 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/objectExpressionDelegatingToSecondaryConstructor.kt"
   },
   "box/box/defaultArguments/convention/incWithDefaultInGetter.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/incWithDefaultInGetter.kt"
   },
   "box/box/defaultArguments/convention/incWithDefaults.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'get' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/incWithDefaults.kt"
   },
   "box/box/defaultArguments/convention/kt16520.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "other: missing argument 'v'",
+   "detail": "missing argument 'v'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/kt16520.kt"
   },
   "box/box/defaultArguments/convention/kt9140.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'get' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/kt9140.kt"
   },
   "box/box/defaultArguments/convention/plusAssignWithDefaultInGetter.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'get' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/plusAssignWithDefaultInGetter.kt"
   },
   "box/box/defaultArguments/convention/plusAssignWithDefaults.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'get' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/convention/plusAssignWithDefaults.kt"
   },
@@ -12697,26 +12676,25 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/defaultArgumentsInFunctionWithExpressionAsBody.kt"
   },
   "box/box/defaultArguments/function/abstractClass.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/abstractClass.kt"
   },
   "box/box/defaultArguments/function/complexInheritance.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/complexInheritance.kt"
   },
   "box/box/defaultArguments/function/covariantOverride.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/covariantOverride.kt"
   },
   "box/box/defaultArguments/function/covariantOverrideGeneric.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "types: CharSequence",
+   "detail": "unknown type CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/covariantOverrideGeneric.kt"
   },
@@ -12726,86 +12704,80 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/defaultLambdaInline.kt"
   },
   "box/box/defaultArguments/function/extensionFunctionManyArgs.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extensionFunctionManyArgs.kt"
   },
   "box/box/defaultArguments/function/extentionFunction.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunction.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionDouble.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionDouble.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionDoubleTwoArgs.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionDoubleTwoArgs.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionInClassObject.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionInClassObject.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionInObject.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionInObject.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionWithOneDefArg.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionWithOneDefArg.kt"
   },
   "box/box/defaultArguments/function/funInTrait.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/funInTrait.kt"
   },
   "box/box/defaultArguments/function/funInTraitChain.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/funInTraitChain.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunction.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/innerExtentionFunction.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunctionDouble.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/innerExtentionFunctionDouble.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunctionDoubleTwoArgs.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/innerExtentionFunctionDoubleTwoArgs.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunctionManyArgs.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/innerExtentionFunctionManyArgs.kt"
   },
   "box/box/defaultArguments/function/kt15971.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971.kt"
   },
@@ -12816,50 +12788,47 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971_2.kt"
   },
   "box/box/defaultArguments/function/kt15971_3.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971_3.kt"
   },
   "box/box/defaultArguments/function/kt36188.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt36188.kt"
   },
   "box/box/defaultArguments/function/kt36188_2.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt36188_2.kt"
   },
   "box/box/defaultArguments/function/kt5232.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt5232.kt"
   },
   "box/box/defaultArguments/function/memberFunctionManyArgs.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/memberFunctionManyArgs.kt"
   },
   "box/box/defaultArguments/function/mixingNamedAndPositioned.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/mixingNamedAndPositioned.kt"
   },
   "box/box/defaultArguments/function/topLevelManyArgs.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/topLevelManyArgs.kt"
   },
   "box/box/defaultArguments/function/trait.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/trait.kt"
   },
@@ -12888,44 +12857,43 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/implementedByFake3.kt"
   },
   "box/box/defaultArguments/inheritedFromInterfaceViaAbstractSuperclass.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/inheritedFromInterfaceViaAbstractSuperclass.kt"
   },
   "box/box/defaultArguments/kt36853.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "other syntax (at ':')",
+   "detail": "expected identifier (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853.kt"
   },
   "box/box/defaultArguments/kt36853_fibonacci.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853_fibonacci.kt"
   },
   "box/box/defaultArguments/kt36853_nestedObject.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "other syntax (at ':')",
+   "detail": "expected identifier (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853_nestedObject.kt"
   },
   "box/box/defaultArguments/kt36853a.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853a.kt"
   },
   "box/box/defaultArguments/kt46189.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "unknown bar (stdlib API / unsupported decl)",
+   "detail": "unknown function 'bar'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt46189.kt"
   },
   "box/box/defaultArguments/kt47073.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt47073.kt"
   },
@@ -12946,14 +12914,14 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt52702.kt"
   },
   "box/box/defaultArguments/kt59326.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt59326.kt"
   },
   "box/box/defaultArguments/kt6382.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt6382.kt"
   },
@@ -12963,14 +12931,14 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/clashingNames.kt"
   },
   "box/box/defaultArguments/private/memberExtensionFunction.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/memberExtensionFunction.kt"
   },
   "box/box/defaultArguments/private/memberFunction.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'bar' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/memberFunction.kt"
   },
@@ -13002,21 +12970,20 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/referenceAsArg.kt"
   },
   "box/box/defaultArguments/signature/kt2789.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/signature/kt2789.kt"
   },
   "box/box/defaultArguments/signature/kt9428.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/signature/kt9428.kt"
   },
   "box/box/defaultArguments/signature/kt9924.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/signature/kt9924.kt"
   },
   "box/box/defaultArguments/simpleFromOtherFile.kt": {
@@ -13031,8 +12998,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/suspendLambdaInTailrecDefault.kt"
   },
   "box/box/defaultArguments/useThisInLambda.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'g' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/useThisInLambda.kt"
   },
@@ -13114,20 +13081,20 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/custom.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/kt49793_companionObject.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt49793_companionObject.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/kt49793_interfaceCompanionObject.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "objects / companion objects",
+   "detail": "companion objects are only supported in classes (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt49793_interfaceCompanionObject.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/kt49793_object.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt49793_object.kt"
   },
@@ -14169,9 +14136,8 @@
    "upstream": "compiler/testData/codegen/box/devirtualization/anonymousObject.kt"
   },
   "box/box/devirtualization/getter_looking_as_box_function.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/devirtualization/getter_looking_as_box_function.kt"
   },
   "box/box/devirtualization/inline_getter.kt": {
@@ -14265,32 +14231,32 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnObject2.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgs.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgs.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgs2.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgs2.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgsOverridden.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'override')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgsOverridden.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'inc' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects2.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'inc' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects2.kt"
   },
@@ -14333,8 +14299,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/insideElvis.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/kt47084_lambdaInDefaultArgument.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/kt47084_lambdaInDefaultArgument.kt"
   },
@@ -14362,15 +14328,14 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/realIteratorFoldl.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/realStringEscape.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/realStringEscape.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/realStringRepeat.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/realStringRepeat.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/recursiveCallInInlineLambda.kt": {
@@ -14751,9 +14716,8 @@
    "upstream": "compiler/testData/codegen/box/enum/companionObjectInEnum.kt"
   },
   "box/box/enum/constructorWithReordering.kt": {
-   "category": "other: named arguments are not supported",
-   "detail": "named arguments are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/constructorWithReordering.kt"
   },
   "box/box/enum/deepInnerClassInEnumEntryClass.kt": {
@@ -14769,9 +14733,8 @@
    "upstream": "compiler/testData/codegen/box/enum/deepInnerClassInEnumEntryClass2.kt"
   },
   "box/box/enum/defaultCtor/constructorWithDefaultArguments.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/constructorWithDefaultArguments.kt"
   },
   "box/box/enum/defaultCtor/constructorWithVararg.kt": {
@@ -14781,8 +14744,8 @@
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/constructorWithVararg.kt"
   },
   "box/box/enum/defaultCtor/entryClassConstructorWithDefaultArguments.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "enum classes",
+   "detail": "enum entries with bodies are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/entryClassConstructorWithDefaultArguments.kt"
   },
@@ -15181,9 +15144,8 @@
    "upstream": "compiler/testData/codegen/box/enum/loop.kt"
   },
   "box/box/enum/manyDefaultParameters.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/manyDefaultParameters.kt"
   },
   "box/box/enum/multipleModules.kt": {
@@ -15227,8 +15189,8 @@
    "upstream": "compiler/testData/codegen/box/enum/refToThis.kt"
   },
   "box/box/enum/reorderedArguments.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/reorderedArguments.kt"
   },
@@ -15838,8 +15800,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/executionOrder.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAndSpreadOperator.kt": {
-   "category": "strings / templates",
-   "detail": "expected ':' (at 'strings')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAndSpreadOperator.kt"
   },
@@ -16063,8 +16025,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3646.kt"
   },
   "box/box/extensionFunctions/kt3969.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3969.kt"
   },
@@ -16566,8 +16528,8 @@
    "upstream": "compiler/testData/codegen/box/fir/anonymousOverrideWithDefaultInLocalOverridden.kt"
   },
   "box/box/fir/anonymousOverrideWithDefaultInOverridden.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/anonymousOverrideWithDefaultInOverridden.kt"
   },
@@ -16666,8 +16628,8 @@
    "upstream": "compiler/testData/codegen/box/fir/localOverrideWithDefaultInLocalOverridden.kt"
   },
   "box/box/fir/localOverrideWithDefaultInOverridden.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "other syntax (at 'MyClass')",
+   "detail": "expected end of statement (at 'MyClass')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/localOverrideWithDefaultInOverridden.kt"
   },
@@ -16677,8 +16639,8 @@
    "upstream": "compiler/testData/codegen/box/fir/missingDependencyClassInTypeArguments.kt"
   },
   "box/box/fir/multipleDefaultsFalsePositiveDelegation.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/multipleDefaultsFalsePositiveDelegation.kt"
   },
@@ -17360,80 +17322,80 @@
    "upstream": "compiler/testData/codegen/box/function/boolean.kt"
   },
   "box/box/function/defaults.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults.kt"
   },
   "box/box/function/defaults1.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults1.kt"
   },
   "box/box/function/defaults10.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults10.kt"
   },
   "box/box/function/defaults2.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Int$foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults2.kt"
   },
   "box/box/function/defaults3.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults3.kt"
   },
   "box/box/function/defaults4.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults4.kt"
   },
   "box/box/function/defaults5.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults5.kt"
   },
   "box/box/function/defaults6.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults6.kt"
   },
   "box/box/function/defaults7.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertEquals'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults7.kt"
   },
   "box/box/function/defaults8.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'test' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults8.kt"
   },
   "box/box/function/defaults9.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaults9.kt"
   },
   "box/box/function/defaultsFromFakeOverride.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'f' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaultsFromFakeOverride.kt"
   },
   "box/box/function/defaultsWithInlineClasses.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/defaultsWithInlineClasses.kt"
   },
@@ -17622,50 +17584,48 @@
    "upstream": "compiler/testData/codegen/box/functions/coerceVoidToObject.kt"
   },
   "box/box/functions/defaultargs.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs.kt"
   },
   "box/box/functions/defaultargs1.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$toPrefixedString' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs1.kt"
   },
   "box/box/functions/defaultargs2.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs2.kt"
   },
   "box/box/functions/defaultargs3.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs3.kt"
   },
   "box/box/functions/defaultargs4.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs4.kt"
   },
   "box/box/functions/defaultargs5.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs5.kt"
   },
   "box/box/functions/defaultargs6.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs6.kt"
   },
   "box/box/functions/defaultargs7.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs7.kt"
   },
@@ -17842,14 +17802,14 @@
    "upstream": "compiler/testData/codegen/box/functions/kt1649_2.kt"
   },
   "box/box/functions/kt2270.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt2270.kt"
   },
   "box/box/functions/kt2271.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt2271.kt"
   },
@@ -17872,8 +17832,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt2716.kt"
   },
   "box/box/functions/kt2739.kt": {
-   "category": "other syntax (at 'ts')",
-   "detail": "expected ':' (at 'ts')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt2739.kt"
   },
@@ -17884,8 +17844,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt2929.kt"
   },
   "box/box/functions/kt3214.kt": {
-   "category": "other syntax (at 'x')",
-   "detail": "expected ':' (at 'x')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt3214.kt"
   },
@@ -18438,14 +18398,14 @@
    "upstream": "compiler/testData/codegen/box/increment/classNaryGetSet.kt"
   },
   "box/box/increment/classVarargGetSet.kt": {
-   "category": "other syntax (at 'va')",
-   "detail": "expected ':' (at 'va')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/classVarargGetSet.kt"
   },
   "box/box/increment/classVarargGetSetEvaluationOrder.kt": {
-   "category": "other syntax (at 'va')",
-   "detail": "expected ':' (at 'va')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/classVarargGetSetEvaluationOrder.kt"
   },
@@ -18823,8 +18783,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt41164.kt"
   },
   "box/box/inference/pcla/issues/kt42139.kt": {
-   "category": "other syntax (at 'x')",
-   "detail": "expected ':' (at 'x')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt42139.kt"
   },
@@ -19089,8 +19049,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt59798.kt"
   },
   "box/box/inference/pcla/issues/kt60291a.kt": {
-   "category": "other syntax (at 'values')",
-   "detail": "expected ':' (at 'values')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt60291a.kt"
   },
@@ -19131,8 +19091,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt63733.kt"
   },
   "box/box/inference/pcla/issues/kt63840a.kt": {
-   "category": "other syntax (at 'values')",
-   "detail": "expected ':' (at 'values')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt63840a.kt"
   },
@@ -19278,8 +19238,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/labaledCall.kt"
   },
   "box/box/inference/pcla/lackOfNullCheckOnNullableInsideBuild.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/lackOfNullCheckOnNullableInsideBuild.kt"
   },
@@ -19725,8 +19685,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/posptonedPCLACallInsideStringInterpolation.kt"
   },
   "box/box/inference/pcla/propagateInferenceSessionIntoDeclarationAnalyzers.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/propagateInferenceSessionIntoDeclarationAnalyzers.kt"
   },
@@ -20154,8 +20114,8 @@
    "upstream": "compiler/testData/codegen/box/inline/defaultArgsMultipleModules.kt"
   },
   "box/box/inline/defaultArgumentWithPrimitiveTypeParameterUpperBound.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/defaultArgumentWithPrimitiveTypeParameterUpperBound.kt"
   },
@@ -20407,8 +20367,8 @@
    "upstream": "compiler/testData/codegen/box/inline/inlineInInlineWithLambda.kt"
   },
   "box/box/inline/inlineInInlineWithLambdaPrivate.kt": {
-   "category": "other syntax (at 'x')",
-   "detail": "expected ':' (at 'x')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'baz' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/inlineInInlineWithLambdaPrivate.kt"
   },
@@ -20497,8 +20457,8 @@
    "upstream": "compiler/testData/codegen/box/inline/kt26466.kt"
   },
   "box/box/inline/kt26787.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "other: unknown method ArrayList<Location>.indexOfFirst()",
+   "detail": "unknown method ArrayList<Location>.indexOfFirst()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/kt26787.kt"
   },
@@ -20868,14 +20828,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClass/secondaryConstructorWithGenerics.kt"
   },
   "box/box/inlineClasses/UIntArraySortExample.kt": {
-   "category": "other syntax (at 'u')",
-   "detail": "expected ':' (at 'u')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/UIntArraySortExample.kt"
   },
   "box/box/inlineClasses/UIntArraySortExampleGeneric.kt": {
-   "category": "other syntax (at 'u')",
-   "detail": "expected ':' (at 'u')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/UIntArraySortExampleGeneric.kt"
   },
@@ -21563,14 +21523,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/unrelatedGenericsGeneric.kt"
   },
   "box/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSet.kt": {
-   "category": "other syntax (at 'elements')",
-   "detail": "expected ':' (at 'elements')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSet.kt"
   },
   "box/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSetGeneric.kt": {
-   "category": "other syntax (at 'elements')",
-   "detail": "expected ':' (at 'elements')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSetGeneric.kt"
   },
@@ -21885,14 +21845,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeTopLevelVarGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/kt37986.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/kt37986.kt"
   },
   "box/box/inlineClasses/callableReferences/kt37986Generic.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/kt37986Generic.kt"
   },
@@ -22550,50 +22510,50 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultInterfaceMethodsInInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/defaultConstructorParameterValuesOfInlineClassType.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'test' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/defaultConstructorParameterValuesOfInlineClassType.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/defaultConstructorParameterValuesOfInlineClassTypeGeneric.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'test' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/defaultConstructorParameterValuesOfInlineClassTypeGeneric.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/defaultInterfaceFunParameterValuesOfInlineClassType.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/defaultInterfaceFunParameterValuesOfInlineClassType.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/defaultInterfaceFunParameterValuesOfInlineClassTypeGeneric.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/defaultInterfaceFunParameterValuesOfInlineClassTypeGeneric.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassType.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'test' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassType.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassTypeBoxing.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassTypeBoxing.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassTypeBoxingGeneric.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'testNullable' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassTypeBoxingGeneric.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassTypeGeneric.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'test' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/defaultParameterValuesOfInlineClassTypeGeneric.kt"
   },
@@ -22618,39 +22578,35 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/defaultValueOfInlineClassTypeInInlineFunInInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/inlineClassFun.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'test' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/inlineClassFun.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/inlineClassFunGeneric.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'test' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/inlineClassFunGeneric.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/inlineClassPrimaryConstructor.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/inlineClassPrimaryConstructor.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/inlineClassPrimaryConstructorGeneric.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/inlineClassPrimaryConstructorGeneric.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/inlineClassPrimaryConstructorWithInlineClassValue.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/inlineClassPrimaryConstructorWithInlineClassValue.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/inlineClassPrimaryConstructorWithInlineClassValueGeneric.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/inlineClassPrimaryConstructorWithInlineClassValueGeneric.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/inlineClassSecondaryConstructor.kt": {
@@ -22666,20 +22622,20 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/inlineClassSecondaryConstructorGeneric.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/kt26554.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/kt26554.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/kt27416.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/kt27416.kt"
   },
   "box/box/inlineClasses/defaultParameterValues/kt27416Generic.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultParameterValues/kt27416Generic.kt"
   },
@@ -22700,14 +22656,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/delegationByUnderlyingType/default.kt"
   },
   "box/box/inlineClasses/delegationByUnderlyingType/defaultArgument.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/delegationByUnderlyingType/defaultArgument.kt"
   },
   "box/box/inlineClasses/delegationByUnderlyingType/defaultArgumentGeneric.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/delegationByUnderlyingType/defaultArgumentGeneric.kt"
   },
@@ -22929,44 +22885,44 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderNonNull.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderNonNull.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderNonNullGeneric.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderNonNullGeneric.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderNullable.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderNullable.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderNullableGeneric.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderNullableGeneric.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderNullableGeneric2.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "types: Any",
+   "detail": "unknown type Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderNullableGeneric2.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderPrimitive.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderPrimitive.kt"
   },
   "box/box/inlineClasses/equalsEvaluationOrderPrimitiveGeneric.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "types: Any?",
+   "detail": "unknown type Any?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderPrimitiveGeneric.kt"
   },
@@ -23349,14 +23305,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/constructorReferencedFromOtherFile2Generic.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/constructorWithDefaultParameters.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/constructorWithDefaultParameters.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/constructorWithDefaultParametersGeneric.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/constructorWithDefaultParametersGeneric.kt"
   },
@@ -23512,14 +23468,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineCollectionOfInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassCollection/inlineListOfInlineClass.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineListOfInlineClass.kt"
   },
   "box/box/inlineClasses/inlineClassCollection/inlineListOfInlineClassGeneric.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineListOfInlineClassGeneric.kt"
   },
@@ -23664,12 +23620,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645856\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789728\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 537660384\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645984\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -24034,14 +23990,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt26103_original.kt"
   },
   "box/box/inlineClasses/kt27096.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096.kt"
   },
   "box/box/inlineClasses/kt27096Generic.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096Generic.kt"
   },
@@ -24153,14 +24109,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27113aGeneric.kt"
   },
   "box/box/inlineClasses/kt27132.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Char$toUInt' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27132.kt"
   },
   "box/box/inlineClasses/kt27132Generic.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Char$toUInt' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27132Generic.kt"
   },
@@ -24259,38 +24215,36 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt37998Generic.kt"
   },
   "box/box/inlineClasses/kt38680.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680.kt"
   },
   "box/box/inlineClasses/kt38680Generic.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680Generic.kt"
   },
   "box/box/inlineClasses/kt38680a.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680a.kt"
   },
   "box/box/inlineClasses/kt38680aGeneric.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680aGeneric.kt"
   },
   "box/box/inlineClasses/kt38680b.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680b.kt"
   },
   "box/box/inlineClasses/kt38680bGeneric.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680bGeneric.kt"
   },
@@ -24341,15 +24295,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt46554Generic.kt"
   },
   "box/box/inlineClasses/kt47762.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "class bodies / constructors",
+   "detail": "constructor A expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt47762.kt"
   },
   "box/box/inlineClasses/kt47762Generic.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt47762Generic.kt"
   },
   "box/box/inlineClasses/kt47823.kt": {
@@ -24388,8 +24341,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt54455.kt"
   },
   "box/box/inlineClasses/kt57973.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'f' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt57973.kt"
   },
@@ -24406,14 +24359,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt71649.kt"
   },
   "box/box/inlineClasses/mangledDefaultParameterFunction.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/mangledDefaultParameterFunction.kt"
   },
   "box/box/inlineClasses/mangledDefaultParameterFunctionGeneric.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/mangledDefaultParameterFunctionGeneric.kt"
   },
@@ -24514,26 +24467,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/overridingFunCallingPrivateFunGeneric.kt"
   },
   "box/box/inlineClasses/passInlineClassAsVararg.kt": {
-   "category": "other syntax (at 'e')",
-   "detail": "expected ':' (at 'e')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/passInlineClassAsVararg.kt"
   },
   "box/box/inlineClasses/passInlineClassAsVarargGeneric.kt": {
-   "category": "other syntax (at 'e')",
-   "detail": "expected ':' (at 'e')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/passInlineClassAsVarargGeneric.kt"
   },
   "box/box/inlineClasses/passInlineClassWithSpreadOperatorToVarargs.kt": {
-   "category": "other syntax (at 'e')",
-   "detail": "expected ':' (at 'e')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/passInlineClassWithSpreadOperatorToVarargs.kt"
   },
   "box/box/inlineClasses/passInlineClassWithSpreadOperatorToVarargsGeneric.kt": {
-   "category": "other syntax (at 'e')",
-   "detail": "expected ':' (at 'e')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/passInlineClassWithSpreadOperatorToVarargsGeneric.kt"
   },
@@ -25970,9 +25923,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/innerSimple.kt"
   },
   "box/box/innerNested/innerWithDefaultArgument.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/innerNested/innerWithDefaultArgument.kt"
   },
   "box/box/innerNested/innerWithDefaultArgumentGenericExtensionProperty.kt": {
@@ -25982,14 +25934,14 @@
    "upstream": "compiler/testData/codegen/box/innerNested/innerWithDefaultArgumentGenericExtensionProperty.kt"
   },
   "box/box/innerNested/innerWithDefaultInner.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/innerWithDefaultInner.kt"
   },
   "box/box/innerNested/innerWithThisInDefaultArguments.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "loops / labels",
+   "detail": "unknown label this@A (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/innerWithThisInDefaultArguments.kt"
   },
@@ -26148,8 +26100,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/localWithClosureExtendsLocalWithClosure.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsClassDefaultArgument.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsClassDefaultArgument.kt"
   },
@@ -26166,8 +26118,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInner.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsInnerDefaultArgument.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInnerDefaultArgument.kt"
   },
@@ -26238,8 +26190,8 @@
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/diamond.kt"
   },
   "box/box/interfaceCallsNCasts/finalMethod.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/finalMethod.kt"
   },
@@ -27224,8 +27176,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/anonymousObjectInInitializer.kt"
   },
   "box/box/localClasses/anonymousObjectInParameterInitializer.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "class bodies / constructors",
+   "detail": "expected identifier (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/anonymousObjectInParameterInitializer.kt"
   },
@@ -27374,8 +27326,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/localClassInInitializer.kt"
   },
   "box/box/localClasses/localClassInParameterInitializer.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localClassInParameterInitializer.kt"
   },
@@ -27573,8 +27525,8 @@
    "upstream": "compiler/testData/codegen/box/mangling/publicOverrideSuperCall.kt"
   },
   "box/box/mixedNamedPosition/defaults.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/mixedNamedPosition/defaults.kt"
   },
@@ -27585,14 +27537,14 @@
    "upstream": "compiler/testData/codegen/box/mixedNamedPosition/simple.kt"
   },
   "box/box/mixedNamedPosition/varargs.kt": {
-   "category": "other syntax (at 'p1')",
-   "detail": "expected ':' (at 'p1')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/mixedNamedPosition/varargs.kt"
   },
   "box/box/mixedNamedPosition/varargsEvaluationOrder.kt": {
-   "category": "other syntax (at 'p1')",
-   "detail": "expected ':' (at 'p1')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/mixedNamedPosition/varargsEvaluationOrder.kt"
   },
@@ -30786,8 +30738,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt6590_identityEquals.kt"
   },
   "box/box/primitiveTypes/kt665.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "class bodies / constructors",
+   "detail": "unexpected top-level token (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt665.kt"
   },
@@ -31260,8 +31212,8 @@
    "upstream": "compiler/testData/codegen/box/properties/const/intermoduleInlineConst.kt"
   },
   "box/box/properties/const/kt52970.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/const/kt52970.kt"
   },
@@ -37255,9 +37207,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt33638.kt"
   },
   "box/box/regressions/kt3421.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/kt3421.kt"
   },
   "box/box/regressions/kt344.kt": {
@@ -37331,14 +37282,14 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt5395.kt"
   },
   "box/box/regressions/kt57487.kt": {
-   "category": "other syntax (at 'values')",
-   "detail": "expected ':' (at 'values')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt57487.kt"
   },
   "box/box/regressions/kt5786_privateWithDefault.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'test' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt5786_privateWithDefault.kt"
   },
@@ -38180,8 +38131,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/callFromSubClass.kt"
   },
   "box/box/secondaryConstructors/clashingDefaultConstructors.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'constructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/clashingDefaultConstructors.kt"
   },
@@ -38494,8 +38445,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/kt19100.kt"
   },
   "box/box/smartCasts/kt44804.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "annotations",
+   "detail": "expected end of statement (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44804.kt"
   },
@@ -38559,8 +38510,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/propertyInitializationAfterSmartCast.kt"
   },
   "box/box/smartCasts/smartCastInsideIf.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'box' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/smartCastInsideIf.kt"
   },
@@ -38711,14 +38662,14 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableCause.kt"
   },
   "box/box/specialBuiltins/throwableComplex.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "other: no field cause in Throwable",
+   "detail": "no field cause in Throwable",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableComplex.kt"
   },
   "box/box/specialBuiltins/throwableImpl.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown name 'super'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableImpl.kt"
   },
@@ -39332,8 +39283,8 @@
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt18356_2.kt"
   },
   "box/box/super/superConstructor/objectExtendsInner.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "other syntax (at 'val')",
+   "detail": "expected ':' (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superConstructor/objectExtendsInner.kt"
   },
@@ -39465,8 +39416,8 @@
    "upstream": "compiler/testData/codegen/box/suspendConversion/suspendConversionOfAliasedType.kt"
   },
   "box/box/suspendConversion/suspendConversionOnVarargElements.kt": {
-   "category": "other syntax (at 'sfn')",
-   "detail": "expected ':' (at 'sfn')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/suspendConversion/suspendConversionOnVarargElements.kt"
   },
@@ -39797,8 +39748,8 @@
    "upstream": "compiler/testData/codegen/box/topLevelPrivate/syntheticAccessor.kt"
   },
   "box/box/trailingComma/noDisambiguation.kt": {
-   "category": "other syntax (at 'x')",
-   "detail": "expected ':' (at 'x')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/trailingComma/noDisambiguation.kt"
   },
@@ -39850,14 +39801,14 @@
    "upstream": "compiler/testData/codegen/box/traits/inheritedVar.kt"
   },
   "box/box/traits/interfaceWithNonAbstractFunIndirect.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/interfaceWithNonAbstractFunIndirect.kt"
   },
   "box/box/traits/interfaceWithNonAbstractFunIndirectGeneric.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "interfaces",
+   "detail": "default interface methods are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/interfaceWithNonAbstractFunIndirectGeneric.kt"
   },
@@ -40462,8 +40413,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/innerClassTypeAliasConstructorInSupertypes.kt"
   },
   "box/box/typealias/kt15109.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "typealias",
+   "detail": "unexpected top-level token (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/kt15109.kt"
   },
@@ -40712,8 +40663,8 @@
    "upstream": "compiler/testData/codegen/box/unit/nullableUnitInWhen3.kt"
   },
   "box/box/unit/sillyThings.kt": {
-   "category": "other syntax (at 't')",
-   "detail": "expected ':' (at 't')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/sillyThings.kt"
   },
@@ -40778,8 +40729,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/checkBasicUnsignedLiterals.kt"
   },
   "box/box/unsignedTypes/defaultArguments.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "types: UByte",
+   "detail": "unknown type UByte",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/defaultArguments.kt"
   },
@@ -41019,68 +40970,68 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/whenByUnsigned.kt"
   },
   "box/box/vararg/boxingArgumentsForVararg.kt": {
-   "category": "other syntax (at 'x')",
-   "detail": "expected ':' (at 'x')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/boxingArgumentsForVararg.kt"
   },
   "box/box/vararg/doNotCopyImmediatelyCreatedArrays.kt": {
-   "category": "other syntax (at 'xs')",
-   "detail": "expected ':' (at 'xs')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/doNotCopyImmediatelyCreatedArrays.kt"
   },
   "box/box/vararg/emptyVarArg.kt": {
-   "category": "other syntax (at 'x')",
-   "detail": "expected ':' (at 'x')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/emptyVarArg.kt"
   },
   "box/box/vararg/evaluationOrder.kt": {
-   "category": "other syntax (at 'va')",
-   "detail": "expected ':' (at 'va')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/evaluationOrder.kt"
   },
   "box/box/vararg/inlineClassArraysAsNamedArgumentInVararg.kt": {
-   "category": "other syntax (at 'arr')",
-   "detail": "expected ':' (at 'arr')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/inlineClassArraysAsNamedArgumentInVararg.kt"
   },
   "box/box/vararg/kt10926.kt": {
-   "category": "other syntax (at 'values')",
-   "detail": "expected ':' (at 'values')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt10926.kt"
   },
   "box/box/vararg/kt1978.kt": {
-   "category": "other syntax (at 'a')",
-   "detail": "expected ':' (at 'a')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt1978.kt"
   },
   "box/box/vararg/kt37715.kt": {
-   "category": "other syntax (at 'values')",
-   "detail": "expected ':' (at 'values')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt37715.kt"
   },
   "box/box/vararg/kt37779.kt": {
-   "category": "other syntax (at 's')",
-   "detail": "expected ':' (at 's')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt37779.kt"
   },
   "box/box/vararg/kt581.kt": {
-   "category": "other syntax (at 'a')",
-   "detail": "expected ':' (at 'a')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt581.kt"
   },
   "box/box/vararg/kt6192.kt": {
-   "category": "other syntax (at 'args')",
-   "detail": "expected ':' (at 'args')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt6192.kt"
   },
@@ -41091,8 +41042,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/kt796_797.kt"
   },
   "box/box/vararg/referenceToContainsFromVarargParameter.kt": {
-   "category": "other syntax (at 'values')",
-   "detail": "expected ':' (at 'values')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/referenceToContainsFromVarargParameter.kt"
   },
@@ -41113,14 +41064,14 @@
    "upstream": "compiler/testData/codegen/box/vararg/varargInFunParam.kt"
   },
   "box/box/vararg/varargInTailrec.kt": {
-   "category": "other syntax (at 'items')",
-   "detail": "expected ':' (at 'items')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/varargInTailrec.kt"
   },
   "box/box/vararg/varargsAndFunctionLiterals.kt": {
-   "category": "other syntax (at 'b')",
-   "detail": "expected ':' (at 'b')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/varargsAndFunctionLiterals.kt"
   },
@@ -41131,8 +41082,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/basicWrappers.kt"
   },
   "box/box/versionOverloads/callableRefDefault.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/callableRefDefault.kt"
   },
@@ -41143,8 +41094,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/companions.kt"
   },
   "box/box/versionOverloads/comparableVersionDefaults.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/comparableVersionDefaults.kt"
   },
@@ -41173,14 +41124,14 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/dataClassMiddleInsertion.kt"
   },
   "box/box/versionOverloads/dataClassMultipleInsertions.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/dataClassMultipleInsertions.kt"
   },
   "box/box/versionOverloads/defaultExpressions.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/defaultExpressions.kt"
   },
@@ -41191,8 +41142,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/enumConstructor.kt"
   },
   "box/box/versionOverloads/enumMultipleVersions.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/enumMultipleVersions.kt"
   },
@@ -41261,14 +41212,14 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/innerSecondaryConstructor.kt"
   },
   "box/box/versionOverloads/interfaceOverride.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/interfaceOverride.kt"
   },
   "box/box/versionOverloads/introducedAtFinalOverride.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/introducedAtFinalOverride.kt"
   },
@@ -41328,8 +41279,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/namedArgumentGap.kt"
   },
   "box/box/versionOverloads/objectMembers.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/objectMembers.kt"
   },
@@ -41364,8 +41315,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/secondaryConstructor.kt"
   },
   "box/box/versionOverloads/super.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/super.kt"
   },
@@ -41375,14 +41326,14 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/suspend.kt"
   },
   "box/box/versionOverloads/tailrec.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/tailrec.kt"
   },
   "box/box/versionOverloads/trailingLambda.kt": {
-   "category": "default arguments",
-   "detail": "expected identifier (at '=')",
+   "category": "annotations",
+   "detail": "expected identifier (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/trailingLambda.kt"
   },
@@ -41405,8 +41356,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/varAndProtected.kt"
   },
   "box/box/versionOverloads/varargBeforeVersioned.kt": {
-   "category": "other syntax (at 'values')",
-   "detail": "expected ':' (at 'values')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/varargBeforeVersioned.kt"
   },
@@ -46215,8 +46166,8 @@
    "upstream": "native/native.tests/testData/codegen/controlflow/for_loops_array.kt"
   },
   "native/native.tests/codegen/coroutines/inheritance.kt": {
-   "category": "other syntax (at '=')",
-   "detail": "default arguments are not supported (at '=')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/coroutines/inheritance.kt"
   },
@@ -46658,8 +46609,8 @@
    "upstream": "native/native.tests/testData/codegen/lower/tailrec.kt"
   },
   "native/native.tests/codegen/lower/vararg.kt": {
-   "category": "other syntax (at 'x')",
-   "detail": "expected ':' (at 'x')",
+   "category": "varargs",
+   "detail": "vararg parameters are not supported (at 'vararg')",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/lower/vararg.kt"
   },

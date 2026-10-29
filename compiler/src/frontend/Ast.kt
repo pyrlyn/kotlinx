@@ -59,7 +59,8 @@ object LamIds {
     private var next = 0
     fun id(b: Block): Int { if (b.lamId < 0) b.lamId = next++; return b.lamId }
 }
-class Param(val name: String, val type: TypeRef)
+/** `default`: default argument, evaluated at the call site (may refer to earlier parameters). */
+class Param(val name: String, val type: TypeRef, val default: E? = null)
 /** `typeParams`: generic type parameters (`fun <T> f(...)`); generic functions are monomorphized per type-argument list. */
 class FunD(val name: String, val params: List<Param>, val ret: TypeRef?, val body: Block?, val exprBody: E?, val line: Int,
            val typeParams: List<String> = emptyList(),
