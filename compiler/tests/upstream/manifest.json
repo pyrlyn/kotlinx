@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 1961,
-  "UNSUPPORTED": 3490
+  "PASS": 1967,
+  "UNSUPPORTED": 3484
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2037,7 +2037,7 @@
   },
   "box/box/bridges/diamond.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/diamond.kt"
   },
@@ -2274,7 +2274,7 @@
   },
   "box/box/bridges/kt12416.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/kt12416.kt"
   },
@@ -2311,8 +2311,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/kt2920.kt"
   },
   "box/box/bridges/kt318.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "other: unknown type E",
+   "detail": "unknown type E",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/kt318.kt"
   },
@@ -2345,7 +2345,7 @@
   },
   "box/box/bridges/methodFromTrait.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/methodFromTrait.kt"
   },
@@ -2489,7 +2489,7 @@
   },
   "box/box/bridges/simpleEnum.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/simpleEnum.kt"
   },
@@ -2512,7 +2512,7 @@
   },
   "box/box/bridges/simpleTraitImpl.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/simpleTraitImpl.kt"
   },
@@ -2569,7 +2569,7 @@
   },
   "box/box/bridges/substitutionInSuperClass/enum.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/enum.kt"
   },
@@ -2756,19 +2756,19 @@
   },
   "box/box/bridges/twoParentsWithDifferentMethodsTwoBridges.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithDifferentMethodsTwoBridges.kt"
   },
   "box/box/bridges/twoParentsWithDifferentMethodsTwoBridges2.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithDifferentMethodsTwoBridges2.kt"
   },
   "box/box/bridges/twoParentsWithTheSameMethodOneBridge.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithTheSameMethodOneBridge.kt"
   },
@@ -12763,9 +12763,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/referenceAsArg.kt"
   },
   "box/box/defaultArguments/signature/kt2789.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/signature/kt2789.kt"
   },
   "box/box/defaultArguments/signature/kt9428.kt": {
@@ -16046,8 +16045,8 @@
    "upstream": "compiler/testData/codegen/box/fakeOverride/intersectionOverrideBetweenValAndVar.kt"
   },
   "box/box/fakeOverride/kt49371.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fakeOverride/kt49371.kt"
   },
@@ -16602,8 +16601,8 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/interopWithInlineClasses.kt"
   },
   "box/box/fullValueClasses/kt70461.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/kt70461.kt"
   },
@@ -17584,7 +17583,7 @@
   },
   "box/box/functions/localFunctions/boundTypeParameterInSupertype.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/boundTypeParameterInSupertype.kt"
   },
@@ -18232,7 +18231,7 @@
   },
   "box/box/inference/capturedTypeWhenSubject.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/capturedTypeWhenSubject.kt"
   },
@@ -20810,15 +20809,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/kt27586_2.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/boxReturnValueInDefaultMethod.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/boxReturnValueInDefaultMethod.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/boxReturnValueInDefaultMethodGenericInt.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/boxReturnValueInDefaultMethodGenericInt.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideChainErasedToAny.kt": {
@@ -23155,12 +23152,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387616\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645792\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804517024\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966880\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23395,15 +23392,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceMethodCall.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceMethodCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceMethodCallGeneric.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceMethodCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/genericInterfaceMethodCall.kt": {
@@ -23726,13 +23721,13 @@
   },
   "box/box/inlineClasses/kt38680a.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680a.kt"
   },
   "box/box/inlineClasses/kt38680aGeneric.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680aGeneric.kt"
   },
@@ -23843,8 +23838,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt57973.kt"
   },
   "box/box/inlineClasses/kt70461.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt70461.kt"
   },
@@ -25655,7 +25650,7 @@
   },
   "box/box/interfaceCallsNCasts/diamond.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/diamond.kt"
   },
@@ -25787,7 +25782,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x104704f1b        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10480e98f        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x102cbcf1b        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102dc6faf        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -36313,7 +36308,7 @@
   },
   "box/box/reified/overrideResolution.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/overrideResolution.kt"
   },
@@ -37057,8 +37052,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/falseSmartCast.kt"
   },
   "box/box/smartCasts/genericInheritanceWithNonGenericNoAmbiguity.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/genericInheritanceWithNonGenericNoAmbiguity.kt"
   },
@@ -37233,8 +37228,8 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/bridgeNotEmptyMap.kt"
   },
   "box/box/specialBuiltins/bridges.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/bridges.kt"
   },
@@ -37778,14 +37773,14 @@
    "upstream": "compiler/testData/codegen/box/super/diamondWithCovariantOverride.kt"
   },
   "box/box/super/diamondWithGenericParameterType.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/diamondWithGenericParameterType.kt"
   },
   "box/box/super/diamondWithGenericReturnType.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/diamondWithGenericReturnType.kt"
   },
@@ -37844,14 +37839,14 @@
    "upstream": "compiler/testData/codegen/box/super/interfaceHashCode.kt"
   },
   "box/box/super/kt14243.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown name 'super'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt14243.kt"
   },
   "box/box/super/kt14243_2.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown name 'super'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt14243_2.kt"
   },
@@ -37862,8 +37857,8 @@
    "upstream": "compiler/testData/codegen/box/super/kt14243_class.kt"
   },
   "box/box/super/kt14243_prop.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown name 'super'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt14243_prop.kt"
   },
@@ -38444,8 +38439,8 @@
    "upstream": "compiler/testData/codegen/box/traits/doubleGenericDiamond.kt"
   },
   "box/box/traits/genericMethod.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'property' of C hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/genericMethod.kt"
   },
@@ -38473,7 +38468,7 @@
   },
   "box/box/traits/interfaceWithNonAbstractFunIndirectGeneric.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/interfaceWithNonAbstractFunIndirectGeneric.kt"
   },
@@ -38503,14 +38498,13 @@
   },
   "box/box/traits/kt2541.kt": {
    "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt2541.kt"
   },
   "box/box/traits/kt3315.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/kt3315.kt"
   },
   "box/box/traits/kt3500.kt": {
@@ -38549,8 +38543,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt5393_property.kt"
   },
   "box/box/traits/multiple.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "nullable types",
+   "detail": "nullable cast from Any to String is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/multiple.kt"
   },
@@ -38566,8 +38560,8 @@
    "upstream": "compiler/testData/codegen/box/traits/receiverOfIntersectionType.kt"
   },
   "box/box/traits/sameNameMethodFromInterface.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "strings / templates",
+   "detail": "override B.foo returns Unit where String is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/sameNameMethodFromInterface.kt"
   },
@@ -38590,8 +38584,8 @@
    "upstream": "compiler/testData/codegen/box/traits/traitImplDiamond.kt"
   },
   "box/box/traits/traitImplGenericDelegation.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods are not supported (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/traitImplGenericDelegation.kt"
   },
@@ -39234,7 +39228,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup_1rzwc1_/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup_1rzwc1_/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupurby93uy/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupurby93uy/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },

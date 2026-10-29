@@ -346,6 +346,7 @@ class Parser(private val t: List<Tok>) {
             val defs = ArrayList(ifaceDefaults[d.name].orEmpty())
             for (s in a) {
                 for (m in byName.getValue(s).methods) if (ms.none { it.name == m.name }) ms.add(m)
+                if (s in genericIfaceTps) fail("default methods inherited from a generic super-interface are not supported")
                 for (m in ifaceDefaults[s].orEmpty()) if (defs.none { it.name == m.name } && d.methods.none { it.name == m.name }) defs.add(m)
             }
             if (defs.isNotEmpty()) ifaceDefaults[d.name] = defs
@@ -377,6 +378,8 @@ class Parser(private val t: List<Tok>) {
 
     /** Interface name -> its default method bodies. */
     private val ifaceDefaults = HashMap<String, List<FunD>>()
+    /** Generic interfaces with default methods -> their type parameters (copies are substituted per implementation). */
+    private val genericIfaceTps = HashMap<String, List<String>>()
 
     private fun implementIfaceProps(classes: MutableList<ClassD>, ifaces: List<InterfaceD>) {
         val byName = classes.associateBy { it.name }
@@ -417,7 +420,12 @@ class Parser(private val t: List<Tok>) {
                 // Only the topmost class in the chain needs the copy; subclasses inherit it.
                 val top = ch.last { x -> s in x.supers }
                 if (top !== c) continue
-                add.add(FunD(d.name, d.params, d.ret ?: TypeRef("Unit", emptyList(), false), d.body, d.exprBody, d.line, d.typeParams))
+                val copy = FunD(d.name, d.params, d.ret ?: TypeRef("Unit", emptyList(), false), d.body, d.exprBody, d.line, d.typeParams)
+                val gtps = genericIfaceTps[s]
+                if (gtps == null) { add.add(copy); continue }
+                val targs = top.superTypeArgs[s] ?: fail("generic interface $s needs type arguments in ${top.name}")
+                if (targs.size != gtps.size) fail("wrong number of type arguments for $s")
+                add.add(Subst(gtps.zip(targs).toMap()).fn(copy))
             }
             if (add.isNotEmpty()) classes[i] = ClassD(c.name, c.fields, c.supers, c.methods + add, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
         }
@@ -568,7 +576,7 @@ class Parser(private val t: List<Tok>) {
         val savedIface = curIface; curIface = name
         val ms = try { if (isOp("{")) members() else emptyList() } finally { curIface = savedIface }
         val defs = ms.filter { it.body != null || it.exprBody != null }
-        if (defs.isNotEmpty() && tps.isNotEmpty()) fail("default interface methods are not supported")
+        if (defs.isNotEmpty() && tps.isNotEmpty()) genericIfaceTps[name] = tps
         if (defs.any { it.ret == null && it.body == null }) fail("default interface methods need an explicit return type")
         if (defs.isNotEmpty()) ifaceDefaults[name] = defs
         // The interface keeps abstract signatures; implementing classes get copies of the default bodies.
