@@ -2,10 +2,10 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "COMPILER_CRASH": 2,
-  "MISCOMPILE": 40,
+  "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 1951,
-  "UNSUPPORTED": 3498
+  "PASS": 1961,
+  "UNSUPPORTED": 3490
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2500,8 +2500,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/simpleGenericMethod.kt"
   },
   "box/box/bridges/simpleObject.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/simpleObject.kt"
   },
@@ -2580,8 +2580,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/genericMethod.kt"
   },
   "box/box/bridges/substitutionInSuperClass/object.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/object.kt"
   },
@@ -2702,8 +2702,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test24.kt"
   },
   "box/box/bridges/test25.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test25.kt"
   },
@@ -3045,8 +3045,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/localFunctionWithDefault.kt"
   },
   "box/box/callableReference/adaptedReferences/manyDefaultsAndVararg.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "exceptions",
+   "detail": "unknown superclass Exception",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/manyDefaultsAndVararg.kt"
   },
@@ -4598,8 +4598,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleTopLevel.kt"
   },
   "box/box/callableReference/serializability/referenceToCompanionFunction.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "other: unknown member Some::foo",
+   "detail": "unknown member Some::foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/serializability/referenceToCompanionFunction.kt"
   },
@@ -4696,8 +4696,8 @@
    "upstream": "compiler/testData/codegen/box/casts/functions/asFunKSmall.kt"
   },
   "box/box/casts/functions/isFunKBig.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "other: callable references as Any are not supported",
+   "detail": "callable references as Any are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/functions/isFunKBig.kt"
   },
@@ -5553,8 +5553,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2711.kt"
   },
   "box/box/classes/kt2784.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "unknown A (stdlib API / unsupported decl)",
+   "detail": "unknown name 'A'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2784.kt"
   },
@@ -12425,8 +12425,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/kt2852.kt"
   },
   "box/box/defaultArguments/constructor/kt30517.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/kt30517.kt"
   },
@@ -13122,8 +13122,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedPropertyInEnum.kt"
   },
   "box/box/delegatedProperty/extensionDelegatesWithSameNames.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "property accessors / delegation",
+   "detail": "extension properties need a getter (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/extensionDelegatesWithSameNames.kt"
   },
@@ -15366,8 +15366,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/stringConcatenation.kt"
   },
   "box/box/evaluate/stringConcatenationWithObject.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "unknown O (stdlib API / unsupported decl)",
+   "detail": "unknown name 'O'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/stringConcatenationWithObject.kt"
   },
@@ -19537,8 +19537,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/files/simpleMultiModule.kt"
   },
   "box/box/initializers/initializers0.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "class bodies / constructors",
+   "detail": "constructor B expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/initializers/initializers0.kt"
   },
@@ -19564,8 +19564,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/initializers4.kt"
   },
   "box/box/initializers/initializers5.kt": {
-   "detail": "exit=-11 stdout='' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/initializers/initializers5.kt"
   },
   "box/box/initializers/initializers7.kt": {
@@ -23155,12 +23155,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267646112\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387616\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804516960\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804517024\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25787,7 +25787,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1002c8f1b        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x1003d194b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x104704f1b        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10480e98f        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -28722,8 +28722,8 @@
    "upstream": "compiler/testData/codegen/box/objects/anonymousObjectReturnsFromTopLevelFun.kt"
   },
   "box/box/objects/classCallsProtectedInheritedByCompanion.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'bar' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/classCallsProtectedInheritedByCompanion.kt"
   },
@@ -28738,8 +28738,8 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/companionInitOrderWithSuperclassCrossModule.kt"
   },
   "box/box/objects/companionObjectAccess/companionObjectInitOrderWithSuperclass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "unknown A1 (stdlib API / unsupported decl)",
+   "detail": "unknown name 'A1'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/companionObjectInitOrderWithSuperclass.kt"
   },
@@ -28848,8 +28848,8 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/nativeCompanionInitOrderCrossModuleLegacy.kt"
   },
   "box/box/objects/companionObjectAccess/nativeCompanionInitOrderLegacy.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "unknown A1 (stdlib API / unsupported decl)",
+   "detail": "unknown name 'A1'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/nativeCompanionInitOrderLegacy.kt"
   },
@@ -29164,8 +29164,8 @@
    "upstream": "compiler/testData/codegen/box/objects/nestedDerivedClassCallsProtectedFromCompanion.kt"
   },
   "box/box/objects/nestedObjectWithSuperclass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/nestedObjectWithSuperclass.kt"
   },
@@ -29187,8 +29187,8 @@
    "upstream": "compiler/testData/codegen/box/objects/objectInLocalAnonymousObject.kt"
   },
   "box/box/objects/objectInitialization_kt5523.kt": {
-   "detail": "exit=-11 stdout='' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/objectInitialization_kt5523.kt"
   },
   "box/box/objects/objectLiteral.kt": {
@@ -29209,14 +29209,14 @@
    "upstream": "compiler/testData/codegen/box/objects/objectVsClassInitialization_kt5291.kt"
   },
   "box/box/objects/objectWithSuperclass.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/objectWithSuperclass.kt"
   },
   "box/box/objects/objectWithSuperclassAndTrait.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/objectWithSuperclassAndTrait.kt"
   },
@@ -29244,8 +29244,8 @@
    "upstream": "compiler/testData/codegen/box/objects/safeAccess.kt"
   },
   "box/box/objects/selfReferenceToCompanionObjectInAnonymousObjectInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
@@ -29256,20 +29256,18 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInInlineLambdaInConstructorBody.kt"
   },
   "box/box/objects/selfReferenceToCompanionObjectInInlineLambdaInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInInlineLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToCompanionObjectInLambdaInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInAnonymousObjectInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
@@ -29280,20 +29278,18 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInConstructorBody.kt"
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInInlineLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInLambdaInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToObjectInAnonymousObjectInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
@@ -29304,15 +29300,13 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInInlineLambdaInConstructorBody.kt"
   },
   "box/box/objects/selfReferenceToObjectInInlineLambdaInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInInlineLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToObjectInLambdaInSuperConstructorCall.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/simpleObject.kt": {
@@ -30274,8 +30268,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/unboxComparable.kt"
   },
   "box/box/primitiveTypes/virtualCallToCustomNumber.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/virtualCallToCustomNumber.kt"
   },
@@ -30586,8 +30580,8 @@
    "upstream": "compiler/testData/codegen/box/properties/const/intermoduleInlineConst.kt"
   },
   "box/box/properties/const/kt52970.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "unknown A (stdlib API / unsupported decl)",
+   "detail": "unknown name 'A'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/const/kt52970.kt"
   },
@@ -36761,14 +36755,14 @@
    "upstream": "compiler/testData/codegen/box/sealed/multipleFiles_enabled.kt"
   },
   "box/box/sealed/objects.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sealed/objects.kt"
   },
   "box/box/sealed/sealedInSameFile.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sealed/sealedInSameFile.kt"
   },
@@ -37394,15 +37388,14 @@
    "upstream": "compiler/testData/codegen/box/statics/incInObject.kt"
   },
   "box/box/statics/inheritedPropertyInClassObject.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "unknown Foo (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Foo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/inheritedPropertyInClassObject.kt"
   },
   "box/box/statics/inheritedPropertyInObject.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/statics/inheritedPropertyInObject.kt"
   },
   "box/box/statics/kt8089.kt": {
@@ -38310,7 +38303,7 @@
   },
   "box/box/syntheticAccessors/superCallFromMultipleSubclasses.kt": {
    "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "detail": "unknown name 'super'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/superCallFromMultipleSubclasses.kt"
   },
@@ -38441,9 +38434,8 @@
    "upstream": "compiler/testData/codegen/box/traits/diamondPropertyAccessors.kt"
   },
   "box/box/traits/doubleDiamond.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/doubleDiamond.kt"
   },
   "box/box/traits/doubleGenericDiamond.kt": {
@@ -39242,7 +39234,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupe1bb6j5_/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupe1bb6j5_/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup_1rzwc1_/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup_1rzwc1_/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -40300,8 +40292,8 @@
    "upstream": "compiler/testData/codegen/box/when/exhaustiveness/exhaustiveWithNegativeEnum.kt"
   },
   "box/box/when/exhaustiveness/exhaustiveWithNegativeSealed.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/exhaustiveness/exhaustiveWithNegativeSealed.kt"
   },
@@ -40467,8 +40459,8 @@
    "upstream": "compiler/testData/codegen/box/when/range.kt"
   },
   "box/box/when/sealedWhenInitialization.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/sealedWhenInitialization.kt"
   },
@@ -44724,8 +44716,8 @@
    "upstream": "native/native.tests/testData/codegen/controlflow/for_loops_array.kt"
   },
   "native/native.tests/codegen/coroutines/inheritance.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "objects with a superclass are not supported (at '(')",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected top-level token (at '->')",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/coroutines/inheritance.kt"
   },

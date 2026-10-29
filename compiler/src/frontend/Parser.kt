@@ -200,10 +200,20 @@ class Parser(private val t: List<Tok>) {
 
     private fun objectDecl(name: String): ClassD {
         val line = t[p - 1].line
-        val supers = ArrayList<String>()
+        val supers = ArrayList<String>(); var superArgs: List<E>? = null
         if (isOp(":")) {
             next()
-            while (true) { val sn = ident(); supers.add(sn); superTypeArgs(sn); if (isOp("(")) fail("objects with a superclass are not supported"); if (isOp(",")) next() else break }
+            while (true) {
+                val sn = ident(); superTypeArgs(sn)
+                if (isOp("(")) {
+                    if (superArgs != null) fail("only one superclass is allowed")
+                    next()
+                    superArgs = nested(1) { val xs = ArrayList<E>(); while (!isOp(")")) { xs.add(expr()); if (isOp(",")) next() }; xs }
+                    expectOp(")")
+                    supers.add(0, sn)
+                } else supers.add(sn)
+                if (isOp(",")) next() else break
+            }
         }
         val fields = ArrayList<FieldD>(); val inits = ArrayList<Any>()
         val sta = takeSuperArgs()
@@ -211,7 +221,11 @@ class Parser(private val t: List<Tok>) {
         val savedObj = curObject; curObject = name
         val ms = try { if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved; curObject = savedObj }
         objects.add(name)
-        return ClassD(name, fields, supers, ms, line, emptyList(), inits, superTypeArgs = sta)
+        // During its own initialization the object's global is not assigned yet: `Obj.x` in initializers means `this.x`.
+        val self = Subst(emptyMap(), rw = { x: E -> if (x is NameE && x.n == name) NameE("this").also { it.line = x.line } else null })
+        val remap = fields.associateWith { f -> FieldD(f.name, f.type, f.isVar, f.init?.let { self.e(it) }, f.lateinit) }
+        val inits2 = inits.map { i -> when (i) { is FieldD -> remap[i] ?: i; is Block -> self.block(i); else -> i } }
+        return ClassD(name, fields.map { remap.getValue(it) }, supers, ms, line, emptyList(), inits2, superArgs, superTypeArgs = sta)
     }
 
     /** Enum entry ("E$A") -> hidden subclass holding its body. */
