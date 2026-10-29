@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 5,
   "MISCOMPILE": 42,
   "N/A": 2984,
-  "PASS": 1773,
-  "UNSUPPORTED": 3671
+  "PASS": 1780,
+  "UNSUPPORTED": 3664
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -353,7 +353,7 @@
   },
   "box/box/argumentOrder/extensionInClass.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "named arguments in member extension calls are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/extensionInClass.kt"
   },
@@ -904,14 +904,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -934,14 +934,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -974,14 +974,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -1511,8 +1511,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/kt11163_properIeee754comparisons.kt"
   },
   "box/box/binaryOp/kt23030_properIeee754comparisons.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/kt23030_properIeee754comparisons.kt"
   },
@@ -1658,17 +1658,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupiphbuwtt/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupiphbuwtt/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz3ca8nuw/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupz3ca8nuw/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupjay6vasf/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupjay6vasf/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupth9e54gf/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupth9e54gf/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0_qcs64p/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0_qcs64p/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuplzqige4y/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkuplzqige4y/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -2634,9 +2634,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test12.kt"
   },
   "box/box/bridges/test13.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/test13.kt"
   },
   "box/box/bridges/test14.kt": {
@@ -2705,8 +2704,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test24.kt"
   },
   "box/box/bridges/test25.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "objects with a superclass are not supported (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test25.kt"
   },
@@ -2777,7 +2776,7 @@
   },
   "box/box/bridges/typeParameterInExtensionReceiver.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/typeParameterInExtensionReceiver.kt"
   },
@@ -5292,8 +5291,8 @@
    "upstream": "compiler/testData/codegen/box/classes/exceptionConstructor.kt"
   },
   "box/box/classes/extensionFunWithDefaultParam.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'postfix' of MyLogicWithDifferentPostfix hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/extensionFunWithDefaultParam.kt"
   },
@@ -5357,14 +5356,14 @@
    "upstream": "compiler/testData/codegen/box/classes/initializerBlockResetToDefault.kt"
   },
   "box/box/classes/inner/extensionWithOuter.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "other: unknown type Outer.Inner",
+   "detail": "unknown type Outer.Inner",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/inner/extensionWithOuter.kt"
   },
   "box/box/classes/inner/instantiateInDerived.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class B needs an outer instance (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/inner/instantiateInDerived.kt"
   },
@@ -5375,9 +5374,8 @@
    "upstream": "compiler/testData/codegen/box/classes/inner/instantiateInDerivedLabeled.kt"
   },
   "box/box/classes/inner/instantiateInSameClass.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/inner/instantiateInSameClass.kt"
   },
   "box/box/classes/inner/kt6708.kt": {
@@ -5785,8 +5783,8 @@
    "upstream": "compiler/testData/codegen/box/classes/overloadUnaryOperator.kt"
   },
   "box/box/classes/privateOuterFunctions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/privateOuterFunctions.kt"
   },
@@ -8865,20 +8863,20 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSmartCastToArray.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionAll.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionAll.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionHasNext.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionHasNext.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionNext.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionNext.kt"
   },
@@ -9057,8 +9055,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt47245.kt"
   },
   "box/box/controlStructures/kt513.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "generics",
+   "detail": "generic member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt513.kt"
   },
@@ -12241,13 +12239,13 @@
   },
   "box/box/dataClasses/kt49715.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/kt49715.kt"
   },
   "box/box/dataClasses/kt49715_behaviorChange.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/kt49715_behaviorChange.kt"
   },
@@ -12583,13 +12581,13 @@
   },
   "box/box/defaultArguments/function/extentionFunctionInClassObject.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionInClassObject.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionInObject.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionInObject.kt"
   },
@@ -12609,26 +12607,24 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/funInTraitChain.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/innerExtentionFunction.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunctionDouble.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/innerExtentionFunctionDouble.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunctionDoubleTwoArgs.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "named arguments in member extension calls are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/innerExtentionFunctionDoubleTwoArgs.kt"
   },
   "box/box/defaultArguments/function/innerExtentionFunctionManyArgs.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "named arguments in member extension calls are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/innerExtentionFunctionManyArgs.kt"
   },
@@ -12769,8 +12765,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt59326.kt"
   },
   "box/box/defaultArguments/kt6382.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "unknown with (stdlib API / unsupported decl)",
+   "detail": "unknown function 'with'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt6382.kt"
   },
@@ -12780,8 +12776,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/clashingNames.kt"
   },
   "box/box/defaultArguments/private/memberExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'bar' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/memberExtensionFunction.kt"
   },
@@ -13783,13 +13779,13 @@
   },
   "box/box/delegation/delegationExtFun1.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationExtFun1.kt"
   },
   "box/box/delegation/delegationExtFun2.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationExtFun2.kt"
   },
@@ -13924,7 +13920,7 @@
   },
   "box/box/destructuringDeclInLambdaParam/extensionComponents.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/extensionComponents.kt"
   },
@@ -14985,9 +14981,8 @@
    "upstream": "compiler/testData/codegen/box/enum/ordinalsWithEnumEntitiesOverrides.kt"
   },
   "box/box/enum/overloadedEnumValues.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/overloadedEnumValues.kt"
   },
   "box/box/enum/refToThis.kt": {
@@ -15489,7 +15484,7 @@
   },
   "box/box/evaluate/useCorrectToString.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/useCorrectToString.kt"
   },
@@ -15660,15 +15655,14 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInDelegatedSam.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInInnerClass.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "loops / labels",
+   "detail": "unknown label this@Outer (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInInnerClass.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInNestedClass.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInNestedClass.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInSAMInterface.kt": {
@@ -15697,7 +15691,7 @@
   },
   "box/box/extensionFunctions/extensionFunctionOverride.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionOverride.kt"
   },
@@ -15725,14 +15719,14 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionWithNestedReceiver.kt"
   },
   "box/box/extensionFunctions/extensionFunctionWithReceiverConflict.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "unknown with (stdlib API / unsupported decl)",
+   "detail": "unknown function 'with'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionWithReceiverConflict.kt"
   },
   "box/box/extensionFunctions/extensionMemberWithTypeParameter.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "unknown with (stdlib API / unsupported decl)",
+   "detail": "unknown function 'with'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionMemberWithTypeParameter.kt"
   },
@@ -15742,8 +15736,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionReceiverIsNotInlined.kt"
   },
   "box/box/extensionFunctions/functionWithTheSameDispatchAndExtensionReceiver.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "unknown with (stdlib API / unsupported decl)",
+   "detail": "unknown function 'with'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/functionWithTheSameDispatchAndExtensionReceiver.kt"
   },
@@ -15781,8 +15775,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1953.kt"
   },
   "box/box/extensionFunctions/kt1953_class.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1953_class.kt"
   },
@@ -15800,7 +15794,7 @@
   },
   "box/box/extensionFunctions/kt3298.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3298.kt"
   },
@@ -15841,14 +15835,14 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt606.kt"
   },
   "box/box/extensionFunctions/kt865.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt865.kt"
   },
   "box/box/extensionFunctions/memberExtensionEqualsHashCodeToStringInInterface.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/memberExtensionEqualsHashCodeToStringInInterface.kt"
   },
@@ -15891,14 +15885,14 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/suspendConversionForExtensionFunAsASuperType.kt"
   },
   "box/box/extensionFunctions/thisMethodInObjectLiteral.kt": {
-   "category": "class bodies / constructors",
-   "detail": "member extension functions are not supported (at '{')",
+   "category": "generics",
+   "detail": "generic member extension functions are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/thisMethodInObjectLiteral.kt"
   },
   "box/box/extensionFunctions/virtual.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/virtual.kt"
   },
@@ -16395,7 +16389,7 @@
   },
   "box/box/fir/localInvokeExtension.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/localInvokeExtension.kt"
   },
@@ -17358,8 +17352,8 @@
    "upstream": "compiler/testData/codegen/box/functions/defaultargs2.kt"
   },
   "box/box/functions/defaultargs3.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "strings / templates",
+   "detail": "unknown method String.toMyPrefixedString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs3.kt"
   },
@@ -17449,8 +17443,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/castFunctionToExtension.kt"
   },
   "box/box/functions/invoke/extensionInvokeOnExpr.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/extensionInvokeOnExpr.kt"
   },
@@ -18177,7 +18171,7 @@
   },
   "box/box/increment/memberExtOnLong.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/memberExtOnLong.kt"
   },
@@ -21285,13 +21279,13 @@
   },
   "box/box/inlineClasses/bridgesWhenInlineClassImplementsGenericInterface.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgesWhenInlineClassImplementsGenericInterface.kt"
   },
   "box/box/inlineClasses/bridgesWhenInlineClassImplementsGenericInterfaceGeneric.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgesWhenInlineClassImplementsGenericInterfaceGeneric.kt"
   },
@@ -22185,13 +22179,13 @@
   },
   "box/box/inlineClasses/defaultInterfaceMethodsInInlineClass.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultInterfaceMethodsInInlineClass.kt"
   },
   "box/box/inlineClasses/defaultInterfaceMethodsInInlineClassGeneric.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultInterfaceMethodsInInlineClassGeneric.kt"
   },
@@ -22737,14 +22731,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/anonymousObjectInFunctionWithMangledNameGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClash.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "other: overloads are not supported: Outer.mext$testExn",
+   "detail": "overloads are not supported: Outer.mext$testExn",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClash.kt"
   },
   "box/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClashGeneric.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "other: overloads are not supported: Outer.mext$testExn",
+   "detail": "overloads are not supported: Outer.mext$testExn",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClashGeneric.kt"
   },
@@ -23252,12 +23246,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146693856\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789600\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269224992\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645792\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23409,25 +23403,25 @@
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypes.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypes.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypesGeneric.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypesGeneric.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationWithInlineClassParameterTypes.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegationWithInlineClassParameterTypes.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationWithInlineClassParameterTypesGeneric.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegationWithInlineClassParameterTypesGeneric.kt"
   },
@@ -23463,13 +23457,13 @@
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCall.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCallGeneric.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCallGeneric.kt"
   },
@@ -23487,13 +23481,13 @@
   },
   "box/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCall.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCallGeneric.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCallGeneric.kt"
   },
@@ -24290,7 +24284,7 @@
   },
   "box/box/inlineClasses/result/extensionOverride.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/extensionOverride.kt"
   },
@@ -25461,8 +25455,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/extenderNestedClass.kt"
   },
   "box/box/innerNested/extensionFun.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "unknown baz (stdlib API / unsupported decl)",
+   "detail": "unknown function 'baz'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/extensionFun.kt"
   },
@@ -25542,7 +25536,7 @@
   },
   "box/box/innerNested/kt5363.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/kt5363.kt"
   },
@@ -25892,7 +25886,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x104ca8def        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x104da6013        kfun:newkotlin.Parser.prefix#internal + 9395 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x10088cdef        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10098b2c7        kfun:newkotlin.Parser.prefix#internal + 9395 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -27179,14 +27173,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27208,14 +27202,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27232,14 +27226,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27273,14 +27267,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27303,14 +27297,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27327,14 +27321,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27351,14 +27345,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27381,14 +27375,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27405,14 +27399,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27428,14 +27422,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -27451,14 +27445,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -29467,13 +29461,13 @@
   },
   "box/box/objects/useImportedMember.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useImportedMember.kt"
   },
   "box/box/objects/useImportedMemberFromCompanion.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useImportedMemberFromCompanion.kt"
   },
@@ -29582,8 +29576,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt14201.kt"
   },
   "box/box/operatorConventions/kt14201_2.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt14201_2.kt"
   },
@@ -30963,9 +30957,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt49203_var.kt"
   },
   "box/box/properties/kt613.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt613.kt"
   },
   "box/box/properties/kt78962.kt": {
@@ -32092,8 +32085,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInCustomCharSequence.kt"
   },
   "box/box/ranges/forInCustomIterable.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInCustomIterable.kt"
   },
@@ -36148,7 +36141,7 @@
   },
   "box/box/regressions/kt6153.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt6153.kt"
   },
@@ -37230,8 +37223,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/implicitExtensionReceiver.kt"
   },
   "box/box/smartCasts/implicitMemberReceiver.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'a' of B hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/implicitMemberReceiver.kt"
   },
@@ -37264,8 +37257,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/invokeRecieverSmartcastK2.kt"
   },
   "box/box/smartCasts/kt17725.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "other: unknown method Bob.bar()",
+   "detail": "unknown method Bob.bar()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt17725.kt"
   },
@@ -37299,8 +37292,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44942.kt"
   },
   "box/box/smartCasts/kt52432.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "unknown baz (stdlib API / unsupported decl)",
+   "detail": "unknown function 'baz'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt52432.kt"
   },
@@ -38746,7 +38739,7 @@
   },
   "box/box/traits/traitWithPrivateExtension.kt": {
    "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/traitWithPrivateExtension.kt"
   },
@@ -39384,7 +39377,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupw8z7xp10/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupw8z7xp10/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxo6z9htd/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxo6z9htd/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -39412,8 +39405,8 @@
    "upstream": "compiler/testData/codegen/box/unit/kt4265.kt"
   },
   "box/box/unit/kt51036.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are not supported (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/kt51036.kt"
   },

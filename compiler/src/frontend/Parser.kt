@@ -278,7 +278,18 @@ class Parser(private val t: List<Tok>) {
                 if (isId("constructor") && curClass != null && props != null) { secondaryCtor(); continue }
                 if (!isId("fun")) fail("only member functions are supported in class/interface bodies")
                 val f = function()
-                if (f.recv != null) fail("member extension functions are not supported")
+                if (f.recv != null) {
+                    // Member extension `fun R.f(...)`: method `mext$f($this_ext: R, ...)`; `this` is the extension receiver.
+                    if (curClass == null || props == null) fail("member extension functions are only supported in classes")
+                    if (f.typeParams.isNotEmpty()) fail("generic member extension functions are not supported")
+                    if (f.name in setOf("unaryPlus", "unaryMinus", "not", "inc", "dec", "plus", "minus", "times", "div", "rem", "get", "set", "invoke",
+                            "contains", "compareTo", "rangeTo", "rangeUntil", "iterator", "next", "hasNext", "equals", "getValue", "setValue", "provideDelegate")
+                        || f.name.endsWith("Assign") || f.name.startsWith("component")) fail("operator member extension functions are not supported")
+                    val sub = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n == "this") NameE("\$this_ext").also { it.line = x.line } else null })
+                    ms.add(FunD("mext\$${f.name}", listOf(Param("\$this_ext", f.recv)) + f.params, f.ret, f.body?.let { sub.block(it) },
+                        f.exprBody?.let { sub.e(it) }, f.line, emptyList(), f.recv))
+                    continue
+                }
                 ms.add(f)
             }
         }
