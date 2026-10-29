@@ -3,6 +3,7 @@
 # middle 3), peak RSS (/usr/bin/time -l), and the collector's own statistics (KX_GC_STATS=1: collections,
 # total and max pause). Writes bench/results/gc/micro-<gc>-<metric>.txt and prints one table per metric
 # (best value per row in bold).   bench/gc/micro.sh [gc ...]   (default: default boehm)
+# One file per benchmark: bench/results/gc-micro/<bench>.json (one run per GC with all metrics, see record.py).
 set -eu
 cd "$(dirname "$0")/.."
 NKC=${NKC:-../bin/newkotlinc}
@@ -22,6 +23,9 @@ for g in $gcs; do
     for m in collections pause_total pause_max; do
       echo "$c $(echo "$st" | grep -oE "$m=[0-9.]+" | cut -d= -f2)" >> results/gc/micro-$g-$m.txt
     done
+    v() { awk -v c="$c" '$1 == c {print $2}' "results/gc/micro-$g-$1.txt"; }
+    python3 record.py gc-micro "$c" --run "micro-$g" --gc "$g" ms="$(v time)" raw_ns="$(echo $ts | tr ' ' ',')" \
+      peak_rss_mib="$(v rss)" pause_total_ms="$(v pause_total)" pause_max_ms="$(v pause_max)" collections="$(v collections)"
   done
 done
 for m in time:"case, ms" rss:"case, peak RSS MiB" pause_total:"case, total GC pause ms" pause_max:"case, max GC pause ms" collections:"case, collections"; do
