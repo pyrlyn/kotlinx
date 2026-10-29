@@ -9,7 +9,7 @@ private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sum
 /** Names after which `{` does not start a trailing lambda. */
 private val NO_TRAILING = setOf("try", "do", "else", "finally", "init", "object", "catch", "return", "this")
 
-private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix")
+private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix", "sealed", "lateinit")
 
 class Parser(private val t: List<Tok>) {
     /** Names of `infix fun`s declared in the source (`a name b` parses as `a.name(b)`). */
@@ -156,6 +156,8 @@ class Parser(private val t: List<Tok>) {
             }
         }
         classes.addAll(companions)
+        classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
+        resolveNested(funs, classes, ifaces, globals)
         resolveExtensions(funs, classes)
         val objGlobals = objects.map { n -> VarS(n, false, TypeRef(n, emptyList(), false), CallE(NameE(n), emptyList(), emptyList(), null)) }
         return Program(funs, classes, ifaces, enumGlobals(classes) + globals + objGlobals, companionOf)
@@ -230,6 +232,7 @@ class Parser(private val t: List<Tok>) {
                     companionOf[cls] = od.name to (od.fields.map { it.name } + od.methods.map { it.name }).toSet() + cn
                     continue
                 }
+                if (nestedDecl()) continue
                 if (!isId("fun")) fail("only member functions are supported in class/interface bodies")
                 val f = function()
                 if (f.recv != null) fail("member extension functions are not supported")
@@ -239,6 +242,99 @@ class Parser(private val t: List<Tok>) {
         expectOp("}")
         return ms
     }
+
+    /** Classes, objects and interfaces declared inside class bodies, hoisted to the top level under their simple names. */
+    private val hoisted = ArrayList<ClassD>()
+    private val hoistedIfaces = ArrayList<InterfaceD>()
+    /** Nested type name -> enclosing class. */
+    private val nestedIn = HashMap<String, String>()
+    /** Inner class name -> enclosing class (instances hold the outer instance in `outer$`). */
+    private val innerOf = HashMap<String, String>()
+
+    /** A nested or inner declaration in a class body; false if the next member is not one. */
+    private fun nestedDecl(): Boolean {
+        val outer = curClass
+        val save = p
+        val inner = isId("inner") && t[p + 1].k == K.ID
+        if (inner) next()
+        val d: Any = when {
+            isId("class") -> classDecl()
+            isId("data") && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { next(); dataClass(classDecl()) }
+            isId("enum") && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { next(); classDecl(true) }
+            !inner && isId("object") && t[p + 1].k == K.ID -> { next(); objectDecl(ident()) }
+            !inner && isId("interface") -> interfaceDecl()
+            else -> { p = save; return false }
+        }
+        if (outer == null) fail("nested declarations are only supported in classes", t[save])
+        val name = if (d is ClassD) d.name else (d as InterfaceD).name
+        if (name in nestedIn) fail("two nested classes named $name are not supported", t[save])
+        nestedIn[name] = outer
+        if (inner) innerOf[name] = outer
+        if (d is ClassD) hoisted.add(d) else hoistedIfaces.add(d as InterfaceD)
+        return true
+    }
+
+    /**
+     * Resolves nested and inner classes after parsing: `Outer.Nested` becomes `Nested`; inner classes get an `outer$`
+     * first property, their uses of the outer class's members go through it, and their constructor calls pass it.
+     */
+    private fun resolveNested(funs: MutableList<FunD>, classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>, globals: MutableList<VarS>) {
+        if (nestedIn.isEmpty() && innerOf.isEmpty()) return
+        val byName = classes.associateBy { it.name }
+        val qualified = nestedIn.entries.associate { (n, o) -> "$o.$n" to TypeRef(n, emptyList(), false) }
+        for (o in innerOf.values) if (byName[o]?.typeParams?.isNotEmpty() == true) fail("inner classes of generic classes are not supported")
+        fun names(c: ClassD) = c.fields.map { it.name }.toSet() + c.methods.map { it.name.removePrefix("\$prop\$") }
+        fun locals(f: FunD): Set<String> {
+            val out = HashSet<String>(f.params.map { it.name })
+            Subst(emptyMap(), srw = { x -> if (x is VarS) out.add(x.name); if (x is ForS) out.add(x.name); null }, rw = { x -> if (x is LambdaE) out.addAll(x.body.params); null }).fn(f)
+            return out
+        }
+        // ctx: class whose members are being rewritten (null for top-level functions).
+        fun rewriter(ctx: String?, f: FunD?): Subst {
+            val own = ctx?.let { byName[it] }?.let { names(it) } ?: emptySet()
+            val outerName = ctx?.let { innerOf[it] }
+            val outerNames = outerName?.let { byName[it] }?.let { names(it) }?.minus(own)?.minus(f?.let { locals(it) } ?: emptySet()) ?: emptySet()
+            fun outerRef(line: Int) = NameE("outer\$").also { it.line = line }
+            lateinit var sub: Subst
+            sub = Subst(qualified, rw = { x ->
+                when {
+                    x is MemberE && x.recv is NameE && (x.recv.n in byName || x.recv.n in nestedIn) && nestedIn[x.n] == x.recv.n -> NameE(x.n).also { it.line = x.line }
+                    x is NameE && x.n.startsWith("this@") -> {
+                        val l = x.n.removePrefix("this@")
+                        NameE(if (l == ctx) "this" else if (l == outerName) "outer\$" else fail("unknown label this@$l")).also { it.line = x.line }
+                    }
+                    x is NameE && x.n in outerNames -> MemberE(outerRef(x.line), x.n, false).also { it.line = x.line }
+                    x is CallE && x.callee is NameE && x.callee.n in innerOf -> {
+                        val o = innerOf.getValue(x.callee.n)
+                        val ref: E = if (o == ctx) NameE("this").also { it.line = x.line } else if (o == outerName) outerRef(x.line) else fail("inner class ${x.callee.n} needs an outer instance")
+                        CallE(x.callee, x.typeArgs, listOf(ref) + x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line }
+                    }
+                    x is CallE && x.callee is MemberE && x.callee.n in innerOf && !(x.callee.recv is NameE && x.callee.recv.n in byName) ->
+                        CallE(NameE(x.callee.n).also { it.line = x.line }, x.typeArgs, listOf(sub.e(x.callee.recv)) + x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line }
+                    x is CallE && x.callee is NameE && x.callee.n in outerNames ->
+                        CallE(MemberE(outerRef(x.line), x.callee.n, false).also { it.line = x.line }, x.typeArgs, x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line }
+                    else -> null
+                }
+            })
+            return sub
+        }
+        for (i in ifaces.indices) ifaces[i] = ifaces[i].let { d -> InterfaceD(d.name, d.methods.map { keepRecv(rewriter(null, it).fn(it), it) }, d.line, d.typeParams) }
+        for (i in globals.indices) globals[i] = rewriter(null, null).s(globals[i]) as VarS
+        for (i in funs.indices) funs[i] = keepRecv(rewriter(null, funs[i]).fn(funs[i]), funs[i])
+        for (i in classes.indices) {
+            val c = classes[i]
+            val ms = c.methods.map { keepRecv(rewriter(c.name, it).fn(it), it) }
+            val sub = rewriter(c.name, null)
+            val fields = c.fields.map { FieldD(it.name, it.type?.let { t -> sub.ty(t) }, it.isVar, it.init?.let { e -> sub.e(e) }) }
+            val inits = c.inits.map { if (it is FieldD) fields.first { f -> f.name == it.name } else sub.block(it as Block) }
+            val o = innerOf[c.name]
+            val of = if (o != null) listOf(FieldD("outer\$", TypeRef(o, emptyList(), false), false)) else emptyList()
+            val op = if (o != null) listOf(Param("outer\$", TypeRef(o, emptyList(), false))) else emptyList()
+            classes[i] = ClassD(c.name, of + fields, c.supers.map { qualified[it]?.name ?: it }, ms, c.line, op + c.ctorParams.map { Param(it.name, sub.ty(it.type)) }, inits, c.superArgs?.map { sub.e(it) }, c.typeParams,
+                c.enumEntries?.map { (n, a) -> n to a.map { sub.e(it) } }, c.isValue, c.superTypeArgs)
+        }
+    }
+    private fun keepRecv(n: FunD, o: FunD) = FunD(n.name, n.params, n.ret, n.body, n.exprBody, n.line, n.typeParams, o.recv)
 
     /** Pending `<...>` type arguments of the supertypes of the class being parsed. */
     private val superTA = HashMap<String, List<TypeRef>>()
@@ -607,6 +703,7 @@ class Parser(private val t: List<Tok>) {
                 "when" -> whenExpr()
                 "try" -> tryExpr()
                 "throw" -> CallE(NameE("\$throw").also { it.line = tk.line }, emptyList(), listOf(expr()), null)
+                "this" -> if (t[p].k == K.OP && t[p].s == "@" && t[p + 1].k == K.ID) { p++; NameE("this@" + ident()) } else NameE("this")
                 else -> {
                     if (tk.s in GENERIC_CALLS && t[p].k == K.OP && t[p].s == "<") {
                         p++
