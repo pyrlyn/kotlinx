@@ -119,6 +119,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "UInt" -> Ty.U32
         "ULong" -> Ty.U64
         "Byte" -> Ty.I8
+        "Short" -> Ty.I32 // Short values live in Int (Kotlin widens Short arithmetic to Int; toShort() truncates)
         "Boolean" -> Ty.I1
         "Double" -> Ty.F64
         "Unit" -> Ty.Unit
@@ -1460,10 +1461,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     private fun genMember(e: MemberE): Val {
-        flatten(e)?.let { if (it == "Long.MAX_VALUE") return Val("9223372036854775807", Ty.I64); if (it == "Int.MAX_VALUE") return Val("2147483647", Ty.I32) }
+        flatten(e)?.let { LIMITS[it]?.let { (v, t) -> return Val(v, t) } }
         if (e.safe) return safe(e.recv) { r -> property(r, e.n) }
         return property(genExpr(e.recv), e.n)
     }
+
+    private val LIMITS = mapOf("Long.MAX_VALUE" to ("9223372036854775807" to Ty.I64), "Long.MIN_VALUE" to ("-9223372036854775808" to Ty.I64),
+        "Int.MAX_VALUE" to ("2147483647" to Ty.I32), "Int.MIN_VALUE" to ("-2147483648" to Ty.I32),
+        "Short.MAX_VALUE" to ("32767" to Ty.I32), "Short.MIN_VALUE" to ("-32768" to Ty.I32),
+        "Byte.MAX_VALUE" to ("127" to Ty.I8), "Byte.MIN_VALUE" to ("-128" to Ty.I8))
 
     private fun property(r: Val, n: String): Val {
         // Property getters (`val x: T get() = ...`) of classes and extension properties: `$prop$x` functions.
@@ -2107,6 +2113,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val e = if (e0.lambda != null && t !is Ty.Cls && t !is Ty.Iface && !(t is Ty.ListTy && n in setOf("map", "filter", "forEach", "sumOf", "count")) && n != "usePinned")
             CallE(e0.callee, e0.typeArgs, allArgs(e0), null) else e0
         val res: Val = when {
+            (t.isNum || t == Ty.Char) && n == "toShort" -> {
+                val i = if (t == Ty.Char) Val(r.v, Ty.I32) else if (t == Ty.F64) Val(emitT("fptosi double ${r.v} to i32"), Ty.I32) else coerce(r, Ty.I32)
+                Val(emitT("sext i16 ${emitT("trunc i32 ${i.v} to i16")} to i32"), Ty.I32)
+            }
             t.isNum && n in setOf("toInt", "toUInt", "toLong", "toULong", "toByte", "toDouble", "toString") -> {
                 if (n == "toString") { val sb = emitT("call ptr @rt_sb_new()"); appendVal("rt_sb_", "ptr $sb, ", r); return Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str, true) }
                 val target = when (n) { "toInt" -> Ty.I32; "toUInt" -> Ty.U32; "toLong" -> Ty.I64; "toULong" -> Ty.U64; "toByte" -> Ty.I8; else -> Ty.F64 }

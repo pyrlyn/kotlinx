@@ -2,10 +2,10 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "COMPILER_CRASH": 5,
-  "MISCOMPILE": 48,
+  "MISCOMPILE": 49,
   "N/A": 2984,
-  "PASS": 1146,
-  "UNSUPPORTED": 4292
+  "PASS": 1213,
+  "UNSUPPORTED": 4224
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -434,9 +434,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_kt37412.kt"
   },
   "box/box/arithmetic/basic_selfComparison.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_selfComparison.kt"
   },
   "box/box/arithmetic/basic_shifts.kt": {
@@ -458,8 +457,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/division.kt"
   },
   "box/box/arithmetic/divisionByZero.kt": {
-   "category": "types: Short",
-   "detail": "unknown type Short",
+   "category": "types: UByte",
+   "detail": "unknown type UByte",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/divisionByZero.kt"
   },
@@ -1481,8 +1480,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableDoublesWithTP.kt"
   },
   "box/box/binaryOp/eqNullableShortToShort.kt": {
-   "category": "types: Short",
-   "detail": "unknown type Short",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableShortToShort.kt"
   },
@@ -1545,20 +1544,18 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/overflowChar.kt"
   },
   "box/box/binaryOp/overflowInt.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/binaryOp/overflowInt.kt"
   },
   "box/box/binaryOp/overflowLong.kt": {
-   "category": "unknown Long (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Long'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/binaryOp/overflowLong.kt"
   },
   "box/box/binaryOp/primitiveEqualsSafeCall.kt": {
-   "category": "types: Short",
-   "detail": "unknown type Short",
+   "category": "other: unknown method Int.equals()",
+   "detail": "unknown method Int.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/primitiveEqualsSafeCall.kt"
   },
@@ -1673,17 +1670,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxmrn69q6/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupxmrn69q6/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8ipq8j9n/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8ipq8j9n/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup7raqojmw/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup7raqojmw/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup9kzi_3fj/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup9kzi_3fj/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup97z1p53t/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup97z1p53t/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup39blmdo2/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup39blmdo2/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -9056,9 +9053,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt237.kt"
   },
   "box/box/controlStructures/kt2416.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2416.kt"
   },
   "box/box/controlStructures/kt2577.kt": {
@@ -12206,8 +12202,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/doubleParam.kt"
   },
   "box/box/dataClasses/equalityChecksPrimitiveUnboxed.kt": {
-   "category": "types: Short",
-   "detail": "unknown type Short",
+   "category": "types: Float",
+   "detail": "unknown type Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/equalityChecksPrimitiveUnboxed.kt"
   },
@@ -12315,9 +12311,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/null.kt"
   },
   "box/box/dataClasses/hashCode/short.kt": {
-   "category": "types: Short",
-   "detail": "unknown type Short",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/short.kt"
   },
   "box/box/dataClasses/kt49715.kt": {
@@ -18245,8 +18240,8 @@
    "upstream": "compiler/testData/codegen/box/increment/argumentWithSideEffects.kt"
   },
   "box/box/increment/arrayElement.kt": {
-   "category": "types: Short",
-   "detail": "unknown type Short",
+   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'shortArrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/arrayElement.kt"
   },
@@ -22670,8 +22665,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksPrimitiveGeneric.kt"
   },
   "box/box/inlineClasses/equalityChecksPrimitiveUnboxed.kt": {
-   "category": "types: Short",
-   "detail": "unknown type Short",
+   "category": "types: Float",
+   "detail": "unknown type Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksPrimitiveUnboxed.kt"
   },
@@ -23432,12 +23427,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804516704\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804517024\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966752\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387488\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -26008,9 +26003,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt10131a.kt"
   },
   "box/box/intrinsics/kt12125.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
-   "status": "UNSUPPORTED",
+   "detail": "exit=0 stdout='fail 2: -32769\\n' stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/intrinsics/kt12125.kt"
   },
   "box/box/intrinsics/kt12125_2.kt": {
@@ -26020,8 +26014,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt12125_2.kt"
   },
   "box/box/intrinsics/kt12125_inc.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
+   "category": "other: unknown method Byte.inc()",
+   "detail": "unknown method Byte.inc()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/kt12125_inc.kt"
   },
@@ -26083,8 +26077,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/throwableParamOrder.kt"
   },
   "box/box/intrinsics/tostring.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
+   "category": "other: unknown method Int.toFloat()",
+   "detail": "unknown method Int.toFloat()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
@@ -27198,8 +27192,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/nested.kt"
   },
   "box/box/lower/forLoopsLowering/progressions.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/progressions.kt"
   },
@@ -29941,8 +29935,8 @@
    "upstream": "compiler/testData/codegen/box/package/kt57353.kt"
   },
   "box/box/package/nullablePrimitiveNoFieldInitializer.kt": {
-   "category": "types: Short",
-   "detail": "unknown type Short?",
+   "category": "types: Float",
+   "detail": "unknown type Float?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/package/nullablePrimitiveNoFieldInitializer.kt"
   },
@@ -30053,9 +30047,8 @@
    "upstream": "compiler/testData/codegen/box/platformTypes/primitives/times.kt"
   },
   "box/box/platformTypes/primitives/toShort.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/platformTypes/primitives/toShort.kt"
   },
   "box/box/platformTypes/primitives/toString.kt": {
@@ -30148,8 +30141,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveLong.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveShort.kt": {
-   "category": "types: Short",
-   "detail": "unknown type Short?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveShort.kt"
   },
@@ -30184,8 +30177,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedLong.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedShort.kt": {
-   "category": "types: Short",
-   "detail": "unknown type Short?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedShort.kt"
   },
@@ -30370,15 +30363,13 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt248.kt"
   },
   "box/box/primitiveTypes/kt2768.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2768.kt"
   },
   "box/box/primitiveTypes/kt2794.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2794.kt"
   },
   "box/box/primitiveTypes/kt3078.kt": {
@@ -31648,9 +31639,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/intDownTo.kt"
   },
   "box/box/ranges/contains/generated/intRangeTo.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/intRangeTo.kt"
   },
   "box/box/ranges/contains/generated/intRangeUntil.kt": {
@@ -31660,9 +31650,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/intRangeUntil.kt"
   },
   "box/box/ranges/contains/generated/intUntil.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/intUntil.kt"
   },
   "box/box/ranges/contains/generated/longDownTo.kt": {
@@ -31671,9 +31660,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/longDownTo.kt"
   },
   "box/box/ranges/contains/generated/longRangeTo.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/longRangeTo.kt"
   },
   "box/box/ranges/contains/generated/longRangeUntil.kt": {
@@ -31683,9 +31671,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/longRangeUntil.kt"
   },
   "box/box/ranges/contains/generated/longUntil.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/longUntil.kt"
   },
   "box/box/ranges/contains/generated/uintDownTo.kt": {
@@ -31848,8 +31835,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithImplicitReceiver.kt"
   },
   "box/box/ranges/contains/inRangeWithNonmatchingArguments.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Double (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Double'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithNonmatchingArguments.kt"
   },
@@ -31860,9 +31847,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithSmartCast.kt"
   },
   "box/box/ranges/contains/inUntil.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inUntil.kt"
   },
   "box/box/ranges/contains/inUntilMaxValue.kt": {
@@ -31884,21 +31870,18 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inUntilMinValueNonConst.kt"
   },
   "box/box/ranges/contains/intInByteRangeWithPossibleOverflow.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/intInByteRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/intInIntRangeWithPossibleOverflow.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/intInIntRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/intInShortRangeWithPossibleOverflow.kt": {
-   "category": "unknown Short (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Short'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/intInShortRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/kt20106.kt": {
@@ -31908,9 +31891,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/kt20106.kt"
   },
   "box/box/ranges/contains/longInLongRangeWithPossibleOverflow.kt": {
-   "category": "unknown Long (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Long'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/longInLongRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/nullableInPrimitiveRange.kt": {
@@ -32166,75 +32148,68 @@
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepStep.kt"
   },
   "box/box/ranges/expression/emptyDownto.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/emptyDownto.kt"
   },
   "box/box/ranges/expression/emptyRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/emptyRange.kt"
   },
   "box/box/ranges/expression/inexactDownToMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/inexactDownToMinValue.kt"
   },
   "box/box/ranges/expression/inexactSteppedDownTo.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/inexactSteppedDownTo.kt"
   },
   "box/box/ranges/expression/inexactSteppedRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/inexactSteppedRange.kt"
   },
   "box/box/ranges/expression/inexactToMaxValue.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/inexactToMaxValue.kt"
   },
   "box/box/ranges/expression/maxValueMinusTwoToMaxValue.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/maxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/expression/maxValueToMaxValue.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/maxValueToMaxValue.kt"
   },
   "box/box/ranges/expression/maxValueToMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/maxValueToMinValue.kt"
   },
   "box/box/ranges/expression/oneElementDownTo.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/oneElementDownTo.kt"
   },
   "box/box/ranges/expression/oneElementRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/oneElementRange.kt"
   },
   "box/box/ranges/expression/openRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/openRange.kt"
   },
   "box/box/ranges/expression/openRangeUntil.kt": {
@@ -32255,99 +32230,88 @@
    "upstream": "compiler/testData/codegen/box/ranges/expression/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/expression/progressionDownToMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionDownToMinValue.kt"
   },
   "box/box/ranges/expression/progressionMaxValueMinusTwoToMaxValue.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionMaxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/expression/progressionMaxValueToMaxValue.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionMaxValueToMaxValue.kt"
   },
   "box/box/ranges/expression/progressionMaxValueToMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionMaxValueToMinValue.kt"
   },
   "box/box/ranges/expression/progressionMinValueToMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/expression/progressionMinValueToMinValue.kt"
   },
   "box/box/ranges/expression/reversedBackSequence.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/reversedBackSequence.kt"
   },
   "box/box/ranges/expression/reversedEmptyBackSequence.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/reversedEmptyBackSequence.kt"
   },
   "box/box/ranges/expression/reversedEmptyRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/reversedEmptyRange.kt"
   },
   "box/box/ranges/expression/reversedInexactSteppedDownTo.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/reversedInexactSteppedDownTo.kt"
   },
   "box/box/ranges/expression/reversedRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/reversedRange.kt"
   },
   "box/box/ranges/expression/reversedSimpleSteppedRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/reversedSimpleSteppedRange.kt"
   },
   "box/box/ranges/expression/simpleDownTo.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/simpleDownTo.kt"
   },
   "box/box/ranges/expression/simpleRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/simpleRange.kt"
   },
   "box/box/ranges/expression/simpleRangeWithNonConstantEnds.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/simpleRangeWithNonConstantEnds.kt"
   },
   "box/box/ranges/expression/simpleSteppedDownTo.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/simpleSteppedDownTo.kt"
   },
   "box/box/ranges/expression/simpleSteppedRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/expression/simpleSteppedRange.kt"
   },
   "box/box/ranges/forByteProgressionWithIntIncrement.kt": {
@@ -32683,9 +32647,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/kt42909.kt"
   },
   "box/box/ranges/forInRangeLiteralWithMixedTypeBounds.kt": {
-   "category": "types: Short",
-   "detail": "unknown type Short",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeLiteralWithMixedTypeBounds.kt"
   },
   "box/box/ranges/forInRangeWithImplicitReceiver.kt": {
@@ -32829,15 +32792,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilIntMaxValue.kt"
   },
   "box/box/ranges/forInUntil/forInUntilIntMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilIntMinValue.kt"
   },
   "box/box/ranges/forInUntil/forInUntilIntMinValueNonConst.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilIntMinValueNonConst.kt"
   },
   "box/box/ranges/forInUntil/forInUntilLesserInt.kt": {
@@ -32857,15 +32818,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilLongMaxValue.kt"
   },
   "box/box/ranges/forInUntil/forInUntilLongMinValue.kt": {
-   "category": "unknown Long (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Long'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilLongMinValue.kt"
   },
   "box/box/ranges/forInUntil/forInUntilLongMinValueNonConst.kt": {
-   "category": "unknown Long (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Long'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forInUntilLongMinValueNonConst.kt"
   },
   "box/box/ranges/forInUntil/forIntInIntUntilSmartcastInt.kt": {
@@ -32875,8 +32834,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/forIntInIntUntilSmartcastInt.kt"
   },
   "box/box/ranges/forInUntil/kt42533.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/kt42533.kt"
   },
@@ -33001,75 +32960,68 @@
    "upstream": "compiler/testData/codegen/box/ranges/kt47492b.kt"
   },
   "box/box/ranges/literal/emptyDownto.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/emptyDownto.kt"
   },
   "box/box/ranges/literal/emptyRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/emptyRange.kt"
   },
   "box/box/ranges/literal/inexactDownToMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactDownToMinValue.kt"
   },
   "box/box/ranges/literal/inexactSteppedDownTo.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactSteppedDownTo.kt"
   },
   "box/box/ranges/literal/inexactSteppedRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactSteppedRange.kt"
   },
   "box/box/ranges/literal/inexactToMaxValue.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/inexactToMaxValue.kt"
   },
   "box/box/ranges/literal/maxValueMinusTwoToMaxValue.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/maxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/literal/maxValueToMaxValue.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/maxValueToMaxValue.kt"
   },
   "box/box/ranges/literal/maxValueToMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/maxValueToMinValue.kt"
   },
   "box/box/ranges/literal/oneElementDownTo.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/oneElementDownTo.kt"
   },
   "box/box/ranges/literal/oneElementRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/oneElementRange.kt"
   },
   "box/box/ranges/literal/openRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/openRange.kt"
   },
   "box/box/ranges/literal/openRangeUntil.kt": {
@@ -33090,99 +33042,88 @@
    "upstream": "compiler/testData/codegen/box/ranges/literal/overflowZeroToMinValue.kt"
   },
   "box/box/ranges/literal/progressionDownToMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionDownToMinValue.kt"
   },
   "box/box/ranges/literal/progressionMaxValueMinusTwoToMaxValue.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionMaxValueMinusTwoToMaxValue.kt"
   },
   "box/box/ranges/literal/progressionMaxValueToMaxValue.kt": {
-   "category": "unknown Byte (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Byte'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionMaxValueToMaxValue.kt"
   },
   "box/box/ranges/literal/progressionMaxValueToMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionMaxValueToMinValue.kt"
   },
   "box/box/ranges/literal/progressionMinValueToMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/literal/progressionMinValueToMinValue.kt"
   },
   "box/box/ranges/literal/reversedBackSequence.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/reversedBackSequence.kt"
   },
   "box/box/ranges/literal/reversedEmptyBackSequence.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/reversedEmptyBackSequence.kt"
   },
   "box/box/ranges/literal/reversedEmptyRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/reversedEmptyRange.kt"
   },
   "box/box/ranges/literal/reversedInexactSteppedDownTo.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/reversedInexactSteppedDownTo.kt"
   },
   "box/box/ranges/literal/reversedRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/reversedRange.kt"
   },
   "box/box/ranges/literal/reversedSimpleSteppedRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/reversedSimpleSteppedRange.kt"
   },
   "box/box/ranges/literal/simpleDownTo.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleDownTo.kt"
   },
   "box/box/ranges/literal/simpleRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleRange.kt"
   },
   "box/box/ranges/literal/simpleRangeWithNonConstantEnds.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleRangeWithNonConstantEnds.kt"
   },
   "box/box/ranges/literal/simpleSteppedDownTo.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleSteppedDownTo.kt"
   },
   "box/box/ranges/literal/simpleSteppedRange.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/literal/simpleSteppedRange.kt"
   },
   "box/box/ranges/multiAssignmentIterationOverIntRange.kt": {
@@ -33245,8 +33186,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/maxValueToMinValueStepMaxValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/maxValueToMinValueStepMaxValue.kt"
   },
@@ -33263,9 +33204,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/maxValueToZeroStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/downTo/mixedTypeStep.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/expression/downTo/nestedStep/stepOneThenStepOne.kt": {
@@ -33399,15 +33339,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/minValueToMaxValueStepMaxValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/mixedTypeStep.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/nestedStep/stepOneThenStepOne.kt": {
@@ -33672,8 +33611,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/expression/until/emptyProgressionToMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/emptyProgressionToMinValue.kt"
   },
@@ -33703,15 +33642,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/expression/until/minValueToMaxValueStepMaxValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/expression/until/mixedTypeStep.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/expression/until/nestedStep/stepOneThenStepOne.kt": {
@@ -33856,8 +33793,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/maxValueToMinValueStepMaxValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/maxValueToMinValueStepMaxValue.kt"
   },
@@ -33874,9 +33811,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/maxValueToZeroStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/mixedTypeStep.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/literal/downTo/nestedStep/stepOneThenStepOne.kt": {
@@ -34010,15 +33946,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/minValueToMaxValueStepMaxValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/mixedTypeStep.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/nestedStep/stepOneThenStepOne.kt": {
@@ -34283,8 +34218,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/literal/until/emptyProgressionToMinValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "unknown Char (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Char'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/emptyProgressionToMinValue.kt"
   },
@@ -34314,15 +34249,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/legalStepThenIllegalStep.kt"
   },
   "box/box/ranges/stepped/literal/until/minValueToMaxValueStepMaxValue.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/minValueToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/until/mixedTypeStep.kt": {
-   "category": "other: unknown method Int.toShort()",
-   "detail": "unknown method Int.toShort()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/mixedTypeStep.kt"
   },
   "box/box/ranges/stepped/literal/until/nestedStep/stepOneThenStepOne.kt": {
@@ -39978,7 +39911,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupag619xmk/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupag619xmk/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwb1iunlp/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupwb1iunlp/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -40941,9 +40874,8 @@
    "upstream": "compiler/testData/codegen/box/when/callProperty.kt"
   },
   "box/box/when/edgeCases.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/edgeCases.kt"
   },
   "box/box/when/emptyWhen.kt": {
@@ -45812,7 +45744,7 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupmzpcge9s/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupmzpcge9s/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup549rplj6/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup549rplj6/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },
