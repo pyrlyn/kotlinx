@@ -829,16 +829,17 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             is AssignS -> {
                 // `list += x` on a mutable list calls add (or addAll for a list): plusAssign.
-                if (s.op == "+=" && s.target is NameE) {
+                if ((s.op == "+=" || s.op == "-=") && s.target is NameE) {
                     val l = lookup(s.target.n)
                     if (l != null && l.t is Ty.ListTy) {
                         val savedFuncs = funcs.length; val savedBody = body.length; val savedAllocas = allocas.length; val savedCur = cur; val savedTerm = term
                         val vt = try { genExpr(s.value).t } catch (e: CompileError) { null } finally { funcs.setLength(savedFuncs); body.setLength(savedBody); allocas.setLength(savedAllocas); cur = savedCur; term = savedTerm }
+                        val am = if (s.op == "+=") "add" else "remove"
                         if (vt is Ty.ListTy) {
                             val x = "\$pa${tmpN++}"
-                            val add = ExprS(CallE(MemberE(s.target, "add", false), emptyList(), listOf(NameE(x).also { it.line = s.line }), null).also { it.line = s.line }).also { it.line = s.line }
+                            val add = ExprS(CallE(MemberE(s.target, am, false), emptyList(), listOf(NameE(x).also { it.line = s.line }), null).also { it.line = s.line }).also { it.line = s.line }
                             genStmt(ForS(x, s.value, Block(listOf(add))).also { it.line = s.line })
-                        } else releaseIfOwned(genExpr(CallE(MemberE(s.target, "add", false), emptyList(), listOf(s.value), null).also { it.line = s.line }))
+                        } else releaseIfOwned(genExpr(CallE(MemberE(s.target, am, false), emptyList(), listOf(s.value), null).also { it.line = s.line }))
                         return
                     }
                 }

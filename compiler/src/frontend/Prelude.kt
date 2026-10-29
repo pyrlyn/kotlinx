@@ -184,11 +184,27 @@ interface Comparable<T> { fun compareTo(other: T): Int }
 """
 private val COMPARABLE_USE = Regex("\\bComparable\\b")
 
+/** Common list operations as generic extensions (monomorphized per element type). */
+const val LIST_EXT = """
+fun <T> ArrayList<T>.indexOf(x: T): Int { var i = 0; val n = size; while (i < n) { if (get(i) == x) return i; i++ }; return -1 }
+fun <T> ArrayList<T>.lastIndexOf(x: T): Int { var i = size - 1; while (i >= 0) { if (get(i) == x) return i; i-- }; return -1 }
+fun <T> ArrayList<T>.contains(x: T): Boolean = indexOf(x) >= 0
+fun <T> ArrayList<T>.remove(x: T): Boolean { val i = indexOf(x); if (i < 0) return false; removeAt(i); return true }
+fun <T> ArrayList<T>.isEmpty(): Boolean = size == 0
+fun <T> ArrayList<T>.isNotEmpty(): Boolean = size != 0
+fun <T> ArrayList<T>.clear() { while (size > 0) removeAt(size - 1) }
+fun <T> ArrayList<T>.first(): T { if (size == 0) throw NoSuchElementException("List is empty."); return get(0) }
+fun <T> ArrayList<T>.last(): T { if (size == 0) throw NoSuchElementException("List is empty."); return get(size - 1) }
+fun <T> ArrayList<T>.firstOrNull(): T? = if (size == 0) null else get(0)
+fun <T> ArrayList<T>.lastOrNull(): T? = if (size == 0) null else get(size - 1)
+"""
+private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull)\(|-=|\bin\b""")
+
 fun withPrelude(src: String, p: Program): Program {
     val ranges = RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
-    val cmp = COMPARABLE_USE.containsMatchIn(src)
-    if (!ranges && !exc && !pairs && !cmp) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "")
+    val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src)
+    if (!ranges && !exc && !pairs && !cmp && !lists) return p
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },

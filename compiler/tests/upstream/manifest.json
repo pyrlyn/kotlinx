@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 5,
   "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 974,
-  "UNSUPPORTED": 4474
+  "PASS": 985,
+  "UNSUPPORTED": 4463
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1673,17 +1673,17 @@
    "upstream": "compiler/testData/codegen/box/boxing/kt53100_casts.kt"
   },
   "box/box/boxing/kt84727.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup7o2o2z47/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup7o2o2z47/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup6f71wf64/t.ll:155:11: error: null must be a pointer type\n  155 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup6f71wf64/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727.kt"
   },
   "box/box/boxing/kt84727_if.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupfnfc8uzm/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupfnfc8uzm/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupictssew_/t.ll:181:11: error: null must be a pointer type\n  181 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupictssew_/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_if.kt"
   },
   "box/box/boxing/kt84727_inline.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0yti2kg0/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0yti2kg0/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0ca317xn/t.ll:169:11: error: null must be a pointer type\n  169 |   ret i32 null\n      |           ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup0ca317xn/t.ll' '/Users/listepo/grok/mini-bench-wt-cov/compiler/runtime/runtime.c' -",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/boxing/kt84727_inline.kt"
   },
@@ -9117,8 +9117,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt416.kt"
   },
   "box/box/controlStructures/kt42455.kt": {
-   "category": "other: unknown method ArrayList<Int>.first()",
-   "detail": "unknown method ArrayList<Int>.first()",
+   "category": "other: ext$ArrayList$first expects 1 arguments",
+   "detail": "ext$ArrayList$first expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt42455.kt"
   },
@@ -20321,8 +20321,8 @@
    "upstream": "compiler/testData/codegen/box/inline/kt20245.kt"
   },
   "box/box/inline/kt26117.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.first()",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/kt26117.kt"
   },
@@ -23448,12 +23448,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531296\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387872\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267646048\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823392\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -27206,8 +27206,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/lists.kt"
   },
   "box/box/lower/forLoopsLowering/listsCME.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.remove()",
+   "category": "exceptions",
+   "detail": "unknown type kotlin.ConcurrentModificationException",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/listsCME.kt"
   },
@@ -31865,8 +31865,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inPrimitiveRange.kt"
   },
   "box/box/ranges/contains/inRangeLiteralComposition.kt": {
-   "category": "other: unknown method ArrayList<Int>.contains()",
-   "detail": "unknown method ArrayList<Int>.contains()",
+   "category": "other: unknown method IntArray.contains()",
+   "detail": "unknown method IntArray.contains()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeLiteralComposition.kt"
   },
@@ -33250,9 +33250,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/safeCallRangeTo.kt"
   },
   "box/box/ranges/stepped/expression/downTo/emptyProgression.kt": {
-   "category": "other: unknown method ArrayList<Int>.isEmpty()",
-   "detail": "unknown method ArrayList<Int>.isEmpty()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/expression/downTo/illegalStepNegative.kt": {
@@ -33405,9 +33404,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/emptyProgression.kt": {
-   "category": "other: unknown method ArrayList<Int>.isEmpty()",
-   "detail": "unknown method ArrayList<Int>.isEmpty()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/expression/rangeTo/illegalStepNegative.kt": {
@@ -33704,9 +33702,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/expression/until/emptyProgression.kt": {
-   "category": "other: unknown method ArrayList<Int>.isEmpty()",
-   "detail": "unknown method ArrayList<Int>.isEmpty()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/expression/until/emptyProgressionToMinValue.kt": {
@@ -33864,9 +33861,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/expression/until/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/literal/downTo/emptyProgression.kt": {
-   "category": "other: unknown method ArrayList<Int>.isEmpty()",
-   "detail": "unknown method ArrayList<Int>.isEmpty()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/literal/downTo/illegalStepNegative.kt": {
@@ -34019,9 +34015,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/emptyProgression.kt": {
-   "category": "other: unknown method ArrayList<Int>.isEmpty()",
-   "detail": "unknown method ArrayList<Int>.isEmpty()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/literal/rangeTo/illegalStepNegative.kt": {
@@ -34318,9 +34313,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/literal/until/emptyProgression.kt": {
-   "category": "other: unknown method ArrayList<Int>.isEmpty()",
-   "detail": "unknown method ArrayList<Int>.isEmpty()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/literal/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/literal/until/emptyProgressionToMinValue.kt": {
@@ -35168,9 +35162,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/expression/until/zeroToMaxValueStepMaxValue.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/emptyProgression.kt": {
-   "category": "other: unknown method ArrayList<UInt>.isEmpty()",
-   "detail": "unknown method ArrayList<UInt>.isEmpty()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/downTo/illegalStepNegative.kt": {
@@ -35339,9 +35332,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/downTo/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/emptyProgression.kt": {
-   "category": "other: unknown method ArrayList<UInt>.isEmpty()",
-   "detail": "unknown method ArrayList<UInt>.isEmpty()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeTo/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/rangeTo/illegalStepNegative.kt": {
@@ -35654,9 +35646,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/rangeUntil/stepToSmallerLast.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/emptyProgression.kt": {
-   "category": "other: unknown method ArrayList<UInt>.isEmpty()",
-   "detail": "unknown method ArrayList<UInt>.isEmpty()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/stepped/unsigned/literal/until/emptyProgression.kt"
   },
   "box/box/ranges/stepped/unsigned/literal/until/emptyProgressionToMinValue.kt": {
@@ -40156,7 +40147,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8lk02aue/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkup8lk02aue/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupr26j1lii/t.ll:167:30: error: void type only allowed for function results\n  167 | define internal i1 @k.isNull(void %a.x) nounwind {\n      |                              ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupr26j1lii/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -41431,9 +41422,8 @@
    "upstream": "compiler/testData/codegen/box/when/oneUnitBranch.kt"
   },
   "box/box/when/range.kt": {
-   "category": "other: unknown method ArrayList<Int>.contains()",
-   "detail": "unknown method ArrayList<Int>.contains()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/range.kt"
   },
   "box/box/when/sealedWhenInitialization.kt": {
@@ -41483,8 +41473,8 @@
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/statement.kt"
   },
   "box/box/when/stringOptimization/temporaryVarInWhenByStringIsDisposedProperly.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.isEmpty()",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/temporaryVarInWhenByStringIsDisposedProperly.kt"
   },
@@ -41559,9 +41549,8 @@
    "upstream": "compiler/testData/codegen/box/when/typeDisjunction.kt"
   },
   "box/box/when/whenArgumentIsEvaluatedOnlyOnce.kt": {
-   "category": "other: unknown method ArrayList<Int>.contains()",
-   "detail": "unknown method ArrayList<Int>.contains()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/whenArgumentIsEvaluatedOnlyOnce.kt"
   },
   "box/box/when/whenSafeCallSubjectEvaluatedOnce.kt": {
@@ -45994,7 +45983,7 @@
    "upstream": "native/native.tests/testData/codegen/inlineClass/valueClass0.kt"
   },
   "native/native.tests/codegen/interfaceCallsNCasts/functionNameClash.kt": {
-   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkups2fomlrk/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkups2fomlrk/t.l",
+   "detail": "/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupom15l27h/t.ll:284:21: error: invalid redefinition of function 'm.C.foo'\n  284 | define internal ptr @m.C.foo(ptr %this, i32 %a.x) nounwind {\n      |                     ^\n1 error generated.\nclang failed (256): clang -O3 -flto -Wno-override-module '/Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupom15l27h/t.l",
    "status": "COMPILER_CRASH",
    "upstream": "native/native.tests/testData/codegen/interfaceCallsNCasts/functionNameClash.kt"
   },
