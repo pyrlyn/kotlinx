@@ -10,15 +10,17 @@ package newkotlin
 fun compileGenerics(p0: Program): String {
     val generic = p0.classes.filter { it.typeParams.isNotEmpty() }.associateBy { it.name }
     val inst = LinkedHashMap<String, ClassD>()
+    val origin = HashMap<String, Pair<String, List<TypeRef>>>()
     while (true) {
         val prog = Program(p0.funs, p0.classes.filter { it.typeParams.isEmpty() } + inst.values, p0.ifaces, p0.globals)
         try {
-            return NativeBackend(prog, generic).generate()
+            return NativeBackend(prog, generic, origin).generate()
         } catch (n: NeedInstance) {
             val m = mangle(n.name, n.args)
             if (m in inst) throw CompileError("internal: instance $m requested twice")
             if (inst.size >= 1000) throw CompileError("too many generic class instances (recursive generic type?)")
             val cd = generic.getValue(n.name)
+            origin[m] = n.name to n.args
             inst[m] = Subst(cd.typeParams.zip(n.args).toMap()).cls(cd, m)
         }
     }
