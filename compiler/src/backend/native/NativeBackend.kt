@@ -44,6 +44,13 @@ class NativeBackend(private val prog: Program) {
     private val methodSigs = HashMap<String, FunSig>() // "Class.method"
     private val slots = ArrayList<String>()             // interface method name -> vtable slot (index + VT_HEADER)
     private var owner: ClassInfo? = null
+    /** Generic functions by name; each call site instantiates (monomorphizes) one copy per type-argument list. */
+    private val genericFuns = HashMap<String, FunD>()
+    /** Instance symbol -> (declaration, bindings, signature); `pending` are instances not generated yet. */
+    private val instances = HashMap<String, Triple<FunD, Map<String, Ty>, FunSig>>()
+    private val pending = ArrayList<String>()
+    /** Type-parameter bindings of the generic instance being generated. */
+    private var tenv: Map<String, Ty> = emptyMap()
 
     // per-function state
     private var allocas = StringBuilder()
@@ -87,7 +94,7 @@ class NativeBackend(private val prog: Program) {
 
     // ---------------------------------------------------------------- types
 
-    private fun resolve(t: TypeRef): Ty = when (t.name) {
+    private fun resolve(t: TypeRef): Ty = tenv[t.name]?.also { if (t.args.isNotEmpty()) fail("type parameter ${t.name} takes no type arguments") } ?: when (t.name) {
         "Int" -> Ty.I32
         "Long" -> Ty.I64
         "UInt" -> Ty.U32
@@ -221,6 +228,12 @@ class NativeBackend(private val prog: Program) {
         }
         for (f in prog.funs) {
             line = f.line
+            if (f.typeParams.isNotEmpty()) {
+                if (f.name in genericFuns || f.name in sigs) fail("overloads are not supported: ${f.name}")
+                if (f.ret == null && f.body == null) fail("expression-bodied function '${f.name}' needs an explicit return type")
+                genericFuns[f.name] = f; continue
+            }
+            if (f.name in genericFuns) fail("overloads are not supported: ${f.name}")
             val ret = f.ret?.let { resolve(it) } ?: if (f.body != null) Ty.Unit else fail("expression-bodied function '${f.name}' needs an explicit return type")
             if (f.name in sigs) fail("overloads are not supported: ${f.name}")
             sigs[f.name] = FunSig(f.name, f.params.map { resolve(it.type) }, ret)
@@ -233,7 +246,14 @@ class NativeBackend(private val prog: Program) {
         for (c in classes.values) genClass(c)
         val main = sigs["main"] ?: throw CompileError("no main function")
         genGlobals()
-        for (f in prog.funs) genFun(f, null)
+        for (f in prog.funs) if (f.typeParams.isEmpty()) genFun(f, null)
+        while (pending.isNotEmpty()) {
+            val sym = pending.removeAt(pending.size - 1)
+            val (f, env, sig) = instances.getValue(sym)
+            tenv = env
+            genFun(f, null, sig, sym)
+            tenv = emptyMap()
+        }
         for (c in prog.classes) for (m in c.methods) if (m.body != null || m.exprBody != null) genFun(m, classes.getValue(c.name))
         for (c in prog.classes) if (c.hasCtorBody || c.name in poly) genInit(c, classes.getValue(c.name))
         for (c in prog.classes) if (c.hasCtorBody) genCtor(c, classes.getValue(c.name))
@@ -347,9 +367,9 @@ class NativeBackend(private val prog: Program) {
         funcs.append(f)
     }
 
-    private fun genFun(f: FunD, cls: ClassInfo?) {
+    private fun genFun(f: FunD, cls: ClassInfo?, instSig: FunSig? = null, instSym: String? = null) {
         if (cls != null && f.body == null && f.exprBody == null) fail("abstract method ${f.name} in class ${cls.name}")
-        val sig = if (cls != null) methodSigs.getValue("${cls.name}.${f.name}") else sigs.getValue(f.name)
+        val sig = instSig ?: if (cls != null) methodSigs.getValue("${cls.name}.${f.name}") else sigs.getValue(f.name)
         owner = cls
         allocas = StringBuilder(); body = StringBuilder(); tmpN = 0; lblN = 0; cur = "entry"; term = false
         scopes.clear(); retTy = sig.ret; line = f.line
@@ -372,7 +392,7 @@ class NativeBackend(private val prog: Program) {
                 if (retTy == Ty.Unit) { releaseAll(); emit("ret void"); term = true } else emit("unreachable")
             }
         }
-        val name = if (cls != null) "m.${cls.name}.${f.name}" else if (f.name == "main") "k.main" else "k.${f.name}"
+        val name = if (instSym != null) instSym else if (cls != null) "m.${cls.name}.${f.name}" else if (f.name == "main") "k.main" else "k.${f.name}"
         val attrs = if (f.name == "main") "" else " nounwind"
         funcs.append("define internal ${sig.ret.llvm} @$name(${params.joinToString(", ")})$attrs {\nentry:\n")
         funcs.append(allocas).append(body).append("}\n\n")
@@ -1181,6 +1201,7 @@ class NativeBackend(private val prog: Program) {
             initObj(ci, p, vals)
             return Val(p, Ty.Cls(n), true)
         }
+        genericFuns[n]?.let { return genGenericCall(it, e) }
         val sig = sigs[n] ?: fail("unknown function '$n'")
         if (sig.params.size != e.args.size) fail("$n expects ${sig.params.size} arguments")
         val vals = e.args.mapIndexed { i, a -> coerce(genExpr(a), sig.params[i]) }
@@ -1189,6 +1210,45 @@ class NativeBackend(private val prog: Program) {
         val res = if (sig.ret == Ty.Unit) { emit(call); Val("", Ty.Unit) } else Val(emitT(call), sig.ret, sig.ret.isRef)
         vals.forEach { releaseIfOwned(it) }
         return res
+    }
+
+    /**
+     * Call of a generic function: type arguments are explicit (`f<Int>(x)`) or inferred from the argument types;
+     * the call binds to the monomorphized instance `@"k.f<Int>"`, queued for generation on first use.
+     * Monomorphization keeps primitives unboxed and every instance's RC code exact for its concrete types.
+     */
+    private fun genGenericCall(f: FunD, e: CallE): Val {
+        if (f.params.size != e.args.size) fail("${f.name} expects ${f.params.size} arguments")
+        val env = LinkedHashMap<String, Ty>()
+        if (e.typeArgs.isNotEmpty()) {
+            if (e.typeArgs.size != f.typeParams.size) fail("${f.name} expects ${f.typeParams.size} type arguments")
+            f.typeParams.forEachIndexed { i, tp -> env[tp] = resolve(e.typeArgs[i]) }
+        }
+        val raw = e.args.map { genExpr(it) }
+        if (e.typeArgs.isEmpty()) f.params.forEachIndexed { i, p -> unify(p.type, raw[i].t, f.typeParams, env) }
+        for (tp in f.typeParams) if (tp !in env) fail("cannot infer type parameter $tp of ${f.name}; pass it explicitly")
+        val bound = f.typeParams.associateWith { env.getValue(it) }
+        val sym = "\"k.${f.name}<${f.typeParams.joinToString(",") { bound.getValue(it).toString() }}>\""
+        val inst = instances[sym] ?: run {
+            val saved = tenv; tenv = bound
+            val sig = try {
+                FunSig(f.name, f.params.map { resolve(it.type) }, f.ret?.let { resolve(it) } ?: Ty.Unit)
+            } finally { tenv = saved }
+            Triple(f, bound, sig).also { instances[sym] = it; pending.add(sym) }
+        }
+        val sig = inst.third
+        val vals = raw.mapIndexed { i, v -> coerce(v, sig.params[i]) }
+        val args = vals.joinToString(", ") { "${it.t.llvm} ${it.v}" }
+        return finishCall("call ${sig.ret.llvm} @$sym($args)", sig.ret, vals)
+    }
+
+    /** Binds type parameters in [ref] against the concrete argument type [t]; the first binding wins (later args coerce). */
+    private fun unify(ref: TypeRef, t: Ty, tps: List<String>, env: MutableMap<String, Ty>) {
+        if (ref.name in tps) { if (ref.name !in env && t != Ty.Nothing) env[ref.name] = t; return }
+        when {
+            t is Ty.ListTy && ref.args.size == 1 -> unify(ref.args[0], t.elem, tps, env)
+            t is Ty.MapTy && ref.args.size == 2 -> { unify(ref.args[0], t.k, tps, env); unify(ref.args[1], t.v, tps, env) }
+        }
     }
 
     private fun method(r: Val, n: String, e: CallE): Val {

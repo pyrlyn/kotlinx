@@ -37,7 +37,9 @@ class JumpS(val isBreak: Boolean) : S()
 /** `params` are lambda parameter names (empty = implicit `it`). */
 class Block(val stmts: List<S>, val params: List<String> = emptyList())
 class Param(val name: String, val type: TypeRef)
-class FunD(val name: String, val params: List<Param>, val ret: TypeRef?, val body: Block?, val exprBody: E?, val line: Int)
+/** `typeParams`: generic type parameters (`fun <T> f(...)`); generic functions are monomorphized per type-argument list. */
+class FunD(val name: String, val params: List<Param>, val ret: TypeRef?, val body: Block?, val exprBody: E?, val line: Int,
+           val typeParams: List<String> = emptyList())
 /** `type == null` (inferred) only for body properties, which have `init`. */
 class FieldD(val name: String, val type: TypeRef?, val isVar: Boolean, val init: E? = null)
 /**

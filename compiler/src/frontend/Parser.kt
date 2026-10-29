@@ -81,6 +81,17 @@ class Parser(private val t: List<Tok>) {
 
     private fun function(): FunD {
         val line = next().line
+        val typeParams = ArrayList<String>()
+        if (isOp("<")) {
+            next()
+            while (!isOp(">")) {
+                if (isId("reified")) next()
+                typeParams.add(ident())
+                if (isOp(":")) { next(); type() } // upper bound: not checked (monomorphization)
+                if (isOp(",")) next()
+            }
+            next()
+        }
         val name = ident()
         expectOp("(")
         val params = nested(1) {
@@ -93,9 +104,9 @@ class Parser(private val t: List<Tok>) {
         }
         expectOp(")")
         val ret = if (isOp(":")) { next(); type() } else null
-        return if (isOp("=")) { next(); skipNLOnly(); FunD(name, params, ret, null, expr(), line) }
-        else if (isOp("{")) FunD(name, params, ret, block(), null, line)
-        else FunD(name, params, ret, null, null, line) // abstract (interface) member
+        return if (isOp("=")) { next(); skipNLOnly(); FunD(name, params, ret, null, expr(), line, typeParams) }
+        else if (isOp("{")) FunD(name, params, ret, block(), null, line, typeParams)
+        else FunD(name, params, ret, null, null, line, typeParams) // abstract (interface) member
     }
 
     private fun classDecl(): ClassD {
@@ -308,7 +319,7 @@ class Parser(private val t: List<Tok>) {
                         while (!isOp(">")) { ta.add(type()); if (isOp(",")) next() }
                         next()
                         CallE(NameE(tk.s).also { it.line = tk.line }, ta, args(), null)
-                    } else NameE(tk.s)
+                    } else explicitTypeArgs()?.let { ta -> CallE(NameE(tk.s).also { it.line = tk.line }, ta, args(), null) } ?: NameE(tk.s)
                 }
             }
             K.OP -> if (tk.s == "(") { val x = nested(1) { expr() }; expectOp(")"); x } else fail("unexpected operator", tk)
@@ -316,6 +327,21 @@ class Parser(private val t: List<Tok>) {
         }
         if (e.line == 0) e.line = tk.line
         return e
+    }
+
+    /** `f<Int, String>(...)`: speculatively parses explicit type arguments before a call; backtracks otherwise. */
+    private fun explicitTypeArgs(): List<TypeRef>? {
+        if (!(t[p].k == K.OP && t[p].s == "<" && t[p + 1].k == K.ID)) return null
+        val save = p
+        try {
+            p++
+            val ta = ArrayList<TypeRef>()
+            while (!isOp(">")) { ta.add(type()); if (isOp(",")) next() else if (!isOp(">")) { p = save; return null } }
+            next()
+            if (t[p].k == K.OP && t[p].s == "(") return ta
+        } catch (_: CompileError) {}
+        p = save
+        return null
     }
 
     private fun ifExpr(): E {

@@ -7,56 +7,56 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| UNSUPPORTED | 5340 |
+| UNSUPPORTED | 5337 |
 | N/A | 2984 |
-| PASS | 151 |
+| PASS | 154 |
 
-Kept in tree (re-runnable with `run.py`): 151
+Kept in tree (re-runnable with `run.py`): 154
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| generics | 838 |
+| generics | 582 |
 | inline/value classes | 571 |
-| ranges (step/downTo/until, ranges as values) | 423 |
-| interfaces | 421 |
-| operator/infix functions | 346 |
-| class bodies / constructors | 291 |
-| lambdas / function types / references | 282 |
+| ranges (step/downTo/until, ranges as values) | 439 |
+| interfaces | 420 |
+| lambdas / function types / references | 358 |
+| operator/infix functions | 342 |
+| class bodies / constructors | 299 |
 | objects / companion objects | 253 |
 | enum classes | 167 |
-| type checks / casts (is, as) | 120 |
-| strings / templates | 95 |
-| exceptions | 78 |
-| extension functions | 73 |
-| annotations | 72 |
-| type inference (expression bodies) | 71 |
-| destructuring declarations | 64 |
-| default arguments | 55 |
+| type checks / casts (is, as) | 160 |
+| extension functions | 119 |
+| strings / templates | 96 |
+| exceptions | 88 |
+| type inference (expression bodies) | 82 |
+| annotations | 74 |
+| destructuring declarations | 68 |
+| default arguments | 57 |
 | inheritance (open/abstract/sealed) | 54 |
-| property accessors / delegation | 52 |
-| stdlib: kotlin.test asserts | 45 |
+| property accessors / delegation | 53 |
+| stdlib: kotlin.test asserts | 49 |
+| other syntax (at '.') | 46 |
 | modifiers (private/const/lateinit/...) | 45 |
-| types: Any | 43 |
-| other: body properties need an initializer (at ' | 43 |
-| other syntax (at '.') | 42 |
+| types: Any | 44 |
+| other: body properties need an initializer (at ' | 44 |
+| other syntax (at ':') | 40 |
 | other syntax (at 'context') | 40 |
-| other syntax (at ':') | 37 |
-| other syntax (at 'in') | 36 |
-| other syntax (at '=') | 32 |
-| other syntax (at 'f') | 31 |
-| other syntax (at ',') | 28 |
+| other syntax (at 'in') | 40 |
+| other syntax (at '=') | 31 |
+| other syntax (at 'f') | 30 |
 | other: expected '=' (at ' | 27 |
-| nullable types | 23 |
-| other syntax (at '!') | 18 |
+| nullable types | 21 |
+| other syntax (at '!') | 21 |
+| unknown listOf (stdlib API / unsupported decl) | 20 |
 | typealias | 17 |
+| type inference / mismatch | 17 |
 | other syntax (at 'A') | 16 |
 | other syntax (at 'foo') | 16 |
 | types: Any? | 15 |
-| type inference / mismatch | 15 |
-| other syntax (at 'Local') | 14 |
-| other syntax (at 'F') | 12 |
+| unknown intArrayOf (stdlib API / unsupported decl) | 14 |
+| other syntax (at '*') | 14 |
 
 ## N/A reasons
 
