@@ -1,10 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "MISCOMPILE": 28,
+  "MISCOMPILE": 26,
   "N/A": 2984,
-  "PASS": 2446,
-  "UNSUPPORTED": 3017
+  "PASS": 2465,
+  "UNSUPPORTED": 3000
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2551,9 +2551,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/property.kt"
   },
   "box/box/bridges/substitutionInSuperClass/simple.kt": {
-   "category": "other: foo expects 2 arguments",
-   "detail": "foo expects 2 arguments",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/simple.kt"
   },
   "box/box/bridges/substitutionInSuperClass/upperBound.kt": {
@@ -2840,8 +2839,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextPropertyWithSam.kt"
   },
   "box/box/callableReference/adaptedReferences/contextTypeWithSam.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "interfaces",
+   "detail": "expected '(' (at 'SamInterface')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextTypeWithSam.kt"
   },
@@ -4411,8 +4410,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/inReceiverOfAnother.kt"
   },
   "box/box/callableReference/property/invokePropertyReference.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "other: unsupported callable reference ::topLevel",
+   "detail": "unsupported callable reference ::topLevel",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/invokePropertyReference.kt"
   },
@@ -4560,8 +4559,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/staticFunctionReferenceMultiUse.kt"
   },
   "box/box/callableReference/twoRefsOneScope.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'get')",
+   "category": "other: unsupported callable reference ::x",
+   "detail": "unsupported callable reference ::x",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/twoRefsOneScope.kt"
   },
@@ -6117,14 +6116,14 @@
    "upstream": "compiler/testData/codegen/box/closures/closureInsideConstrucor.kt"
   },
   "box/box/closures/closureOnTopLevel1.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "interfaces",
+   "detail": "unknown interface Function0$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureOnTopLevel1.kt"
   },
   "box/box/closures/closureOnTopLevel2.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "interfaces",
+   "detail": "unknown interface Function0$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureOnTopLevel2.kt"
   },
@@ -6558,14 +6557,14 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionExtensions.kt"
   },
   "box/box/companionBlocksAndExtensions/companionExtensionsWithContext.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "objects / companion objects",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionExtensionsWithContext.kt"
   },
   "box/box/companionBlocksAndExtensions/companionExtensionsWithSeveralContextParameters.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "objects / companion objects",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionExtensionsWithSeveralContextParameters.kt"
   },
@@ -7292,110 +7291,107 @@
    "upstream": "compiler/testData/codegen/box/constants/privateConst.kt"
   },
   "box/box/contextParameters/ImplicitReceiverWithTheSameContextAndExtension.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/ImplicitReceiverWithTheSameContextAndExtension.kt"
   },
   "box/box/contextParameters/arrayAccessCompositveOperators.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other: unknown method MyContainer.plus()",
+   "detail": "unknown method MyContainer.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/arrayAccessCompositveOperators.kt"
   },
   "box/box/contextParameters/arrayAccessOperators.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/arrayAccessOperators.kt"
   },
   "box/box/contextParameters/assignmentOfContextVar.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/assignmentOfContextVar.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/adaptations.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other syntax (at '\"...\"')",
+   "detail": "expected identifier (at '\"...\"')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/adaptations.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/companion.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other syntax (at 'val')",
+   "detail": "context parameters are only supported on functions (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/companion.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/boundExtensionReceiver.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/boundExtensionReceiver.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/boundReceiver.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other syntax (at 'var')",
+   "detail": "context parameters are only supported on functions (at 'var')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/boundReceiver.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/localProperty.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/localProperty.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/multipleBoundValues.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/multipleBoundValues.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/singleContextArgUnboundReceiver.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other syntax (at 'val')",
+   "detail": "context parameters are only supported on functions (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/singleContextArgUnboundReceiver.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/smartCastContextArg.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/smartCastContextArg.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/thisAsContextArg.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/thisAsContextArg.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/unboundReceiver.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other syntax (at 'val')",
+   "detail": "context parameters are only supported on functions (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/unboundReceiver.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/unboundReceiverVar.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other syntax (at 'var')",
+   "detail": "context parameters are only supported on functions (at 'var')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/unboundReceiverVar.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/varProperty.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/varProperty.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/equality.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "unknown context (stdlib API / unsupported decl)",
+   "detail": "unknown function 'context'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/equality.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/fakeOverride.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "class bodies / constructors",
+   "detail": "context parameters are only supported on functions (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/fakeOverride.kt"
   },
@@ -7406,38 +7402,38 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/funInterfaceEquality.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/generic.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other syntax (at '\"...\"')",
+   "detail": "expected identifier (at '\"...\"')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/generic.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/localFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "unknown context (stdlib API / unsupported decl)",
+   "detail": "unknown function 'context'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/localFunction.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/nullableContextArg.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "unknown context (stdlib API / unsupported decl)",
+   "detail": "unknown function 'context'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/nullableContextArg.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/propertyEquality.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other syntax (at 'val')",
+   "detail": "context parameters are only supported on functions (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/propertyEquality.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/shapes.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other syntax (at 'val')",
+   "detail": "context parameters are only supported on functions (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/shapes.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/simple.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/simple.kt"
   },
@@ -7447,26 +7443,26 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/suspend.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/throughInline.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/throughInline.kt"
   },
   "box/box/contextParameters/choosingTheNearestContext.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other: no context argument of type Int in scope",
+   "detail": "no context argument of type Int in scope",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/choosingTheNearestContext.kt"
   },
   "box/box/contextParameters/classCastException.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/classCastException.kt"
   },
   "box/box/contextParameters/classMemberAndTopLevelExtensionWithContext.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "lambdas / function types / references",
+   "detail": "non-local return from a 'with' lambda is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/classMemberAndTopLevelExtensionWithContext.kt"
   },
@@ -7483,45 +7479,44 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/companionObjectInContext.kt"
   },
   "box/box/contextParameters/compoundAssignmentOperators.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other: val 'result' cannot be reassigned",
+   "detail": "val 'result' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/compoundAssignmentOperators.kt"
   },
   "box/box/contextParameters/contextAndNoContextOverloads.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other: overloads are not supported: ClassBoth.foo",
+   "detail": "overloads are not supported: ClassBoth.foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextAndNoContextOverloads.kt"
   },
   "box/box/contextParameters/contextFunInSam.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "interfaces",
+   "detail": "expected '(' (at 'SamInterface')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextFunInSam.kt"
   },
   "box/box/contextParameters/contextOnInvokeResolve.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "strings / templates",
+   "detail": "no context argument of type String in scope",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextOnInvokeResolve.kt"
   },
   "box/box/contextParameters/contextParameterToDefaultArgument.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "lambdas / function types / references",
+   "detail": "non-local return from a 'with' lambda is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextParameterToDefaultArgument.kt"
   },
   "box/box/contextParameters/contextPropertyInInterface.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other syntax (at 'var')",
+   "detail": "context parameters are only supported on functions (at 'var')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextPropertyInInterface.kt"
   },
   "box/box/contextParameters/contextResolveDependingOnCallSite.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextResolveDependingOnCallSite.kt"
   },
   "box/box/contextParameters/contextualAnonymousFunAsAnExpression.kt": {
@@ -7558,44 +7553,43 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualInlineCall.kt"
   },
   "box/box/contextParameters/contextualLocalFunAndTopLevelFun.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "non-local return from a 'with' lambda is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualLocalFunAndTopLevelFun.kt"
   },
   "box/box/contextParameters/contextualLocalFunWithExtensiionReceiver.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "non-local return from a 'with' lambda is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualLocalFunWithExtensiionReceiver.kt"
   },
   "box/box/contextParameters/contextualLocalFunWithTypeParam.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualLocalFunWithTypeParam.kt"
   },
   "box/box/contextParameters/contextualLocalFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualLocalFunction.kt"
   },
   "box/box/contextParameters/contextualLocalWithLocalExtensionAndValue.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: overloads are not supported: foo$l1",
+   "detail": "overloads are not supported: foo$l1",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualLocalWithLocalExtensionAndValue.kt"
   },
   "box/box/contextParameters/dispatchExtensionAndContextReceiverResolve.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other: overloads are not supported: A.mext$usage",
+   "detail": "overloads are not supported: A.mext$usage",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/dispatchExtensionAndContextReceiverResolve.kt"
   },
   "box/box/contextParameters/evaluationOrder.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other: no context argument of type Int in scope",
+   "detail": "no context argument of type Int in scope",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/evaluationOrder.kt"
   },
@@ -7605,20 +7599,20 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/explicitPassing.kt"
   },
   "box/box/contextParameters/functionalType.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/functionalType.kt"
   },
   "box/box/contextParameters/genericPropertyWithContextParameters.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other syntax (at 'var')",
+   "detail": "context parameters are only supported on functions (at 'var')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/genericPropertyWithContextParameters.kt"
   },
   "box/box/contextParameters/inferGenericPropertyType.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "local / extension functions",
+   "detail": "expected extension property (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/inferGenericPropertyType.kt"
   },
@@ -7651,8 +7645,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/invokeOnTypeWithContext.kt"
   },
   "box/box/contextParameters/kt51277.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt51277.kt"
   },
@@ -7663,8 +7657,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/kt51284.kt"
   },
   "box/box/contextParameters/kt51290.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other: save expects 2 arguments",
+   "detail": "save expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt51290.kt"
   },
@@ -7674,15 +7668,14 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/kt51475.kt"
   },
   "box/box/contextParameters/kt51863.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt51863.kt"
   },
   "box/box/contextParameters/kt51951.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt51951.kt"
   },
   "box/box/contextParameters/kt52207.kt": {
@@ -7696,14 +7689,14 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/kt52213.kt"
   },
   "box/box/contextParameters/kt52373.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other: unknown method Extended.foo()",
+   "detail": "unknown method Extended.foo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt52373.kt"
   },
   "box/box/contextParameters/kt52459.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt52459.kt"
   },
@@ -7724,8 +7717,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/kt58476.kt"
   },
   "box/box/contextParameters/kt63430.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other: unknown method P.foo()",
+   "detail": "unknown method P.foo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt63430.kt"
   },
@@ -7736,33 +7729,32 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/kt65953.kt"
   },
   "box/box/contextParameters/kt66368.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other syntax (at 'suspend')",
+   "detail": "unexpected top-level token (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt66368.kt"
   },
   "box/box/contextParameters/kt74998.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt74998.kt"
   },
   "box/box/contextParameters/propertyCompoundAssignment.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other syntax (at 'var')",
+   "detail": "context parameters are only supported on functions (at 'var')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/propertyCompoundAssignment.kt"
   },
   "box/box/contextParameters/propertyWithContextAndWithout.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other: overloads are not supported: $get$b",
+   "detail": "overloads are not supported: $get$b",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/propertyWithContextAndWithout.kt"
   },
   "box/box/contextParameters/receiversOrder.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/receiversOrder.kt"
   },
   "box/box/contextParameters/sameArgForContextAndExtension.kt": {
@@ -7778,56 +7770,52 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/sameExtensionContextAndDispatchReceiver.kt"
   },
   "box/box/contextParameters/sameNameWithGlobalProperty.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/sameNameWithGlobalProperty.kt"
   },
   "box/box/contextParameters/sameNameWithLocalArguments.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/sameNameWithLocalArguments.kt"
   },
   "box/box/contextParameters/sameNameWithLocalProperty.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/sameNameWithLocalProperty.kt"
   },
   "box/box/contextParameters/sameNameWithLocalValueParameter.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "non-local return from a 'with' lambda is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/sameNameWithLocalValueParameter.kt"
   },
   "box/box/contextParameters/sameNameWithMemberProperty.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "lambdas / function types / references",
+   "detail": "non-local return from a 'with' lambda is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/sameNameWithMemberProperty.kt"
   },
   "box/box/contextParameters/sameNameWithOuterContext.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other syntax (at 'val')",
+   "detail": "context parameters are only supported on functions (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/sameNameWithOuterContext.kt"
   },
   "box/box/contextParameters/sameNameWithPropertyName.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/sameNameWithPropertyName.kt"
   },
   "box/box/contextParameters/specificity.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other syntax (at '(')",
+   "detail": "expected ':' (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/specificity.kt"
   },
   "box/box/contextParameters/substitutedContextReceivers.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other syntax (at 'val')",
+   "detail": "context parameters are only supported on functions (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/substitutedContextReceivers.kt"
   },
@@ -7842,15 +7830,14 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/suspendContextualWithExtension.kt"
   },
   "box/box/contextParameters/typealiasOnTypeWithContext.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other syntax (at '(')",
+   "detail": "unexpected top-level token (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/typealiasOnTypeWithContext.kt"
   },
   "box/box/contextParameters/unaryOperators.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/unaryOperators.kt"
   },
   "box/box/contextParameters/useFromAnotherModuleSuspending.kt": {
@@ -7864,8 +7851,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/useFromAnotherModuleWithDefaultParameterValues.kt"
   },
   "box/box/contextParameters/withExtensionReceiverAndThis.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "lambdas / function types / references",
+   "detail": "non-local return from a 'with' lambda is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/withExtensionReceiverAndThis.kt"
   },
@@ -12737,8 +12724,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateForExtPropertyInClass.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/custom.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "property accessors / delegation",
+   "detail": "expected '=' (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/custom.kt"
   },
@@ -14161,8 +14148,8 @@
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/capturingLambda.kt"
   },
   "box/box/directInvokeOptimization/contextParameters.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Int, $Lam1$Int$Int$Int$Int$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/contextParameters.kt"
   },
@@ -15680,8 +15667,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/accessorForPrivateSetter.kt"
   },
   "box/box/extensionProperties/contextPropertyInInterface.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'context')",
+   "category": "other syntax (at 'var')",
+   "detail": "context parameters are only supported on functions (at 'var')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/contextPropertyInInterface.kt"
   },
@@ -17604,8 +17591,8 @@
    "upstream": "compiler/testData/codegen/box/functions/overloadByInterfaceType.kt"
   },
   "box/box/functions/prefixRecursiveCall.kt": {
-   "detail": "exit=0 stdout='FAIL\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/prefixRecursiveCall.kt"
   },
   "box/box/functions/recursiveCompareTo.kt": {
@@ -18225,8 +18212,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/constraintsBetweenTwoStubVariables.kt"
   },
   "box/box/inference/pcla/contextParameters.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/contextParameters.kt"
   },
@@ -19151,8 +19138,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/receiverUsesOuterTVButReturnTypeIsProper.kt"
   },
   "box/box/inference/pcla/specialCallsWithCallableReferencesDontRewriteAtSlice.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "generics",
+   "detail": "expected ':' (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/specialCallsWithCallableReferencesDontRewriteAtSlice.kt"
   },
@@ -19406,9 +19393,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/static_smallIntIdentity.kt"
   },
   "box/box/initializers/static_varargChange.kt": {
-   "category": "varargs",
-   "detail": "varargGetter expects 2 arguments",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/initializers/static_varargChange.kt"
   },
   "box/box/initializers/throw1.kt": {
@@ -22889,12 +22875,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804516768\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -536081568\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -536081504\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789472\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -28320,9 +28306,8 @@
    "upstream": "compiler/testData/codegen/box/object/constructor0.kt"
   },
   "box/box/object/fields.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/object/fields.kt"
   },
   "box/box/object/fields1.kt": {
@@ -29063,8 +29048,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/assignmentOperations.kt"
   },
   "box/box/operatorConventions/augmentedAssignmentWithArrayLHS.kt": {
-   "detail": "exit=0 stdout='fail3: foo;foo;bar;!;foo;foo;bar;\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/operatorConventions/augmentedAssignmentWithArrayLHS.kt"
   },
   "box/box/operatorConventions/compareTo/comparable.kt": {
@@ -29208,9 +29193,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusExplicit.kt"
   },
   "box/box/operatorConventions/reassignmentLhsCaching.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/operatorConventions/reassignmentLhsCaching.kt"
   },
   "box/box/operatorConventions/suspendOperators.kt": {
@@ -30381,8 +30365,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt1714_minimal.kt"
   },
   "box/box/properties/kt1892.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'get')",
+   "category": "other: unknown method Int.ext()",
+   "detail": "unknown method Int.ext()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt1892.kt"
   },
@@ -31164,8 +31148,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/longInLongRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/nullableInPrimitiveRange.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/nullableInPrimitiveRange.kt"
   },
@@ -39246,9 +39230,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/comparableVersionDefaults.kt"
   },
   "box/box/versionOverloads/contextParameters.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/contextParameters.kt"
   },
   "box/box/versionOverloads/contracts.kt": {
@@ -39394,8 +39377,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/multiplatformExpectDefaults.kt"
   },
   "box/box/versionOverloads/multipleContextParameters.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "lambdas / function types / references",
+   "detail": "non-local return from a 'with' lambda is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/multipleContextParameters.kt"
   },

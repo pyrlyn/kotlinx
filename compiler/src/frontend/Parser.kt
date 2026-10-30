@@ -1067,7 +1067,7 @@ class Parser(private val t: List<Tok>) {
         while (!isOp(")")) {
             skipNL()
             val n = ident(); expectOp(":"); val ty = type()
-            ps.add(Param(if (n == "_") "\$ctx\$${ctxN++}" else n, ty, null, false, true))
+            ps.add(Param(if (n == "_") "\$cp\$${ctxN++}" else n, ty, null, false, true))
             skipNL(); if (isOp(",")) next(); skipNL()
         }
         expectOp(")")

@@ -949,7 +949,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     }
                 }
                 val tg = s.target
-                if (s.op != "=" && tg is MemberE && tg.recv !is NameE && !tg.safe) {
+                fun pure(x: E) = (x is NameE && lookup(x.n) != null) || x is IntL || (x is NameE && x.n == "this")
+                if (s.op != "=" && tg is IndexE && !(pure(tg.recv) && pure(tg.idx))) {
+                    // `a()[i()] += v`: receiver and index are evaluated once.
+                    withTemps(listOf(genExpr(tg.recv), genExpr(tg.idx))) { (r, i) ->
+                        val t2 = IndexE(r, i).also { it.line = s.line }
+                        assign(t2, BinE(s.op.dropLast(1), t2, s.value).also { it.line = s.line }); Val("", Ty.Unit)
+                    }
+                    return
+                }
+                if (s.op != "=" && tg is MemberE && !pure(tg.recv) && !tg.safe) {
                     // Compound assignment evaluates the receiver once.
                     withTemps(listOf(genExpr(tg.recv))) { (x) ->
                         val t2 = MemberE(x, tg.n, false).also { it.line = s.line }
@@ -1284,7 +1293,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (v.t is Ty.Cls || v.t is Ty.Iface) return method(v, when (e.op) { "-" -> "unaryMinus"; "+" -> "unaryPlus"; else -> "not" }, opCall("", null))
                 when (e.op) {
                     "!" -> Val(emitT("xor i1 ${coerce(v, Ty.I1).v}, true"), Ty.I1)
-                    "+" -> if (v.t.isNum) coerce(v, if (v.t == Ty.I8) Ty.I32 else v.t) else fail("unary plus on ${v.t}")
+                    "+" -> if (v.t.isNum) coerce(v, if (v.t == Ty.I8) Ty.I32 else v.t) else method(v, "unaryPlus", opCall("", null))
                     "-" -> when {
                         v.t.isFp -> Val(emitT("fneg ${v.t.llvm} ${v.v}"), v.t)
                         v.t.isInt -> { val w = coerce(v, if (v.t == Ty.I8) Ty.I32 else v.t); Val(emitT("sub ${w.t.llvm} 0, ${w.v}"), w.t) }
@@ -2013,7 +2022,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun ctxArg(t: Ty): E {
         for (i in scopes.indices.reversed()) {
             val vs = scopes[i].vars.entries.filter { it.key.startsWith("\$ctx\$") && fits(it.value.t, t) }
-            if (vs.isNotEmpty()) return NameE(vs.maxBy { it.key.drop(6).toInt() }.key).also { it.line = line }
+            if (vs.isNotEmpty()) return NameE(vs.maxBy { it.key.drop(6).toIntOrNull() ?: -1 }.key).also { it.line = line }
         }
         owner?.let { o -> if (fits(Ty.Cls(o.name), t)) return NameE("this").also { it.line = line } }
         fail("no context argument of type $t in scope")
