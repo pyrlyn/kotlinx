@@ -1360,6 +1360,13 @@ class Parser(private val t: List<Tok>) {
                 "when" -> whenExpr()
                 "try" -> tryExpr()
                 "throw" -> CallE(NameE("\$throw").also { it.line = tk.line }, emptyList(), listOf(expr()), null)
+                // `return` / `break` / `continue` used as an expression (`x ?: return 0`, `a + continue`): a block
+                // expression whose only statement jumps (type Nothing).
+                "return", "break", "continue" -> {
+                    p--
+                    val j = stmt()
+                    WhenE(null, listOf(null to Block(listOf(j)))).also { it.line = tk.line }
+                }
                 "this" -> if (t[p].k == K.OP && t[p].s == "@" && t[p + 1].k == K.ID) { p++; NameE("this@" + ident()) } else NameE("this")
                 else -> {
                     if (tk.s in GENERIC_CALLS && t[p].k == K.OP && t[p].s == "<") {

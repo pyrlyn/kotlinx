@@ -920,9 +920,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 startBlock(lb)
                 pushLoop(Triple(lc, le, scopes.size))
                 genBlockBody(s.body, false)
-                popLoop()
                 startBlock(lc)
+                // A do-while condition is inside the loop: `break` / `continue` in it target this loop (not so for `while`).
                 val c = coerce(genExpr(s.cond), Ty.I1)
+                popLoop()
                 condBr(c.v, lb, le)
                 startBlock(le)
             } else {
