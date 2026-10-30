@@ -918,6 +918,8 @@ class Parser(toks: List<Tok>) {
                         if (nn != n) { rename[n] = nn; types[n] = TypeRef(nn, emptyList(), false) }
                     }
                 }
+                val inLambdaFns = ArrayList<Any>()
+                for (d in asLambda) Subst(emptyMap(), srw = { x -> if (x is LocalDeclS) inLambdaFns.add(x.d); null }).fn(d)
                 lateinit var sub: Subst
                 sub = Subst(types, rw = { x ->
                     when {
@@ -931,6 +933,9 @@ class Parser(toks: List<Tok>) {
                     }
                 }, srw = { x ->
                     if (x !is LocalDeclS) null
+                    // Declarations nested deeper (inside a lifted local function) are lifted with that function.
+                    // (Inside a local function turned into a lambda they are still dropped, as before.)
+                    else if (decls.none { it === x.d } && inLambdaFns.none { it === x.d }) null
                     else if (x.d is FunD && x.d in asLambda) {
                         val g = x.d
                         val ret = g.ret ?: if (g.body != null) TypeRef("Unit", emptyList(), false) else null
