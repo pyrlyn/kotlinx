@@ -9,7 +9,7 @@ class IntL(val v: Long, val long: Boolean, val unsigned: Boolean = false) : E()
 /** `x++` / `x--` used as an expression: yields the old value. */
 class PostIncE(val target: E, val op: String) : E()
 class CharL(val v: Long) : E()
-class DblL(val v: Double) : E()
+class DblL(val v: Double, val f32: Boolean = false) : E()
 class BoolL(val v: Boolean) : E()
 class NullL : E()
 class StrL(val parts: List<Any>) : E() // String or E

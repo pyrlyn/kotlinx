@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 28,
   "N/A": 2984,
-  "PASS": 2348,
-  "UNSUPPORTED": 3115
+  "PASS": 2388,
+  "UNSUPPORTED": 3075
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -410,21 +410,19 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_charCornerCases.kt"
   },
   "box/box/arithmetic/basic_compareIntToFloat.kt": {
-   "category": "other: unknown method Int.compareTo()",
-   "detail": "unknown method Int.compareTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_compareIntToFloat.kt"
   },
   "box/box/arithmetic/basic_doubleBasic.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
+   "category": "unknown Double (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Double'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_doubleBasic.kt"
   },
   "box/box/arithmetic/basic_integralToFloat.kt": {
-   "category": "unknown f (stdlib API / unsupported decl)",
-   "detail": "unknown name 'f'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_integralToFloat.kt"
   },
   "box/box/arithmetic/basic_kt37412.kt": {
@@ -454,8 +452,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/division.kt"
   },
   "box/box/arithmetic/divisionByZero.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float",
+   "category": "other: unknown method Float.isNaN()",
+   "detail": "unknown method Float.isNaN()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/divisionByZero.kt"
   },
@@ -559,9 +557,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/forEachDoubleArray.kt"
   },
   "box/box/arrays/forEachFloatArray.kt": {
-   "category": "unknown FloatArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'FloatArray'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forEachFloatArray.kt"
   },
   "box/box/arrays/forEachIntArray.kt": {
@@ -735,8 +732,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/iteratorDoubleArray.kt"
   },
   "box/box/arrays/iteratorFloatArray.kt": {
-   "category": "unknown FloatArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'FloatArray'",
+   "category": "other: unknown method FloatArray.iterator()",
+   "detail": "unknown method FloatArray.iterator()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorFloatArray.kt"
   },
@@ -1101,9 +1098,8 @@
    "upstream": "compiler/testData/codegen/box/basics/concatenation.kt"
   },
   "box/box/basics/const_infinity.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "unexpected top-level token (at 'F')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/const_infinity.kt"
   },
   "box/box/basics/expression_as_statement.kt": {
@@ -1407,8 +1403,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/call.kt"
   },
   "box/box/binaryOp/callAny.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
+   "category": "other: unknown method Byte.plus()",
+   "detail": "unknown method Byte.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/callAny.kt"
   },
@@ -1468,9 +1464,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/intrinsic.kt"
   },
   "box/box/binaryOp/intrinsicAny.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/binaryOp/intrinsicAny.kt"
   },
   "box/box/binaryOp/intrinsicNullable.kt": {
@@ -3481,8 +3476,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/objectReceiver.kt"
   },
   "box/box/callableReference/bound/primitiveReceiver.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float",
+   "category": "other: unsupported callable reference Boolean::foo",
+   "detail": "unsupported callable reference Boolean::foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/primitiveReceiver.kt"
   },
@@ -4595,8 +4590,8 @@
    "upstream": "compiler/testData/codegen/box/casts/asSafeFail.kt"
   },
   "box/box/casts/asSafeForConstants.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
+   "category": "other: unsupported cast from Int to Byte",
+   "detail": "unsupported cast from Int to Byte",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/asSafeForConstants.kt"
   },
@@ -4749,8 +4744,8 @@
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeWithoutGenericsAsReceiver.kt"
   },
   "box/box/casts/isNullablePrimitive.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected end of statement (at 'F')",
+   "category": "other: type checks against Function1 are not supported",
+   "detail": "type checks against Function1 are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/isNullablePrimitive.kt"
   },
@@ -5104,8 +5099,8 @@
    "upstream": "compiler/testData/codegen/box/classLiteral/primitiveClassEquality.kt"
   },
   "box/box/classes/boxPrimitiveTypeInClinitOfClassObject.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/boxPrimitiveTypeInClinitOfClassObject.kt"
   },
@@ -5555,8 +5550,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt471.kt"
   },
   "box/box/classes/kt48.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt48.kt"
   },
@@ -7234,14 +7229,14 @@
    "upstream": "compiler/testData/codegen/box/compileKotlinAgainstKotlin/willBecomeValueSupertypeFromBinary.kt"
   },
   "box/box/constants/comparisonFalse.kt": {
-   "category": "unknown F (stdlib API / unsupported decl)",
-   "detail": "unknown name 'F'",
+   "category": "other: Double.equals() is not supported",
+   "detail": "Double.equals() is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/constants/comparisonFalse.kt"
   },
   "box/box/constants/comparisonTrue.kt": {
-   "category": "unknown F (stdlib API / unsupported decl)",
-   "detail": "unknown name 'F'",
+   "category": "other: unknown method ArrayList<Boolean>.any()",
+   "detail": "unknown method ArrayList<Boolean>.any()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/constants/comparisonTrue.kt"
   },
@@ -7266,8 +7261,8 @@
    "upstream": "compiler/testData/codegen/box/constants/doNotTriggerInit.kt"
   },
   "box/box/constants/float.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "unexpected top-level token (at 'F')",
+   "category": "unknown kotlin (stdlib API / unsupported decl)",
+   "detail": "unknown name 'kotlin'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/constants/float.kt"
   },
@@ -8304,8 +8299,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forArrayListMultiDecl.kt"
   },
   "box/box/controlStructures/forInArray/forInArraySpecializedToUntil.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
+   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'shortArrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInArraySpecializedToUntil.kt"
   },
@@ -11977,9 +11972,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/doubleParam.kt"
   },
   "box/box/dataClasses/equalityChecksPrimitiveUnboxed.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/equalityChecksPrimitiveUnboxed.kt"
   },
   "box/box/dataClasses/equals/alreadyDeclared.kt": {
@@ -12015,8 +12009,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/sameinstance.kt"
   },
   "box/box/dataClasses/floatParam.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float",
+   "category": "unknown HashSet (stdlib API / unsupported decl)",
+   "detail": "unknown function 'HashSet'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/floatParam.kt"
   },
@@ -12056,9 +12050,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/double.kt"
   },
   "box/box/dataClasses/hashCode/float.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/float.kt"
   },
   "box/box/dataClasses/hashCode/genericNull.kt": {
@@ -14983,14 +14976,14 @@
    "upstream": "compiler/testData/codegen/box/evaluate/booleanOperations.kt"
   },
   "box/box/evaluate/byteOperations.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method Byte.plus()",
+   "detail": "unknown method Byte.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/byteOperations.kt"
   },
   "box/box/evaluate/charOperations.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/charOperations.kt"
   },
@@ -15000,8 +14993,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/complexBooleanConstant.kt"
   },
   "box/box/evaluate/doubleOperations.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method Double.unaryPlus()",
+   "detail": "unknown method Double.unaryPlus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/doubleOperations.kt"
   },
@@ -15011,8 +15004,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/enumWithDifferentFileOrder.kt"
   },
   "box/box/evaluate/floatOperations.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method Float.unaryPlus()",
+   "detail": "unknown method Float.unaryPlus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/floatOperations.kt"
   },
@@ -15033,8 +15026,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/inJavaPackage.kt"
   },
   "box/box/evaluate/intOperations.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method Int.unaryPlus()",
+   "detail": "unknown method Int.unaryPlus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intOperations.kt"
   },
@@ -15073,8 +15066,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/enumNameWithInit.kt"
   },
   "box/box/evaluate/intrinsicConst/equals_after.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method Boolean.equals()",
+   "detail": "unknown method Boolean.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/equals_after.kt"
   },
@@ -15135,14 +15128,14 @@
    "upstream": "compiler/testData/codegen/box/evaluate/kt9443.kt"
   },
   "box/box/evaluate/longOperations.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method Long.unaryPlus()",
+   "detail": "unknown method Long.unaryPlus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/longOperations.kt"
   },
   "box/box/evaluate/nanBitPattern.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method Float.toRawBits()",
+   "detail": "unknown method Float.toRawBits()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/nanBitPattern.kt"
   },
@@ -15222,14 +15215,14 @@
    "upstream": "compiler/testData/codegen/box/evaluate/serialization/typeAnnotation.kt"
   },
   "box/box/evaluate/shortOperations.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method Int.unaryPlus()",
+   "detail": "unknown method Int.unaryPlus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/shortOperations.kt"
   },
   "box/box/evaluate/stdlibConst.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method Byte.floorDiv()",
+   "detail": "unknown method Byte.floorDiv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/stdlibConst.kt"
   },
@@ -15262,20 +15255,20 @@
    "upstream": "compiler/testData/codegen/box/evaluate/thisPlusStringWithObject.kt"
   },
   "box/box/evaluate/ubyteOperations.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method UInt.floorDiv()",
+   "detail": "unknown method UInt.floorDiv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/ubyteOperations.kt"
   },
   "box/box/evaluate/uintOperations.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method UInt.floorDiv()",
+   "detail": "unknown method UInt.floorDiv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/uintOperations.kt"
   },
   "box/box/evaluate/ulongOperations.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method ULong.floorDiv()",
+   "detail": "unknown method ULong.floorDiv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/ulongOperations.kt"
   },
@@ -15291,8 +15284,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/useCorrectToString.kt"
   },
   "box/box/evaluate/ushortOperations.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method UInt.floorDiv()",
+   "detail": "unknown method UInt.floorDiv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/ushortOperations.kt"
   },
@@ -15788,8 +15781,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/genericContextOverride.kt"
   },
   "box/box/extensionProperties/genericValForPrimitiveType.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'f')",
+   "category": "other: unsupported call",
+   "detail": "unsupported call",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/genericValForPrimitiveType.kt"
   },
@@ -16258,9 +16251,8 @@
    "upstream": "compiler/testData/codegen/box/fp/addSubDenormalDouble.kt"
   },
   "box/box/fp/addSubDenormalFloat.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fp/addSubDenormalFloat.kt"
   },
   "box/box/fp/addSubZeroInfinityDouble.kt": {
@@ -16270,8 +16262,8 @@
    "upstream": "compiler/testData/codegen/box/fp/addSubZeroInfinityDouble.kt"
   },
   "box/box/fp/addSubZeroInfinityFloat.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method Float.isNaN()",
+   "detail": "unknown method Float.isNaN()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/addSubZeroInfinityFloat.kt"
   },
@@ -16288,8 +16280,8 @@
    "upstream": "compiler/testData/codegen/box/fp/denormalGradualDoubleBits.kt"
   },
   "box/box/fp/denormalGradualFloatBits.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "unknown Float (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Float'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/denormalGradualFloatBits.kt"
   },
@@ -16300,8 +16292,8 @@
    "upstream": "compiler/testData/codegen/box/fp/divZeroAndNanDouble.kt"
   },
   "box/box/fp/divZeroAndNanFloat.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
+   "category": "other: unknown method Float.isNaN()",
+   "detail": "unknown method Float.isNaN()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/divZeroAndNanFloat.kt"
   },
@@ -16311,9 +16303,8 @@
    "upstream": "compiler/testData/codegen/box/fp/divisionOfZeroDouble.kt"
   },
   "box/box/fp/divisionOfZeroFloat.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fp/divisionOfZeroFloat.kt"
   },
   "box/box/fp/mulZeroInfinityDouble.kt": {
@@ -16323,8 +16314,8 @@
    "upstream": "compiler/testData/codegen/box/fp/mulZeroInfinityDouble.kt"
   },
   "box/box/fp/mulZeroInfinityFloat.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: unknown method Float.isNaN()",
+   "detail": "unknown method Float.isNaN()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/mulZeroInfinityFloat.kt"
   },
@@ -16335,8 +16326,8 @@
    "upstream": "compiler/testData/codegen/box/fp/powDouble.kt"
   },
   "box/box/fp/powFloat.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
+   "category": "other: unknown method Float.pow()",
+   "detail": "unknown method Float.pow()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/powFloat.kt"
   },
@@ -16346,32 +16337,31 @@
    "upstream": "compiler/testData/codegen/box/fp/precisionAround2p53Double.kt"
   },
   "box/box/fp/precisionAround2p53Float.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fp/precisionAround2p53Float.kt"
   },
   "box/box/fp/remainderMixedFpInfinitiesNans.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
+   "category": "other: unknown method Double.isNaN()",
+   "detail": "unknown method Double.isNaN()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/remainderMixedFpInfinitiesNans.kt"
   },
   "box/box/fp/remainderMixedFpSubnormalDivisor.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: overloads are not supported: signOf",
+   "detail": "overloads are not supported: signOf",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/remainderMixedFpSubnormalDivisor.kt"
   },
   "box/box/fp/remainderMixedIntFp.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ')' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/remainderMixedIntFp.kt"
   },
   "box/box/fp/remainderMixedLongFpLargeRatio.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: overloads are not supported: signOf",
+   "detail": "overloads are not supported: signOf",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/remainderMixedLongFpLargeRatio.kt"
   },
@@ -16382,8 +16372,8 @@
    "upstream": "compiler/testData/codegen/box/fp/remainderVsModDouble.kt"
   },
   "box/box/fp/remainderVsModFloat.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
+   "category": "other: unknown method Float.isNaN()",
+   "detail": "unknown method Float.isNaN()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/remainderVsModFloat.kt"
   },
@@ -16394,8 +16384,8 @@
    "upstream": "compiler/testData/codegen/box/fp/toBitsZeroAndNanDouble.kt"
   },
   "box/box/fp/toBitsZeroAndNanFloat.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
+   "category": "other: unknown method Float.toBits()",
+   "detail": "unknown method Float.toBits()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/toBitsZeroAndNanFloat.kt"
   },
@@ -17028,9 +17018,8 @@
    "upstream": "compiler/testData/codegen/box/function/referenceBigArity.kt"
   },
   "box/box/function/sum.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/sum.kt"
   },
   "box/box/function/sum_3const.kt": {
@@ -17054,9 +17043,8 @@
    "upstream": "compiler/testData/codegen/box/function/sum_imm.kt"
   },
   "box/box/function/sum_mixed.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/sum_mixed.kt"
   },
   "box/box/function/sum_silly.kt": {
@@ -17666,20 +17654,19 @@
    "upstream": "compiler/testData/codegen/box/ieee754/anyCastToPrimitiveCompareTo2.kt"
   },
   "box/box/ieee754/anyToReal.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected end of statement (at 'F')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/anyToReal.kt"
   },
   "box/box/ieee754/asComparableToDouble.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected ')' (at 'F')",
+   "category": "other: unsupported cast from Double to Comparable$Double",
+   "detail": "unsupported cast from Double to Comparable$Double",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/asComparableToDouble.kt"
   },
   "box/box/ieee754/asComparableToDouble_properIeeeComparisons.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected ')' (at 'F')",
+   "category": "other: unsupported cast from Double to Comparable$Double",
+   "detail": "unsupported cast from Double to Comparable$Double",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/asComparableToDouble_properIeeeComparisons.kt"
   },
@@ -17690,8 +17677,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/comparableToTWithT_properIeeeComparisons.kt"
   },
   "box/box/ieee754/comparableTypeCast.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected ')' (at 'F')",
+   "category": "other: unsupported cast from Double to Comparable$Double",
+   "detail": "unsupported cast from Double to Comparable$Double",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/comparableTypeCast.kt"
   },
@@ -17701,9 +17688,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/dataClass.kt"
   },
   "box/box/ieee754/differentTypesComparison.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected ')' (at 'F')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/differentTypesComparison.kt"
   },
   "box/box/ieee754/equalsDouble_properIeeeComparisons.kt": {
@@ -17713,15 +17699,14 @@
    "upstream": "compiler/testData/codegen/box/ieee754/equalsDouble_properIeeeComparisons.kt"
   },
   "box/box/ieee754/equalsFloat_properIeeeComparisons.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected ')' (at 'F')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Boolean, found Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/equalsFloat_properIeeeComparisons.kt"
   },
   "box/box/ieee754/equalsNaN_properIeeeComparisons.kt": {
-   "category": "unknown Float (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Float'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/equalsNaN_properIeeeComparisons.kt"
   },
   "box/box/ieee754/equalsNullableDouble_properIeeeComparisons.kt": {
@@ -17731,8 +17716,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/equalsNullableDouble_properIeeeComparisons.kt"
   },
   "box/box/ieee754/equalsNullableFloat_properIeeeComparisons.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Boolean, found Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/equalsNullableFloat_properIeeeComparisons.kt"
   },
@@ -17760,8 +17745,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/greaterDouble_properIeeeComparisons.kt"
   },
   "box/box/ieee754/greaterFloat_properIeeeComparisons.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected ')' (at 'F')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Boolean, found Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/greaterFloat_properIeeeComparisons.kt"
   },
@@ -17782,15 +17767,13 @@
    "upstream": "compiler/testData/codegen/box/ieee754/lessDouble_properIeeeComparisons.kt"
   },
   "box/box/ieee754/lessFloat_properIeeeComparisons.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected ')' (at 'F')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/lessFloat_properIeeeComparisons.kt"
   },
   "box/box/ieee754/nullableAnyToReal.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected end of statement (at 'F')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/nullableAnyToReal.kt"
   },
   "box/box/ieee754/nullableDoubleEquals.kt": {
@@ -17812,14 +17795,14 @@
    "upstream": "compiler/testData/codegen/box/ieee754/nullableDoubleNotEquals.kt"
   },
   "box/box/ieee754/nullableFloatEquals.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Float, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/nullableFloatEquals.kt"
   },
   "box/box/ieee754/nullableFloatNotEquals.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Float, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/nullableFloatNotEquals.kt"
   },
@@ -17836,27 +17819,24 @@
    "upstream": "compiler/testData/codegen/box/ieee754/safeCall.kt"
   },
   "box/box/ieee754/smartCastOnWhenSubjectAfterCheckInBranch_properIeeeComparisons.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected '->' (at 'F')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/smartCastOnWhenSubjectAfterCheckInBranch_properIeeeComparisons.kt"
   },
   "box/box/ieee754/smartCastToDifferentTypesWithNumericPromotion_properIeeeComparisons.kt": {
    "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'eqFI' needs an explicit return type",
+   "detail": "expression-bodied function 'eqDI' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/smartCastToDifferentTypesWithNumericPromotion_properIeeeComparisons.kt"
   },
   "box/box/ieee754/smartCastToDifferentTypes_properIeeeComparisons.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'ne' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/smartCastToDifferentTypes_properIeeeComparisons.kt"
   },
   "box/box/ieee754/smartCastToDoubleAndComparableToDouble.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected ')' (at 'F')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/smartCastToDoubleAndComparableToDouble.kt"
   },
   "box/box/ieee754/smartCastToInt.kt": {
@@ -17923,9 +17903,8 @@
    "upstream": "compiler/testData/codegen/box/increment/classVarargGetSetEvaluationOrder.kt"
   },
   "box/box/increment/classWithGetSet.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/classWithGetSet.kt"
   },
   "box/box/increment/extOnLong.kt": {
@@ -17935,9 +17914,8 @@
    "upstream": "compiler/testData/codegen/box/increment/extOnLong.kt"
   },
   "box/box/increment/genericClassWithGetSet.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/genericClassWithGetSet.kt"
   },
   "box/box/increment/kt36956.kt": {
@@ -17952,15 +17930,13 @@
    "upstream": "compiler/testData/codegen/box/increment/memberExtOnLong.kt"
   },
   "box/box/increment/mutableListElement.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/mutableListElement.kt"
   },
   "box/box/increment/nullable.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/nullable.kt"
   },
   "box/box/increment/postfixIncrementDoubleSmartCast.kt": {
@@ -19205,8 +19181,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/receiverUsesOuterTVButReturnTypeIsProper.kt"
   },
   "box/box/inference/pcla/specialCallsWithCallableReferencesDontRewriteAtSlice.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other: expected '=' (at '",
+   "detail": "expected '=' (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/specialCallsWithCallableReferencesDontRewriteAtSlice.kt"
   },
@@ -22215,8 +22191,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksPrimitiveGeneric.kt"
   },
   "box/box/inlineClasses/equalityChecksPrimitiveUnboxed.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksPrimitiveUnboxed.kt"
   },
@@ -22836,15 +22812,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineMutableCollectionBulkAdd.kt"
   },
   "box/box/inlineClasses/inlineClassEqualityShouldUseTotalOrderForFloatingPointData.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassEqualityShouldUseTotalOrderForFloatingPointData.kt"
   },
   "box/box/inlineClasses/inlineClassEqualityShouldUseTotalOrderForFloatingPointDataGeneric.kt": {
-   "category": "class bodies / constructors",
-   "detail": "constructor InlineFloat expects 1 arguments",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassEqualityShouldUseTotalOrderForFloatingPointDataGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassFieldHandling.kt": {
@@ -22947,12 +22921,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387872\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -536081440\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531488\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789664\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25557,8 +25531,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/throwableParamOrder.kt"
   },
   "box/box/intrinsics/tostring.kt": {
-   "category": "other: unknown method Int.toFloat()",
-   "detail": "unknown method Int.toFloat()",
+   "category": "strings / templates",
+   "detail": "unknown method Boolean.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
@@ -25645,9 +25619,8 @@
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/mutable1.kt"
   },
   "box/box/ir/closureConversion/mutablePrimitives.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected '->' (at 'F')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/mutablePrimitives.kt"
   },
   "box/box/ir/enumClass.kt": {
@@ -25725,9 +25698,8 @@
    "upstream": "compiler/testData/codegen/box/ir/primitiveNumberComparisons/doubleEqeq.kt"
   },
   "box/box/ir/primitiveNumberComparisons/floatEqeq.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected end of statement (at 'F')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/primitiveNumberComparisons/floatEqeq.kt"
   },
   "box/box/ir/primitiveNumberComparisons/mixedNumberTypes.kt": {
@@ -26617,8 +26589,8 @@
    "upstream": "compiler/testData/codegen/box/localEscapeAnalysis/arraysFieldWrite.kt"
   },
   "box/box/lower/forLoopsLowering/arrays.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected end of statement (at 'F')",
+   "category": "other: unknown method IntArray.sumOf()",
+   "detail": "unknown method IntArray.sumOf()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/arrays.kt"
   },
@@ -29300,8 +29272,8 @@
    "upstream": "compiler/testData/codegen/box/optimizations/kt89860.kt"
   },
   "box/box/package/boxPrimitiveTypeInClinit.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float?",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/package/boxPrimitiveTypeInClinit.kt"
   },
@@ -29343,9 +29315,8 @@
    "upstream": "compiler/testData/codegen/box/package/kt57353.kt"
   },
   "box/box/package/nullablePrimitiveNoFieldInitializer.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float?",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/package/nullablePrimitiveNoFieldInitializer.kt"
   },
   "box/box/package/packageLocalClassNotImportedWithDefaultImport.kt": {
@@ -29489,9 +29460,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/comparisonWithNullCallsFun.kt"
   },
   "box/box/primitiveTypes/conversions.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/conversions.kt"
   },
   "box/box/primitiveTypes/ea35963.kt": {
@@ -29656,8 +29626,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/whenNullableBoxed.kt"
   },
   "box/box/primitiveTypes/equalsHashCodeToString.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
+   "category": "other: unknown method Byte.equals()",
+   "detail": "unknown method Byte.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalsHashCodeToString.kt"
   },
@@ -29775,8 +29745,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt3517.kt"
   },
   "box/box/primitiveTypes/kt3576.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float",
+   "category": "other: Float.equals() is not supported",
+   "detail": "Float.equals() is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt3576.kt"
   },
@@ -30007,8 +29977,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/unboxComparable.kt"
   },
   "box/box/primitiveTypes/virtualCallToCustomNumber.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'f')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown superclass Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/virtualCallToCustomNumber.kt"
   },
@@ -30963,26 +30933,26 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/collectionIndices.kt"
   },
   "box/box/ranges/contains/generated/doubleRangeTo.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "unexpected top-level token (at 'F')",
+   "category": "other: cannot build a range of Double and Double",
+   "detail": "cannot build a range of Double and Double",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/doubleRangeTo.kt"
   },
   "box/box/ranges/contains/generated/doubleRangeUntil.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "unexpected top-level token (at 'F')",
+   "category": "other: cannot build a range of Double and Double",
+   "detail": "cannot build a range of Double and Double",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/doubleRangeUntil.kt"
   },
   "box/box/ranges/contains/generated/floatRangeTo.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "unexpected top-level token (at 'F')",
+   "category": "other: cannot build a range of Float and Float",
+   "detail": "cannot build a range of Float and Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/floatRangeTo.kt"
   },
   "box/box/ranges/contains/generated/floatRangeUntil.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "unexpected top-level token (at 'F')",
+   "category": "other: cannot build a range of Float and Float",
+   "detail": "cannot build a range of Float and Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/generated/floatRangeUntil.kt"
   },
@@ -31125,8 +31095,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inIterable.kt"
   },
   "box/box/ranges/contains/inNonMatchingRange.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
+   "category": "other: cannot build a range of Float and Float",
+   "detail": "cannot build a range of Float and Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inNonMatchingRange.kt"
   },
@@ -31137,8 +31107,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inOptimizableDoubleRange.kt"
   },
   "box/box/ranges/contains/inOptimizableFloatRange.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
+   "category": "other: unknown type ClosedRange<Float>",
+   "detail": "unknown type ClosedRange<Float>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inOptimizableFloatRange.kt"
   },
@@ -31183,8 +31153,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithImplicitReceiver.kt"
   },
   "box/box/ranges/contains/inRangeWithNonmatchingArguments.kt": {
-   "category": "unknown Float (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Float'",
+   "category": "other: cannot build a range of Float and Float",
+   "detail": "cannot build a range of Float and Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithNonmatchingArguments.kt"
   },
@@ -31253,8 +31223,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/rangeContainsString.kt"
   },
   "box/box/ranges/contains/smartCastOnBothEnds.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float?",
+   "category": "other: cannot build a range of Double and Double",
+   "detail": "cannot build a range of Double and Double",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/smartCastOnBothEnds.kt"
   },
@@ -31694,8 +31664,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forNullableIntInDownTo.kt"
   },
   "box/box/ranges/forInFloatRangeWithCustomIterator.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
+   "category": "interfaces",
+   "detail": "unknown interface Iterator$Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInFloatRangeWithCustomIterator.kt"
   },
@@ -35428,9 +35398,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/doubleMerge.kt"
   },
   "box/box/regressions/floatMerge.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/floatMerge.kt"
   },
   "box/box/regressions/functionLiteralAsLastExpressionInBlock.kt": {
@@ -35687,8 +35656,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt68727.kt"
   },
   "box/box/regressions/kt71119.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
+   "category": "unknown Any (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Any'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt71119.kt"
   },
@@ -36527,8 +36496,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/enums.kt"
   },
   "box/box/secondaryConstructors/fieldInitializerOptimization.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
+   "category": "unknown Any (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Any'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/fieldInitializerOptimization.kt"
   },
@@ -37211,15 +37180,13 @@
    "upstream": "compiler/testData/codegen/box/strings/concatDynamicWithSpecialSymbols.kt"
   },
   "box/box/strings/concatGenericWithNullablePrimitiveUpperBound.kt": {
-   "category": "other: concatNFloat expects 1 arguments",
-   "detail": "concatNFloat expects 1 arguments",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/concatGenericWithNullablePrimitiveUpperBound.kt"
   },
   "box/box/strings/concatGenericWithPrimitiveUpperBound.kt": {
-   "category": "other: concatFloat expects 1 arguments",
-   "detail": "concatFloat expects 1 arguments",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/concatGenericWithPrimitiveUpperBound.kt"
   },
   "box/box/strings/concatGenericWithStringUpperBound.kt": {
@@ -37228,15 +37195,13 @@
    "upstream": "compiler/testData/codegen/box/strings/concatGenericWithStringUpperBound.kt"
   },
   "box/box/strings/concatNullableGenericWithPrimitiveUpperBound.kt": {
-   "category": "other: concatNFloat expects 1 arguments",
-   "detail": "concatNFloat expects 1 arguments",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/concatNullableGenericWithPrimitiveUpperBound.kt"
   },
   "box/box/strings/constInStringTemplate.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "unexpected top-level token (at 'F')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/constInStringTemplate.kt"
   },
   "box/box/strings/ea35743.kt": {
@@ -37359,9 +37324,8 @@
    "upstream": "compiler/testData/codegen/box/strings/singleConcatNullable.kt"
   },
   "box/box/strings/stringBuilderAppend.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected end of statement (at 'F')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/stringBuilderAppend.kt"
   },
   "box/box/strings/stringPlusOnlyWorksOnString.kt": {
@@ -38819,15 +38783,13 @@
    "upstream": "compiler/testData/codegen/box/unaryOp/callWithCommonType.kt"
   },
   "box/box/unaryOp/intrinsic.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unaryOp/intrinsic.kt"
   },
   "box/box/unaryOp/intrinsicNullable.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unaryOp/intrinsicNullable.kt"
   },
   "box/box/unaryOp/longOverflow.kt": {
@@ -38851,8 +38813,8 @@
    "upstream": "compiler/testData/codegen/box/underscoredTypeArguments/react.kt"
   },
   "box/box/underscoredTypeArguments/simple.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
+   "category": "other: unknown type _",
+   "detail": "unknown type _",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/underscoredTypeArguments/simple.kt"
   },
@@ -39213,14 +39175,14 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/whenByUnsigned.kt"
   },
   "box/box/vararg/boxingArgumentsForVararg.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/boxingArgumentsForVararg.kt"
   },
   "box/box/vararg/doNotCopyImmediatelyCreatedArrays.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
+   "category": "unknown booleanArrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'booleanArrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/doNotCopyImmediatelyCreatedArrays.kt"
   },
@@ -39271,8 +39233,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/kt581.kt"
   },
   "box/box/vararg/kt6192.kt": {
-   "category": "types: Float",
-   "detail": "unknown type Float",
+   "category": "unknown CharArray (stdlib API / unsupported decl)",
+   "detail": "unknown function 'CharArray'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt6192.kt"
   },
@@ -39615,9 +39577,8 @@
    "upstream": "compiler/testData/codegen/box/volatile/volatileDouble.kt"
   },
   "box/box/volatile/volatileFloat.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected ')' (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/volatile/volatileFloat.kt"
   },
   "box/box/volatile/volatileGeneric.kt": {
@@ -40234,14 +40195,14 @@
    "upstream": "compiler/testData/codegen/box/when/whenSubjectVariable/equalityWithSubjectVariable.kt"
   },
   "box/box/when/whenSubjectVariable/ieee754Equality.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other syntax (at 'y')",
+   "detail": "expected ')' (at 'y')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/whenSubjectVariable/ieee754Equality.kt"
   },
   "box/box/when/whenSubjectVariable/ieee754EqualityWithSmartCast.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "unexpected top-level token (at 'f')",
+   "category": "other syntax (at 'a')",
+   "detail": "expected ')' (at 'a')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/whenSubjectVariable/ieee754EqualityWithSmartCast.kt"
   },
@@ -44805,9 +44766,8 @@
    "upstream": "native/native.tests/testData/codegen/object/fields2_2.kt"
   },
   "native/native.tests/codegen/objectDeclaration/compileTime.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'f')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/compileTime.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkComputedField.kt": {
@@ -44835,8 +44795,8 @@
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkField.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkInit.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'f')",
+   "category": "other: unknown method ClassWithConstants.isPermanent()",
+   "detail": "unknown method ClassWithConstants.isPermanent()",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkInit.kt"
   },

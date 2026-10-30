@@ -343,7 +343,7 @@ fun withPrelude(src: String, p: Program): Program {
 }
 
 /** Primitive types that are boxed (into `AnyBox<T>` classes) when used as `Any`. */
-val ANY_BOXED = listOf("Int", "Long", "Double", "Boolean", "Char", "String", "UInt", "ULong", "Byte")
+val ANY_BOXED = listOf("Int", "Long", "Double", "Float", "Boolean", "Char", "String", "UInt", "ULong", "Byte")
 private val ANY_USE = Regex("""\bAny\b""")
 
 /**
@@ -376,7 +376,7 @@ fun withAny(src: String, p: Program): Program {
     }
     sb.append("    return \"Any\"\n}\n")
     sb.append("fun anyEquals__(a: Any?, b: Any?): Boolean {\n    if (a == null) return b == null\n    if (b == null) return false\n")
-    for (b in ANY_BOXED) sb.append(if (b == "Double") "    if (a is AnyBoxDouble) return b is AnyBoxDouble && a.v.compareTo(b.v) == 0\n" else "    if (a is AnyBox$b) return b is AnyBox$b && a.v == b.v\n")
+    for (b in ANY_BOXED) sb.append(if (b == "Double" || b == "Float") "    if (a is AnyBox$b) return b is AnyBox$b && a.v.compareTo(b.v) == 0\n" else "    if (a is AnyBox$b) return b is AnyBox$b && a.v == b.v\n")
     for (c in concrete) when {
         has(c, "equals") -> sb.append("    if (a is `${c.name}`) return a.equals(b)\n")
         c.isValue || c.methods.any { it.name == "\$equals" } -> sb.append("    if (a is `${c.name}`) return b is `${c.name}` && a == b\n")
