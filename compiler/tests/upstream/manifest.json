@@ -2,10 +2,10 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "COMPILER_CRASH": 2,
-  "MISCOMPILE": 38,
+  "MISCOMPILE": 39,
   "N/A": 2984,
-  "PASS": 2046,
-  "UNSUPPORTED": 3405
+  "PASS": 2087,
+  "UNSUPPORTED": 3363
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1574,8 +1574,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing10.kt"
   },
   "box/box/boxing/boxing11.kt": {
-   "category": "unknown sb (stdlib API / unsupported decl)",
-   "detail": "unknown name 'sb'",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing11.kt"
   },
@@ -1602,39 +1602,36 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing15.kt"
   },
   "box/box/boxing/boxing2.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'printInt' needs an explicit return type",
+   "category": "strings / templates",
+   "detail": "unknown method Boolean.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing2.kt"
   },
   "box/box/boxing/boxing3.kt": {
-   "category": "unknown sb (stdlib API / unsupported decl)",
-   "detail": "unknown name 'sb'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxing/boxing3.kt"
   },
   "box/box/boxing/boxing4.kt": {
-   "category": "unknown sb (stdlib API / unsupported decl)",
-   "detail": "unknown name 'sb'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxing/boxing4.kt"
   },
   "box/box/boxing/boxing5.kt": {
-   "category": "unknown sb (stdlib API / unsupported decl)",
-   "detail": "unknown name 'sb'",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing5.kt"
   },
   "box/box/boxing/boxing6.kt": {
-   "category": "unknown sb (stdlib API / unsupported decl)",
-   "detail": "unknown name 'sb'",
+   "category": "nullable types",
+   "detail": "nullable cast from Any to Int is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing6.kt"
   },
   "box/box/boxing/boxing7.kt": {
-   "category": "unknown sb (stdlib API / unsupported decl)",
-   "detail": "unknown name 'sb'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxing/boxing7.kt"
   },
   "box/box/boxing/boxing8.kt": {
@@ -14002,15 +13999,13 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgsOverridden.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects.kt": {
-   "category": "unknown counter (stdlib API / unsupported decl)",
-   "detail": "unknown name 'counter'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects2.kt": {
-   "category": "unknown counter (stdlib API / unsupported decl)",
-   "detail": "unknown name 'counter'",
-   "status": "UNSUPPORTED",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.IllegalArgumentException: x=2 y=4 z=5\\n'",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects2.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/extensionTailCall.kt": {
@@ -14922,9 +14917,8 @@
    "upstream": "compiler/testData/codegen/box/enum/switchLowering.kt"
   },
   "box/box/enum/test0.kt": {
-   "category": "unknown TOP_LEVEL (stdlib API / unsupported decl)",
-   "detail": "unknown name 'TOP_LEVEL'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/test0.kt"
   },
   "box/box/enum/test1.kt": {
@@ -17014,9 +17008,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaults3.kt"
   },
   "box/box/function/defaults4.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'foo' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/defaults4.kt"
   },
   "box/box/function/defaults5.kt": {
@@ -19537,9 +19530,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/initializers8.kt"
   },
   "box/box/initializers/initializers9.kt": {
-   "category": "unknown sb (stdlib API / unsupported decl)",
-   "detail": "unknown name 'sb'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/initializers/initializers9.kt"
   },
   "box/box/initializers/kt73691.kt": {
@@ -23109,12 +23101,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267646112\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146694048\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 806096032\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387808\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25735,7 +25727,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1030613ab        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10317de9b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x104f253ab        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x1050425db        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -31506,201 +31498,168 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/userDefinedContainsExtension.kt"
   },
   "box/box/ranges/evaluationOrder/forInDownTo.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInDownTo.kt"
   },
   "box/box/ranges/evaluationOrder/forInDownToReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInDownToReversed.kt"
   },
   "box/box/ranges/evaluationOrder/forInDownToReversedReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInDownToReversedReversed.kt"
   },
   "box/box/ranges/evaluationOrder/forInRangeLiteral.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInRangeLiteral.kt"
   },
   "box/box/ranges/evaluationOrder/forInRangeLiteralReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInRangeLiteralReversed.kt"
   },
   "box/box/ranges/evaluationOrder/forInRangeLiteralReversedReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInRangeLiteralReversedReversed.kt"
   },
   "box/box/ranges/evaluationOrder/forInUntil.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInUntil.kt"
   },
   "box/box/ranges/evaluationOrder/forInUntilReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInUntilReversed.kt"
   },
   "box/box/ranges/evaluationOrder/forInUntilReversedReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/forInUntilReversedReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToReversedStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToReversedStepReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToReversedStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToReversedStepReversedStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToReversedStepReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepReversedStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepReversedStepReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepReversedStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInDownTo/forInDownToStepStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralReversedStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralReversedStepReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralReversedStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralReversedStepReversedStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralReversedStepReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepReversedStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepReversedStepReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepReversedStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInRangeLiteral/forInRangeLiteralStepStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilReversedStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilReversedStepReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilReversedStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilReversedStepReversedStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilReversedStepReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepReversedStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepReversedStep.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepReversedStepReversed.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepReversedStepReversed.kt"
   },
   "box/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepStep.kt": {
-   "category": "unknown log (stdlib API / unsupported decl)",
-   "detail": "unknown name 'log'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/evaluationOrder/stepped/forInUntil/forInUntilStepStep.kt"
   },
   "box/box/ranges/expression/emptyDownto.kt": {
@@ -36769,9 +36728,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/defaultArgs.kt"
   },
   "box/box/secondaryConstructors/defaultParametersNotDuplicated.kt": {
-   "category": "unknown global (stdlib API / unsupported decl)",
-   "detail": "unknown name 'global'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/defaultParametersNotDuplicated.kt"
   },
   "box/box/secondaryConstructors/delegateWithComplexExpression.kt": {
@@ -39151,7 +39109,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/grok/kotlinx-features/compiler/build/upstream-tmp/nkup2f5gz5zl/t.ll:202:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\ncommand failed (256): '/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt' -passes='lt",
+   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/grok/kotlinx-features/compiler/build/upstream-tmp/nkupxlsq7lb4/t.ll:202:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\ncommand failed (256): '/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt' -passes='lt",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -40501,8 +40459,8 @@
    "upstream": "compiler/testData/codegen/box/when/whenArgumentIsEvaluatedOnlyOnce.kt"
   },
   "box/box/when/whenSafeCallSubjectEvaluatedOnce.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'test' needs an explicit return type",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/whenSafeCallSubjectEvaluatedOnce.kt"
   },
