@@ -1,11 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "COMPILER_CRASH": 2,
-  "MISCOMPILE": 38,
+  "MISCOMPILE": 29,
   "N/A": 2984,
-  "PASS": 2071,
-  "UNSUPPORTED": 3380
+  "PASS": 2058,
+  "UNSUPPORTED": 3404
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -326,13 +325,13 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/argumentOrderInSuperCall.kt"
   },
   "box/box/argumentOrder/arguments.kt": {
-   "detail": "exit=0 stdout='fail1: 132 != 123 or xab != xab\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/arguments.kt"
   },
   "box/box/argumentOrder/captured.kt": {
-   "detail": "exit=0 stdout='fail 1: 0_1_9 != 1_0_9 or 0_1_9 != 0_1_9\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/captured.kt"
   },
   "box/box/argumentOrder/capturedInExtension.kt": {
@@ -342,13 +341,13 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/capturedInExtension.kt"
   },
   "box/box/argumentOrder/defaults.kt": {
-   "detail": "exit=0 stdout='fail: xOyK != KOxy or 1OK1 != 1OK1\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/defaults.kt"
   },
   "box/box/argumentOrder/extension.kt": {
-   "detail": "exit=0 stdout='fail 1: 0_1_L != 1_0_L or 1_0_1_L != 1_0_1_L\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/extension.kt"
   },
   "box/box/argumentOrder/extensionInClass.kt": {
@@ -358,8 +357,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/extensionInClass.kt"
   },
   "box/box/argumentOrder/kt17691WithEnabledFeature.kt": {
-   "category": "other: Unit cannot be used as Any",
-   "detail": "Unit cannot be used as Any",
+   "category": "other: cannot store Unit in '$a0'",
+   "detail": "cannot store Unit in '$a0'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt17691WithEnabledFeature.kt"
   },
@@ -380,18 +379,18 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/lambdaMigrationInClass.kt"
   },
   "box/box/argumentOrder/simple.kt": {
-   "detail": "exit=0 stdout='fail 1: OKL != KOL or OKL != OKL\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simple.kt"
   },
   "box/box/argumentOrder/simpleInClass.kt": {
-   "detail": "exit=0 stdout='fail 1: OKL != KOL or OKLZ != OKLZ\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simpleInClass.kt"
   },
   "box/box/argumentOrder/singleSideEffect.kt": {
-   "detail": "exit=0 stdout='fail: cba != abc\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/singleSideEffect.kt"
   },
   "box/box/argumentOrder/varargAndDefaultParameters_ForNative.kt": {
@@ -439,9 +438,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_selfComparison.kt"
   },
   "box/box/arithmetic/basic_shifts.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'ext$Int$myshr' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_shifts.kt"
   },
   "box/box/arithmetic/basic_uintTests.kt": {
@@ -462,9 +460,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/divisionByZero.kt"
   },
   "box/box/arithmetic/github1856.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/github1856.kt"
   },
   "box/box/arrays/arrayConstructorWithNonInlineLambda.kt": {
@@ -1399,20 +1396,20 @@
    "upstream": "compiler/testData/codegen/box/bce/withGetter.kt"
   },
   "box/box/binaryOp/bitwiseOp.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOp.kt"
   },
   "box/box/binaryOp/bitwiseOpAny.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpAny.kt"
   },
   "box/box/binaryOp/bitwiseOpNullable.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpNullable.kt"
   },
@@ -1541,8 +1538,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/overflowLong.kt"
   },
   "box/box/binaryOp/primitiveEqualsSafeCall.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
+   "category": "other: unknown method Int.equals()",
+   "detail": "unknown method Int.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/primitiveEqualsSafeCall.kt"
   },
@@ -1709,8 +1706,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/checkcastAndInstanceOf2.kt"
   },
   "box/box/boxingOptimization/explicitEqualsOnDouble.kt": {
-   "category": "other: Double.equals() is not supported",
-   "detail": "Double.equals() is not supported",
+   "category": "other: unknown method Double.equals()",
+   "detail": "unknown method Double.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/explicitEqualsOnDouble.kt"
   },
@@ -5242,8 +5239,9 @@
    "upstream": "compiler/testData/codegen/box/classes/delegationGenericLongArg.kt"
   },
   "box/box/classes/delegationMethodsWithArgs.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "strings / templates",
+   "detail": "unknown method String.equals()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/delegationMethodsWithArgs.kt"
   },
   "box/box/classes/exceptionConstructor.kt": {
@@ -5422,8 +5420,9 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1726.kt"
   },
   "box/box/classes/kt1759.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "strings / templates",
+   "detail": "unknown method String.plus()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1759.kt"
   },
   "box/box/classes/kt1891.kt": {
@@ -8908,8 +8907,9 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2259.kt"
   },
   "box/box/controlStructures/kt2291.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.rangeTo()",
+   "detail": "unknown method Int.rangeTo()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2291.kt"
   },
   "box/box/controlStructures/kt237.kt": {
@@ -8966,8 +8966,9 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt3280.kt"
   },
   "box/box/controlStructures/kt416.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.plus()",
+   "detail": "unknown method Int.plus()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt416.kt"
   },
   "box/box/controlStructures/kt42455.kt": {
@@ -8989,8 +8990,9 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt513.kt"
   },
   "box/box/controlStructures/kt628.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'test7' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt628.kt"
   },
   "box/box/controlStructures/kt769.kt": {
@@ -17937,8 +17939,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/nullableIntEquals.kt"
   },
   "box/box/ieee754/safeCall.kt": {
-   "category": "other: Double.equals() is not supported",
-   "detail": "Double.equals() is not supported",
+   "category": "other: unknown method Double.equals()",
+   "detail": "unknown method Double.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/safeCall.kt"
   },
@@ -20390,8 +20392,8 @@
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/kt49370.kt"
   },
   "box/box/inlineArgsInPlace/kt49407.kt": {
-   "category": "other: unknown method Long.mod()",
-   "detail": "unknown method Long.mod()",
+   "category": "other: unknown method Int.plus()",
+   "detail": "unknown method Int.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/kt49407.kt"
   },
@@ -23104,12 +23106,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531616\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823008\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1611402144\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269224928\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25626,8 +25628,9 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/charToInt.kt"
   },
   "box/box/intrinsics/ea35953.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "strings / templates",
+   "detail": "unknown method String.equals()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/ea35953.kt"
   },
   "box/box/intrinsics/incWithLabel.kt": {
@@ -25684,8 +25687,9 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt8666.kt"
   },
   "box/box/intrinsics/longRangeWithExplicitDot.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Long.rangeTo()",
+   "detail": "unknown method Long.rangeTo()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/longRangeWithExplicitDot.kt"
   },
   "box/box/intrinsics/nonShortCircuitAnd.kt": {
@@ -25728,8 +25732,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1008f53ab        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x100a13b13        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
-   "status": "COMPILER_CRASH",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
   "box/box/invokedynamic/extensionFunInvoke.kt": {
@@ -27113,13 +27117,15 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.rangeTo()",
+   "detail": "unknown method Int.rangeTo()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.rangeTo()",
+   "detail": "unknown method Int.rangeTo()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensions.kt": {
@@ -27135,13 +27141,15 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Long.rangeTo()",
+   "detail": "unknown method Long.rangeTo()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Long.rangeTo()",
+   "detail": "unknown method Long.rangeTo()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensions.kt": {
@@ -27187,13 +27195,15 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.rangeTo()",
+   "detail": "unknown method Int.rangeTo()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.rangeTo()",
+   "detail": "unknown method Int.rangeTo()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensions.kt": {
@@ -27209,13 +27219,15 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensions.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Long.rangeTo()",
+   "detail": "unknown method Long.rangeTo()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Long.rangeTo()",
+   "detail": "unknown method Long.rangeTo()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensions.kt": {
@@ -29444,8 +29456,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusAssignWithComplexRHS.kt"
   },
   "box/box/operatorConventions/plusExplicit.kt": {
-   "category": "unknown with (stdlib API / unsupported decl)",
-   "detail": "unknown function 'with'",
+   "category": "strings / templates",
+   "detail": "unknown method String.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusExplicit.kt"
   },
@@ -29798,8 +29810,9 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectShort.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/intEqualsNull.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.equals()",
+   "detail": "unknown method Int.equals()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/intEqualsNull.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/intEqualsNullableInt.kt": {
@@ -29901,13 +29914,15 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2251.kt"
   },
   "box/box/primitiveTypes/kt2269.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.equals()",
+   "detail": "unknown method Int.equals()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2269.kt"
   },
   "box/box/primitiveTypes/kt2269NotOptimizable.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.equals()",
+   "detail": "unknown method Int.equals()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2269NotOptimizable.kt"
   },
   "box/box/primitiveTypes/kt2275.kt": {
@@ -29917,8 +29932,9 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2275.kt"
   },
   "box/box/primitiveTypes/kt239.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.plus()",
+   "detail": "unknown method Int.plus()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt239.kt"
   },
   "box/box/primitiveTypes/kt242.kt": {
@@ -29971,8 +29987,9 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt36952_identityEqualsWithBooleanInLocalFunction.kt"
   },
   "box/box/primitiveTypes/kt37505.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'testByte' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt37505.kt"
   },
   "box/box/primitiveTypes/kt4097.kt": {
@@ -30015,8 +30032,9 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt46864_long.kt"
   },
   "box/box/primitiveTypes/kt518.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.plus()",
+   "detail": "unknown method Int.plus()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt518.kt"
   },
   "box/box/primitiveTypes/kt52230.kt": {
@@ -30048,19 +30066,19 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt737.kt"
   },
   "box/box/primitiveTypes/kt753.kt": {
-   "detail": "run timeout",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt753.kt"
   },
   "box/box/primitiveTypes/kt756.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Int.unaryPlus()",
+   "detail": "unknown method Int.unaryPlus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt756.kt"
   },
   "box/box/primitiveTypes/kt757.kt": {
-   "detail": "run timeout",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt757.kt"
   },
   "box/box/primitiveTypes/kt79977.kt": {
@@ -30170,8 +30188,9 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/smartCastOnNullableDoubleIdentityEquals.kt"
   },
   "box/box/primitiveTypes/stringEqualsHashCodeToString.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "strings / templates",
+   "detail": "unknown method String.equals()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/stringEqualsHashCodeToString.kt"
   },
   "box/box/primitiveTypes/substituteIntForGeneric.kt": {
@@ -32159,8 +32178,9 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeLiteralWithMixedTypeBounds.kt"
   },
   "box/box/ranges/forInRangeWithImplicitReceiver.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.rangeTo()",
+   "detail": "unknown method Int.rangeTo()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeWithImplicitReceiver.kt"
   },
   "box/box/ranges/forInReversed/ForInReversedReversedRange.kt": {
@@ -37600,8 +37620,9 @@
    "upstream": "compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt"
   },
   "box/box/strings/simpleStringPlus.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "strings / templates",
+   "detail": "unknown method String.plus()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/simpleStringPlus.kt"
   },
   "box/box/strings/singleConcatNullable.kt": {
@@ -37644,8 +37665,9 @@
    "upstream": "compiler/testData/codegen/box/strings/twoArgumentNullableStringOperatorPlus.kt"
   },
   "box/box/strings/twoArgumentNullableStringPlus.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "strings / templates",
+   "detail": "unknown method String.plus()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/twoArgumentNullableStringPlus.kt"
   },
   "box/box/strings/twoArgumentStringTemplate.kt": {
@@ -39126,8 +39148,9 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/grok/kotlinx-features/compiler/build/upstream-tmp/nkupd_p59ebd/t.ll:202:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\ncommand failed (256): '/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt' -passes='lt",
-   "status": "COMPILER_CRASH",
+   "category": "other: parameters of type Unit / Unit? are not supported",
+   "detail": "parameters of type Unit / Unit? are not supported",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
   "box/box/unit/ifElse.kt": {

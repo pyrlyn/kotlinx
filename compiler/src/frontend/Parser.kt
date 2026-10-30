@@ -11,6 +11,8 @@ private val NO_TRAILING = setOf("try", "do", "else", "finally", "init", "object"
 
 private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix", "sealed", "lateinit")
 
+private var argTmp = 0
+
 class Parser(private val t: List<Tok>) {
     /** Names of `infix fun`s declared in the source (`a name b` parses as `a.name(b)`). */
     private val userInfix: Set<String> = hashSetOf("to").also { set ->
@@ -1305,10 +1307,55 @@ class Parser(private val t: List<Tok>) {
         val r = when {
             e.n == "trimIndent" && a.isEmpty() -> text.trimIndent()
             e.n == "trimMargin" && a.isEmpty() -> text.trimMargin()
-            e.n == "trimMargin" && a.size == 1 && a[0] is StrL && (a[0] as StrL).parts.all { it is String } -> text.trimMargin((a[0] as StrL).parts.joinToString("") { it as String })
+            e.n == "trimMargin" && a.size == 1 && a[0] is StrL && (a[0] as StrL).parts.all { it is String } -> {
+                val prefix = (a[0] as StrL).parts.joinToString("") { it as String }
+                // Kotlin throws at run time for a blank prefix; keep that behaviour instead of crashing the compiler.
+                if (prefix.isBlank()) return CallE(NameE("\$throw").also { it.line = e.line }, emptyList(),
+                    listOf(CallE(NameE("IllegalArgumentException").also { it.line = e.line }, emptyList(),
+                        listOf(StrL(listOf("marginPrefix must be non-blank string."))), null)), null)
+                text.trimMargin(prefix)
+            }
             else -> return null
         }
         return StrL(listOf(r))
+    }
+
+    /** Arguments kept in place: literals, lambdas and spreads `*xs` (a spread is not a value of its own). */
+    private fun constArg(a: E) = a is LambdaE || (a is UnE && a.op == "*") || a is IntL || a is BoolL || a is CharL || a is DblL || a is NullL ||
+        (a is StrL && a.parts.all { it is String })
+
+    /**
+     * Kotlin evaluates call arguments in source order, but the backend places named arguments in parameter order.
+     * A call with named arguments and side-effecting arguments is rewritten to
+     * `when { else -> { val $a0 = x; val $a1 = y; f(b = $a0, a = $a1) } }` so evaluation order is preserved.
+     */
+    private fun inSourceOrder(callee: E, a: List<E>, lam: Block?): E {
+        val plain = CallE(callee, emptyList(), a, lam)
+        if (a.none { it is NamedE }) return plain
+        if (!(callee is NameE || callee is MemberE)) return plain
+        val inner = a.map { if (it is NamedE) it.e else it }
+        val complex = { x: E -> !constArg(x) && x !is NameE }
+        if (inner.none(complex)) return plain
+        val line = t[p - 1].line
+        val pre = ArrayList<S>()
+        fun hoist(v: E): E {
+            val tmp = "\$a${argTmp++}"
+            pre.add(VarS(tmp, false, null, v).also { it.line = line })
+            return NameE(tmp).also { it.line = line }
+        }
+        // The receiver is evaluated before the arguments (a plain name cannot have side effects).
+        var callee2 = callee
+        if (callee is MemberE && complex(callee.recv) && !callee.safe) callee2 = MemberE(hoist(callee.recv), callee.n, false).also { it.line = callee.line }
+        val args = a.mapIndexed { i, x ->
+            val v = inner[i]
+            // A name only needs a temporary when a later argument may change it; keeping it keeps smart casts.
+            if (constArg(v) || (v is NameE && inner.drop(i + 1).none(complex))) x else {
+                val n = hoist(v)
+                if (x is NamedE) NamedE(x.name, n).also { it.line = x.line } else n
+            }
+        }
+        val call = CallE(callee2, emptyList(), args, lam).also { it.line = line }
+        return WhenE(null, listOf(null to Block(pre + ExprS(call).also { it.line = line }))).also { it.line = line }
     }
 
     private fun postfix(): E {
@@ -1322,7 +1369,7 @@ class Parser(private val t: List<Tok>) {
                 "(" -> {
                     val a = args()
                     val lam = if (!noBraceCall && t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
-                    foldStr(e, a, lam) ?: CallE(e, emptyList(), a, lam)
+                    foldStr(e, a, lam) ?: inSourceOrder(e, a, lam)
                 }
                 "[" -> { p++; val i = nested(1) { expr() }; expectOp("]"); IndexE(e, i) }
                 "!!" -> { p++; UnE("!!", e).also { it.line = tk.line } }
