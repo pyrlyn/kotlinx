@@ -1,0 +1,18 @@
+# aon working tree 2026-10-30 16:02 EET load: { 85.07 63.02 42.98 }
+sum 3.702
+alloc 76.798
+bigheap 121.445
+closures 86.934
+cycles 45.936
+dispatch 95.763
+file 52.013
+free 52.151
+hashmap 73.472
+lru 94.838
+matmul 10.366
+nbody 72.262
+recursion 6.039
+refpass 129.18
+sort 62.968
+strings 31.383
+trees 123.78
