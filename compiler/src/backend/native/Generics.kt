@@ -109,6 +109,7 @@ private fun boxCapturedVars(p: Program): Program {
                     is RetS -> x.e?.let { e(it, d) }
                     is ExprS -> e(x.e, d)
                     is JumpS -> {}
+                    is LocalDeclS -> {}
                 }
             }
             // Inline builtin lambdas (forEach, map, ...) are expanded in place, so they do not add depth.
@@ -256,6 +257,8 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
         is RetS -> RetS(x.e?.let { e(it) })
         is ExprS -> ExprS(e(x.e))
         is JumpS -> JumpS(x.isBreak).also { it.label = x.label }
+        // Left as is: callers that care (Parser.liftLocals) handle local declarations in [srw].
+        is LocalDeclS -> x
     }.also { it.line = x.line }
 
     fun e(x: E): E = rw?.invoke(x) ?: when (x) {

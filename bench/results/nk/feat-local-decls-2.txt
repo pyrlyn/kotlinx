@@ -1,0 +1,18 @@
+# feat-local-decls-2 working tree 2026-10-30 01:25 EET load: { 22.59 19.50 30.13 }
+sum 3.692
+alloc 75.289
+bigheap 115.838
+closures 82.567
+cycles 44.966
+dispatch 95.159
+file 50.786
+free 49.83
+hashmap 68.303
+lru 88.27
+matmul 10.131
+nbody 70.246
+recursion 5.989
+refpass 131.152
+sort 61.686
+strings 31.963
+trees 123.19
