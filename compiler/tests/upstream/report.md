@@ -7,12 +7,12 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| UNSUPPORTED | 2999 |
+| UNSUPPORTED | 2996 |
 | N/A | 2984 |
-| PASS | 2478 |
+| PASS | 2481 |
 | MISCOMPILE | 14 |
 
-Kept in tree (re-runnable with `run.py`): 2478
+Kept in tree (re-runnable with `run.py`): 2481
 
 ## Unsupported features (roadmap, by test count)
 
@@ -38,7 +38,6 @@ Kept in tree (re-runnable with `run.py`): 2478
 | destructuring declarations | 29 |
 | other syntax (at ':') | 28 |
 | annotations | 23 |
-| other: local classes that capture local variables are not supported | 23 |
 | other syntax (at ',') | 21 |
 | other syntax (at 'var') | 19 |
 | other syntax (at 'val') | 18 |
@@ -47,8 +46,9 @@ Kept in tree (re-runnable with `run.py`): 2478
 | when expressions | 15 |
 | other: unknown type * | 15 |
 | other syntax (at 'where') | 15 |
+| other: local classes that capture local variables are not supported | 15 |
 | other syntax (at 'suspend') | 14 |
-| unknown x (stdlib API / unsupported decl) | 12 |
+| unknown x (stdlib API / unsupported decl) | 14 |
 | enum classes | 11 |
 | other: unsupported call | 11 |
 | other: unknown type Nothing | 11 |
@@ -102,7 +102,7 @@ Affected upstream tests:
 - MISCOMPILE `box/box/initializers/correctOrder3.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: Expected <1>, actual <0>.\n'
 - MISCOMPILE `box/box/inlineClasses/callableRefClassMergingGenerics.kt` — exit=0 stdout='FAIL n3: null\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt` — exit=0 stdout='Fail 4\n' stderr=''
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -1072952352\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 1342966624\n'
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/kt31994.kt` — exit=-11 stdout='' stderr=''
