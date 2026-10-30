@@ -11,6 +11,20 @@ private val NO_TRAILING = setOf("try", "do", "else", "finally", "init", "object"
 
 private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix", "sealed", "lateinit")
 
+/**
+ * Upper bounds of type parameters, by "<declaration line>:<name>" (declarations are copied and renamed by later
+ * passes but keep their line). Only consulted for semantics that depend on the bound (unchecked casts).
+ */
+object TypeParamBounds {
+    val bounds = HashMap<String, TypeRef>()
+    val unbounded = HashSet<String>()
+}
+
+/** Names of lifted local declarations (a local function wins over a member of an implicit receiver). */
+object LiftedLocals { val names = HashSet<String>() }
+
+private var argTmp = 0
+
 class Parser(private val t: List<Tok>) {
     /** Names of `infix fun`s declared in the source (`a name b` parses as `a.name(b)`). */
     private val userInfix: Set<String> = hashSetOf("to").also { set ->
@@ -23,6 +37,12 @@ class Parser(private val t: List<Tok>) {
     private var destructN = 0
     /** Extra statements produced by a destructuring declaration, emitted after the one [stmt] returned. */
     private val pendingStmts = ArrayList<S>()
+    /** Classes of anonymous objects (`object : T { }` expressions) declared before the current statement. */
+    private var pendingDecls = ArrayList<S>()
+    /** Anonymous-object classes outside function bodies (property initializers): top-level classes. */
+    private val topAnon = ArrayList<ClassD>()
+    private var bodyLevel = 0
+    private var anonN = 0
 
     /** Data class: generated toString, componentN, hashCode and `$equals` (structural `==`) over the constructor properties. */
     private fun dataClass(c: ClassD): ClassD {
@@ -50,7 +70,9 @@ class Parser(private val t: List<Tok>) {
         val self = TypeRef(c.name, c.typeParams.map { TypeRef(it, emptyList(), false) }, false)
         var eq: E = BoolL(true)
         props.forEachIndexed { i, p ->
-            val one = BinE("==", nm(p.name), MemberE(nm("other"), p.name, false).also { it.line = l }).also { it.line = l }
+            // Double properties compare like Double.equals (bits: NaN == NaN, 0.0 != -0.0).
+            fun bits(e: E): E = if (p.type.name == "Double" || p.type.name == "Float") CallE(MemberE(e, "\$bits", false).also { it.line = l }, emptyList(), emptyList(), null).also { it.line = l } else e
+            val one = BinE("==", bits(nm(p.name)), bits(MemberE(nm("other"), p.name, false).also { it.line = l })).also { it.line = l }
             eq = if (i == 0) one else BinE("&&", eq, one).also { it.line = l }
         }
         ms.add(FunD("\$equals", listOf(Param("other", self)), TypeRef("Boolean", emptyList(), false), null, eq, l))
@@ -131,8 +153,45 @@ class Parser(private val t: List<Tok>) {
     }
     private var sub0: Subst? = null
 
+    /**
+     * Top-level computed property `val x: T get() = ...` / `var x: T get() ... set(v) ...` (no backing field, possibly
+     * with context parameters): the getter `$get$x()` (read like an object accessor), the setter `$tset$x(v)`.
+     */
+    private fun topProperty(funs: MutableList<FunD>): Boolean {
+        val save = p
+        val isVar = next().s == "var"
+        if (peek().k != K.ID || !(t[p + 1].k == K.OP && t[p + 1].s == ":")) { p = save; return false }
+        val n = ident(); next(); val ty = type()
+        val ctx = pendingCtx ?: emptyList()
+        var get: FunD? = null; var set: FunD? = null
+        while (true) {
+            val at = p
+            while (t[p].k == K.NL) p++
+            if (get == null && isId("get") && t[p + 1].k == K.OP && t[p + 1].s == "(") { get = getter("\$get\$$n", ty, emptyList(), null); continue }
+            if (set == null && isVar && isId("set") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
+                val line = next().line; next()
+                val pn = ident(); if (isOp(":")) { next(); type() }
+                expectOp(")")
+                val body = if (isOp("=")) { next(); skipNLOnly(); Block(listOf(ExprS(expr()).also { it.line = line })) } else block()
+                set = FunD("\$tset\$$n", ctx + Param(pn, ty), TypeRef("Unit", emptyList(), false), body, null, line)
+                continue
+            }
+            p = at; break
+        }
+        if (get == null || (isVar && set == null)) { p = save; return false }
+        pendingCtx = null
+        funs.add(FunD(get.name, ctx + get.params, get.ret, get.body, get.exprBody, get.line))
+        set?.let { funs.add(it) }
+        return true
+    }
+
     /** Extension property `val <T> Recv.name: Type get() = ...` (getter only): an extension function `$prop$name`. */
     private fun extProperty(): FunD {
+        val ctx = takeCtx()
+        return extProperty0().let { g -> FunD(g.name, ctx + g.params, g.ret, g.body, g.exprBody, g.line, g.typeParams, g.recv) }
+    }
+
+    private fun extProperty0(): FunD {
         next()
         val tps = typeParams()
         val rt = type()
@@ -185,14 +244,21 @@ class Parser(private val t: List<Tok>) {
                     p++
                     val c = classDecl()
                     if (c.fields.size != 1 || c.ctorParams.size != 1) fail("a value class needs exactly one property", tk)
-                    classes.add(ClassD(c.name, c.fields, c.supers, c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true, c.superTypeArgs))
+                    // hashCode of a value class is its property's hashCode.
+                    val hashable = c.fields[0].type?.let { it.name in setOf("Int", "Long", "Short", "Byte", "Char", "Boolean", "String", "Double", "Float", "UInt", "ULong") && !it.nullable } == true
+                    val ms = if (!hashable || c.methods.any { it.name == "hashCode" && it.params.isEmpty() }) c.methods else c.methods + FunD("hashCode", emptyList(), TypeRef("Int", emptyList(), false), null,
+                        CallE(MemberE(NameE(c.fields[0].name).also { it.line = c.line }, "hashCode", false).also { it.line = c.line }, emptyList(), emptyList(), null).also { it.line = c.line }, c.line)
+                    classes.add(ClassD(c.name, c.fields, c.supers, ms, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true, c.superTypeArgs))
                 }
                 tk.k == K.ID && tk.s == "data" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(dataClass(classDecl())) }
                 tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "operator", "infix", "tailrec", "const", "open", "final", "abstract", "sealed") -> p++
+                tk.k == K.ID && (tk.s == "val" || tk.s == "var") && topProperty(funs) -> {}
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && (t[p + 1].k == K.OP && t[p + 1].s == "<" ||
                     t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> funs.add(extProperty())
-                tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> { globals.add(stmt() as VarS); if (pendingStmts.isNotEmpty()) fail("top-level destructuring declarations are not supported", tk) }
+                tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> { noCtx(); globals.add(stmt() as VarS); if (pendingStmts.isNotEmpty()) fail("top-level destructuring declarations are not supported", tk) }
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
+                isContextDecl() -> contextDecl()
+                tk.k == K.ID && (tk.s == "val" || tk.s == "var" || tk.s == "class" || tk.s == "object" || tk.s == "interface") && pendingCtx != null -> noCtx()
                 tk.k == K.ID && tk.s == "class" -> classes.add(classDecl())
                 tk.k == K.ID && tk.s == "enum" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(classDecl(true)) }
                 tk.k == K.ID && tk.s == "interface" -> ifaces.add(interfaceDecl())
@@ -202,6 +268,7 @@ class Parser(private val t: List<Tok>) {
         }
         classes.addAll(companions); funs.addAll(ctorFactories)
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
+        classes.addAll(topAnon); topAnon.clear()
         liftLocals(funs, classes, ifaces)
         resolveNested(funs, classes, ifaces, globals)
         resolveExtensions(funs, classes)
@@ -224,7 +291,8 @@ class Parser(private val t: List<Tok>) {
             funs.add(FunD("\$init\$$n", emptyList(), TypeRef("Unit", emptyList(), false), Block(listOf(ExprS(init))), null, 0))
             funs.add(FunD("\$get\$$n", emptyList(), TypeRef(n, emptyList(), false), Block(listOf(ExprS(CallE(NameE("\$init\$$n"), emptyList(), emptyList(), null)), RetS(slot))), null, 0))
         }
-        return Program(funs, classes, ifaces, enumGlobals(classes) + globals + objGlobals, companionOf)
+        // Object slots come first: a top-level property initializer may already access an object.
+        return Program(funs, classes, ifaces, objGlobals + enumGlobals(classes) + globals, companionOf)
     }
 
     /**
@@ -260,13 +328,43 @@ class Parser(private val t: List<Tok>) {
         val sta = takeSuperArgs()
         val saved = curClass; curClass = null
         val savedObj = curObject; curObject = name
-        val ms = try { if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved; curObject = savedObj }
+        val ms = try { braceOnNextLine(); if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved; curObject = savedObj }
         objects.add(name)
         // During its own initialization the object's global is not assigned yet: `Obj.x` in initializers means `this.x`.
         val self = Subst(emptyMap(), rw = { x: E -> if (x is NameE && x.n == name) NameE("this").also { it.line = x.line } else null })
         val remap = fields.associateWith { f -> FieldD(f.name, f.type, f.isVar, f.init?.let { self.e(it) }, f.lateinit) }
         val inits2 = inits.map { i -> when (i) { is FieldD -> remap[i] ?: i; is Block -> self.block(i); else -> i } }
         return ClassD(name, fields.map { remap.getValue(it) }, supers, ms, line, emptyList(), inits2, superArgs, superTypeArgs = sta)
+    }
+
+    /** `object : Supers { body }` as an expression: a fresh local class, instantiated in place. */
+    private fun anonObject(line: Int): E {
+        val name = "\$anon${anonN++}"
+        val supers = ArrayList<String>(); var superArgs: List<E>? = null
+        if (isOp(":")) {
+            next()
+            while (true) {
+                val sn = ident(); superTypeArgs(sn)
+                if (isOp("(")) {
+                    if (superArgs != null) fail("only one superclass is allowed")
+                    next()
+                    superArgs = nested(1) { val xs = ArrayList<E>(); while (!isOp(")")) { xs.add(expr()); if (isOp(",")) next() }; xs }
+                    expectOp(")")
+                    supers.add(0, sn)
+                } else supers.add(sn)
+                if (isOp(",")) next() else break
+            }
+        }
+        // Inside its own class body, names would resolve to the outer instance's (also private) members.
+        if (curClass != null && curClass in supers) fail("anonymous objects extending their enclosing class are not supported")
+        val fields = ArrayList<FieldD>(); val inits = ArrayList<Any>()
+        val sta = takeSuperArgs()
+        val saved = curClass; curClass = null
+        val outerDecls = pendingDecls; pendingDecls = ArrayList(); val lvl = bodyLevel; bodyLevel = 0
+        val ms = try { nested(0) { if (isOp("{")) members(fields, inits) else emptyList() } } finally { curClass = saved; pendingDecls = outerDecls; bodyLevel = lvl }
+        val c = ClassD(name, fields, supers, ms, line, emptyList(), inits, superArgs, superTypeArgs = sta)
+        if (bodyLevel > 0) { pendingDecls.add(LocalDeclS(c).also { it.line = line }); sawLocal = true } else topAnon.add(c)
+        return CallE(NameE(name).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line }
     }
 
     /** Enum entry ("E$A") -> hidden subclass holding its body. */
@@ -295,12 +393,18 @@ class Parser(private val t: List<Tok>) {
                 skipNL()
                 if (isOp("}")) break
                 var isConst = false; var isLate = false
-                while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) { if (peek().s == "const") isConst = true; if (peek().s == "lateinit") isLate = true; p++ }
+                var isPrivate = false; var isAbstract = false
+                if (isContextDecl()) { contextDecl(); continue }
+                if (pendingCtx != null && !isId("fun") && !(peek().k == K.ID && peek().s in MEMBER_MODS)) noCtx()
+                while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) { if (peek().s == "const") isConst = true; if (peek().s == "lateinit") isLate = true; if (peek().s == "private") isPrivate = true; if (peek().s == "abstract") isAbstract = true; p++ }
+                if (isPrivate && curIface != null && isId("fun") && t[p + 1].k == K.ID) privateIfaceFuns.getOrPut(curIface!!) { HashSet() }.add(t[p + 1].s)
                 if (props != null && inits != null && (isId("val") || isId("var"))) {
                     val isVar = next().s == "var"
                     val n = ident()
                     val ty = if (isOp(":")) { next(); type() } else null
                     getter("\$prop\$$n", ty, emptyList(), null)?.let { ms.add(it); continue }
+                    // `abstract val x: T` in a class: an abstract getter, like an interface property.
+                    if (isAbstract && !isVar && ty != null && !isOp("=")) { ms.add(FunD("\$prop\$$n", emptyList(), ty, null, null, peek().line)); continue }
                     // Without an initializer (`lateinit var x: T`, or assigned in an `init` block) the property starts at
                     // the type's zero value (null for references) and is assignable during construction.
                     val f = if (!isOp("=")) {
@@ -381,6 +485,7 @@ class Parser(private val t: List<Tok>) {
             return seen
         }
         val ancestors = ifaces.associate { it.name to anc(it.name).toList() }
+        ifaceAnc.putAll(ancestors)
         for (i in ifaces.indices) {
             val d = ifaces[i]; val a = ancestors.getValue(d.name)
             if (a.isEmpty()) continue
@@ -389,8 +494,9 @@ class Parser(private val t: List<Tok>) {
             for (s in a) {
                 for (m in byName.getValue(s).methods) if (ms.none { it.name == m.name }) ms.add(m)
                 if (s in genericIfaceTps) fail("default methods inherited from a generic super-interface are not supported")
-                for (m in ifaceDefaults[s].orEmpty()) if (defs.none { it.name == m.name } && d.methods.none { it.name == m.name }) defs.add(m)
             }
+            // Inherited defaults: the most specific declaration wins (`interface D : B, C` with `C : A` overriding A's).
+            for (m in mostSpecificDefaults(a)) if (defs.none { it.name == m.name } && d.methods.none { it.name == m.name }) defs.add(m)
             if (defs.isNotEmpty()) ifaceDefaults[d.name] = defs
             ifaces[i] = InterfaceD(d.name, ms, d.line, d.typeParams, a)
         }
@@ -420,6 +526,23 @@ class Parser(private val t: List<Tok>) {
 
     /** Interface name -> its default method bodies. */
     private val ifaceDefaults = HashMap<String, List<FunD>>()
+    /** Interface -> all its super-interfaces. */
+    private val ifaceAnc = HashMap<String, List<String>>()
+    /** Interface that declares each default body (defaults are shared by reference with sub-interfaces). */
+    private val defaultOwner = HashMap<FunD, String>()
+
+    /**
+     * Default methods visible through the interfaces [ss]: for each name, the declarations whose interface is not a
+     * super-interface of another declaring interface (Kotlin's most specific implementation).
+     */
+    private fun mostSpecificDefaults(ss: List<String>): List<FunD> {
+        val cands = LinkedHashSet<FunD>()
+        for (s in ss) cands.addAll(ifaceDefaults[s].orEmpty())
+        return cands.filter { m ->
+            val o = defaultOwner[m] ?: return@filter true
+            cands.none { x -> x !== m && x.name == m.name && defaultOwner[x]?.let { ox -> o in ifaceAnc[ox].orEmpty() } == true }
+        }
+    }
     /** Generic interfaces with default methods -> their type parameters (copies are substituted per implementation). */
     private val genericIfaceTps = HashMap<String, List<String>>()
 
@@ -438,6 +561,14 @@ class Parser(private val t: List<Tok>) {
                 if (ch.none { x -> x.fields.any { it.name == n } }) continue
                 add.add(FunD(m.name, emptyList(), m.ret, null, NameE(n).also { it.line = c.line }, c.line))
             }
+            // `abstract val x: T` of a superclass overridden by a stored property: the getter returns the field.
+            for (m in ch.drop(1).flatMap { it.methods }) {
+                if (!m.name.startsWith("\$prop\$") || m.params.isNotEmpty() || m.body != null || m.exprBody != null) continue
+                val n = m.name.removePrefix("\$prop\$")
+                if (ch.any { x -> x.methods.any { it.name == m.name && (it.body != null || it.exprBody != null) } } || add.any { it.name == m.name }) continue
+                val fd = ch.firstNotNullOfOrNull { x -> x.fields.firstOrNull { it.name == n } } ?: continue
+                add.add(FunD(m.name, emptyList(), fd.type ?: m.ret, null, NameE(n).also { it.line = c.line }, c.line))
+            }
             for (s in byDelegs[c.name].orEmpty()) {
                 val iface = ifaces.firstOrNull { it.name == s } ?: fail("only interfaces can be delegated with 'by'")
                 val targs = c.superTypeArgs[s].orEmpty()
@@ -449,7 +580,7 @@ class Parser(private val t: List<Tok>) {
                 for (m in iface.methods) {
                     if (ch.any { x -> x.methods.any { it.name == m.name && (it.body != null || it.exprBody != null) } } || add.any { it.name == m.name }) continue
                     if (m.typeParams.isNotEmpty()) fail("delegating generic interface methods is not supported")
-                    val ps = m.params.map { Param(it.name, st(it.type), it.default, it.vararg) }
+                    val ps = m.params.map { Param(it.name, st(it.type), it.default, it.vararg, it.ctx) }
                     if (m.params.any { it.vararg }) fail("delegating vararg methods is not supported")
                     val body: E = if (m.name.startsWith("\$prop\$") && m.params.isEmpty()) MemberE(recv, m.name.removePrefix("\$prop\$"), false)
                         else CallE(MemberE(recv, m.name, false), emptyList(), ps.map { NameE(it.name) }, null)
@@ -457,7 +588,10 @@ class Parser(private val t: List<Tok>) {
                     add.add(FunD(m.name, ps, st(m.ret ?: TypeRef("Unit", emptyList(), false)), null, body, c.line))
                 }
             }
-            for (s in ch.flatMap { it.supers }.distinct()) for (d in ifaceDefaults[s].orEmpty()) {
+            val chainSupers = ch.flatMap { it.supers }.distinct()
+            val chosen = mostSpecificDefaults(chainSupers.filter { it in ifaceDefaults || it in ifaceAnc }).toSet()
+            for (s in chainSupers) for (d in ifaceDefaults[s].orEmpty()) {
+                if (d !in chosen) continue
                 if (ch.any { x -> x.methods.any { it.name == d.name && (it.body != null || it.exprBody != null) } } || add.any { it.name == d.name }) continue
                 // Only the topmost class in the chain needs the copy; subclasses inherit it.
                 val top = ch.last { x -> s in x.supers }
@@ -475,7 +609,7 @@ class Parser(private val t: List<Tok>) {
 
     private fun zeroOf(t: TypeRef): E = if (t.nullable) NullL() else when (t.name) {
         "Int", "Short", "Byte" -> IntL(0, false); "Long" -> IntL(0, true); "UInt" -> IntL(0, false, true); "ULong" -> IntL(0, true, true)
-        "Double", "Float" -> DblL(0.0); "Boolean" -> BoolL(false); "Char" -> CharL(0); else -> NullL()
+        "Double" -> DblL(0.0); "Float" -> DblL(0.0, true); "Boolean" -> BoolL(false); "Char" -> CharL(0); else -> NullL()
     }
 
     /** `const val`s of objects and companions with literal values ("Obj.name" -> literal); uses do not initialize the object. */
@@ -488,7 +622,7 @@ class Parser(private val t: List<Tok>) {
         for (i in globals.indices) globals[i] = sub.s(globals[i]) as VarS
         for (i in classes.indices) {
             val c = classes[i]
-            val fields = c.fields.map { FieldD(it.name, it.type, it.isVar, it.init?.let { e -> sub.e(e) }) }
+            val fields = c.fields.map { FieldD(it.name, it.type, it.isVar, it.init?.let { e -> sub.e(e) }, it.lateinit) }
             val inits = c.inits.map { if (it is FieldD) fields.first { f -> f.name == it.name } else sub.block(it as Block) }
             classes[i] = ClassD(c.name, fields, c.supers, c.methods.map { keepRecv(sub.fn(it), it) }, c.line, c.ctorParams, inits, c.superArgs?.map { sub.e(it) }, c.typeParams,
                 c.enumEntries?.map { (n, a) -> n to a.map { sub.e(it) } }, c.isValue, c.superTypeArgs)
@@ -577,7 +711,7 @@ class Parser(private val t: List<Tok>) {
             val c = classes[i]
             val ms = c.methods.map { keepRecv(rewriter(c.name, it).fn(it), it) }
             val sub = rewriter(c.name, null)
-            val fields = c.fields.map { FieldD(it.name, it.type?.let { t -> sub.ty(t) }, it.isVar, it.init?.let { e -> sub.e(e) }) }
+            val fields = c.fields.map { FieldD(it.name, it.type?.let { t -> sub.ty(t) }, it.isVar, it.init?.let { e -> sub.e(e) }, it.lateinit) }
             val inits = c.inits.map { if (it is FieldD) fields.first { f -> f.name == it.name } else sub.block(it as Block) }
             val o = innerOf[c.name]
             val of = if (o != null) listOf(FieldD("outer\$", TypeRef(o, emptyList(), false), false)) else emptyList()
@@ -601,6 +735,25 @@ class Parser(private val t: List<Tok>) {
         Subst(emptyMap(), srw = { x -> if (x is VarS) out.add(x.name); if (x is ForS) out.add(x.name); null },
             rw = { x -> if (x is LambdaE) out.addAll(x.body.params); null }).fn(f)
         return out
+    }
+
+    /** Declared or literal-evident type of the parameter or local `val` [n] of [f]; null if unknown. */
+    private fun localType(f: FunD, n: String): TypeRef? {
+        f.params.firstOrNull { it.name == n }?.let { return it.type }
+        var t: TypeRef? = null; var seen = 0
+        fun r(x: String) = TypeRef(x, emptyList(), false)
+        Subst(emptyMap(), srw = { x ->
+            if (x is VarS && x.name == n) {
+                seen++
+                t = x.type ?: when (val i = x.init) {
+                    is StrL -> r("String"); is BoolL -> r("Boolean"); is CharL -> r("Char"); is DblL -> r(if (i.f32) "Float" else "Double")
+                    is IntL -> if (i.unsigned) null else r(if (i.long) "Long" else "Int")
+                    else -> null
+                }
+            }
+            null
+        }).fn(f)
+        return if (seen == 1) t else null
     }
 
     /** Names used in [f] (also as callees and `::name` references), including inside its local declarations. */
@@ -662,8 +815,8 @@ class Parser(private val t: List<Tok>) {
         val taken = HashSet<String>()
         funs.forEach { taken.add(it.name) }; classes.forEach { taken.add(it.name) }; ifaces.forEach { taken.add(it.name) }
         fun fresh(n: String, extra: Set<String> = emptySet()): String {
-            if (n !in taken && n !in extra) { taken.add(n); return n }
-            while (true) { val m = "$n\$l${localN++}"; if (m !in taken && m !in extra) { taken.add(m); return m } }
+            if (n !in taken && n !in extra) { taken.add(n); LiftedLocals.names.add(n); return n }
+            while (true) { val m = "$n\$l${localN++}"; if (m !in taken && m !in extra) { taken.add(m); LiftedLocals.names.add(m); return m } }
         }
         fun copyFun(n: FunD, o: FunD, name: String = n.name) = FunD(name, n.params, n.ret, n.body, n.exprBody, n.line, o.typeParams, o.recv)
         fun copyClass(sub: Subst, c: ClassD, name: String): ClassD {
@@ -685,6 +838,7 @@ class Parser(private val t: List<Tok>) {
                 val rename = HashMap<String, String>()
                 val types = HashMap<String, TypeRef>()
                 val asLambda = HashSet<FunD>()
+                val capCls = HashMap<String, List<Pair<String, TypeRef>>>()
                 val ownerNames = owner?.let { o -> o.methods.map { it.name } + newMethods.map { it.name } }?.toSet() ?: emptySet()
                 for (d in decls) when (d) {
                     is FunD -> {
@@ -705,7 +859,23 @@ class Parser(private val t: List<Tok>) {
                         val used = HashSet<String>(); localDeclNames(d, used)
                         val own = if (d is ClassD) ownNames(d) else (d as InterfaceD).methods.flatMap { localsOf(it) + it.name }.toSet()
                         val caps = used - own
-                        caps.firstOrNull { it in outer }?.let { throw CompileError("line ${if (d is ClassD) d.line else (d as InterfaceD).line}: local classes that capture local variables are not supported ('$it')") }
+                        val capd = caps.filter { it in outer }.sorted()
+                        if (capd.isNotEmpty()) {
+                            fun no(): Nothing = throw CompileError("line ${if (d is ClassD) d.line else (d as InterfaceD).line}: local classes that capture local variables are not supported ('${capd.first()}')")
+                            // Captured `val`s become leading constructor properties of the lifted class; every
+                            // construction passes the current values. Captured `var`s, data classes, objects,
+                            // interfaces and superclasses of other local classes are not supported.
+                            // Assignments inside the class's own methods count too (a captured `var` must be shared, not copied).
+                            val assignedIn = HashSet<String>(); if (d is ClassD) d.methods.forEach { assignedNames(it, assignedIn) }
+                            if (d !is ClassD || capd.any { it in assigned || it in assignedIn } || d.methods.any { it.name == "\$equals" } || d.enumEntries != null) no()
+                            if (decls.any { o -> o is ClassD && o !== d && d.name in o.supers }) no()
+                            // A member inherited from a superclass would shadow the captured value: not supported.
+                            fun inherited(c: ClassD, seen: Int = 0): Set<String> = if (seen > 20) emptySet() else
+                                c.supers.flatMap { sn -> (classes + decls.filterIsInstance<ClassD>()).filter { it.name == sn }.flatMap { sc -> sc.fields.map { it.name } + sc.ctorParams.map { it.name } + sc.methods.map { it.name.removePrefix("\$prop\$") } + inherited(sc, seen + 1) } }.toSet()
+                            val body = HashSet<String>(); localDeclNames(ClassD(d.name, d.fields, d.supers, d.methods, d.line, d.ctorParams, d.inits, null, d.typeParams), body)
+                            if (capd.any { it in body && it in inherited(d) }) no()
+                            capCls[d.name] = capd.map { c -> c to (localType(f, c) ?: no()) }
+                        }
                         val n = if (d is ClassD) d.name else (d as InterfaceD).name
                         val nn = fresh(n)
                         if (nn != n) { rename[n] = nn; types[n] = TypeRef(nn, emptyList(), false) }
@@ -714,6 +884,10 @@ class Parser(private val t: List<Tok>) {
                 lateinit var sub: Subst
                 sub = Subst(types, rw = { x ->
                     when {
+                        x is CallE && x.callee is NameE && x.callee.n in capCls ->
+                            CallE(NameE(rename[x.callee.n] ?: x.callee.n).also { it.line = x.callee.line }, x.typeArgs.map { sub.ty(it) },
+                                capCls.getValue(x.callee.n).map { (c, _) -> NameE(c).also { it.line = x.line } } + x.args.map { sub.e(it) },
+                                x.lambda?.let { sub.block(it) }).also { it.line = x.line }
                         x is NameE && x.n in rename -> NameE(rename.getValue(x.n)).also { it.line = x.line }
                         x is UnE && x.op.startsWith("::") && x.e is NullL && x.op.drop(2) in rename -> UnE("::" + rename.getValue(x.op.drop(2)), x.e).also { it.line = x.line }
                         else -> null
@@ -734,7 +908,14 @@ class Parser(private val t: List<Tok>) {
                         val g = copyFun(sub.fn(d), d, rename.getValue(d.name))
                         if (owner != null) newMethods.add(lift(g, owner, newMethods)) else funs.add(lift(g, null, newMethods))
                     }
-                    is ClassD -> classes.add(copyClass(sub, d, rename[d.name] ?: d.name))
+                    is ClassD -> classes.add(copyClass(sub, d, rename[d.name] ?: d.name).let { c ->
+                        val cs = capCls[d.name] ?: return@let c
+                        // Inside the class the captured values are its hidden `$cap$x` properties.
+                        val names = cs.map { it.first }.toSet()
+                        val r = copyClass(Subst(emptyMap(), rw = { x -> if (x is NameE && x.n in names) NameE("\$cap\$" + x.n).also { it.line = x.line } else null }), c, c.name)
+                        ClassD(r.name, cs.map { (n, t) -> FieldD("\$cap\$" + n, t, false) } + r.fields, r.supers, r.methods, r.line,
+                            cs.map { (n, t) -> Param("\$cap\$" + n, t) } + r.ctorParams, r.inits, r.superArgs, r.typeParams, r.enumEntries, r.isValue, r.superTypeArgs)
+                    })
                     is InterfaceD -> ifaces.add(InterfaceD(rename[d.name] ?: d.name, d.methods.map { copyFun(sub.fn(it), it) }, d.line, d.typeParams, d.supers))
                 }
             }
@@ -766,6 +947,86 @@ class Parser(private val t: List<Tok>) {
     }
     private fun takeSuperArgs(): Map<String, List<TypeRef>> = HashMap(superTA).also { superTA.clear() }
 
+    /** Private methods declared in each interface (by name). */
+    private val privateIfaceFuns = HashMap<String, MutableSet<String>>()
+
+    /**
+     * Private interface methods are copied into implementing classes with the defaults that call them; they get a
+     * unique name (`$p$I$f`) so a class member with the same name neither clashes with nor captures them.
+     */
+    private fun renamePrivate(name: String, ms: List<FunD>): List<FunD> {
+        val privs = privateIfaceFuns[name]?.filter { n -> ms.any { it.name == n && (it.body != null || it.exprBody != null) } }?.toSet() ?: return ms
+        if (privs.isEmpty()) return ms
+        fun nn(n: String) = "\$p\$$name\$$n"
+        lateinit var sub: Subst
+        sub = Subst(emptyMap(), rw = { x ->
+            if (x !is CallE) null else {
+                val c = x.callee
+                val r = when {
+                    c is NameE && c.n in privs -> NameE(nn(c.n))
+                    c is MemberE && c.n in privs && c.recv is NameE && (c.recv as NameE).n == "this" -> MemberE(c.recv, nn(c.n), false)
+                    else -> null
+                }
+                r?.let { CallE(it.also { e -> e.line = c.line }, x.typeArgs, x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line } }
+            }
+        })
+        return ms.map { m -> val f = sub.fn(m); FunD(if (m.name in privs) nn(m.name) else m.name, f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams, f.recv) }
+    }
+
+    /** Declared or inferred return types of the methods of each interface parsed so far. */
+    private val ifaceRets = HashMap<String, Map<String, TypeRef>>()
+
+    /**
+     * Interface default methods must have a signature before code generation, so the return type of an
+     * expression-bodied default without one is inferred syntactically: literals, string templates and `+` with a
+     * string, `toString()`, `if`/`when` branches, calls of methods of this interface (or its super-interfaces) with
+     * known types. Iterated to a fixed point; methods it cannot type keep the "needs an explicit return type" error.
+     */
+    private fun inferIfaceRets(name: String, ms: List<FunD>): List<FunD> {
+        val known = HashMap<String, TypeRef>()
+        for (s in ifaceSupers[name].orEmpty()) ifaceRets[s]?.let { known.putAll(it) }
+        ms.forEach { m -> m.ret?.let { known[m.name] = it } }
+        fun simple(n: String) = TypeRef(n, emptyList(), false)
+        fun guess(e: E): TypeRef? = when (e) {
+            is StrL -> simple("String")
+            is IntL -> simple(if (e.unsigned) (if (e.long) "ULong" else "UInt") else if (e.long) "Long" else "Int")
+            is BoolL -> simple("Boolean")
+            is DblL -> simple(if (e.f32) "Float" else "Double")
+            is CharL -> simple("Char")
+            is IsE -> simple("Boolean")
+            is BinE -> when (e.op) {
+                "==", "!=", "<", ">", "<=", ">=", "&&", "||" -> simple("Boolean")
+                "+" -> guess(e.l)?.takeIf { it.name == "String" } ?: guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double", "Float") } }
+                "-", "*", "/", "%" -> guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double", "Float") } }
+                else -> null
+            }
+            is IfE -> {
+                fun last(b: Block?) = (b?.stmts?.singleOrNull() as? ExprS)?.e
+                val a = last(e.th)?.let { guess(it) }; val b = last(e.el)?.let { guess(it) }
+                if (a != null && b != null && a.name == b.name && !a.nullable && !b.nullable && a.args.isEmpty()) a else null
+            }
+            is CallE -> {
+                val c = e.callee
+                when {
+                    c is MemberE && c.n == "toString" && e.args.isEmpty() -> simple("String")
+                    c is NameE -> known[c.n]
+                    c is MemberE && c.recv is NameE && (c.recv as NameE).n == "this" -> known[c.n]
+                    else -> null
+                }
+            }
+            else -> null
+        }
+        var out = ms
+        while (true) {
+            var changed = false
+            out = out.map { m ->
+                if (m.ret != null || m.exprBody == null || m.typeParams.isNotEmpty()) m
+                else guess(m.exprBody)?.let { t -> changed = true; known[m.name] = t; FunD(m.name, m.params, t, m.body, m.exprBody, m.line, m.typeParams, m.recv) } ?: m
+            }
+            if (!changed) return out
+        }
+    }
+
     private fun interfaceDecl(): InterfaceD {
         val line = next().line
         val name = ident()
@@ -782,11 +1043,14 @@ class Parser(private val t: List<Tok>) {
             ifaceSupers[name] = ss
         }
         val savedIface = curIface; curIface = name
-        val ms = try { if (isOp("{")) members() else emptyList() } finally { curIface = savedIface }
+        val ms0 = try { if (isOp("{")) members() else emptyList() } finally { curIface = savedIface }
+        val ms = inferIfaceRets(name, renamePrivate(name, ms0))
         val defs = ms.filter { it.body != null || it.exprBody != null }
         if (defs.isNotEmpty() && tps.isNotEmpty()) genericIfaceTps[name] = tps
         if (defs.any { it.ret == null && it.body == null }) fail("default interface methods need an explicit return type")
+        ifaceRets[name] = ms.filter { it.ret != null }.associate { it.name to it.ret!! }
         if (defs.isNotEmpty()) ifaceDefaults[name] = defs
+        defs.forEach { defaultOwner[it] = name }
         // The interface keeps abstract signatures; implementing classes get copies of the default bodies.
         return InterfaceD(name, ms.map { if (it in defs) FunD(it.name, it.params, it.ret ?: TypeRef("Unit", emptyList(), false), null, null, it.line, it.typeParams) else it }, line, tps)
     }
@@ -798,15 +1062,38 @@ class Parser(private val t: List<Tok>) {
         next()
         while (!isOp(">")) {
             while (isId("reified") || isId("out") || isId("in")) next()
-            tps.add(ident())
-            if (isOp(":")) { next(); type() }
+            val tl = t[p].line; val tp = ident()
+            tps.add(tp)
+            if (isOp(":")) { next(); val b = type(); TypeParamBounds.bounds["$tl:$tp"] = b; if (b.name == "Any" && b.nullable) TypeParamBounds.unbounded.add("$tl:$tp") } else TypeParamBounds.unbounded.add("$tl:$tp")
             if (isOp(",")) next()
         }
         next()
         return tps
     }
 
+    /** `context(a: A, _: B)` before the next declaration (a function). */
+    private var pendingCtx: List<Param>? = null
+    private var ctxN = 0
+    private fun isContextDecl() = isId("context") && t[p + 1].k == K.OP && t[p + 1].s == "("
+    private fun contextDecl() {
+        next(); expectOp("(")
+        val ps = ArrayList<Param>()
+        while (!isOp(")")) {
+            skipNL()
+            val n = ident(); expectOp(":"); val ty = type()
+            ps.add(Param(if (n == "_") "\$cp\$${ctxN++}" else n, ty, null, false, true))
+            skipNL(); if (isOp(",")) next(); skipNL()
+        }
+        expectOp(")")
+        if (pendingCtx != null) fail("several context(...) lists are not supported")
+        pendingCtx = ps
+        skipNL()
+    }
+    private fun takeCtx(): List<Param> { val c = pendingCtx ?: emptyList(); pendingCtx = null; return c }
+    private fun noCtx() { if (pendingCtx != null) { pendingCtx = null; fail("context parameters are only supported on functions") } }
+
     private fun function(): FunD {
+        val ctxPs = takeCtx()
         val line = next().line
         val typeParams = typeParams()
         // Extension receiver: `fun Recv.name`, `fun Box<T>.name`, `fun String?.name`.
@@ -823,7 +1110,7 @@ class Parser(private val t: List<Tok>) {
         } else { p = save; ident() }
         expectOp("(")
         val params = nested(1) {
-            val ps = ArrayList<Param>()
+            val ps = ArrayList<Param>(ctxPs)
             while (!isOp(")")) {
                 var va = false
                 while (peek().k == K.ID && (peek().s == "vararg" || peek().s == "noinline" || peek().s == "crossinline") && t[p + 1].k == K.ID) { if (peek().s == "vararg") va = true; p++ }
@@ -837,7 +1124,18 @@ class Parser(private val t: List<Tok>) {
         }
         expectOp(")")
         val ret = if (isOp(":")) { next(); type() } else null
-        return if (isOp("=")) { next(); skipNLOnly(); FunD(name, params, ret, null, expr(), line, typeParams, recv) }
+        return if (isOp("=")) {
+            next(); skipNLOnly()
+            val outerDecls = pendingDecls; pendingDecls = ArrayList(); bodyLevel++
+            val (e, ds) = try { expr() to pendingDecls } finally { pendingDecls = outerDecls; bodyLevel-- }
+            if (ds.isEmpty()) FunD(name, params, ret, null, e, line, typeParams, recv)
+            else {
+                // `= object : T { }`: the anonymous class is declared in a block body; the function returns T.
+                val anon = (ds.last() as LocalDeclS).d as ClassD
+                val r = ret ?: if (e is CallE && (e.callee as? NameE)?.n == anon.name) TypeRef(anon.supers.firstOrNull() ?: anon.name, anon.superTypeArgs[anon.supers.firstOrNull()] ?: emptyList(), false) else fail("expression body with an anonymous object needs an explicit return type")
+                FunD(name, params, r, Block(ds + RetS(e).also { it.line = line }), null, line, typeParams, recv)
+            }
+        }
         else if (isOp("{")) FunD(name, params, ret, block(), null, line, typeParams, recv)
         else FunD(name, params, ret, null, null, line, typeParams, recv) // abstract (interface) member
     }
@@ -911,10 +1209,21 @@ class Parser(private val t: List<Tok>) {
         return superArgs
     }
 
+    /** A declaration body `{` on the line after the header: skips the newlines. Always true. */
+    private fun braceOnNextLine(): Boolean {
+        var i = p
+        while (t[i].k == K.NL) i++
+        if (i > p && t[i].k == K.OP && t[i].s == "{") p = i
+        return true
+    }
+
     private fun classDecl(isEnum: Boolean = false): ClassD {
         val line = next().line
         val name = ident()
         val typeParams = typeParams()
+        // `class C private constructor(...)`: the visibility of the primary constructor is not checked.
+        if (peek().k == K.ID && peek().s in setOf("private", "public", "internal", "protected") && t[p + 1].k == K.ID && t[p + 1].s == "constructor") p++
+        if (isId("constructor") && t[p + 1].k == K.OP && t[p + 1].s == "(") p++
         val fields = ArrayList<FieldD>(); val ctorParams = ArrayList<Param>(); val inits = ArrayList<Any>()
         if (isEnum) enumClasses.add(name)
         if (isEnum) for ((n, ty) in listOf("name" to "String", "ordinal" to "Int")) {
@@ -1001,7 +1310,7 @@ class Parser(private val t: List<Tok>) {
             }
             entries = es
             if (isOp(";")) { next(); members(fields, inits, open = false) } else { skipNL0(); expectOp("}"); emptyList() }
-        } else if (isOp("{")) members(fields, inits) else emptyList()
+        } else if (braceOnNextLine() && isOp("{")) members(fields, inits) else emptyList()
         // An entry body overriding toString needs a virtual base `toString(): String = name`.
         val subs = entries.orEmpty().mapNotNull { enumBodies["$name$${it.first}"] }.toSet()
         val ms2 = if (ms.none { it.name == "toString" } && hoisted.any { it.name in subs && it.methods.any { m -> m.name == "toString" && m.params.isEmpty() } })
@@ -1019,7 +1328,7 @@ class Parser(private val t: List<Tok>) {
             return if (isOp("?")) { next(); TypeRef(fn.name, fn.args, true) } else fn
         }
         var name = ident()
-        while (isOp(".")) { next(); name += "." + ident() }
+        while (isOp(".") && t[p + 1].k == K.ID) { next(); name += "." + ident() }
         val args = ArrayList<TypeRef>()
         if (isOp("<")) {
             next()
@@ -1032,8 +1341,15 @@ class Parser(private val t: List<Tok>) {
             next()
         }
         val nullable = if (isOp("?")) { next(); true } else false
-        aliases[name]?.let { a -> if (args.isEmpty()) return TypeRef(a.name, a.args, a.nullable || nullable) }
-        return TypeRef(name, args, nullable)
+        val base = aliases[name]?.takeIf { args.isEmpty() }?.let { a -> TypeRef(a.name, a.args, a.nullable || nullable) } ?: TypeRef(name, args, nullable)
+        // Function type with receiver `R.(A) -> X`: TypeRef "$FnR" with args = receiver + params + return.
+        if (isOp(".") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
+            next(); next()
+            val ps = nested(1) { val xs = ArrayList<TypeRef>(); while (!isOp(")")) { if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == ":") { p += 2 }; xs.add(type()); if (isOp(",")) next() }; xs }
+            expectOp(")"); expectOp("->")
+            return TypeRef("\$FnR", listOf(base) + ps + type(), false)
+        }
+        return base
     }
 
     /** Non-generic `typealias N = T`, collected before parsing so aliases may be used before their declaration. */
@@ -1062,7 +1378,8 @@ class Parser(private val t: List<Tok>) {
     private fun block(lambda: Boolean = false): Block {
         expectOp("{")
         val params = ArrayList<String>(); val ptypes = ArrayList<TypeRef?>()
-        val stmts = nested(0) {
+        val outerDecls = pendingDecls; pendingDecls = ArrayList(); bodyLevel++
+        val stmts = try { nested(0) {
             if (lambda) {
                 // `x, y: T ->` parameter list (backtracks if it is not one).
                 val save = p
@@ -1081,12 +1398,13 @@ class Parser(private val t: List<Tok>) {
             while (true) {
                 skipNL()
                 if (isOp("}")) break
-                ss.add(stmt()); ss.addAll(pendingStmts); pendingStmts.clear()
+                val st = stmt(); ss.addAll(pendingDecls); pendingDecls.clear()
+                ss.add(st); ss.addAll(pendingStmts); pendingStmts.clear()
                 val tk = t[p]
                 if (!(tk.k == K.NL || (tk.k == K.OP && (tk.s == ";" || tk.s == "}")))) fail("expected end of statement")
             }
             ss
-        }
+        } } finally { pendingDecls = outerDecls; bodyLevel-- }
         expectOp("}")
         return Block(stmts, params, ptypes)
     }
@@ -1138,6 +1456,7 @@ class Parser(private val t: List<Tok>) {
 
     private fun stmt(): S {
         val line = peek().line
+        if (isContextDecl()) { contextDecl(); if (!localDeclAhead()) noCtx() }
         val s: S = when {
             localDeclAhead() -> localDecl()
             // Loop label `name@ for/while/do`.
@@ -1256,7 +1575,7 @@ class Parser(private val t: List<Tok>) {
             }
             if (levels[level] === INFIX_FUNS && tk.k == K.ID && tk.s in userInfix && tk.s !in INFIX_FUNS) {
                 p++; skipNLOnly()
-                l = CallE(MemberE(l, tk.s, false).also { it.line = tk.line }, emptyList(), listOf(binary(level + 1)), null).also { it.line = tk.line }
+                l = CallE(MemberE(l, tk.s, false).also { it.line = tk.line }, emptyList(), listOf(binary(level + 1)), null).also { it.line = tk.line; it.infix = true }
                 continue
             }
             val ok = if (levels[level] === INFIX_FUNS) tk.k == K.ID && tk.s in INFIX_FUNS else tk.k == K.OP && tk.s in levels[level]
@@ -1278,7 +1597,7 @@ class Parser(private val t: List<Tok>) {
         if (tk.k == K.OP && (tk.s == "-" || tk.s == "!" || tk.s == "+")) {
             p++
             val e = prefix()
-            return if (tk.s == "+") e else UnE(tk.s, e).also { it.line = tk.line }
+            return if (tk.s == "+" && (e is IntL || e is DblL)) e else UnE(tk.s, e).also { it.line = tk.line }
         }
         return postfix()
     }
@@ -1305,10 +1624,55 @@ class Parser(private val t: List<Tok>) {
         val r = when {
             e.n == "trimIndent" && a.isEmpty() -> text.trimIndent()
             e.n == "trimMargin" && a.isEmpty() -> text.trimMargin()
-            e.n == "trimMargin" && a.size == 1 && a[0] is StrL && (a[0] as StrL).parts.all { it is String } -> text.trimMargin((a[0] as StrL).parts.joinToString("") { it as String })
+            e.n == "trimMargin" && a.size == 1 && a[0] is StrL && (a[0] as StrL).parts.all { it is String } -> {
+                val prefix = (a[0] as StrL).parts.joinToString("") { it as String }
+                // Kotlin throws at run time for a blank prefix; keep that behaviour instead of crashing the compiler.
+                if (prefix.isBlank()) return CallE(NameE("\$throw").also { it.line = e.line }, emptyList(),
+                    listOf(CallE(NameE("IllegalArgumentException").also { it.line = e.line }, emptyList(),
+                        listOf(StrL(listOf("marginPrefix must be non-blank string."))), null)), null)
+                text.trimMargin(prefix)
+            }
             else -> return null
         }
         return StrL(listOf(r))
+    }
+
+    /** Arguments kept in place: literals, lambdas and spreads `*xs` (a spread is not a value of its own). */
+    private fun constArg(a: E) = a is LambdaE || (a is UnE && a.op == "*") || a is IntL || a is BoolL || a is CharL || a is DblL || a is NullL ||
+        (a is StrL && a.parts.all { it is String })
+
+    /**
+     * Kotlin evaluates call arguments in source order, but the backend places named arguments in parameter order.
+     * A call with named arguments and side-effecting arguments is rewritten to
+     * `when { else -> { val $a0 = x; val $a1 = y; f(b = $a0, a = $a1) } }` so evaluation order is preserved.
+     */
+    private fun inSourceOrder(callee: E, a: List<E>, lam: Block?): E {
+        val plain = CallE(callee, emptyList(), a, lam)
+        if (a.none { it is NamedE }) return plain
+        if (!(callee is NameE || callee is MemberE)) return plain
+        val inner = a.map { if (it is NamedE) it.e else it }
+        val complex = { x: E -> !constArg(x) && x !is NameE }
+        if (inner.none(complex)) return plain
+        val line = t[p - 1].line
+        val pre = ArrayList<S>()
+        fun hoist(v: E): E {
+            val tmp = "\$a${argTmp++}"
+            pre.add(VarS(tmp, false, null, v).also { it.line = line })
+            return NameE(tmp).also { it.line = line }
+        }
+        // The receiver is evaluated before the arguments (a plain name cannot have side effects).
+        var callee2 = callee
+        if (callee is MemberE && complex(callee.recv) && !callee.safe) callee2 = MemberE(hoist(callee.recv), callee.n, false).also { it.line = callee.line }
+        val args = a.mapIndexed { i, x ->
+            val v = inner[i]
+            // A name only needs a temporary when a later argument may change it; keeping it keeps smart casts.
+            if (constArg(v) || (v is NameE && inner.drop(i + 1).none(complex))) x else {
+                val n = hoist(v)
+                if (x is NamedE) NamedE(x.name, n).also { it.line = x.line } else n
+            }
+        }
+        val call = CallE(callee2, emptyList(), args, lam).also { it.line = line }
+        return WhenE(null, listOf(null to Block(pre + ExprS(call).also { it.line = line }))).also { it.line = line }
     }
 
     private fun postfix(): E {
@@ -1322,7 +1686,7 @@ class Parser(private val t: List<Tok>) {
                 "(" -> {
                     val a = args()
                     val lam = if (!noBraceCall && t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
-                    foldStr(e, a, lam) ?: CallE(e, emptyList(), a, lam)
+                    foldStr(e, a, lam) ?: inSourceOrder(e, a, lam)
                 }
                 "[" -> { p++; val i = nested(1) { expr() }; expectOp("]"); IndexE(e, i) }
                 "!!" -> { p++; UnE("!!", e).also { it.line = tk.line } }
@@ -1348,11 +1712,12 @@ class Parser(private val t: List<Tok>) {
         val e: E = when (tk.k) {
             K.INT -> IntL(tk.num, tk.isLong, tk.unsigned)
             K.CHAR -> CharL(tk.num)
-            K.DBL -> DblL(tk.dbl)
+            K.DBL -> DblL(tk.dbl, tk.flt)
             K.STR -> StrL(tk.parts.map {
                 if (it is TemplateCode) Parser(Lexer(it.code, it.line).lex()).also { p -> p.depth[0] = 1 }.expr() else it
             })
             K.ID -> when (tk.s) {
+                "object" -> if (isOp(":") || isOp("{")) anonObject(tk.line) else fail("unexpected 'object'", tk)
                 "true" -> BoolL(true)
                 "false" -> BoolL(false)
                 "null" -> NullL()
@@ -1360,6 +1725,13 @@ class Parser(private val t: List<Tok>) {
                 "when" -> whenExpr()
                 "try" -> tryExpr()
                 "throw" -> CallE(NameE("\$throw").also { it.line = tk.line }, emptyList(), listOf(expr()), null)
+                // `return` / `break` / `continue` used as an expression (`x ?: return 0`, `a + continue`): a block
+                // expression whose only statement jumps (type Nothing).
+                "return", "break", "continue" -> {
+                    p--
+                    val j = stmt()
+                    WhenE(null, listOf(null to Block(listOf(j)))).also { it.line = tk.line }
+                }
                 "this" -> if (t[p].k == K.OP && t[p].s == "@" && t[p + 1].k == K.ID) { p++; NameE("this@" + ident()) } else NameE("this")
                 else -> {
                     if (tk.s in GENERIC_CALLS && t[p].k == K.OP && t[p].s == "<") {

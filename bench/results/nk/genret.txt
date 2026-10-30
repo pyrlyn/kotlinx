@@ -1,0 +1,18 @@
+# genret working tree 2026-10-30 04:45 EET load: { 31.44 22.96 20.55 }
+sum 3.706
+alloc 75.405
+bigheap 122.514
+closures 83.298
+cycles 44.975
+dispatch 95.478
+file 50.982
+free 49.828
+hashmap 66.144
+lru 90.492
+matmul 10.106
+nbody 69.837
+recursion 5.986
+refpass 128.482
+sort 61.769
+strings 32.028
+trees 121.495

@@ -132,6 +132,9 @@ def run_one(path, nkc, timeout, cflags, src=None):
         return {"status": "N/A", "detail": why}
     # Test-infrastructure macro: the upstream harness expands it to @JvmInline on JVM and to nothing on Native.
     src = src.replace("OPTIONAL_JVM_INLINE_ANNOTATION", "")
+    # CHECK_TYPE_WITH_EXACT: the upstream harness adds these helpers (exact-type checks are compile-time only).
+    if re.search(r"^//\s*CHECK_TYPE_WITH_EXACT\b", src, re.M):
+        src += "\nfun <T> checkExactType(expr: T) {}\nfun <T> checkTypeEquality(reference: T, expr: T) {}\n"
     mode, expected = mode_for(path, src)
     if mode is None:
         return {"status": "N/A", "detail": "no oracle (no box() and no .out)"}

@@ -1,0 +1,18 @@
+# listinit working tree 2026-10-30 05:58 EET load: { 32.23 26.27 24.23 }
+sum 3.688
+alloc 75.434
+bigheap 117.919
+closures 83.412
+cycles 44.965
+dispatch 94.837
+file 55.32
+free 50.696
+hashmap 67.278
+lru 87.933
+matmul 10.124
+nbody 70.578
+recursion 6.035
+refpass 125.569
+sort 61.367
+strings 32.005
+trees 122.547

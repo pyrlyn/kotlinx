@@ -1,0 +1,18 @@
+# withidx working tree 2026-10-30 06:07 EET load: { 32.42 21.48 21.74 }
+sum 3.73
+alloc 75.424
+bigheap 116.142
+closures 82.906
+cycles 45.494
+dispatch 95.104
+file 50.831
+free 50.35
+hashmap 68.037
+lru 87.661
+matmul 10.112
+nbody 70.026
+recursion 6.1
+refpass 128.299
+sort 62.73
+strings 31.957
+trees 122.613

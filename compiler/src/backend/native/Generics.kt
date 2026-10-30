@@ -173,6 +173,7 @@ fun canon(t: TypeRef): TypeRef = TypeRef(when (t.name) { "List", "MutableList" -
 fun tyRef(t: Ty): TypeRef = when (t) {
     is Ty.ListTy -> TypeRef("ArrayList", listOf(tyRef(t.elem)), false)
     is Ty.MapTy -> TypeRef("HashMap", listOf(tyRef(t.k), tyRef(t.v)), false)
+    is Ty.NBox -> tyRef(t.inner) // generic instances do not track nullability
     else -> TypeRef(t.toString(), emptyList(), false)
 }
 
@@ -240,9 +241,9 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
 
     fun iface(d: InterfaceD, name: String): InterfaceD = InterfaceD(name, d.methods.map { fn(it) }, d.line)
 
-    fun field(f: FieldD): FieldD = fieldMemo.getOrPut(f) { FieldD(f.name, f.type?.let { ty(it) }, f.isVar, f.init?.let { e(it) }) }
+    fun field(f: FieldD): FieldD = fieldMemo.getOrPut(f) { FieldD(f.name, f.type?.let { ty(it) }, f.isVar, f.init?.let { e(it) }, f.lateinit) }
 
-    fun fn(f: FunD): FunD = FunD(f.name, f.params.map { Param(it.name, ty(it.type), it.default?.let { d -> e(d) }) }, f.ret?.let { ty(it) },
+    fun fn(f: FunD): FunD = FunD(f.name, f.params.map { Param(it.name, ty(it.type), it.default?.let { d -> e(d) }, it.vararg, it.ctx) }, f.ret?.let { ty(it) },
         f.body?.let { block(it) }, f.exprBody?.let { e(it) }, f.line, f.typeParams)
 
     fun block(b: Block): Block = Block(b.stmts.map { s(it) }, b.params, b.paramTypes.map { it?.let { t -> ty(t) } })

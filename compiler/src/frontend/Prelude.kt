@@ -245,7 +245,7 @@ val PROGRESSIONS = mapOf("UIntProgression" to "U", "UIntRange" to "U", "ULongPro
     "CharProgression" to "C", "CharRange" to "C")
 
 private val UNSIGNED_USE = Regex("""\bU(Int|Long)\b|\d[uU]""")
-private val RANGE_USE = Regex("""\.\.|\buntil\b|\bdownTo\b|\bstep\b|Range\b|Progression\b""")
+private val RANGE_USE = Regex("""\.\.|\brangeTo\b|\buntil\b|\bdownTo\b|\bstep\b|Range\b|Progression\b""")
 
 private val EXC_USE = Regex("""\btry\b|\bassertFails""")
 
@@ -285,6 +285,12 @@ fun <T> ArrayList<T>.firstOrNull(): T? = if (size == 0) null else get(0)
 fun <T> ArrayList<T>.lastOrNull(): T? = if (size == 0) null else get(size - 1)
 data class IndexedValue<T>(val index: Int, val value: T)
 fun <T> ArrayList<T>.withIndex(): ArrayList<IndexedValue<T>> { val r = ArrayList<IndexedValue<T>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
+fun String.withIndex(): ArrayList<IndexedValue<Char>> { val r = ArrayList<IndexedValue<Char>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
+fun IntArray.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
+"""
+/** `withIndex()` of progressions (needs both the range and the list prelude). */
+const val RANGE_LIST_EXT = """
+fun IntProgression.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
 private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex)\(|-=|\bin\b""")
 
@@ -301,11 +307,35 @@ val String.lastIndex: Int get() = length - 1
 """
 private val INDICES_USE = Regex("""\.(indices|lastIndex)\b""")
 
+/** `Array(n) { init }`, `List(n) { }`, `MutableList(n) { }`: arrays of references are lists. */
+const val LIST_INIT = """
+fun <T> Array(size: Int, init: (Int) -> T): ArrayList<T> { val r = ArrayList<T>(); var i = 0; while (i < size) { r.add(init(i)); i++ }; return r }
+fun <T> List(size: Int, init: (Int) -> T): ArrayList<T> { val r = ArrayList<T>(); var i = 0; while (i < size) { r.add(init(i)); i++ }; return r }
+fun <T> MutableList(size: Int, init: (Int) -> T): ArrayList<T> { val r = ArrayList<T>(); var i = 0; while (i < size) { r.add(init(i)); i++ }; return r }
+"""
+private val LIST_INIT_USE = Regex("""\b(Array|List|MutableList)\s*(<[^>]*>)?\s*\(""")
+
+/** `arrayOfNulls<T>(n)`: arrays of references are lists; elements start as null. */
+const val ARRAY_OF_NULLS = """
+fun <T> arrayOfNulls(size: Int): ArrayList<T?> { val r = ArrayList<T?>(); var i = 0; while (i < size) { r.add(null); i++ }; return r }
+"""
+private val ARRAY_OF_NULLS_USE = Regex("""\barrayOfNulls\b""")
+
+/** Scope functions taking a function value (literal lambdas of `let`/`also`/`run` are lowered in the backend). */
+const val SCOPE_FUNS = """
+fun <T> T.apply(block: T.() -> Unit): T { block(this); return this }
+fun <T> T.also(block: (T) -> Unit): T { block(this); return this }
+fun <T, R> T.let(block: (T) -> R): R = block(this)
+fun <T, R> T.run(block: T.() -> R): R = block(this)
+fun <T, R> with(receiver: T, block: T.() -> R): R = block(receiver)
+"""
+private val SCOPE_USE = Regex("""\.(apply)\s*[({]|\.(also|let|run)\s*\(|\bwith\s*\(""")
+
 fun withPrelude(src: String, p: Program): Program {
     val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
-    val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src)
-    if (!ranges && !exc && !pairs && !cmp && !lists) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (idx) INDICES else "")
+    val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src)
+    if (!ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon) return p
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },
@@ -313,8 +343,9 @@ fun withPrelude(src: String, p: Program): Program {
 }
 
 /** Primitive types that are boxed (into `AnyBox<T>` classes) when used as `Any`. */
-val ANY_BOXED = listOf("Int", "Long", "Double", "Boolean", "Char", "String", "UInt", "ULong", "Byte")
-private val ANY_USE = Regex("""\bAny\b""")
+val ANY_BOXED = listOf("Int", "Long", "Double", "Float", "Boolean", "Char", "String", "UInt", "ULong", "Byte")
+// Nullable primitives (`Int?`) and safe calls (`a?.x` may yield one) are boxed like `Any`.
+private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UInt|ULong|Byte|Short|UByte|UShort)\?|\?\.""")
 
 /**
  * `Any`: a built-in interface with no methods that every class implements. Primitives and strings are boxed into
@@ -346,7 +377,7 @@ fun withAny(src: String, p: Program): Program {
     }
     sb.append("    return \"Any\"\n}\n")
     sb.append("fun anyEquals__(a: Any?, b: Any?): Boolean {\n    if (a == null) return b == null\n    if (b == null) return false\n")
-    for (b in ANY_BOXED) sb.append(if (b == "Double") "    if (a is AnyBoxDouble) return b is AnyBoxDouble && a.v.compareTo(b.v) == 0\n" else "    if (a is AnyBox$b) return b is AnyBox$b && a.v == b.v\n")
+    for (b in ANY_BOXED) sb.append(if (b == "Double" || b == "Float") "    if (a is AnyBox$b) return b is AnyBox$b && a.v.compareTo(b.v) == 0\n" else "    if (a is AnyBox$b) return b is AnyBox$b && a.v == b.v\n")
     for (c in concrete) when {
         has(c, "equals") -> sb.append("    if (a is `${c.name}`) return a.equals(b)\n")
         c.isValue || c.methods.any { it.name == "\$equals" } -> sb.append("    if (a is `${c.name}`) return b is `${c.name}` && a == b\n")

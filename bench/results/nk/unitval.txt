@@ -1,0 +1,18 @@
+# unitval working tree 2026-10-30 05:47 EET load: { 31.21 27.48 23.72 }
+sum 3.708
+alloc 74.953
+bigheap 113.856
+closures 83.233
+cycles 45.157
+dispatch 94.968
+file 50.862
+free 49.83
+hashmap 67.072
+lru 86.827
+matmul 10.348
+nbody 69.93
+recursion 6.082
+refpass 127.826
+sort 65.673
+strings 32.048
+trees 122.703

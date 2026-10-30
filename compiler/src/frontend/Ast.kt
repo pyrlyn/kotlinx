@@ -9,12 +9,15 @@ class IntL(val v: Long, val long: Boolean, val unsigned: Boolean = false) : E()
 /** `x++` / `x--` used as an expression: yields the old value. */
 class PostIncE(val target: E, val op: String) : E()
 class CharL(val v: Long) : E()
-class DblL(val v: Double) : E()
+class DblL(val v: Double, val f32: Boolean = false) : E()
 class BoolL(val v: Boolean) : E()
 class NullL : E()
 class StrL(val parts: List<Any>) : E() // String or E
 class NameE(val n: String) : E()
-class CallE(val callee: E, val typeArgs: List<TypeRef>, val args: List<E>, val lambda: Block?) : E()
+class CallE(val callee: E, val typeArgs: List<TypeRef>, val args: List<E>, val lambda: Block?) : E() {
+    /** Written as `a name b`: builtin non-infix members (Int.rem) cannot be called this way, so extensions win. */
+    var infix = false
+}
 /** Named call argument `name = e` (only `copy` of data classes accepts these). */
 class NamedE(val name: String, val e: E) : E()
 /** `e is T` / `e !is T`. */
@@ -66,7 +69,8 @@ object LamIds {
     fun id(b: Block): Int { if (b.lamId < 0) b.lamId = next++; return b.lamId }
 }
 /** `default`: default argument, evaluated at the call site (may refer to earlier parameters). */
-class Param(val name: String, val type: TypeRef, val default: E? = null, /** `vararg`: [type] is the list type. */ val vararg: Boolean = false)
+class Param(val name: String, val type: TypeRef, val default: E? = null, /** `vararg`: [type] is the list type. */ val vararg: Boolean = false,
+            /** Context parameter (`context(c: T) fun f()`): filled from the implicit values in scope at the call. */ val ctx: Boolean = false)
 /** `typeParams`: generic type parameters (`fun <T> f(...)`); generic functions are monomorphized per type-argument list. */
 class FunD(val name: String, val params: List<Param>, val ret: TypeRef?, val body: Block?, val exprBody: E?, val line: Int,
            val typeParams: List<String> = emptyList(),
