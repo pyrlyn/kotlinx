@@ -273,7 +273,7 @@ class Parser(private val t: List<Tok>) {
         val sta = takeSuperArgs()
         val saved = curClass; curClass = null
         val savedObj = curObject; curObject = name
-        val ms = try { if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved; curObject = savedObj }
+        val ms = try { braceOnNextLine(); if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved; curObject = savedObj }
         objects.add(name)
         // During its own initialization the object's global is not assigned yet: `Obj.x` in initializers means `this.x`.
         val self = Subst(emptyMap(), rw = { x: E -> if (x is NameE && x.n == name) NameE("this").also { it.line = x.line } else null })
@@ -640,6 +640,25 @@ class Parser(private val t: List<Tok>) {
         return out
     }
 
+    /** Declared or literal-evident type of the parameter or local `val` [n] of [f]; null if unknown. */
+    private fun localType(f: FunD, n: String): TypeRef? {
+        f.params.firstOrNull { it.name == n }?.let { return it.type }
+        var t: TypeRef? = null; var seen = 0
+        fun r(x: String) = TypeRef(x, emptyList(), false)
+        Subst(emptyMap(), srw = { x ->
+            if (x is VarS && x.name == n) {
+                seen++
+                t = x.type ?: when (val i = x.init) {
+                    is StrL -> r("String"); is BoolL -> r("Boolean"); is CharL -> r("Char"); is DblL -> r("Double")
+                    is IntL -> if (i.unsigned) null else r(if (i.long) "Long" else "Int")
+                    else -> null
+                }
+            }
+            null
+        }).fn(f)
+        return if (seen == 1) t else null
+    }
+
     /** Names used in [f] (also as callees and `::name` references), including inside its local declarations. */
     private fun usedNames(f: FunD, out: MutableSet<String> = HashSet()): MutableSet<String> {
         lateinit var sub: Subst
@@ -722,6 +741,7 @@ class Parser(private val t: List<Tok>) {
                 val rename = HashMap<String, String>()
                 val types = HashMap<String, TypeRef>()
                 val asLambda = HashSet<FunD>()
+                val capCls = HashMap<String, List<Pair<String, TypeRef>>>()
                 val ownerNames = owner?.let { o -> o.methods.map { it.name } + newMethods.map { it.name } }?.toSet() ?: emptySet()
                 for (d in decls) when (d) {
                     is FunD -> {
@@ -742,7 +762,21 @@ class Parser(private val t: List<Tok>) {
                         val used = HashSet<String>(); localDeclNames(d, used)
                         val own = if (d is ClassD) ownNames(d) else (d as InterfaceD).methods.flatMap { localsOf(it) + it.name }.toSet()
                         val caps = used - own
-                        caps.firstOrNull { it in outer }?.let { throw CompileError("line ${if (d is ClassD) d.line else (d as InterfaceD).line}: local classes that capture local variables are not supported ('$it')") }
+                        val capd = caps.filter { it in outer }.sorted()
+                        if (capd.isNotEmpty()) {
+                            fun no(): Nothing = throw CompileError("line ${if (d is ClassD) d.line else (d as InterfaceD).line}: local classes that capture local variables are not supported ('${capd.first()}')")
+                            // Captured `val`s become leading constructor properties of the lifted class; every
+                            // construction passes the current values. Captured `var`s, data classes, objects,
+                            // interfaces and superclasses of other local classes are not supported.
+                            if (d !is ClassD || capd.any { it in assigned } || d.methods.any { it.name == "\$equals" } || d.enumEntries != null) no()
+                            if (decls.any { o -> o is ClassD && o !== d && d.name in o.supers }) no()
+                            // A member inherited from a superclass would shadow the captured value: not supported.
+                            fun inherited(c: ClassD, seen: Int = 0): Set<String> = if (seen > 20) emptySet() else
+                                c.supers.flatMap { sn -> (classes + decls.filterIsInstance<ClassD>()).filter { it.name == sn }.flatMap { sc -> sc.fields.map { it.name } + sc.ctorParams.map { it.name } + sc.methods.map { it.name.removePrefix("\$prop\$") } + inherited(sc, seen + 1) } }.toSet()
+                            val body = HashSet<String>(); localDeclNames(ClassD(d.name, d.fields, d.supers, d.methods, d.line, d.ctorParams, d.inits, null, d.typeParams), body)
+                            if (capd.any { it in body && it in inherited(d) }) no()
+                            capCls[d.name] = capd.map { c -> c to (localType(f, c) ?: no()) }
+                        }
                         val n = if (d is ClassD) d.name else (d as InterfaceD).name
                         val nn = fresh(n)
                         if (nn != n) { rename[n] = nn; types[n] = TypeRef(nn, emptyList(), false) }
@@ -751,6 +785,10 @@ class Parser(private val t: List<Tok>) {
                 lateinit var sub: Subst
                 sub = Subst(types, rw = { x ->
                     when {
+                        x is CallE && x.callee is NameE && x.callee.n in capCls ->
+                            CallE(NameE(rename[x.callee.n] ?: x.callee.n).also { it.line = x.callee.line }, x.typeArgs.map { sub.ty(it) },
+                                capCls.getValue(x.callee.n).map { (c, _) -> NameE(c).also { it.line = x.line } } + x.args.map { sub.e(it) },
+                                x.lambda?.let { sub.block(it) }).also { it.line = x.line }
                         x is NameE && x.n in rename -> NameE(rename.getValue(x.n)).also { it.line = x.line }
                         x is UnE && x.op.startsWith("::") && x.e is NullL && x.op.drop(2) in rename -> UnE("::" + rename.getValue(x.op.drop(2)), x.e).also { it.line = x.line }
                         else -> null
@@ -771,7 +809,14 @@ class Parser(private val t: List<Tok>) {
                         val g = copyFun(sub.fn(d), d, rename.getValue(d.name))
                         if (owner != null) newMethods.add(lift(g, owner, newMethods)) else funs.add(lift(g, null, newMethods))
                     }
-                    is ClassD -> classes.add(copyClass(sub, d, rename[d.name] ?: d.name))
+                    is ClassD -> classes.add(copyClass(sub, d, rename[d.name] ?: d.name).let { c ->
+                        val cs = capCls[d.name] ?: return@let c
+                        // Inside the class the captured values are its hidden `$cap$x` properties.
+                        val names = cs.map { it.first }.toSet()
+                        val r = copyClass(Subst(emptyMap(), rw = { x -> if (x is NameE && x.n in names) NameE("\$cap\$" + x.n).also { it.line = x.line } else null }), c, c.name)
+                        ClassD(r.name, cs.map { (n, t) -> FieldD("\$cap\$" + n, t, false) } + r.fields, r.supers, r.methods, r.line,
+                            cs.map { (n, t) -> Param("\$cap\$" + n, t) } + r.ctorParams, r.inits, r.superArgs, r.typeParams, r.enumEntries, r.isValue, r.superTypeArgs)
+                    })
                     is InterfaceD -> ifaces.add(InterfaceD(rename[d.name] ?: d.name, d.methods.map { copyFun(sub.fn(it), it) }, d.line, d.typeParams, d.supers))
                 }
             }
@@ -1032,10 +1077,21 @@ class Parser(private val t: List<Tok>) {
         return superArgs
     }
 
+    /** A declaration body `{` on the line after the header: skips the newlines. Always true. */
+    private fun braceOnNextLine(): Boolean {
+        var i = p
+        while (t[i].k == K.NL) i++
+        if (i > p && t[i].k == K.OP && t[i].s == "{") p = i
+        return true
+    }
+
     private fun classDecl(isEnum: Boolean = false): ClassD {
         val line = next().line
         val name = ident()
         val typeParams = typeParams()
+        // `class C private constructor(...)`: the visibility of the primary constructor is not checked.
+        if (peek().k == K.ID && peek().s in setOf("private", "public", "internal", "protected") && t[p + 1].k == K.ID && t[p + 1].s == "constructor") p++
+        if (isId("constructor") && t[p + 1].k == K.OP && t[p + 1].s == "(") p++
         val fields = ArrayList<FieldD>(); val ctorParams = ArrayList<Param>(); val inits = ArrayList<Any>()
         if (isEnum) enumClasses.add(name)
         if (isEnum) for ((n, ty) in listOf("name" to "String", "ordinal" to "Int")) {
@@ -1122,7 +1178,7 @@ class Parser(private val t: List<Tok>) {
             }
             entries = es
             if (isOp(";")) { next(); members(fields, inits, open = false) } else { skipNL0(); expectOp("}"); emptyList() }
-        } else if (isOp("{")) members(fields, inits) else emptyList()
+        } else if (braceOnNextLine() && isOp("{")) members(fields, inits) else emptyList()
         // An entry body overriding toString needs a virtual base `toString(): String = name`.
         val subs = entries.orEmpty().mapNotNull { enumBodies["$name$${it.first}"] }.toSet()
         val ms2 = if (ms.none { it.name == "toString" } && hoisted.any { it.name in subs && it.methods.any { m -> m.name == "toString" && m.params.isEmpty() } })

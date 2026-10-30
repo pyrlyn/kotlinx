@@ -1,0 +1,18 @@
+# hdr working tree 2026-10-30 15:51 EET load: { 45.18 31.31 29.80 }
+sum 3.72
+alloc 75.613
+bigheap 115.772
+closures 83.295
+cycles 46.036
+dispatch 95.368
+file 51.165
+free 51.492
+hashmap 65.281
+lru 91.075
+matmul 10.451
+nbody 70.726
+recursion 6.092
+refpass 129.951
+sort 62.475
+strings 31.809
+trees 122.54
