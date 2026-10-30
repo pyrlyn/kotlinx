@@ -805,7 +805,9 @@ class Parser(private val t: List<Tok>) {
                             // Captured `val`s become leading constructor properties of the lifted class; every
                             // construction passes the current values. Captured `var`s, data classes, objects,
                             // interfaces and superclasses of other local classes are not supported.
-                            if (d !is ClassD || capd.any { it in assigned } || d.methods.any { it.name == "\$equals" } || d.enumEntries != null) no()
+                            // Assignments inside the class's own methods count too (a captured `var` must be shared, not copied).
+                            val assignedIn = HashSet<String>(); if (d is ClassD) d.methods.forEach { assignedNames(it, assignedIn) }
+                            if (d !is ClassD || capd.any { it in assigned || it in assignedIn } || d.methods.any { it.name == "\$equals" } || d.enumEntries != null) no()
                             if (decls.any { o -> o is ClassD && o !== d && d.name in o.supers }) no()
                             // A member inherited from a superclass would shadow the captured value: not supported.
                             fun inherited(c: ClassD, seen: Int = 0): Set<String> = if (seen > 20) emptySet() else
