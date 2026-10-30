@@ -30,7 +30,8 @@
 // Generations: objects found externally referenced by a scan become stable (old) until touched; minor
 // detections do not trace them, major detections (amortized against the stable population) do.
 // Trial deletion's MarkGray/Scan run in parallel on KX_GC_THREADS threads for every detection with at
-// least PAR_MIN_ROOTS roots and an expected traversal of at least PAR_MIN_WORK objects (minor or major).
+// least PAR_MIN_ROOTS roots once the workload is large: by live traced objects (KX_GC_PAR_MIN_OBJECTS), by
+// traced heap bytes (KX_GC_PAR_MIN_HEAP_BYTES), or by default by expected traversal (KX_GC_PAR_MIN_WORK).
 // Program exit drains the queue only for --leak-check / --alloc malloc builds or KX_GC_EXIT_DRAIN=1.
 // See compiler/gc/docs/architecture.md, section 7.
 #include <pthread.h>
@@ -112,6 +113,7 @@ static inline int is_traced(void *p) {
     if (!p || (pg >> PAGE_BITS_LOG) || !page_bits) return 0;
     return (atomic_load_explicit(&page_bits[pg >> 6], memory_order_acquire) >> (pg & 63)) & 1;
 }
+static _Atomic int64_t t_allocs, t_frees, t_heap_bytes;   /* traced objects allocated / freed, slab bytes (mutator-written) */
 #define CLASSES 32
 static void *free_list[CLASSES + 1];
 static char *bump, *bump_end;
@@ -125,6 +127,7 @@ static void *page_alloc(size_t bytes) {
     }
     if (posix_memalign(&p, PAGE, bytes)) rt_panic("OutOfMemoryError");
     for (size_t o = 0; o < bytes; o += PAGE) reg_add((uintptr_t)p + o);
+    atomic_fetch_add_explicit(&t_heap_bytes, (int64_t)bytes, memory_order_relaxed);
     return p;
 }
 // ---- small vector ----
@@ -142,6 +145,7 @@ void *rt_alloc_trace(int64_t size) {
 #ifdef RT_LEAKCHECK
     rg_alloc[1]++;
 #endif
+    atomic_store_explicit(&t_allocs, atomic_load_explicit(&t_allocs, memory_order_relaxed) + 1, memory_order_relaxed);
     size_t cls = ((size_t)size + 7) >> 3;
     void *p;
     if (cls > CLASSES) {
@@ -156,6 +160,7 @@ void *rt_alloc_trace(int64_t size) {
     return p;
 }
 void rt_free_trace(void *p, int64_t size) {
+    atomic_store_explicit(&t_frees, atomic_load_explicit(&t_frees, memory_order_relaxed) + 1, memory_order_relaxed);
     LEAK(-1);
 #ifdef RT_LEAKCHECK
     rg_free[1]++;
@@ -375,7 +380,7 @@ static void apply_log(Log *l) {
 #define MAX_THREADS 16
 #define PAR_MIN_ROOTS 1024          /* smaller detections run on the collector thread alone */
 #define PAR_MIN_WORK 65536          /* ... and so do detections expected to visit fewer objects (KX_GC_PAR_MIN_WORK) */
-static int64_t par_min_work = -1;
+static int64_t par_min_work = -1, par_min_objects = -1, par_min_heap = -1;
 static double visits_per_root[2] = { 1.0, 1.0 };   /* [major]: running estimate from previous detections */
 #define SHARE_CHUNK 64
 static int c_major;                 /* current detection ignores the stable bit (traces the old generation too) */
@@ -575,8 +580,18 @@ static void detect(int major) {
     /* minor and major detections alike, when the expected traversal (roots x visits per root of the
      * previous detections of the same kind) pays for waking the helpers: the roots are split into
      * contiguous slices, idle workers take SHARE_CHUNK-sized pieces of a busy worker's stack */
-    if (par_min_work < 0) { const char *e = getenv("KX_GC_PAR_MIN_WORK"); par_min_work = e && *e ? atoll(e) : PAR_MIN_WORK; }
-    int active = k >= PAR_MIN_ROOTS && (double)k * visits_per_root[major] >= (double)par_min_work ? n_threads : 1;
+    if (par_min_work < 0) {
+        const char *e = getenv("KX_GC_PAR_MIN_WORK"); par_min_work = e && *e ? atoll(e) : PAR_MIN_WORK;
+        e = getenv("KX_GC_PAR_MIN_OBJECTS"); par_min_objects = e && *e ? atoll(e) : -1;
+        e = getenv("KX_GC_PAR_MIN_HEAP_BYTES"); par_min_heap = e && *e ? atoll(e) : -1;
+    }
+    /* Gate (first one set wins): KX_GC_PAR_MIN_OBJECTS = live traced objects, KX_GC_PAR_MIN_HEAP_BYTES =
+     * traced slab bytes, else the expected-traversal estimate (KX_GC_PAR_MIN_WORK). */
+    int big;
+    if (par_min_objects >= 0) big = atomic_load_explicit(&t_allocs, memory_order_relaxed) - atomic_load_explicit(&t_frees, memory_order_relaxed) >= par_min_objects;
+    else if (par_min_heap >= 0) big = atomic_load_explicit(&t_heap_bytes, memory_order_relaxed) >= par_min_heap;
+    else big = (double)k * visits_per_root[major] >= (double)par_min_work;
+    int active = k >= PAR_MIN_ROOTS && big ? n_threads : 1;
     atomic_store_explicit(&c_hit_stable, 0, memory_order_relaxed);
     int64_t t0 = rt_nanos();
     run_phase(PHASE_MARK, roots.items, k, active);
