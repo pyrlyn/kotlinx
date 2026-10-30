@@ -1,10 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "MISCOMPILE": 19,
+  "MISCOMPILE": 16,
   "N/A": 2984,
-  "PASS": 2472,
-  "UNSUPPORTED": 3000
+  "PASS": 2476,
+  "UNSUPPORTED": 2999
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2369,8 +2369,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/noBridges/simpleFakeOverrideSameSignature.kt"
   },
   "box/box/bridges/overrideAbstractProperty.kt": {
-   "detail": "exit=0 stdout='null\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/overrideAbstractProperty.kt"
   },
   "box/box/bridges/overrideReturnType.kt": {
@@ -4755,9 +4755,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt48927_privateMethodOnDerivedCastToBase.kt"
   },
   "box/box/casts/kt50577.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "property 'x' of B hides an inherited property",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/kt50577.kt"
   },
   "box/box/casts/kt53677.kt": {
@@ -5433,8 +5432,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2477.kt"
   },
   "box/box/classes/kt2480.kt": {
-   "detail": "exit=0 stdout='null\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt2480.kt"
   },
   "box/box/classes/kt2482.kt": {
@@ -15874,8 +15873,8 @@
    "upstream": "compiler/testData/codegen/box/fakeOverride/intersectionInLocal.kt"
   },
   "box/box/fakeOverride/intersectionOverrideBetweenValAndVar.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "property 'x' of D hides an inherited property",
+   "category": "other: no field x in C",
+   "detail": "no field x in C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fakeOverride/intersectionOverrideBetweenValAndVar.kt"
   },
@@ -17136,9 +17135,8 @@
    "upstream": "compiler/testData/codegen/box/functions/delegatedPropertyWithMultipleOverriddens_generics.kt"
   },
   "box/box/functions/delegatedPropertyWithMultipleOverriddens_noGenerics.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "property 'bar' of MyArrayList hides an inherited property",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/delegatedPropertyWithMultipleOverriddens_noGenerics.kt"
   },
   "box/box/functions/ea33909.kt": {
@@ -22875,12 +22873,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387808\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645664\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789536\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269225248\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -30133,8 +30131,8 @@
    "upstream": "compiler/testData/codegen/box/properties/backingField/typeCheckSupertypeWithValueClassExplicitBackingField.kt"
   },
   "box/box/properties/classArtificialFieldInsideNested.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "property 'your' of $anon0 hides an inherited property",
+   "category": "unknown back (stdlib API / unsupported decl)",
+   "detail": "unknown name 'back'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classArtificialFieldInsideNested.kt"
   },
@@ -30150,8 +30148,8 @@
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideLocalInSetter.kt"
   },
   "box/box/properties/classFieldInsideNested.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "property 'your' of $anon0 hides an inherited property",
+   "category": "unknown field (stdlib API / unsupported decl)",
+   "detail": "unknown name 'field'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideNested.kt"
   },
@@ -30172,8 +30170,8 @@
    "upstream": "compiler/testData/codegen/box/properties/classObjectProperties.kt"
   },
   "box/box/properties/classPrivateArtificialFieldInsideNested.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "property 'your' of $anon0 hides an inherited property",
+   "category": "unknown back (stdlib API / unsupported decl)",
+   "detail": "unknown name 'back'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classPrivateArtificialFieldInsideNested.kt"
   },
@@ -30338,7 +30336,7 @@
   },
   "box/box/properties/kt1168.kt": {
    "category": "inheritance (open/abstract/sealed)",
-   "detail": "property 'kind' of Subclass hides an inherited property",
+   "detail": "property 'kind2' of Subclass hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt1168.kt"
   },
@@ -36699,8 +36697,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44814.kt"
   },
   "box/box/smartCasts/kt44932.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "property 'parent' of KtNameReferenceExpression hides an inherited property",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected KtNameReferenceExpression, found PsiElement",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt44932.kt"
   },
@@ -37266,8 +37264,9 @@
    "upstream": "compiler/testData/codegen/box/strings/stringPlusOnlyWorksOnString.kt"
   },
   "box/box/strings/stringPlusOverride.kt": {
-   "detail": "exit=0 stdout='OK Fail\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "category": "operator/infix functions",
+   "detail": "operator extension 'plus' on String? is not supported",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/stringPlusOverride.kt"
   },
   "box/box/strings/surrogatePair.kt": {

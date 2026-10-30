@@ -7,12 +7,12 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| UNSUPPORTED | 3000 |
+| UNSUPPORTED | 2999 |
 | N/A | 2984 |
-| PASS | 2472 |
-| MISCOMPILE | 19 |
+| PASS | 2476 |
+| MISCOMPILE | 16 |
 
-Kept in tree (re-runnable with `run.py`): 2472
+Kept in tree (re-runnable with `run.py`): 2476
 
 ## Unsupported features (roadmap, by test count)
 
@@ -21,18 +21,18 @@ Kept in tree (re-runnable with `run.py`): 2472
 | strings / templates | 238 |
 | interfaces | 234 |
 | generics | 183 |
-| operator/infix functions | 177 |
+| operator/infix functions | 178 |
 | lambdas / function types / references | 149 |
 | property accessors / delegation | 138 |
 | class bodies / constructors | 83 |
-| type inference / mismatch | 73 |
+| type inference / mismatch | 74 |
 | objects / companion objects | 58 |
 | local / extension functions | 52 |
-| inheritance (open/abstract/sealed) | 47 |
 | other: expected '=' (at ' | 44 |
 | other syntax (at '.') | 43 |
 | type inference (expression bodies) | 42 |
 | inline/value classes | 42 |
+| inheritance (open/abstract/sealed) | 40 |
 | other: unknown type T | 39 |
 | nullable types | 37 |
 | destructuring declarations | 29 |
@@ -94,22 +94,19 @@ Minimal repros in `bugs/`:
 
 Affected upstream tests:
 
-- MISCOMPILE `box/box/bridges/overrideAbstractProperty.kt` — exit=0 stdout='null\n' stderr=''
 - MISCOMPILE `box/box/classes/inner/properOuter.kt` — exit=0 stdout='B_A\n' stderr=''
 - MISCOMPILE `box/box/classes/inner/properSuperLinking.kt` — exit=0 stdout='FailFail\n' stderr=''
 - MISCOMPILE `box/box/classes/kt2477.kt` — exit=0 stdout='FAIL\n' stderr=''
-- MISCOMPILE `box/box/classes/kt2480.kt` — exit=0 stdout='null\n' stderr=''
 - MISCOMPILE `box/box/closures/captureInSuperConstructorCall/properValueCapturedByClosure2.kt` — exit=0 stdout='Fail: Outer.ok\n' stderr=''
 - MISCOMPILE `box/box/dataClasses/equals/genericarray.kt` — exit=0 stdout='fail\n' stderr=''
 - MISCOMPILE `box/box/initializers/correctOrder3.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: Expected <1>, actual <0>.\n'
 - MISCOMPILE `box/box/inlineClasses/callableRefClassMergingGenerics.kt` — exit=0 stdout='FAIL n3: null\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/defaultFunctionsFromAnyForInlineClass.kt` — exit=0 stdout='Fail 4\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt` — exit=0 stdout='Fail 4\n' stderr=''
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -1341387808\n'
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 789536\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -267645664\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 269225248\n'
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/kt31994.kt` — exit=-11 stdout='' stderr=''
 - MISCOMPILE `box/box/innerClass/superOuter.kt` — exit=0 stdout='Fail\n' stderr=''
 - MISCOMPILE `box/box/intrinsics/kt12125.kt` — exit=0 stdout='fail 2: -32769\n' stderr=''
-- MISCOMPILE `box/box/strings/stringPlusOverride.kt` — exit=0 stdout='OK Fail\n' stderr=''

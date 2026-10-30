@@ -3297,6 +3297,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             OP_FUNS[e.op]?.let { return method(a, it, opCall(it, e.r)) }
             if (e.op in setOf("<", ">", "<=", ">=")) return compare(e.op, method(a, "compareTo", opCall("compareTo", e.r)), Val("0", Ty.I32))
         }
+        // `operator fun String?.plus` applies to nullable receivers, whose nullability is not tracked here.
+        if (e.op == "+" && a.t == Ty.Str && extFuns["plus"]?.any { it.params[0].type.name == "String" && it.params[0].type.nullable } == true)
+            fail("operator extension 'plus' on String? is not supported")
         val b = genExpr(e.r)
         if (a.t == Ty.Char || b.t == Ty.Char) return charOp(e.op, a, b)
         // `Double? == Int?` after nullable smart casts: null handling plus numeric promotion is not modelled yet.

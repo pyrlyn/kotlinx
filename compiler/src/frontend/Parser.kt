@@ -389,16 +389,18 @@ class Parser(private val t: List<Tok>) {
                 skipNL()
                 if (isOp("}")) break
                 var isConst = false; var isLate = false
-                var isPrivate = false
+                var isPrivate = false; var isAbstract = false
                 if (isContextDecl()) { contextDecl(); continue }
                 if (pendingCtx != null && !isId("fun") && !(peek().k == K.ID && peek().s in MEMBER_MODS)) noCtx()
-                while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) { if (peek().s == "const") isConst = true; if (peek().s == "lateinit") isLate = true; if (peek().s == "private") isPrivate = true; p++ }
+                while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) { if (peek().s == "const") isConst = true; if (peek().s == "lateinit") isLate = true; if (peek().s == "private") isPrivate = true; if (peek().s == "abstract") isAbstract = true; p++ }
                 if (isPrivate && curIface != null && isId("fun") && t[p + 1].k == K.ID) privateIfaceFuns.getOrPut(curIface!!) { HashSet() }.add(t[p + 1].s)
                 if (props != null && inits != null && (isId("val") || isId("var"))) {
                     val isVar = next().s == "var"
                     val n = ident()
                     val ty = if (isOp(":")) { next(); type() } else null
                     getter("\$prop\$$n", ty, emptyList(), null)?.let { ms.add(it); continue }
+                    // `abstract val x: T` in a class: an abstract getter, like an interface property.
+                    if (isAbstract && !isVar && ty != null && !isOp("=")) { ms.add(FunD("\$prop\$$n", emptyList(), ty, null, null, peek().line)); continue }
                     // Without an initializer (`lateinit var x: T`, or assigned in an `init` block) the property starts at
                     // the type's zero value (null for references) and is assignable during construction.
                     val f = if (!isOp("=")) {
@@ -554,6 +556,14 @@ class Parser(private val t: List<Tok>) {
                 if (ch.any { x -> x.methods.any { it.name == m.name } } || add.any { it.name == m.name }) continue
                 if (ch.none { x -> x.fields.any { it.name == n } }) continue
                 add.add(FunD(m.name, emptyList(), m.ret, null, NameE(n).also { it.line = c.line }, c.line))
+            }
+            // `abstract val x: T` of a superclass overridden by a stored property: the getter returns the field.
+            for (m in ch.drop(1).flatMap { it.methods }) {
+                if (!m.name.startsWith("\$prop\$") || m.params.isNotEmpty() || m.body != null || m.exprBody != null) continue
+                val n = m.name.removePrefix("\$prop\$")
+                if (ch.any { x -> x.methods.any { it.name == m.name && (it.body != null || it.exprBody != null) } } || add.any { it.name == m.name }) continue
+                val fd = ch.firstNotNullOfOrNull { x -> x.fields.firstOrNull { it.name == n } } ?: continue
+                add.add(FunD(m.name, emptyList(), fd.type ?: m.ret, null, NameE(n).also { it.line = c.line }, c.line))
             }
             for (s in byDelegs[c.name].orEmpty()) {
                 val iface = ifaces.firstOrNull { it.name == s } ?: fail("only interfaces can be delegated with 'by'")
