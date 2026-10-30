@@ -9,10 +9,10 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 |---|---|
 | UNSUPPORTED | 3000 |
 | N/A | 2984 |
-| PASS | 2465 |
-| MISCOMPILE | 26 |
+| PASS | 2468 |
+| MISCOMPILE | 23 |
 
-Kept in tree (re-runnable with `run.py`): 2465
+Kept in tree (re-runnable with `run.py`): 2468
 
 ## Unsupported features (roadmap, by test count)
 
@@ -107,8 +107,8 @@ Affected upstream tests:
 - MISCOMPILE `box/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt` — exit=0 stdout='Fail 4\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/inlineClassInInitBlock.kt` — exit=0 stdout='null\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/inlineClassInInitBlockGeneric.kt` — exit=0 stdout='null\n' stderr=''
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -536081568\n'
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 789472\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 269225120\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -267645728\n'
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/kt27140.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError\n'
@@ -116,7 +116,4 @@ Affected upstream tests:
 - MISCOMPILE `box/box/inlineClasses/kt31994.kt` — exit=-11 stdout='' stderr=''
 - MISCOMPILE `box/box/innerClass/superOuter.kt` — exit=0 stdout='Fail\n' stderr=''
 - MISCOMPILE `box/box/intrinsics/kt12125.kt` — exit=0 stdout='fail 2: -32769\n' stderr=''
-- MISCOMPILE `box/box/operatorConventions/infixFunctionOverBuiltinMember.kt` — exit=0 stdout='fail 3\n' stderr=''
-- MISCOMPILE `box/box/ranges/unsigned/outOfBoundsInMixedContains.kt` — exit=0 stdout='Failed\n' stderr=''
 - MISCOMPILE `box/box/strings/stringPlusOverride.kt` — exit=0 stdout='OK Fail\n' stderr=''
-- MISCOMPILE `native/native.tests/codegen/escapeAnalysis/negativeArraySize.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: NegativeArraySizeException\n'
