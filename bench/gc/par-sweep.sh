@@ -7,7 +7,7 @@ set -eu
 cd "$(dirname "$0")/.."
 NKC=${NKC:-../bin/newkotlinc}
 runs=${RUNS:-3}
-out=results/gc/exp/d2-threshold; tmp=../compiler/build/gcpar; mkdir -p "$out" "$tmp"
+out=${OUT:-results/gc/exp/d2-threshold}; tmp=../compiler/build/gcpar; mkdir -p "$out" "$tmp"
 cases="${CASES:-cyclic_garbage live_heap_churn big_live_churn bigheap}"
 OBJ="${OBJ:-0 10000 100000 1000000 10000000}"
 HEAP="${HEAP:-0 4194304 16777216 67108864 268435456}"
