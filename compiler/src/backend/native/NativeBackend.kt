@@ -2387,7 +2387,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (isAny(t) && n == "hashCode" && e0.args.isEmpty()) { val h = anyCall("anyHashCode__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return h }
         // Operators of numbers and strings called as methods: `1.plus(2)`, `"a".plus("b")`, `1.rangeTo(3)`, `x.equals(y)`.
         val opOf = mapOf("plus" to "+", "minus" to "-", "times" to "*", "div" to "/", "rem" to "%", "rangeTo" to "..", "equals" to "==")
-        if ((t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.F64 || t == Ty.Char || (t == Ty.Str && (n == "plus" || n == "equals"))) &&
+        // `equals` is boxed equality: false for another type; Double.equals compares bits (0.0 != -0.0), not supported.
+        if (n == "equals" && t == Ty.F64 && e0.args.size == 1) fail("Double.equals() is not supported")
+        if (n == "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.Char || t == Ty.Str) && e0.args.size == 1 && e0.args[0] !is NamedE &&
+            extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false) {
+            val a = genExpr(e0.args[0])
+            if (a.t != t) { releaseIfOwned(a); releaseIfOwned(r); return Val("false", Ty.I1) }
+            return compare("==", r, a)
+        }
+        if (n != "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.F64 || t == Ty.Char || (t == Ty.Str && (n == "plus" || n == "equals"))) &&
             n in opOf && e0.args.size == 1 && e0.args[0] !is NamedE && e0.lambda == null && extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false)
             return withTemps(listOf(r)) { (x) -> genExpr(BinE(opOf.getValue(n), x, e0.args[0]).also { it.line = line }) }
         // Built-in members `inc()`/`dec()` of numbers and chars win over extensions.
