@@ -173,6 +173,7 @@ fun canon(t: TypeRef): TypeRef = TypeRef(when (t.name) { "List", "MutableList" -
 fun tyRef(t: Ty): TypeRef = when (t) {
     is Ty.ListTy -> TypeRef("ArrayList", listOf(tyRef(t.elem)), false)
     is Ty.MapTy -> TypeRef("HashMap", listOf(tyRef(t.k), tyRef(t.v)), false)
+    is Ty.NBox -> tyRef(t.inner) // generic instances do not track nullability
     else -> TypeRef(t.toString(), emptyList(), false)
 }
 

@@ -116,7 +116,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     // ---------------------------------------------------------------- types
 
-    private fun resolve(t: TypeRef): Ty = tenv[t.name]?.also { if (t.args.isNotEmpty()) fail("type parameter ${t.name} takes no type arguments") } ?: when (t.name) {
+    private fun resolve(t: TypeRef): Ty {
+        if (t.name.endsWith("?")) return resolve(TypeRef(t.name.dropLast(1), t.args, true))
+        val r = resolve0(t)
+        // Inside generic instances `T?` stays `T` (substituted nullability is not tracked); AnyBox must exist.
+        if (!t.nullable || t.name in tenv || tenv.isNotEmpty() || instLine >= 0 || boxName(r)?.let { "AnyBox$it" in classDecls } != true) return r
+        return if (r != Ty.Str && boxName(r) != null && t.name !in setOf("Short", "UByte", "UShort")) Ty.NBox(r) else r
+    }
+
+    private fun resolve0(t: TypeRef): Ty = tenv[t.name]?.also { if (t.args.isNotEmpty()) fail("type parameter ${t.name} takes no type arguments") } ?: when (t.name) {
         "Int" -> Ty.I32
         "Long" -> Ty.I64
         "UInt" -> Ty.U32
@@ -157,7 +165,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         is Ty.Cls -> if (t.name in poly) "@rt_release_dyn" else "@rel.${t.name}"
         is Ty.ListTy -> "@rt_list_release"
         is Ty.MapTy -> "@rt_map_release"
-        is Ty.Iface -> "@rt_release_dyn"
+        is Ty.Iface, is Ty.NBox -> "@rt_release_dyn"
         Ty.SB -> "@rt_sb_release"
         Ty.Str -> "@rt_str_release"
         is Ty.Arr -> "@rt_arr_release"
@@ -184,7 +192,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (v.t is Ty.Cls && v.t.name.substringBefore('$') in genericClasses) fail("generic class ${v.t.name.substringBefore('$')} used as Any is not supported")
         // Kotlin compares callable references structurally; ours are distinct closures, so refuse them as Any.
         if (v.v in refVals) fail("callable references as Any are not supported")
-        if (v.v == "null" || v.t is Ty.Cls || v.t is Ty.Iface) return Val(v.v, t, v.owned)
+        if (v.v == "null" || v.t is Ty.Cls || v.t is Ty.Iface || v.t is Ty.NBox) return Val(v.v, t, v.owned)
         val n = boxName(v.t) ?: fail("${v.t} cannot be used as Any")
         val b = withTemps(listOf(v)) { (x) -> genNamedCall("AnyBox$n", CallE(NameE("AnyBox$n").also { it.line = line }, emptyList(), listOf(x), null).also { it.line = line }) }
         return Val(b.v, t, true)
@@ -208,6 +216,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Unreachable value (after `throw`): keep the slot well-typed.
         if (v.t == Ty.Nothing) return if (t.llvm == "void") v else Val("undef", t)
         if (isAny(t)) return toAny(v, t)
+        // Into code that drops nullability (generic instances): a checked unbox, like `!!`.
+        if (v.t is Ty.NBox && t !is Ty.NBox && t.llvm != "ptr" && t != Ty.Unit) return coerce(genNonNull(v), t)
+        if (t is Ty.NBox && v.v != "null") {
+            if (v.t is Ty.NBox) fail("type mismatch: expected $t, found ${v.t}")
+            val p = coerce(v, t.inner)
+            return Val(toAny(p, Ty.Iface("Any")).v, t, true)
+        }
         if (v.t.isInt && t.isInt) {
             return when {
                 t.llvm == v.t.llvm -> Val(v.v, t)
@@ -1210,7 +1225,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     // `operator fun inc()/dec()` (member, or an extension on the operand type).
                     val custom = (old.t as? Ty.Cls)?.let { mname in classes.getValue(it.name).methods } == true ||
                         extFuns[mname]?.any { extMatches(old.t, it.params[0].type, it.typeParams) } == true
-                    if (!custom && old.t.llvm == "ptr") fail("$op on ${old.t}")
+                    if (!custom && old.t.llvm == "ptr" && old.t !is Ty.NBox) fail("$op on ${old.t}")
                     // The getter runs once for the old value; prefix forms read the property again for the result.
                     withTemps(listOf(old)) { (x) ->
                         val savedIv = incViaExt; incViaExt = custom
@@ -1265,16 +1280,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is UnE -> {
                 if (e.op.startsWith("::")) return genRef(e, if (e.e is NullL) null else e.e, e.op.removePrefix("::"))
                 val v = genExpr(e.e)
-                if (e.op == "!!") {
-                    if (v.t.llvm != "ptr") return v
-                    val ok = label("nn.ok"); val bad = label("nn.null")
-                    condBr(emitT("icmp ne ptr ${v.v}, null"), ok, bad)
-                    startBlock(bad)
-                    if (excMode) throwNew("NullPointerException", Val("null", Ty.Str))
-                    else { emit("call void @rt_panic(ptr ${cstr("NullPointerException")})"); emit("unreachable"); term = true }
-                    startBlock(ok)
-                    return if (v.v == "null") Val("null", v.t) else v
-                }
+                if (e.op == "!!") return genNonNull(v)
                 if (v.t is Ty.Cls || v.t is Ty.Iface) return method(v, when (e.op) { "-" -> "unaryMinus"; "+" -> "unaryPlus"; else -> "not" }, opCall("", null))
                 when (e.op) {
                     "!" -> Val(emitT("xor i1 ${coerce(v, Ty.I1).v}, true"), Ty.I1)
@@ -1483,6 +1489,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // A `null` branch takes the type of the other (reference) branches.
         val typed = res.filter { it.first.v != "null" }.ifEmpty { res }
         var t = typed[0].first.t
+        // `if (c) 5 else null`: a primitive and a null branch make an `Int?` (boxed after the join).
+        if (exhaustive && res.size > 1 && res.any { it.first.v == "null" } && typed.all { it.first.t == t && it.first.v != "null" } && canBox(t)) {
+            val isNull = emitT("phi i1 " + res.joinToString(", ") { "[ ${it.first.v == "null"}, %${it.second} ]" })
+            val raw = emitT("phi ${t.llvm} " + res.joinToString(", ") { "[ ${if (it.first.v == "null") "undef" else it.first.v}, %${it.second} ]" })
+            val from = cur; val lb = label("nbox.box"); val lj = label("nbox.join")
+            condBr(isNull, lj, lb)
+            startBlock(lb)
+            val bx = coerce(Val(raw, t), Ty.NBox(t)); val bEnd = cur
+            br(lj)
+            startBlock(lj)
+            return Val(emitT("phi ptr [ null, %$from ], [ ${bx.v}, %$bEnd ]"), Ty.NBox(t), true)
+        }
         if (exhaustive && typed.any { it.first.t != t }) commonIface(typed.map { it.first.t })?.let { t = it }
         if (!exhaustive || t == Ty.Unit || res.any { it.first.t != t && !(it.first.v == "null" && t.llvm == "ptr") && !((t is Ty.Iface || t is Ty.Cls) && it.first.t is Ty.Cls) }) {
             for ((v, _) in res) if (v.t.isRef && v.owned) fail("if/when branches yield references of different types; assign the result or make the types match")
@@ -1567,7 +1585,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** Calls `<prefix>{str,i64,f64,bool}(<lead> value)` for printing / string building. */
     private fun appendVal(prefix: String, lead: String, v: Val, checked: Boolean = false) {
-        if (!checked && v.v != "null" && (v.t is Ty.Cls || v.t is Ty.ListTy || (v.t is Ty.Iface && !isAny(v.t)))) {
+        if (!checked && v.v != "null" && (v.t is Ty.Cls || v.t is Ty.ListTy || v.t is Ty.NBox || (v.t is Ty.Iface && !isAny(v.t)))) {
             // A nullable object prints as "null".
             val ln = label("ts.null"); val lv = label("ts.val"); val le = label("ts.end")
             condBr(emitT("icmp eq ptr ${v.v}, null"), ln, lv)
@@ -1576,6 +1594,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             startBlock(le)
             return
         }
+        if (v.t is Ty.NBox) return appendVal(prefix, lead, unbox(Val(v.v, v.t, false), v.t.inner))
         when {
             v.t == Ty.Str || v.t == Ty.RawPtr -> emit("call void @${prefix}str($lead ptr ${v.v})")
             v.t == Ty.Char -> emit("call void @${prefix}char($lead i32 ${v.v})")
@@ -1700,6 +1719,64 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return res
     }
 
+    private fun isSafeCall(e: E): Boolean = (e is MemberE && e.safe) || (e is CallE && e.callee is MemberE && (e.callee as MemberE).safe)
+
+    private fun canBox(t: Ty) = t != Ty.Str && boxName(t)?.let { "AnyBox$it" in classDecls } == true
+
+    /** `v!!`: NullPointerException on null; a nullable primitive is unboxed. */
+    private fun genNonNull(v: Val): Val {
+        if (v.t.llvm != "ptr") return v
+        val ok = label("nn.ok"); val bad = label("nn.null")
+        condBr(emitT("icmp ne ptr ${v.v}, null"), ok, bad)
+        startBlock(bad)
+        if (excMode) throwNew("NullPointerException", Val("null", Ty.Str))
+        else { emit("call void @rt_panic(ptr ${cstr("NullPointerException")})"); emit("unreachable"); term = true }
+        startBlock(ok)
+        return if (v.v == "null") Val("null", v.t) else if (v.t is Ty.NBox) unbox(v, v.t.inner) else v
+    }
+
+    /** `a ?: b` with a nullable primitive `a` and a non-null primitive (or jumping) `b`: the unboxed value. */
+    private fun elvisBox(a: Val, r: E): Val? {
+        val inner = (a.t as Ty.NBox).inner
+        if (r is NullL) return null
+        val lr = label("elvis.rhs"); val ln = label("elvis.lhs"); val le = label("elvis.end")
+        condBr(emitT("icmp ne ptr ${a.v}, null"), ln, lr)
+        startBlock(lr)
+        val b0 = genExpr(r)
+        if (!term && (b0.t is Ty.NBox || b0.v == "null")) fail("nullable right side of ?: on ${a.t} is not supported")
+        val b = if (term) null else coerce(b0, inner)
+        val rhsEnd = cur
+        if (b != null) br(le)
+        startBlock(ln)
+        val x = unbox(Val(a.v, a.t, false), inner)
+        releaseIfOwned(a)
+        val lhsEnd = cur
+        br(le)
+        startBlock(le)
+        return if (b == null) x else Val(emitT("phi ${inner.llvm} [ ${x.v}, %$lhsEnd ], [ ${b.v}, %$rhsEnd ]"), inner)
+    }
+
+    /** `==` / `!=` with a nullable primitive side: null-aware, IEEE/numeric comparison of the values. */
+    private fun nboxEq(op: String, a: Val, b: Val): Val {
+        val from = cur
+        val lc = label("neq.chk"); val lv = label("neq.val"); val le = label("neq.end")
+        val an = if (a.t is Ty.NBox) emitT("icmp eq ptr ${a.v}, null") else "false"
+        val bn = if (b.t is Ty.NBox) emitT("icmp eq ptr ${b.v}, null") else "false"
+        val anyNull = emitT("or i1 $an, $bn")
+        val bothNull = emitT("and i1 $an, $bn")
+        condBr(anyNull, le, lv)
+        startBlock(lv)
+        val x = if (a.t is Ty.NBox) unbox(Val(a.v, a.t, false), a.t.inner) else a
+        val y = if (b.t is Ty.NBox) unbox(Val(b.v, b.t, false), b.t.inner) else b
+        val c = coerce(compare("==", Val(x.v, x.t, false), Val(y.v, y.t, false)), Ty.I1).v
+        val vEnd = cur
+        br(le)
+        startBlock(le)
+        val eq = emitT("phi i1 [ $bothNull, %$from ], [ $c, %$vEnd ]")
+        releaseIfOwned(a); releaseIfOwned(b)
+        return Val(if (op == "==") eq else emitT("xor i1 $eq, true"), Ty.I1)
+    }
+
     /** `recv?.x`: evaluates `f` only when recv is non-null; the result must be a pointer type. */
     private fun safe(recvE: E, f: (Val) -> Val): Val {
         val r = genExpr(recvE)
@@ -1708,12 +1785,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val lc = label("safe.call"); val le = label("safe.end")
         condBr(emitT("icmp eq ptr ${r.v}, null"), le, lc)
         startBlock(lc)
-        val v = f(r)
+        val v0 = f(if (r.t is Ty.NBox) unbox(Val(r.v, r.t, false), r.t.inner) else r)
+        // A primitive result is boxed: `a?.x` has type `Int?`.
+        val v = if (v0.t.llvm != "ptr" && v0.t != Ty.Unit && canBox(v0.t)) coerce(v0, Ty.NBox(v0.t)) else v0
         if (v.t.llvm != "ptr") fail("safe call result must be a reference")
         val vFrom = cur
         br(le)
         startBlock(le)
-        return Val(emitT("phi ptr [ null, %$from ], [ ${v.v}, %$vFrom ]"), v.t)
+        return Val(emitT("phi ptr [ null, %$from ], [ ${v.v}, %$vFrom ]"), v.t, v.t is Ty.NBox)
     }
 
     /** Stdlib scope functions with a lambda literal (`let`, `also`, `run`, `repeat`), lowered to plain blocks. */
@@ -2406,6 +2485,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** i1 for `v is t` (does not consume [v]). */
     private fun isCheck(v: Val, t: TypeRef): String {
+        // A nullable primitive is null or an AnyBox: checked like an `Any?`.
+        if (v.t is Ty.NBox) return isCheck(Val(v.v, Ty.Iface("Any"), false), t)
         if (Regex("Function\\d+").matches(t.name)) fail("type checks against ${t.name} are not supported")
         val star = t.args.any { it.name == "*" }
         val target = if (star) null else resolveOrNull(t)
@@ -2514,6 +2595,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** Smart casts implied by [cond] being true (positive) or false: local name -> narrowed type. */
     private fun smartCasts(cond: E, positive: Boolean): List<Pair<String, TypeRef>> = when {
         cond is IsE && cond.e is NameE && cond.neg != positive && cond.type.args.none { it.name == "*" } && cond.type.name != "Any" -> listOf(cond.e.n to cond.type)
+        // `x != null` narrows a nullable primitive local to its value.
+        cond is BinE && ((cond.op == "!=" && positive) || (cond.op == "==" && !positive)) && cond.l is NameE && cond.r is NullL -> listOf(cond.l.n to TypeRef("\$nn", emptyList(), false))
         cond is BinE && cond.op == "&&" && positive -> smartCasts(cond.l, true) + smartCasts(cond.r, true)
         cond is BinE && cond.op == "||" && !positive -> smartCasts(cond.l, false) + smartCasts(cond.r, false)
         cond is UnE && cond.op == "!" -> smartCasts(cond.e, !positive)
@@ -2529,7 +2612,24 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         for ((n, tr) in casts) {
             val l = lookup(n) ?: continue
             if (l.isVar || l.t.llvm != "ptr") continue
+            // `a is Float` on a `Float?` local: the unboxed value.
+            if (l.t is Ty.NBox && !tr.nullable && resolveOrNull(tr) == l.t.inner) {
+                val x = unbox(Val(emitT("load ptr, ptr ${l.slot}"), l.t), l.t.inner)
+                val nl = declare(n, l.t.inner, false, false)
+                emit("store ${x.t.llvm} ${x.v}, ptr ${nl.slot}")
+                continue
+            }
+            if (tr.name == "\$nn") {
+                if (l.t is Ty.NBox) {
+                    val x = unbox(Val(emitT("load ptr, ptr ${l.slot}"), l.t), l.t.inner)
+                    val nl = declare(n, l.t.inner, false, false)
+                    emit("store ${x.t.llvm} ${x.v}, ptr ${nl.slot}")
+                }
+                continue
+            }
             val t = resolveOrNull(tr) ?: continue
+            // `x is Int?`: still possibly null, so the alias is a nullable primitive (same box pointer).
+            if (isAny(l.t) && tr.nullable && canBox(t)) { scopes.last().vars[n] = Local(l.slot, Ty.NBox(t), false); continue }
             if (isAny(l.t) && boxName(t) != null) {
                 // Smart cast of an Any to a primitive or String: a borrowed unboxed alias.
                 val x = unbox(Val(emitT("load ptr, ptr ${l.slot}"), l.t), t)
@@ -2629,6 +2729,27 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private var nonNullRecv = false
     private fun method(r: Val, n: String, e0: CallE): Val {
         val t = r.t
+        if (t is Ty.NBox && t.inner.isNum && n == "\$bits" && e0.args.isEmpty()) {
+            // Data class equality on `Double?`: canonical bits, null -> a pattern no canonical Double has.
+            val from = cur; val lv = label("nb.val"); val le = label("nb.end")
+            condBr(emitT("icmp eq ptr ${r.v}, null"), le, lv)
+            startBlock(lv)
+            val x = unbox(Val(r.v, t, false), t.inner)
+            val b = if (x.t == Ty.F64) Val(doubleBits(x), Ty.I64) else coerce(x, Ty.I64); val vEnd = cur
+            br(le); startBlock(le)
+            val res = Val(emitT("phi i64 [ 9221120237041090561, %$from ], [ ${b.v}, %$vEnd ]"), Ty.I64)
+            releaseIfOwned(r); return res
+        }
+        if (t is Ty.NBox && n == "hashCode" && e0.args.isEmpty()) {
+            // null -> 0, else the value's hashCode.
+            val from = cur; val lv = label("nh.val"); val le = label("nh.end")
+            condBr(emitT("icmp eq ptr ${r.v}, null"), le, lv)
+            startBlock(lv)
+            val h = coerce(method(unbox(Val(r.v, t, false), t.inner), n, e0), Ty.I32); val vEnd = cur
+            br(le); startBlock(le)
+            val res = Val(emitT("phi i32 [ 0, %$from ], [ ${h.v}, %$vEnd ]"), Ty.I32)
+            releaseIfOwned(r); return res
+        }
         // Member extension of the enclosing class (dispatch receiver `this`).
         owner?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, emptyList()) && !hasMember(t, n) }?.let {
             if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
@@ -2651,6 +2772,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (n == "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.Char || t == Ty.Str) && e0.args.size == 1 && e0.args[0] !is NamedE &&
             extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false) {
             val a = genExpr(e0.args[0])
+            if (a.t is Ty.NBox && a.t.inner == t) return nboxEq("==", r, a)
             if (a.t != t) { releaseIfOwned(a); releaseIfOwned(r); return Val("false", Ty.I1) }
             return compare("==", r, a)
         }
@@ -3086,6 +3208,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             "?:" -> {
                 val a = genExpr(e.l)
                 if (a.t.llvm != "ptr") return a
+                if (a.t is Ty.NBox) elvisBox(a, e.r)?.let { return it }
                 val lr = label("elvis.rhs"); val ln = label("elvis.lhs"); val le = label("elvis.end")
                 condBr(emitT("icmp ne ptr ${a.v}, null"), ln, lr)
                 startBlock(lr)
@@ -3114,6 +3237,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
         }
         val a = genExpr(e.l)
+        if ((e.op == "==" || e.op == "!=") && a.t is Ty.NBox && isSafeCall(e.l) && e.r !is NullL) {
+            // `a?.x == f()`: when `a` is null the right side is not evaluated (as Kotlin/Native does).
+            val from = cur; val lv = label("seq.val"); val le = label("seq.end")
+            condBr(emitT("icmp eq ptr ${a.v}, null"), le, lv)
+            startBlock(lv)
+            val c = nboxEq(e.op, a, genExpr(e.r)); val vEnd = cur
+            br(le); startBlock(le)
+            return Val(emitT("phi i1 [ ${e.op == "!="}, %$from ], [ ${c.v}, %$vEnd ]"), Ty.I1)
+        }
         if (a.t is Ty.Cls || a.t is Ty.Iface) {
             // Operator overloading: `a + b` -> a.plus(b); `a < b` -> a.compareTo(b) < 0. `==` stays identity.
             OP_FUNS[e.op]?.let { return method(a, it, opCall(it, e.r)) }
@@ -3264,7 +3396,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return when (r) { 2 -> if (u) Ty.U32 else Ty.I32; 3 -> if (u) Ty.U64 else Ty.I64; 4 -> Ty.F32; else -> Ty.F64 }
     }
 
-    private fun arith(op: String, a: Val, b: Val): Val {
+    /** A nullable primitive operand of arithmetic/ordering: Kotlin only allows it smart-cast, so a checked unbox. */
+    private fun nbArg(v: Val): Val = if (v.t is Ty.NBox) coerce(v, v.t.inner) else v
+
+    private fun arith(op: String, a0: Val, b0: Val): Val {
+        val a = nbArg(a0); val b = nbArg(b0)
         val t = numType(a, b)
         val x = coerce(a, t).v; val y = coerce(b, t).v
         val ins = if (t.isFp) mapOf("+" to "fadd", "-" to "fsub", "*" to "fmul", "/" to "fdiv", "%" to "frem")
@@ -3400,6 +3536,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val c = withTemps(listOf(a, b)) { (x, y) -> genExpr(CallE(MemberE(x, "compareTo", false).also { it.line = line }, emptyList(), listOf(y), null).also { it.line = line }) }
             return compare(op, c, Val("0", Ty.I32))
         }
+        if ((op == "==" || op == "!=") && (a.t is Ty.NBox || b.t is Ty.NBox) && a.v != "null" && b.v != "null" &&
+            (a.t is Ty.NBox || boxName(a.t) != null) && (b.t is Ty.NBox || boxName(b.t) != null) && a.t != Ty.Str && b.t != Ty.Str) return nboxEq(op, a, b)
+        // Ordering needs a non-null smart cast (handled by aliases) or a user `compareTo` on the nullable type.
+        if (op != "==" && op != "!=" && (a.t is Ty.NBox || b.t is Ty.NBox)) fail("ordering of ${a.t} and ${b.t} is not supported")
         if (a.t.llvm == "ptr" || b.t.llvm == "ptr") {
             if (op != "==" && op != "!=") fail("cannot order references")
             val res = if (a.t == Ty.Str && b.t == Ty.Str) {
