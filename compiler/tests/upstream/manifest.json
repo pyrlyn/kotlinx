@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 29,
   "N/A": 2984,
-  "PASS": 2164,
-  "UNSUPPORTED": 3298
+  "PASS": 2173,
+  "UNSUPPORTED": 3289
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -683,8 +683,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/inProjectionOfList.kt"
   },
   "box/box/arrays/indices.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: unknown method IntRange.iterator()",
+   "detail": "unknown method IntRange.iterator()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/indices.kt"
   },
@@ -700,8 +700,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/inlineInitializer.kt"
   },
   "box/box/arrays/iterator.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: unknown method ArrayList<Int>.iterator()",
+   "detail": "unknown method ArrayList<Int>.iterator()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/iterator.kt"
   },
@@ -824,8 +824,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt4357.kt"
   },
   "box/box/arrays/kt47483.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: Array expects 2 arguments",
+   "detail": "Array expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt47483.kt"
   },
@@ -865,9 +865,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt779.kt"
   },
   "box/box/arrays/kt945.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/kt945.kt"
   },
   "box/box/arrays/kt950.kt": {
@@ -888,15 +887,13 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiArrayConstructors.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclFor.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclFor.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentExtensions.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentMemberExtensions.kt": {
@@ -918,9 +915,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForValCaptured.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentExtensions.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentExtensionsValCaptured.kt": {
@@ -958,9 +954,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/kt15575.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentExtensions.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentExtensionsValCaptured.kt": {
@@ -988,9 +983,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/nonLocalReturnArrayConstructor.kt"
   },
   "box/box/arrays/nonNullArray.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/nonNullArray.kt"
   },
   "box/box/arrays/primitiveArrays.kt": {
@@ -1076,8 +1070,8 @@
    "upstream": "compiler/testData/codegen/box/associatedObjects/kt88571.kt"
   },
   "box/box/basics/array_to_any.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: ArrayList<Any> cannot be used as Any",
+   "detail": "ArrayList<Any> cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/array_to_any.kt"
   },
@@ -5574,9 +5568,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt454.kt"
   },
   "box/box/classes/kt471.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt471.kt"
   },
   "box/box/classes/kt48.kt": {
@@ -5625,9 +5618,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt6136.kt"
   },
   "box/box/classes/kt633.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt633.kt"
   },
   "box/box/classes/kt6816.kt": {
@@ -11950,14 +11942,13 @@
    "upstream": "compiler/testData/codegen/box/cycles/cycle_do.kt"
   },
   "box/box/cycles/cycle_for.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/cycles/cycle_for.kt"
   },
   "box/box/dataClasses/arrayParams.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "strings / templates",
+   "detail": "cannot convert IntArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/arrayParams.kt"
   },
@@ -12199,8 +12190,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/alreadyDeclared.kt"
   },
   "box/box/dataClasses/toString/arrayParams.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "strings / templates",
+   "detail": "cannot convert IntArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/arrayParams.kt"
   },
@@ -23072,12 +23063,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609822944\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966880\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1879837664\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645792\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -35652,8 +35643,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt14447.kt"
   },
   "box/box/regressions/kt15196.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: unknown method IntArray.asList()",
+   "detail": "unknown method IntArray.asList()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt15196.kt"
   },
