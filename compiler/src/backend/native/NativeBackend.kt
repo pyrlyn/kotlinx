@@ -135,7 +135,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "DoubleArray" -> Ty.Arr(Ty.F64)
         "StringBuilder" -> Ty.SB
         "HashMap", "MutableMap", "Map" -> mapTy(resolve(t.args[0]), resolve(t.args[1]))
-        "ArrayList", "MutableList", "List" -> Ty.ListTy(resolve(t.args.single()))
+        "ArrayList", "MutableList", "List" -> Ty.ListTy(resolve(t.args.single()).also { if (it == Ty.Unit) fail("lists of Unit are not supported") })
         "\$Fn" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()))
         "\$FnR" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()), receiver = true)
         "Array" -> if (t.args.singleOrNull()?.name == "String" && mainParams) Ty.Args else Ty.ListTy(resolve(t.args.single()))
@@ -1222,6 +1222,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     e.n == "this" && owner != null -> Val("%this", Ty.Cls(owner!!.name))
                     owner != null && (owner!!.index(e.n) >= 0 || "\$prop\$${e.n}" in owner!!.methods) -> property(Val("%this", Ty.Cls(owner!!.name)), e.n)
                     e.n in CONSTS -> Val("${CONSTS.getValue(e.n)}", Ty.I32)
+                    // The `Unit` object as a value (`return Unit`, `else -> Unit`).
+                    e.n == "Unit" && "Unit" !in classes -> Val("", Ty.Unit)
                     "\$get\$${e.n}" in sigs -> genNamedCall("\$get\$${e.n}", CallE(NameE("\$get\$${e.n}"), emptyList(), emptyList(), null).also { it.line = e.line })
                     // Implicit receiver of a top-level extension function.
                     lookup("this") != null -> property(genExpr(NameE("this").also { it.line = e.line }), e.n)
