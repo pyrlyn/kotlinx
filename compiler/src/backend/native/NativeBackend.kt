@@ -1632,7 +1632,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "Short.MAX_VALUE" to ("32767" to Ty.I32), "Short.MIN_VALUE" to ("-32768" to Ty.I32),
         "UByte.MAX_VALUE" to ("255" to Ty.U32), "UByte.MIN_VALUE" to ("0" to Ty.U32), "UShort.MAX_VALUE" to ("65535" to Ty.U32), "UShort.MIN_VALUE" to ("0" to Ty.U32),
         "UInt.MAX_VALUE" to ("4294967295" to Ty.U32), "UInt.MIN_VALUE" to ("0" to Ty.U32), "ULong.MAX_VALUE" to ("-1" to Ty.U64), "ULong.MIN_VALUE" to ("0" to Ty.U64),
-        "Byte.MAX_VALUE" to ("127" to Ty.I8), "Byte.MIN_VALUE" to ("-128" to Ty.I8))
+        "Byte.MAX_VALUE" to ("127" to Ty.I8), "Byte.MIN_VALUE" to ("-128" to Ty.I8),
+        // Double constants as LLVM hex bit patterns.
+        "Double.NaN" to ("0x7FF8000000000000" to Ty.F64), "Double.POSITIVE_INFINITY" to ("0x7FF0000000000000" to Ty.F64),
+        "Double.NEGATIVE_INFINITY" to ("0xFFF0000000000000" to Ty.F64), "Double.MAX_VALUE" to ("0x7FEFFFFFFFFFFFFF" to Ty.F64),
+        "Double.MIN_VALUE" to ("0x0000000000000001" to Ty.F64))
 
     private val lateinitFields by lazy { prog.classes.flatMap { c -> c.fields.filter { it.lateinit }.map { "${c.name}.${it.name}" } }.toSet() }
 
@@ -2429,6 +2433,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (isAny(t) && n == "toString" && e0.args.isEmpty()) { val s = anyCall("anyToString__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return s }
         if (isAny(t) && n == "equals" && e0.args.size == 1) return compare("==", r, genExpr(e0.args[0]))
         if (isAny(t) && n == "hashCode" && e0.args.isEmpty()) { val h = anyCall("anyHashCode__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return h }
+        // Internal: canonical bits of a Double (all NaNs equal), used by data class equals.
+        if (t == Ty.F64 && n == "\$bits" && e0.args.isEmpty()) {
+            val b = emitT("bitcast double ${r.v} to i64")
+            val nan = emitT("fcmp uno double ${r.v}, ${r.v}")
+            return Val(emitT("select i1 $nan, i64 9221120237041090560, i64 $b"), Ty.I64)
+        }
         // Operators of numbers and strings called as methods: `1.plus(2)`, `"a".plus("b")`, `1.rangeTo(3)`, `x.equals(y)`.
         val opOf = mapOf("plus" to "+", "minus" to "-", "times" to "*", "div" to "/", "rem" to "%", "rangeTo" to "..", "equals" to "==")
         // `equals` is boxed equality: false for another type; Double.equals compares bits (0.0 != -0.0), not supported.

@@ -52,7 +52,9 @@ class Parser(private val t: List<Tok>) {
         val self = TypeRef(c.name, c.typeParams.map { TypeRef(it, emptyList(), false) }, false)
         var eq: E = BoolL(true)
         props.forEachIndexed { i, p ->
-            val one = BinE("==", nm(p.name), MemberE(nm("other"), p.name, false).also { it.line = l }).also { it.line = l }
+            // Double properties compare like Double.equals (bits: NaN == NaN, 0.0 != -0.0).
+            fun bits(e: E): E = if (p.type.name == "Double") CallE(MemberE(e, "\$bits", false).also { it.line = l }, emptyList(), emptyList(), null).also { it.line = l } else e
+            val one = BinE("==", bits(nm(p.name)), bits(MemberE(nm("other"), p.name, false).also { it.line = l })).also { it.line = l }
             eq = if (i == 0) one else BinE("&&", eq, one).also { it.line = l }
         }
         ms.add(FunD("\$equals", listOf(Param("other", self)), TypeRef("Boolean", emptyList(), false), null, eq, l))

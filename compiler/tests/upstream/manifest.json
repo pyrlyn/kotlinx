@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 29,
   "N/A": 2984,
-  "PASS": 2212,
-  "UNSUPPORTED": 3250
+  "PASS": 2216,
+  "UNSUPPORTED": 3246
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -11997,8 +11997,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/dnnInPropertyType.kt"
   },
   "box/box/dataClasses/doubleParam.kt": {
-   "category": "unknown Double (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Double'",
+   "category": "unknown HashSet (stdlib API / unsupported decl)",
+   "detail": "unknown function 'HashSet'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/doubleParam.kt"
   },
@@ -16290,9 +16290,8 @@
    "upstream": "compiler/testData/codegen/box/fir/unnamedLocalVariable.kt"
   },
   "box/box/fp/addSubDenormalDouble.kt": {
-   "category": "unknown Double (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Double'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fp/addSubDenormalDouble.kt"
   },
   "box/box/fp/addSubDenormalFloat.kt": {
@@ -16302,8 +16301,8 @@
    "upstream": "compiler/testData/codegen/box/fp/addSubDenormalFloat.kt"
   },
   "box/box/fp/addSubZeroInfinityDouble.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'isPosZero' needs an explicit return type",
+   "category": "other: unknown method Double.isNaN()",
+   "detail": "unknown method Double.isNaN()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/addSubZeroInfinityDouble.kt"
   },
@@ -16314,8 +16313,8 @@
    "upstream": "compiler/testData/codegen/box/fp/addSubZeroInfinityFloat.kt"
   },
   "box/box/fp/atan2ZeroGuadrantsDouble.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'isPosZero' needs an explicit return type",
+   "category": "unknown atan2 (stdlib API / unsupported decl)",
+   "detail": "unknown function 'atan2'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/atan2ZeroGuadrantsDouble.kt"
   },
@@ -16332,8 +16331,8 @@
    "upstream": "compiler/testData/codegen/box/fp/denormalGradualFloatBits.kt"
   },
   "box/box/fp/divZeroAndNanDouble.kt": {
-   "category": "unknown Double (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Double'",
+   "category": "other: unknown method Double.isNaN()",
+   "detail": "unknown method Double.isNaN()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/divZeroAndNanDouble.kt"
   },
@@ -16344,9 +16343,8 @@
    "upstream": "compiler/testData/codegen/box/fp/divZeroAndNanFloat.kt"
   },
   "box/box/fp/divisionOfZeroDouble.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'isPosZero' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fp/divisionOfZeroDouble.kt"
   },
   "box/box/fp/divisionOfZeroFloat.kt": {
@@ -16356,8 +16354,8 @@
    "upstream": "compiler/testData/codegen/box/fp/divisionOfZeroFloat.kt"
   },
   "box/box/fp/mulZeroInfinityDouble.kt": {
-   "category": "unknown Double (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Double'",
+   "category": "other: unknown method Double.isNaN()",
+   "detail": "unknown method Double.isNaN()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/mulZeroInfinityDouble.kt"
   },
@@ -16368,8 +16366,8 @@
    "upstream": "compiler/testData/codegen/box/fp/mulZeroInfinityFloat.kt"
   },
   "box/box/fp/powDouble.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'isNegInf' needs an explicit return type",
+   "category": "other: unknown method Double.pow()",
+   "detail": "unknown method Double.pow()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/powDouble.kt"
   },
@@ -17739,9 +17737,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/comparableTypeCast.kt"
   },
   "box/box/ieee754/dataClass.kt": {
-   "category": "unknown Double (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Double'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/dataClass.kt"
   },
   "box/box/ieee754/differentTypesComparison.kt": {
@@ -17763,8 +17760,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/equalsFloat_properIeeeComparisons.kt"
   },
   "box/box/ieee754/equalsNaN_properIeeeComparisons.kt": {
-   "category": "unknown Double (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Double'",
+   "category": "unknown Float (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Float'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/equalsNaN_properIeeeComparisons.kt"
   },
@@ -19447,9 +19444,8 @@
    "upstream": "compiler/testData/codegen/box/initializers/initializers3.kt"
   },
   "box/box/initializers/initializers4.kt": {
-   "category": "unknown Double (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Double'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/initializers/initializers4.kt"
   },
   "box/box/initializers/initializers5.kt": {
@@ -23040,12 +23036,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267646048\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1879837856\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823264\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1879837856\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -31228,8 +31224,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inExtensionRange.kt"
   },
   "box/box/ranges/contains/inFloatingPointRangeWithNaNBound.kt": {
-   "category": "unknown Double (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Double'",
+   "category": "other: cannot build a range of Double and Double",
+   "detail": "cannot build a range of Double and Double",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inFloatingPointRangeWithNaNBound.kt"
   },
@@ -31303,8 +31299,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithImplicitReceiver.kt"
   },
   "box/box/ranges/contains/inRangeWithNonmatchingArguments.kt": {
-   "category": "unknown Double (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Double'",
+   "category": "unknown Float (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Float'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inRangeWithNonmatchingArguments.kt"
   },
