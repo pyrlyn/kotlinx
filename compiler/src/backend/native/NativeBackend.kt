@@ -324,7 +324,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             c.superClass?.let { s -> val fs = classes.getValue(c.name).fields as MutableList<Pair<String, Ty>>; classes.getValue(s).fields.forEachIndexed { i, f -> fs[i] = f } }
             inferFields(c)
         }
+        probeGlobals()
         inferReturnTypes()
+        probeGlobals()
         computeCyclic()
         for (c in classes.values) genClass(c)
         val main = sigs["main"] ?: throw CompileError("no main function")
@@ -508,6 +510,24 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     private fun lookup(n: String): Local? { for (i in scopes.indices.reversed()) scopes[i].vars[n]?.let { return it }; return globalVars[n] }
+
+    /**
+     * Types of top-level properties without an explicit type, so functions whose return type is inferred can use them
+     * (`val log = StringBuilder(); fun f(x: Int) = x.also { log.append("x") }`). Each initializer is generated and
+     * rolled back; one that cannot be typed yet (it calls a function still being inferred) is retried later.
+     */
+    private fun probeGlobals() {
+        for (g in prog.globals) {
+            if (g.type != null || g.name in globalVars) continue
+            val savedFuncs = funcs.length; val savedLine = line
+            val t = try {
+                beginBody(null, Ty.Unit); line = g.line
+                genExpr(g.init).t
+            } catch (e: CompileError) { null } finally { funcs.setLength(savedFuncs); line = savedLine }
+            if (t == null || t == Ty.Nothing || t == Ty.Unit || t == Ty.Args || t == Ty.RawPtr) continue
+            globalVars[g.name] = Local("@g.${g.name}", t, g.isVar)
+        }
+    }
 
     /** Top-level properties: module globals, initialized in declaration order by @k.init.globals before main. */
     private val globalVars = HashMap<String, Local>()
