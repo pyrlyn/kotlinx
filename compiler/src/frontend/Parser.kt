@@ -11,6 +11,15 @@ private val NO_TRAILING = setOf("try", "do", "else", "finally", "init", "object"
 
 private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix", "sealed", "lateinit")
 
+/**
+ * Upper bounds of type parameters, by "<declaration line>:<name>" (declarations are copied and renamed by later
+ * passes but keep their line). Only consulted for semantics that depend on the bound (unchecked casts).
+ */
+object TypeParamBounds {
+    val bounds = HashMap<String, TypeRef>()
+    val unbounded = HashSet<String>()
+}
+
 private var argTmp = 0
 
 class Parser(private val t: List<Tok>) {
@@ -516,7 +525,7 @@ class Parser(private val t: List<Tok>) {
         for (i in globals.indices) globals[i] = sub.s(globals[i]) as VarS
         for (i in classes.indices) {
             val c = classes[i]
-            val fields = c.fields.map { FieldD(it.name, it.type, it.isVar, it.init?.let { e -> sub.e(e) }) }
+            val fields = c.fields.map { FieldD(it.name, it.type, it.isVar, it.init?.let { e -> sub.e(e) }, it.lateinit) }
             val inits = c.inits.map { if (it is FieldD) fields.first { f -> f.name == it.name } else sub.block(it as Block) }
             classes[i] = ClassD(c.name, fields, c.supers, c.methods.map { keepRecv(sub.fn(it), it) }, c.line, c.ctorParams, inits, c.superArgs?.map { sub.e(it) }, c.typeParams,
                 c.enumEntries?.map { (n, a) -> n to a.map { sub.e(it) } }, c.isValue, c.superTypeArgs)
@@ -605,7 +614,7 @@ class Parser(private val t: List<Tok>) {
             val c = classes[i]
             val ms = c.methods.map { keepRecv(rewriter(c.name, it).fn(it), it) }
             val sub = rewriter(c.name, null)
-            val fields = c.fields.map { FieldD(it.name, it.type?.let { t -> sub.ty(t) }, it.isVar, it.init?.let { e -> sub.e(e) }) }
+            val fields = c.fields.map { FieldD(it.name, it.type?.let { t -> sub.ty(t) }, it.isVar, it.init?.let { e -> sub.e(e) }, it.lateinit) }
             val inits = c.inits.map { if (it is FieldD) fields.first { f -> f.name == it.name } else sub.block(it as Block) }
             val o = innerOf[c.name]
             val of = if (o != null) listOf(FieldD("outer\$", TypeRef(o, emptyList(), false), false)) else emptyList()
@@ -909,8 +918,9 @@ class Parser(private val t: List<Tok>) {
         next()
         while (!isOp(">")) {
             while (isId("reified") || isId("out") || isId("in")) next()
-            tps.add(ident())
-            if (isOp(":")) { next(); type() }
+            val tl = t[p].line; val tp = ident()
+            tps.add(tp)
+            if (isOp(":")) { next(); val b = type(); TypeParamBounds.bounds["$tl:$tp"] = b } else TypeParamBounds.unbounded.add("$tl:$tp")
             if (isOp(",")) next()
         }
         next()
