@@ -344,7 +344,8 @@ fun withPrelude(src: String, p: Program): Program {
 
 /** Primitive types that are boxed (into `AnyBox<T>` classes) when used as `Any`. */
 val ANY_BOXED = listOf("Int", "Long", "Double", "Float", "Boolean", "Char", "String", "UInt", "ULong", "Byte")
-private val ANY_USE = Regex("""\bAny\b""")
+// Nullable primitives (`Int?`) and safe calls (`a?.x` may yield one) are boxed like `Any`.
+private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UInt|ULong|Byte|Short|UByte|UShort)\?|\?\.""")
 
 /**
  * `Any`: a built-in interface with no methods that every class implements. Primitives and strings are boxed into
