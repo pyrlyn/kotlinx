@@ -2141,6 +2141,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             fun isBound(r: TypeRef): Boolean = (r.name !in f.typeParams || r.name in env) && r.args.all { isBound(it) }
             fun res(r: TypeRef): Ty? = if (!isBound(r)) null else { val sv = tenv; tenv = sv + env; try { resolve(r) } finally { tenv = sv } }
             val isFn = pt.name == "\$Fn" || pt.name == "\$FnR"
+            if (f.name in SCOPE_FUN_NAMES && hasReturn(a.body.stmts)) fail("non-local return from a '${f.name}' lambda is not supported")
             if (pt.name == "\$FnR" && pt.args.size >= 2 && !isBound(pt.args[0])) builderInfer(a.body, pt.args[0], f.typeParams, env)
             val lps = if (isFn) pt.args.dropLast(1).map { res(it) }.takeIf { l -> l.all { it != null } }?.map { it!! } else null
             val lrt = if (isFn) res(pt.args.last()) else null
@@ -2222,6 +2223,29 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (t != Ty.Unit && t != Ty.RawPtr && t != Ty.Args) unify(pr, t, tps, env)
             }
         }
+    }
+
+    private val SCOPE_FUN_NAMES = setOf("ext\$T\$apply", "ext\$T\$also", "ext\$T\$let", "ext\$T\$run", "with")
+
+    /** Does a block contain an unlabeled `return` outside nested lambdas (a non-local return if the lambda were inline)? */
+    private fun hasReturn(ss: List<S>): Boolean {
+        fun b(x: Block?) = x != null && hasReturn(x.stmts)
+        fun e(x: E?): Boolean = when (x) {
+            is IfE -> e(x.cond) || b(x.th) || b(x.el)
+            is WhenE -> x.branches.any { b(it.second) }
+            is TryE -> b(x.body) || x.catches.any { b(it.body) } || b(x.fin)
+            is BinE -> e(x.l) || e(x.r)
+            else -> false
+        }
+        return ss.any { s -> when (s) {
+            is RetS -> true
+            is ExprS -> e(s.e)
+            is VarS -> e(s.init)
+            is AssignS -> e(s.value)
+            is WhileS -> b(s.body)
+            is ForS -> b(s.body)
+            else -> false
+        } }
     }
 
     private val probingGeneric = HashSet<String>()
