@@ -563,8 +563,8 @@ static void batch_close(uint64_t valid_after) {
 }
 #define SLICE_ROOTS 32768   /* KX_GC_SLICE_ROOTS; 0 = unbounded */
 static size_t slice_roots = SLICE_ROOTS;
-static size_t q_seen;
-static int64_t carry_q = -1;   /* KX_GC_CARRY_QUEUE: skip detection at this queue length (default 0 = never) */          /* queue length when the collector took the current log */
+static size_t q_seen;          /* queue length when the collector took the current log */
+static int64_t carry_q = -1;   /* KX_GC_CARRY_QUEUE: skip detection at this queue length (default 0 = never) */
 static uint64_t c_valid_after;                      /* hand-off count when the current detection ended */
 static PtrStack c_deferred;   /* buffered roots whose minor detection stopped at the old generation */
 /* Minor (major = 0): stable objects are opaque. Roots left non-white after a minor detection that hit a
