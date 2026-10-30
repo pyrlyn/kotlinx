@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 2046,
-  "UNSUPPORTED": 3405
+  "PASS": 2055,
+  "UNSUPPORTED": 3396
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -686,8 +686,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/inProjectionOfList.kt"
   },
   "box/box/arrays/indices.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: unknown method IntRange.iterator()",
+   "detail": "unknown method IntRange.iterator()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/indices.kt"
   },
@@ -703,8 +703,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/inlineInitializer.kt"
   },
   "box/box/arrays/iterator.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: unknown method ArrayList<Int>.iterator()",
+   "detail": "unknown method ArrayList<Int>.iterator()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/iterator.kt"
   },
@@ -827,8 +827,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt4357.kt"
   },
   "box/box/arrays/kt47483.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: Array expects 2 arguments",
+   "detail": "Array expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt47483.kt"
   },
@@ -868,9 +868,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt779.kt"
   },
   "box/box/arrays/kt945.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/kt945.kt"
   },
   "box/box/arrays/kt950.kt": {
@@ -891,15 +890,13 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiArrayConstructors.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclFor.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclFor.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentExtensions.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentMemberExtensions.kt": {
@@ -921,9 +918,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForValCaptured.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentExtensions.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentExtensionsValCaptured.kt": {
@@ -961,9 +957,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/kt15575.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentExtensions.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentExtensionsValCaptured.kt": {
@@ -991,9 +986,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/nonLocalReturnArrayConstructor.kt"
   },
   "box/box/arrays/nonNullArray.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/nonNullArray.kt"
   },
   "box/box/arrays/primitiveArrays.kt": {
@@ -1079,8 +1073,8 @@
    "upstream": "compiler/testData/codegen/box/associatedObjects/kt88571.kt"
   },
   "box/box/basics/array_to_any.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: ArrayList<Any> cannot be used as Any",
+   "detail": "ArrayList<Any> cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/array_to_any.kt"
   },
@@ -5592,9 +5586,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt454.kt"
   },
   "box/box/classes/kt471.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt471.kt"
   },
   "box/box/classes/kt48.kt": {
@@ -5643,9 +5636,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt6136.kt"
   },
   "box/box/classes/kt633.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt633.kt"
   },
   "box/box/classes/kt6816.kt": {
@@ -11972,14 +11964,13 @@
    "upstream": "compiler/testData/codegen/box/cycles/cycle_do.kt"
   },
   "box/box/cycles/cycle_for.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/cycles/cycle_for.kt"
   },
   "box/box/dataClasses/arrayParams.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "strings / templates",
+   "detail": "cannot convert IntArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/arrayParams.kt"
   },
@@ -12221,8 +12212,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/alreadyDeclared.kt"
   },
   "box/box/dataClasses/toString/arrayParams.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "strings / templates",
+   "detail": "cannot convert IntArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/arrayParams.kt"
   },
@@ -23109,12 +23100,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267646112\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269225248\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 806096032\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609822944\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25735,7 +25726,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1030613ab        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10317de9b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1026093ab        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102725e9b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -35748,8 +35739,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt14447.kt"
   },
   "box/box/regressions/kt15196.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "other: unknown method IntArray.asList()",
+   "detail": "unknown method IntArray.asList()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt15196.kt"
   },
@@ -39151,7 +39142,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/grok/kotlinx-features/compiler/build/upstream-tmp/nkup2f5gz5zl/t.ll:202:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\ncommand failed (256): '/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt' -passes='lt",
+   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/grok/kotlinx-features/compiler/build/upstream-tmp/nkup1mvow_p6/t.ll:202:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\ncommand failed (256): '/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt' -passes='lt",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
