@@ -23,7 +23,7 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
 - Language subset: top-level functions, top-level properties (`val`/`var`/`const val`), classes with primary-constructor
   fields and methods, interfaces with virtual dispatch, val/var, if/when expressions, while, for over ranges/arrays/lists/strings,
   unlabeled `break`/`continue`, lambdas as trailing blocks for built-ins, ArrayList/HashMap/StringBuilder/arrays, string
-  templates, nullable references and nullable primitives (`Int?`, boxed) with `?.` `?:` `!!`, Int/Long/unsigned/Double/Boolean/Char/String.
+  templates, nullable references and nullable primitives (`Int?`, boxed) with `?.` `?:` `!!`, Int/Long/unsigned/Float/Double/Boolean/Char/String.
 - Not yet: user generics, function types and general lambdas, inheritance from classes (open/abstract/sealed), objects and
   companions, enums, inline/value classes, extension and operator functions, default/named arguments, exceptions,
   labeled jumps. `compiler/tests/upstream/report.md` ranks the missing features by upstream test count.
@@ -32,7 +32,7 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   cycle collector with an adaptive root threshold. Leak tests (`compiler/tests/leaks`) check live count = 0, ASan and macOS `leaks`.
 - Tests: `compiler/test.sh` (golden `compiler/tests/*.kt|.out`, benchmark checksums, leak tests);
   upstream Kotlin tests in `compiler/tests/upstream` (unmodified, JetBrains/kotlin @ 19c36e1), 8475 candidates:
-  PASS 2396, MISCOMPILE 28, COMPILER_CRASH 0, UNSUPPORTED 3067, N/A 2984 (passing ones are kept and re-runnable with
+  PASS 2446, MISCOMPILE 28, COMPILER_CRASH 0, UNSUPPORTED 3017, N/A 2984 (passing ones are kept and re-runnable with
   `run.py`); `import.py --no-fetch` re-scans all candidates and keeps the newly passing ones.
 
 ## Resume

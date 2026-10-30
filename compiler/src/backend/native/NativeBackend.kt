@@ -134,6 +134,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "Short" -> Ty.I32 // Short values live in Int (Kotlin widens Short arithmetic to Int; toShort() truncates)
         "Boolean" -> Ty.I1
         "Double" -> Ty.F64
+        "Float" -> Ty.F32
         "Unit" -> Ty.Unit
         "String" -> Ty.Str
         "Char" -> Ty.Char
@@ -141,6 +142,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "IntArray" -> Ty.Arr(Ty.I32)
         "LongArray" -> Ty.Arr(Ty.I64)
         "DoubleArray" -> Ty.Arr(Ty.F64)
+        "FloatArray" -> Ty.Arr(Ty.F32)
         "StringBuilder" -> Ty.SB
         "HashMap", "MutableMap", "Map" -> mapTy(resolve(t.args[0]), resolve(t.args[1]))
         "ArrayList", "MutableList", "List" -> Ty.ListTy(resolve(t.args.single()).also { if (it == Ty.Unit) fail("lists of Unit are not supported") })
@@ -181,7 +183,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun isAny(t: Ty) = t is Ty.Iface && t.name == "Any"
     private fun boxName(t: Ty): String? = when (t) {
-        Ty.I32 -> "Int"; Ty.I64 -> "Long"; Ty.F64 -> "Double"; Ty.I1 -> "Boolean"; Ty.Char -> "Char"; Ty.Str -> "String"
+        Ty.I32 -> "Int"; Ty.I64 -> "Long"; Ty.F64 -> "Double"; Ty.F32 -> "Float"; Ty.I1 -> "Boolean"; Ty.Char -> "Char"; Ty.Str -> "String"
         Ty.U32 -> "UInt"; Ty.U64 -> "ULong"; Ty.I8 -> "Byte"; else -> null
     }
 
@@ -228,7 +230,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 else -> Val(emitT("trunc ${v.t.llvm} ${v.v} to ${t.llvm}"), t)
             }
         }
-        if (v.t.isInt && t == Ty.F64) return Val(emitT("${if (v.t.isUnsigned) "uitofp" else "sitofp"} ${v.t.llvm} ${v.v} to double"), t)
+        if (v.t.isInt && t.isFp) return Val(emitT("${if (v.t.isUnsigned) "uitofp" else "sitofp"} ${v.t.llvm} ${v.v} to ${t.llvm}"), t)
+        if (v.t == Ty.F32 && t == Ty.F64) return Val(emitT("fpext float ${v.v} to double"), t)
         if (v.t == Ty.RawPtr && t == Ty.Str) return Val(emitT("call ptr @rt_str_from_c(ptr ${v.v})"), Ty.Str, true)
         if ((v.t == Ty.RawPtr || v.t == Ty.Str) && (t == Ty.RawPtr || t == Ty.Str)) return Val(v.v, t, v.owned)
         if (v.v == "null" && t.llvm == "ptr") return Val("null", t)
@@ -243,6 +246,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "ptr" -> emitT("ptrtoint ptr ${v.v} to i64")
         "i64" -> v.v
         "double" -> emitT("bitcast double ${v.v} to i64")
+        "float" -> emitT("zext i32 ${emitT("bitcast float ${v.v} to i32")} to i64")
         "i1" -> emitT("zext i1 ${v.v} to i64")
         else -> emitT("sext ${v.t.llvm} ${v.v} to i64")
     }
@@ -251,6 +255,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "ptr" -> emitT("inttoptr i64 $s to ptr")
         "i64" -> s
         "double" -> emitT("bitcast i64 $s to double")
+        "float" -> emitT("bitcast i32 ${emitT("trunc i64 $s to i32")} to float")
         else -> emitT("trunc i64 $s to ${t.llvm}")
     }
 
@@ -1215,7 +1220,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     // `operator fun inc()/dec()` (member, or an extension on the operand type).
                     val custom = (old.t as? Ty.Cls)?.let { mname in classes.getValue(it.name).methods } == true ||
                         extFuns[mname]?.any { extMatches(old.t, it.params[0].type, it.typeParams) } == true
-                    if (!custom && old.t.llvm == "ptr") fail("$op on ${old.t}")
+                    if (!custom && old.t.llvm == "ptr" && old.t !is Ty.NBox) fail("$op on ${old.t}")
                     // The getter runs once for the old value; prefix forms read the property again for the result.
                     withTemps(listOf(old)) { (x) ->
                         val savedIv = incViaExt; incViaExt = custom
@@ -1225,7 +1230,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     }
                 }
             }
-            is DblL -> Val("0x" + e.v.toRawBits().toULong().toString(16).uppercase().padStart(16, '0'), Ty.F64)
+            is DblL -> Val("0x" + e.v.toRawBits().toULong().toString(16).uppercase().padStart(16, '0'), if (e.f32) Ty.F32 else Ty.F64)
             is BoolL -> Val(if (e.v) "true" else "false", Ty.I1)
             is CharL -> Val("${e.v}", Ty.Char)
             is NullL -> Val("null", Ty.RawPtr)
@@ -1275,7 +1280,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 when (e.op) {
                     "!" -> Val(emitT("xor i1 ${coerce(v, Ty.I1).v}, true"), Ty.I1)
                     "-" -> when {
-                        v.t == Ty.F64 -> Val(emitT("fneg double ${v.v}"), Ty.F64)
+                        v.t.isFp -> Val(emitT("fneg ${v.t.llvm} ${v.v}"), v.t)
                         v.t.isInt -> { val w = coerce(v, if (v.t == Ty.I8) Ty.I32 else v.t); Val(emitT("sub ${w.t.llvm} 0, ${w.v}"), w.t) }
                         else -> fail("unary minus on ${v.t}")
                     }
@@ -1339,7 +1344,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun excArgs(cls: String, args: List<E>): List<E> = if (cls in PRELUDE_EXCEPTIONS && args.isEmpty()) listOf(NullL()) else args
 
     private fun emitDefaultRet() {
-        emit(when (retTy.llvm) { "void" -> "ret void"; "ptr" -> "ret ptr null"; "double" -> "ret double 0.0"; "i1" -> "ret i1 false"; else -> "ret ${retTy.llvm} 0" })
+        emit(when (retTy.llvm) { "void" -> "ret void"; "ptr" -> "ret ptr null"; "double" -> "ret double 0.0"; "float" -> "ret float 0.0"; "i1" -> "ret i1 false"; else -> "ret ${retTy.llvm} 0" })
         term = true
     }
 
@@ -1539,7 +1544,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val lt = label("when.then"); val ln = label("when.next")
             var c: String? = null
             for (ce in conds) {
-                val x = if (subj != null && !isSubjCond(ce)) compare("==", Val(subj.v, subj.t, false), genExpr(ce)).v else coerce(genExpr(ce), Ty.I1).v
+                // After `!is Float ->` / `!is Double ->`, an `Any` subject is smart-cast: compare a literal with IEEE `==`.
+                val fpCast = if (subj != null && isAny(subj.t) && ce is DblL) e.branches.take(bi).any { b -> b.first?.singleOrNull()?.let { it is IsE && it.neg && isSubjCond(it) && it.type.name == (if (ce.f32) "Float" else "Double") && !it.type.nullable } == true } else false
+                val x = if (fpCast) compare("==", unbox(Val(subj!!.v, subj.t, false), if ((ce as DblL).f32) Ty.F32 else Ty.F64), genExpr(ce)).v
+                else if (subj != null && !isSubjCond(ce)) compare("==", Val(subj.v, subj.t, false), genExpr(ce)).v else coerce(genExpr(ce), Ty.I1).v
                 c = if (c == null) x else emitT("or i1 $c, $x")
             }
             condBr(c!!, lt, ln)
@@ -1587,6 +1595,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             v.t.isUnsigned -> emit("call void @${prefix}u64($lead i64 ${coerce(v, Ty.U64).v})")
             v.t.isInt -> emit("call void @${prefix}i64($lead i64 ${coerce(v, Ty.I64).v})")
             v.t == Ty.F64 -> emit("call void @${prefix}f64($lead double ${v.v})")
+            v.t == Ty.F32 -> emit("call void @${prefix}f32($lead float ${v.v})")
             v.t == Ty.I1 -> emit("call void @${prefix}bool($lead i1 ${v.v})")
             isAny(v.t) -> appendVal(prefix, lead, anyCall("anyToString__", listOf(Val(v.v, v.t, false))))
             v.t is Ty.Cls && classes.getValue(v.t.name).methods["toString"]?.params?.isEmpty() == true -> {
@@ -1655,7 +1664,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Double constants as LLVM hex bit patterns.
         "Double.NaN" to ("0x7FF8000000000000" to Ty.F64), "Double.POSITIVE_INFINITY" to ("0x7FF0000000000000" to Ty.F64),
         "Double.NEGATIVE_INFINITY" to ("0xFFF0000000000000" to Ty.F64), "Double.MAX_VALUE" to ("0x7FEFFFFFFFFFFFFF" to Ty.F64),
-        "Double.MIN_VALUE" to ("0x0000000000000001" to Ty.F64))
+        "Double.MIN_VALUE" to ("0x0000000000000001" to Ty.F64),
+        // Float constants: LLVM wants the double bit pattern of the (exactly representable) float value.
+        "Float.NaN" to ("0x7FF8000000000000" to Ty.F32), "Float.POSITIVE_INFINITY" to ("0x7FF0000000000000" to Ty.F32),
+        "Float.NEGATIVE_INFINITY" to ("0xFFF0000000000000" to Ty.F32), "Float.MAX_VALUE" to ("0x47EFFFFFE0000000" to Ty.F32),
+        "Float.MIN_VALUE" to ("0x36A0000000000000" to Ty.F32))
 
     private val lateinitFields by lazy { prog.classes.flatMap { c -> c.fields.filter { it.lateinit }.map { "${c.name}.${it.name}" } }.toSet() }
 
@@ -1996,6 +2009,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     val neg = emitT("sub ${w.t.llvm} 0, ${w.v}")
                     return Val(emitT("select i1 ${emitT("icmp slt ${w.t.llvm} ${w.v}, 0")}, ${w.t.llvm} $neg, ${w.t.llvm} ${w.v}"), w.t)
                 }
+                if (a.t == Ty.F32) return Val(emitT("call float @llvm.${if (n.endsWith("sqrt")) "sqrt" else "fabs"}.f32(float ${a.v})"), Ty.F32)
                 val fn = if (n.endsWith("sqrt")) "llvm.sqrt.f64" else "llvm.fabs.f64"
                 return Val(emitT("call double @$fn(double ${coerce(a, Ty.F64).v})"), Ty.F64)
             }
@@ -2009,8 +2023,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val t = mapTy(resolve(e.typeArgs[0]), resolve(e.typeArgs[1]))
                 return Val(emitT("call ptr @rt_map_new()"), t, true)
             }
-            "IntArray", "LongArray", "DoubleArray" -> {
-                val et = when (n) { "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; else -> Ty.F64 }
+            "IntArray", "LongArray", "DoubleArray", "FloatArray" -> {
+                val et = when (n) { "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; "FloatArray" -> Ty.F32; else -> Ty.F64 }
                 if (e.lambda != null) return initLoop(e.args.single(), e.lambda, et, { sz, t -> Val(emitT("call ptr @rt_arr_new(i64 ${coerce(sz, Ty.I64).v}, i64 ${t.size})"), Ty.Arr(t), true) }) { c, i, v ->
                     emit("store ${et.llvm} ${coerce(v, et).v}, ptr ${emitT("getelementptr ${et.llvm}, ptr ${emitT("getelementptr i8, ptr ${c.v}, i64 8")}, i32 $i")}")
                 }
@@ -2093,8 +2107,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     emit("call void @rt_list_add(ptr ${c.v}, i64 ${toSlot(consume(v))})")
                 }
             }
-            "intArrayOf", "longArrayOf", "doubleArrayOf", "byteArrayOf" -> {
-                val et = when (n) { "intArrayOf" -> Ty.I32; "longArrayOf" -> Ty.I64; "doubleArrayOf" -> Ty.F64; else -> Ty.I8 }
+            "intArrayOf", "longArrayOf", "doubleArrayOf", "floatArrayOf", "byteArrayOf" -> {
+                val et = when (n) { "intArrayOf" -> Ty.I32; "longArrayOf" -> Ty.I64; "doubleArrayOf" -> Ty.F64; "floatArrayOf" -> Ty.F32; else -> Ty.I8 }
                 val a = emitT("call ptr @rt_arr_new(i64 ${e.args.size}, i64 ${et.size})")
                 val data = emitT("getelementptr i8, ptr $a, i64 8")
                 e.args.forEachIndexed { i, x -> emit("store ${et.llvm} ${coerce(genExpr(x), et).v}, ptr ${emitT("getelementptr ${et.llvm}, ptr $data, i64 $i")}") }
@@ -2446,7 +2460,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (isAny(v.t) && target != null && target !is Ty.Cls && target !is Ty.Iface && boxName(target) == null) fail("type check of Any against $target is not supported")
         val boxed = if (isAny(v.t)) target?.let { boxName(it) } else null
         val special = if (target == null && !star) when (t.name) {
-            "Number" -> if (isAny(v.t)) listOf("Int", "Long", "Double", "Byte", "UInt", "ULong").map { "AnyBox$it" } else emptyList()
+            "Number" -> if (isAny(v.t)) listOf("Int", "Long", "Double", "Float", "Byte", "UInt", "ULong").map { "AnyBox$it" } else emptyList()
             "CharSequence" -> if (isAny(v.t)) listOf("AnyBoxString") else emptyList()
             else -> fail("unknown type ${t.name}")
         } else null
@@ -2481,10 +2495,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val p = f.params.firstOrNull { it.name == e.n } ?: return false
         if (p.type.name !in tenv) return false
         val bound = TypeParamBounds.bounds["$instLine:${p.type.name}"]
-        return bound == null || bound.name != "Double"
+        return bound == null || bound.name !in setOf("Double", "Float")
     }
 
-    private fun doubleBits(v: Val): String {
+    private fun fpToInt(r: Val, target: Ty): Val {
+        val w = if (target == Ty.I8) Ty.I32 else target
+        val fn = "llvm.${if (w.isUnsigned) "fptoui" else "fptosi"}.sat.${w.llvm}.${if (r.t == Ty.F32) "f32" else "f64"}"
+        val v = Val(emitT("call ${w.llvm} @$fn(${r.t.llvm} ${r.v})"), w)
+        return if (target == Ty.I8) Val(emitT("trunc i32 ${v.v} to i8"), Ty.I8) else v
+    }
+
+    private fun doubleBits(v0: Val): String {
+        val v = coerce(v0, Ty.F64)
         val b = emitT("bitcast double ${v.v} to i64")
         val nan = emitT("fcmp uno double ${v.v}, ${v.v}")
         return emitT("select i1 $nan, i64 9221120237041090560, i64 $b")
@@ -2541,11 +2563,22 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         else -> emptyList()
     }
 
+    /** Slots of aliases made by `x is Int?`-style smart casts (unboxed although the value may be null). */
+    private val nullableAliases = HashSet<String>()
+    private fun nullableAlias(e: E) = e is NameE && lookup(e.n)?.slot?.let { it in nullableAliases } == true
+
     /** Declares borrowed narrowed aliases of the [casts] locals in the current scope (skipping reassigned vars). */
     private fun applyCasts(casts: List<Pair<String, TypeRef>>) {
         for ((n, tr) in casts) {
             val l = lookup(n) ?: continue
             if (l.isVar || l.t.llvm != "ptr") continue
+            // `a is Float` on a `Float?` local: the unboxed value.
+            if (l.t is Ty.NBox && !tr.nullable && resolveOrNull(tr) == l.t.inner) {
+                val x = unbox(Val(emitT("load ptr, ptr ${l.slot}"), l.t), l.t.inner)
+                val nl = declare(n, l.t.inner, false, false)
+                emit("store ${x.t.llvm} ${x.v}, ptr ${nl.slot}")
+                continue
+            }
             if (tr.name == "\$nn") {
                 if (l.t is Ty.NBox) {
                     val x = unbox(Val(emitT("load ptr, ptr ${l.slot}"), l.t), l.t.inner)
@@ -2562,6 +2595,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val x = unbox(Val(emitT("load ptr, ptr ${l.slot}"), l.t), t)
                 val nl = declare(n, t, false, false)
                 emit("store ${t.llvm} ${x.v}, ptr ${nl.slot}")
+                if (tr.nullable) nullableAliases.add(nl.slot)
                 continue
             }
             if (t == l.t || !(t is Ty.Cls || t is Ty.Iface)) continue
@@ -2595,7 +2629,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (n == "compareTo" && e.args.size == 1 && (t == Ty.Str || t.isNum || t == Ty.Char)) {
             val o = genExpr(e.args[0])
             if (t == Ty.Str) { val c = emitT("call i32 @rt_str_cmp(ptr ${r.v}, ptr ${coerce(o, Ty.Str).v})"); releaseIfOwned(r); releaseIfOwned(o); return Val(c, Ty.I32) }
-            if (t == Ty.F64 || o.t == Ty.F64) {
+            if (t.isFp || o.t.isFp) {
                 // Total order (Double.compare): -0.0 < 0.0, NaN is greatest and equal to itself.
                 val x = coerce(r, Ty.F64).v; val y = coerce(o, Ty.F64).v
                 fun bits(d: String) = emitT("select i1 ${emitT("fcmp uno double $d, $d")}, i64 9221120237041090560, i64 ${emitT("bitcast double $d to i64")}")
@@ -2611,6 +2645,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             t == Ty.Str -> { val v = Val(emitT("call i32 @rt_str_hash(ptr ${r.v})"), Ty.I32); releaseIfOwned(r); return v }
             t == Ty.I1 -> return Val(emitT("select i1 ${r.v}, i32 1231, i32 1237"), Ty.I32)
             t == Ty.F64 -> return Val(emitT("call i32 @rt_double_hash(double ${r.v})"), Ty.I32)
+            t == Ty.F32 -> return Val(emitT("select i1 ${emitT("fcmp uno float ${r.v}, ${r.v}")}, i32 2143289344, i32 ${emitT("bitcast float ${r.v} to i32")}"), Ty.I32)
             t == Ty.I64 || t == Ty.U64 -> { val x = emitT("xor i64 ${r.v}, ${emitT("lshr i64 ${r.v}, 32")}"); return Val(emitT("trunc i64 $x to i32"), Ty.I32) }
             t == Ty.Char || t.isInt -> return Val(coerce(Val(r.v, if (t == Ty.Char) Ty.I32 else t), Ty.I32).v, Ty.I32)
         }
@@ -2684,7 +2719,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (isAny(t) && n == "equals" && e0.args.size == 1) return compare("==", r, genExpr(e0.args[0]))
         if (isAny(t) && n == "hashCode" && e0.args.isEmpty()) { val h = anyCall("anyHashCode__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return h }
         // Internal: canonical bits of a Double (all NaNs equal), used by data class equals.
-        if (t == Ty.F64 && n == "\$bits" && e0.args.isEmpty()) {
+        if (t.isFp && n == "\$bits" && e0.args.isEmpty()) {
+            if (t == Ty.F32) return Val(doubleBits(r), Ty.I64)
             val b = emitT("bitcast double ${r.v} to i64")
             val nan = emitT("fcmp uno double ${r.v}, ${r.v}")
             return Val(emitT("select i1 $nan, i64 9221120237041090560, i64 $b"), Ty.I64)
@@ -2692,7 +2728,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Operators of numbers and strings called as methods: `1.plus(2)`, `"a".plus("b")`, `1.rangeTo(3)`, `x.equals(y)`.
         val opOf = mapOf("plus" to "+", "minus" to "-", "times" to "*", "div" to "/", "rem" to "%", "rangeTo" to "..", "equals" to "==")
         // `equals` is boxed equality: false for another type; Double.equals compares bits (0.0 != -0.0), not supported.
-        if (n == "equals" && t == Ty.F64 && e0.args.size == 1) fail("Double.equals() is not supported")
+        if (n == "equals" && t.isFp && e0.args.size == 1) fail("$t.equals() is not supported")
         if (n == "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.Char || t == Ty.Str) && e0.args.size == 1 && e0.args[0] !is NamedE &&
             extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false) {
             val a = genExpr(e0.args[0])
@@ -2700,7 +2736,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (a.t != t) { releaseIfOwned(a); releaseIfOwned(r); return Val("false", Ty.I1) }
             return compare("==", r, a)
         }
-        if (n != "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.F64 || t == Ty.Char || (t == Ty.Str && (n == "plus" || n == "equals"))) &&
+        if (n != "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t.isFp || t == Ty.Char || (t == Ty.Str && (n == "plus" || n == "equals"))) &&
             n in opOf && e0.args.size == 1 && e0.args[0] !is NamedE && e0.lambda == null && extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false)
             return withTemps(listOf(r)) { (x) -> genExpr(BinE(opOf.getValue(n), x, e0.args[0]).also { it.line = line }) }
         // Built-in members `inc()`/`dec()` of numbers and chars win over extensions.
@@ -2738,19 +2774,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val e = if (e0.lambda != null && t !is Ty.Cls && t !is Ty.Iface && !(t is Ty.ListTy && n in setOf("map", "filter", "forEach", "sumOf", "count")) && n != "usePinned")
             CallE(e0.callee, e0.typeArgs, allArgs(e0), null) else e0
         val res: Val = when {
-            t.isNum && t != Ty.F64 && (n == "toUByte" || n == "toUShort") -> {
+            t.isNum && !t.isFp && (n == "toUByte" || n == "toUShort") -> {
                 val w = if (n == "toUByte") "i8" else "i16"
                 Val(emitT("zext $w ${emitT("trunc ${t.llvm} ${r.v} to $w")} to i32"), Ty.U32)
             }
             (t.isNum || t == Ty.Char) && n == "toShort" -> {
-                val i = if (t == Ty.Char) Val(r.v, Ty.I32) else if (t == Ty.F64) Val(emitT("fptosi double ${r.v} to i32"), Ty.I32) else coerce(r, Ty.I32)
+                val i = if (t == Ty.Char) Val(r.v, Ty.I32) else if (t.isFp) fpToInt(r, Ty.I32) else coerce(r, Ty.I32)
                 Val(emitT("sext i16 ${emitT("trunc i32 ${i.v} to i16")} to i32"), Ty.I32)
             }
-            t.isNum && n in setOf("toInt", "toUInt", "toLong", "toULong", "toByte", "toDouble", "toString") -> {
+            t.isNum && n in setOf("toInt", "toUInt", "toLong", "toULong", "toByte", "toDouble", "toFloat", "toString") -> {
                 if (n == "toString") { val sb = emitT("call ptr @rt_sb_new()"); appendVal("rt_sb_", "ptr $sb, ", r); return Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str, true) }
-                val target = when (n) { "toInt" -> Ty.I32; "toUInt" -> Ty.U32; "toLong" -> Ty.I64; "toULong" -> Ty.U64; "toByte" -> Ty.I8; else -> Ty.F64 }
+                val target = when (n) { "toInt" -> Ty.I32; "toUInt" -> Ty.U32; "toLong" -> Ty.I64; "toULong" -> Ty.U64; "toByte" -> Ty.I8; "toFloat" -> Ty.F32; else -> Ty.F64 }
                 when {
-                    t == Ty.F64 && target.isInt -> Val(emitT("fptosi double ${r.v} to ${target.llvm}"), target)
+                    // Kotlin conversions saturate and map NaN to 0 (llvm.fpto[su]i.sat); Byte goes through Int.
+                    t.isFp && target.isInt -> fpToInt(r, target)
+                    t == Ty.F64 && target == Ty.F32 -> Val(emitT("fptrunc double ${r.v} to float"), target)
                     else -> coerce(r, target)
                 }
             }
@@ -3094,7 +3132,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             "filter" -> "  $res = call ptr @rt_list_new(ptr ${releaseFn(t.elem) ?: "null"})\n"
             "sumOf", "count" -> {
                 allocas.append("  $acc = alloca ${accTy.llvm}\n")
-                "  store ${accTy.llvm} ${if (accTy == Ty.F64) "0.0" else "0"}, ptr $acc\n"
+                "  store ${accTy.llvm} ${if (accTy.isFp) "0.0" else "0"}, ptr $acc\n"
             }
             else -> ""
         }
@@ -3174,7 +3212,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         val b = genExpr(e.r)
         if (a.t == Ty.Char || b.t == Ty.Char) return charOp(e.op, a, b)
-        if ((e.op == "==" || e.op == "!=") && a.t == Ty.F64 && b.t == Ty.F64 && (boxedDoubleOperand(e.l) || boxedDoubleOperand(e.r)))
+        // `Double? == Int?` after nullable smart casts: null handling plus numeric promotion is not modelled yet.
+        if ((e.op == "==" || e.op == "!=") && a.t != b.t && a.t.isNum && b.t.isNum && (nullableAlias(e.l) || nullableAlias(e.r)))
+            fail("equality of smart-cast nullable ${a.t} and ${b.t} is not supported")
+        if ((e.op == "==" || e.op == "!=") && a.t.isFp && b.t.isFp && (boxedDoubleOperand(e.l) || boxedDoubleOperand(e.r)))
             return compare(e.op, Val(doubleBits(a), Ty.I64), Val(doubleBits(b), Ty.I64))
         return when (e.op) {
             "==", "!=", "<", ">", "<=", ">=" -> compare(e.op, a, b)
@@ -3311,16 +3352,20 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (!a.t.isNum || !b.t.isNum) fail("operator on non-numeric types ${a.t}, ${b.t}")
         val r = maxOf(a.t.rank, b.t.rank, 2)
         val u = a.t.isUnsigned || b.t.isUnsigned
-        return when (r) { 2 -> if (u) Ty.U32 else Ty.I32; 3 -> if (u) Ty.U64 else Ty.I64; else -> Ty.F64 }
+        return when (r) { 2 -> if (u) Ty.U32 else Ty.I32; 3 -> if (u) Ty.U64 else Ty.I64; 4 -> Ty.F32; else -> Ty.F64 }
     }
 
-    private fun arith(op: String, a: Val, b: Val): Val {
+    /** A nullable primitive operand of arithmetic/ordering: Kotlin only allows it smart-cast, so a checked unbox. */
+    private fun nbArg(v: Val): Val = if (v.t is Ty.NBox) coerce(v, v.t.inner) else v
+
+    private fun arith(op: String, a0: Val, b0: Val): Val {
+        val a = nbArg(a0); val b = nbArg(b0)
         val t = numType(a, b)
         val x = coerce(a, t).v; val y = coerce(b, t).v
-        val ins = if (t == Ty.F64) mapOf("+" to "fadd", "-" to "fsub", "*" to "fmul", "/" to "fdiv", "%" to "frem")
+        val ins = if (t.isFp) mapOf("+" to "fadd", "-" to "fsub", "*" to "fmul", "/" to "fdiv", "%" to "frem")
         else if (t.isUnsigned) mapOf("+" to "add", "-" to "sub", "*" to "mul", "/" to "udiv", "%" to "urem")
         else mapOf("+" to "add", "-" to "sub", "*" to "mul", "/" to "sdiv", "%" to "srem")
-        if (excMode && t != Ty.F64 && (op == "/" || op == "%") && !(y.toLongOrNull()?.let { it != 0L } ?: false)) {
+        if (excMode && !t.isFp && (op == "/" || op == "%") && !(y.toLongOrNull()?.let { it != 0L } ?: false)) {
             val bad = label("div.zero"); val ok = label("div.ok")
             emit("br i1 ${emitT("icmp eq ${t.llvm} $y, 0")}, label %$bad, label %$ok, !prof !1"); term = true
             startBlock(bad)
@@ -3330,7 +3375,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return Val(emitT("${ins.getValue(op)} ${t.llvm} $x, $y"), t)
     }
 
-    private val NUMERIC = setOf(Ty.I8, Ty.I32, Ty.I64, Ty.U32, Ty.U64, Ty.F64, Ty.Char)
+    private val NUMERIC = setOf(Ty.I8, Ty.I32, Ty.I64, Ty.U32, Ty.U64, Ty.F32, Ty.F64, Ty.Char)
     private val CONST_RE = Regex("-?[0-9][0-9.eE+-]*|0x[0-9a-fA-F]+|true|false")
     private fun compare(op: String, a: Val, b: Val): Val {
         // Values of different primitive types are never equal (`equals` of boxed values). Kotlin rejects this for
@@ -3398,7 +3443,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }, Ty.I1) else {
                 val fa = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${a.v}, i32 0, i32 2")}"), ft)
                 val fb = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${b.v}, i32 0, i32 2")}"), ft)
-                coerce(compare("==", fa, fb), Ty.I1)
+                // Value class equality is boxed equality of the property: Float/Double compare by bits.
+                if (ft.isFp) compare("==", Val(doubleBits(fa), Ty.I64), Val(doubleBits(fb), Ty.I64)) else coerce(compare("==", fa, fb), Ty.I1)
             }
             val fromF = cur
             br(le)
@@ -3451,6 +3497,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         if ((op == "==" || op == "!=") && (a.t is Ty.NBox || b.t is Ty.NBox) && a.v != "null" && b.v != "null" &&
             (a.t is Ty.NBox || boxName(a.t) != null) && (b.t is Ty.NBox || boxName(b.t) != null) && a.t != Ty.Str && b.t != Ty.Str) return nboxEq(op, a, b)
+        // Ordering needs a non-null smart cast (handled by aliases) or a user `compareTo` on the nullable type.
+        if (op != "==" && op != "!=" && (a.t is Ty.NBox || b.t is Ty.NBox)) fail("ordering of ${a.t} and ${b.t} is not supported")
         if (a.t.llvm == "ptr" || b.t.llvm == "ptr") {
             if (op != "==" && op != "!=") fail("cannot order references")
             val res = if (a.t == Ty.Str && b.t == Ty.Str) {
@@ -3462,9 +3510,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         val t = numType(a, b)
         val x = coerce(a, t).v; val y = coerce(b, t).v
-        val res = if (t == Ty.F64) {
+        val res = if (t.isFp) {
             val c = mapOf("==" to "oeq", "!=" to "une", "<" to "olt", ">" to "ogt", "<=" to "ole", ">=" to "oge").getValue(op)
-            emitT("fcmp $c double $x, $y")
+            emitT("fcmp $c ${t.llvm} $x, $y")
         } else {
             val c = if (t.isUnsigned) mapOf("==" to "eq", "!=" to "ne", "<" to "ult", ">" to "ugt", "<=" to "ule", ">=" to "uge").getValue(op)
             else mapOf("==" to "eq", "!=" to "ne", "<" to "slt", ">" to "sgt", "<=" to "sle", ">=" to "sge").getValue(op)
@@ -3508,12 +3556,14 @@ declare void @rt_exit_flush()
 declare void @rt_print_str(ptr)
 declare void @rt_print_i64(i64)
 declare void @rt_print_f64(double)
+declare void @rt_print_f32(float)
 declare void @rt_print_bool(i1 zeroext)
 declare void @rt_newline()
 declare ptr @rt_sb_new()
 declare void @rt_sb_str(ptr, ptr)
 declare void @rt_sb_i64(ptr, i64)
 declare void @rt_sb_f64(ptr, double)
+declare void @rt_sb_f32(ptr, float)
 declare void @rt_sb_bool(ptr, i1 zeroext)
 declare ptr @rt_sb_done(ptr)
 declare ptr @rt_list_new(ptr)
@@ -3545,6 +3595,16 @@ declare i64 @rt_map_size(ptr)
 declare void @rt_map_release(ptr)
 declare double @llvm.sqrt.f64(double)
 declare double @llvm.fabs.f64(double)
+declare float @llvm.sqrt.f32(float)
+declare i32 @llvm.fptosi.sat.i32.f32(float)
+declare i32 @llvm.fptosi.sat.i32.f64(double)
+declare i64 @llvm.fptosi.sat.i64.f32(float)
+declare i64 @llvm.fptosi.sat.i64.f64(double)
+declare i32 @llvm.fptoui.sat.i32.f32(float)
+declare i32 @llvm.fptoui.sat.i32.f64(double)
+declare i64 @llvm.fptoui.sat.i64.f32(float)
+declare i64 @llvm.fptoui.sat.i64.f64(double)
+declare float @llvm.fabs.f32(float)
 !0 = !{!"branch_weights", i32 2000, i32 1}
 !1 = !{!"branch_weights", i32 1, i32 2000}
 ${tbaaMeta()}

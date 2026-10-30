@@ -10,7 +10,7 @@ class TemplateCode(val code: String, val line: Int)
 class Tok(
     val k: K, val s: String, val line: Int,
     val num: Long = 0, val isLong: Boolean = false, val unsigned: Boolean = false,
-    val dbl: Double = 0.0, val parts: List<Any> = emptyList(),
+    val dbl: Double = 0.0, val flt: Boolean = false, val parts: List<Any> = emptyList(),
 )
 
 private val OPS = listOf(
@@ -120,7 +120,12 @@ class Lexer(private val src: String, private var line: Int = 1) {
                 while (i < src.length && src[i].isDigit()) i++
             }
             val text = src.substring(st, i).replace("_", "")
-            out.add(Tok(K.DBL, text, line, dbl = text.toDouble())); return
+            val f = i < src.length && (src[i] == 'f' || src[i] == 'F'); if (f) i++
+            out.add(Tok(K.DBL, text, line, dbl = if (f) text.toFloat().toDouble() else text.toDouble(), flt = f)); return
+        }
+        if (i < src.length && (src[i] == 'f' || src[i] == 'F') && !(i + 1 < src.length && (src[i + 1].isLetterOrDigit() || src[i + 1] == '_'))) {
+            val text = src.substring(st, i).replace("_", ""); i++
+            out.add(Tok(K.DBL, text, line, dbl = text.toFloat().toDouble(), flt = true)); return
         }
         val digits = src.substring(st, i).replace("_", "")
         val v = digits.toULongOrNull()?.toLong() ?: throw CompileError("line $line: integer literal out of range: $digits")

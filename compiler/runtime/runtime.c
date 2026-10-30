@@ -71,13 +71,13 @@ void rt_panic(const char *msg) {
 
 /* Kotlin-style Double formatting: shortest round-trip digits; plain notation for 1e-3 <= |d| < 1e7,
    otherwise computerized scientific notation (e.g. 3.3358775E8, 1.0E-4), always with a '.'. */
-static void fmt_double(char *buf, size_t n, double d) {
+static void fmt_fp(char *buf, size_t n, double d, int f32) {
     if (d != d) { snprintf(buf, n, "NaN"); return; }
     if (d == 1.0 / 0.0) { snprintf(buf, n, "Infinity"); return; }
     if (d == -1.0 / 0.0) { snprintf(buf, n, "-Infinity"); return; }
     if (d == 0) { snprintf(buf, n, (1.0 / d < 0) ? "-0.0" : "0.0"); return; }
     char e[40];
-    for (int p = 0; p <= 16; p++) { snprintf(e, sizeof e, "%.*e", p, d); if (strtod(e, NULL) == d) break; }
+    for (int p = 0; p <= 16; p++) { snprintf(e, sizeof e, "%.*e", p, d); if (f32 ? (double)strtof(e, NULL) == d : strtod(e, NULL) == d) break; }
     /* e = [-]D[.DDD]e[+-]XX */
     char digits[24]; int nd = 0, neg = 0; const char *q = e;
     if (*q == '-') { neg = 1; q++; }
@@ -109,7 +109,9 @@ static void fmt_double(char *buf, size_t n, double d) {
 
 void rt_print_str(const char *s) { fputs(s ? s : "null", stdout); }
 void rt_print_i64(int64_t v) { printf("%" PRId64, v); }
+static void fmt_double(char *buf, size_t n, double d) { fmt_fp(buf, n, d, 0); }
 void rt_print_f64(double d) { char b[64]; fmt_double(b, sizeof b, d); fputs(b, stdout); }
+void rt_print_f32(float d) { char b[64]; fmt_fp(b, sizeof b, d, 1); fputs(b, stdout); }
 void rt_print_u64(uint64_t v) { printf("%" PRIu64, v); }
 /* Kotlin String.hashCode over the UTF-16 code units of a UTF-8 string. */
 int32_t rt_str_hash(const char *s) {
@@ -186,6 +188,7 @@ void rt_str_release(char *p) {
 int64_t rt_sb_len(SB *s) { return (int64_t)s->len; }
 void rt_sb_release(SB *s) { if (!s || --s->rc > 0) return; LK(LK_SB, -1); free(s->buf - 8); free(s); }
 void rt_sb_f64(SB *s, double d) { char b[64]; fmt_double(b, sizeof b, d); rt_sb_str(s, b); }
+void rt_sb_f32(SB *s, float d) { char b[64]; fmt_fp(b, sizeof b, d, 1); rt_sb_str(s, b); }
 void rt_sb_bool(SB *s, _Bool v) { rt_sb_str(s, v ? "true" : "false"); }
 char *rt_sb_done(SB *s) { char *r = s->buf; ((int64_t *)r)[-1] = 1; LK(LK_SB, -1); LK(LK_STR, 1); free(s); return r; }
 
