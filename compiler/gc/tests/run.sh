@@ -43,6 +43,18 @@ for g in $gcs; do
     fi
   done
 done
+# Epoch: a back-pressure wait over the pause target on every hand-off (KX_GC_TARGET_PAUSE_US=1, i.e. a
+# collector that is always late) must not grow the log queue / log pool without bound: the adaptive limit
+# stays <= 16 and at most limit + 2 spare logs are kept (it used to reach 64 logs, 2x peak RSS).
+if [[ " $(echo $gcs) " == *" epoch "* ]]; then
+  t=compiler/gc/tests/epoch/queue_spike.kt
+  if "$NKC" --gc=epoch "$t" -o "$out/epoch.queue_spike" 2>/dev/null; then
+    dbg=$(KX_GC_TARGET_PAUSE_US=1 KX_GC_DEBUG=1 "$out/epoch.queue_spike" 2>&1 >/dev/null)
+    q=$(echo "$dbg" | grep -oE 'qmax=[0-9]+' | cut -d= -f2); logs=$(echo "$dbg" | grep -oE 'mem MiB slabs=[0-9.]+ logs=[0-9]+' | grep -oE '[0-9]+$')
+    if [ -n "$q" ] && [ -n "$logs" ] && [ "$q" -le 16 ] && [ "$logs" -le 20 ]; then echo "PASS gc-epoch queue_spike (qmax=$q logs=$logs)"
+    else echo "FAIL gc-epoch queue_spike (qmax=$q logs=$logs, want <= 16 / <= 20)"; fail=1; fi
+  else echo "FAIL gc-epoch queue_spike: compile"; fail=1; fi
+fi
 # Selecting an unknown implementation is a compile error.
 if "$NKC" --gc=nope compiler/gc/tests/kt/reuse.kt -o "$out/nope" 2>/dev/null; then echo "FAIL gc-unknown"; fail=1; else echo "PASS gc-unknown"; fi
 rm -rf "$out"

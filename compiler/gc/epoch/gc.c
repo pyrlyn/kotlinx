@@ -121,13 +121,27 @@ static void *free_list[CLASSES + 1];
 static char *bump, *bump_end;
 typedef struct Big { struct Big *next; size_t size; } Big;
 static Big *big_free;
+#define SLAB_CHUNK (2u << 20)
+static int64_t dbg_slab_bytes, dbg_log_allocs, dbg_batch_bytes, dbg_batch_peak;
 static void *page_alloc(size_t bytes) {
-    void *p = NULL;
+    void *p = NULL; dbg_slab_bytes += (int64_t)bytes;
     if (!page_bits) {
         page_bits = mmap(NULL, (1ULL << PAGE_BITS_LOG) / 8, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON | MAP_NORESERVE, -1, 0);
         if (page_bits == MAP_FAILED) rt_panic("OutOfMemoryError");
     }
-    if (posix_memalign(&p, PAGE, bytes)) rt_panic("OutOfMemoryError");
+    if (bytes == PAGE) {   /* small-object slabs: carved from 2 MiB mmap chunks (no per-slab malloc header or alignment slack) */
+        static char *ch, *ch_end;
+        if (ch == ch_end) {
+            size_t want = SLAB_CHUNK + PAGE;
+            char *m = mmap(NULL, want, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+            if (m == MAP_FAILED) rt_panic("OutOfMemoryError");
+            char *a = (char *)(((uintptr_t)m + PAGE - 1) & ~(uintptr_t)(PAGE - 1));
+            if (a > m) munmap(m, (size_t)(a - m));
+            if (a + SLAB_CHUNK < m + want) munmap(a + SLAB_CHUNK, (size_t)(m + want - (a + SLAB_CHUNK)));
+            ch = a; ch_end = a + SLAB_CHUNK;
+        }
+        p = ch; ch += PAGE;
+    } else if (posix_memalign(&p, PAGE, bytes)) rt_panic("OutOfMemoryError");
     for (size_t o = 0; o < bytes; o += PAGE) reg_add((uintptr_t)p + o);
     return p;
 }
@@ -183,9 +197,13 @@ void rt_cc_dead(void *p) { (void)p; rt_panic("epoch GC: rt_cc_dead"); }
 static size_t max_queued;
 #define Q_ADAPT_START 4
 #define Q_ADAPT_MIN 2
-#define Q_ADAPT_MAX 64
+#define Q_ADAPT_MAX 16   /* was 64: a starved collector (busy machine) doubled it to 64 within a few hand-offs; 64 queued
+                          * logs are 16 MiB of logs plus the garbage they hold back, and exceed the early-validation
+                          * scan (EARLY_SCAN_MAX = 32 logs), so every candidate also waited for the whole queue:
+                          * 2x peak RSS on live_heap_churn (78 vs 36 MiB) in about 1 run of 6 under load */
+#define Q_ADAPT_COOL 16  /* hand-offs between two doublings */
 #define Q_ADAPT_WINDOW 64
-static int q_fixed, q_win, q_win_bad;   /* guarded by mu */
+static int q_fixed, q_win, q_win_bad, q_cool, pool_len;   /* guarded by mu */
 static int64_t q_target_ns; static size_t dbg_q_max;
 static int major_slack = -1;          /* KX_GC_MAJOR_SLACK: queue limit multiplier while a major runs (default 1: off; measured: the mutator fills any slack within a major) */
 static _Atomic int c_in_major;         /* collector is in a major detection */
@@ -212,7 +230,7 @@ static int64_t free_budget_ns = -1;
 static void *collector_main(void *);
 static Log *log_new(void) {
     Log *l = log_pool;
-    if (l) log_pool = l->next; else { l = malloc(sizeof *l); if (!l) rt_panic("OutOfMemoryError"); }
+    if (l) { log_pool = l->next; pool_len--; } else { dbg_log_allocs++; l = malloc(sizeof *l); if (!l) rt_panic("OutOfMemoryError"); }
     l->n = 0; l->next = NULL; return l;
 }
 /* Hands the current log to the collector; takes the dead objects it returned. Caller holds no lock. */
@@ -242,15 +260,18 @@ static void handoff(void) {
     int64_t d = 0;
     if (q_len > Q_LIMIT()) { int64_t w0 = rt_nanos(); while (q_len > Q_LIMIT()) pthread_cond_wait(&cv_done, &mu); d = rt_nanos() - w0; dbg_bp_ns += d; if (d > dbg_bp_max) dbg_bp_max = d; }
     /* Adaptive queue depth (unless KX_GC_MAX_QUEUED is set): a back-pressure wait longer than the pause
-     * target doubles the limit (up to Q_ADAPT_MAX); a window of Q_ADAPT_WINDOW hand-offs with no wait over a
-     * quarter of the target and the queue never past half the limit lowers it by one (down to Q_ADAPT_MIN).
+     * target doubles the limit (up to Q_ADAPT_MAX, at most once per Q_ADAPT_COOL hand-offs); a window of
+     * Q_ADAPT_WINDOW hand-offs with no wait over a quarter of the target and the queue never past half the
+     * limit halves it (down to Q_ADAPT_MIN).
      * A short queue means garbage is confirmed and returned sooner (lower RSS); a long one absorbs collector
      * spikes (lower pauses). */
     if (!q_fixed) {
-        if (d > q_target_ns) { if (max_queued < Q_ADAPT_MAX) max_queued *= 2; if (max_queued > Q_ADAPT_MAX) max_queued = Q_ADAPT_MAX; q_win = 0; q_win_bad = 0; }
+        if (q_cool) q_cool--;
+        if (d > q_target_ns && !q_cool) { if (max_queued < Q_ADAPT_MAX) max_queued *= 2; if (max_queued > Q_ADAPT_MAX) max_queued = Q_ADAPT_MAX; q_win = 0; q_win_bad = 0; q_cool = Q_ADAPT_COOL; }
+        else if (d > q_target_ns) q_win_bad = 1;
         else {
             if (d > q_target_ns / 4 || q_len * 2 > max_queued) q_win_bad = 1;
-            if (++q_win >= Q_ADAPT_WINDOW) { if (!q_win_bad && max_queued > Q_ADAPT_MIN) max_queued--; q_win = 0; q_win_bad = 0; }
+            if (++q_win >= Q_ADAPT_WINDOW) { if (!q_win_bad && max_queued > Q_ADAPT_MIN) max_queued = max_queued / 2 > Q_ADAPT_MIN ? max_queued / 2 : Q_ADAPT_MIN; q_win = 0; q_win_bad = 0; }
         }
         if (max_queued > dbg_q_max) dbg_q_max = max_queued;
     }
@@ -595,7 +616,9 @@ static void collect_white(void *s) {
 static void batch_close(uint64_t valid_after) {
     if (!cw_ends.len) return;
     size_t n = cw_m.len, k = cw_ends.len;
-    Batch *b = malloc(sizeof *b + n * sizeof(void *) + k * sizeof(size_t)); if (!b) rt_panic("OutOfMemoryError");
+    size_t bsz = sizeof(Batch) + n * sizeof(void *) + k * sizeof(size_t);
+    Batch *b = malloc(bsz); if (!b) rt_panic("OutOfMemoryError");
+    dbg_batch_bytes += (int64_t)bsz; if (dbg_batch_bytes > dbg_batch_peak) dbg_batch_peak = dbg_batch_bytes;
     b->next = NULL; b->tried = 0; b->valid_after = valid_after; b->first_id = cw_first_id; b->nsets = k;
     memcpy(b->members, cw_m.items, n * sizeof(void *));
     b->ends = (size_t *)(b->members + n);
@@ -603,6 +626,10 @@ static void batch_close(uint64_t valid_after) {
     if (cands_tail) cands_tail->next = b; else cands = b;
     cands_tail = b;
     dbg_members += (int64_t)n; cw_m.len = 0; cw_ends.len = 0;
+}
+static void batch_free(Batch *b) {
+    size_t n = b->nsets ? b->ends[b->nsets - 1] : 0;
+    dbg_batch_bytes -= (int64_t)(sizeof(Batch) + n * sizeof(void *) + b->nsets * sizeof(size_t)); free(b);
 }
 #define SLICE_ROOTS 32768   /* KX_GC_SLICE_ROOTS; 0 = unbounded */
 static size_t slice_roots = SLICE_ROOTS;
@@ -894,7 +921,7 @@ static size_t validate_ready(uint64_t upto, int force) {
             freed += validate(b->first_id + i, (Members){ b->ends[i] - start, b->members + start });
             start = b->ends[i];
         }
-        free(b);
+        batch_free(b);
     }
     return freed;
 }
@@ -958,7 +985,7 @@ static size_t try_early(uint64_t applied_seq) {
         if (!cands_tail) for (Batch *t = cands; t; t = t->next) cands_tail = t;
         size_t start = 0;
         for (size_t i = 0; i < b->nsets; i++) { freed += validate(b->first_id + i, (Members){ b->ends[i] - start, b->members + start }); start = b->ends[i]; }
-        free(b);
+        batch_free(b);
     }
     return freed;
 }
@@ -1048,7 +1075,9 @@ static void *collector_main(void *arg) {
             gc_st.reclaimed += (int64_t)freed;
             publish_returns();
             pthread_mutex_lock(&mu);
-            applied = l->seq; l->next = log_pool; log_pool = l;
+            applied = l->seq;
+            /* keep only as many spare logs as the queue may hold again; return the rest after a spike */
+            if ((size_t)pool_len > max_queued + 2) free(l); else { l->next = log_pool; log_pool = l; pool_len++; }
             if (q_len <= max_queued && atomic_load_explicit(&c_in_major, memory_order_relaxed)) atomic_store(&c_in_major, 0);
             pthread_cond_broadcast(&cv_done);
         } else if (full_req) {
@@ -1072,6 +1101,14 @@ static void epoch_debug(void) {
     if (e && *e) fprintf(stderr, "epoch: roots=%lld minor-visits=%lld major-visits=%lld members=%lld\n", (long long)dbg_roots_k, (long long)dbg_minor_visits, (long long)dbg_major_visits, (long long)dbg_members);
     if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld early ok=%lld hit=%lld skip=%lld qmax=%zu q=%zu\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits, (long long)dbg_early_ok, (long long)dbg_early_hit, (long long)dbg_early_skip, dbg_q_max, max_queued);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
+    if (e && *e) {
+        size_t wk = 0; for (int i = 0; i < n_threads; i++) wk += workers[i].work.cap + workers[i].black.cap;
+        fprintf(stderr, "epoch: mem MiB slabs=%.1f logs=%lld(%.1f) batches-peak=%.1f stacks(cap): roots=%.1f deferred=%.1f work=%.1f ret=%.1f ret-shared=%.1f ret-local=%.1f im-seen=%.1f hold=%.1f cw=%.1f dying=%.1f workers=%.1f es=%.1f\n",
+            dbg_slab_bytes / 1048576.0, (long long)dbg_log_allocs, dbg_log_allocs * (double)sizeof(Log) / 1048576.0, dbg_batch_peak / 1048576.0,
+            c_roots.cap * 8 / 1048576.0, c_deferred.cap * 8 / 1048576.0, c_work.cap * 8 / 1048576.0, c_ret.cap * 8 / 1048576.0, ret_shared.cap * 8 / 1048576.0, ret_local.cap * 8 / 1048576.0,
+            im_seen.cap * 8 / 1048576.0, c_hold.cap * 8 / 1048576.0, (cw_m.cap + cw_ends.cap) * 8 / 1048576.0, c_dying.cap * 8 / 1048576.0, wk * 8 / 1048576.0, es.cap * 8 / 1048576.0);
+        fprintf(stderr, "epoch: mem MiB side-minor tab=%.1f stacks=%.1f\n", sm_cap * sizeof(SmEnt) / 1048576.0, (sm_work.cap + sm_black.cap + sm_roots.cap + sm_retry.cap) * 8 / 1048576.0);
+    }
 }
 /* Program exit drains the queue only when someone looks at the heap afterwards: --leak-check
  * (RT_LEAKCHECK) and --alloc malloc (ASan / macOS leaks builds), or KX_GC_EXIT_DRAIN=1. Otherwise the
