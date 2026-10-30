@@ -144,7 +144,7 @@ changes the generated code for traced (cyclic) classes only:
 
 Epoch boundary (log full, 32768 entries): the mutator hands the log over (one mutex round-trip) and frees
 dead objects returned by the collector under `KX_GC_FREE_BUDGET_US` (default 200 us); allocation also frees
-two returned objects per call. If the collector is more than `KX_GC_MAX_QUEUED` logs behind (default 32,
+two returned objects per call. If the collector is more than `KX_GC_MAX_QUEUED` logs behind (default 16,
 256 KiB each), the boundary waits (back-pressure); that wait is counted as a pause.
 
 The collector, per log: applies all increments, then all decrements (single mutator, so no count drops to
@@ -169,7 +169,10 @@ stable objects as opaque live objects, so it never re-traces the live graph: its
 the objects touched since the last scan. Garbage cycles that run through stable objects are still found:
 a root whose minor detection stopped at a stable object and did not turn white stays buffered in a
 deferred list, and a major detection (stable objects traced like any other) processes the deferred roots
-once as many have been deferred as there are stable objects, so its cost is amortized O(1) per root.
+once four times as many roots have been deferred as there are stable objects, so its cost is amortized
+O(1) per root. An object whose count drops to zero while it is listed (root buffer or deferred list)
+releases its children at once and stays as a zombie until its list entry is removed, so dead chains do
+not keep each other alive until the next major detection.
 
 Program exit does not drain the queue: the process exits and the OS reclaims the memory. Builds that
 inspect the heap at exit drain it stop-the-world first: `--leak-check`, `--alloc malloc` (ASan and
@@ -198,7 +201,7 @@ collection event callback.
 | `KX_GC_BUDGET_US` | run time, `incremental` only: per-step budget in microseconds (default 500) |
 | `KX_GC_FREE_BUDGET_US` | run time, `epoch` only: time per epoch boundary for freeing returned objects (default 200) |
 | `KX_GC_THREADS` | run time, `epoch` only: collector threads for parallel trial deletion (default min(cores, 4)) |
-| `KX_GC_MAX_QUEUED` | run time, `epoch` only: logs the collector may fall behind before the program waits (default 32) |
+| `KX_GC_MAX_QUEUED` | run time, `epoch` only: logs the collector may fall behind before the program waits (default 16) |
 | `KX_GC_EXIT_DRAIN=1` | run time, `epoch` only: drain the queue at exit even without `--leak-check` / `--alloc malloc` |
 | `KX_GC_DEBUG=1` | run time, `epoch` only: print epoch/detection/validation counters at each full collection |
 
