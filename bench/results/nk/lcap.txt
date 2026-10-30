@@ -1,0 +1,18 @@
+# lcap working tree 2026-10-30 15:30 EET load: { 28.79 29.61 32.60 }
+sum 3.696
+alloc 76.093
+bigheap 117.417
+closures 84.67
+cycles 45.105
+dispatch 94.5
+file 50.952
+free 52.662
+hashmap 69.023
+lru 92.528
+matmul 10.181
+nbody 69.542
+recursion 6.104
+refpass 127.15
+sort 61.609
+strings 31.773
+trees 122.375
