@@ -14,7 +14,10 @@ class BoolL(val v: Boolean) : E()
 class NullL : E()
 class StrL(val parts: List<Any>) : E() // String or E
 class NameE(val n: String) : E()
-class CallE(val callee: E, val typeArgs: List<TypeRef>, val args: List<E>, val lambda: Block?) : E()
+class CallE(val callee: E, val typeArgs: List<TypeRef>, val args: List<E>, val lambda: Block?) : E() {
+    /** Written as `a name b`: builtin non-infix members (Int.rem) cannot be called this way, so extensions win. */
+    var infix = false
+}
 /** Named call argument `name = e` (only `copy` of data classes accepts these). */
 class NamedE(val name: String, val e: E) : E()
 /** `e is T` / `e !is T`. */

@@ -549,7 +549,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return l
     }
 
-    private fun lookup(n: String): Local? { for (i in scopes.indices.reversed()) scopes[i].vars[n]?.let { return it }; return globalVars[n] }
+    private fun lookup(n: String): Local? { for (i in scopes.indices.reversed()) scopes[i].vars[n]?.let { return it }
+        // A member property shadows a top-level one of the same name inside the class.
+        val g = globalVars[n] ?: return null
+        val o = owner
+        return if (o != null && (o.index(n) >= 0 || "\$get\$$n" in o.methods || "\$set\$$n" in o.methods)) null else g
+    }
 
     /**
      * Types of top-level properties without an explicit type, so functions whose return type is inferred can use them
@@ -1755,6 +1760,17 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun isSafeCall(e: E): Boolean = (e is MemberE && e.safe) || (e is CallE && e.callee is MemberE && (e.callee as MemberE).safe)
 
+    /** Kotlin/Native: a negative array size throws IllegalArgumentException (catchable when exceptions are used). */
+    private fun checkArrSize(sz: Val): Val {
+        if (!excMode || sz.v.toLongOrNull()?.let { it >= 0 } == true) return sz
+        val bad = label("arr.neg"); val ok = label("arr.ok")
+        emit("br i1 ${emitT("icmp slt i64 ${sz.v}, 0")}, label %$bad, label %$ok, !prof !1"); term = true
+        startBlock(bad)
+        throwNew("IllegalArgumentException", Val(cstr("Negative array size"), Ty.Str))
+        startBlock(ok)
+        return sz
+    }
+
     private fun canBox(t: Ty) = t != Ty.Str && boxName(t)?.let { "AnyBox$it" in classDecls } == true
 
     /** `v!!`: NullPointerException on null; a nullable primitive is unboxed. */
@@ -2097,12 +2113,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val t = mapTy(resolve(e.typeArgs[0]), resolve(e.typeArgs[1]))
                 return Val(emitT("call ptr @rt_map_new()"), t, true)
             }
-            "IntArray", "LongArray", "DoubleArray", "FloatArray" -> {
-                val et = when (n) { "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; "FloatArray" -> Ty.F32; else -> Ty.F64 }
-                if (e.lambda != null) return initLoop(e.args.single(), e.lambda, et, { sz, t -> Val(emitT("call ptr @rt_arr_new(i64 ${coerce(sz, Ty.I64).v}, i64 ${t.size})"), Ty.Arr(t), true) }) { c, i, v ->
+            "IntArray", "LongArray", "DoubleArray", "FloatArray", "ByteArray" -> {
+                val et = when (n) { "ByteArray" -> Ty.I8; "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; "FloatArray" -> Ty.F32; else -> Ty.F64 }
+                if (e.lambda != null) return initLoop(e.args.single(), e.lambda, et, { sz, t -> Val(emitT("call ptr @rt_arr_new(i64 ${checkArrSize(coerce(sz, Ty.I64)).v}, i64 ${t.size})"), Ty.Arr(t), true) }) { c, i, v ->
                     emit("store ${et.llvm} ${coerce(v, et).v}, ptr ${emitT("getelementptr ${et.llvm}, ptr ${emitT("getelementptr i8, ptr ${c.v}, i64 8")}, i32 $i")}")
                 }
-                val size = coerce(genExpr(e.args.single()), Ty.I64)
+                val size = checkArrSize(coerce(genExpr(e.args.single()), Ty.I64))
                 return Val(emitT("call ptr @rt_arr_new(i64 ${size.v}, i64 ${et.size})"), Ty.Arr(et), true)
             }
             "println", "print" -> {
@@ -2196,10 +2212,6 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val l = emitT("call ptr @rt_list_new(ptr $rel)")
                 for (v in vals) emit("call void @rt_list_add(ptr $l, i64 ${toSlot(consume(coerce(v, et)))})")
                 return Val(l, Ty.ListTy(et), true)
-            }
-            "ByteArray" -> {
-                val size = coerce(genExpr(e.args.single()), Ty.I64)
-                return Val(emitT("call ptr @rt_arr_new(i64 ${size.v}, i64 1)"), Ty.Arr(Ty.I8), true)
             }
         }
         POSIX[n]?.let { (ps, ret) ->
@@ -2811,7 +2823,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return compare("==", r, a)
         }
         if (n != "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t.isFp || t == Ty.Char || (t == Ty.Str && (n == "plus" || n == "equals"))) &&
-            n in opOf && e0.args.size == 1 && e0.args[0] !is NamedE && e0.lambda == null && extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false)
+            n in opOf && e0.args.size == 1 && e0.args[0] !is NamedE && e0.lambda == null && (e0 !is CallE || !e0.infix || extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false))
             return withTemps(listOf(r)) { (x) -> genExpr(BinE(opOf.getValue(n), x, e0.args[0]).also { it.line = line }) }
         // Built-in members `inc()`/`dec()` of numbers and chars win over extensions.
         // Byte (I8) is excluded: its inc() must wrap at 8 bits.
@@ -3390,7 +3402,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (re is BinE && re.op in setOf("..", "until", "downTo")) {
             val x = genExpr(xe); val lo = genExpr(re.l); val hi = genExpr(re.r)
             val k = rangeKind(lo.t, hi.t)
-            val t = when (k) { "C" -> Ty.I32; "L" -> Ty.I64; "U" -> Ty.U32; "UL" -> Ty.U64; else -> if (x.t == Ty.I64) Ty.I64 else Ty.I32 }
+            val t0 = when (k) { "C" -> Ty.I32; "L" -> Ty.I64; "U" -> Ty.U32; "UL" -> Ty.U64; else -> if (x.t == Ty.I64) Ty.I64 else Ty.I32 }
+            // A wider value is compared in its own type (`x: ULong in UInt.MIN_VALUE..UInt.MAX_VALUE`).
+            val t = if (k != "C" && x.t.isInt && x.t.rank > t0.rank && x.t.isUnsigned == t0.isUnsigned) x.t else t0
             val c = { v: Val -> if (v.t == Ty.Char) Val(v.v, Ty.I32) else coerce(v, t) }
             if (k == "C" && x.t != Ty.Char) fail("type mismatch: expected Char, found ${x.t}")
             val xv = c(x); val l = c(lo); val h = c(hi)

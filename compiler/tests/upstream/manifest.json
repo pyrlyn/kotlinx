@@ -1,9 +1,9 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "MISCOMPILE": 26,
+  "MISCOMPILE": 19,
   "N/A": 2984,
-  "PASS": 2465,
+  "PASS": 2472,
   "UNSUPPORTED": 3000
  },
  "excluded_js_only": 73,
@@ -22802,13 +22802,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassHashCodeOverride.kt"
   },
   "box/box/inlineClasses/inlineClassInInitBlock.kt": {
-   "detail": "exit=0 stdout='null\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInInitBlock.kt"
   },
   "box/box/inlineClasses/inlineClassInInitBlockGeneric.kt": {
-   "detail": "exit=0 stdout='null\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInInitBlockGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassInStringTemplate.kt": {
@@ -22875,12 +22875,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -536081568\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387808\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789472\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789536\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23341,13 +23341,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27132Generic.kt"
   },
   "box/box/inlineClasses/kt27140.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError\\n'",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27140.kt"
   },
   "box/box/inlineClasses/kt27140Generic.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError\\n'",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27140Generic.kt"
   },
   "box/box/inlineClasses/kt27705.kt": {
@@ -29117,8 +29117,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/incDecOnObject.kt"
   },
   "box/box/operatorConventions/infixFunctionOverBuiltinMember.kt": {
-   "detail": "exit=0 stdout='fail 3\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/operatorConventions/infixFunctionOverBuiltinMember.kt"
   },
   "box/box/operatorConventions/kt14201.kt": {
@@ -34955,8 +34955,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/nullableLoopParameter/rangeLiteral.kt"
   },
   "box/box/ranges/unsigned/outOfBoundsInMixedContains.kt": {
-   "detail": "exit=0 stdout='Failed\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/outOfBoundsInMixedContains.kt"
   },
   "box/box/reflection/classLiterals/annotationClassLiteral.kt": {
@@ -44279,8 +44279,8 @@
    "upstream": "native/native.tests/testData/codegen/escapeAnalysis/localAllocatedArray.kt"
   },
   "native/native.tests/codegen/escapeAnalysis/negativeArraySize.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.IllegalStateException: NegativeArraySizeException\\n'",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/escapeAnalysis/negativeArraySize.kt"
   },
   "native/native.tests/codegen/escapeAnalysis/stackAllocated.kt": {
