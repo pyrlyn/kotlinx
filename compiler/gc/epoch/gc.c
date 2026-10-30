@@ -27,8 +27,9 @@
 //      failing members go back to the root buffer.
 // Traced objects live in 64 KiB-aligned size-class slabs registered in a page bitmap, so the
 // collector recognizes traced pointers without dereferencing (acyclic objects may be freed concurrently).
-// Generations: objects found externally referenced by a scan become stable (old) until touched; minor
-// detections do not trace them, major detections (amortized against the stable population) do.
+// Generations: objects found externally referenced by a scan become stable (old) until decremented; minor
+// detections do not trace them, major detections (amortized against the stable population, with a
+// geometric backoff while majors find no garbage) do.
 // Trial deletion's MarkGray/Scan run in parallel on KX_GC_THREADS threads for large major detections.
 // Program exit drains the queue only for --leak-check / --alloc malloc builds or KX_GC_EXIT_DRAIN=1.
 // See compiler/gc/docs/architecture.md, section 7.
@@ -293,6 +294,8 @@ static PtrStack c_roots, c_work, c_ret;                 /* collector-local */
 static size_t c_threshold = 10000;
 #define C_MAX_THRESHOLD (1u << 18)
 #define MAJOR_RATIO 4   /* major detection once 4x as many roots were deferred as there are stable objects */
+#define MAJOR_RATIO_MAX 256
+static int64_t major_ratio = MAJOR_RATIO;   /* adaptive: doubles after a major that found (almost) no garbage */
 /* Candidate cycles of one detection, validated together: set i has id first_id + i and members
  * members[ends[i-1] .. ends[i]). One allocation per detection; batches are validated in FIFO order. */
 typedef struct Batch { struct Batch *next; uint64_t valid_after, first_id; size_t nsets; size_t *ends; void *members[]; } Batch;
@@ -300,7 +303,11 @@ static Batch *cands, *cands_tail;
 static uint64_t next_set_id = 1;
 static int64_t dbg_dem_touch, dbg_dem_other, dbg_prom, dbg_major_visits, dbg_minor_visits, dbg_roots_k, dbg_t_mark, dbg_t_scan, dbg_t_apply, dbg_t_valid, dbg_t_detect, c_stable_n, c_deferred_new, dbg_majors, c_traversed, dbg_members, dbg_sets, dbg_pass, dbg_fail_delta, dbg_fail_sigma, dbg_dead, dbg_logs;
 
-/* An RC operation or write barrier touched p: it is dirty (Delta test) and leaves the old generation. */
+/* An increment or write barrier touched p: it is dirty (Delta test) but stays in the old generation.
+ * Neither can make p garbage (an increment adds a reference, a store changes only p's out-edges, whose
+ * targets get their own increment / decrement), so a stable object stays opaque to minor detections. */
+static inline void touch_keep(void *p) { *header(p) |= DIRTY_BIT; }
+/* A decrement touched p: it is dirty and leaves the old generation (it may have become garbage). */
 static inline void touch(void *p) {
     uint64_t h = *header(p);
     if (h & STABLE_BIT) { c_stable_n--; dbg_dem_touch++; }
@@ -354,8 +361,8 @@ static void dec_apply(void *p) {
 static void apply_log(Log *l) {
     for (size_t i = 0; i < l->n; i++) {
         uintptr_t e = l->a[i]; void *p = (void *)(e & ~(uintptr_t)3);
-        if ((e & 3) == OP_INC) { *header(p) += 1; touch(p); }
-        else if ((e & 3) == OP_MOD) touch(p);
+        if ((e & 3) == OP_INC) { *header(p) += 1; touch_keep(p); }
+        else if ((e & 3) == OP_MOD) touch_keep(p);
     }
     for (size_t i = 0; i < l->n; i++) {
         uintptr_t e = l->a[i];
@@ -661,7 +668,7 @@ static void *collector_main(void *arg) {
             int64_t ta = rt_nanos(); apply_log(l); dbg_logs++;
             int64_t tb = rt_nanos(); size_t freed = validate_ready(l->seq, 0);
             int64_t tc = rt_nanos(); dbg_t_apply += tb - ta; dbg_t_valid += tc - tb;
-            int64_t major_at = MAJOR_RATIO * (c_stable_n > (int64_t)c_threshold ? c_stable_n : (int64_t)c_threshold);
+            int64_t major_at = major_ratio * (c_stable_n > (int64_t)c_threshold ? c_stable_n : (int64_t)c_threshold);
             if (c_roots.len >= c_threshold || c_deferred_new >= major_at) {
                 size_t nroots = c_roots.len;
                 int64_t m0 = dbg_members + dbg_dead, w0 = c_traversed;
@@ -670,7 +677,12 @@ static void *collector_main(void *arg) {
                 gc_st.collections++;
                 /* adaptive: traversal work mostly spent on live data -> detect less often */
                 int64_t found = dbg_members + dbg_dead - m0, work = c_traversed - w0;
-                if (work > 4 * found + 2 * (int64_t)nroots) { if (c_threshold < C_MAX_THRESHOLD) c_threshold *= 2; }
+                if (major) {
+                    /* old generation only when needed: a major that mostly re-traced live data makes the
+                     * next one rarer (geometric backoff); one that found garbage resets the ratio */
+                    if (work > 64 * found) { if (major_ratio < MAJOR_RATIO_MAX) major_ratio *= 2; }
+                    else major_ratio = MAJOR_RATIO;
+                } else if (work > 4 * found + 2 * (int64_t)nroots) { if (c_threshold < C_MAX_THRESHOLD) c_threshold *= 2; }
                 else if (c_threshold > 10000) c_threshold /= 2;
             }
             gc_st.reclaimed += (int64_t)freed;
