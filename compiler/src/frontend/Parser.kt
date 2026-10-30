@@ -295,7 +295,9 @@ class Parser(private val t: List<Tok>) {
                 skipNL()
                 if (isOp("}")) break
                 var isConst = false; var isLate = false
-                while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) { if (peek().s == "const") isConst = true; if (peek().s == "lateinit") isLate = true; p++ }
+                var isPrivate = false
+                while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) { if (peek().s == "const") isConst = true; if (peek().s == "lateinit") isLate = true; if (peek().s == "private") isPrivate = true; p++ }
+                if (isPrivate && curIface != null && isId("fun") && t[p + 1].k == K.ID) privateIfaceFuns.getOrPut(curIface!!) { HashSet() }.add(t[p + 1].s)
                 if (props != null && inits != null && (isId("val") || isId("var"))) {
                     val isVar = next().s == "var"
                     val n = ident()
@@ -381,6 +383,7 @@ class Parser(private val t: List<Tok>) {
             return seen
         }
         val ancestors = ifaces.associate { it.name to anc(it.name).toList() }
+        ifaceAnc.putAll(ancestors)
         for (i in ifaces.indices) {
             val d = ifaces[i]; val a = ancestors.getValue(d.name)
             if (a.isEmpty()) continue
@@ -389,8 +392,9 @@ class Parser(private val t: List<Tok>) {
             for (s in a) {
                 for (m in byName.getValue(s).methods) if (ms.none { it.name == m.name }) ms.add(m)
                 if (s in genericIfaceTps) fail("default methods inherited from a generic super-interface are not supported")
-                for (m in ifaceDefaults[s].orEmpty()) if (defs.none { it.name == m.name } && d.methods.none { it.name == m.name }) defs.add(m)
             }
+            // Inherited defaults: the most specific declaration wins (`interface D : B, C` with `C : A` overriding A's).
+            for (m in mostSpecificDefaults(a)) if (defs.none { it.name == m.name } && d.methods.none { it.name == m.name }) defs.add(m)
             if (defs.isNotEmpty()) ifaceDefaults[d.name] = defs
             ifaces[i] = InterfaceD(d.name, ms, d.line, d.typeParams, a)
         }
@@ -420,6 +424,23 @@ class Parser(private val t: List<Tok>) {
 
     /** Interface name -> its default method bodies. */
     private val ifaceDefaults = HashMap<String, List<FunD>>()
+    /** Interface -> all its super-interfaces. */
+    private val ifaceAnc = HashMap<String, List<String>>()
+    /** Interface that declares each default body (defaults are shared by reference with sub-interfaces). */
+    private val defaultOwner = HashMap<FunD, String>()
+
+    /**
+     * Default methods visible through the interfaces [ss]: for each name, the declarations whose interface is not a
+     * super-interface of another declaring interface (Kotlin's most specific implementation).
+     */
+    private fun mostSpecificDefaults(ss: List<String>): List<FunD> {
+        val cands = LinkedHashSet<FunD>()
+        for (s in ss) cands.addAll(ifaceDefaults[s].orEmpty())
+        return cands.filter { m ->
+            val o = defaultOwner[m] ?: return@filter true
+            cands.none { x -> x !== m && x.name == m.name && defaultOwner[x]?.let { ox -> o in ifaceAnc[ox].orEmpty() } == true }
+        }
+    }
     /** Generic interfaces with default methods -> their type parameters (copies are substituted per implementation). */
     private val genericIfaceTps = HashMap<String, List<String>>()
 
@@ -457,7 +478,10 @@ class Parser(private val t: List<Tok>) {
                     add.add(FunD(m.name, ps, st(m.ret ?: TypeRef("Unit", emptyList(), false)), null, body, c.line))
                 }
             }
-            for (s in ch.flatMap { it.supers }.distinct()) for (d in ifaceDefaults[s].orEmpty()) {
+            val chainSupers = ch.flatMap { it.supers }.distinct()
+            val chosen = mostSpecificDefaults(chainSupers.filter { it in ifaceDefaults || it in ifaceAnc }).toSet()
+            for (s in chainSupers) for (d in ifaceDefaults[s].orEmpty()) {
+                if (d !in chosen) continue
                 if (ch.any { x -> x.methods.any { it.name == d.name && (it.body != null || it.exprBody != null) } } || add.any { it.name == d.name }) continue
                 // Only the topmost class in the chain needs the copy; subclasses inherit it.
                 val top = ch.last { x -> s in x.supers }
@@ -766,6 +790,86 @@ class Parser(private val t: List<Tok>) {
     }
     private fun takeSuperArgs(): Map<String, List<TypeRef>> = HashMap(superTA).also { superTA.clear() }
 
+    /** Private methods declared in each interface (by name). */
+    private val privateIfaceFuns = HashMap<String, MutableSet<String>>()
+
+    /**
+     * Private interface methods are copied into implementing classes with the defaults that call them; they get a
+     * unique name (`$p$I$f`) so a class member with the same name neither clashes with nor captures them.
+     */
+    private fun renamePrivate(name: String, ms: List<FunD>): List<FunD> {
+        val privs = privateIfaceFuns[name]?.filter { n -> ms.any { it.name == n && (it.body != null || it.exprBody != null) } }?.toSet() ?: return ms
+        if (privs.isEmpty()) return ms
+        fun nn(n: String) = "\$p\$$name\$$n"
+        lateinit var sub: Subst
+        sub = Subst(emptyMap(), rw = { x ->
+            if (x !is CallE) null else {
+                val c = x.callee
+                val r = when {
+                    c is NameE && c.n in privs -> NameE(nn(c.n))
+                    c is MemberE && c.n in privs && c.recv is NameE && (c.recv as NameE).n == "this" -> MemberE(c.recv, nn(c.n), false)
+                    else -> null
+                }
+                r?.let { CallE(it.also { e -> e.line = c.line }, x.typeArgs, x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line } }
+            }
+        })
+        return ms.map { m -> val f = sub.fn(m); FunD(if (m.name in privs) nn(m.name) else m.name, f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams, f.recv) }
+    }
+
+    /** Declared or inferred return types of the methods of each interface parsed so far. */
+    private val ifaceRets = HashMap<String, Map<String, TypeRef>>()
+
+    /**
+     * Interface default methods must have a signature before code generation, so the return type of an
+     * expression-bodied default without one is inferred syntactically: literals, string templates and `+` with a
+     * string, `toString()`, `if`/`when` branches, calls of methods of this interface (or its super-interfaces) with
+     * known types. Iterated to a fixed point; methods it cannot type keep the "needs an explicit return type" error.
+     */
+    private fun inferIfaceRets(name: String, ms: List<FunD>): List<FunD> {
+        val known = HashMap<String, TypeRef>()
+        for (s in ifaceSupers[name].orEmpty()) ifaceRets[s]?.let { known.putAll(it) }
+        ms.forEach { m -> m.ret?.let { known[m.name] = it } }
+        fun simple(n: String) = TypeRef(n, emptyList(), false)
+        fun guess(e: E): TypeRef? = when (e) {
+            is StrL -> simple("String")
+            is IntL -> simple(if (e.unsigned) (if (e.long) "ULong" else "UInt") else if (e.long) "Long" else "Int")
+            is BoolL -> simple("Boolean")
+            is DblL -> simple("Double")
+            is CharL -> simple("Char")
+            is IsE -> simple("Boolean")
+            is BinE -> when (e.op) {
+                "==", "!=", "<", ">", "<=", ">=", "&&", "||" -> simple("Boolean")
+                "+" -> guess(e.l)?.takeIf { it.name == "String" } ?: guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double") } }
+                "-", "*", "/", "%" -> guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double") } }
+                else -> null
+            }
+            is IfE -> {
+                fun last(b: Block?) = (b?.stmts?.singleOrNull() as? ExprS)?.e
+                val a = last(e.th)?.let { guess(it) }; val b = last(e.el)?.let { guess(it) }
+                if (a != null && b != null && a.name == b.name && !a.nullable && !b.nullable && a.args.isEmpty()) a else null
+            }
+            is CallE -> {
+                val c = e.callee
+                when {
+                    c is MemberE && c.n == "toString" && e.args.isEmpty() -> simple("String")
+                    c is NameE -> known[c.n]
+                    c is MemberE && c.recv is NameE && (c.recv as NameE).n == "this" -> known[c.n]
+                    else -> null
+                }
+            }
+            else -> null
+        }
+        var out = ms
+        while (true) {
+            var changed = false
+            out = out.map { m ->
+                if (m.ret != null || m.exprBody == null || m.typeParams.isNotEmpty()) m
+                else guess(m.exprBody)?.let { t -> changed = true; known[m.name] = t; FunD(m.name, m.params, t, m.body, m.exprBody, m.line, m.typeParams, m.recv) } ?: m
+            }
+            if (!changed) return out
+        }
+    }
+
     private fun interfaceDecl(): InterfaceD {
         val line = next().line
         val name = ident()
@@ -782,11 +886,14 @@ class Parser(private val t: List<Tok>) {
             ifaceSupers[name] = ss
         }
         val savedIface = curIface; curIface = name
-        val ms = try { if (isOp("{")) members() else emptyList() } finally { curIface = savedIface }
+        val ms0 = try { if (isOp("{")) members() else emptyList() } finally { curIface = savedIface }
+        val ms = inferIfaceRets(name, renamePrivate(name, ms0))
         val defs = ms.filter { it.body != null || it.exprBody != null }
         if (defs.isNotEmpty() && tps.isNotEmpty()) genericIfaceTps[name] = tps
         if (defs.any { it.ret == null && it.body == null }) fail("default interface methods need an explicit return type")
+        ifaceRets[name] = ms.filter { it.ret != null }.associate { it.name to it.ret!! }
         if (defs.isNotEmpty()) ifaceDefaults[name] = defs
+        defs.forEach { defaultOwner[it] = name }
         // The interface keeps abstract signatures; implementing classes get copies of the default bodies.
         return InterfaceD(name, ms.map { if (it in defs) FunD(it.name, it.params, it.ret ?: TypeRef("Unit", emptyList(), false), null, null, it.line, it.typeParams) else it }, line, tps)
     }
