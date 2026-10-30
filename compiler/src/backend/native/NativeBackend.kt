@@ -306,7 +306,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             line = f.line
             if (f.typeParams.isNotEmpty()) {
                 if (f.name in genericFuns || f.name in sigs) fail("overloads are not supported: ${f.name}")
-                if (f.ret == null && f.body == null) fail("expression-bodied function '${f.name}' needs an explicit return type")
+                // Expression-bodied generic functions without a return type: inferred per instance in genGenericCall.
                 genericFuns[f.name] = f; continue
             }
             if (f.name in genericFuns) fail("overloads are not supported: ${f.name}")
@@ -335,9 +335,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         while (pending.isNotEmpty()) {
             val sym = pending.removeAt(pending.size - 1)
             val (f, env, sig) = instances.getValue(sym)
-            tenv = env
+            tenv = env; instLine = f.line
             genFun(f, instCls[sym], sig, sym)
-            tenv = emptyMap()
+            tenv = emptyMap(); instLine = -1
         }
         if (excMode) genUncaught()
         val sb = StringBuilder()
@@ -2107,7 +2107,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val inst = instances[sym] ?: run {
             val saved = tenv; tenv = bound
             val sig = try {
-                FunSig(f.name, f.params.map { resolve(it.type) }, f.ret?.let { resolve(it) } ?: Ty.Unit)
+                val ps = f.params.map { resolve(it.type) }
+                FunSig(f.name, ps, f.ret?.let { resolve(it) } ?: if (f.exprBody != null) probeGenericRet(f, sym, ps, cls) else Ty.Unit)
             } finally { tenv = saved }
             if (cls != null) instCls[sym] = cls
             Triple(f, bound, sig).also { instances[sym] = it; pending.add(sym) }
@@ -2116,6 +2117,33 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val vals = raw.mapIndexed { i, v -> coerce(v, sig.params[i]) }
         val args = (listOfNotNull(recv?.let { "ptr ${it.v}" }) + vals.map { "${it.t.llvm} ${it.v}" }).joinToString(", ")
         return finishCall("call ${sig.ret.llvm} @$sym($args)", sig.ret, vals)
+    }
+
+    private val probingGeneric = HashSet<String>()
+
+    /**
+     * Return type of the generic instance [sym] of expression-bodied [f] without a declared return type: its body is
+     * generated once with the instance's type bindings (already in `tenv`) in a fresh scope and the IR is rolled back.
+     */
+    private fun probeGenericRet(f: FunD, sym: String, ps: List<Ty>, cls: ClassInfo?): Ty {
+        if (cls != null) fail("expression-bodied generic method '${f.name}' needs an explicit return type")
+        if (!probingGeneric.add(sym)) fail("recursive generic function '${f.name}' needs an explicit return type")
+        val sb = body.length; val sa = allocas.length; val sc = cur; val st = term; val sm = HashSet(moveNodes)
+        val sf = funcs.length; val so = owner; val sr = retTy; val sl = line
+        val savedScopes = ArrayList(scopes); val sts = ArrayList(tryStack); val sfs = ArrayList(finStack)
+        try {
+            owner = null; retTy = Ty.Unit; line = f.line
+            scopes.clear(); scopes.add(Scope())
+            f.params.forEachIndexed { i, p -> declare(p.name, ps[i], false, false) }
+            val t = genExpr(f.exprBody!!).t
+            if (t == Ty.RawPtr || t == Ty.Args) fail("expression-bodied function '${f.name}' needs an explicit return type")
+            return if (t == Ty.Nothing) Ty.Unit else t
+        } finally {
+            probingGeneric.remove(sym)
+            scopes.clear(); scopes.addAll(savedScopes); tryStack.clear(); tryStack.addAll(sts); finStack.clear(); finStack.addAll(sfs)
+            body.setLength(sb); allocas.setLength(sa); cur = sc; term = st; moveNodes.clear(); moveNodes.addAll(sm)
+            funcs.setLength(sf); owner = so; retTy = sr; line = sl
+        }
     }
 
     /** `Box<Int>` -> the monomorphized class `Box$Int`; requests the instance if the program does not have it yet. */
@@ -2230,7 +2258,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return emitT("phi i1 [ ${t.nullable}, %$from ], [ $r, %$fromC ]")
     }
 
-    private fun genAs(e: AsE): Val {
+    /** Declaration line of the generic function instance being generated (key of [TypeParamBounds]); -1 outside. */
+    private var instLine = -1
+
+    private fun genAs(e0: AsE): Val {
+        // `x as T` with an unbounded type parameter (implicit bound `Any?`) is unchecked: a null passes through.
+        val e = if (instLine >= 0 && e0.type.name in tenv && !e0.type.nullable && !e0.safe && "$instLine:${e0.type.name}" in TypeParamBounds.unbounded)
+            AsE(e0.e, TypeRef(e0.type.name, e0.type.args, true), false).also { it.line = e0.line } else e0
         val v = genExpr(e.e)
         if (e.type.name == "Any" && "Any" in ifaces && (boxName(v.t) != null || v.t is Ty.Iface || v.t is Ty.Cls && v.t.name.substringBefore('$') !in genericClasses)) return coerce(v, Ty.Iface("Any"))
         val star = e.type.args.any { it.name == "*" }
@@ -2979,7 +3013,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return Val(emitT("${ins.getValue(op)} ${t.llvm} $x, $y"), t)
     }
 
+    private val NUMERIC = setOf(Ty.I8, Ty.I32, Ty.I64, Ty.U32, Ty.U64, Ty.F64, Ty.Char)
+    private val CONST_RE = Regex("-?[0-9][0-9.eE+-]*|0x[0-9a-fA-F]+|true|false")
     private fun compare(op: String, a: Val, b: Val): Val {
+        // Values of different primitive types are never equal (`equals` of boxed values). Kotlin rejects this for
+        // non-literal operands outside generic code, so it only shows up through type parameters (`fun <A, B: Any> f(a: A, b: B) = a == b`).
+        if ((op == "==" || op == "!=") && tenv.isNotEmpty() && a.t != b.t && a.t in NUMERIC && b.t in NUMERIC && !CONST_RE.matches(a.v) && !CONST_RE.matches(b.v))
+            return Val(if (op == "==") "false" else "true", Ty.I1)
+        // A type parameter bound by a `null` argument (RawPtr) against a primitive: null is never equal to a number.
+        if ((op == "==" || op == "!=") && tenv.isNotEmpty() && ((a.t == Ty.RawPtr && b.t in NUMERIC) || (b.t == Ty.RawPtr && a.t in NUMERIC))) {
+            releaseIfOwned(a); releaseIfOwned(b)
+            return Val(if (op == "==") "false" else "true", Ty.I1)
+        }
         if ((op == "==" || op == "!=") && a.v != "null" && b.v != "null" && listOf(a.t, b.t).any { it is Ty.Iface && it.name.startsWith("\$Fn") })
             fail("equality of function values is not supported")
         if ((op == "==" || op == "!=") && a.t is Ty.Cls && a.v != "null" && b.v != "null" && classes.getValue(a.t.name).methods["equals"]?.params?.size == 1) {
