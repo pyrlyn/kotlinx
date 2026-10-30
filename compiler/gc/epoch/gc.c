@@ -120,6 +120,12 @@ static void *free_list[CLASSES + 1];
 static char *bump, *bump_end;
 typedef struct Big { struct Big *next; size_t size; } Big;
 static Big *big_free;
+/* Base address of every slab / big block. The allocator never frees them, and after the cells were
+ * handed out the only pointers left are interior ones (free-list links, bump), so without this list a
+ * slab whose start no cell or free-list link happens to point at is unreachable to macOS `leaks`, which
+ * then reports it as a ROOT LEAK (intermittently: it depends on the free order, i.e. on collector
+ * timing). Written by the mutator only (page_alloc). */
+static PtrStack slab_bases;
 static void *page_alloc(size_t bytes) {
     void *p = NULL;
     if (!page_bits) {
@@ -127,6 +133,7 @@ static void *page_alloc(size_t bytes) {
         if (page_bits == MAP_FAILED) rt_panic("OutOfMemoryError");
     }
     if (posix_memalign(&p, PAGE, bytes)) rt_panic("OutOfMemoryError");
+    stack_push(&slab_bases, p);
     for (size_t o = 0; o < bytes; o += PAGE) reg_add((uintptr_t)p + o);
     atomic_fetch_add_explicit(&t_heap_bytes, (int64_t)bytes, memory_order_relaxed);
     return p;
@@ -736,6 +743,7 @@ static void epoch_debug(void) {
     if (e && *e) fprintf(stderr, "epoch: roots=%lld minor-visits=%lld major-visits=%lld members=%lld\n", (long long)dbg_roots_k, (long long)dbg_minor_visits, (long long)dbg_major_visits, (long long)dbg_members);
     if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld\n", (long long)dbg_prom, (long long)dbg_dem_touch);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
+    if (e && *e) fprintf(stderr, "epoch: exit live-traced=%lld ret-pending=%zu roots=%zu deferred=%zu cands=%d\n", (long long)(atomic_load(&t_allocs) - atomic_load(&t_frees)), ret_local.len - ret_pos, c_roots.len, c_deferred.len, cands != NULL);
 }
 /* Program exit drains the queue only when someone looks at the heap afterwards: --leak-check
  * (RT_LEAKCHECK) and --alloc malloc (ASan / macOS leaks builds), or KX_GC_EXIT_DRAIN=1. Otherwise the
