@@ -2141,6 +2141,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             fun isBound(r: TypeRef): Boolean = (r.name !in f.typeParams || r.name in env) && r.args.all { isBound(it) }
             fun res(r: TypeRef): Ty? = if (!isBound(r)) null else { val sv = tenv; tenv = sv + env; try { resolve(r) } finally { tenv = sv } }
             val isFn = pt.name == "\$Fn" || pt.name == "\$FnR"
+            if (pt.name == "\$FnR" && pt.args.size >= 2 && !isBound(pt.args[0])) builderInfer(a.body, pt.args[0], f.typeParams, env)
             val lps = if (isFn) pt.args.dropLast(1).map { res(it) }.takeIf { l -> l.all { it != null } }?.map { it!! } else null
             val lrt = if (isFn) res(pt.args.last()) else null
             rawN[i] = genLambda(a, lps, lrt, pt.name == "\$FnR")
@@ -2163,6 +2164,64 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val vals = raw.mapIndexed { i, v -> coerce(v, sig.params[i]) }
         val args = (listOfNotNull(recv?.let { "ptr ${it.v}" }) + vals.map { "${it.t.llvm} ${it.v}" }).joinToString(", ")
         return finishCall("call ${sig.ret.llvm} @$sym($args)", sig.ret, vals)
+    }
+
+    /** Builder-style receivers of standard collections: method name -> parameter types over the receiver's type parameters. */
+    private val BUILDER_STD: Map<String, Pair<List<String>, Map<String, List<TypeRef>>>> by lazy {
+        fun r(n: String) = TypeRef(n, emptyList(), false)
+        val list = listOf("E") to mapOf("add" to listOf(r("E")))
+        mapOf("MutableList" to list, "ArrayList" to list, "MutableCollection" to list, "MutableSet" to list,
+            "MutableMap" to (listOf("K", "V") to mapOf("put" to listOf(r("K"), r("V")))))
+    }
+
+    /**
+     * Builder inference: the receiver type [recv] of a lambda with receiver still mentions unbound type parameters of
+     * the called function. Calls on the implicit receiver inside the lambda (`yield(x)`, `put(k, v)`) whose parameters
+     * are typed by the receiver's type parameters bind them from the (probed) argument types.
+     */
+    private fun builderInfer(b: Block, recv: TypeRef, tps: List<String>, env: MutableMap<String, Ty>) {
+        val (ctps, methods) = genericClasses[recv.name]?.let { cd -> cd.typeParams to cd.methods.groupBy { it.name }.mapValues { (_, fs) -> fs.first().params.map { it.type } } }
+            ?: BUILDER_STD[recv.name] ?: return
+        if (ctps.size != recv.args.size) return
+        val sub = ctps.zip(recv.args).toMap()
+        fun subst(r: TypeRef): TypeRef = sub[r.name]?.let { if (r.nullable) TypeRef(it.name, it.args, true) else it } ?: TypeRef(r.name, r.args.map { subst(it) }, r.nullable)
+        val calls = ArrayList<CallE>()
+        var stF: (S) -> Unit = {}
+        fun ex(e: E?) {
+            when (e) {
+                null -> {}
+                is CallE -> { if (e.callee is NameE) calls.add(e); if (e.callee !is NameE) ex(e.callee); e.args.forEach { ex(it) } }
+                is NamedE -> ex(e.e)
+                is BinE -> { ex(e.l); ex(e.r) }
+                is UnE -> ex(e.e)
+                is MemberE -> ex(e.recv)
+                is IfE -> { ex(e.cond); e.th.stmts.forEach { stF(it) }; e.el?.stmts?.forEach { stF(it) } }
+                else -> {}
+            }
+        }
+        fun stImpl(s: S) {
+            when (s) {
+                is ExprS -> ex(s.e)
+                is VarS -> ex(s.init)
+                is AssignS -> ex(s.value)
+                is RetS -> ex(s.e)
+                else -> {}
+            }
+        }
+        stF = ::stImpl
+        b.stmts.forEach { stImpl(it) }
+        for (c in calls) {
+            val n = (c.callee as NameE).n
+            val ps = methods[n] ?: continue
+            if (ps.size != c.args.size || c.lambda != null) continue
+            c.args.forEachIndexed { i, a ->
+                val pr = subst(ps[i])
+                fun free(r: TypeRef): Boolean = (r.name in tps && r.name !in env) || r.args.any { free(it) }
+                if (!free(pr) || a is LambdaE || a is NamedE) return@forEachIndexed
+                val t = probeType(a) ?: return@forEachIndexed
+                if (t != Ty.Unit && t != Ty.RawPtr && t != Ty.Args) unify(pr, t, tps, env)
+            }
+        }
     }
 
     private val probingGeneric = HashSet<String>()
