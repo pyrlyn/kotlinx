@@ -27,7 +27,11 @@ for t in compiler/tests/leaks/*.kt; do
   got=$("$out/$n.asan" 2>"$out/$n.asanerr"); rc=$?
   if [ $rc -eq 0 ] && [ "$got" = "$exp" ]; then echo "PASS asan $n"; else echo "FAIL asan $n (rc=$rc)"; head -20 "$out/$n.asanerr"; fail=1; fi
   "$NKC" --alloc malloc "$t" -o "$out/$n" 2>/dev/null
-  if leaks --atExit -- "$out/$n" 2>/dev/null | grep -q " 0 leaks for 0 total leaked bytes"; then echo "PASS leaks $n"
-  else echo "FAIL leaks $n"; fail=1; fi
+  leaks --atExit -- "$out/$n" >"$out/$n.leaks" 2>&1; lrc=$?
+  if grep -q " 0 leaks for 0 total leaked bytes" "$out/$n.leaks"; then echo "PASS leaks $n"
+  else echo "FAIL leaks $n (leaks rc=$lrc)"; grep -E "leaks for|ROOT|^Leak|error|rror:" "$out/$n.leaks" | head -20; fail=1; fi
 done
+# Repeated `leaks` check with 4 collector threads: slab memory reachable only through interior pointers
+# used to be reported as a ROOT LEAK in ~20% of dlist runs (epoch GC, loaded machine); 72 runs, 6 at a time, catch it (measured: HEAD before the fix failed 2 of 36, 30 of 80; after 0 of 228).
+if [ "${NEWKOTLIN_GC:-default}" = epoch ]; then NKC="$NKC" KX_GC_THREADS=4 compiler/tests/leaks/stress.sh dlist 72 || fail=1; fi
 [ $fail -eq 0 ] && echo "LEAKS ALL PASSED" || { echo "LEAKS FAILED"; exit 1; }

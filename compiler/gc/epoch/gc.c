@@ -30,7 +30,10 @@
 // Generations: objects found externally referenced by a scan become stable (old) until decremented; minor
 // detections do not trace them, major detections (amortized against the stable population, with a
 // geometric backoff while majors find no garbage) do.
-// Trial deletion's MarkGray/Scan run in parallel on KX_GC_THREADS threads for large major detections.
+// Trial deletion's MarkGray/Scan (minor and one-pass major detections) run in parallel on KX_GC_THREADS
+// threads whenever a runtime cost model predicts it is faster: expected visits (roots x visits per root) x
+// measured serial ns per visit against expected visits x measured parallel ns per visit plus the measured
+// cost of waking the helpers. No tuning thresholds. (The incremental major traces on one thread.)
 // Bounded slices: a minor detection takes at most KX_GC_SLICE_ROOTS roots, validation at most
 // VALIDATE_BUDGET members per log; the leftovers carry over to the next log. Opt-in experiments:
 // KX_GC_CARRY_QUEUE=n skips detection while n logs are queued, KX_GC_MAJOR_SLACK=k lets the queue grow
@@ -123,6 +126,12 @@ typedef struct Big { struct Big *next; size_t size; } Big;
 static Big *big_free;
 #define SLAB_CHUNK (2u << 20)
 static int64_t dbg_slab_bytes, dbg_log_allocs, dbg_batch_bytes, dbg_batch_peak;
+/* Base address of every slab chunk / big block. The allocator never frees them, and after the cells were
+ * handed out the only pointers left may be interior ones (free-list links, bump), so without this list
+ * macOS `leaks` intermittently reported a malloc'd slab as a ROOT LEAK (depending on free order, i.e. on
+ * collector timing). Written by the mutator only (page_alloc). */
+static PtrStack slab_bases;
+static _Atomic int64_t t_allocs, t_frees;   /* traced objects allocated / freed (mutator-written; debug) */
 static void *page_alloc(size_t bytes) {
     void *p = NULL; dbg_slab_bytes += (int64_t)bytes;
     if (!page_bits) {
@@ -138,10 +147,10 @@ static void *page_alloc(size_t bytes) {
             char *a = (char *)(((uintptr_t)m + PAGE - 1) & ~(uintptr_t)(PAGE - 1));
             if (a > m) munmap(m, (size_t)(a - m));
             if (a + SLAB_CHUNK < m + want) munmap(a + SLAB_CHUNK, (size_t)(m + want - (a + SLAB_CHUNK)));
-            ch = a; ch_end = a + SLAB_CHUNK;
+            ch = a; ch_end = a + SLAB_CHUNK; stack_push(&slab_bases, a);
         }
         p = ch; ch += PAGE;
-    } else if (posix_memalign(&p, PAGE, bytes)) rt_panic("OutOfMemoryError");
+    } else { if (posix_memalign(&p, PAGE, bytes)) rt_panic("OutOfMemoryError"); stack_push(&slab_bases, p); }
     for (size_t o = 0; o < bytes; o += PAGE) reg_add((uintptr_t)p + o);
     return p;
 }
@@ -153,6 +162,7 @@ static int64_t dbg_bp_ns, dbg_bp_max, dbg_exit_ns, dbg_bmax;
 static PtrStack ret_local; static size_t ret_pos;       /* mutator: dead objects returned by the collector */
 static void free_returned(void *p);
 void *rt_alloc_trace(int64_t size) {
+    atomic_store_explicit(&t_allocs, atomic_load_explicit(&t_allocs, memory_order_relaxed) + 1, memory_order_relaxed);
     /* Lazy freeing: every traced allocation frees up to two returned dead objects, so reclamation keeps
      * pace with allocation without a pause. */
     for (int k = 0; k < 2 && ret_pos < ret_local.len; k++) free_returned(ret_local.items[ret_pos++]);
@@ -174,6 +184,7 @@ void *rt_alloc_trace(int64_t size) {
     return p;
 }
 void rt_free_trace(void *p, int64_t size) {
+    atomic_store_explicit(&t_frees, atomic_load_explicit(&t_frees, memory_order_relaxed) + 1, memory_order_relaxed);
     LEAK(-1);
 #ifdef RT_LEAKCHECK
     rg_free[1]++;
@@ -447,7 +458,17 @@ static void apply_log(Log *l) {
 // so are stable (old-generation) objects. A wrong CRC (more than 2^24 references) can only make the
 // detector propose a wrong candidate, which the Sigma test rejects.
 #define MAX_THREADS 16
-#define PAR_MIN_ROOTS 2048          /* smaller detections run on the collector thread alone */
+/* Cost model, learned at run time: wall ns per visited object on one thread (ns_ser) and on all threads
+ * (ns_par, the real speedup including contention and imbalance), plus the fixed cost of one parallel
+ * phase (wake + barrier, calibrated by an empty parallel phase). ns_par starts at a perfect split; while
+ * the model keeps choosing serial it drifts back towards optimistic (PAR_RETRY_DECAY per detection), so a
+ * machine that was busy is retried later. The first parallel sample replaces the guess. */
+#define PAR_RETRY_DECAY 0.995
+#define PAR_MARGIN 0.8          /* parallel only if predicted at least 20% faster (hysteresis, not a size threshold) */
+static int par_sampled;
+static double ns_ser = 20.0, ns_par = -1.0, par_wake_ns = -1.0;
+static int64_t dbg_par_det;
+static double visits_per_root[2] = { 1.0, 1.0 };   /* [major]: running estimate from previous detections */
 #define SHARE_CHUNK 128
 static int c_major;                 /* current detection ignores the stable bit (traces the old generation too) */
 static _Atomic int c_hit_stable;    /* current minor detection stopped at a stable object */
@@ -644,13 +665,32 @@ static size_t detect_prepare(int major, PtrStack *rootsp);
 static void detect_finish(int major, PtrStack roots, size_t k, int hit_stable);
 static void detect(int major) {
     PtrStack roots; size_t k = detect_prepare(major, &roots);
-    int active = major && k >= PAR_MIN_ROOTS ? n_threads : 1;
+    /* minor and one-pass major detections alike, when the expected traversal pays for waking the helpers */
+    if (par_wake_ns < 0 && n_threads > 1) {
+        int64_t w0 = rt_nanos(); run_phase(PHASE_MARK, NULL, 0, n_threads); run_phase(PHASE_SCAN, NULL, 0, n_threads);
+        par_wake_ns = (double)(rt_nanos() - w0) / 2.0;
+    }
+    if (ns_par < 0) ns_par = ns_ser / n_threads;
+    double v_est = (double)k * visits_per_root[major];
+    int active = n_threads > 1 && (size_t)n_threads <= k && v_est * ns_par + 2.0 * par_wake_ns < PAR_MARGIN * v_est * ns_ser ? n_threads : 1;
+    if (active == 1 && n_threads > 1 && ns_par > ns_ser / n_threads) ns_par = ns_par * PAR_RETRY_DECAY + (1 - PAR_RETRY_DECAY) * ns_ser / n_threads;
+    if (active > 1) dbg_par_det++;
     atomic_store_explicit(&c_hit_stable, 0, memory_order_relaxed);
     int64_t t0 = rt_nanos();
     run_phase(PHASE_MARK, roots.items, k, active);
     int64_t t1 = rt_nanos();
     run_phase(PHASE_SCAN, roots.items, k, active);
-    dbg_t_mark += t1 - t0; dbg_t_scan += rt_nanos() - t1;
+    int64_t t2 = rt_nanos();
+    dbg_t_mark += t1 - t0; dbg_t_scan += t2 - t1;
+    {   /* refresh the cost model from this detection's MarkGray + Scan wall time */
+        int64_t tr = 0; for (int i = 0; i < n_threads; i++) tr += workers[i].traversed;
+        double v = (double)(tr + (int64_t)k), t = (double)(t2 - t0);
+        if (k) visits_per_root[major] = 0.5 * visits_per_root[major] + 0.5 * v / (double)k;
+        if (v > 0 && t > 0) {
+            if (active == 1) ns_ser = 0.8 * ns_ser + 0.2 * (t / v);
+            else { double a = (t - 2.0 * par_wake_ns) / v; if (a < ns_ser / active) a = ns_ser / active; ns_par = par_sampled++ ? 0.5 * ns_par + 0.5 * a : a; }
+        }
+    }
     detect_finish(major, roots, k, atomic_load_explicit(&c_hit_stable, memory_order_relaxed));
 }
 static size_t detect_prepare(int major, PtrStack *rootsp) {
@@ -1097,10 +1137,11 @@ static void epoch_debug(void) {
     const char *e = getenv("KX_GC_DEBUG");
     if (e && *e) fprintf(stderr, "epoch: epochs=%lld logs=%lld detections=%lld sets=%lld pass=%lld fail-delta=%lld fail-sigma=%lld dead=%lld majors=%lld stable=%lld deferred=%zu\n",
         (long long)ep_epochs, (long long)dbg_logs, (long long)ep_detections, (long long)dbg_sets, (long long)dbg_pass, (long long)dbg_fail_delta, (long long)dbg_fail_sigma, (long long)dbg_dead, (long long)dbg_majors, (long long)c_stable_n, c_deferred.len);
-    if (e && *e) fprintf(stderr, "epoch: collector apply=%.1fms validate=%.1fms detect=%.1fms (mark %.1f scan %.1f) threads=%d\n", dbg_t_apply/1e6, dbg_t_valid/1e6, dbg_t_detect/1e6, dbg_t_mark/1e6, dbg_t_scan/1e6, n_threads);
+    if (e && *e) fprintf(stderr, "epoch: collector apply=%.1fms validate=%.1fms detect=%.1fms (mark %.1f scan %.1f) threads=%d parallel=%lld (ns/visit ser %.1f par %.1f wake %.0f)\n", dbg_t_apply/1e6, dbg_t_valid/1e6, dbg_t_detect/1e6, dbg_t_mark/1e6, dbg_t_scan/1e6, n_threads, (long long)dbg_par_det, ns_ser, ns_par, par_wake_ns);
     if (e && *e) fprintf(stderr, "epoch: roots=%lld minor-visits=%lld major-visits=%lld members=%lld\n", (long long)dbg_roots_k, (long long)dbg_minor_visits, (long long)dbg_major_visits, (long long)dbg_members);
     if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld early ok=%lld hit=%lld skip=%lld qmax=%zu q=%zu\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits, (long long)dbg_early_ok, (long long)dbg_early_hit, (long long)dbg_early_skip, dbg_q_max, max_queued);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
+    if (e && *e) fprintf(stderr, "epoch: exit live-traced=%lld ret-pending=%zu roots=%zu deferred=%zu cands=%d\n", (long long)(atomic_load(&t_allocs) - atomic_load(&t_frees)), ret_local.len - ret_pos, c_roots.len, c_deferred.len, cands != NULL);
     if (e && *e) {
         size_t wk = 0; for (int i = 0; i < n_threads; i++) wk += workers[i].work.cap + workers[i].black.cap;
         fprintf(stderr, "epoch: mem MiB slabs=%.1f logs=%lld(%.1f) batches-peak=%.1f stacks(cap): roots=%.1f deferred=%.1f work=%.1f ret=%.1f ret-shared=%.1f ret-local=%.1f im-seen=%.1f hold=%.1f cw=%.1f dying=%.1f workers=%.1f es=%.1f\n",
