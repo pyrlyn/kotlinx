@@ -273,7 +273,7 @@ class Parser(private val t: List<Tok>) {
         val sta = takeSuperArgs()
         val saved = curClass; curClass = null
         val savedObj = curObject; curObject = name
-        val ms = try { if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved; curObject = savedObj }
+        val ms = try { braceOnNextLine(); if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved; curObject = savedObj }
         objects.add(name)
         // During its own initialization the object's global is not assigned yet: `Obj.x` in initializers means `this.x`.
         val self = Subst(emptyMap(), rw = { x: E -> if (x is NameE && x.n == name) NameE("this").also { it.line = x.line } else null })
@@ -1032,10 +1032,21 @@ class Parser(private val t: List<Tok>) {
         return superArgs
     }
 
+    /** A declaration body `{` on the line after the header: skips the newlines. Always true. */
+    private fun braceOnNextLine(): Boolean {
+        var i = p
+        while (t[i].k == K.NL) i++
+        if (i > p && t[i].k == K.OP && t[i].s == "{") p = i
+        return true
+    }
+
     private fun classDecl(isEnum: Boolean = false): ClassD {
         val line = next().line
         val name = ident()
         val typeParams = typeParams()
+        // `class C private constructor(...)`: the visibility of the primary constructor is not checked.
+        if (peek().k == K.ID && peek().s in setOf("private", "public", "internal", "protected") && t[p + 1].k == K.ID && t[p + 1].s == "constructor") p++
+        if (isId("constructor") && t[p + 1].k == K.OP && t[p + 1].s == "(") p++
         val fields = ArrayList<FieldD>(); val ctorParams = ArrayList<Param>(); val inits = ArrayList<Any>()
         if (isEnum) enumClasses.add(name)
         if (isEnum) for ((n, ty) in listOf("name" to "String", "ordinal" to "Int")) {
@@ -1122,7 +1133,7 @@ class Parser(private val t: List<Tok>) {
             }
             entries = es
             if (isOp(";")) { next(); members(fields, inits, open = false) } else { skipNL0(); expectOp("}"); emptyList() }
-        } else if (isOp("{")) members(fields, inits) else emptyList()
+        } else if (braceOnNextLine() && isOp("{")) members(fields, inits) else emptyList()
         // An entry body overriding toString needs a virtual base `toString(): String = name`.
         val subs = entries.orEmpty().mapNotNull { enumBodies["$name$${it.first}"] }.toSet()
         val ms2 = if (ms.none { it.name == "toString" } && hoisted.any { it.name in subs && it.methods.any { m -> m.name == "toString" && m.params.isEmpty() } })
