@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 2046,
-  "UNSUPPORTED": 3405
+  "PASS": 2053,
+  "UNSUPPORTED": 3398
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -358,8 +358,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/extensionInClass.kt"
   },
   "box/box/argumentOrder/kt17691WithEnabledFeature.kt": {
-   "category": "other: Unit cannot be used as Any",
-   "detail": "Unit cannot be used as Any",
+   "category": "other: lists of Unit are not supported",
+   "detail": "lists of Unit are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt17691WithEnabledFeature.kt"
   },
@@ -1291,8 +1291,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unit2.kt"
   },
   "box/box/basics/unit3.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "other: Unit cannot be used as Any",
+   "detail": "Unit cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/unit3.kt"
   },
@@ -2617,9 +2617,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test10.kt"
   },
   "box/box/bridges/test11.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/test11.kt"
   },
   "box/box/bridges/test12.kt": {
@@ -8916,8 +8915,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2291.kt"
   },
   "box/box/controlStructures/kt237.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "other: cannot store Unit in 'y'",
+   "detail": "cannot store Unit in 'y'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt237.kt"
   },
@@ -9264,8 +9263,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryCatchAfterWhileTrue.kt"
   },
   "box/box/controlStructures/tryCatchInExpressions/tryFinallyOfTypeUnit.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "other: Unit cannot be used as Any",
+   "detail": "Unit cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/tryCatchInExpressions/tryFinallyOfTypeUnit.kt"
   },
@@ -12249,8 +12248,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/primitiveArrays.kt"
   },
   "box/box/dataClasses/toString/unitComponent.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "strings / templates",
+   "detail": "cannot convert Unit to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/unitComponent.kt"
   },
@@ -12265,8 +12264,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/twoVarParams.kt"
   },
   "box/box/dataClasses/unitComponent.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "strings / templates",
+   "detail": "cannot convert Unit to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/unitComponent.kt"
   },
@@ -14172,9 +14171,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/sum.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailCallInBlockInParentheses.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailCallInBlockInParentheses.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailCallInParentheses.kt": {
@@ -16280,9 +16278,8 @@
    "upstream": "compiler/testData/codegen/box/fir/kt68806.kt"
   },
   "box/box/fir/listAssignmentInWhen.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fir/listAssignmentInWhen.kt"
   },
   "box/box/fir/localInvokeExtension.kt": {
@@ -17480,8 +17477,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt2929.kt"
   },
   "box/box/functions/kt3214.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "other: lists of Unit are not supported",
+   "detail": "lists of Unit are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt3214.kt"
   },
@@ -18347,8 +18344,8 @@
    "upstream": "compiler/testData/codegen/box/inference/noCoercionToUniForNullableLambdaReturnType.kt"
   },
   "box/box/inference/noCoercionToUnitWithEqualityConstraintForNullableReturnType.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "other: cannot store Unit in 'r'",
+   "detail": "cannot store Unit in 'r'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/noCoercionToUnitWithEqualityConstraintForNullableReturnType.kt"
   },
@@ -23109,12 +23106,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267646112\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823200\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 806096032\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -536081504\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -24281,8 +24278,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/secondaryConstructorsWithBody.kt"
   },
   "box/box/inlineClasses/simpleSecondaryConstructor.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Foo, found Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/simpleSecondaryConstructor.kt"
   },
@@ -25735,7 +25732,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1030613ab        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10317de9b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1005fd3ab        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x100719f57        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -29423,8 +29420,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt44647.kt"
   },
   "box/box/operatorConventions/kt45022.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "other: unknown variable 'X'",
+   "detail": "unknown variable 'X'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt45022.kt"
   },
@@ -35918,9 +35915,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt57487.kt"
   },
   "box/box/regressions/kt5786_privateWithDefault.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/kt5786_privateWithDefault.kt"
   },
   "box/box/regressions/kt5953.kt": {
@@ -36859,9 +36855,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/withReturn.kt"
   },
   "box/box/secondaryConstructors/withReturnUnit.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/withReturnUnit.kt"
   },
   "box/box/secondaryConstructors/withoutPrimarySimple.kt": {
@@ -38886,8 +38881,8 @@
    "upstream": "compiler/testData/codegen/box/typeMapping/nullNothing.kt"
   },
   "box/box/typeMapping/nullableNothing.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "other: Unit cannot be used as Any",
+   "detail": "Unit cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typeMapping/nullableNothing.kt"
   },
@@ -39145,13 +39140,13 @@
    "upstream": "compiler/testData/codegen/box/underscoredTypeArguments/simple.kt"
   },
   "box/box/unit/UnitValue.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Unit, Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/grok/kotlinx-features/compiler/build/upstream-tmp/nkup2f5gz5zl/t.ll:202:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\ncommand failed (256): '/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt' -passes='lt",
+   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/grok/kotlinx-features/compiler/build/upstream-tmp/nkupw262iir9/t.ll:202:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\ncommand failed (256): '/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt' -passes='lt",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -39161,8 +39156,8 @@
    "upstream": "compiler/testData/codegen/box/unit/ifElse.kt"
   },
   "box/box/unit/kt3634.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "other: cannot store Unit in top-level property 'c'",
+   "detail": "cannot store Unit in top-level property 'c'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/kt3634.kt"
   },
@@ -39213,14 +39208,14 @@
    "upstream": "compiler/testData/codegen/box/unit/nullableUnitInWhen3.kt"
   },
   "box/box/unit/sillyThings.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "other: lists of Unit are not supported",
+   "detail": "lists of Unit are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/sillyThings.kt"
   },
   "box/box/unit/unitClassObject.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "other: cannot store Unit in 'a'",
+   "detail": "cannot store Unit in 'a'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/unitClassObject.kt"
   },
@@ -40427,9 +40422,8 @@
    "upstream": "compiler/testData/codegen/box/when/stringOptimization/temporaryVarInWhenByStringIsDisposedProperly.kt"
   },
   "box/box/when/switchBreakNoLabel.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/switchBreakNoLabel.kt"
   },
   "box/box/when/switchOptimizationDense.kt": {
@@ -40455,9 +40449,8 @@
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationMultipleMixedConditions.kt"
   },
   "box/box/when/switchOptimizationSingleStatementCase.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationSingleStatementCase.kt"
   },
   "box/box/when/switchOptimizationSparse.kt": {
