@@ -34,6 +34,12 @@ class Parser(private val t: List<Tok>) {
     private var destructN = 0
     /** Extra statements produced by a destructuring declaration, emitted after the one [stmt] returned. */
     private val pendingStmts = ArrayList<S>()
+    /** Classes of anonymous objects (`object : T { }` expressions) declared before the current statement. */
+    private var pendingDecls = ArrayList<S>()
+    /** Anonymous-object classes outside function bodies (property initializers): top-level classes. */
+    private val topAnon = ArrayList<ClassD>()
+    private var bodyLevel = 0
+    private var anonN = 0
 
     /** Data class: generated toString, componentN, hashCode and `$equals` (structural `==`) over the constructor properties. */
     private fun dataClass(c: ClassD): ClassD {
@@ -215,6 +221,7 @@ class Parser(private val t: List<Tok>) {
         }
         classes.addAll(companions); funs.addAll(ctorFactories)
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
+        classes.addAll(topAnon); topAnon.clear()
         liftLocals(funs, classes, ifaces)
         resolveNested(funs, classes, ifaces, globals)
         resolveExtensions(funs, classes)
@@ -280,6 +287,36 @@ class Parser(private val t: List<Tok>) {
         val remap = fields.associateWith { f -> FieldD(f.name, f.type, f.isVar, f.init?.let { self.e(it) }, f.lateinit) }
         val inits2 = inits.map { i -> when (i) { is FieldD -> remap[i] ?: i; is Block -> self.block(i); else -> i } }
         return ClassD(name, fields.map { remap.getValue(it) }, supers, ms, line, emptyList(), inits2, superArgs, superTypeArgs = sta)
+    }
+
+    /** `object : Supers { body }` as an expression: a fresh local class, instantiated in place. */
+    private fun anonObject(line: Int): E {
+        val name = "\$anon${anonN++}"
+        val supers = ArrayList<String>(); var superArgs: List<E>? = null
+        if (isOp(":")) {
+            next()
+            while (true) {
+                val sn = ident(); superTypeArgs(sn)
+                if (isOp("(")) {
+                    if (superArgs != null) fail("only one superclass is allowed")
+                    next()
+                    superArgs = nested(1) { val xs = ArrayList<E>(); while (!isOp(")")) { xs.add(expr()); if (isOp(",")) next() }; xs }
+                    expectOp(")")
+                    supers.add(0, sn)
+                } else supers.add(sn)
+                if (isOp(",")) next() else break
+            }
+        }
+        // Inside its own class body, names would resolve to the outer instance's (also private) members.
+        if (curClass != null && curClass in supers) fail("anonymous objects extending their enclosing class are not supported")
+        val fields = ArrayList<FieldD>(); val inits = ArrayList<Any>()
+        val sta = takeSuperArgs()
+        val saved = curClass; curClass = null
+        val outerDecls = pendingDecls; pendingDecls = ArrayList(); val lvl = bodyLevel; bodyLevel = 0
+        val ms = try { nested(0) { if (isOp("{")) members(fields, inits) else emptyList() } } finally { curClass = saved; pendingDecls = outerDecls; bodyLevel = lvl }
+        val c = ClassD(name, fields, supers, ms, line, emptyList(), inits, superArgs, superTypeArgs = sta)
+        if (bodyLevel > 0) { pendingDecls.add(LocalDeclS(c).also { it.line = line }); sawLocal = true } else topAnon.add(c)
+        return CallE(NameE(name).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line }
     }
 
     /** Enum entry ("E$A") -> hidden subclass holding its body. */
@@ -958,7 +995,18 @@ class Parser(private val t: List<Tok>) {
         }
         expectOp(")")
         val ret = if (isOp(":")) { next(); type() } else null
-        return if (isOp("=")) { next(); skipNLOnly(); FunD(name, params, ret, null, expr(), line, typeParams, recv) }
+        return if (isOp("=")) {
+            next(); skipNLOnly()
+            val outerDecls = pendingDecls; pendingDecls = ArrayList(); bodyLevel++
+            val (e, ds) = try { expr() to pendingDecls } finally { pendingDecls = outerDecls; bodyLevel-- }
+            if (ds.isEmpty()) FunD(name, params, ret, null, e, line, typeParams, recv)
+            else {
+                // `= object : T { }`: the anonymous class is declared in a block body; the function returns T.
+                val anon = (ds.last() as LocalDeclS).d as ClassD
+                val r = ret ?: if (e is CallE && (e.callee as? NameE)?.n == anon.name) TypeRef(anon.supers.firstOrNull() ?: anon.name, anon.superTypeArgs[anon.supers.firstOrNull()] ?: emptyList(), false) else fail("expression body with an anonymous object needs an explicit return type")
+                FunD(name, params, r, Block(ds + RetS(e).also { it.line = line }), null, line, typeParams, recv)
+            }
+        }
         else if (isOp("{")) FunD(name, params, ret, block(), null, line, typeParams, recv)
         else FunD(name, params, ret, null, null, line, typeParams, recv) // abstract (interface) member
     }
@@ -1190,7 +1238,8 @@ class Parser(private val t: List<Tok>) {
     private fun block(lambda: Boolean = false): Block {
         expectOp("{")
         val params = ArrayList<String>(); val ptypes = ArrayList<TypeRef?>()
-        val stmts = nested(0) {
+        val outerDecls = pendingDecls; pendingDecls = ArrayList(); bodyLevel++
+        val stmts = try { nested(0) {
             if (lambda) {
                 // `x, y: T ->` parameter list (backtracks if it is not one).
                 val save = p
@@ -1209,12 +1258,13 @@ class Parser(private val t: List<Tok>) {
             while (true) {
                 skipNL()
                 if (isOp("}")) break
-                ss.add(stmt()); ss.addAll(pendingStmts); pendingStmts.clear()
+                val st = stmt(); ss.addAll(pendingDecls); pendingDecls.clear()
+                ss.add(st); ss.addAll(pendingStmts); pendingStmts.clear()
                 val tk = t[p]
                 if (!(tk.k == K.NL || (tk.k == K.OP && (tk.s == ";" || tk.s == "}")))) fail("expected end of statement")
             }
             ss
-        }
+        } } finally { pendingDecls = outerDecls; bodyLevel-- }
         expectOp("}")
         return Block(stmts, params, ptypes)
     }
@@ -1526,6 +1576,7 @@ class Parser(private val t: List<Tok>) {
                 if (it is TemplateCode) Parser(Lexer(it.code, it.line).lex()).also { p -> p.depth[0] = 1 }.expr() else it
             })
             K.ID -> when (tk.s) {
+                "object" -> if (isOp(":") || isOp("{")) anonObject(tk.line) else fail("unexpected 'object'", tk)
                 "true" -> BoolL(true)
                 "false" -> BoolL(false)
                 "null" -> NullL()
