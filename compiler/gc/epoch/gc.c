@@ -30,7 +30,8 @@
 // Generations: objects found externally referenced by a scan become stable (old) until decremented; minor
 // detections do not trace them, major detections (amortized against the stable population, with a
 // geometric backoff while majors find no garbage) do.
-// Trial deletion's MarkGray/Scan run in parallel on KX_GC_THREADS threads for large major detections.
+// Trial deletion's MarkGray/Scan run in parallel on KX_GC_THREADS threads for every detection with at
+// least PAR_MIN_ROOTS roots and an expected traversal of at least PAR_MIN_WORK objects (minor or major).
 // Program exit drains the queue only for --leak-check / --alloc malloc builds or KX_GC_EXIT_DRAIN=1.
 // See compiler/gc/docs/architecture.md, section 7.
 #include <pthread.h>
@@ -379,8 +380,11 @@ static void apply_log(Log *l) {
 // so are stable (old-generation) objects. A wrong CRC (more than 2^24 references) can only make the
 // detector propose a wrong candidate, which the Sigma test rejects.
 #define MAX_THREADS 16
-#define PAR_MIN_ROOTS 2048          /* smaller detections run on the collector thread alone */
-#define SHARE_CHUNK 128
+#define PAR_MIN_ROOTS 1024          /* smaller detections run on the collector thread alone */
+#define PAR_MIN_WORK 65536          /* ... and so do detections expected to visit fewer objects (KX_GC_PAR_MIN_WORK) */
+static int64_t par_min_work = -1;
+static double visits_per_root[2] = { 1.0, 1.0 };   /* [major]: running estimate from previous detections */
+#define SHARE_CHUNK 64
 static int c_major;                 /* current detection ignores the stable bit (traces the old generation too) */
 static _Atomic int c_hit_stable;    /* current minor detection stopped at a stable object */
 static _Atomic int64_t c_stable_delta;
@@ -575,7 +579,11 @@ static void detect(int major) {
         if (!s || has(s, CAND_BIT | DEAD_BIT)) continue;
         if (color(s) == PURPLE && ref_count(s) > 0) { set_color(s, GRAY); clr_bit(s, DIRTY_BIT); roots.items[k++] = s; }
     }
-    int active = major && k >= PAR_MIN_ROOTS ? n_threads : 1;
+    /* minor and major detections alike, when the expected traversal (roots x visits per root of the
+     * previous detections of the same kind) pays for waking the helpers: the roots are split into
+     * contiguous slices, idle workers take SHARE_CHUNK-sized pieces of a busy worker's stack */
+    if (par_min_work < 0) { const char *e = getenv("KX_GC_PAR_MIN_WORK"); par_min_work = e && *e ? atoll(e) : PAR_MIN_WORK; }
+    int active = k >= PAR_MIN_ROOTS && (double)k * visits_per_root[major] >= (double)par_min_work ? n_threads : 1;
     atomic_store_explicit(&c_hit_stable, 0, memory_order_relaxed);
     int64_t t0 = rt_nanos();
     run_phase(PHASE_MARK, roots.items, k, active);
@@ -584,6 +592,7 @@ static void detect(int major) {
     dbg_t_mark += t1 - t0; dbg_t_scan += rt_nanos() - t1;
     int64_t tv0 = c_traversed; collect_phases_stats();
     if (major) dbg_major_visits += c_traversed - tv0; else dbg_minor_visits += c_traversed - tv0;
+    if (k) visits_per_root[major] = 0.5 * visits_per_root[major] + 0.5 * (double)(c_traversed - tv0 + (int64_t)k) / (double)k;
     dbg_roots_k += (int64_t)k;
     int hit_stable = atomic_load_explicit(&c_hit_stable, memory_order_relaxed);
     for (size_t i = 0; i < k; i++) collect_white(roots.items[i]);
