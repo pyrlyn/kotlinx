@@ -1,0 +1,18 @@
+# m26 working tree 2026-10-30 09:05 EET load: { 61.00 50.03 38.05 }
+sum 3.767
+alloc 77.597
+bigheap 121.937
+closures 83.888
+cycles 49.855
+dispatch 96.252
+file 53.424
+free 51.556
+hashmap 73.259
+lru 96.671
+matmul 10.263
+nbody 75.865
+recursion 6.164
+refpass 140.629
+sort 62.249
+strings 32.594
+trees 133.855
