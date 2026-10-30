@@ -181,6 +181,12 @@ void rt_cc_dead(void *p) { (void)p; rt_panic("epoch GC: rt_cc_dead"); }
 #define LOG_CAP 32768
 #define MAX_QUEUED_DEFAULT 16   /* logs (256 KiB each) the collector may fall behind; KX_GC_MAX_QUEUED */
 static size_t max_queued;
+#define Q_ADAPT_START 4
+#define Q_ADAPT_MIN 2
+#define Q_ADAPT_MAX 64
+#define Q_ADAPT_WINDOW 64
+static int q_fixed, q_win, q_win_bad;   /* guarded by mu */
+static int64_t q_target_ns; static size_t dbg_q_max;
 static int major_slack = -1;          /* KX_GC_MAJOR_SLACK: queue limit multiplier while a major runs (default 1: off; measured: the mutator fills any slack within a major) */
 static _Atomic int c_in_major;         /* collector is in a major detection */
 enum { OP_INC = 0, OP_DEC = 1, OP_MOD = 2 };
@@ -219,13 +225,31 @@ static void handoff(void) {
         cur = NULL;
         pthread_cond_signal(&cv_work);
     }
-    if (!max_queued) { const char *e = getenv("KX_GC_MAX_QUEUED"); max_queued = e && atoi(e) > 0 ? (size_t)atoi(e) : MAX_QUEUED_DEFAULT; }
+    if (!max_queued) {
+        const char *e = getenv("KX_GC_MAX_QUEUED");
+        if (e && atoi(e) > 0) { max_queued = (size_t)atoi(e); q_fixed = 1; } else max_queued = Q_ADAPT_START;
+        e = getenv("KX_GC_TARGET_PAUSE_US"); q_target_ns = (e && *e ? atoll(e) : 3000) * 1000;   /* KX_GC_TARGET_PAUSE_US, default 3 ms */
+    }
     if (major_slack < 0) { const char *e = getenv("KX_GC_MAJOR_SLACK"); major_slack = e && *e ? atoi(e) : 1; if (major_slack < 1) major_slack = 1; }
     /* a major detection is one long collector step: let the queue grow (bounded) instead of stopping the
      * mutator; the backlog is carried over, and the raised limit stays until it is back under max_queued,
      * so the mutator never waits for the whole backlog at once */
 #define Q_LIMIT() (atomic_load_explicit(&c_in_major, memory_order_relaxed) ? max_queued * (size_t)major_slack : max_queued)
-    if (q_len > Q_LIMIT()) { int64_t w0 = rt_nanos(); while (q_len > Q_LIMIT()) pthread_cond_wait(&cv_done, &mu); int64_t d = rt_nanos() - w0; dbg_bp_ns += d; if (d > dbg_bp_max) dbg_bp_max = d; }
+    int64_t d = 0;
+    if (q_len > Q_LIMIT()) { int64_t w0 = rt_nanos(); while (q_len > Q_LIMIT()) pthread_cond_wait(&cv_done, &mu); d = rt_nanos() - w0; dbg_bp_ns += d; if (d > dbg_bp_max) dbg_bp_max = d; }
+    /* Adaptive queue depth (unless KX_GC_MAX_QUEUED is set): a back-pressure wait longer than the pause
+     * target doubles the limit (up to Q_ADAPT_MAX); a window of Q_ADAPT_WINDOW hand-offs with no wait over a
+     * quarter of the target and the queue never past half the limit lowers it by one (down to Q_ADAPT_MIN).
+     * A short queue means garbage is confirmed and returned sooner (lower RSS); a long one absorbs collector
+     * spikes (lower pauses). */
+    if (!q_fixed) {
+        if (d > q_target_ns) { if (max_queued < Q_ADAPT_MAX) max_queued *= 2; if (max_queued > Q_ADAPT_MAX) max_queued = Q_ADAPT_MAX; q_win = 0; q_win_bad = 0; }
+        else {
+            if (d > q_target_ns / 4 || q_len * 2 > max_queued) q_win_bad = 1;
+            if (++q_win >= Q_ADAPT_WINDOW) { if (!q_win_bad && max_queued > Q_ADAPT_MIN) max_queued--; q_win = 0; q_win_bad = 0; }
+        }
+        if (max_queued > dbg_q_max) dbg_q_max = max_queued;
+    }
     stack_move(&ret_local, &ret_shared);
     if (!cur) cur = log_new();
     pthread_mutex_unlock(&mu);
@@ -312,7 +336,7 @@ static size_t c_threshold = 10000;
 static int64_t major_ratio = MAJOR_RATIO;   /* adaptive: doubles after a major that found (almost) no garbage */
 /* Candidate cycles of one detection, validated together: set i has id first_id + i and members
  * members[ends[i-1] .. ends[i]). One allocation per detection; batches are validated in FIFO order. */
-typedef struct Batch { struct Batch *next; uint64_t valid_after, first_id; size_t nsets; size_t *ends; void *members[]; } Batch;
+typedef struct Batch { struct Batch *next; uint64_t valid_after, first_id; int tried; size_t nsets; size_t *ends; void *members[]; } Batch;
 static Batch *cands, *cands_tail;
 static uint64_t next_set_id = 1;
 static int64_t dbg_dem_touch, dbg_dem_other, dbg_prom, dbg_major_visits, dbg_minor_visits, dbg_roots_k, dbg_t_mark, dbg_t_scan, dbg_t_apply, dbg_t_valid, dbg_t_detect, c_stable_n, c_deferred_new, dbg_majors, c_traversed, dbg_members, dbg_sets, dbg_pass, dbg_fail_delta, dbg_fail_sigma, dbg_dead, dbg_logs;
@@ -564,7 +588,7 @@ static void batch_close(uint64_t valid_after) {
     if (!cw_ends.len) return;
     size_t n = cw_m.len, k = cw_ends.len;
     Batch *b = malloc(sizeof *b + n * sizeof(void *) + k * sizeof(size_t)); if (!b) rt_panic("OutOfMemoryError");
-    b->next = NULL; b->valid_after = valid_after; b->first_id = cw_first_id; b->nsets = k;
+    b->next = NULL; b->tried = 0; b->valid_after = valid_after; b->first_id = cw_first_id; b->nsets = k;
     memcpy(b->members, cw_m.items, n * sizeof(void *));
     b->ends = (size_t *)(b->members + n);
     for (size_t i = 0; i < k; i++) b->ends[i] = (size_t)(uintptr_t)cw_ends.items[i];
@@ -864,6 +888,68 @@ static size_t validate_ready(uint64_t upto, int force) {
     }
     return freed;
 }
+// Early validation: a batch normally waits until the log that was current when its detection ended has
+// been APPLIED (valid_after < applied seq), i.e. behind the whole queue. Once that log has merely been
+// HANDED OFF, every RC operation made before the detection ended is in an applied or a queued log. If no
+// queued log mentions a member or a member's traced child (the objects validation reads or decrements),
+// applying those logs first would not change anything validation looks at, so the batch is validated at
+// once. Otherwise it waits as before. Queued logs are immutable once handed off; scanning them is bounded
+// by EARLY_SCAN_MAX entries (KX_GC_EARLY_SCAN; 0 disables).
+#define EARLY_SCAN_MAX (32 * LOG_CAP)
+static int64_t early_scan_max = -1, dbg_early_ok, dbg_early_hit, dbg_early_skip;
+typedef struct { void **k; size_t cap, n; } PSet;
+static PSet es;
+static void ps_add(PSet *s, void *p) {
+    if ((s->n + 1) * 2 > s->cap) {
+        void **old = s->k; size_t oc = s->cap; s->cap = oc ? oc * 2 : 1024; s->k = calloc(s->cap, sizeof(void *)); if (!s->k) rt_panic("OutOfMemoryError"); s->n = 0;
+        for (size_t i = 0; i < oc; i++) if (old[i]) ps_add(s, old[i]);
+        free(old);
+    }
+    size_t m = s->cap - 1, i = (size_t)(((uint64_t)(uintptr_t)p >> 3) * 0x9E3779B97F4A7C15ULL >> 20) & m;
+    while (s->k[i]) { if (s->k[i] == p) return; i = (i + 1) & m; }
+    s->k[i] = p; s->n++;
+}
+static int ps_has(PSet *s, void *p) {
+    if (!s->cap) return 0;
+    size_t m = s->cap - 1, i = (size_t)(((uint64_t)(uintptr_t)p >> 3) * 0x9E3779B97F4A7C15ULL >> 20) & m;
+    while (s->k[i]) { if (s->k[i] == p) return 1; i = (i + 1) & m; }
+    return 0;
+}
+static void es_child(void *t) { if (t && is_traced(t)) ps_add(&es, t); }
+#define ES_MAX_LOGS 64
+static size_t try_early(uint64_t applied_seq) {
+    if (early_scan_max < 0) { const char *e = getenv("KX_GC_EARLY_SCAN"); early_scan_max = e && *e ? atoll(e) : EARLY_SCAN_MAX; }
+    if (!early_scan_max) return 0;
+    Log *pend[ES_MAX_LOGS]; size_t np = 0, entries = 0; uint64_t h;
+    pthread_mutex_lock(&mu);
+    h = handed;
+    for (Log *l = q_head; l && np < ES_MAX_LOGS; l = l->next) { pend[np++] = l; entries += l->n; }
+    int complete = np == q_len;
+    pthread_mutex_unlock(&mu);
+    (void)applied_seq;
+    size_t freed = 0;
+    Batch **pp = &cands;
+    while (*pp) {
+        Batch *b = *pp;
+        if (b->tried || h <= b->valid_after) { pp = &b->next; continue; }
+        b->tried = 1;
+        if (!complete || (int64_t)entries > early_scan_max) { dbg_early_skip++; pp = &b->next; continue; }
+        size_t n = b->nsets ? b->ends[b->nsets - 1] : 0;
+        es.n = 0; if (es.cap) memset(es.k, 0, es.cap * sizeof(void *));
+        for (size_t i = 0; i < n; i++) { ps_add(&es, b->members[i]); vtab(b->members[i])->trav(b->members[i], es_child); }
+        int hit = 0;
+        for (size_t j = 0; j < np && !hit; j++)
+            for (size_t i = 0; i < pend[j]->n; i++) if (ps_has(&es, (void *)(pend[j]->a[i] & ~(uintptr_t)3))) { hit = 1; break; }
+        if (hit) { dbg_early_hit++; pp = &b->next; continue; }
+        dbg_early_ok++;
+        *pp = b->next; if (cands_tail == b) cands_tail = NULL;
+        if (!cands_tail) for (Batch *t = cands; t; t = t->next) cands_tail = t;
+        size_t start = 0;
+        for (size_t i = 0; i < b->nsets; i++) { freed += validate(b->first_id + i, (Members){ b->ends[i] - start, b->members + start }); start = b->ends[i]; }
+        free(b);
+    }
+    return freed;
+}
 static void publish_returns(void) {
     if (!c_ret.len) return;
     pthread_mutex_lock(&mu); stack_move(&ret_shared, &c_ret); pthread_mutex_unlock(&mu);
@@ -905,7 +991,7 @@ static void *collector_main(void *arg) {
             pthread_cond_broadcast(&cv_done);
             pthread_mutex_unlock(&mu);
             int64_t ta = rt_nanos(); apply_log(l); dbg_logs++;
-            int64_t tb = rt_nanos(); size_t freed = validate_ready(l->seq, 0);
+            int64_t tb = rt_nanos(); size_t freed = validate_ready(l->seq, 0); freed += try_early(l->seq);
             int64_t tc = rt_nanos(); dbg_t_apply += tb - ta; dbg_t_valid += tc - tb;
             int64_t major_at = major_ratio * (c_stable_n > (int64_t)c_threshold ? c_stable_n : (int64_t)c_threshold);
             /* Carry-over (opt-in, KX_GC_CARRY_QUEUE): while the queue holds that many logs, only apply logs and
@@ -972,7 +1058,7 @@ static void epoch_debug(void) {
         (long long)ep_epochs, (long long)dbg_logs, (long long)ep_detections, (long long)dbg_sets, (long long)dbg_pass, (long long)dbg_fail_delta, (long long)dbg_fail_sigma, (long long)dbg_dead, (long long)dbg_majors, (long long)c_stable_n, c_deferred.len);
     if (e && *e) fprintf(stderr, "epoch: collector apply=%.1fms validate=%.1fms detect=%.1fms (mark %.1f scan %.1f) threads=%d\n", dbg_t_apply/1e6, dbg_t_valid/1e6, dbg_t_detect/1e6, dbg_t_mark/1e6, dbg_t_scan/1e6, n_threads);
     if (e && *e) fprintf(stderr, "epoch: roots=%lld minor-visits=%lld major-visits=%lld members=%lld\n", (long long)dbg_roots_k, (long long)dbg_minor_visits, (long long)dbg_major_visits, (long long)dbg_members);
-    if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits);
+    if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld early ok=%lld hit=%lld skip=%lld qmax=%zu q=%zu\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits, (long long)dbg_early_ok, (long long)dbg_early_hit, (long long)dbg_early_skip, dbg_q_max, max_queued);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
 }
 /* Program exit drains the queue only when someone looks at the heap afterwards: --leak-check
