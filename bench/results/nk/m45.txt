@@ -1,0 +1,18 @@
+# m45 working tree 2026-10-30 16:59 EET load: { 34.81 38.73 35.75 }
+sum 3.958
+alloc 78.673
+bigheap 124.436
+closures 86.713
+cycles 46.722
+dispatch 96.582
+file 51.884
+free 52.396
+hashmap 74.229
+lru 104.167
+matmul 10.784
+nbody 70.964
+recursion 6.218
+refpass 130.11
+sort 63.191
+strings 32.175
+trees 125.183

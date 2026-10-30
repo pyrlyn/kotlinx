@@ -7,12 +7,12 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| UNSUPPORTED | 3164 |
+| UNSUPPORTED | 3145 |
 | N/A | 2984 |
-| PASS | 2299 |
+| PASS | 2318 |
 | MISCOMPILE | 28 |
 
-Kept in tree (re-runnable with `run.py`): 2299
+Kept in tree (re-runnable with `run.py`): 2318
 
 ## Unsupported features (roadmap, by test count)
 
@@ -21,12 +21,12 @@ Kept in tree (re-runnable with `run.py`): 2299
 | interfaces | 275 |
 | strings / templates | 229 |
 | operator/infix functions | 218 |
-| generics | 177 |
-| lambdas / function types / references | 131 |
+| generics | 180 |
+| lambdas / function types / references | 129 |
 | property accessors / delegation | 120 |
 | class bodies / constructors | 110 |
+| type inference / mismatch | 107 |
 | other syntax (at ':') | 99 |
-| type inference / mismatch | 94 |
 | inheritance (open/abstract/sealed) | 66 |
 | other syntax (at 'f') | 55 |
 | objects / companion objects | 52 |
@@ -37,27 +37,27 @@ Kept in tree (re-runnable with `run.py`): 2299
 | inline/value classes | 42 |
 | other syntax (at '.') | 42 |
 | type inference (expression bodies) | 36 |
-| other: local classes that capture local variables are not supported | 29 |
 | destructuring declarations | 29 |
 | other syntax (at 'F') | 27 |
 | annotations | 21 |
 | other syntax (at ',') | 20 |
 | types: Float | 18 |
 | other syntax (at 'FunIFace') | 18 |
-| other: safe call result must be a reference | 16 |
+| other: safe call result must be a reference | 17 |
 | other: unknown type Number | 16 |
 | other syntax (at 'where') | 15 |
 | when expressions | 14 |
 | other: unknown type * | 14 |
-| unknown with (stdlib API / unsupported decl) | 14 |
 | other syntax (at 'suspend') | 13 |
 | other syntax (at 'var') | 13 |
 | other: unknown type T | 12 |
+| other: local classes that capture local variables are not supported | 12 |
 | other syntax (at 'val') | 11 |
 | default arguments | 11 |
 | unknown A (stdlib API / unsupported decl) | 10 |
 | types: UIntArray | 10 |
 | other: unknown type Nothing | 10 |
+| enum classes | 9 |
 
 ## N/A reasons
 
@@ -108,8 +108,8 @@ Affected upstream tests:
 - MISCOMPILE `box/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt` — exit=0 stdout='Fail 4\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/inlineClassInInitBlock.kt` — exit=0 stdout='null\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/inlineClassInInitBlockGeneric.kt` — exit=0 stdout='null\n' stderr=''
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -1609823136\n'
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 1879837792\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 1611402400\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -267645856\n'
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/kt27140.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError\n'
