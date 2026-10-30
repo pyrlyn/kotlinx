@@ -1,11 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "COMPILER_CRASH": 2,
-  "MISCOMPILE": 38,
+  "MISCOMPILE": 29,
   "N/A": 2984,
-  "PASS": 2055,
-  "UNSUPPORTED": 3396
+  "PASS": 2106,
+  "UNSUPPORTED": 3356
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -326,13 +325,13 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/argumentOrderInSuperCall.kt"
   },
   "box/box/argumentOrder/arguments.kt": {
-   "detail": "exit=0 stdout='fail1: 132 != 123 or xab != xab\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/arguments.kt"
   },
   "box/box/argumentOrder/captured.kt": {
-   "detail": "exit=0 stdout='fail 1: 0_1_9 != 1_0_9 or 0_1_9 != 0_1_9\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/captured.kt"
   },
   "box/box/argumentOrder/capturedInExtension.kt": {
@@ -342,13 +341,13 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/capturedInExtension.kt"
   },
   "box/box/argumentOrder/defaults.kt": {
-   "detail": "exit=0 stdout='fail: xOyK != KOxy or 1OK1 != 1OK1\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/defaults.kt"
   },
   "box/box/argumentOrder/extension.kt": {
-   "detail": "exit=0 stdout='fail 1: 0_1_L != 1_0_L or 1_0_1_L != 1_0_1_L\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/extension.kt"
   },
   "box/box/argumentOrder/extensionInClass.kt": {
@@ -358,8 +357,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/extensionInClass.kt"
   },
   "box/box/argumentOrder/kt17691WithEnabledFeature.kt": {
-   "category": "other: Unit cannot be used as Any",
-   "detail": "Unit cannot be used as Any",
+   "category": "other: cannot store Unit in '$a0'",
+   "detail": "cannot store Unit in '$a0'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt17691WithEnabledFeature.kt"
   },
@@ -380,18 +379,18 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/lambdaMigrationInClass.kt"
   },
   "box/box/argumentOrder/simple.kt": {
-   "detail": "exit=0 stdout='fail 1: OKL != KOL or OKL != OKL\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simple.kt"
   },
   "box/box/argumentOrder/simpleInClass.kt": {
-   "detail": "exit=0 stdout='fail 1: OKL != KOL or OKLZ != OKLZ\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simpleInClass.kt"
   },
   "box/box/argumentOrder/singleSideEffect.kt": {
-   "detail": "exit=0 stdout='fail: cba != abc\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/singleSideEffect.kt"
   },
   "box/box/argumentOrder/varargAndDefaultParameters_ForNative.kt": {
@@ -439,9 +438,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_selfComparison.kt"
   },
   "box/box/arithmetic/basic_shifts.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'ext$Int$myshr' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_shifts.kt"
   },
   "box/box/arithmetic/basic_uintTests.kt": {
@@ -462,9 +460,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/divisionByZero.kt"
   },
   "box/box/arithmetic/github1856.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/github1856.kt"
   },
   "box/box/arrays/arrayConstructorWithNonInlineLambda.kt": {
@@ -1399,20 +1396,20 @@
    "upstream": "compiler/testData/codegen/box/bce/withGetter.kt"
   },
   "box/box/binaryOp/bitwiseOp.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOp.kt"
   },
   "box/box/binaryOp/bitwiseOpAny.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpAny.kt"
   },
   "box/box/binaryOp/bitwiseOpNullable.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpNullable.kt"
   },
@@ -1541,8 +1538,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/overflowLong.kt"
   },
   "box/box/binaryOp/primitiveEqualsSafeCall.kt": {
-   "category": "other: unknown method Int.equals()",
-   "detail": "unknown method Int.equals()",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/primitiveEqualsSafeCall.kt"
   },
@@ -1709,8 +1706,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/checkcastAndInstanceOf2.kt"
   },
   "box/box/boxingOptimization/explicitEqualsOnDouble.kt": {
-   "category": "other: unknown method Double.equals()",
-   "detail": "unknown method Double.equals()",
+   "category": "other: Double.equals() is not supported",
+   "detail": "Double.equals() is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/explicitEqualsOnDouble.kt"
   },
@@ -2036,8 +2033,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/delegationProperty.kt"
   },
   "box/box/bridges/diamond.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/diamond.kt"
   },
@@ -2083,9 +2080,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeGenericCovariantOverride.kt"
   },
   "box/box/bridges/fakeGenericCovariantOverrideWithDelegation.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeGenericCovariantOverrideWithDelegation.kt"
   },
   "box/box/bridges/fakeOverride/abstractFakeOverride.kt": {
@@ -2240,8 +2236,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/genericProperty.kt"
   },
   "box/box/bridges/innerClassTypeParameters.kt": {
-   "category": "generics",
-   "detail": "inner classes of generic classes are not supported (at '<eof>')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/innerClassTypeParameters.kt"
   },
@@ -2271,8 +2267,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/internalMethodOverridePublishedApi.kt"
   },
   "box/box/bridges/kt12416.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/kt12416.kt"
   },
@@ -2341,9 +2337,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/manyTypeArgumentsSubstitutedSuccessively.kt"
   },
   "box/box/bridges/methodFromTrait.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/methodFromTrait.kt"
   },
   "box/box/bridges/methodWithDefaultParameter.kt": {
@@ -2485,9 +2480,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/simple.kt"
   },
   "box/box/bridges/simpleEnum.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/simpleEnum.kt"
   },
   "box/box/bridges/simpleGenericMethod.kt": {
@@ -2508,9 +2502,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/simpleReturnType.kt"
   },
   "box/box/bridges/simpleTraitImpl.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/simpleTraitImpl.kt"
   },
   "box/box/bridges/simpleUpperBound.kt": {
@@ -2565,8 +2558,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/differentErasureInSuperClassComplex.kt"
   },
   "box/box/bridges/substitutionInSuperClass/enum.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/enum.kt"
   },
@@ -2752,21 +2745,19 @@
    "upstream": "compiler/testData/codegen/box/bridges/traitImplInheritsTraitImpl.kt"
   },
   "box/box/bridges/twoParentsWithDifferentMethodsTwoBridges.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithDifferentMethodsTwoBridges.kt"
   },
   "box/box/bridges/twoParentsWithDifferentMethodsTwoBridges2.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithDifferentMethodsTwoBridges2.kt"
   },
   "box/box/bridges/twoParentsWithTheSameMethodOneBridge.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithTheSameMethodOneBridge.kt"
   },
   "box/box/bridges/typeParameterInExtensionReceiver.kt": {
@@ -2910,20 +2901,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionFunctionAdaptedReferences.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionFunctionAnonymous.kt": {
-   "category": "strings / templates",
-   "detail": "unexpected top-level token (at 'String')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionFunctionAnonymous.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionFunctionWithNestedReceiver.kt": {
-   "category": "other: unknown type A.B",
-   "detail": "unknown type A.B",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionFunctionWithNestedReceiver.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionFunctionWithPassedSupertype.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionFunctionWithPassedSupertype.kt"
   },
@@ -2934,8 +2925,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionInSamWithPassedSupertype.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionParameterToValueParameter.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionParameterToValueParameter.kt"
   },
@@ -2951,8 +2942,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousContextFun.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousExtensionFun.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "unexpected top-level token (at 'A')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousExtensionFun.kt"
   },
@@ -3012,8 +3003,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/inlineVarargInts.kt"
   },
   "box/box/callableReference/adaptedReferences/innerConstructorToExtensionFun.kt": {
-   "category": "other: unknown member Foo::Bar",
-   "detail": "unknown member Foo::Bar",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorToExtensionFun.kt"
   },
@@ -3235,8 +3226,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/suspendUnitConversion.kt"
   },
   "box/box/callableReference/adaptedReferences/unboundReferences.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected String, found ArrayList<String>",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/unboundReferences.kt"
   },
@@ -3802,8 +3793,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/coercionToUnit.kt"
   },
   "box/box/callableReference/function/constructorFromInnerClass.kt": {
-   "category": "other: unknown member Foo::Bar",
-   "detail": "unknown member Foo::Bar",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromInnerClass.kt"
   },
@@ -3852,14 +3843,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromExtension.kt"
   },
   "box/box/callableReference/function/extensionFromTopLevelStringNoArgs.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $FnR$A$String, found $Fn$A$String",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelStringNoArgs.kt"
   },
   "box/box/callableReference/function/extensionFromTopLevelStringOneStringArg.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $FnR$A$String$String, found $Fn$A$String$String",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelStringOneStringArg.kt"
   },
@@ -3869,8 +3860,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelUnitNoArgs.kt"
   },
   "box/box/callableReference/function/extensionFromTopLevelUnitOneStringArg.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $FnR$A$String$Unit, found $Fn$A$String$Unit",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelUnitOneStringArg.kt"
   },
@@ -3887,8 +3878,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionInSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionFunctionLocal.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionLocal.kt"
   },
@@ -3917,14 +3908,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionPassedToDelegatedSam.kt"
   },
   "box/box/callableReference/function/extensionWithNestedFunction.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $FnR$A$$FnR$A$String$String, found $Fn$A$$FnR$A$String$String",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionWithNestedFunction.kt"
   },
   "box/box/callableReference/function/extensionWithTypeParam.kt": {
-   "category": "generics",
-   "detail": "reference to generic method foo is not supported",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionWithTypeParam.kt"
   },
@@ -4238,9 +4229,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromTopLevelUnitOneStringArg.kt"
   },
   "box/box/callableReference/function/traitImplMethodWithClassReceiver.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/traitImplMethodWithClassReceiver.kt"
   },
   "box/box/callableReference/function/traitMember.kt": {
@@ -4420,8 +4410,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyReferenceWithExplicitType.kt"
   },
   "box/box/callableReference/property/extensionPropertyReferenceWithTypeParameter.kt": {
-   "category": "other: listOf needs an explicit element type, e.g. listOf<Long>()",
-   "detail": "listOf needs an explicit element type, e.g. listOf<Long>()",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyReferenceWithTypeParameter.kt"
   },
@@ -4432,8 +4422,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyWithExtensionReceiver.kt"
   },
   "box/box/callableReference/property/extensionPropertyWithExtensionType.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyWithExtensionType.kt"
   },
@@ -5093,9 +5083,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/property.kt"
   },
   "box/box/classDelegation/withBridge.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classDelegation/withBridge.kt"
   },
   "box/box/classLiteral/bareArray.kt": {
@@ -5242,9 +5231,8 @@
    "upstream": "compiler/testData/codegen/box/classes/delegationGenericLongArg.kt"
   },
   "box/box/classes/delegationMethodsWithArgs.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/delegationMethodsWithArgs.kt"
   },
   "box/box/classes/exceptionConstructor.kt": {
@@ -5374,8 +5362,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1157.kt"
   },
   "box/box/classes/kt1247.kt": {
-   "category": "other: unknown method Int.b()",
-   "detail": "unknown method Int.b()",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1247.kt"
   },
@@ -5423,9 +5411,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1726.kt"
   },
   "box/box/classes/kt1759.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt1759.kt"
   },
   "box/box/classes/kt1891.kt": {
@@ -5435,8 +5422,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1891.kt"
   },
   "box/box/classes/kt1918.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1918.kt"
   },
@@ -5548,9 +5535,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2784.kt"
   },
   "box/box/classes/kt285.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt285.kt"
   },
   "box/box/classes/kt3001.kt": {
@@ -6131,8 +6117,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/withCoroutinesNoStdLib.kt"
   },
   "box/box/closures/closureCapturingGenericParam.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureCapturingGenericParam.kt"
   },
@@ -6149,8 +6135,8 @@
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/localFunInsideLocalFunDifferentSignatures.kt"
   },
   "box/box/closures/closureInsideClosure/propertyAndFunctionNameClash.kt": {
-   "category": "other: unsupported call",
-   "detail": "unsupported call",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/propertyAndFunctionNameClash.kt"
   },
@@ -6227,7 +6213,7 @@
   },
   "box/box/closures/extensionClosure.kt": {
    "category": "lambdas / function types / references",
-   "detail": "typed parameters in a lambda with receiver are not supported",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/extensionClosure.kt"
   },
@@ -6261,14 +6247,14 @@
    "upstream": "compiler/testData/codegen/box/closures/kt11634_4.kt"
   },
   "box/box/closures/kt19389.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt19389.kt"
   },
   "box/box/closures/kt19389_set.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt19389_set.kt"
   },
@@ -6290,8 +6276,9 @@
    "upstream": "compiler/testData/codegen/box/closures/kt3523.kt"
   },
   "box/box/closures/kt3738.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt3738.kt"
   },
   "box/box/closures/kt3905.kt": {
@@ -8909,9 +8896,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2259.kt"
   },
   "box/box/controlStructures/kt2291.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2291.kt"
   },
   "box/box/controlStructures/kt237.kt": {
@@ -8968,9 +8954,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt3280.kt"
   },
   "box/box/controlStructures/kt416.kt": {
-   "category": "other: unknown method Int.plus()",
-   "detail": "unknown method Int.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt416.kt"
   },
   "box/box/controlStructures/kt42455.kt": {
@@ -8992,9 +8977,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt513.kt"
   },
   "box/box/controlStructures/kt628.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'test7' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt628.kt"
   },
   "box/box/controlStructures/kt769.kt": {
@@ -9471,8 +9455,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/bridges/mapSuspendClear.kt"
   },
   "box/box/coroutines/builderInferenceAndGenericArrayAcessCall.kt": {
-   "category": "other: HashMap values must be primitives, found Any",
-   "detail": "HashMap values must be primitives, found Any",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/builderInferenceAndGenericArrayAcessCall.kt"
   },
@@ -11042,8 +11026,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/kt30858.kt"
   },
   "box/box/coroutines/kt31784.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/kt31784.kt"
   },
@@ -12556,15 +12540,13 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971.kt"
   },
   "box/box/defaultArguments/function/kt15971_2.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971_2.kt"
   },
   "box/box/defaultArguments/function/kt15971_3.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971_3.kt"
   },
   "box/box/defaultArguments/function/kt36188.kt": {
@@ -13069,14 +13051,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateWithPrivateSet.kt"
   },
   "box/box/delegatedProperty/delegatedByExtensionMemberProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedByExtensionMemberProperty.kt"
   },
   "box/box/delegatedProperty/delegatedByExtensionProperty.kt": {
-   "category": "property accessors / delegation",
-   "detail": "extension properties need a getter (at 'by')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedByExtensionProperty.kt"
   },
@@ -13768,8 +13750,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/genericProperty.kt"
   },
   "box/box/delegation/hiddenSuperOverrideIn1.0.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/hiddenSuperOverrideIn1.0.kt"
   },
@@ -13907,9 +13889,8 @@
    "upstream": "compiler/testData/codegen/box/devirtualization/kt67218c.kt"
   },
   "box/box/devirtualization/kt67218i.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/devirtualization/kt67218i.kt"
   },
   "box/box/devirtualization/lateinitInterface.kt": {
@@ -14839,8 +14820,9 @@
    "upstream": "compiler/testData/codegen/box/enum/kt9711_2.kt"
   },
   "box/box/enum/lambdaInDefault.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/lambdaInDefault.kt"
   },
   "box/box/enum/loop.kt": {
@@ -15523,7 +15505,7 @@
   },
   "box/box/extensionFunctions/extensionFunctionAsType.kt": {
    "category": "lambdas / function types / references",
-   "detail": "typed parameters in a lambda with receiver are not supported",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsType.kt"
   },
@@ -15569,8 +15551,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInSAMInterface.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInValueClass.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInValueClass.kt"
   },
@@ -15581,8 +15563,9 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionLocal.kt"
   },
   "box/box/extensionFunctions/extensionFunctionNestedInExtensionFunction.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionNestedInExtensionFunction.kt"
   },
   "box/box/extensionFunctions/extensionFunctionOverride.kt": {
@@ -15654,8 +15637,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1290.kt"
   },
   "box/box/extensionFunctions/kt13312.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected $Fn$Int$Int, found $FnR$Int$Int",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt13312.kt"
   },
@@ -15677,14 +15660,14 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1953_class.kt"
   },
   "box/box/extensionFunctions/kt23675.kt": {
-   "category": "unknown fieldAccessedInsideChild (stdlib API / unsupported decl)",
-   "detail": "unknown name 'fieldAccessedInsideChild'",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt23675.kt"
   },
   "box/box/extensionFunctions/kt3285.kt": {
-   "category": "generics",
-   "detail": "generic member extension functions are not supported (at '",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3285.kt"
   },
@@ -15695,8 +15678,9 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3298.kt"
   },
   "box/box/extensionFunctions/kt3646.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3646.kt"
   },
   "box/box/extensionFunctions/kt3969.kt": {
@@ -15723,8 +15707,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt5467.kt"
   },
   "box/box/extensionFunctions/kt606.kt": {
-   "category": "other: unknown method ChannelPipeline.config()",
-   "detail": "unknown method ChannelPipeline.config()",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt606.kt"
   },
@@ -15741,8 +15725,9 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/memberExtensionEqualsHashCodeToStringInInterface.kt"
   },
   "box/box/extensionFunctions/nested2.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/nested2.kt"
   },
   "box/box/extensionFunctions/nestedExtensionFunctionAsASupertype.kt": {
@@ -15837,20 +15822,20 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyInSAMInterface.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithAnonymoesExtensionWithALabel.kt": {
-   "category": "other: unknown method A.a()",
-   "detail": "unknown method A.a()",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithAnonymoesExtensionWithALabel.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithAnonymousExtensionFun.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "unexpected top-level token (at 'A')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithAnonymousExtensionFun.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithAnonymousExtensionFunWithTypeParam.kt": {
-   "category": "other syntax (at 'T')",
-   "detail": "unexpected top-level token (at 'T')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithAnonymousExtensionFunWithTypeParam.kt"
   },
@@ -15861,8 +15846,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithExtensionAsReceiver.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithExtensionNestedType.kt": {
-   "category": "other: unknown method A.x()",
-   "detail": "unknown method A.x()",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithExtensionNestedType.kt"
   },
@@ -15873,8 +15858,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithInline.kt"
   },
   "box/box/extensionProperties/extensionProperyWithExtensionType.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionProperyWithExtensionType.kt"
   },
@@ -15955,8 +15940,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/nonAbstractInInterface.kt"
   },
   "box/box/extensionProperties/propertyWithExtensionNestedType.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $FnR$A$$FnR$A$String$String, found $Fn$$FnR$A$String$String",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/propertyWithExtensionNestedType.kt"
   },
@@ -17380,8 +17365,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3297.kt"
   },
   "box/box/functions/invoke/kt3450getAndInvoke.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3450getAndInvoke.kt"
   },
@@ -17392,8 +17377,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3631invokeOnString.kt"
   },
   "box/box/functions/invoke/kt3772.kt": {
-   "category": "other: override of '$prop$attr' in D changes its signature",
-   "detail": "override of '$prop$attr' in D changes its signature",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3772.kt"
   },
@@ -17486,19 +17471,20 @@
    "upstream": "compiler/testData/codegen/box/functions/kt3313.kt"
   },
   "box/box/functions/kt3573.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt3573.kt"
   },
   "box/box/functions/kt3724.kt": {
-   "category": "other: invoke expects 1 arguments",
-   "detail": "invoke expects 1 arguments",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt3724.kt"
   },
   "box/box/functions/kt395.kt": {
-   "category": "other: unknown method Int.with()",
-   "detail": "unknown method Int.with()",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt395.kt"
   },
@@ -17618,8 +17604,8 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4119_2.kt"
   },
   "box/box/functions/localFunctions/kt4514.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.vf()",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4514.kt"
   },
@@ -17936,8 +17922,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/nullableIntEquals.kt"
   },
   "box/box/ieee754/safeCall.kt": {
-   "category": "other: unknown method Double.equals()",
-   "detail": "unknown method Double.equals()",
+   "category": "other: Double.equals() is not supported",
+   "detail": "Double.equals() is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/safeCall.kt"
   },
@@ -18258,8 +18244,8 @@
    "upstream": "compiler/testData/codegen/box/inference/integerLiteralTypeInLamdaReturnType.kt"
   },
   "box/box/inference/kt10822.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/kt10822.kt"
   },
@@ -18319,7 +18305,7 @@
   },
   "box/box/inference/lambdasWithExtensionFunctionType.kt": {
    "category": "lambdas / function types / references",
-   "detail": "cannot infer the type of lambda parameter '_'",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/lambdasWithExtensionFunctionType.kt"
   },
@@ -18329,8 +18315,8 @@
    "upstream": "compiler/testData/codegen/box/inference/lastExpressionOfLambdaWithNothingConstraint.kt"
   },
   "box/box/inference/mapCollectChainWithNullResult.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/mapCollectChainWithNullResult.kt"
   },
@@ -18380,20 +18366,20 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/capturedTypes.kt"
   },
   "box/box/inference/pcla/constraintsBetweenTwoStubVariables.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/constraintsBetweenTwoStubVariables.kt"
   },
   "box/box/inference/pcla/contextParameters.kt": {
-   "category": "other syntax (at 'context')",
-   "detail": "unexpected top-level token (at 'context')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/contextParameters.kt"
   },
   "box/box/inference/pcla/issues/kt41164.kt": {
-   "category": "other: unknown type *",
-   "detail": "unknown type *",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt41164.kt"
   },
@@ -18404,8 +18390,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt42139.kt"
   },
   "box/box/inference/pcla/issues/kt43710.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt43710.kt"
   },
@@ -18415,14 +18401,14 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt43710b.kt"
   },
   "box/box/inference/pcla/issues/kt44241.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt44241.kt"
   },
   "box/box/inference/pcla/issues/kt45083.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt45083.kt"
   },
@@ -18494,8 +18480,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt49887.kt"
   },
   "box/box/inference/pcla/issues/kt50453.kt": {
-   "category": "other: overloads are not supported: consume",
-   "detail": "overloads are not supported: consume",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt50453.kt"
   },
@@ -18505,20 +18491,20 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt50827a.kt"
   },
   "box/box/inference/pcla/issues/kt50827b.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt50827b.kt"
   },
   "box/box/inference/pcla/issues/kt51988.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt51988.kt"
   },
   "box/box/inference/pcla/issues/kt52757.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt52757.kt"
   },
@@ -18528,26 +18514,26 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt52838a.kt"
   },
   "box/box/inference/pcla/issues/kt52838b.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt52838b.kt"
   },
   "box/box/inference/pcla/issues/kt52838c.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt52838c.kt"
   },
   "box/box/inference/pcla/issues/kt53109.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53109.kt"
   },
   "box/box/inference/pcla/issues/kt53422a.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53422a.kt"
   },
@@ -18557,20 +18543,20 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53422b.kt"
   },
   "box/box/inference/pcla/issues/kt53478.kt": {
-   "category": "unknown Unit (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Unit'",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53478.kt"
   },
   "box/box/inference/pcla/issues/kt53553.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53553.kt"
   },
   "box/box/inference/pcla/issues/kt53639.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53639.kt"
   },
@@ -18625,8 +18611,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt55056.kt"
   },
   "box/box/inference/pcla/issues/kt55252.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt55252.kt"
   },
@@ -18641,14 +18627,14 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt56949.kt"
   },
   "box/box/inference/pcla/issues/kt57707.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt57707.kt"
   },
   "box/box/inference/pcla/issues/kt57834.kt": {
-   "category": "other: overloads are not supported: consume",
-   "detail": "overloads are not supported: consume",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt57834.kt"
   },
@@ -18658,68 +18644,68 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt59426.kt"
   },
   "box/box/inference/pcla/issues/kt59798.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt59798.kt"
   },
   "box/box/inference/pcla/issues/kt60291a.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt60291a.kt"
   },
   "box/box/inference/pcla/issues/kt60291b.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt60291b.kt"
   },
   "box/box/inference/pcla/issues/kt60291c.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt60291c.kt"
   },
   "box/box/inference/pcla/issues/kt60447a.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt60447a.kt"
   },
   "box/box/inference/pcla/issues/kt60447b.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt60447b.kt"
   },
   "box/box/inference/pcla/issues/kt61310.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt61310.kt"
   },
   "box/box/inference/pcla/issues/kt63733.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt63733.kt"
   },
   "box/box/inference/pcla/issues/kt63840a.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt63840a.kt"
   },
   "box/box/inference/pcla/issues/kt63840b.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt63840b.kt"
   },
   "box/box/inference/pcla/issues/kt63840c.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt63840c.kt"
   },
@@ -18736,32 +18722,32 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt64069.kt"
   },
   "box/box/inference/pcla/issues/kt65300a.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300a.kt"
   },
   "box/box/inference/pcla/issues/kt65300b.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300b.kt"
   },
   "box/box/inference/pcla/issues/kt65300c.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300c.kt"
   },
   "box/box/inference/pcla/issues/kt65300d.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300d.kt"
   },
   "box/box/inference/pcla/issues/kt65300e.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300e.kt"
   },
@@ -18778,20 +18764,20 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300g.kt"
   },
   "box/box/inference/pcla/issues/kt65300h.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300h.kt"
   },
   "box/box/inference/pcla/issues/kt65300i.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300i.kt"
   },
   "box/box/inference/pcla/issues/kt65300j.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected ')' (at ':')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300j.kt"
   },
@@ -18802,8 +18788,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66229.kt"
   },
   "box/box/inference/pcla/issues/kt66243.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66243.kt"
   },
@@ -18814,14 +18800,14 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66272.kt"
   },
   "box/box/inference/pcla/issues/kt66359a.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66359a.kt"
   },
   "box/box/inference/pcla/issues/kt66359b.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66359b.kt"
   },
@@ -18853,20 +18839,20 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/labaledCall.kt"
   },
   "box/box/inference/pcla/lackOfNullCheckOnNullableInsideBuild.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'build' needs an explicit return type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/lackOfNullCheckOnNullableInsideBuild.kt"
   },
   "box/box/inference/pcla/lambdaParameterHasTVType.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/lambdaParameterHasTVType.kt"
   },
   "box/box/inference/pcla/memberScope.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/memberScope.kt"
   },
@@ -18888,8 +18874,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/AnonymousFunctionArgumentAndBuildeeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/AnonymousFunctionArgumentAndBuildeeReceiver.kt": {
-   "category": "unknown fun (stdlib API / unsupported decl)",
-   "detail": "unknown function 'fun'",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/AnonymousFunctionArgumentAndBuildeeReceiver.kt"
   },
@@ -18900,38 +18886,38 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/LambdaArgumentAndBuildeeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/LambdaArgumentAndBuildeeReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/LambdaArgumentAndBuildeeReceiver.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ByAssignmentToALocalVariableMaterializeCase.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ByAssignmentToALocalVariableMaterializeCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ByAssignmentToALocalVariableYieldCase.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ByAssignmentToALocalVariableYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideAnonymousObject.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideAnonymousObject.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideLocalClass.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('arg')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideLocalClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideNestedLambda.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideNestedLambda.kt"
   },
@@ -18946,20 +18932,20 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughDelegatedLocalVariableYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughGenericFunctionCall.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughGenericFunctionCall.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughLocalVariable.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughLocalVariable.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/AnonymousObject.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/AnonymousObject.kt"
   },
@@ -18970,20 +18956,20 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/DefinitelyNonNullableTypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingClass.kt": {
-   "category": "unknown with (stdlib API / unsupported decl)",
-   "detail": "unknown function 'with'",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingEnumerationEntryType.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'init')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingEnumerationEntryType.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingEnumerationType.kt": {
-   "category": "unknown with (stdlib API / unsupported decl)",
-   "detail": "unknown function 'with'",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingEnumerationType.kt"
   },
@@ -18994,26 +18980,26 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingExplicitlyGenericInnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingGenericClass.kt": {
-   "category": "unknown with (stdlib API / unsupported decl)",
-   "detail": "unknown function 'with'",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingGenericClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingImplicitlyGenericInnerClass.kt": {
    "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingImplicitlyGenericInnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingInnerClass.kt": {
-   "category": "unknown with (stdlib API / unsupported decl)",
-   "detail": "unknown function 'with'",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingInnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnumerationType.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnumerationType.kt"
   },
@@ -19024,8 +19010,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ExplicitlyGenericInnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/FunctionWithParameterToUnit.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/FunctionWithParameterToUnit.kt"
   },
@@ -19036,110 +19022,110 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/FunctionWithReceiverToUnit.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericLocalClass.kt": {
-   "category": "unknown Local (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Local'",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericLocalClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericLocalClassWithLeakingTypeParameter.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericLocalClassWithLeakingTypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithContravariantTypeParameter.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "type mismatch: expected In$UserKlass, found In$UserSuperklass",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithContravariantTypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithCovariantTypeParameter.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Out$UserKlass, found Out$UserSubklass",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithCovariantTypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithInProjectedTypeArgument.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "type mismatch: expected Inv$UserKlass, found Inv$UserSuperklass",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithInProjectedTypeArgument.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithInvariantTypeParameter.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of Inv; pass it explicitly",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithInvariantTypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithOutProjectedTypeArgument.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Inv$UserKlass, found Inv$UserSubklass",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithOutProjectedTypeArgument.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithStarProjectedTypeArgument.kt": {
-   "category": "other: unknown type *",
-   "detail": "unknown type *",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericWithStarProjectedTypeArgument.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ImplicitlyGenericInnerClass.kt": {
    "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ImplicitlyGenericInnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/InnerClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/InnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/Int.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/Int.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/IntersectionType.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected A, found B",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/IntersectionType.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/LocalClass.kt": {
-   "category": "unknown Local (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Local'",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/LocalClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NothingYieldCase.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NothingYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableNothing.kt": {
-   "category": "other: unknown type Nothing?",
-   "detail": "unknown type Nothing?",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableNothing.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableNothingNullLiteralYieldCase.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableNothingNullLiteralYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableType.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableType.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableTypeParameter.kt": {
-   "category": "unknown with (stdlib API / unsupported decl)",
-   "detail": "unknown function 'with'",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullableTypeParameter.kt"
   },
@@ -19156,38 +19142,38 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullaryFunctionWithReturnValue.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/String.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/String.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/SuspendingFunction.kt": {
-   "category": "other syntax (at '(')",
-   "detail": "expected '=' (at '(')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/SuspendingFunction.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/TypeParameter.kt": {
-   "category": "unknown with (stdlib API / unsupported decl)",
-   "detail": "unknown function 'with'",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/TypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ExtensionFunctions.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ExtensionFunctions.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ImmutableExtensionProperties.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ImmutableExtensionProperties.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ImmutableProperties.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ImmutableProperties.kt"
   },
@@ -19204,14 +19190,14 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutableExtensionPropertiesYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutablePropertiesMaterializeCase.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutablePropertiesMaterializeCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutablePropertiesYieldCase.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutablePropertiesYieldCase.kt"
   },
@@ -19222,32 +19208,32 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ParametersOfBuilderArguments.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ReceiversOfBuilderArguments.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ReceiversOfBuilderArguments.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/ExtensionFunctions.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/ExtensionFunctions.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/ExtensionProperties.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/ExtensionProperties.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/ParametersOfBuilderArguments.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/ParametersOfBuilderArguments.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/ReceiversOfBuilderArguments.kt": {
    "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/ReceiversOfBuilderArguments.kt"
   },
@@ -19294,26 +19280,26 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/pclaRootIsTrySyntheticCallWithDelegate.kt"
   },
   "box/box/inference/pcla/posptonedPCLACallInsideStringInterpolation.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/posptonedPCLACallInsideStringInterpolation.kt"
   },
   "box/box/inference/pcla/propagateInferenceSessionIntoDeclarationAnalyzers.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/propagateInferenceSessionIntoDeclarationAnalyzers.kt"
   },
   "box/box/inference/pcla/propertyInvokeInsidePCLALambda.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/propertyInvokeInsidePCLALambda.kt"
   },
   "box/box/inference/pcla/receiverUsesOuterTVButReturnTypeIsProper.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/receiverUsesOuterTVButReturnTypeIsProper.kt"
   },
@@ -19335,8 +19321,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/substituteStubTypeIntoCR.kt"
   },
   "box/box/inference/pcla/substituteStubTypeIntolambdaParameterDescriptor.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/substituteStubTypeIntolambdaParameterDescriptor.kt"
   },
@@ -19347,32 +19333,32 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/substitutelambdaExtensionReceiverType.kt"
   },
   "box/box/inference/pcla/topDownCompletionBreakedByNonBuilderInferenceSession.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionBreakedByNonBuilderInferenceSession.kt"
   },
   "box/box/inference/pcla/topDownCompletionWithThreeBuilderInferenceCalls.kt": {
-   "category": "strings / templates",
-   "detail": "no field builder1 in A1$String",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionWithThreeBuilderInferenceCalls.kt"
   },
   "box/box/inference/pcla/topDownCompletionWithThreeBuilderInferenceCallsSameLevel.kt": {
-   "category": "strings / templates",
-   "detail": "no field builder1 in A1$String",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionWithThreeBuilderInferenceCallsSameLevel.kt"
   },
   "box/box/inference/pcla/topDownCompletionWithTwoBuilderInferenceCalls.kt": {
-   "category": "strings / templates",
-   "detail": "no field builder1 in A1$String",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionWithTwoBuilderInferenceCalls.kt"
   },
   "box/box/inference/pcla/withoutAnnotation.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/withoutAnnotation.kt"
   },
@@ -20389,8 +20375,8 @@
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/kt49370.kt"
   },
   "box/box/inlineArgsInPlace/kt49407.kt": {
-   "category": "other: unknown method Int.plus()",
-   "detail": "unknown method Int.plus()",
+   "category": "other: unknown method Long.mod()",
+   "detail": "unknown method Long.mod()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/kt49407.kt"
   },
@@ -22454,26 +22440,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsOperatorWithGenericCallGeneric.kt"
   },
   "box/box/inlineClasses/extLambdaInInlineClassFun.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'ext$T$runExt' needs an explicit return type",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/extLambdaInInlineClassFun.kt"
   },
   "box/box/inlineClasses/extLambdaInInlineClassFun2.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'ext$T$runExt' needs an explicit return type",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/extLambdaInInlineClassFun2.kt"
   },
   "box/box/inlineClasses/extLambdaInInlineClassFun2Generic.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'ext$T$runExt' needs an explicit return type",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/extLambdaInInlineClassFun2Generic.kt"
   },
   "box/box/inlineClasses/extLambdaInInlineClassFunGeneric.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'ext$T$runExt' needs an explicit return type",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/extLambdaInInlineClassFunGeneric.kt"
   },
@@ -23103,12 +23089,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804516704\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342967008\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -536081248\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966688\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23319,15 +23305,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCall.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCallGeneric.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCall.kt": {
@@ -23385,15 +23369,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/interfaceSuperCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCall.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCallGeneric.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCallGeneric.kt"
   },
   "box/box/inlineClasses/iterateOverArrayOfInlineClassValues.kt": {
@@ -23669,15 +23651,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680Generic.kt"
   },
   "box/box/inlineClasses/kt38680a.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680a.kt"
   },
   "box/box/inlineClasses/kt38680aGeneric.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680aGeneric.kt"
   },
   "box/box/inlineClasses/kt38680b.kt": {
@@ -25222,8 +25202,8 @@
    "upstream": "compiler/testData/codegen/box/innerClass/inCallableReferenceLHSclassReference.kt"
   },
   "box/box/innerClass/inCallableReferenceLHSwithGenericFun.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/inCallableReferenceLHSwithGenericFun.kt"
   },
@@ -25596,8 +25576,8 @@
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/conservativeItable.kt"
   },
   "box/box/interfaceCallsNCasts/diamond.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/diamond.kt"
   },
@@ -25625,9 +25605,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/charToInt.kt"
   },
   "box/box/intrinsics/ea35953.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/ea35953.kt"
   },
   "box/box/intrinsics/incWithLabel.kt": {
@@ -25684,9 +25663,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt8666.kt"
   },
   "box/box/intrinsics/longRangeWithExplicitDot.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/longRangeWithExplicitDot.kt"
   },
   "box/box/intrinsics/nonShortCircuitAnd.kt": {
@@ -25729,13 +25707,13 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1040a53ab        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x1041c3f97        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
-   "status": "COMPILER_CRASH",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
   "box/box/invokedynamic/extensionFunInvoke.kt": {
-   "category": "unknown with (stdlib API / unsupported decl)",
-   "detail": "unknown function 'with'",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/invokedynamic/extensionFunInvoke.kt"
   },
@@ -25844,8 +25822,8 @@
    "upstream": "compiler/testData/codegen/box/ir/genericCompanion.kt"
   },
   "box/box/ir/kt25405.kt": {
-   "category": "generics",
-   "detail": "inner classes of generic classes are not supported (at '<eof>')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/kt25405.kt"
   },
@@ -26167,8 +26145,8 @@
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessorFunctionLiteral.kt"
   },
   "box/box/labels/propertyAccessorInnerExtensionFun.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessorInnerExtensionFun.kt"
   },
@@ -26226,8 +26204,9 @@
    "upstream": "compiler/testData/codegen/box/lambda/lambda12.kt"
   },
   "box/box/lambda/lambda13.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lambda/lambda13.kt"
   },
   "box/box/lambda/lambda14.kt": {
@@ -26584,8 +26563,9 @@
    "upstream": "compiler/testData/codegen/box/localClasses/closureWithSelfInstantiation.kt"
   },
   "box/box/localClasses/defaultParameterInConstructor.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/defaultParameterInConstructor.kt"
   },
   "box/box/localClasses/inCallableReferenceLHS.kt": {
@@ -26637,8 +26617,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/kt10835.kt"
   },
   "box/box/localClasses/kt10835a.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/kt10835a.kt"
   },
@@ -27112,15 +27092,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensions.kt": {
@@ -27136,15 +27114,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensions.kt": {
@@ -27190,15 +27166,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensions.kt": {
@@ -27214,15 +27188,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensions.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensions.kt": {
@@ -29154,8 +29126,8 @@
    "upstream": "compiler/testData/codegen/box/objects/objectWithSuperclassAndTrait.kt"
   },
   "box/box/objects/privateExtensionFromInitializer_kt4543.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/privateExtensionFromInitializer_kt4543.kt"
   },
@@ -29451,8 +29423,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusAssignWithComplexRHS.kt"
   },
   "box/box/operatorConventions/plusExplicit.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
+   "category": "unknown with (stdlib API / unsupported decl)",
+   "detail": "unknown function 'with'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusExplicit.kt"
   },
@@ -29805,9 +29777,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectShort.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/intEqualsNull.kt": {
-   "category": "other: unknown method Int.equals()",
-   "detail": "unknown method Int.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/intEqualsNull.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/intEqualsNullableInt.kt": {
@@ -29909,15 +29880,13 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2251.kt"
   },
   "box/box/primitiveTypes/kt2269.kt": {
-   "category": "other: unknown method Int.equals()",
-   "detail": "unknown method Int.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2269.kt"
   },
   "box/box/primitiveTypes/kt2269NotOptimizable.kt": {
-   "category": "other: unknown method Int.equals()",
-   "detail": "unknown method Int.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2269NotOptimizable.kt"
   },
   "box/box/primitiveTypes/kt2275.kt": {
@@ -29927,9 +29896,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2275.kt"
   },
   "box/box/primitiveTypes/kt239.kt": {
-   "category": "other: unknown method Int.plus()",
-   "detail": "unknown method Int.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt239.kt"
   },
   "box/box/primitiveTypes/kt242.kt": {
@@ -29982,9 +29950,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt36952_identityEqualsWithBooleanInLocalFunction.kt"
   },
   "box/box/primitiveTypes/kt37505.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'testByte' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt37505.kt"
   },
   "box/box/primitiveTypes/kt4097.kt": {
@@ -30027,9 +29994,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt46864_long.kt"
   },
   "box/box/primitiveTypes/kt518.kt": {
-   "category": "other: unknown method Int.plus()",
-   "detail": "unknown method Int.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt518.kt"
   },
   "box/box/primitiveTypes/kt52230.kt": {
@@ -30061,19 +30027,19 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt737.kt"
   },
   "box/box/primitiveTypes/kt753.kt": {
-   "detail": "run timeout",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt753.kt"
   },
   "box/box/primitiveTypes/kt756.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Int.unaryPlus()",
+   "detail": "unknown method Int.unaryPlus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt756.kt"
   },
   "box/box/primitiveTypes/kt757.kt": {
-   "detail": "run timeout",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt757.kt"
   },
   "box/box/primitiveTypes/kt79977.kt": {
@@ -30183,9 +30149,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/smartCastOnNullableDoubleIdentityEquals.kt"
   },
   "box/box/primitiveTypes/stringEqualsHashCodeToString.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/stringEqualsHashCodeToString.kt"
   },
   "box/box/primitiveTypes/substituteIntForGeneric.kt": {
@@ -32173,9 +32138,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeLiteralWithMixedTypeBounds.kt"
   },
   "box/box/ranges/forInRangeWithImplicitReceiver.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeWithImplicitReceiver.kt"
   },
   "box/box/ranges/forInReversed/ForInReversedReversedRange.kt": {
@@ -35854,8 +35818,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt3587.kt"
   },
   "box/box/regressions/kt35914.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'bar' needs an explicit return type",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt35914.kt"
   },
@@ -35904,8 +35868,9 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt5395.kt"
   },
   "box/box/regressions/kt57487.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt57487.kt"
   },
   "box/box/regressions/kt5786_privateWithDefault.kt": {
@@ -36230,8 +36195,8 @@
    "upstream": "compiler/testData/codegen/box/reified/nullableNothingArrayAsStringArray.kt"
   },
   "box/box/reified/overrideResolution.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/overrideResolution.kt"
   },
@@ -36407,8 +36372,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt247.kt"
   },
   "box/box/safeCall/kt3430.kt": {
-   "category": "other: unknown method Int.b()",
-   "detail": "unknown method Int.b()",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/kt3430.kt"
   },
@@ -36472,8 +36437,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallNotEqPrimitive.kt"
   },
   "box/box/safeCall/safeCallOnLong.kt": {
-   "category": "other: unknown method Long.b()",
-   "detail": "unknown method Long.b()",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallOnLong.kt"
   },
@@ -36483,26 +36448,26 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallWithElvisFolding.kt"
   },
   "box/box/sam/approximation/approxToIntermediateType.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "other syntax (at 'IFoo')",
+   "detail": "expected '(' (at 'IFoo')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/approxToIntermediateType.kt"
   },
   "box/box/sam/approximation/approxToSingleUpperBound.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "other syntax (at 'IFoo')",
+   "detail": "expected '(' (at 'IFoo')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/approxToSingleUpperBound.kt"
   },
   "box/box/sam/approximation/impossibleToApproxToRepresentable.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "other syntax (at 'IFoo')",
+   "detail": "expected '(' (at 'IFoo')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/impossibleToApproxToRepresentable.kt"
   },
   "box/box/sam/approximation/impossibleToApproxToRepresentable2.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "other syntax (at 'IFoo')",
+   "detail": "expected '(' (at 'IFoo')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/impossibleToApproxToRepresentable2.kt"
   },
@@ -37614,9 +37579,8 @@
    "upstream": "compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt"
   },
   "box/box/strings/simpleStringPlus.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/simpleStringPlus.kt"
   },
   "box/box/strings/singleConcatNullable.kt": {
@@ -37659,9 +37623,8 @@
    "upstream": "compiler/testData/codegen/box/strings/twoArgumentNullableStringOperatorPlus.kt"
   },
   "box/box/strings/twoArgumentNullableStringPlus.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/twoArgumentNullableStringPlus.kt"
   },
   "box/box/strings/twoArgumentStringTemplate.kt": {
@@ -37717,13 +37680,13 @@
   },
   "box/box/super/innerClassLabeledSuper.kt": {
    "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "detail": "only member functions are supported in class/interface bodies (at 'test2')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuper.kt"
   },
   "box/box/super/innerClassLabeledSuper2.kt": {
    "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "detail": "only member functions are supported in class/interface bodies (at 'test2')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuper2.kt"
   },
@@ -37826,8 +37789,8 @@
    "upstream": "compiler/testData/codegen/box/super/kt4982.kt"
   },
   "box/box/super/multipleSuperTraits.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/multipleSuperTraits.kt"
   },
@@ -37931,8 +37894,8 @@
    "upstream": "compiler/testData/codegen/box/suspendConversion/conversionOfInterfaceInheritingFunctionN.kt"
   },
   "box/box/suspendConversion/kt50949_suspendConversionForExtensionFunction.kt": {
-   "category": "other: unknown type suspend",
-   "detail": "unknown type suspend",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/suspendConversion/kt50949_suspendConversionForExtensionFunction.kt"
   },
@@ -38375,14 +38338,13 @@
    "upstream": "compiler/testData/codegen/box/traits/inheritedVar.kt"
   },
   "box/box/traits/interfaceWithNonAbstractFunIndirect.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/interfaceWithNonAbstractFunIndirect.kt"
   },
   "box/box/traits/interfaceWithNonAbstractFunIndirectGeneric.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/interfaceWithNonAbstractFunIndirectGeneric.kt"
   },
@@ -38399,8 +38361,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt1936_1.kt"
   },
   "box/box/traits/kt2260.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt2260.kt"
   },
@@ -38411,9 +38373,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt2399.kt"
   },
   "box/box/traits/kt2541.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/kt2541.kt"
   },
   "box/box/traits/kt3315.kt": {
@@ -38422,9 +38383,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt3315.kt"
   },
   "box/box/traits/kt3500.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/kt3500.kt"
   },
   "box/box/traits/kt3579.kt": {
@@ -38463,9 +38423,8 @@
    "upstream": "compiler/testData/codegen/box/traits/multiple.kt"
   },
   "box/box/traits/privateInterfaceMethod.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/privateInterfaceMethod.kt"
   },
   "box/box/traits/receiverOfIntersectionType.kt": {
@@ -38492,9 +38451,8 @@
    "upstream": "compiler/testData/codegen/box/traits/traitImplDelegationWithCovariantOverride.kt"
   },
   "box/box/traits/traitImplDiamond.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/traitImplDiamond.kt"
   },
   "box/box/traits/traitImplGenericDelegation.kt": {
@@ -39142,8 +39100,9 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/grok/kotlinx-features/compiler/build/upstream-tmp/nkupdamoj5dv/t.ll:202:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\ncommand failed (256): '/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt' -passes='lt",
-   "status": "COMPILER_CRASH",
+   "category": "other: parameters of type Unit / Unit? are not supported",
+   "detail": "parameters of type Unit / Unit? are not supported",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
   "box/box/unit/ifElse.kt": {
@@ -39314,8 +39273,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/forInUnsignedUntil.kt"
   },
   "box/box/unsignedTypes/generic.kt": {
-   "category": "other: unknown method Wrapper$UInt.run()",
-   "detail": "unknown method Wrapper$UInt.run()",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/generic.kt"
   },

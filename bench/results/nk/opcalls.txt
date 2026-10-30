@@ -1,0 +1,18 @@
+# opcalls working tree 2026-10-30 06:40 EET load: { 23.94 20.26 20.82 }
+sum 3.657
+alloc 74.301
+bigheap 110.124
+closures 81.905
+cycles 44.609
+dispatch 94.002
+file 49.862
+free 49.369
+hashmap 64.118
+lru 84.529
+matmul 10.058
+nbody 69.346
+recursion 5.957
+refpass 129.904
+sort 61.075
+strings 32.926
+trees 120.99
