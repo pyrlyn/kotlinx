@@ -126,14 +126,71 @@ a later slice is released but left BLACK with count 0 (like `rt_cc_dead`); its o
 very first slice already exceeds the budget, the step finishes in one pass, since every further slice
 would re-trace the same large graph. `rt_gc_collect` and program exit run without a budget.
 
-## 7. bdwgc backend
+## 7. Epoch collector (deferred RC, background cycle collection)
+
+`epoch` (caps `cycles precise asan deferred`) moves all reference counting of possibly cyclic objects and
+all cycle collection to a background thread (Bacon & Rajan, "Concurrent Cycle Collection in Reference
+Counted Systems", 2001). The driver reads the `deferred` cap and sets `NativeBackend.deferredRc`, which
+changes the generated code for traced (cyclic) classes only:
+
+- retain/release of a traced object append `pointer | op` to the current epoch log
+  (`rt_gc_log_inc` / `rt_gc_log_dec`); acyclic objects keep the inline Perceus fast paths;
+- a reference store into a traced object is a release store followed by `rt_gc_write_barrier(obj)`
+  (logs "modified"); the collector reads fields with acquire loads (`trav.C`);
+- values of unknown dynamic class go through `rt_retain_dyn`, which checks `vtable->cyclic`;
+- FBIP reuse is disabled for traced classes (their count is not known to the mutator).
+
+`rt_gc_write_barrier` is an empty function in every other implementation and is never emitted for them.
+
+Epoch boundary (log full, 32768 entries): the mutator hands the log over (one mutex round-trip) and frees
+dead objects returned by the collector under `KX_GC_FREE_BUDGET_US` (default half the target pause, 1.5 ms); allocation also frees
+two returned objects per call. If the collector is more than `KX_GC_MAX_QUEUED` logs behind (default 16,
+256 KiB each), the boundary waits (back-pressure); that wait is counted as a pause.
+
+The collector, per log: applies all increments, then all decrements (single mutator, so no count drops to
+zero early), marking each touched object dirty; count zero frees the object (its traced children are
+decremented, the memory goes back to the mutator), non-zero buffers it as a possible root. When the buffer
+is large it runs trial deletion; each white component becomes a candidate set. All sets of one detection
+form one batch (one allocation), validated once a log handed over after the detection has been applied:
+Delta test (no member dirty) and Sigma test (sum of member counts equals the member-to-member edges).
+Passing sets are freed, failing members are re-buffered.
+
+Trial deletion counts in the CRC field (header bits 40-63) the references coming from traversed objects
+and compares it with the real count, so real counts are never disturbed. MarkGray and Scan run in parallel
+on the collector thread plus `KX_GC_THREADS - 1` helpers (default `min(cores, 4)`), with atomic header
+updates (CAS on the color, atomic add on the CRC) and shared work stealing; CollectWhite, validation and
+log application stay on the collector thread, separated from the parallel phases by a barrier.
+Parallel phases are used for major detections of at least 2048 roots; small and minor detections run on
+the collector thread alone (measured: more threads only add synchronization there).
+
+Generations: an object that Scan finds externally referenced (black) is promoted to the old generation
+(header bit 39, `stable`). Any RC operation or write barrier on it demotes it. A minor detection treats
+stable objects as opaque live objects, so it never re-traces the live graph: its cost is proportional to
+the objects touched since the last scan. Garbage cycles that run through stable objects are still found:
+a root whose minor detection stopped at a stable object and did not turn white stays buffered in a
+deferred list, and a major detection (stable objects traced like any other) processes the deferred roots
+once four times as many roots have been deferred as there are stable objects, so its cost is amortized
+O(1) per root. An object whose count drops to zero while it is listed (root buffer or deferred list)
+releases its children at once and stays as a zombie until its list entry is removed, so dead chains do
+not keep each other alive until the next major detection.
+
+Program exit does not drain the queue: the process exits and the OS reclaims the memory. Builds that
+inspect the heap at exit drain it stop-the-world first: `--leak-check`, `--alloc malloc` (ASan and
+macOS `leaks` builds), or any build with `KX_GC_EXIT_DRAIN=1`.
+
+Traced objects use 64 KiB-aligned size-class slabs registered in a page bitmap (one bit per 64 KiB page,
+256 MiB of lazily touched virtual memory), so the collector recognizes traced pointers without
+dereferencing them (acyclic objects may be freed concurrently). The unit test `gc_unit.c`
+(immediate-RC protocol) is skipped for `deferred` implementations.
+
+## 8. bdwgc backend
 
 `boehm` keeps RC (objects are freed with `GC_FREE` at count zero) and lets bdwgc reclaim unreachable
 cycles. Acyclic objects and `rt_gc_mem_*` storage are uncollectable but scanned; traced objects are
 collectable with a finalizer that releases their acyclic fields. Pauses are measured through bdwgc's
 collection event callback.
 
-## 8. Statistics and environment
+## 9. Statistics and environment
 
 | variable | effect |
 |---|---|
@@ -142,22 +199,28 @@ collection event callback.
 | `NEWKOTLIN_BDWGC_DIR` | compile time: bdwgc install prefix for `--gc=boehm` |
 | `KX_GC_STATS=1` | run time: print `gc-stats: gc=... collections=... reclaimed=... pause_total=... pause_max=...` (ms) at exit |
 | `KX_GC_BUDGET_US` | run time, `incremental` only: per-step budget in microseconds (default 500) |
+| `KX_GC_FREE_BUDGET_US` | run time, `epoch` only: time per epoch boundary for freeing returned objects (default half of `KX_GC_TARGET_PAUSE_US`: 1500) |
+| `KX_GC_THREADS` | run time, `epoch` only: collector threads for parallel trial deletion (default min(cores, 4)) |
+| `KX_GC_MAX_QUEUED` | run time, `epoch` only: logs the collector may fall behind before the program waits (default 16) |
+| `KX_GC_EXIT_DRAIN=1` | run time, `epoch` only: drain the queue at exit even without `--leak-check` / `--alloc malloc` |
+| `KX_GC_DEBUG=1` | run time, `epoch` only: print epoch/detection/validation counters at each full collection |
 
-## 9. Adding an implementation
+## 10. Adding an implementation
 
 1. Create `compiler/gc/<name>/gc.c` implementing every function of `kxgc.h`. RC implementations include
    `common/regions.inc`; cycle collectors add `common/object.inc` and `common/trial_deletion.inc`.
 2. Add `compiler/gc/<name>/caps` listing what tests may expect: `cycles` (reclaims cycles), `precise`
-   (zero live objects under `--leak-check`), `asan` (works under ASan).
+   (zero live objects under `--leak-check`), `asan` (works under ASan), `deferred` (generated code logs RC
+   operations on traced objects through `rt_gc_log_inc`/`rt_gc_log_dec`/`rt_gc_write_barrier`).
 3. If it needs extra clang flags, add an executable `config.sh` that prints them.
 4. Run `compiler/gc/tests/run.sh` (picks it up automatically) and the benchmarks below.
 
-## 10. Testing and benchmarking
+## 11. Testing and benchmarking
 
 - `compiler/test.sh`: everything, including leak tests and `compiler/gc/tests/run.sh`.
 - `GCS="default incremental" compiler/gc/tests/run.sh`: GC unit tests (-O1/-O3), Kotlin tests, leak-check
   and ASan per implementation. Tests marked `// gc-needs: cycles` are skipped without the `cycles` cap.
-- `bench/gc/compare.sh default incremental`: full KotlinX suite per GC.
+- `bench/gc/compare.sh default incremental`: full KotlinX suite per GC, interleaved over `ROUNDS` rounds (median).
 - `bench/gc/micro.sh default incremental`: GC microbenchmarks (time, peak RSS, pauses).
 - Results are appended, one file per benchmark, under `bench/results/` (see
   [`bench/gc/README.md`](../../../bench/gc/README.md)).

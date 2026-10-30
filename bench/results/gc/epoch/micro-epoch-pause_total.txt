@@ -1,0 +1,4 @@
+alloc_throughput 0.030
+cyclic_garbage 110.431
+live_heap_churn 431.254
+short_lived 0.038
