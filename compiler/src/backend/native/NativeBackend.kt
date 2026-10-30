@@ -532,7 +532,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return l
     }
 
-    private fun lookup(n: String): Local? { for (i in scopes.indices.reversed()) scopes[i].vars[n]?.let { return it }; return globalVars[n] }
+    private fun lookup(n: String): Local? { for (i in scopes.indices.reversed()) scopes[i].vars[n]?.let { return it }
+        // A member property shadows a top-level one of the same name inside the class.
+        val g = globalVars[n] ?: return null
+        val o = owner
+        return if (o != null && (o.index(n) >= 0 || "\$get\$$n" in o.methods || "\$set\$$n" in o.methods)) null else g
+    }
 
     /**
      * Types of top-level properties without an explicit type, so functions whose return type is inferred can use them
@@ -2083,8 +2088,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val t = mapTy(resolve(e.typeArgs[0]), resolve(e.typeArgs[1]))
                 return Val(emitT("call ptr @rt_map_new()"), t, true)
             }
-            "IntArray", "LongArray", "DoubleArray", "FloatArray" -> {
-                val et = when (n) { "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; "FloatArray" -> Ty.F32; else -> Ty.F64 }
+            "IntArray", "LongArray", "DoubleArray", "FloatArray", "ByteArray" -> {
+                val et = when (n) { "ByteArray" -> Ty.I8; "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; "FloatArray" -> Ty.F32; else -> Ty.F64 }
                 if (e.lambda != null) return initLoop(e.args.single(), e.lambda, et, { sz, t -> Val(emitT("call ptr @rt_arr_new(i64 ${checkArrSize(coerce(sz, Ty.I64)).v}, i64 ${t.size})"), Ty.Arr(t), true) }) { c, i, v ->
                     emit("store ${et.llvm} ${coerce(v, et).v}, ptr ${emitT("getelementptr ${et.llvm}, ptr ${emitT("getelementptr i8, ptr ${c.v}, i64 8")}, i32 $i")}")
                 }
@@ -2182,10 +2187,6 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val l = emitT("call ptr @rt_list_new(ptr $rel)")
                 for (v in vals) emit("call void @rt_list_add(ptr $l, i64 ${toSlot(consume(coerce(v, et)))})")
                 return Val(l, Ty.ListTy(et), true)
-            }
-            "ByteArray" -> {
-                val size = coerce(genExpr(e.args.single()), Ty.I64)
-                return Val(emitT("call ptr @rt_arr_new(i64 ${size.v}, i64 1)"), Ty.Arr(Ty.I8), true)
             }
         }
         POSIX[n]?.let { (ps, ret) ->

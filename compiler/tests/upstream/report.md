@@ -9,10 +9,10 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 |---|---|
 | UNSUPPORTED | 3000 |
 | N/A | 2984 |
-| PASS | 2468 |
-| MISCOMPILE | 23 |
+| PASS | 2472 |
+| MISCOMPILE | 19 |
 
-Kept in tree (re-runnable with `run.py`): 2468
+Kept in tree (re-runnable with `run.py`): 2472
 
 ## Unsupported features (roadmap, by test count)
 
@@ -105,14 +105,10 @@ Affected upstream tests:
 - MISCOMPILE `box/box/inlineClasses/callableRefClassMergingGenerics.kt` — exit=0 stdout='FAIL n3: null\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/defaultFunctionsFromAnyForInlineClass.kt` — exit=0 stdout='Fail 4\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt` — exit=0 stdout='Fail 4\n' stderr=''
-- MISCOMPILE `box/box/inlineClasses/inlineClassInInitBlock.kt` — exit=0 stdout='null\n' stderr=''
-- MISCOMPILE `box/box/inlineClasses/inlineClassInInitBlockGeneric.kt` — exit=0 stdout='null\n' stderr=''
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 269225120\n'
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -267645728\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -1341387808\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 789536\n'
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
-- MISCOMPILE `box/box/inlineClasses/kt27140.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError\n'
-- MISCOMPILE `box/box/inlineClasses/kt27140Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError\n'
 - MISCOMPILE `box/box/inlineClasses/kt31994.kt` — exit=-11 stdout='' stderr=''
 - MISCOMPILE `box/box/innerClass/superOuter.kt` — exit=0 stdout='Fail\n' stderr=''
 - MISCOMPILE `box/box/intrinsics/kt12125.kt` — exit=0 stdout='fail 2: -32769\n' stderr=''

@@ -1,9 +1,9 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "MISCOMPILE": 23,
+  "MISCOMPILE": 19,
   "N/A": 2984,
-  "PASS": 2468,
+  "PASS": 2472,
   "UNSUPPORTED": 3000
  },
  "excluded_js_only": 73,
@@ -22802,13 +22802,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassHashCodeOverride.kt"
   },
   "box/box/inlineClasses/inlineClassInInitBlock.kt": {
-   "detail": "exit=0 stdout='null\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInInitBlock.kt"
   },
   "box/box/inlineClasses/inlineClassInInitBlockGeneric.kt": {
-   "detail": "exit=0 stdout='null\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInInitBlockGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassInStringTemplate.kt": {
@@ -22875,12 +22875,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269225120\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387808\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645728\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789536\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23341,13 +23341,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27132Generic.kt"
   },
   "box/box/inlineClasses/kt27140.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError\\n'",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27140.kt"
   },
   "box/box/inlineClasses/kt27140Generic.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError\\n'",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27140Generic.kt"
   },
   "box/box/inlineClasses/kt27705.kt": {
