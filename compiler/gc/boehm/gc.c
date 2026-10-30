@@ -88,3 +88,8 @@ void rt_gc_collect(void) {
 }
 const char *rt_gc_name(void) { return "boehm"; }
 void rt_gc_stats(KxGcStats *out) { *out = gc_st; out->collections = (int64_t)GC_get_gc_no(); }
+
+/* Deferred-RC hooks (kxgc.h): never called for this implementation (its caps do not list "deferred"). */
+void rt_gc_log_inc(void *p) { (void)p; rt_panic("rt_gc_log_inc without deferred RC"); }
+void rt_gc_log_dec(void *p) { (void)p; rt_panic("rt_gc_log_dec without deferred RC"); }
+void rt_gc_write_barrier(void *obj) { (void)obj; }

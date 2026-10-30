@@ -98,3 +98,8 @@ void *rt_gc_mem_alloc(size_t n) { void *p = malloc(n); if (!p && n) rt_panic("Ou
 void *rt_gc_mem_calloc(size_t n) { void *p = calloc(1, n); if (!p) rt_panic("OutOfMemoryError"); return p; }
 void *rt_gc_mem_realloc(void *p, size_t n) { p = realloc(p, n); if (!p && n) rt_panic("OutOfMemoryError"); return p; }
 void rt_gc_mem_free(void *p) { free(p); }
+
+/* Deferred-RC hooks (kxgc.h): never called for this implementation (its caps do not list "deferred"). */
+void rt_gc_log_inc(void *p) { (void)p; rt_panic("rt_gc_log_inc without deferred RC"); }
+void rt_gc_log_dec(void *p) { (void)p; rt_panic("rt_gc_log_dec without deferred RC"); }
+void rt_gc_write_barrier(void *obj) { (void)obj; }

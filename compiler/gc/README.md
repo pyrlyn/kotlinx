@@ -8,6 +8,7 @@ linked into every program.
 |---|---|---|---|
 | `default` | [`default/gc.c`](default/gc.c) | collected | Perceus-style RC + synchronous trial-deletion cycle collector over the tracing region (Bacon & Rajan). The previous built-in GC, unchanged. |
 | `incremental` | [`incremental/gc.c`](incremental/gc.c) | collected | Default GC with the root buffer processed in slices of 64 under a per-step time budget (`KX_GC_BUDGET_US`, default 500 us); falls back to one pass when a single slice already exceeds the budget. |
+| `epoch` | [`epoch/gc.c`](epoch/gc.c) | collected | Deferred RC for possibly cyclic objects: the program logs reference operations per epoch, a background thread applies them and runs concurrent cycle detection with Delta/Sigma validation. See [`docs/architecture.md`](docs/architecture.md#7-epoch-collector-deferred-rc-background-cycle-collection). |
 | `rc` | [`rc/gc.c`](rc/gc.c) | leak | Same RC and regions, no cycle collector. Baseline for the collector's cost. |
 | `boehm` | [`boehm/gc.c`](boehm/gc.c) | collected | RC + [bdwgc](https://github.com/bdwgc/bdwgc) 8.2.12 (conservative mark-sweep) for unreachable cycles. bdwgc is installed by `mise install` (`conda:bdw-gc` in `mise.toml`). |
 
@@ -35,6 +36,10 @@ Full description (object layout, RC + Perceus, regions, cycle collector, ownersh
 | `NEWKOTLIN_BDWGC_DIR` | compile | bdwgc prefix for `--gc=boehm` |
 | `KX_GC_STATS=1` | run | print GC statistics to stderr at exit |
 | `KX_GC_BUDGET_US` | run | per-step budget of `incremental` (default 500) |
+| `KX_GC_FREE_BUDGET_US` | run | `epoch`: freeing budget per epoch boundary (default 200) |
+| `KX_GC_THREADS` | run | `epoch`: collector threads (default min(cores, 4)) |
+| `KX_GC_MAX_QUEUED` | run | `epoch`: logs the collector may lag before the program waits (default 16) |
+| `KX_GC_EXIT_DRAIN` | run | `epoch`: `1` drains the queue at exit in any build |
 
 ## Selecting an implementation
 

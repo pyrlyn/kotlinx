@@ -18,7 +18,10 @@ for g in $gcs; do
   has() { case " $caps " in *" $1 "*) return 0;; esac; return 1; }
   extra=""; if [ -f "compiler/gc/$g/config.sh" ]; then extra=$(sh "compiler/gc/$g/config.sh") || { echo "FAIL gc $g: config.sh"; fail=1; continue; }; fi
   def=""; has cycles && def=-DKX_CAP_CYCLES; has precise && def="$def -DKX_CAP_PRECISE"
+  # The unit test drives the immediate-RC header protocol directly; deferred-RC GCs (epoch) take
+  # reference operations through a log instead and are covered by the Kotlin tests below.
   for o in -O1 -O3; do
+    if has deferred; then echo "SKIP gc-unit $g $o (deferred RC)"; continue; fi
     if eval "$CC" $o -g -Icompiler/gc $def $extra compiler/gc/tests/unit/gc_unit.c compiler/runtime/runtime.c "compiler/gc/$g/gc.c" -o "$out/unit-$g" 2>"$out/unit-$g.err" \
        && "$out/unit-$g" >"$out/unit-$g.log" 2>&1; then echo "PASS gc-unit $g $o"
     else echo "FAIL gc-unit $g $o"; cat "$out/unit-$g.err" "$out/unit-$g.log" 2>/dev/null | head -20; fail=1; fi
