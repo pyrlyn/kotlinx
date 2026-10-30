@@ -1,0 +1,18 @@
+# builder working tree 2026-10-30 15:19 EET load: { 55.44 44.44 39.91 }
+sum 3.719
+alloc 76.108
+bigheap 120.463
+closures 87.652
+cycles 45.794
+dispatch 95.641
+file 53.848
+free 51.075
+hashmap 74.374
+lru 100.627
+matmul 10.476
+nbody 70.733
+recursion 6.132
+refpass 130.076
+sort 62.702
+strings 32.022
+trees 124.035
