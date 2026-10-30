@@ -1019,7 +1019,7 @@ class Parser(private val t: List<Tok>) {
             return if (isOp("?")) { next(); TypeRef(fn.name, fn.args, true) } else fn
         }
         var name = ident()
-        while (isOp(".")) { next(); name += "." + ident() }
+        while (isOp(".") && t[p + 1].k == K.ID) { next(); name += "." + ident() }
         val args = ArrayList<TypeRef>()
         if (isOp("<")) {
             next()
@@ -1032,8 +1032,15 @@ class Parser(private val t: List<Tok>) {
             next()
         }
         val nullable = if (isOp("?")) { next(); true } else false
-        aliases[name]?.let { a -> if (args.isEmpty()) return TypeRef(a.name, a.args, a.nullable || nullable) }
-        return TypeRef(name, args, nullable)
+        val base = aliases[name]?.takeIf { args.isEmpty() }?.let { a -> TypeRef(a.name, a.args, a.nullable || nullable) } ?: TypeRef(name, args, nullable)
+        // Function type with receiver `R.(A) -> X`: TypeRef "$FnR" with args = receiver + params + return.
+        if (isOp(".") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
+            next(); next()
+            val ps = nested(1) { val xs = ArrayList<TypeRef>(); while (!isOp(")")) { if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == ":") { p += 2 }; xs.add(type()); if (isOp(",")) next() }; xs }
+            expectOp(")"); expectOp("->")
+            return TypeRef("\$FnR", listOf(base) + ps + type(), false)
+        }
+        return base
     }
 
     /** Non-generic `typealias N = T`, collected before parsing so aliases may be used before their declaration. */
