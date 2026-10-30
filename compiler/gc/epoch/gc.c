@@ -419,7 +419,7 @@ static inline void promote_atomic(void *p) {
     if (!(__atomic_fetch_or(header(p), STABLE_BIT, __ATOMIC_RELAXED) & STABLE_BIT)) atomic_fetch_add_explicit(&c_stable_delta, 1, memory_order_relaxed);
 }
 static int c_im;                    /* an incremental major is tracing (single-threaded) */
-static PtrStack im_seen, c_hold;     /* objects it visited; freed objects it visited (held until it ends) */
+static PtrStack im_seen, c_hold, sm_retry;   /* sm_retry: side-minor roots retried after the major */     /* objects it visited; freed objects it visited (held until it ends) */
 static void mg_child(void *t) {
     if (!t || !is_traced(t)) return;
     uint64_t h = hload(t);
@@ -642,8 +642,8 @@ static void detect_finish(int major, PtrStack roots, size_t k, int hit_stable) {
 // Logs applied between steps change counts and colors exactly as a concurrently running mutator would in
 // Bacon & Rajan's concurrent collector: every touched object is dirty (the Delta bit is cleared only on an
 // object's first visit), and candidates are still checked by Delta + Sigma with current counts. While a
-// major is in progress there is no minor detection (they share the CRC field and the worker stacks;
-// roots stay buffered), but logs, validation and freeing go on: every object the major visits is marked
+// major is in progress, minors run as side minors (own colors / counts in a hash table, see
+// side_minor; KX_GC_SIDE_MINOR=0 pauses them instead), and logs, validation and freeing go on: every object the major visits is marked
 // SEEN (header bit 63) and listed; a SEEN object that dies or whose cycle is freed is held (DEAD bit set,
 // memory not returned) until the major ends, since the trace's stacks may still point to it, and the trace
 // never follows the fields of a dead or held object. Objects the major never visited are returned at once:
@@ -656,6 +656,7 @@ static int im_state;                 /* 0 none, 1 MarkGray, 2 Scan */
 static PtrStack im_roots; static size_t im_k;
 static int64_t im_step_budget = -1, im_m0, im_w0, im_steps;
 static int incremental_major = -1;   /* KX_GC_INC_MAJOR (default 1) */
+static int side_minors = 1;          /* KX_GC_SIDE_MINOR (default 1): minors keep running during a major */
 static void major_adapt(void);
 static int64_t im_step_ns = -1, dbg_held, dbg_held_max;
 static inline int im_dead(void *x) { return ref_count(x) == 0 || has(x, DEAD_BIT); }
@@ -703,8 +704,118 @@ static int im_step(int64_t budget) {
     im_seen.len = 0;
     if ((int64_t)c_hold.len > dbg_held_max) dbg_held_max = (int64_t)c_hold.len;
     stack_move(&c_ret, &c_hold);
+    for (size_t i = 0; i < sm_retry.len; i++) { void *x = sm_retry.items[i]; if (color(x) == BLACK) set_color(x, PURPLE); stack_push(&c_roots, x); }
+    sm_retry.len = 0;
     major_adapt();
     return 1;
+}
+// Side minor: young-generation trial deletion while an incremental major is in progress. The major owns
+// the header's color and CRC fields, so the side minor keeps its colors and counts in a private hash
+// table (sm_tab) and its own stacks, and never writes a header color. It treats as opaque (live) every
+// object the major has visited (SEEN), every stable, candidate or dead object; roots that are SEEN or
+// whose trace stopped at a SEEN object are retried after the major (sm_retry). White components become
+// candidate sets exactly as in CollectWhite (CAND bit + set id in the CRC field: the major skips CAND
+// objects and never visited these), validated by Delta + Sigma like every other set.
+typedef struct { void *k; uint32_t crc; uint8_t col; } SmEnt;
+static SmEnt *sm_tab; static size_t sm_cap, sm_n;
+static PtrStack sm_work, sm_black, sm_roots;
+static int sm_hit_seen, sm_hit_stable;
+static int64_t dbg_side_minors, dbg_side_visits;
+enum { SM_NONE = 0, SM_GRAY, SM_WHITE, SM_BLACK };
+static inline size_t sm_hash(void *p) { uint64_t x = (uint64_t)(uintptr_t)p >> 3; x *= 0x9E3779B97F4A7C15ULL; return (size_t)(x >> 17); }
+static SmEnt *sm_find(void *p, int ins);
+static void sm_grow(void) {
+    SmEnt *old = sm_tab; size_t oc = sm_cap;
+    sm_cap = oc ? oc * 2 : 1 << 14; sm_tab = calloc(sm_cap, sizeof(SmEnt)); if (!sm_tab) rt_panic("OutOfMemoryError");
+    sm_n = 0;
+    for (size_t i = 0; i < oc; i++) if (old[i].k) { SmEnt *e = sm_find(old[i].k, 1); e->crc = old[i].crc; e->col = old[i].col; }
+    free(old);
+}
+static SmEnt *sm_find(void *p, int ins) {
+    if (ins && (sm_n + 1) * 2 > sm_cap) sm_grow();
+    if (!sm_cap) return NULL;
+    size_t m = sm_cap - 1, i = sm_hash(p) & m;
+    while (sm_tab[i].k) { if (sm_tab[i].k == p) return &sm_tab[i]; i = (i + 1) & m; }
+    if (!ins) return NULL;
+    sm_tab[i].k = p; sm_tab[i].crc = 0; sm_tab[i].col = SM_NONE; sm_n++;
+    return &sm_tab[i];
+}
+static inline int sm_opaque(void *t) {
+    uint64_t h = *header(t);
+    if (h & SEEN_BIT) { sm_hit_seen = 1; return 1; }
+    if (h & STABLE_BIT) { sm_hit_stable = 1; return 1; }
+    return (h & (CAND_BIT | DEAD_BIT)) || (h & KX_CNT_MASK) == 0;
+}
+static void sm_mg_child(void *t) {
+    if (!t || !is_traced(t) || sm_opaque(t)) return;
+    SmEnt *e = sm_find(t, 1); e->crc++; dbg_side_visits++;
+    if (e->col != SM_GRAY) { if (e->col == SM_NONE) clr_bit(t, DIRTY_BIT); e->col = SM_GRAY; stack_push(&sm_work, t); }
+}
+static void sm_sb_child(void *t) {
+    if (!t || !is_traced(t)) return;
+    SmEnt *e = sm_find(t, 0);
+    if (e && e->col != SM_BLACK) { e->col = SM_BLACK; promote(t); stack_push(&sm_black, t); }
+}
+static void sm_scan_child(void *t) { if (t && is_traced(t) && sm_find(t, 0)) stack_push(&sm_work, t); }
+static void sm_cw_child(void *t) {
+    if (!t || !is_traced(t) || has(t, CAND_BIT)) return;
+    SmEnt *e = sm_find(t, 0);
+    if (e && e->col == SM_WHITE) { e->col = SM_BLACK; set_bit(t, CAND_BIT); set_crc(t, cw_id & CRC_MAX); stack_push(&cw_m, t); stack_push(&c_work, t); }
+}
+static void side_minor(void) {
+    ep_detections++; dbg_side_minors++; gc_st.collections++;
+    PtrStack roots = c_roots; c_roots = (PtrStack){0};
+    if (slice_roots && roots.len > slice_roots) {
+        for (size_t i = slice_roots; i < roots.len; i++) stack_push(&c_roots, roots.items[i]);
+        roots.len = slice_roots;
+    }
+    sm_roots.len = 0;
+    for (size_t i = 0; i < roots.len; i++) {   /* pass 1, as in detect_prepare */
+        void *x = roots.items[i];
+        clr_bit(x, KX_BUF_BIT);
+        if (has(x, ZOMBIE_BIT)) { clr_bit(x, ZOMBIE_BIT); ret_push(x); roots.items[i] = NULL; continue; }
+        if (has(x, DEAD_BIT) && !has(x, CAND_BIT)) { clr_bit(x, DEAD_BIT); release_dead(x); roots.items[i] = NULL; }
+    }
+    for (size_t i = 0; i < roots.len; i++) {
+        void *x = roots.items[i];
+        if (!x || has(x, CAND_BIT | DEAD_BIT) || ref_count(x) == 0 || color(x) != PURPLE) continue;
+        if (has(x, SEEN_BIT)) { set_bit(x, KX_BUF_BIT); stack_push(&sm_retry, x); continue; }
+        set_color(x, BLACK);                  /* leaves the root buffer; the major may trace it like any object */
+        SmEnt *e = sm_find(x, 1);
+        if (e->col != SM_NONE) continue;
+        e->col = SM_GRAY; clr_bit(x, DIRTY_BIT); stack_push(&sm_roots, x); stack_push(&sm_work, x);
+    }
+    free(roots.items);
+    sm_hit_seen = sm_hit_stable = 0;
+    while (sm_work.len) { void *x = stack_pop(&sm_work); vtab(x)->trav(x, sm_mg_child); }       /* MarkGray */
+    for (size_t i = 0; i < sm_roots.len; i++) stack_push(&sm_work, sm_roots.items[i]);           /* Scan */
+    while (sm_work.len || sm_black.len) {
+        if (sm_black.len) { void *y = stack_pop(&sm_black); vtab(y)->trav(y, sm_sb_child); continue; }
+        void *x = stack_pop(&sm_work); SmEnt *e = sm_find(x, 0);
+        if (!e || e->col != SM_GRAY) continue;
+        if ((int64_t)ref_count(x) - (int64_t)e->crc > 0) { e->col = SM_BLACK; promote(x); stack_push(&sm_black, x); }
+        else { e->col = SM_WHITE; vtab(x)->trav(x, sm_scan_child); }
+    }
+    for (size_t i = 0; i < sm_roots.len; i++) {                                                 /* CollectWhite */
+        void *x = sm_roots.items[i]; SmEnt *e = sm_find(x, 0);
+        if (e->col != SM_WHITE || has(x, CAND_BIT)) continue;
+        if (!cw_ends.len) cw_first_id = next_set_id;
+        cw_id = next_set_id++;
+        e->col = SM_BLACK; set_bit(x, CAND_BIT); set_crc(x, cw_id & CRC_MAX); stack_push(&cw_m, x); stack_push(&c_work, x);
+        while (c_work.len) { void *y = c_work.items[--c_work.len]; vtab(y)->trav(y, sm_cw_child); }
+        stack_push(&cw_ends, (void *)(uintptr_t)cw_m.len);
+        dbg_sets++;
+    }
+    for (size_t i = 0; i < sm_roots.len; i++) {   /* live-looking roots whose trace was cut short: retry later */
+        void *x = sm_roots.items[i];
+        if (has(x, CAND_BIT) || has(x, KX_BUF_BIT)) continue;
+        if (sm_hit_seen) { set_color(x, PURPLE); set_bit(x, KX_BUF_BIT); stack_push(&sm_retry, x); }
+        else if (sm_hit_stable) { set_bit(x, KX_BUF_BIT); stack_push(&c_deferred, x); c_deferred_new++; }
+    }
+    dbg_roots_k += (int64_t)sm_roots.len;
+    memset(sm_tab, 0, sm_cap * sizeof(SmEnt)); sm_n = 0;
+    pthread_mutex_lock(&mu); uint64_t h = handed; pthread_mutex_unlock(&mu);
+    batch_close(h);
 }
 static uint64_t v_sid; static int64_t v_internal;
 static inline int in_set(void *t) { return has(t, CAND_BIT) && crc(t) == v_sid; }
@@ -805,12 +916,14 @@ static void *collector_main(void *arg) {
             if (incremental_major < 0) {
                 const char *e = getenv("KX_GC_INC_MAJOR"); incremental_major = e && *e ? *e != '0' : 1;
                 e = getenv("KX_GC_MAJOR_STEP"); im_step_budget = e && *e ? atoll(e) : MAJOR_STEP;
+                e = getenv("KX_GC_SIDE_MINOR"); side_minors = e && *e ? *e != '0' : 1;
                 e = getenv("KX_GC_MAJOR_STEP_US"); im_step_ns = (e && *e ? atoll(e) : MAJOR_STEP_US) * 1000;
             }
             if (im_state) {
                 int64_t td = rt_nanos();
                 if (im_step_ns > 0) { while (!im_step(512) && rt_nanos() - td < im_step_ns) {} }
                 else im_step(im_step_budget);
+                if (im_state && side_minors && c_roots.len >= c_threshold) side_minor();
                 dbg_t_detect += rt_nanos() - td;
             }
             else if (incremental_major && !behind && c_deferred_new >= major_at) {
@@ -859,7 +972,7 @@ static void epoch_debug(void) {
         (long long)ep_epochs, (long long)dbg_logs, (long long)ep_detections, (long long)dbg_sets, (long long)dbg_pass, (long long)dbg_fail_delta, (long long)dbg_fail_sigma, (long long)dbg_dead, (long long)dbg_majors, (long long)c_stable_n, c_deferred.len);
     if (e && *e) fprintf(stderr, "epoch: collector apply=%.1fms validate=%.1fms detect=%.1fms (mark %.1f scan %.1f) threads=%d\n", dbg_t_apply/1e6, dbg_t_valid/1e6, dbg_t_detect/1e6, dbg_t_mark/1e6, dbg_t_scan/1e6, n_threads);
     if (e && *e) fprintf(stderr, "epoch: roots=%lld minor-visits=%lld major-visits=%lld members=%lld\n", (long long)dbg_roots_k, (long long)dbg_minor_visits, (long long)dbg_major_visits, (long long)dbg_members);
-    if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps);
+    if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
 }
 /* Program exit drains the queue only when someone looks at the heap afterwards: --leak-check
