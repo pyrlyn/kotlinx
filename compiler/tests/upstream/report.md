@@ -7,12 +7,12 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| UNSUPPORTED | 3145 |
+| UNSUPPORTED | 3141 |
 | N/A | 2984 |
-| PASS | 2318 |
+| PASS | 2322 |
 | MISCOMPILE | 28 |
 
-Kept in tree (re-runnable with `run.py`): 2318
+Kept in tree (re-runnable with `run.py`): 2322
 
 ## Unsupported features (roadmap, by test count)
 
@@ -24,8 +24,8 @@ Kept in tree (re-runnable with `run.py`): 2318
 | generics | 180 |
 | lambdas / function types / references | 129 |
 | property accessors / delegation | 120 |
+| type inference / mismatch | 111 |
 | class bodies / constructors | 110 |
-| type inference / mismatch | 107 |
 | other syntax (at ':') | 99 |
 | inheritance (open/abstract/sealed) | 66 |
 | other syntax (at 'f') | 55 |
@@ -33,17 +33,17 @@ Kept in tree (re-runnable with `run.py`): 2318
 | other: expected '=' (at ' | 51 |
 | other syntax (at 'context') | 47 |
 | local / extension functions | 45 |
-| nullable types | 44 |
 | inline/value classes | 42 |
 | other syntax (at '.') | 42 |
 | type inference (expression bodies) | 36 |
+| nullable types | 34 |
 | destructuring declarations | 29 |
 | other syntax (at 'F') | 27 |
 | annotations | 21 |
 | other syntax (at ',') | 20 |
 | types: Float | 18 |
+| other: safe call result must be a reference | 18 |
 | other syntax (at 'FunIFace') | 18 |
-| other: safe call result must be a reference | 17 |
 | other: unknown type Number | 16 |
 | other syntax (at 'where') | 15 |
 | when expressions | 14 |
@@ -108,8 +108,8 @@ Affected upstream tests:
 - MISCOMPILE `box/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt` — exit=0 stdout='Fail 4\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/inlineClassInInitBlock.kt` — exit=0 stdout='null\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/inlineClassInInitBlockGeneric.kt` — exit=0 stdout='null\n' stderr=''
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 1611402400\n'
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -267645856\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 806096096\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 806095840\n'
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/kt27140.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError\n'

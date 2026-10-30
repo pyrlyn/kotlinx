@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 28,
   "N/A": 2984,
-  "PASS": 2318,
-  "UNSUPPORTED": 3145
+  "PASS": 2322,
+  "UNSUPPORTED": 3141
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -772,8 +772,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt1291.kt"
   },
   "box/box/arrays/kt238.kt": {
-   "category": "nullable types",
-   "detail": "unknown function 'arrayOfNulls'",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt238.kt"
   },
@@ -859,8 +859,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt7288.kt"
   },
   "box/box/arrays/kt779.kt": {
-   "category": "nullable types",
-   "detail": "unknown function 'arrayOfNulls'",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt779.kt"
   },
@@ -881,9 +881,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/longAsIndex.kt"
   },
   "box/box/arrays/multiArrayConstructors.kt": {
-   "category": "nullable types",
-   "detail": "unknown function 'arrayOfNulls'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiArrayConstructors.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclFor.kt": {
@@ -8235,9 +8234,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInExpr.kt"
   },
   "box/box/controlStructures/continueInFor.kt": {
-   "category": "nullable types",
-   "detail": "unknown function 'arrayOfNulls'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInFor.kt"
   },
   "box/box/controlStructures/continueInForCondition.kt": {
@@ -8256,9 +8254,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInWhile.kt"
   },
   "box/box/controlStructures/continueToLabelInFor.kt": {
-   "category": "nullable types",
-   "detail": "unknown function 'arrayOfNulls'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/continueToLabelInFor.kt"
   },
   "box/box/controlStructures/doWhile.kt": {
@@ -8356,14 +8353,14 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInInlineClassArrayWithUpcast.kt"
   },
   "box/box/controlStructures/forInArray/forIntArray.kt": {
-   "category": "nullable types",
-   "detail": "unknown function 'arrayOfNulls'",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forIntArray.kt"
   },
   "box/box/controlStructures/forInArray/forNullableIntArray.kt": {
-   "category": "nullable types",
-   "detail": "unknown function 'arrayOfNulls'",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forNullableIntArray.kt"
   },
@@ -22964,12 +22961,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1611402400\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 806096096\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645856\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 806095840\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -32128,9 +32125,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInUntil/kt42533.kt"
   },
   "box/box/ranges/forIntRange.kt": {
-   "category": "nullable types",
-   "detail": "unknown function 'arrayOfNulls'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forIntRange.kt"
   },
   "box/box/ranges/forNullableIntInRangeWithImplicitReceiver.kt": {
@@ -35403,8 +35399,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/Kt2495Test.kt"
   },
   "box/box/regressions/arrayLengthNPE.kt": {
-   "category": "nullable types",
-   "detail": "unknown function 'arrayOfNulls'",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/arrayLengthNPE.kt"
   },
@@ -36057,8 +36053,8 @@
    "upstream": "compiler/testData/codegen/box/reified/reifiedNullableNothing3.kt"
   },
   "box/box/reified/reifiedNullableNothing4.kt": {
-   "category": "nullable types",
-   "detail": "unknown function 'arrayOfNulls'",
+   "category": "other: unknown type Nothing?",
+   "detail": "unknown type Nothing?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/reifiedNullableNothing4.kt"
   },
