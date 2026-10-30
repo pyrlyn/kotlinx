@@ -576,6 +576,29 @@
     "raw_ns": "69776916,69651459,70197000,70007417,69198292",
     "flags": ""
    }
+  },
+  {
+   "run": "anon",
+   "date": "2026-10-30T15:41:41+02:00",
+   "commit": "334c4ad16a439d8b122ce0617e01b1f35b6c42f8",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 51.71 34.82 32.39 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.4.1.1)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 69.955,
+    "raw_ns": "69798875,70187791,70070667,69302000,69995917",
+    "flags": ""
+   }
   }
  ]
 }

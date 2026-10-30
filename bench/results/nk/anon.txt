@@ -1,0 +1,18 @@
+# anon working tree 2026-10-30 15:41 EET load: { 48.25 33.31 31.82 }
+sum 3.714
+alloc 75.825
+bigheap 120.217
+closures 84.85
+cycles 45.458
+dispatch 95.129
+file 51.412
+free 50.54
+hashmap 70.908
+lru 96.822
+matmul 10.384
+nbody 69.955
+recursion 5.996
+refpass 129.904
+sort 61.345
+strings 31.729
+trees 122.303
