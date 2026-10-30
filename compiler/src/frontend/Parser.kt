@@ -68,7 +68,7 @@ class Parser(private val t: List<Tok>) {
         var eq: E = BoolL(true)
         props.forEachIndexed { i, p ->
             // Double properties compare like Double.equals (bits: NaN == NaN, 0.0 != -0.0).
-            fun bits(e: E): E = if (p.type.name == "Double") CallE(MemberE(e, "\$bits", false).also { it.line = l }, emptyList(), emptyList(), null).also { it.line = l } else e
+            fun bits(e: E): E = if (p.type.name == "Double" || p.type.name == "Float") CallE(MemberE(e, "\$bits", false).also { it.line = l }, emptyList(), emptyList(), null).also { it.line = l } else e
             val one = BinE("==", bits(nm(p.name)), bits(MemberE(nm("other"), p.name, false).also { it.line = l })).also { it.line = l }
             eq = if (i == 0) one else BinE("&&", eq, one).also { it.line = l }
         }
@@ -244,7 +244,8 @@ class Parser(private val t: List<Tok>) {
             funs.add(FunD("\$init\$$n", emptyList(), TypeRef("Unit", emptyList(), false), Block(listOf(ExprS(init))), null, 0))
             funs.add(FunD("\$get\$$n", emptyList(), TypeRef(n, emptyList(), false), Block(listOf(ExprS(CallE(NameE("\$init\$$n"), emptyList(), emptyList(), null)), RetS(slot))), null, 0))
         }
-        return Program(funs, classes, ifaces, enumGlobals(classes) + globals + objGlobals, companionOf)
+        // Object slots come first: a top-level property initializer may already access an object.
+        return Program(funs, classes, ifaces, objGlobals + enumGlobals(classes) + globals, companionOf)
     }
 
     /**
@@ -549,7 +550,7 @@ class Parser(private val t: List<Tok>) {
 
     private fun zeroOf(t: TypeRef): E = if (t.nullable) NullL() else when (t.name) {
         "Int", "Short", "Byte" -> IntL(0, false); "Long" -> IntL(0, true); "UInt" -> IntL(0, false, true); "ULong" -> IntL(0, true, true)
-        "Double", "Float" -> DblL(0.0); "Boolean" -> BoolL(false); "Char" -> CharL(0); else -> NullL()
+        "Double" -> DblL(0.0); "Float" -> DblL(0.0, true); "Boolean" -> BoolL(false); "Char" -> CharL(0); else -> NullL()
     }
 
     /** `const val`s of objects and companions with literal values ("Obj.name" -> literal); uses do not initialize the object. */
@@ -686,7 +687,7 @@ class Parser(private val t: List<Tok>) {
             if (x is VarS && x.name == n) {
                 seen++
                 t = x.type ?: when (val i = x.init) {
-                    is StrL -> r("String"); is BoolL -> r("Boolean"); is CharL -> r("Char"); is DblL -> r("Double")
+                    is StrL -> r("String"); is BoolL -> r("Boolean"); is CharL -> r("Char"); is DblL -> r(if (i.f32) "Float" else "Double")
                     is IntL -> if (i.unsigned) null else r(if (i.long) "Long" else "Int")
                     else -> null
                 }
@@ -931,13 +932,13 @@ class Parser(private val t: List<Tok>) {
             is StrL -> simple("String")
             is IntL -> simple(if (e.unsigned) (if (e.long) "ULong" else "UInt") else if (e.long) "Long" else "Int")
             is BoolL -> simple("Boolean")
-            is DblL -> simple("Double")
+            is DblL -> simple(if (e.f32) "Float" else "Double")
             is CharL -> simple("Char")
             is IsE -> simple("Boolean")
             is BinE -> when (e.op) {
                 "==", "!=", "<", ">", "<=", ">=", "&&", "||" -> simple("Boolean")
-                "+" -> guess(e.l)?.takeIf { it.name == "String" } ?: guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double") } }
-                "-", "*", "/", "%" -> guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double") } }
+                "+" -> guess(e.l)?.takeIf { it.name == "String" } ?: guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double", "Float") } }
+                "-", "*", "/", "%" -> guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double", "Float") } }
                 else -> null
             }
             is IfE -> {
@@ -1629,7 +1630,7 @@ class Parser(private val t: List<Tok>) {
         val e: E = when (tk.k) {
             K.INT -> IntL(tk.num, tk.isLong, tk.unsigned)
             K.CHAR -> CharL(tk.num)
-            K.DBL -> DblL(tk.dbl)
+            K.DBL -> DblL(tk.dbl, tk.flt)
             K.STR -> StrL(tk.parts.map {
                 if (it is TemplateCode) Parser(Lexer(it.code, it.line).lex()).also { p -> p.depth[0] = 1 }.expr() else it
             })
