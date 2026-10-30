@@ -1,0 +1,18 @@
+# m32 working tree 2026-10-30 09:57 EET load: { 71.99 42.90 36.09 }
+sum 3.685
+alloc 77.466
+bigheap 118.129
+closures 82.542
+cycles 46.3
+dispatch 95.956
+file 51.226
+free 51.994
+hashmap 66.8
+lru 87.494
+matmul 10.632
+nbody 70.749
+recursion 6.289
+refpass 130.215
+sort 62.079
+strings 32.364
+trees 121.427

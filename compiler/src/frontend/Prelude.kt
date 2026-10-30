@@ -245,7 +245,7 @@ val PROGRESSIONS = mapOf("UIntProgression" to "U", "UIntRange" to "U", "ULongPro
     "CharProgression" to "C", "CharRange" to "C")
 
 private val UNSIGNED_USE = Regex("""\bU(Int|Long)\b|\d[uU]""")
-private val RANGE_USE = Regex("""\.\.|\buntil\b|\bdownTo\b|\bstep\b|Range\b|Progression\b""")
+private val RANGE_USE = Regex("""\.\.|\brangeTo\b|\buntil\b|\bdownTo\b|\bstep\b|Range\b|Progression\b""")
 
 private val EXC_USE = Regex("""\btry\b|\bassertFails""")
 
