@@ -1731,6 +1731,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (callee is NameE && (lookup(callee.n) == null || (callee.n in classes && scopes.none { callee.n in it.vars }))) return genNamedCall(callee.n, e)
         if (callee is MemberE) {
             if (callee.safe) return safe(callee.recv) { r -> method(r, callee.n, e) }
+            // `x!!.f()`: a member of the non-null type wins over an extension on the nullable type (`fun Long?.inv()`).
+            if (callee.recv is UnE && callee.recv.op == "!!") {
+                val r = genExpr(callee.recv)
+                nonNullRecv = true
+                try { return method(r, callee.n, e) } finally { nonNullRecv = false }
+            }
             return method(genExpr(callee.recv), callee.n, e)
         }
         val f = genExpr(callee)
@@ -2375,6 +2381,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** `x++` with an `operator fun T?.inc()` extension: the operator call resolves to the extension. */
     private var incViaExt = false
 
+    /** Set while generating a call whose receiver is `x!!` (see [method]). */
+    private var nonNullRecv = false
     private fun method(r: Val, n: String, e0: CallE): Val {
         val t = r.t
         // Member extension of the enclosing class (dispatch receiver `this`).
@@ -2389,7 +2397,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Byte (I8) is excluded: its inc() must wrap at 8 bits.
         if ((t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.Char) && (n == "inc" || n == "dec") && e0.args.isEmpty() && !incViaExt)
             return withTemps(listOf(r)) { (x) -> genExpr(BinE(if (n == "inc") "+" else "-", x, IntL(1, false)).also { it.line = line }) }
-        if (!hasMember(t, n)) extFuns[n]?.firstOrNull { extMatches(t, it.params[0].type, it.typeParams) }?.let { f ->
+        val nn = nonNullRecv; nonNullRecv = false
+        // Bitwise members called as methods: `x.shl(2)`, `x.inv()` (they win over an extension when the receiver is `y!!`).
+        if ((t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64) && (nn || extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false) && e0.lambda == null && e0.args.none { it is NamedE }) {
+            if (n in setOf("and", "or", "xor", "shl", "shr", "ushr") && e0.args.size == 1)
+                return withTemps(listOf(r)) { (x) -> genExpr(BinE(n, x, e0.args[0]).also { it.line = line }) }
+            if (n == "inv" && e0.args.isEmpty())
+                return withTemps(listOf(r)) { (x) -> genExpr(BinE("xor", x, UnE("-", IntL(1, t == Ty.I64 || t == Ty.U64)).also { it.line = line }).also { it.line = line }) }
+        }
+        if (!hasMember(t, n)) extFuns[n]?.firstOrNull { extMatches(t, it.params[0].type, it.typeParams) && !(nn && it.params[0].type.nullable && t.llvm != "ptr") }?.let { f ->
             return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
         }
         dataMethod(r, n, e0)?.let { return it }
