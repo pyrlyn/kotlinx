@@ -244,7 +244,11 @@ class Parser(private val t: List<Tok>) {
                     p++
                     val c = classDecl()
                     if (c.fields.size != 1 || c.ctorParams.size != 1) fail("a value class needs exactly one property", tk)
-                    classes.add(ClassD(c.name, c.fields, c.supers, c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true, c.superTypeArgs))
+                    // hashCode of a value class is its property's hashCode.
+                    val hashable = c.fields[0].type?.let { it.name in setOf("Int", "Long", "Short", "Byte", "Char", "Boolean", "String", "Double", "Float", "UInt", "ULong") && !it.nullable } == true
+                    val ms = if (!hashable || c.methods.any { it.name == "hashCode" && it.params.isEmpty() }) c.methods else c.methods + FunD("hashCode", emptyList(), TypeRef("Int", emptyList(), false), null,
+                        CallE(MemberE(NameE(c.fields[0].name).also { it.line = c.line }, "hashCode", false).also { it.line = c.line }, emptyList(), emptyList(), null).also { it.line = c.line }, c.line)
+                    classes.add(ClassD(c.name, c.fields, c.supers, ms, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true, c.superTypeArgs))
                 }
                 tk.k == K.ID && tk.s == "data" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(dataClass(classDecl())) }
                 tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "operator", "infix", "tailrec", "const", "open", "final", "abstract", "sealed") -> p++

@@ -1,9 +1,9 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "MISCOMPILE": 16,
+  "MISCOMPILE": 14,
   "N/A": 2984,
-  "PASS": 2476,
+  "PASS": 2478,
   "UNSUPPORTED": 2999
  },
  "excluded_js_only": 73,
@@ -21813,8 +21813,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/customIterator.kt"
   },
   "box/box/inlineClasses/defaultFunctionsFromAnyForInlineClass.kt": {
-   "detail": "exit=0 stdout='Fail 4\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultFunctionsFromAnyForInlineClass.kt"
   },
   "box/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt": {
@@ -22873,12 +22873,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645664\\n'",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269225248\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952352\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
