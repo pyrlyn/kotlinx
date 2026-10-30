@@ -1,0 +1,18 @@
+# globals working tree 2026-10-30 05:32 EET load: { 27.33 22.41 19.27 }
+sum 4.019
+alloc 75.183
+bigheap 115.295
+closures 83.155
+cycles 45.007
+dispatch 95.077
+file 50.796
+free 49.804
+hashmap 67.068
+lru 86.157
+matmul 10.08
+nbody 70.097
+recursion 6.16
+refpass 127.864
+sort 61.242
+strings 31.991
+trees 123.225
