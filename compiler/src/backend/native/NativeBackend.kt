@@ -338,9 +338,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         while (pending.isNotEmpty()) {
             val sym = pending.removeAt(pending.size - 1)
             val (f, env, sig) = instances.getValue(sym)
-            tenv = env; instLine = f.line
+            tenv = env; instLine = f.line; instFun = f
             genFun(f, instCls[sym], sig, sym)
-            tenv = emptyMap(); instLine = -1
+            tenv = emptyMap(); instLine = -1; instFun = null
         }
         if (excMode) genUncaught()
         val sb = StringBuilder()
@@ -2306,6 +2306,25 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** Declaration line of the generic function instance being generated (key of [TypeParamBounds]); -1 outside. */
     private var instLine = -1
+    /** The generic function instance being generated; null outside. */
+    private var instFun: FunD? = null
+
+    /** True if [e] is a parameter of the current generic instance typed by a type parameter whose bound is not
+     *  `Double`/`Double?` (e.g. `Any`): `==` on it is boxed `equals`, which compares Doubles by bits (0.0 != -0.0). */
+    private fun boxedDoubleOperand(e: E): Boolean {
+        val f = instFun ?: return false
+        if (e !is NameE) return false
+        val p = f.params.firstOrNull { it.name == e.n } ?: return false
+        if (p.type.name !in tenv) return false
+        val bound = TypeParamBounds.bounds["$instLine:${p.type.name}"]
+        return bound == null || bound.name != "Double"
+    }
+
+    private fun doubleBits(v: Val): String {
+        val b = emitT("bitcast double ${v.v} to i64")
+        val nan = emitT("fcmp uno double ${v.v}, ${v.v}")
+        return emitT("select i1 $nan, i64 9221120237041090560, i64 $b")
+    }
 
     private fun genAs(e0: AsE): Val {
         // `x as T` with an unbounded type parameter (implicit bound `Any?`) is unchecked: a null passes through.
@@ -2947,6 +2966,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         val b = genExpr(e.r)
         if (a.t == Ty.Char || b.t == Ty.Char) return charOp(e.op, a, b)
+        if ((e.op == "==" || e.op == "!=") && a.t == Ty.F64 && b.t == Ty.F64 && (boxedDoubleOperand(e.l) || boxedDoubleOperand(e.r)))
+            return compare(e.op, Val(doubleBits(a), Ty.I64), Val(doubleBits(b), Ty.I64))
         return when (e.op) {
             "==", "!=", "<", ">", "<=", ">=" -> compare(e.op, a, b)
             "+" -> if (a.t == Ty.Str) concat(a, b) else arith(e.op, a, b)
