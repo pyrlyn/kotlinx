@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 28,
   "N/A": 2984,
-  "PASS": 2322,
-  "UNSUPPORTED": 3141
+  "PASS": 2348,
+  "UNSUPPORTED": 3115
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -313,8 +313,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/typeAnnotations/unsafeVarianceInDependency.kt"
   },
   "box/box/argumentOrder/argumentOrderInObjectSuperCall.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/argumentOrderInObjectSuperCall.kt"
   },
@@ -653,9 +653,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexReversed.kt"
   },
   "box/box/arrays/genericArrayInObjectLiteralConstructor.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/genericArrayInObjectLiteralConstructor.kt"
   },
   "box/box/arrays/hashMap.kt": {
@@ -800,8 +799,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt3771.kt"
   },
   "box/box/arrays/kt4118.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: overloads are not supported: ext$Array$test1",
+   "detail": "overloads are not supported: ext$Array$test1",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt4118.kt"
   },
@@ -2010,8 +2009,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/delegationComplexWithList.kt"
   },
   "box/box/bridges/delegationProperty.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/delegationProperty.kt"
   },
@@ -2151,8 +2150,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideSameSuperDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractDeclaration.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "strings / templates",
+   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractDeclaration.kt"
   },
@@ -2392,8 +2391,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/overrideReturnType.kt"
   },
   "box/box/bridges/overrideWithValueClassReturn.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of VC; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overrideWithValueClassReturn.kt"
   },
@@ -2474,9 +2473,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/simpleGenericMethod.kt"
   },
   "box/box/bridges/simpleObject.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/simpleObject.kt"
   },
   "box/box/bridges/simpleReturnType.kt": {
@@ -2553,9 +2551,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/genericMethod.kt"
   },
   "box/box/bridges/substitutionInSuperClass/object.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/object.kt"
   },
   "box/box/bridges/substitutionInSuperClass/property.kt": {
@@ -3308,8 +3305,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/boundPrimitiveAndReferenceReceiverSharedClassSplit.kt"
   },
   "box/box/callableReference/bound/boundReferenceToOverloadedFunction.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: unsupported callable reference JsonCodingParser::parseValue",
+   "detail": "unsupported callable reference JsonCodingParser::parseValue",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/boundReferenceToOverloadedFunction.kt"
   },
@@ -3379,8 +3376,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/genericValOnLHS.kt"
   },
   "box/box/callableReference/bound/inlineFunctionRefToAnonymousObject.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression body with an anonymous object needs an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/inlineFunctionRefToAnonymousObject.kt"
   },
@@ -4317,9 +4314,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt50172.kt"
   },
   "box/box/callableReference/kt51844.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/kt51844.kt"
   },
   "box/box/callableReference/kt52270.kt": {
@@ -4735,8 +4731,8 @@
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeMultipleBoundsImplicitReceiver.kt"
   },
   "box/box/casts/intersectionTypeSmartcast.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "strings / templates",
+   "detail": "override $anon0.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeSmartcast.kt"
   },
@@ -4792,8 +4788,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt54802.kt"
   },
   "box/box/casts/kt58707.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected ')' (at ':')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression body with an anonymous object needs an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt58707.kt"
   },
@@ -5194,21 +5190,18 @@
    "upstream": "compiler/testData/codegen/box/classes/delegation4.kt"
   },
   "box/box/classes/delegationGenericArg.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/delegationGenericArg.kt"
   },
   "box/box/classes/delegationGenericArgUpperBound.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/delegationGenericArgUpperBound.kt"
   },
   "box/box/classes/delegationGenericLongArg.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/delegationGenericLongArg.kt"
   },
   "box/box/classes/delegationMethodsWithArgs.kt": {
@@ -5337,8 +5330,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1018.kt"
   },
   "box/box/classes/kt1157.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "unknown foo (stdlib API / unsupported decl)",
+   "detail": "unknown function 'foo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1157.kt"
   },
@@ -5403,8 +5396,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1891.kt"
   },
   "box/box/classes/kt1918.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: unknown method Bar.bar()",
+   "detail": "unknown method Bar.bar()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1918.kt"
   },
@@ -5419,8 +5412,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1980.kt"
   },
   "box/box/classes/kt2224.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "expected end of statement (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2224.kt"
   },
@@ -5474,9 +5467,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt249.kt"
   },
   "box/box/classes/kt2532.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt2532.kt"
   },
   "box/box/classes/kt2566.kt": {
@@ -5492,8 +5484,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2566_2.kt"
   },
   "box/box/classes/kt2607.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other syntax (at 'inner')",
+   "detail": "nested declarations are only supported in classes (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2607.kt"
   },
@@ -5531,9 +5523,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt3114.kt"
   },
   "box/box/classes/kt3414.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt3414.kt"
   },
   "box/box/classes/kt343.kt": {
@@ -5548,7 +5539,7 @@
   },
   "box/box/classes/kt40332.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '{')",
+   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt40332.kt"
   },
@@ -5646,8 +5637,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt8011a.kt"
   },
   "box/box/classes/kt940.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt940.kt"
   },
@@ -5663,8 +5654,8 @@
    "upstream": "compiler/testData/codegen/box/classes/namedClassObject.kt"
   },
   "box/box/classes/nestedInitBlocksWithLambda.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/nestedInitBlocksWithLambda.kt"
   },
@@ -5705,14 +5696,14 @@
    "upstream": "compiler/testData/codegen/box/classes/overloadUnaryOperator.kt"
   },
   "box/box/classes/privateOuterFunctions.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "strings / templates",
+   "detail": "unknown method String.ext()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/privateOuterFunctions.kt"
   },
   "box/box/classes/privateOuterProperty.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: unknown variable 'v'",
+   "detail": "unknown variable 'v'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/privateOuterProperty.kt"
   },
@@ -5743,8 +5734,8 @@
    "upstream": "compiler/testData/codegen/box/classes/rightHandOverride.kt"
   },
   "box/box/classes/selfcreate.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "class bodies / constructors",
+   "detail": "anonymous objects extending their enclosing class are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/selfcreate.kt"
   },
@@ -5770,8 +5761,8 @@
    "upstream": "compiler/testData/codegen/box/closures/anonymousObjectAsLastExpressionInLambda.kt"
   },
   "box/box/closures/captureExtensionReceiver.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureExtensionReceiver.kt"
   },
@@ -5803,8 +5794,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/kt13454.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/kt14148.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other syntax (at '.')",
+   "detail": "anonymous objects extending their enclosing class are not supported (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/kt14148.kt"
   },
@@ -5820,14 +5811,14 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/kt4174a.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/localCapturedInAnonymousObjectInLocalClass.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown name 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/localCapturedInAnonymousObjectInLocalClass.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/localCapturedInAnonymousObjectInLocalClass2.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown name 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/localCapturedInAnonymousObjectInLocalClass2.kt"
   },
@@ -5909,20 +5900,20 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInNestedLambda.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInNestedObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression body with an anonymous object needs an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInNestedObject.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown name 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInObject.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInObject2.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown name 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInObject2.kt"
   },
@@ -5960,38 +5951,38 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/referenceToCapturedVariablesInMultipleLambdas.kt"
   },
   "box/box/closures/captureOuterProperty/captureFunctionInProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "unknown getx (stdlib API / unsupported decl)",
+   "detail": "unknown function 'getx'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/captureFunctionInProperty.kt"
   },
   "box/box/closures/captureOuterProperty/inFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'bar' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/inFunction.kt"
   },
   "box/box/closures/captureOuterProperty/inProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/inProperty.kt"
   },
   "box/box/closures/captureOuterProperty/inPropertyDeepObjectChain.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "unknown $anon1 (stdlib API / unsupported decl)",
+   "detail": "unknown function '$anon1'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/inPropertyDeepObjectChain.kt"
   },
   "box/box/closures/captureOuterProperty/inPropertyFromSuperClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/inPropertyFromSuperClass.kt"
   },
   "box/box/closures/captureOuterProperty/inPropertyFromSuperSuperClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/inPropertyFromSuperSuperClass.kt"
   },
@@ -6091,8 +6082,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/withCoroutinesNoStdLib.kt"
   },
   "box/box/closures/closureCapturingGenericParam.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: unknown type GroupingByTP",
+   "detail": "unknown type GroupingByTP",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureCapturingGenericParam.kt"
   },
@@ -6197,26 +6188,26 @@
    "upstream": "compiler/testData/codegen/box/closures/kt10044.kt"
   },
   "box/box/closures/kt11634.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "expected end of statement (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt11634.kt"
   },
   "box/box/closures/kt11634_2.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "expected end of statement (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt11634_2.kt"
   },
   "box/box/closures/kt11634_3.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "expected end of statement (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt11634_3.kt"
   },
   "box/box/closures/kt11634_4.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt11634_4.kt"
   },
@@ -6238,8 +6229,8 @@
    "upstream": "compiler/testData/codegen/box/closures/kt2151.kt"
   },
   "box/box/closures/kt3152.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '{')",
+   "category": "unknown content (stdlib API / unsupported decl)",
+   "detail": "unknown name 'content'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt3152.kt"
   },
@@ -10975,8 +10966,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/kt30858.kt"
   },
   "box/box/coroutines/kt31784.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/kt31784.kt"
   },
@@ -11938,8 +11929,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/constructorWithDefaultParam.kt"
   },
   "box/box/dataClasses/copy/copyInObjectNestedDataClass.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other syntax (at 'inner')",
+   "detail": "nested declarations are only supported in classes (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/copy/copyInObjectNestedDataClass.kt"
   },
@@ -12326,14 +12317,14 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/innerClass32Args.kt"
   },
   "box/box/defaultArguments/constructor/kt2852.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other syntax (at 'inner')",
+   "detail": "nested declarations are only supported in classes (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/kt2852.kt"
   },
   "box/box/defaultArguments/constructor/kt30517.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Foo expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/kt30517.kt"
   },
@@ -12343,8 +12334,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/kt3060.kt"
   },
   "box/box/defaultArguments/constructor/objectExpressionDelegatingToSecondaryConstructor.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "class bodies / constructors",
+   "detail": "constructor O expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/objectExpressionDelegatingToSecondaryConstructor.kt"
   },
@@ -12561,8 +12552,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/inheritedFromInterfaceViaAbstractSuperclass.kt"
   },
   "box/box/defaultArguments/kt36853.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected identifier (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "trailing lambdas in default arguments are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853.kt"
   },
@@ -12573,8 +12564,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853_fibonacci.kt"
   },
   "box/box/defaultArguments/kt36853_nestedObject.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected identifier (at ':')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'tailrec')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853_nestedObject.kt"
   },
@@ -13112,8 +13103,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt45431.kt"
   },
   "box/box/delegatedProperty/kt6722.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt6722.kt"
   },
@@ -13130,14 +13121,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/lazy.kt"
   },
   "box/box/delegatedProperty/lazyDelegateInObject.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/lazyDelegateInObject.kt"
   },
   "box/box/delegatedProperty/lazyInAnonymousObject.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/lazyInAnonymousObject.kt"
   },
@@ -13472,7 +13463,7 @@
   },
   "box/box/delegatedProperty/referenceEnclosingClassFieldInReceiver.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "detail": "only member functions are supported in class/interface bodies (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/referenceEnclosingClassFieldInReceiver.kt"
   },
@@ -13654,8 +13645,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationToInnerClassOfGenericClass.kt"
   },
   "box/box/delegation/delegationToIntersectionType.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "expected end of statement (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationToIntersectionType.kt"
   },
@@ -13672,8 +13663,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationToSAMInterface.kt"
   },
   "box/box/delegation/delegationToVar.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('result')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationToVar.kt"
   },
@@ -13683,8 +13674,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationWithPrivateConstructor.kt"
   },
   "box/box/delegation/genericFunctionInGenericInterface.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "expected end of statement (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/genericFunctionInGenericInterface.kt"
   },
@@ -13695,8 +13686,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/genericProperty.kt"
   },
   "box/box/delegation/hiddenSuperOverrideIn1.0.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "expected end of statement (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/hiddenSuperOverrideIn1.0.kt"
   },
@@ -13724,20 +13715,20 @@
    "upstream": "compiler/testData/codegen/box/delegation/kt8154.kt"
   },
   "box/box/delegation/nestedNameClash.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type second.Base<second.Base<Int>>",
+   "detail": "unknown type second.Base<second.Base<Int>>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/nestedNameClash.kt"
   },
   "box/box/delegation/nestedNameClash2.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type second.Base",
+   "detail": "unknown type second.Base",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/nestedNameClash2.kt"
   },
   "box/box/delegation/smartCastedDelegation.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "expected end of statement (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/smartCastedDelegation.kt"
   },
@@ -13748,8 +13739,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/viaTypeAlias.kt"
   },
   "box/box/delegation/withDefaultParameters.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unsupported call",
+   "detail": "unsupported call",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/withDefaultParameters.kt"
   },
@@ -13812,8 +13803,8 @@
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/withIndexed.kt"
   },
   "box/box/devirtualization/anonymousObject.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "expected end of statement (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/devirtualization/anonymousObject.kt"
   },
@@ -14650,8 +14641,8 @@
    "upstream": "compiler/testData/codegen/box/enum/kt20651a.kt"
   },
   "box/box/enum/kt20651b.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "unknown FOO (stdlib API / unsupported decl)",
+   "detail": "unknown name 'FOO'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt20651b.kt"
   },
@@ -14890,9 +14881,8 @@
    "upstream": "compiler/testData/codegen/box/enum/varargParam.kt"
   },
   "box/box/enum/whenInObject.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/whenInObject.kt"
   },
   "box/box/equivalentCalls/localEquivalentWins.kt": {
@@ -15693,7 +15683,7 @@
   },
   "box/box/extensionFunctions/thisMethodInObjectLiteral.kt": {
    "category": "generics",
-   "detail": "generic member extension functions are not supported (at '{')",
+   "detail": "generic member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/thisMethodInObjectLiteral.kt"
   },
@@ -16103,14 +16093,14 @@
    "upstream": "compiler/testData/codegen/box/finally/tryLoopTry.kt"
   },
   "box/box/fir/anonymousOverrideWithDefaultInLocalOverridden.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other syntax (at 'inner')",
+   "detail": "nested declarations are only supported in classes (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/anonymousOverrideWithDefaultInLocalOverridden.kt"
   },
   "box/box/fir/anonymousOverrideWithDefaultInOverridden.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other syntax (at 'inner')",
+   "detail": "nested declarations are only supported in classes (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/anonymousOverrideWithDefaultInOverridden.kt"
   },
@@ -16177,8 +16167,8 @@
    "upstream": "compiler/testData/codegen/box/fir/inferenceWithTypeAliasFromOtherModule.kt"
   },
   "box/box/fir/initializationInLocalInnerClassWithSecondaryConstructor.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "other syntax (at 'inner')",
+   "detail": "nested declarations are only supported in classes (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/initializationInLocalInnerClassWithSecondaryConstructor.kt"
   },
@@ -16215,9 +16205,8 @@
    "upstream": "compiler/testData/codegen/box/fir/missingDependencyClassInTypeArguments.kt"
   },
   "box/box/fir/multipleDefaultsFalsePositiveDelegation.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fir/multipleDefaultsFalsePositiveDelegation.kt"
   },
   "box/box/fir/nestedClassTypeParameterDeserialization.kt": {
@@ -16617,20 +16606,20 @@
    "upstream": "compiler/testData/codegen/box/funInterface/castFromAny.kt"
   },
   "box/box/funInterface/contravariantIntersectionType.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other syntax (at 'Consumer')",
+   "detail": "expected '(' (at 'Consumer')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionType.kt"
   },
   "box/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other syntax (at 'Consumer')",
+   "detail": "expected '(' (at 'Consumer')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype.kt"
   },
   "box/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype2.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other syntax (at 'IFoo')",
+   "detail": "expected '(' (at 'IFoo')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype2.kt"
   },
@@ -17325,14 +17314,14 @@
    "upstream": "compiler/testData/codegen/box/functions/kt1038.kt"
   },
   "box/box/functions/kt1199.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt1199.kt"
   },
   "box/box/functions/kt1413.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "unknown local (stdlib API / unsupported decl)",
+   "detail": "unknown function 'local'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt1413.kt"
   },
@@ -17519,9 +17508,8 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4119.kt"
   },
   "box/box/functions/localFunctions/kt4119_2.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4119_2.kt"
   },
   "box/box/functions/localFunctions/kt4514.kt": {
@@ -17635,8 +17623,8 @@
    "upstream": "compiler/testData/codegen/box/functions/nothisnoclosure.kt"
   },
   "box/box/functions/overloadByInterfaceType.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: overloads are not supported: C.foo",
+   "detail": "overloads are not supported: C.foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/overloadByInterfaceType.kt"
   },
@@ -18063,14 +18051,14 @@
    "upstream": "compiler/testData/codegen/box/inference/capturedSelfInsideIntersection.kt"
   },
   "box/box/inference/capturedSelfInsideIntersection2.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/capturedSelfInsideIntersection2.kt"
   },
   "box/box/inference/capturedSelfInsideIntersection3.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/capturedSelfInsideIntersection3.kt"
   },
@@ -18163,8 +18151,8 @@
    "upstream": "compiler/testData/codegen/box/inference/integerLiteralTypeInLamdaReturnType.kt"
   },
   "box/box/inference/kt10822.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: unknown type U",
+   "detail": "unknown type U",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/kt10822.kt"
   },
@@ -18234,8 +18222,8 @@
    "upstream": "compiler/testData/codegen/box/inference/lastExpressionOfLambdaWithNothingConstraint.kt"
   },
   "box/box/inference/mapCollectChainWithNullResult.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/mapCollectChainWithNullResult.kt"
   },
@@ -18262,8 +18250,8 @@
    "upstream": "compiler/testData/codegen/box/inference/overrideGenericDefaultMethod.kt"
   },
   "box/box/inference/pcla/builderCallAsReturnTypeInLocalClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/builderCallAsReturnTypeInLocalClass.kt"
   },
@@ -18415,8 +18403,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt50827b.kt"
   },
   "box/box/inference/pcla/issues/kt51988.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown type AB1",
+   "detail": "unknown type AB1",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt51988.kt"
   },
@@ -18691,8 +18679,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300i.kt"
   },
   "box/box/inference/pcla/issues/kt65300j.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected ')' (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300j.kt"
   },
@@ -18727,8 +18715,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66359b.kt"
   },
   "box/box/inference/pcla/issues/kt67993.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt67993.kt"
   },
@@ -18819,8 +18807,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ByAssignmentToALocalVariableYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideAnonymousObject.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideAnonymousObject.kt"
   },
@@ -18859,8 +18847,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughLocalVariable.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/AnonymousObject.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "unknown $anon0 (stdlib API / unsupported decl)",
+   "detail": "unknown function '$anon0'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/AnonymousObject.kt"
   },
@@ -19200,8 +19188,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/posptonedPCLACallInsideStringInterpolation.kt"
   },
   "box/box/inference/pcla/propagateInferenceSessionIntoDeclarationAnalyzers.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/propagateInferenceSessionIntoDeclarationAnalyzers.kt"
   },
@@ -19346,8 +19334,8 @@
    "upstream": "compiler/testData/codegen/box/inference/whenAtAssignmentWithSmartCast.kt"
   },
   "box/box/inference/whenAtAssignmentWithSmartCastInsideCapturedLambda.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of materialize; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/whenAtAssignmentWithSmartCastInsideCapturedLambda.kt"
   },
@@ -19943,8 +19931,8 @@
    "upstream": "compiler/testData/codegen/box/inline/iteratorOnInlineFunctionResult.kt"
   },
   "box/box/inline/kt20245.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "unknown data (stdlib API / unsupported decl)",
+   "detail": "unknown name 'data'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/kt20245.kt"
   },
@@ -20076,8 +20064,8 @@
    "upstream": "compiler/testData/codegen/box/inline/localInlineFunctionReference.kt"
   },
   "box/box/inline/localObjectReturnedFromWhen.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/localObjectReturnedFromWhen.kt"
   },
@@ -21013,20 +21001,20 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeForFunctionReturningInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/bridgeGenerationWithInlineClassOverAny.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeGenerationWithInlineClassOverAny.kt"
   },
   "box/box/inlineClasses/bridgeGenerationWithInlineClassOverAnyGeneric.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeGenerationWithInlineClassOverAnyGeneric.kt"
   },
   "box/box/inlineClasses/bridgeGenerationWithInlineClassOverAnyGeneric2.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeGenerationWithInlineClassOverAnyGeneric2.kt"
   },
@@ -21757,14 +21745,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInLambdaGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInObject.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '{')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression body with an anonymous object needs an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInObject.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInObjectGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '{')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression body with an anonymous object needs an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInObjectGeneric.kt"
   },
@@ -21823,14 +21811,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/lambdaInInlineClassFunGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/objectInInlineClassFun.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '{')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression body with an anonymous object needs an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/objectInInlineClassFun.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/objectInInlineClassFunGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '{')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression body with an anonymous object needs an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/objectInInlineClassFunGeneric.kt"
   },
@@ -22441,15 +22429,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionExpressionGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/anonymousObjectInFunctionWithMangledName.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/anonymousObjectInFunctionWithMangledName.kt"
   },
   "box/box/inlineClasses/functionNameMangling/anonymousObjectInFunctionWithMangledNameGeneric.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/anonymousObjectInFunctionWithMangledNameGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/extensionFunctionsDoNotClash.kt": {
@@ -22820,14 +22806,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineCollectionOfInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassCollection/inlineListOfInlineClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "interfaces",
+   "detail": "unknown interface List$Z",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineListOfInlineClass.kt"
   },
   "box/box/inlineClasses/inlineClassCollection/inlineListOfInlineClassGeneric.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "interfaces",
+   "detail": "unknown interface List$Z$Int$$",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineListOfInlineClassGeneric.kt"
   },
@@ -22961,12 +22947,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 806096096\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387872\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 806095840\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531488\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23638,8 +23624,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt57973.kt"
   },
   "box/box/inlineClasses/kt70461.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: unknown type Nothing",
+   "detail": "unknown type Nothing",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt70461.kt"
   },
@@ -24045,8 +24031,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/classResultOverride.kt"
   },
   "box/box/inlineClasses/returnResult/interface.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression body with an anonymous object needs an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/interface.kt"
   },
@@ -24397,104 +24383,104 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/any.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/any.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/anyGeneric.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/anyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/anyN.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/anyN.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/anyNGeneric.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/anyNGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/anyNGeneric2.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/anyNGeneric2.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/iface.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/iface.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceChild.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceChild.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceChildGeneric.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceChildGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceGeneric.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/nullableResult.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type Result<T>?",
+   "detail": "unknown type Result<T>?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/nullableResult.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/primitive.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/primitive.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/primitiveGeneric.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/primitiveGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/result.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type Result<T>",
+   "detail": "unknown type Result<T>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/result.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAny.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type Result<T>",
+   "detail": "unknown type Result<T>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAny.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAnyGeneric.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type Result<T>",
+   "detail": "unknown type Result<T>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAnyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/string.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/string.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/stringGeneric.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/stringGeneric.kt"
   },
@@ -25274,8 +25260,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/nestedInPackage.kt"
   },
   "box/box/innerNested/nestedInnerClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other syntax (at 'inner')",
+   "detail": "nested declarations are only supported in classes (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/nestedInnerClass.kt"
   },
@@ -25326,14 +25312,14 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/innerExtendsInnerWithProperOuterCapture.kt"
   },
   "box/box/innerNested/superConstructorCall/kt11833_1.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "local / extension functions",
+   "detail": "expected end of statement (at 'fun')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/kt11833_1.kt"
   },
   "box/box/innerNested/superConstructorCall/kt11833_2.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "local / extension functions",
+   "detail": "expected end of statement (at 'fun')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/kt11833_2.kt"
   },
@@ -25362,8 +25348,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/localWithClosureExtendsLocalWithClosure.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsClassDefaultArgument.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "class bodies / constructors",
+   "detail": "constructor A expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsClassDefaultArgument.kt"
   },
@@ -25374,14 +25360,14 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsClassVararg.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsInner.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Inner expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInner.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsInnerDefaultArgument.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInnerDefaultArgument.kt"
   },
@@ -25392,38 +25378,38 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInnerOfLocalVarargAndDefault.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsInnerOfLocalWithCapture.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Inner expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInnerOfLocalWithCapture.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsInnerWithDelegatingConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class Inner needs an outer instance (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInnerWithDelegatingConstructor.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsLocalCaptureInSuperCall.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "unknown result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsLocalCaptureInSuperCall.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsLocalWithClosure.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected ')' (at ':')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('c')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsLocalWithClosure.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsLocal_kt16858.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsLocal_kt16858.kt"
   },
   "box/box/innerNested/superConstructorCall/objectOuterDiffersFromInnerOuter.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "unknown foo (stdlib API / unsupported decl)",
+   "detail": "unknown function 'foo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectOuterDiffersFromInnerOuter.kt"
   },
@@ -25599,21 +25585,20 @@
    "upstream": "compiler/testData/codegen/box/ir/anonymousClassLeak.kt"
   },
   "box/box/ir/anonymousObjectInForLoopIteratorAndBody.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('x')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/anonymousObjectInForLoopIteratorAndBody.kt"
   },
   "box/box/ir/anonymousObjectInGenericFun.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ')')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/anonymousObjectInGenericFun.kt"
   },
   "box/box/ir/anonymousObjectInsideElvis.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected ')' (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/anonymousObjectInsideElvis.kt"
   },
   "box/box/ir/classInitializers.kt": {
@@ -26021,8 +26006,8 @@
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessorInnerExtensionFun.kt"
   },
   "box/box/labels/propertyAccessorObject.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "property accessors / delegation",
+   "detail": "unknown name 'this@getter'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessorObject.kt"
   },
@@ -26360,14 +26345,14 @@
    "upstream": "compiler/testData/codegen/box/localClass/noPrimaryConstructor.kt"
   },
   "box/box/localClass/objectExpressionInInitializer.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "local / extension functions",
+   "detail": "expected end of statement (at 'fun')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/objectExpressionInInitializer.kt"
   },
   "box/box/localClass/objectExpressionInProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "local / extension functions",
+   "detail": "expected end of statement (at 'fun')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/objectExpressionInProperty.kt"
   },
@@ -26378,32 +26363,31 @@
    "upstream": "compiler/testData/codegen/box/localClass/signatureConflictHiddenByTypeParameter.kt"
   },
   "box/box/localClass/tryCatch.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localClass/tryCatch.kt"
   },
   "box/box/localClass/virtualCallFromConstructor.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('result')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/virtualCallFromConstructor.kt"
   },
   "box/box/localClasses/anonymousObjectInExtension.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "objects / companion objects",
+   "detail": "unknown type WithCompanion.Companion",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/anonymousObjectInExtension.kt"
   },
   "box/box/localClasses/anonymousObjectInInitializer.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: local declarations are only supported in function bodies",
+   "detail": "local declarations are only supported in function bodies",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/anonymousObjectInInitializer.kt"
   },
   "box/box/localClasses/anonymousObjectInParameterInitializer.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected identifier (at '{')",
+   "category": "lambdas / function types / references",
+   "detail": "trailing lambdas in default arguments are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/anonymousObjectInParameterInitializer.kt"
   },
@@ -26426,8 +26410,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/closureOfLambdaInLocalClass.kt"
   },
   "box/box/localClasses/closureWithSelfInstantiation.kt": {
-   "category": "other: unknown variable 'log'",
-   "detail": "unknown variable 'log'",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('capturedInBody')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/closureWithSelfInstantiation.kt"
   },
@@ -26479,20 +26463,20 @@
    "upstream": "compiler/testData/codegen/box/localClasses/innerOfLocalCaptureExtensionReceiver.kt"
   },
   "box/box/localClasses/kt10835.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "non-local return from a 'with' lambda is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/kt10835.kt"
   },
   "box/box/localClasses/kt10835a.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Y expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/kt10835a.kt"
   },
   "box/box/localClasses/kt2700.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: local declarations are only supported in function bodies",
+   "detail": "local declarations are only supported in function bodies",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/kt2700.kt"
   },
@@ -26502,8 +26486,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/kt2873.kt"
   },
   "box/box/localClasses/kt3210.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/kt3210.kt"
   },
@@ -26541,20 +26525,20 @@
    "upstream": "compiler/testData/codegen/box/localClasses/localClassCaptureExtensionReceiver.kt"
   },
   "box/box/localClasses/localClassInInitializer.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: local declarations are only supported in function bodies",
+   "detail": "local declarations are only supported in function bodies",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localClassInInitializer.kt"
   },
   "box/box/localClasses/localClassInParameterInitializer.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "lambdas / function types / references",
+   "detail": "trailing lambdas in default arguments are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localClassInParameterInitializer.kt"
   },
   "box/box/localClasses/localClassUsedBeforeDeclaration.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other syntax (at 'inner')",
+   "detail": "nested declarations are only supported in classes (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localClassUsedBeforeDeclaration.kt"
   },
@@ -26587,9 +26571,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/noclosure.kt"
   },
   "box/box/localClasses/object.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localClasses/object.kt"
   },
   "box/box/localClasses/ownClosureOfInnerLocalClass.kt": {
@@ -28328,9 +28311,8 @@
    "upstream": "compiler/testData/codegen/box/nonLocalReturns/kt9644let.kt"
   },
   "box/box/nonLocalReturns/localReturnInsideProperty.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/nonLocalReturns/localReturnInsideProperty.kt"
   },
   "box/box/nonLocalReturns/returnInsideTwoLambdas.kt": {
@@ -28446,20 +28428,18 @@
    "upstream": "compiler/testData/codegen/box/object/method_call.kt"
   },
   "box/box/objectExpression/expr1.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objectExpression/expr1.kt"
   },
   "box/box/objectExpression/expr2.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objectExpression/expr2.kt"
   },
   "box/box/objectExpression/expr3.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('cnt')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objectExpression/expr3.kt"
   },
@@ -28475,20 +28455,19 @@
    "upstream": "compiler/testData/codegen/box/objectIntrinsics/objects.kt"
   },
   "box/box/objects/anonymousObjectAndContrvariantProjection.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown type Number",
+   "detail": "unknown type Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/anonymousObjectAndContrvariantProjection.kt"
   },
   "box/box/objects/anonymousObjectPropertyInitialization.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/anonymousObjectPropertyInitialization.kt"
   },
   "box/box/objects/anonymousObjectReturnsFromTopLevelFun.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown method IFoo.qux()",
+   "detail": "unknown method IFoo.qux()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/anonymousObjectReturnsFromTopLevelFun.kt"
   },
@@ -28667,8 +28646,8 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/shortCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromAnonymousObjectInNestedClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '{')",
+   "category": "unknown result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromAnonymousObjectInNestedClass.kt"
   },
@@ -28752,8 +28731,8 @@
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToPropertyImportedFromObject.kt"
   },
   "box/box/objects/compoundAssignmentToPropertyWithQualifier.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: unknown method A.plus()",
+   "detail": "unknown method A.plus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToPropertyWithQualifier.kt"
   },
@@ -28763,8 +28742,8 @@
    "upstream": "compiler/testData/codegen/box/objects/dceRemoveUnusedEagerlyInitializedObject.kt"
   },
   "box/box/objects/flist.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "class bodies / constructors",
+   "detail": "anonymous objects extending their enclosing class are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/flist.kt"
   },
@@ -28787,8 +28766,8 @@
    "upstream": "compiler/testData/codegen/box/objects/initializerBlockResetToDefault.kt"
   },
   "box/box/objects/innerClassInsideAnonymousObject.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other syntax (at 'inner')",
+   "detail": "nested declarations are only supported in classes (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/innerClassInsideAnonymousObject.kt"
   },
@@ -28798,8 +28777,8 @@
    "upstream": "compiler/testData/codegen/box/objects/interfaceCompanion.kt"
   },
   "box/box/objects/interfaceCompanionObjectReference.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '{')",
+   "category": "objects / companion objects",
+   "detail": "unknown method Test$Companion.method()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/interfaceCompanionObjectReference.kt"
   },
@@ -28809,8 +28788,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt1047a.kt"
   },
   "box/box/objects/kt11117.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "unknown value (stdlib API / unsupported decl)",
+   "detail": "unknown name 'value'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt11117.kt"
   },
@@ -28836,14 +28815,14 @@
    "upstream": "compiler/testData/codegen/box/objects/kt2398.kt"
   },
   "box/box/objects/kt2663.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: val '$cap$a' cannot be reassigned",
+   "detail": "val '$cap$a' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt2663.kt"
   },
   "box/box/objects/kt2663_3.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: val '$cap$a' cannot be reassigned",
+   "detail": "val '$cap$a' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt2663_3.kt"
   },
@@ -28854,39 +28833,37 @@
    "upstream": "compiler/testData/codegen/box/objects/kt2675.kt"
   },
   "box/box/objects/kt2719.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/kt2719.kt"
   },
   "box/box/objects/kt2822.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt2822.kt"
   },
   "box/box/objects/kt32351.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('x')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt32351.kt"
   },
   "box/box/objects/kt32749.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: local declarations are only supported in function bodies",
+   "detail": "local declarations are only supported in function bodies",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt32749.kt"
   },
   "box/box/objects/kt3684.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "class bodies / constructors",
+   "detail": "anonymous objects extending their enclosing class are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt3684.kt"
   },
   "box/box/objects/kt4086.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/kt4086.kt"
   },
   "box/box/objects/kt45170.kt": {
@@ -28896,8 +28873,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt45170.kt"
   },
   "box/box/objects/kt46136.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected A$String, found $anon0",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt46136.kt"
   },
@@ -28946,14 +28923,14 @@
    "upstream": "compiler/testData/codegen/box/objects/object.kt"
   },
   "box/box/objects/objectExtendsInnerAndReferencesOuterMember.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "unknown foo (stdlib API / unsupported decl)",
+   "detail": "unknown function 'foo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/objectExtendsInnerAndReferencesOuterMember.kt"
   },
   "box/box/objects/objectInLocalAnonymousObject.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "unknown boo (stdlib API / unsupported decl)",
+   "detail": "unknown name 'boo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/objectInLocalAnonymousObject.kt"
   },
@@ -28963,14 +28940,14 @@
    "upstream": "compiler/testData/codegen/box/objects/objectInitialization_kt5523.kt"
   },
   "box/box/objects/objectLiteral.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('x')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/objectLiteral.kt"
   },
   "box/box/objects/objectLiteralInClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '{')",
+   "category": "unknown s (stdlib API / unsupported decl)",
+   "detail": "unknown name 's'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/objectLiteralInClass.kt"
   },
@@ -29005,7 +28982,7 @@
   },
   "box/box/objects/receiverInConstructor.kt": {
    "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "detail": "property 'v' of $anon0 hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/receiverInConstructor.kt"
   },
@@ -29015,8 +28992,8 @@
    "upstream": "compiler/testData/codegen/box/objects/safeAccess.kt"
   },
   "box/box/objects/selfReferenceToCompanionObjectInAnonymousObjectInSuperConstructorCall.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "objects / companion objects",
+   "detail": "unknown method Host$Companion.fn()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
@@ -29037,8 +29014,8 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToCompanionObjectInLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToInterfaceCompanionObjectInAnonymousObjectInSuperConstructorCall.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "objects / companion objects",
+   "detail": "unknown method Host$Companion.fn()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
@@ -29059,8 +29036,8 @@
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToInterfaceCompanionObjectInLambdaInSuperConstructorCall.kt"
   },
   "box/box/objects/selfReferenceToObjectInAnonymousObjectInSuperConstructorCall.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown method Test.fn()",
+   "detail": "unknown method Test.fn()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/selfReferenceToObjectInAnonymousObjectInSuperConstructorCall.kt"
   },
@@ -29086,14 +29063,14 @@
    "upstream": "compiler/testData/codegen/box/objects/simpleObject.kt"
   },
   "box/box/objects/substitutionFunctionFromSuper.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "enum classes",
+   "detail": "constructor Inner$Enum expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/substitutionFunctionFromSuper.kt"
   },
   "box/box/objects/thisInConstructor.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'v' of $anon0 hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/thisInConstructor.kt"
   },
@@ -29104,14 +29081,14 @@
    "upstream": "compiler/testData/codegen/box/objects/thisRefToObjectInNestedClassConstructorCall.kt"
   },
   "box/box/objects/useAnonymousObjectAsIterator.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "interfaces",
+   "detail": "unknown interface Iterator$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useAnonymousObjectAsIterator.kt"
   },
   "box/box/objects/useAnonymousObjectFunction.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "enum classes",
+   "detail": "constructor Inner$Enum expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useAnonymousObjectFunction.kt"
   },
@@ -29224,8 +29201,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/infixFunctionOverBuiltinMember.kt"
   },
   "box/box/operatorConventions/kt14201.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown function 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt14201.kt"
   },
@@ -29307,7 +29284,7 @@
   },
   "box/box/operatorConventions/untilOperator.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "detail": "unknown interface ClosedRange$A",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/untilOperator.kt"
   },
@@ -30249,8 +30226,8 @@
    "upstream": "compiler/testData/codegen/box/properties/backingField/typeCheckSupertypeWithValueClassExplicitBackingField.kt"
   },
   "box/box/properties/classArtificialFieldInsideNested.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'your' of $anon0 hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classArtificialFieldInsideNested.kt"
   },
@@ -30266,8 +30243,8 @@
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideLocalInSetter.kt"
   },
   "box/box/properties/classFieldInsideNested.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'your' of $anon0 hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideNested.kt"
   },
@@ -30288,8 +30265,8 @@
    "upstream": "compiler/testData/codegen/box/properties/classObjectProperties.kt"
   },
   "box/box/properties/classPrivateArtificialFieldInsideNested.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'your' of $anon0 hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classPrivateArtificialFieldInsideNested.kt"
   },
@@ -30561,8 +30538,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt4340.kt"
   },
   "box/box/properties/kt4373.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt4373.kt"
   },
@@ -30679,9 +30656,8 @@
    "upstream": "compiler/testData/codegen/box/properties/lateinit/local/uninitializedRead.kt"
   },
   "box/box/properties/lateinit/localClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/localClass.kt"
   },
   "box/box/properties/lateinit/nameClash.kt": {
@@ -31108,14 +31084,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/inCharSequence.kt"
   },
   "box/box/ranges/contains/inComparableRange.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "interfaces",
+   "detail": "unknown interface ClosedFloatingPointRange$Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inComparableRange.kt"
   },
   "box/box/ranges/contains/inCustomObjectRange.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "interfaces",
+   "detail": "unknown interface ClosedRange$A",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/inCustomObjectRange.kt"
   },
@@ -31652,8 +31628,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInCharSequenceLengthIncreasedInLoopBody.kt"
   },
   "box/box/ranges/forInCharSequenceWithCustomIterator.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "interfaces",
+   "detail": "unknown interface CharSequence",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInCharSequenceWithCustomIterator.kt"
   },
@@ -31676,8 +31652,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInCustomIterable.kt"
   },
   "box/box/ranges/forInDoubleRangeWithCustomIterator.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "interfaces",
+   "detail": "unknown interface Iterator$Double",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInDoubleRangeWithCustomIterator.kt"
   },
@@ -31718,8 +31694,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInDownTo/forNullableIntInDownTo.kt"
   },
   "box/box/ranges/forInFloatRangeWithCustomIterator.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other syntax (at 'f')",
+   "detail": "expected end of statement (at 'f')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInFloatRangeWithCustomIterator.kt"
   },
@@ -35382,8 +35358,8 @@
    "upstream": "compiler/testData/codegen/box/reflection/types/useSiteVariance.kt"
   },
   "box/box/regressions/Kt1149.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('res')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/Kt1149.kt"
   },
@@ -35727,8 +35703,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt789.kt"
   },
   "box/box/regressions/kt79516.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt79516.kt"
   },
@@ -35789,8 +35765,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/nullableAfterExclExcl.kt"
   },
   "box/box/regressions/objectCaptureOuterConstructorProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at ':')",
+   "category": "other: unknown type Iterator<Nothing>",
+   "detail": "unknown type Iterator<Nothing>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/objectCaptureOuterConstructorProperty.kt"
   },
@@ -35955,8 +35931,8 @@
    "upstream": "compiler/testData/codegen/box/reified/kt36237.kt"
   },
   "box/box/reified/kt39256_privateInlineWithAnonymousObject.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/kt39256_privateInlineWithAnonymousObject.kt"
   },
@@ -36856,8 +36832,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/multipleSmartCast.kt"
   },
   "box/box/smartCasts/negativesmartCastAugmentedAssignment.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "annotations",
+   "detail": "cannot assign to IrDeclaration.annotations",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/negativesmartCastAugmentedAssignment.kt"
   },
@@ -36895,8 +36871,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/smartcastFromGenericToString.kt"
   },
   "box/box/smartCasts/smartcastToStarType.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/smartcastToStarType.kt"
   },
@@ -37559,14 +37535,14 @@
    "upstream": "compiler/testData/codegen/box/super/kt3492TraitProperty.kt"
   },
   "box/box/super/kt4173.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: unknown variable 'x'",
+   "detail": "unknown variable 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt4173.kt"
   },
   "box/box/super/kt4173_2.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: unknown variable 'x'",
+   "detail": "unknown variable 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt4173_2.kt"
   },
@@ -37576,8 +37552,8 @@
    "upstream": "compiler/testData/codegen/box/super/kt4173_3.kt"
   },
   "box/box/super/kt4982.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('result')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt4982.kt"
   },
@@ -37606,8 +37582,8 @@
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt17464_arrayOf.kt"
   },
   "box/box/super/superConstructor/kt18356.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt18356.kt"
   },
@@ -37636,8 +37612,8 @@
    "upstream": "compiler/testData/codegen/box/super/traitproperty.kt"
   },
   "box/box/super/unqualifiedSuper.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "interfaces",
+   "detail": "abstract method Base.interfaceFun() cannot be called via super",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/unqualifiedSuper.kt"
   },
@@ -38067,9 +38043,8 @@
    "upstream": "compiler/testData/codegen/box/topLevelInitializtion/suspendLambdaDoesNotTriggerFileInit.kt"
   },
   "box/box/topLevelPrivate/privateInInlineNested.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/topLevelPrivate/privateInInlineNested.kt"
   },
   "box/box/topLevelPrivate/syntheticAccessor.kt": {
@@ -38150,9 +38125,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt1936_1.kt"
   },
   "box/box/traits/kt2260.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/kt2260.kt"
   },
   "box/box/traits/kt2399.kt": {
@@ -38790,7 +38764,7 @@
   },
   "box/box/typealias/typeAliasInAnonymousObjectType.kt": {
    "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "detail": "unknown superclass FooStr",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasInAnonymousObjectType.kt"
   },

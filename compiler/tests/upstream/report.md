@@ -7,57 +7,57 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| UNSUPPORTED | 3141 |
+| UNSUPPORTED | 3115 |
 | N/A | 2984 |
-| PASS | 2322 |
+| PASS | 2348 |
 | MISCOMPILE | 28 |
 
-Kept in tree (re-runnable with `run.py`): 2322
+Kept in tree (re-runnable with `run.py`): 2348
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| interfaces | 275 |
-| strings / templates | 229 |
-| operator/infix functions | 218 |
-| generics | 180 |
-| lambdas / function types / references | 129 |
-| property accessors / delegation | 120 |
+| interfaces | 255 |
+| strings / templates | 233 |
+| generics | 182 |
+| operator/infix functions | 180 |
+| lambdas / function types / references | 138 |
+| property accessors / delegation | 132 |
 | type inference / mismatch | 111 |
-| class bodies / constructors | 110 |
-| other syntax (at ':') | 99 |
-| inheritance (open/abstract/sealed) | 66 |
-| other syntax (at 'f') | 55 |
-| objects / companion objects | 52 |
+| class bodies / constructors | 83 |
+| other syntax (at 'f') | 56 |
+| objects / companion objects | 56 |
 | other: expected '=' (at ' | 51 |
+| local / extension functions | 49 |
 | other syntax (at 'context') | 47 |
-| local / extension functions | 45 |
+| inheritance (open/abstract/sealed) | 46 |
+| type inference (expression bodies) | 45 |
+| other syntax (at '.') | 43 |
 | inline/value classes | 42 |
-| other syntax (at '.') | 42 |
-| type inference (expression bodies) | 36 |
+| other: unknown type T | 38 |
 | nullable types | 34 |
 | destructuring declarations | 29 |
+| other syntax (at ':') | 28 |
 | other syntax (at 'F') | 27 |
-| annotations | 21 |
+| other: local classes that capture local variables are not supported | 23 |
+| annotations | 22 |
 | other syntax (at ',') | 20 |
 | types: Float | 18 |
 | other: safe call result must be a reference | 18 |
 | other syntax (at 'FunIFace') | 18 |
-| other: unknown type Number | 16 |
+| other: unknown type Number | 17 |
 | other syntax (at 'where') | 15 |
 | when expressions | 14 |
 | other: unknown type * | 14 |
 | other syntax (at 'suspend') | 13 |
 | other syntax (at 'var') | 13 |
-| other: unknown type T | 12 |
-| other: local classes that capture local variables are not supported | 12 |
+| unknown x (stdlib API / unsupported decl) | 12 |
+| enum classes | 11 |
 | other syntax (at 'val') | 11 |
+| other: unknown type Nothing | 11 |
 | default arguments | 11 |
 | unknown A (stdlib API / unsupported decl) | 10 |
-| types: UIntArray | 10 |
-| other: unknown type Nothing | 10 |
-| enum classes | 9 |
 
 ## N/A reasons
 
@@ -108,8 +108,8 @@ Affected upstream tests:
 - MISCOMPILE `box/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt` — exit=0 stdout='Fail 4\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/inlineClassInInitBlock.kt` — exit=0 stdout='null\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/inlineClassInInitBlockGeneric.kt` — exit=0 stdout='null\n' stderr=''
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 806096096\n'
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 806095840\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -1341387872\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: 1074531488\n'
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/kt27140.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError\n'
