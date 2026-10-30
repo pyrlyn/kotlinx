@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 28,
   "N/A": 2984,
-  "PASS": 2282,
-  "UNSUPPORTED": 3181
+  "PASS": 2292,
+  "UNSUPPORTED": 3171
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -4049,9 +4049,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/genericMember.kt"
   },
   "box/box/callableReference/function/local/localClassMember.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('result')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/localClassMember.kt"
   },
   "box/box/callableReference/function/local/localFunctionName.kt": {
@@ -5637,9 +5636,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt725.kt"
   },
   "box/box/classes/kt8011.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('str')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt8011.kt"
   },
   "box/box/classes/kt8011a.kt": {
@@ -5818,9 +5816,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/kt4174.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/kt4174a.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('s')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/kt4174a.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/localCapturedInAnonymousObjectInLocalClass.kt": {
@@ -5842,9 +5839,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/localCapturedInLambdaInInnerClassInLocalClass.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/localCapturedInLambdaInLocalClass.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('o')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/localCapturedInLambdaInLocalClass.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/localFunctionCapturedInLambda.kt": {
@@ -5854,8 +5850,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/localFunctionCapturedInLambda.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerAndLocalCapturedInLocalClass.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('localK')",
+   "category": "unknown outerO (stdlib API / unsupported decl)",
+   "detail": "unknown name 'outerO'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerAndLocalCapturedInLocalClass.kt"
   },
@@ -5950,9 +5946,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerEnumEntryCapturedInLambdaInInnerClass.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/properValueCapturedByClosure1.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('ok')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/properValueCapturedByClosure1.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/properValueCapturedByClosure2.kt": {
@@ -5961,9 +5956,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/properValueCapturedByClosure2.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/referenceToCapturedVariablesInMultipleLambdas.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('x')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/referenceToCapturedVariablesInMultipleLambdas.kt"
   },
   "box/box/closures/captureOuterProperty/captureFunctionInProperty.kt": {
@@ -18842,8 +18836,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideAnonymousObject.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideLocalClass.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('arg')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideLocalClass.kt"
   },
@@ -22511,15 +22505,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/genericFunctionsDoNotClashGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/localClassInFunctionWithMangledName.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('s')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/localClassInFunctionWithMangledName.kt"
   },
   "box/box/inlineClasses/functionNameMangling/localClassInFunctionWithMangledNameGeneric.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('s')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/localClassInFunctionWithMangledNameGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/mangledFunctionsCanBeOverridden.kt": {
@@ -22987,12 +22979,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952096\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146693856\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804516640\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952096\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -26368,8 +26360,8 @@
    "upstream": "compiler/testData/codegen/box/localClass/localFunctionCallFromLocalClass.kt"
   },
   "box/box/localClass/localFunctionInLocalClass.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('x')",
+   "category": "unknown local (stdlib API / unsupported decl)",
+   "detail": "unknown function 'local'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/localFunctionInLocalClass.kt"
   },
@@ -26452,8 +26444,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/closureOfLambdaInLocalClass.kt"
   },
   "box/box/localClasses/closureWithSelfInstantiation.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('log')",
+   "category": "other: unknown variable 'log'",
+   "detail": "unknown variable 'log'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/closureWithSelfInstantiation.kt"
   },
@@ -26539,20 +26531,19 @@
    "upstream": "compiler/testData/codegen/box/localClasses/kt3389.kt"
   },
   "box/box/localClasses/kt3584.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('s')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localClasses/kt3584.kt"
   },
   "box/box/localClasses/kt4174.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('s')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/kt4174.kt"
   },
   "box/box/localClasses/kt45383.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('cur')",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/kt45383.kt"
   },
@@ -26650,9 +26641,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/subclassingExtensionReceiverClass.kt"
   },
   "box/box/localClasses/withclosure.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('x')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localClasses/withclosure.kt"
   },
   "box/box/localEscapeAnalysis/arraysFieldWrite.kt": {
@@ -30294,8 +30284,8 @@
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideLambda.kt"
   },
   "box/box/properties/classFieldInsideLocalInSetter.kt": {
-   "category": "other: local classes that capture local variables are not supported",
-   "detail": "local classes that capture local variables are not supported ('arg')",
+   "category": "other: unknown variable 'field'",
+   "detail": "unknown variable 'field'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideLocalInSetter.kt"
   },
