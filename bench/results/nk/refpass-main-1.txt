@@ -1,0 +1,18 @@
+# refpass-main-1 origin/main 2026-10-29 23:56 EET load: { 37.28 159.58 391.36 }
+sum 3.713
+alloc 75.739
+bigheap 120.804
+closures 84.487
+cycles 45.943
+dispatch 95.106
+file 50.959
+free 50.824
+hashmap 70.914
+lru 100.034
+matmul 10.206
+nbody 76.773
+recursion 6.139
+refpass 143.275
+sort 62.74
+strings 31.955
+trees 122.949

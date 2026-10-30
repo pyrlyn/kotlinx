@@ -1,0 +1,18 @@
+# main-8fa1cd9 origin/main 2026-10-30 01:25 EET load: { 17.04 18.27 29.95 }
+sum 3.704
+alloc 75.242
+bigheap 115.766
+closures 82.775
+cycles 44.917
+dispatch 94.48
+file 51.536
+free 49.727
+hashmap 65.594
+lru 88.728
+matmul 10.103
+nbody 70.167
+recursion 5.968
+refpass 130.167
+sort 61.709
+strings 32.401
+trees 122.6

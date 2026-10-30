@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 38,
   "N/A": 2984,
-  "PASS": 2006,
-  "UNSUPPORTED": 3445
+  "PASS": 2046,
+  "UNSUPPORTED": 3405
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -803,8 +803,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt3771.kt"
   },
   "box/box/arrays/kt4118.kt": {
-   "category": "other syntax (at 'Z2')",
-   "detail": "expected end of statement (at 'Z2')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt4118.kt"
   },
@@ -3036,8 +3036,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/largeVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/localFunctionWithDefault.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "generics",
+   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/localFunctionWithDefault.kt"
   },
@@ -3459,8 +3459,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassBoundMemberReferences.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassBoundValuesOrder.kt": {
-   "category": "other syntax (at 'render')",
-   "detail": "expected end of statement (at 'render')",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassBoundValuesOrder.kt"
   },
@@ -3887,8 +3887,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionInSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionFunctionLocal.kt": {
-   "category": "other syntax (at 'Int')",
-   "detail": "expected end of statement (at 'Int')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionLocal.kt"
   },
@@ -4015,27 +4015,24 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/captureOuter.kt"
   },
   "box/box/callableReference/function/local/classMember.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/classMember.kt"
   },
   "box/box/callableReference/function/local/closureWithSideEffect.kt": {
-   "category": "other syntax (at 'changeToOK')",
-   "detail": "expected end of statement (at 'changeToOK')",
+   "category": "other: unsupported callable reference ::changeToOK",
+   "detail": "unsupported callable reference ::changeToOK",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/closureWithSideEffect.kt"
   },
   "box/box/callableReference/function/local/constructor.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/constructor.kt"
   },
   "box/box/callableReference/function/local/constructorWithInitializer.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/constructorWithInitializer.kt"
   },
   "box/box/callableReference/function/local/enumExtendsTrait.kt": {
@@ -4044,92 +4041,87 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/enumExtendsTrait.kt"
   },
   "box/box/callableReference/function/local/equalsHashCode.kt": {
-   "category": "other syntax (at 'bar')",
-   "detail": "expected end of statement (at 'bar')",
+   "category": "other: unknown method $Fn$Unit.equals()",
+   "detail": "unknown method $Fn$Unit.equals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/equalsHashCode.kt"
   },
   "box/box/callableReference/function/local/extension.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/extension.kt"
   },
   "box/box/callableReference/function/local/extensionToLocalClass.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/extensionToLocalClass.kt"
   },
   "box/box/callableReference/function/local/extensionToPrimitive.kt": {
-   "category": "other syntax (at 'Int')",
-   "detail": "expected end of statement (at 'Int')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/extensionToPrimitive.kt"
   },
   "box/box/callableReference/function/local/extensionWithClosure.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
+   "category": "generics",
+   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/extensionWithClosure.kt"
   },
   "box/box/callableReference/function/local/genericMember.kt": {
-   "category": "other syntax (at 'Id')",
-   "detail": "expected end of statement (at 'Id')",
+   "category": "unknown Id (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Id'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/genericMember.kt"
   },
   "box/box/callableReference/function/local/localClassMember.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('result')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/localClassMember.kt"
   },
   "box/box/callableReference/function/local/localFunctionName.kt": {
-   "category": "other syntax (at 'OK')",
-   "detail": "expected end of statement (at 'OK')",
+   "category": "other: unknown property $Fn$Unit.name",
+   "detail": "unknown property $Fn$Unit.name",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/localFunctionName.kt"
   },
   "box/box/callableReference/function/local/localLocal.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "other: unsupported callable reference ::bar",
+   "detail": "unsupported callable reference ::bar",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/localLocal.kt"
   },
   "box/box/callableReference/function/local/recursiveClosure.kt": {
-   "category": "other syntax (at 'bar')",
-   "detail": "expected end of statement (at 'bar')",
+   "category": "local / extension functions",
+   "detail": "recursive local functions that capture local variables are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/recursiveClosure.kt"
   },
   "box/box/callableReference/function/local/simple.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/simple.kt"
   },
   "box/box/callableReference/function/local/simpleClosure.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "other: unsupported callable reference ::foo",
+   "detail": "unsupported callable reference ::foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/simpleClosure.kt"
   },
   "box/box/callableReference/function/local/simpleWithArg.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/simpleWithArg.kt"
   },
   "box/box/callableReference/function/local/unitWithSideEffect.kt": {
-   "category": "other syntax (at 'incrementState')",
-   "detail": "expected end of statement (at 'incrementState')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/unitWithSideEffect.kt"
   },
   "box/box/callableReference/function/local/withValueArguments.kt": {
-   "category": "strings / templates",
-   "detail": "expected end of statement (at 'indexToString')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/withValueArguments.kt"
   },
@@ -4262,14 +4254,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/functionAndKFunctionSharedClassSplit.kt"
   },
   "box/box/callableReference/genericConstructorReference.kt": {
-   "category": "other syntax (at 'Local1')",
-   "detail": "expected end of statement (at 'Local1')",
+   "category": "generics",
+   "detail": "expected identifier (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/genericConstructorReference.kt"
   },
   "box/box/callableReference/genericLocalClassConstructorReference.kt": {
-   "category": "other syntax (at 'FLocal')",
-   "detail": "expected end of statement (at 'FLocal')",
+   "category": "other: unsupported callable reference ::FLocal",
+   "detail": "unsupported callable reference ::FLocal",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/genericLocalClassConstructorReference.kt"
   },
@@ -4320,8 +4312,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt46902.kt"
   },
   "box/box/callableReference/kt47988.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
+   "category": "generics",
+   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt47988.kt"
   },
@@ -4348,8 +4340,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt49526b.kt"
   },
   "box/box/callableReference/kt50172.kt": {
-   "category": "other syntax (at 'f')",
-   "detail": "expected end of statement (at 'f')",
+   "category": "other: unsupported call",
+   "detail": "unsupported call",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt50172.kt"
   },
@@ -4480,8 +4472,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/kClassInstanceIsInitializedFirst.kt"
   },
   "box/box/callableReference/property/kt12044.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt12044.kt"
   },
@@ -4504,8 +4496,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt14330_2.kt"
   },
   "box/box/callableReference/property/kt15447.kt": {
-   "category": "other syntax (at 'localMethod')",
-   "detail": "expected end of statement (at 'localMethod')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt15447.kt"
   },
@@ -4538,8 +4530,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/overriddenInSubclass.kt"
   },
   "box/box/callableReference/property/privateSetOuterClass.kt": {
-   "category": "other syntax (at 'D')",
-   "detail": "expected end of statement (at 'D')",
+   "category": "loops / labels",
+   "detail": "unknown label this@C (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/privateSetOuterClass.kt"
   },
@@ -5639,8 +5631,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt508.kt"
   },
   "box/box/classes/kt5347.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('str')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt5347.kt"
   },
@@ -5678,14 +5670,14 @@
    "upstream": "compiler/testData/codegen/box/classes/kt725.kt"
   },
   "box/box/classes/kt8011.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('str')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt8011.kt"
   },
   "box/box/classes/kt8011a.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('capture')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt8011a.kt"
   },
@@ -5820,27 +5812,25 @@
    "upstream": "compiler/testData/codegen/box/closures/captureExtensionReceiver.kt"
   },
   "box/box/closures/captureExtensionReceiverX2.kt": {
-   "category": "strings / templates",
-   "detail": "expected end of statement (at 'String')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureExtensionReceiverX2.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/constructorParameterAndLocalCapturedInLambdaInLocalClass.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "unknown o (stdlib API / unsupported decl)",
+   "detail": "unknown name 'o'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/constructorParameterAndLocalCapturedInLambdaInLocalClass.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/constructorParameterCapturedInLambdaInLocalClass.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/constructorParameterCapturedInLambdaInLocalClass.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/constructorParameterCapturedInLambdaInLocalClass2.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/constructorParameterCapturedInLambdaInLocalClass2.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/kt13454.kt": {
@@ -5855,50 +5845,50 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/kt14148.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/kt4174.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/kt4174.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/kt4174a.kt": {
-   "category": "other syntax (at 'Z')",
-   "detail": "expected end of statement (at 'Z')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('s')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/kt4174a.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/localCapturedInAnonymousObjectInLocalClass.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/localCapturedInAnonymousObjectInLocalClass.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/localCapturedInAnonymousObjectInLocalClass2.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/localCapturedInAnonymousObjectInLocalClass2.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/localCapturedInLambdaInInnerClassInLocalClass.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown name 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/localCapturedInLambdaInInnerClassInLocalClass.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/localCapturedInLambdaInLocalClass.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('o')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/localCapturedInLambdaInLocalClass.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/localFunctionCapturedInLambda.kt": {
-   "category": "other syntax (at 'localFn')",
-   "detail": "expected end of statement (at 'localFn')",
+   "category": "unknown localFn (stdlib API / unsupported decl)",
+   "detail": "unknown function 'localFn'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/localFunctionCapturedInLambda.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerAndLocalCapturedInLocalClass.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('localK')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerAndLocalCapturedInLocalClass.kt"
   },
@@ -5946,8 +5936,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInLambdaInSubExpression.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInLocalClass.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown name 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInLocalClass.kt"
   },
@@ -5993,8 +5983,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerEnumEntryCapturedInLambdaInInnerClass.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/properValueCapturedByClosure1.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('ok')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/properValueCapturedByClosure1.kt"
   },
@@ -6004,8 +5994,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/properValueCapturedByClosure2.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/referenceToCapturedVariablesInMultipleLambdas.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('x')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/referenceToCapturedVariablesInMultipleLambdas.kt"
   },
@@ -6046,21 +6036,19 @@
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/inPropertyFromSuperSuperClass.kt"
   },
   "box/box/closures/captureOuterProperty/kt4176.kt": {
-   "category": "other syntax (at 'X')",
-   "detail": "expected end of statement (at 'X')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/kt4176.kt"
   },
   "box/box/closures/captureOuterProperty/kt4656.kt": {
-   "category": "other syntax (at 'b')",
-   "detail": "expected end of statement (at 'b')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/kt4656.kt"
   },
   "box/box/closures/capturedLocalGenericFun.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/capturedLocalGenericFun.kt"
   },
   "box/box/closures/capturedVarsOptimization/callableReferenceWithSwap.kt": {
@@ -6149,14 +6137,14 @@
    "upstream": "compiler/testData/codegen/box/closures/closureCapturingGenericParam.kt"
   },
   "box/box/closures/closureInsideClosure/localFunInsideLocalFun.kt": {
-   "category": "other syntax (at 'rec')",
-   "detail": "expected end of statement (at 'rec')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown function 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/localFunInsideLocalFun.kt"
   },
   "box/box/closures/closureInsideClosure/localFunInsideLocalFunDifferentSignatures.kt": {
-   "category": "other syntax (at 'rec')",
-   "detail": "expected end of statement (at 'rec')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown function 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/localFunInsideLocalFunDifferentSignatures.kt"
   },
@@ -6167,26 +6155,25 @@
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/propertyAndFunctionNameClash.kt"
   },
   "box/box/closures/closureInsideClosure/threeLevels.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "unknown bar (stdlib API / unsupported decl)",
+   "detail": "unknown function 'bar'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/threeLevels.kt"
   },
   "box/box/closures/closureInsideClosure/threeLevelsDifferentSignatures.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "unknown bar (stdlib API / unsupported decl)",
+   "detail": "unknown function 'bar'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/threeLevelsDifferentSignatures.kt"
   },
   "box/box/closures/closureInsideClosure/varAsFunInsideLocalFun.kt": {
-   "category": "other syntax (at 'rec')",
-   "detail": "expected end of statement (at 'rec')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/varAsFunInsideLocalFun.kt"
   },
   "box/box/closures/closureInsideConstrucor.kt": {
-   "category": "other syntax (at 'relativePath')",
-   "detail": "expected end of statement (at 'relativePath')",
+   "category": "other: local declarations are only supported in function bodies",
+   "detail": "local declarations are only supported in function bodies",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideConstrucor.kt"
   },
@@ -6286,9 +6273,8 @@
    "upstream": "compiler/testData/codegen/box/closures/kt19389_set.kt"
   },
   "box/box/closures/kt2151.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/kt2151.kt"
   },
   "box/box/closures/kt3152.kt": {
@@ -6310,9 +6296,8 @@
    "upstream": "compiler/testData/codegen/box/closures/kt3738.kt"
   },
   "box/box/closures/kt3905.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/kt3905.kt"
   },
   "box/box/closures/kt4106.kt": {
@@ -6327,8 +6312,8 @@
    "upstream": "compiler/testData/codegen/box/closures/kt4137.kt"
   },
   "box/box/closures/kt47840.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "local / extension functions",
+   "detail": "recursive local functions that capture local variables are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt47840.kt"
   },
@@ -6338,33 +6323,32 @@
    "upstream": "compiler/testData/codegen/box/closures/kt47894_inlineFunWithObjectWithNothing.kt"
   },
   "box/box/closures/kt5589.kt": {
-   "category": "other syntax (at 'bar')",
-   "detail": "expected end of statement (at 'bar')",
+   "category": "generics",
+   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt5589.kt"
   },
   "box/box/closures/localClassFunClosure.kt": {
-   "category": "other syntax (at 'ok')",
-   "detail": "expected end of statement (at 'ok')",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown function 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/localClassFunClosure.kt"
   },
   "box/box/closures/localClassLambdaClosure.kt": {
-   "category": "other syntax (at 'OK')",
-   "detail": "expected end of statement (at 'OK')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('ok_L')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/localClassLambdaClosure.kt"
   },
   "box/box/closures/localFunInInit.kt": {
-   "category": "other syntax (at 'getFlag')",
-   "detail": "expected end of statement (at 'getFlag')",
+   "category": "other: local declarations are only supported in function bodies",
+   "detail": "local declarations are only supported in function bodies",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/localFunInInit.kt"
   },
   "box/box/closures/localFunctionInFunction.kt": {
-   "category": "other syntax (at 'local')",
-   "detail": "expected end of statement (at 'local')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/localFunctionInFunction.kt"
   },
   "box/box/closures/localFunctionInInitBlock.kt": {
@@ -6374,15 +6358,13 @@
    "upstream": "compiler/testData/codegen/box/closures/localFunctionInInitBlock.kt"
   },
   "box/box/closures/localFunctionInInitializer.kt": {
-   "category": "other syntax (at 'local')",
-   "detail": "expected end of statement (at 'local')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/localFunctionInInitializer.kt"
   },
   "box/box/closures/localGenericFun.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/localGenericFun.kt"
   },
   "box/box/closures/localReturn.kt": {
@@ -6398,8 +6380,8 @@
    "upstream": "compiler/testData/codegen/box/closures/localReturnWithAutolabel.kt"
   },
   "box/box/closures/recursiveClosure.kt": {
-   "category": "other syntax (at 'bar')",
-   "detail": "expected end of statement (at 'bar')",
+   "category": "local / extension functions",
+   "detail": "recursive local functions that capture local variables are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/recursiveClosure.kt"
   },
@@ -6476,8 +6458,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/primitiveArraysOperatorOf.kt"
   },
   "box/box/collectionLiterals/resolvesToOperator.kt": {
-   "category": "other syntax (at 'myAssert')",
-   "detail": "expected end of statement (at 'myAssert')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/resolvesToOperator.kt"
   },
@@ -6604,8 +6586,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/callableReferences_extensions.kt"
   },
   "box/box/companionBlocksAndExtensions/capturedOuterClassTypeParameter.kt": {
-   "category": "other syntax (at 'Outer')",
-   "detail": "expected end of statement (at 'Outer')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/capturedOuterClassTypeParameter.kt"
   },
@@ -7434,8 +7416,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/multipleBoundValues.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/singleContextArgUnboundReceiver.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'context')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/singleContextArgUnboundReceiver.kt"
   },
@@ -7452,14 +7434,14 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/thisAsContextArg.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/unboundReceiver.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'context')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/unboundReceiver.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/unboundReceiverVar.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'context')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/unboundReceiverVar.kt"
   },
@@ -7664,8 +7646,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualLocalFunction.kt"
   },
   "box/box/contextParameters/contextualLocalWithLocalExtensionAndValue.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualLocalWithLocalExtensionAndValue.kt"
   },
@@ -12685,9 +12667,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt47073.kt"
   },
   "box/box/defaultArguments/kt47073_nested.kt": {
-   "category": "other syntax (at 'nested')",
-   "detail": "expected end of statement (at 'nested')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt47073_nested.kt"
   },
   "box/box/defaultArguments/kt48391.kt": {
@@ -13059,8 +13040,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsToEnum.kt"
   },
   "box/box/delegatedProperty/delegateToSmartCastReceiver.kt": {
-   "category": "other syntax (at 'B')",
-   "detail": "expected end of statement (at 'B')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSmartCastReceiver.kt"
   },
@@ -14112,8 +14093,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/recursiveCallInInlineLambda.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/recursiveCallInInlineLambdaWithCapture.kt": {
-   "category": "local / extension functions",
-   "detail": "expected end of statement (at 'fun')",
+   "category": "unknown emptyList (stdlib API / unsupported decl)",
+   "detail": "unknown function 'emptyList'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/recursiveCallInInlineLambdaWithCapture.kt"
   },
@@ -14123,15 +14104,13 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/recursiveCallInLambda.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/recursiveCallInLocalFunction.kt": {
-   "category": "other syntax (at 'bar')",
-   "detail": "expected end of statement (at 'bar')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/recursiveCallInLocalFunction.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/recursiveInnerFunction.kt": {
-   "category": "local / extension functions",
-   "detail": "expected end of statement (at 'fun')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/recursiveInnerFunction.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/returnIf.kt": {
@@ -14368,8 +14347,8 @@
    "upstream": "compiler/testData/codegen/box/elvis/genericElvisWithMoreSpecificLHS.kt"
   },
   "box/box/elvis/genericElvisWithNullLHS.kt": {
-   "category": "other syntax (at 'returnMutableList')",
-   "detail": "expected end of statement (at 'returnMutableList')",
+   "category": "other: unknown method ArrayList<Int>.addAll()",
+   "detail": "unknown method ArrayList<Int>.addAll()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/elvis/genericElvisWithNullLHS.kt"
   },
@@ -14937,8 +14916,8 @@
    "upstream": "compiler/testData/codegen/box/enum/superCallInEnumLiteral.kt"
   },
   "box/box/enum/switchLowering.kt": {
-   "category": "local / extension functions",
-   "detail": "expected end of statement (at 'fun')",
+   "category": "operator/infix functions",
+   "detail": "local operator extension functions are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/switchLowering.kt"
   },
@@ -15515,8 +15494,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsASupertypeOfValueClass.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAsATypeLocal.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other syntax (at '.')",
+   "detail": "expected end of statement (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsATypeLocal.kt"
   },
@@ -15551,8 +15530,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsType.kt"
   },
   "box/box/extensionFunctions/extensionFunctionClassLevelLocal.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "unknown with (stdlib API / unsupported decl)",
+   "detail": "unknown function 'with'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionClassLevelLocal.kt"
   },
@@ -15598,8 +15577,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInValueClass.kt"
   },
   "box/box/extensionFunctions/extensionFunctionLocal.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other: unknown method Local.bar()",
+   "detail": "unknown method Local.bar()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionLocal.kt"
   },
@@ -15689,8 +15668,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1776.kt"
   },
   "box/box/extensionFunctions/kt1953.kt": {
-   "category": "local / extension functions",
-   "detail": "expected end of statement (at 'fun')",
+   "category": "operator/infix functions",
+   "detail": "local operator extension functions are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1953.kt"
   },
@@ -15742,8 +15721,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt475.kt"
   },
   "box/box/extensionFunctions/kt5467.kt": {
-   "category": "other syntax (at 'Int')",
-   "detail": "expected end of statement (at 'Int')",
+   "category": "other: unknown method Long.baz()",
+   "detail": "unknown method Long.baz()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt5467.kt"
   },
@@ -16215,8 +16194,8 @@
    "upstream": "compiler/testData/codegen/box/finally/tryLoopTry.kt"
   },
   "box/box/fir/anonymousOverrideWithDefaultInLocalOverridden.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/anonymousOverrideWithDefaultInLocalOverridden.kt"
   },
@@ -16313,15 +16292,13 @@
    "upstream": "compiler/testData/codegen/box/fir/localInvokeExtension.kt"
   },
   "box/box/fir/localOverrideWithDefaultInLocalOverridden.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fir/localOverrideWithDefaultInLocalOverridden.kt"
   },
   "box/box/fir/localOverrideWithDefaultInOverridden.kt": {
-   "category": "other syntax (at 'MyClass')",
-   "detail": "expected end of statement (at 'MyClass')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fir/localOverrideWithDefaultInOverridden.kt"
   },
   "box/box/fir/missingDependencyClassInTypeArguments.kt": {
@@ -16504,8 +16481,8 @@
    "upstream": "compiler/testData/codegen/box/fp/remainderMixedLongFpLargeRatio.kt"
   },
   "box/box/fp/remainderVsModDouble.kt": {
-   "category": "other syntax (at 'expectedMod')",
-   "detail": "expected end of statement (at 'expectedMod')",
+   "category": "other: unknown method Double.isNaN()",
+   "detail": "unknown method Double.isNaN()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/remainderVsModDouble.kt"
   },
@@ -17108,20 +17085,19 @@
    "upstream": "compiler/testData/codegen/box/function/intrinsic.kt"
   },
   "box/box/function/localFunction.kt": {
-   "category": "other syntax (at 'local0')",
-   "detail": "expected end of statement (at 'local0')",
+   "category": "unknown local0 (stdlib API / unsupported decl)",
+   "detail": "unknown function 'local0'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/localFunction.kt"
   },
   "box/box/function/localFunction2.kt": {
-   "category": "other syntax (at 'local')",
-   "detail": "expected end of statement (at 'local')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/localFunction2.kt"
   },
   "box/box/function/localFunction3.kt": {
-   "category": "other syntax (at 'bar')",
-   "detail": "expected end of statement (at 'bar')",
+   "category": "unknown local1 (stdlib API / unsupported decl)",
+   "detail": "unknown function 'local1'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/localFunction3.kt"
   },
@@ -17477,9 +17453,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt2271.kt"
   },
   "box/box/functions/kt2280.kt": {
-   "category": "other syntax (at 'rmrf')",
-   "detail": "expected end of statement (at 'rmrf')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/kt2280.kt"
   },
   "box/box/functions/kt2481.kt": {
@@ -17566,8 +17541,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt873.kt"
   },
   "box/box/functions/localFunction.kt": {
-   "category": "other syntax (at 'local')",
-   "detail": "expected end of statement (at 'local')",
+   "category": "generics",
+   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunction.kt"
   },
@@ -17578,14 +17553,14 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/boundTypeParameterInSupertype.kt"
   },
   "box/box/functions/localFunctions/boundTypeParameterInVararg.kt": {
-   "category": "other syntax (at 'g')",
-   "detail": "expected end of statement (at 'g')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/boundTypeParameterInVararg.kt"
   },
   "box/box/functions/localFunctions/callBetweenLocalFunctions.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "generics",
+   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/callBetweenLocalFunctions.kt"
   },
@@ -17595,8 +17570,8 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/callInlineLocalInLambda.kt"
   },
   "box/box/functions/localFunctions/captureUpperBoundedTypeParameter.kt": {
-   "category": "other syntax (at 'g')",
-   "detail": "expected end of statement (at 'g')",
+   "category": "other: unknown type V",
+   "detail": "unknown type V",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/captureUpperBoundedTypeParameter.kt"
   },
@@ -17616,62 +17591,59 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/definedWithinLambdaInnerUsage2.kt"
   },
   "box/box/functions/localFunctions/kt2895.kt": {
-   "category": "other syntax (at 'inner')",
-   "detail": "expected end of statement (at 'inner')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt2895.kt"
   },
   "box/box/functions/localFunctions/kt3308.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt3308.kt"
   },
   "box/box/functions/localFunctions/kt3978.kt": {
-   "category": "other syntax (at 'local')",
-   "detail": "expected end of statement (at 'local')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt3978.kt"
   },
   "box/box/functions/localFunctions/kt3978_2.kt": {
-   "category": "other syntax (at 'local')",
-   "detail": "expected end of statement (at 'local')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt3978_2.kt"
   },
   "box/box/functions/localFunctions/kt4119.kt": {
    "category": "operator/infix functions",
-   "detail": "expected end of statement (at 'operator')",
+   "detail": "local operator extension functions are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4119.kt"
   },
   "box/box/functions/localFunctions/kt4119_2.kt": {
-   "category": "local / extension functions",
-   "detail": "expected end of statement (at 'fun')",
+   "category": "class bodies / constructors",
+   "detail": "expected end of statement (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4119_2.kt"
   },
   "box/box/functions/localFunctions/kt4514.kt": {
-   "category": "strings / templates",
-   "detail": "expected end of statement (at 'String')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4514.kt"
   },
   "box/box/functions/localFunctions/kt4783.kt": {
-   "category": "local / extension functions",
-   "detail": "expected end of statement (at 'fun')",
+   "category": "operator/infix functions",
+   "detail": "local operator extension functions are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4783.kt"
   },
   "box/box/functions/localFunctions/kt4784.kt": {
-   "category": "local / extension functions",
-   "detail": "expected end of statement (at 'fun')",
+   "category": "operator/infix functions",
+   "detail": "local operator extension functions are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4784.kt"
   },
   "box/box/functions/localFunctions/kt4989.kt": {
-   "category": "other syntax (at 'selectMetaRunnerId')",
-   "detail": "expected end of statement (at 'selectMetaRunnerId')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4989.kt"
   },
@@ -17681,69 +17653,68 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/liftThroughFunObjectLambda.kt"
   },
   "box/box/functions/localFunctions/localExtensionOnNullableParameter.kt": {
-   "category": "other syntax (at 'T')",
-   "detail": "expected end of statement (at 'T')",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/localExtensionOnNullableParameter.kt"
   },
   "box/box/functions/localFunctions/localFunctionInConstructor.kt": {
-   "category": "other syntax (at 'local')",
-   "detail": "expected end of statement (at 'local')",
+   "category": "other: local declarations are only supported in function bodies",
+   "detail": "local declarations are only supported in function bodies",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/localFunctionInConstructor.kt"
   },
   "box/box/functions/localFunctions/localFunctionVsLocalVariable.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found $Fn$String$Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/localFunctionVsLocalVariable.kt"
   },
   "box/box/functions/localFunctions/nameClash.kt": {
-   "category": "other syntax (at 'result')",
-   "detail": "expected end of statement (at 'result')",
+   "category": "other: overloads are not supported: result$l0",
+   "detail": "overloads are not supported: result$l0",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/nameClash.kt"
   },
   "box/box/functions/localFunctions/nameClashAcrossDifferentContainers.kt": {
-   "category": "other syntax (at 'local')",
-   "detail": "expected end of statement (at 'local')",
+   "category": "other: overloads are not supported: C.overload",
+   "detail": "overloads are not supported: C.overload",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/nameClashAcrossDifferentContainers.kt"
   },
   "box/box/functions/localFunctions/overloadedLocalFunWithoutClosure.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "other: overloads are not supported: foo$l0",
+   "detail": "overloads are not supported: foo$l0",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/overloadedLocalFunWithoutClosure.kt"
   },
   "box/box/functions/localFunctions/overloadedLocalFunction.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "other: invoke expects 1 arguments",
+   "detail": "invoke expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/overloadedLocalFunction.kt"
   },
   "box/box/functions/localFunctions/overloadedLocalFunction1.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "other: invoke expects 2 arguments",
+   "detail": "invoke expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/overloadedLocalFunction1.kt"
   },
   "box/box/functions/localFunctions/overloadedLocalFunction2.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/overloadedLocalFunction2.kt"
   },
   "box/box/functions/localFunctions/overloadedLocalFunction3.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
+   "category": "other: invoke expects 1 arguments",
+   "detail": "invoke expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/overloadedLocalFunction3.kt"
   },
   "box/box/functions/localFunctions/parameterAsDefaultValue.kt": {
-   "category": "other syntax (at 'bar')",
-   "detail": "expected end of statement (at 'bar')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/parameterAsDefaultValue.kt"
   },
   "box/box/functions/localReturnInsideFunctionExpression.kt": {
@@ -17790,8 +17761,8 @@
    "upstream": "compiler/testData/codegen/box/functions/typeParameterAsUpperBound.kt"
   },
   "box/box/functions/typeParametersInLocalFunction.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "other: unknown type C",
+   "detail": "unknown type C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/typeParametersInLocalFunction.kt"
   },
@@ -18482,8 +18453,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt47989b.kt"
   },
   "box/box/inference/pcla/issues/kt48633.kt": {
-   "category": "other syntax (at 'Foo')",
-   "detail": "expected end of statement (at 'Foo')",
+   "category": "unknown buildList (stdlib API / unsupported decl)",
+   "detail": "unknown function 'buildList'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt48633.kt"
   },
@@ -18717,8 +18688,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt60291c.kt"
   },
   "box/box/inference/pcla/issues/kt60447a.kt": {
-   "category": "other syntax (at 'ConcreteType')",
-   "detail": "expected end of statement (at 'ConcreteType')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt60447a.kt"
   },
@@ -18783,20 +18754,20 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300b.kt"
   },
   "box/box/inference/pcla/issues/kt65300c.kt": {
-   "category": "other syntax (at 'typeInfoSourceFunction')",
-   "detail": "expected end of statement (at 'typeInfoSourceFunction')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300c.kt"
   },
   "box/box/inference/pcla/issues/kt65300d.kt": {
-   "category": "other syntax (at 'typeInfoSourceFunction')",
-   "detail": "expected end of statement (at 'typeInfoSourceFunction')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300d.kt"
   },
   "box/box/inference/pcla/issues/kt65300e.kt": {
-   "category": "other syntax (at 'typeInfoSourceFunction')",
-   "detail": "expected end of statement (at 'typeInfoSourceFunction')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300e.kt"
   },
@@ -18813,20 +18784,20 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300g.kt"
   },
   "box/box/inference/pcla/issues/kt65300h.kt": {
-   "category": "other syntax (at 'LocalClass')",
-   "detail": "expected end of statement (at 'LocalClass')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300h.kt"
   },
   "box/box/inference/pcla/issues/kt65300i.kt": {
-   "category": "other syntax (at 'LocalClass')",
-   "detail": "expected end of statement (at 'LocalClass')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300i.kt"
   },
   "box/box/inference/pcla/issues/kt65300j.kt": {
-   "category": "other syntax (at 'TypeInfoSourceClass')",
-   "detail": "expected end of statement (at 'TypeInfoSourceClass')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300j.kt"
   },
@@ -18917,8 +18888,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/nullability.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/AnonymousFunctionArgumentAndBuildeeParameter.kt": {
-   "category": "other syntax (at 'consume')",
-   "detail": "expected end of statement (at 'consume')",
+   "category": "unknown fun (stdlib API / unsupported decl)",
+   "detail": "unknown function 'fun'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/AnonymousFunctionArgumentAndBuildeeParameter.kt"
   },
@@ -18929,8 +18900,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/AnonymousFunctionArgumentAndBuildeeReceiver.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/LambdaArgumentAndBuildeeParameter.kt": {
-   "category": "other syntax (at 'consume')",
-   "detail": "expected end of statement (at 'consume')",
+   "category": "generics",
+   "detail": "cannot infer type parameter FT of build; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/LambdaArgumentAndBuildeeParameter.kt"
   },
@@ -18959,8 +18930,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideAnonymousObject.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideLocalClass.kt": {
-   "category": "other syntax (at 'LocalClass')",
-   "detail": "expected end of statement (at 'LocalClass')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/InsideLocalClass.kt"
   },
@@ -18981,8 +18952,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughDelegatedLocalVariableYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughGenericFunctionCall.kt": {
-   "category": "other syntax (at 'consume')",
-   "detail": "expected end of statement (at 'consume')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughGenericFunctionCall.kt"
   },
@@ -19209,26 +19180,26 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/TypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ExtensionFunctions.kt": {
-   "category": "other syntax (at 'consume')",
-   "detail": "expected end of statement (at 'consume')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ExtensionFunctions.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ImmutableExtensionProperties.kt": {
-   "category": "other syntax (at 'consume')",
-   "detail": "expected end of statement (at 'consume')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ImmutableExtensionProperties.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ImmutableProperties.kt": {
-   "category": "other syntax (at 'consume')",
-   "detail": "expected end of statement (at 'consume')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ImmutableProperties.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutableExtensionPropertiesMaterializeCase.kt": {
-   "category": "other syntax (at 'consume')",
-   "detail": "expected end of statement (at 'consume')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutableExtensionPropertiesMaterializeCase.kt"
   },
@@ -19239,8 +19210,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutableExtensionPropertiesYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutablePropertiesMaterializeCase.kt": {
-   "category": "other syntax (at 'consume')",
-   "detail": "expected end of statement (at 'consume')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutablePropertiesMaterializeCase.kt"
   },
@@ -19251,14 +19222,14 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutablePropertiesYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ParametersOfBuilderArguments.kt": {
-   "category": "other syntax (at 'consume')",
-   "detail": "expected end of statement (at 'consume')",
+   "category": "generics",
+   "detail": "cannot infer type parameter FT of build; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ParametersOfBuilderArguments.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ReceiversOfBuilderArguments.kt": {
-   "category": "other syntax (at 'consume')",
-   "detail": "expected end of statement (at 'consume')",
+   "category": "other syntax (at '.')",
+   "detail": "expected identifier (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ReceiversOfBuilderArguments.kt"
   },
@@ -19611,7 +19582,7 @@
   },
   "box/box/initializers/static_varargChange.kt": {
    "category": "varargs",
-   "detail": "expected end of statement (at 'varargGetter')",
+   "detail": "varargGetter expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/initializers/static_varargChange.kt"
   },
@@ -19686,9 +19657,8 @@
    "upstream": "compiler/testData/codegen/box/inline/changingCapturedLocal.kt"
   },
   "box/box/inline/classDeclarationInsideInline.kt": {
-   "category": "other syntax (at 'Test1')",
-   "detail": "expected end of statement (at 'Test1')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inline/classDeclarationInsideInline.kt"
   },
   "box/box/inline/classObject.kt": {
@@ -20248,8 +20218,8 @@
    "upstream": "compiler/testData/codegen/box/inline/nameBasedDestructuring.kt"
   },
   "box/box/inline/nestedLabelsInlinedClashingAtFunctionsWithClosure.kt": {
-   "category": "local / extension functions",
-   "detail": "expected end of statement (at 'fun')",
+   "category": "unknown test2 (stdlib API / unsupported decl)",
+   "detail": "unknown function 'test2'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/nestedLabelsInlinedClashingAtFunctionsWithClosure.kt"
   },
@@ -21739,14 +21709,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkUnboxingResultFromTypeVariableGeneric2.kt"
   },
   "box/box/inlineClasses/classInInlineClassInit.kt": {
-   "category": "other syntax (at 'B')",
-   "detail": "expected end of statement (at 'B')",
+   "category": "other: local declarations are only supported in function bodies",
+   "detail": "local declarations are only supported in function bodies",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/classInInlineClassInit.kt"
   },
   "box/box/inlineClasses/classInInlineClassInitGeneric.kt": {
-   "category": "other syntax (at 'B')",
-   "detail": "expected end of statement (at 'B')",
+   "category": "other: local declarations are only supported in function bodies",
+   "detail": "local declarations are only supported in function bodies",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/classInInlineClassInitGeneric.kt"
   },
@@ -22662,14 +22632,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/genericFunctionsDoNotClashGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/localClassInFunctionWithMangledName.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('s')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/localClassInFunctionWithMangledName.kt"
   },
   "box/box/inlineClasses/functionNameMangling/localClassInFunctionWithMangledNameGeneric.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('s')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/localClassInFunctionWithMangledNameGeneric.kt"
   },
@@ -23139,12 +23109,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645728\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267646112\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269225056\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 806096032\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25402,8 +25372,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/kt3132.kt"
   },
   "box/box/innerNested/kt3927.kt": {
-   "category": "other syntax (at 'Child')",
-   "detail": "expected end of statement (at 'Child')",
+   "category": "generics",
+   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/kt3927.kt"
   },
@@ -25495,7 +25465,7 @@
   },
   "box/box/innerNested/superConstructorCall/deepLocalHierarchy.kt": {
    "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "detail": "constructor L3 expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/deepLocalHierarchy.kt"
   },
@@ -25524,26 +25494,26 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/kt11833_2.kt"
   },
   "box/box/innerNested/superConstructorCall/localClassOuterDiffersFromInnerOuter.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/localClassOuterDiffersFromInnerOuter.kt"
   },
   "box/box/innerNested/superConstructorCall/localExtendsInner.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other syntax (at '.')",
+   "detail": "expected end of statement (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/localExtendsInner.kt"
   },
   "box/box/innerNested/superConstructorCall/localExtendsLocalWithClosure.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "unknown result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/localExtendsLocalWithClosure.kt"
   },
   "box/box/innerNested/superConstructorCall/localWithClosureExtendsLocalWithClosure.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('three')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/localWithClosureExtendsLocalWithClosure.kt"
   },
@@ -25572,14 +25542,14 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInnerDefaultArgument.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsInnerOfLocalVarargAndDefault.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other syntax (at 'val')",
+   "detail": "expected ':' (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInnerOfLocalVarargAndDefault.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsInnerOfLocalWithCapture.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInnerOfLocalWithCapture.kt"
   },
@@ -25590,14 +25560,14 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInnerWithDelegatingConstructor.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsLocalCaptureInSuperCall.kt": {
-   "category": "other syntax (at 'B')",
-   "detail": "expected end of statement (at 'B')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsLocalCaptureInSuperCall.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsLocalWithClosure.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "other syntax (at ':')",
+   "detail": "expected ')' (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsLocalWithClosure.kt"
   },
@@ -25765,7 +25735,7 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1050350a3        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x105147747        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
+   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1030613ab        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10317de9b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
@@ -25810,26 +25780,25 @@
    "upstream": "compiler/testData/codegen/box/ir/classInitializers.kt"
   },
   "box/box/ir/closureConversion/closureConversion1.kt": {
-   "category": "other syntax (at 'bar')",
-   "detail": "expected end of statement (at 'bar')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/closureConversion1.kt"
   },
   "box/box/ir/closureConversion/closureConversion2.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "generics",
+   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/closureConversion2.kt"
   },
   "box/box/ir/closureConversion/closureConversion3.kt": {
-   "category": "other syntax (at 'bar')",
-   "detail": "expected end of statement (at 'bar')",
+   "category": "unknown qux (stdlib API / unsupported decl)",
+   "detail": "unknown function 'qux'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/closureConversion3.kt"
   },
   "box/box/ir/closureConversion/closureConversion4.kt": {
-   "category": "other syntax (at 'bar')",
-   "detail": "expected end of statement (at 'bar')",
+   "category": "unknown this (stdlib API / unsupported decl)",
+   "detail": "unknown name 'this'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/closureConversion4.kt"
   },
@@ -25844,14 +25813,13 @@
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/innerClass2.kt"
   },
   "box/box/ir/closureConversion/mutable1.kt": {
-   "category": "other syntax (at 'add')",
-   "detail": "expected end of statement (at 'add')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/mutable1.kt"
   },
   "box/box/ir/closureConversion/mutablePrimitives.kt": {
-   "category": "other syntax (at 'setValue')",
-   "detail": "expected end of statement (at 'setValue')",
+   "category": "other syntax (at 'F')",
+   "detail": "expected '->' (at 'F')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/mutablePrimitives.kt"
   },
@@ -26515,38 +26483,38 @@
    "upstream": "compiler/testData/codegen/box/literals/strdedup1.kt"
   },
   "box/box/localClass/innerTakesCapturedFromOuter.kt": {
-   "category": "other syntax (at 'Outer')",
-   "detail": "expected end of statement (at 'Outer')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'toString' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/innerTakesCapturedFromOuter.kt"
   },
   "box/box/localClass/innerWithCapture.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "unknown s (stdlib API / unsupported decl)",
+   "detail": "unknown name 's'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/innerWithCapture.kt"
   },
   "box/box/localClass/localFunctionCallFromLocalClass.kt": {
-   "category": "other syntax (at 'local1')",
-   "detail": "expected end of statement (at 'local1')",
+   "category": "unknown local1 (stdlib API / unsupported decl)",
+   "detail": "unknown function 'local1'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/localFunctionCallFromLocalClass.kt"
   },
   "box/box/localClass/localFunctionInLocalClass.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('x')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/localFunctionInLocalClass.kt"
   },
   "box/box/localClass/localHierarchy.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('s')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/localHierarchy.kt"
   },
   "box/box/localClass/noPrimaryConstructor.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/noPrimaryConstructor.kt"
   },
@@ -26563,8 +26531,8 @@
    "upstream": "compiler/testData/codegen/box/localClass/objectExpressionInProperty.kt"
   },
   "box/box/localClass/signatureConflictHiddenByTypeParameter.kt": {
-   "category": "other syntax (at 'B')",
-   "detail": "expected end of statement (at 'B')",
+   "category": "generics",
+   "detail": "generic method 'f' in an open class hierarchy is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/signatureConflictHiddenByTypeParameter.kt"
   },
@@ -26605,20 +26573,20 @@
    "upstream": "compiler/testData/codegen/box/localClasses/capturingInDefaultConstructorParameter.kt"
   },
   "box/box/localClasses/closureOfInnerLocalClass.kt": {
-   "category": "other syntax (at 'C')",
-   "detail": "expected end of statement (at 'C')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('t')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/closureOfInnerLocalClass.kt"
   },
   "box/box/localClasses/closureOfLambdaInLocalClass.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('t')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/closureOfLambdaInLocalClass.kt"
   },
   "box/box/localClasses/closureWithSelfInstantiation.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('log')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/closureWithSelfInstantiation.kt"
   },
@@ -26629,26 +26597,26 @@
    "upstream": "compiler/testData/codegen/box/localClasses/defaultParameterInConstructor.kt"
   },
   "box/box/localClasses/inCallableReferenceLHS.kt": {
-   "category": "other syntax (at 'L')",
-   "detail": "expected end of statement (at 'L')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ')')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/inCallableReferenceLHS.kt"
   },
   "box/box/localClasses/inExtensionFunction.kt": {
-   "category": "other syntax (at 'B')",
-   "detail": "expected end of statement (at 'B')",
+   "category": "unknown this@a (stdlib API / unsupported decl)",
+   "detail": "unknown name 'this@a'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/inExtensionFunction.kt"
   },
   "box/box/localClasses/inExtensionProperty.kt": {
-   "category": "other syntax (at 'B')",
-   "detail": "expected end of statement (at 'B')",
+   "category": "unknown this@a (stdlib API / unsupported decl)",
+   "detail": "unknown name 'this@a'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/inExtensionProperty.kt"
   },
   "box/box/localClasses/inLocalExtensionFunction.kt": {
-   "category": "other syntax (at 'B')",
-   "detail": "expected end of statement (at 'B')",
+   "category": "unknown this@a (stdlib API / unsupported decl)",
+   "detail": "unknown name 'this@a'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/inLocalExtensionFunction.kt"
   },
@@ -26659,14 +26627,14 @@
    "upstream": "compiler/testData/codegen/box/localClasses/inLocalExtensionProperty.kt"
   },
   "box/box/localClasses/innerClassInLocalClass.kt": {
-   "category": "other syntax (at 'B')",
-   "detail": "expected end of statement (at 'B')",
+   "category": "loops / labels",
+   "detail": "unknown label this@A (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/innerClassInLocalClass.kt"
   },
   "box/box/localClasses/innerOfLocalCaptureExtensionReceiver.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "loops / labels",
+   "detail": "unknown label this@bar (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/innerOfLocalCaptureExtensionReceiver.kt"
   },
@@ -26689,62 +26657,59 @@
    "upstream": "compiler/testData/codegen/box/localClasses/kt2700.kt"
   },
   "box/box/localClasses/kt2873.kt": {
-   "category": "other syntax (at 'B')",
-   "detail": "expected end of statement (at 'B')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localClasses/kt2873.kt"
   },
   "box/box/localClasses/kt3210.kt": {
-   "category": "other syntax (at 'InlineTrait')",
-   "detail": "expected end of statement (at 'InlineTrait')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/kt3210.kt"
   },
   "box/box/localClasses/kt3389.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localClasses/kt3389.kt"
   },
   "box/box/localClasses/kt3584.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('s')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/kt3584.kt"
   },
   "box/box/localClasses/kt4174.kt": {
-   "category": "other syntax (at 'Z')",
-   "detail": "expected end of statement (at 'Z')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('s')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/kt4174.kt"
   },
   "box/box/localClasses/kt45383.kt": {
-   "category": "other syntax (at 'Node')",
-   "detail": "expected end of statement (at 'Node')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('cur')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/kt45383.kt"
   },
   "box/box/localClasses/localClass.kt": {
-   "category": "other syntax (at 'B')",
-   "detail": "expected end of statement (at 'B')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localClasses/localClass.kt"
   },
   "box/box/localClasses/localClassCaptureExtensionReceiver.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'result' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localClassCaptureExtensionReceiver.kt"
   },
   "box/box/localClasses/localClassInInitializer.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localClassInInitializer.kt"
   },
   "box/box/localClasses/localClassInParameterInitializer.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localClassInParameterInitializer.kt"
   },
@@ -26756,32 +26721,30 @@
   },
   "box/box/localClasses/localDataClass.kt": {
    "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "detail": "local classes that capture local variables are not supported ('capturedInConstructor')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localDataClass.kt"
   },
   "box/box/localClasses/localExtendsInnerAndReferencesOuterMember.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "unknown foo (stdlib API / unsupported decl)",
+   "detail": "unknown function 'foo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localExtendsInnerAndReferencesOuterMember.kt"
   },
   "box/box/localClasses/localGenericWithTypeParameters.kt": {
-   "category": "other syntax (at 'CC')",
-   "detail": "expected end of statement (at 'CC')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localGenericWithTypeParameters.kt"
   },
   "box/box/localClasses/nameWithWhitespace.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localClasses/nameWithWhitespace.kt"
   },
   "box/box/localClasses/noclosure.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localClasses/noclosure.kt"
   },
   "box/box/localClasses/object.kt": {
@@ -26791,38 +26754,38 @@
    "upstream": "compiler/testData/codegen/box/localClasses/object.kt"
   },
   "box/box/localClasses/ownClosureOfInnerLocalClass.kt": {
-   "category": "other syntax (at 'C')",
-   "detail": "expected end of statement (at 'C')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('t')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/ownClosureOfInnerLocalClass.kt"
   },
   "box/box/localClasses/recaptureVarCapturedInLocalClass1.kt": {
-   "category": "other syntax (at 'CapturesX')",
-   "detail": "expected end of statement (at 'CapturesX')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('x')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/recaptureVarCapturedInLocalClass1.kt"
   },
   "box/box/localClasses/recaptureVarCapturedInLocalClass2.kt": {
-   "category": "other syntax (at 'CapturesX')",
-   "detail": "expected end of statement (at 'CapturesX')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('x')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/recaptureVarCapturedInLocalClass2.kt"
   },
   "box/box/localClasses/recaptureVarCapturedInLocalClass3.kt": {
-   "category": "other syntax (at 'CapturesX')",
-   "detail": "expected end of statement (at 'CapturesX')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('x')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/recaptureVarCapturedInLocalClass3.kt"
   },
   "box/box/localClasses/subclassingExtensionReceiverClass.kt": {
-   "category": "other syntax (at 'FooC')",
-   "detail": "expected end of statement (at 'FooC')",
+   "category": "other syntax (at '.')",
+   "detail": "expected end of statement (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/subclassingExtensionReceiverClass.kt"
   },
   "box/box/localClasses/withclosure.kt": {
-   "category": "other syntax (at 'Aaa')",
-   "detail": "expected end of statement (at 'Aaa')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('x')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/withclosure.kt"
   },
@@ -26879,8 +26842,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/sequences.kt"
   },
   "box/box/lower/forLoopsLowering/vars.kt": {
-   "category": "other syntax (at 'doTheChange')",
-   "detail": "expected end of statement (at 'doTheChange')",
+   "category": "other: unknown type Iterable<Int>",
+   "detail": "unknown type Iterable<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/vars.kt"
   },
@@ -28676,8 +28639,8 @@
    "upstream": "compiler/testData/codegen/box/objectExpression/multipleAnonymousObjectsInsideInlineFunction.kt"
   },
   "box/box/objectIntrinsics/objects.kt": {
-   "category": "other syntax (at 'Int')",
-   "detail": "expected end of statement (at 'Int')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objectIntrinsics/objects.kt"
   },
@@ -29005,8 +28968,8 @@
    "upstream": "compiler/testData/codegen/box/objects/interfaceCompanion.kt"
   },
   "box/box/objects/interfaceCompanionObjectReference.kt": {
-   "category": "other syntax (at 'localFun')",
-   "detail": "expected end of statement (at 'localFun')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/interfaceCompanionObjectReference.kt"
   },
@@ -29125,8 +29088,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt694.kt"
   },
   "box/box/objects/localFunctionInObjectInitializer_kt4516.kt": {
-   "category": "other syntax (at 'doStuff')",
-   "detail": "expected end of statement (at 'doStuff')",
+   "category": "strings / templates",
+   "detail": "HashMap keys must be Int/Long/Char, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/localFunctionInObjectInitializer_kt4516.kt"
   },
@@ -29466,8 +29429,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt45022.kt"
   },
   "box/box/operatorConventions/kt4987.kt": {
-   "category": "local / extension functions",
-   "detail": "expected end of statement (at 'fun')",
+   "category": "operator/infix functions",
+   "detail": "local operator extension functions are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt4987.kt"
   },
@@ -30021,8 +29984,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt3613.kt"
   },
   "box/box/primitiveTypes/kt36952_identityEqualsWithBooleanInLocalFunction.kt": {
-   "category": "other syntax (at 'a')",
-   "detail": "expected end of statement (at 'a')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt36952_identityEqualsWithBooleanInLocalFunction.kt"
   },
@@ -30482,8 +30445,8 @@
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideLambda.kt"
   },
   "box/box/properties/classFieldInsideLocalInSetter.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('arg')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideLocalInSetter.kt"
   },
@@ -30733,9 +30696,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt2786.kt"
   },
   "box/box/properties/kt2892.kt": {
-   "category": "other syntax (at 'inner')",
-   "detail": "expected end of statement (at 'inner')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt2892.kt"
   },
   "box/box/properties/kt3118.kt": {
@@ -32482,8 +32444,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/kt37370.kt"
   },
   "box/box/ranges/kt37370a.kt": {
-   "category": "other syntax (at 'inc')",
-   "detail": "expected end of statement (at 'inc')",
+   "category": "break / continue",
+   "detail": "unknown name 'continue'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/kt37370a.kt"
   },
@@ -35695,8 +35657,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/commonSupertypeContravariant2.kt"
   },
   "box/box/regressions/dataClassInInlineFunctionWithTypeParameters.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/dataClassInInlineFunctionWithTypeParameters.kt"
   },
@@ -35848,8 +35810,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt2470.kt"
   },
   "box/box/regressions/kt24913.kt": {
-   "category": "other syntax (at 'Inner')",
-   "detail": "expected end of statement (at 'Inner')",
+   "category": "other: local declarations are only supported in function bodies",
+   "detail": "local declarations are only supported in function bodies",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt24913.kt"
   },
@@ -35906,9 +35868,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt35914.kt"
   },
   "box/box/regressions/kt3903.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/kt3903.kt"
   },
   "box/box/regressions/kt39088.kt": {
@@ -36031,8 +35992,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/lambdaPostponeConstruction.kt"
   },
   "box/box/regressions/lambdaWithTypeParameters.kt": {
-   "category": "other syntax (at 'Matches')",
-   "detail": "expected end of statement (at 'Matches')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ')' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/lambdaWithTypeParameters.kt"
   },
@@ -36766,8 +36727,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/basicPrimary.kt"
   },
   "box/box/secondaryConstructors/callFromLocalSubClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('z')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/callFromLocalSubClass.kt"
   },
@@ -36864,8 +36825,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/innerClassesInheritance.kt"
   },
   "box/box/secondaryConstructors/localClasses.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "property accessors / delegation",
+   "detail": "secondary constructors must delegate to this(...) (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/localClasses.kt"
   },
@@ -37647,9 +37608,8 @@
    "upstream": "compiler/testData/codegen/box/strings/multilineStringsWithTemplates.kt"
   },
   "box/box/strings/nestedConcat.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected end of statement (at 'foo')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/nestedConcat.kt"
   },
   "box/box/strings/rawStrings.kt": {
@@ -37863,8 +37823,8 @@
    "upstream": "compiler/testData/codegen/box/super/kt4173_2.kt"
   },
   "box/box/super/kt4173_3.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected end of statement (at 'A')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt4173_3.kt"
   },
@@ -37917,8 +37877,8 @@
    "upstream": "compiler/testData/codegen/box/super/superConstructor/objectExtendsInner.kt"
   },
   "box/box/super/superConstructor/objectExtendsLocalInner.kt": {
-   "category": "other syntax (at 'Local')",
-   "detail": "expected end of statement (at 'Local')",
+   "category": "other syntax (at 'val')",
+   "detail": "expected ':' (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superConstructor/objectExtendsLocalInner.kt"
   },
@@ -39191,7 +39151,7 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/Grok/nk-opt-mlgo/build/bin/opt: /Users/listepo/grok/mini-bench-wt-cov/compiler/build/upstream-tmp/nkupx5fs_yb6/t.ll:167:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\nopt failed (256): '/Users/listepo/Grok/nk-opt-mlgo/build/bin/opt' -passes='lto-pre-link<O3>' -S '/Users/listepo/grok/mini-bench-",
+   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/grok/kotlinx-features/compiler/build/upstream-tmp/nkup2f5gz5zl/t.ll:202:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\ncommand failed (256): '/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt' -passes='lt",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
@@ -44656,8 +44616,8 @@
    "upstream": "native/native.tests/testData/codegen/companionBlocksAndExtensions/initPlatformObjCSuperclass.kt"
   },
   "native/native.tests/codegen/contracts/assertions.kt": {
-   "category": "class bodies / constructors",
-   "detail": "expected end of statement (at 'class')",
+   "category": "other: no field str in S",
+   "detail": "no field str in S",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/contracts/assertions.kt"
   },

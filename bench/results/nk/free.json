@@ -93,6 +93,167 @@
     "raw_ns": "51027917,51192334,51772042,52604958,51336291",
     "flags": ""
    }
+  },
+  {
+   "run": "refpass-main-1",
+   "date": "2026-10-29T23:57:04+02:00",
+   "commit": "eb0a7f969717105a4dab5108d5845cc4c8a53f2c",
+   "dirty": false,
+   "ref": "origin/main",
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 35.99 155.28 387.12 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 50.824,
+    "raw_ns": "51007708,50617042,50845833,50307500,51115958",
+    "flags": ""
+   }
+  },
+  {
+   "run": "refpass-pr-1",
+   "date": "2026-10-29T23:57:23+02:00",
+   "commit": "e34e6d123268bf24a553e42fd69e8f5298f072c5",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 33.28 146.96 378.75 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 50.245,
+    "raw_ns": "50512959,49897083,50409834,49326750,50429125",
+    "flags": ""
+   }
+  },
+  {
+   "run": "refpass-main-2",
+   "date": "2026-10-29T23:58:10+02:00",
+   "commit": "eb0a7f969717105a4dab5108d5845cc4c8a53f2c",
+   "dirty": false,
+   "ref": "origin/main",
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 45.75 133.91 361.97 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 50.517,
+    "raw_ns": "50776291,50287375,50516750,50747292,50022708",
+    "flags": ""
+   }
+  },
+  {
+   "run": "refpass-pr-2",
+   "date": "2026-10-29T23:58:29+02:00",
+   "commit": "e34e6d123268bf24a553e42fd69e8f5298f072c5",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 37.89 126.43 353.99 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 50.942,
+    "raw_ns": "51125167,51447541,51081416,50395084,50618125",
+    "flags": ""
+   }
+  },
+  {
+   "run": "feat-local-decls",
+   "date": "2026-10-30T01:14:41+02:00",
+   "commit": "8fa1cd9616deda6f73e55d2988b074aaee607b84",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 35.03 43.35 46.12 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 50.568,
+    "raw_ns": "51082375,50561042,50573750,50568875,50090667",
+    "flags": ""
+   }
+  },
+  {
+   "run": "main-8fa1cd9",
+   "date": "2026-10-30T01:25:31+02:00",
+   "commit": "8fa1cd9616deda6f73e55d2988b074aaee607b84",
+   "dirty": false,
+   "ref": "origin/main",
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 19.34 18.75 29.99 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 49.727,
+    "raw_ns": "49897833,49901417,49580709,49702917,49553000",
+    "flags": ""
+   }
+  },
+  {
+   "run": "feat-local-decls-2",
+   "date": "2026-10-30T01:25:49+02:00",
+   "commit": "8fa1cd9616deda6f73e55d2988b074aaee607b84",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 24.20 19.95 30.16 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 49.83,
+    "raw_ns": "49892042,49888875,49799833,49801042,49742208",
+    "flags": ""
+   }
   }
  ]
 }

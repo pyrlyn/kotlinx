@@ -202,6 +202,7 @@ class Parser(private val t: List<Tok>) {
         }
         classes.addAll(companions); funs.addAll(ctorFactories)
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
+        liftLocals(funs, classes, ifaces)
         resolveNested(funs, classes, ifaces, globals)
         resolveExtensions(funs, classes)
         flattenIfaces(classes, ifaces)
@@ -585,6 +586,172 @@ class Parser(private val t: List<Tok>) {
                 c.enumEntries?.map { (n, a) -> n to a.map { sub.e(it) } }, c.isValue, c.superTypeArgs)
         }
     }
+    private val OPERATOR_NAMES = setOf("plus", "minus", "times", "div", "rem", "mod", "rangeTo", "rangeUntil", "compareTo", "equals",
+        "contains", "get", "set", "invoke", "inc", "dec", "not", "unaryMinus", "unaryPlus", "plusAssign", "minusAssign",
+        "timesAssign", "divAssign", "remAssign", "iterator", "hasNext", "next", "getValue", "setValue", "provideDelegate")
+
+    /** Set when the parser saw a local declaration; [liftLocals] does nothing otherwise. */
+    private var sawLocal = false
+    /** Counter for fresh names of lifted local declarations. */
+    private var localN = 0
+
+    /** Names a function declares: parameters, local `val`/`var`s, `for` variables and lambda parameters. */
+    private fun localsOf(f: FunD): Set<String> {
+        val out = HashSet<String>(f.params.map { it.name })
+        Subst(emptyMap(), srw = { x -> if (x is VarS) out.add(x.name); if (x is ForS) out.add(x.name); null },
+            rw = { x -> if (x is LambdaE) out.addAll(x.body.params); null }).fn(f)
+        return out
+    }
+
+    /** Names used in [f] (also as callees and `::name` references), including inside its local declarations. */
+    private fun usedNames(f: FunD, out: MutableSet<String> = HashSet()): MutableSet<String> {
+        lateinit var sub: Subst
+        sub = Subst(emptyMap(), rw = { x ->
+            if (x is NameE) out.add(x.n)
+            if (x is UnE && x.op.startsWith("::")) out.add(x.op.drop(2))
+            null
+        }, srw = { x -> if (x is LocalDeclS) localDeclNames(x.d, out); null })
+        sub.fn(f)
+        return out
+    }
+
+    private fun localDeclNames(d: Any, out: MutableSet<String>) {
+        when (d) {
+            is FunD -> usedNames(d, out)
+            is InterfaceD -> d.methods.forEach { usedNames(it, out) }
+            is ClassD -> {
+                d.methods.forEach { usedNames(it, out) }
+                val sub = Subst(emptyMap(), rw = { x -> if (x is NameE) out.add(x.n); null })
+                d.fields.forEach { it.init?.let { e -> sub.e(e) } }
+                d.inits.forEach { if (it is Block) sub.block(it) }
+                d.superArgs?.forEach { sub.e(it) }
+                d.ctorParams.forEach { it.default?.let { e -> sub.e(e) } }
+            }
+        }
+    }
+
+    /** Names assigned anywhere in [f] (`x = ...`, `x += ...`, `x++`), including in its local declarations. */
+    private fun assignedNames(f: FunD, out: MutableSet<String> = HashSet()): MutableSet<String> {
+        Subst(emptyMap(), rw = { x -> if (x is PostIncE && x.target is NameE) out.add(x.target.n); null }, srw = { x ->
+            when {
+                x is AssignS && x.target is NameE -> out.add(x.target.n)
+                x is IncS && x.target is NameE -> out.add(x.target.n)
+                x is LocalDeclS && x.d is FunD -> assignedNames(x.d, out)
+            }
+            null
+        }).fn(f)
+        return out
+    }
+
+    /** Names a class declares itself (properties, constructor parameters, methods and their locals). */
+    private fun ownNames(c: ClassD): Set<String> =
+        c.fields.map { it.name }.toSet() + c.ctorParams.map { it.name } + c.methods.flatMap { listOf(it.name.removePrefix("\$prop\$")) + localsOf(it) } + c.name
+
+    /**
+     * Lifts local declarations ([LocalDeclS]) out of function and method bodies:
+     * - a local function that captures no local variable becomes a top-level function (inside a method: a method of
+     *   the same class), renamed when its name is taken; calls and `::f` references in the enclosing body follow;
+     * - a local function that captures local variables becomes a local `val` holding a lambda (closures capture values
+     *   and box captured `var`s, see `boxCapturedVars`); such a function cannot be recursive, generic, an extension,
+     *   or have default or vararg parameters;
+     * - local classes, objects and interfaces become top-level declarations (renamed when the name is taken); they must
+     *   not capture local variables.
+     */
+    private fun liftLocals(funs: MutableList<FunD>, classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>) {
+        if (!sawLocal) return
+        val taken = HashSet<String>()
+        funs.forEach { taken.add(it.name) }; classes.forEach { taken.add(it.name) }; ifaces.forEach { taken.add(it.name) }
+        fun fresh(n: String, extra: Set<String> = emptySet()): String {
+            if (n !in taken && n !in extra) { taken.add(n); return n }
+            while (true) { val m = "$n\$l${localN++}"; if (m !in taken && m !in extra) { taken.add(m); return m } }
+        }
+        fun copyFun(n: FunD, o: FunD, name: String = n.name) = FunD(name, n.params, n.ret, n.body, n.exprBody, n.line, o.typeParams, o.recv)
+        fun copyClass(sub: Subst, c: ClassD, name: String): ClassD {
+            val fm = c.fields.associateWith { f -> FieldD(f.name, f.type?.let { sub.ty(it) }, f.isVar, f.init?.let { sub.e(it) }, f.lateinit) }
+            return ClassD(name, c.fields.map { fm.getValue(it) }, c.supers.map { sub.ty(TypeRef(it, emptyList(), false)).name }, c.methods.map { copyFun(sub.fn(it), it) }, c.line,
+                c.ctorParams.map { Param(it.name, sub.ty(it.type), it.default?.let { d -> sub.e(d) }, it.vararg) },
+                c.inits.map { if (it is FieldD) fm[it] ?: it else sub.block(it as Block) }, c.superArgs?.map { sub.e(it) }, c.typeParams,
+                c.enumEntries?.map { (n, a) -> n to a.map { sub.e(it) } }, c.isValue, c.superTypeArgs)
+        }
+        // Lifts the local declarations directly inside [f0]; returns the rewritten function. [owner]: class of a method.
+        fun lift(f0: FunD, owner: ClassD?, newMethods: MutableList<FunD>): FunD {
+            var f = f0
+            while (true) {
+                val decls = ArrayList<Any>()
+                Subst(emptyMap(), srw = { x -> if (x is LocalDeclS) decls.add(x.d); null }).fn(f)
+                if (decls.isEmpty()) return f
+                val outer = localsOf(f)
+                val assigned = assignedNames(f)
+                val rename = HashMap<String, String>()
+                val types = HashMap<String, TypeRef>()
+                val asLambda = HashSet<FunD>()
+                val ownerNames = owner?.let { o -> o.methods.map { it.name } + newMethods.map { it.name } }?.toSet() ?: emptySet()
+                for (d in decls) when (d) {
+                    is FunD -> {
+                        // Operator resolution against built-in operators is not scoped: a local `Int?.plus` would
+                        // change every `+` in the program.
+                        if (d.recv != null && d.name in OPERATOR_NAMES)
+                            throw CompileError("line ${d.line}: local operator extension functions are not supported")
+                        val caps = usedNames(d) - localsOf(d) - d.name
+                        if (caps.none { it in outer }) rename[d.name] = fresh(d.name, ownerNames)
+                        else {
+                            if (d.name in usedNames(d)) throw CompileError("line ${d.line}: recursive local functions that capture local variables are not supported")
+                            if (d.typeParams.isNotEmpty() || d.recv != null || d.params.any { it.default != null || it.vararg })
+                                throw CompileError("line ${d.line}: local functions that capture local variables cannot be generic, extensions or have default/vararg parameters")
+                            asLambda.add(d)
+                        }
+                    }
+                    is ClassD, is InterfaceD -> {
+                        val used = HashSet<String>(); localDeclNames(d, used)
+                        val own = if (d is ClassD) ownNames(d) else (d as InterfaceD).methods.flatMap { localsOf(it) + it.name }.toSet()
+                        val caps = used - own
+                        caps.firstOrNull { it in outer }?.let { throw CompileError("line ${if (d is ClassD) d.line else (d as InterfaceD).line}: local classes that capture local variables are not supported ('$it')") }
+                        val n = if (d is ClassD) d.name else (d as InterfaceD).name
+                        val nn = fresh(n)
+                        if (nn != n) { rename[n] = nn; types[n] = TypeRef(nn, emptyList(), false) }
+                    }
+                }
+                lateinit var sub: Subst
+                sub = Subst(types, rw = { x ->
+                    when {
+                        x is NameE && x.n in rename -> NameE(rename.getValue(x.n)).also { it.line = x.line }
+                        x is UnE && x.op.startsWith("::") && x.e is NullL && x.op.drop(2) in rename -> UnE("::" + rename.getValue(x.op.drop(2)), x.e).also { it.line = x.line }
+                        else -> null
+                    }
+                }, srw = { x ->
+                    if (x !is LocalDeclS) null
+                    else if (x.d is FunD && x.d in asLambda) {
+                        val g = x.d
+                        val ret = g.ret ?: if (g.body != null) TypeRef("Unit", emptyList(), false) else null
+                        val ty = ret?.let { TypeRef("\$Fn", g.params.map { it.type } + it, false) }
+                        val body = g.body ?: Block(listOf(ExprS(g.exprBody!!).also { it.line = g.line }))
+                        VarS(g.name, false, ty, LambdaE(sub.block(Block(body.stmts, g.params.map { it.name }, g.params.map { it.type }))).also { it.line = g.line }).also { it.line = g.line }
+                    } else ExprS(BoolL(true)).also { it.line = x.line }
+                })
+                f = copyFun(sub.fn(f), f)
+                for (d in decls) when (d) {
+                    is FunD -> if (d !in asLambda) {
+                        val g = copyFun(sub.fn(d), d, rename.getValue(d.name))
+                        if (owner != null) newMethods.add(lift(g, owner, newMethods)) else funs.add(lift(g, null, newMethods))
+                    }
+                    is ClassD -> classes.add(copyClass(sub, d, rename[d.name] ?: d.name))
+                    is InterfaceD -> ifaces.add(InterfaceD(rename[d.name] ?: d.name, d.methods.map { copyFun(sub.fn(it), it) }, d.line, d.typeParams, d.supers))
+                }
+            }
+        }
+        val top = ArrayList<FunD>()
+        for (i in funs.indices) funs[i] = lift(funs[i], null, top)
+        var i = 0
+        while (i < classes.size) {
+            val c = classes[i]
+            val added = ArrayList<FunD>()
+            val ms = c.methods.map { lift(it, c, added) }
+            if (added.isNotEmpty() || ms.zip(c.methods).any { (a, b) -> a !== b })
+                classes[i] = ClassD(c.name, c.fields, c.supers, ms + added, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
+            i++
+        }
+    }
+
     private fun keepRecv(n: FunD, o: FunD) = FunD(n.name, n.params, n.ret, n.body, n.exprBody, n.line, n.typeParams, o.recv)
 
     /** Pending `<...>` type arguments of the supertypes of the class being parsed. */
@@ -929,9 +1096,50 @@ class Parser(private val t: List<Tok>) {
     private fun destructVar(d: String, n: String, i: Int, isVar: Boolean, line: Int): S =
         VarS(n, isVar, null, CallE(MemberE(NameE(d).also { it.line = line }, "component${i + 1}", false).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line }).also { it.line = line }
 
+    /** Modifiers that may precede a local declaration; they have no effect here. */
+    private val LOCAL_MODIFIERS = setOf("inline", "tailrec", "operator", "infix", "private", "data", "open", "abstract", "sealed", "enum", "value")
+
+    /** A local `fun` / `class` / `object` / `interface` starts at the current token (after optional modifiers). */
+    private fun localDeclAhead(): Boolean {
+        var i = p
+        while (t[i].k == K.ID && t[i].s in LOCAL_MODIFIERS && t[i + 1].k == K.ID) i++
+        val k = t[i]; val n = t[i + 1]
+        if (k.k != K.ID) return false
+        return when (k.s) {
+            "fun" -> n.k == K.ID || (n.k == K.OP && n.s == "<")
+            "class", "interface" -> n.k == K.ID
+            "object" -> n.k == K.ID
+            else -> false
+        }
+    }
+
+    /** Parses a local declaration into a [LocalDeclS]; [liftLocals] hoists it after parsing. */
+    private fun localDecl(): S {
+        var isData = false; var isEnum = false; var isValue = false
+        while (peek().s in LOCAL_MODIFIERS && t[p + 1].k == K.ID) {
+            when (next().s) { "data" -> isData = true; "enum" -> isEnum = true; "value" -> isValue = true }
+        }
+        val saved = curClass
+        val d: Any = try {
+            when {
+                isId("fun") -> function()
+                isId("interface") -> interfaceDecl()
+                isId("object") -> { next(); objectDecl(ident()) }
+                else -> {
+                    val c = classDecl(isEnum)
+                    if (isValue) fail("local value classes are not supported")
+                    if (isData) dataClass(c) else c
+                }
+            }
+        } finally { curClass = saved }
+        sawLocal = true
+        return LocalDeclS(d)
+    }
+
     private fun stmt(): S {
         val line = peek().line
         val s: S = when {
+            localDeclAhead() -> localDecl()
             // Loop label `name@ for/while/do`.
             peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == "@" && t[p + 2].k == K.ID && t[p + 2].s in setOf("for", "while", "do") -> {
                 val l = next().s; next()

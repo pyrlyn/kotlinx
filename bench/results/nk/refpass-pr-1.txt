@@ -1,0 +1,18 @@
+# refpass-pr-1 working tree 2026-10-29 23:57 EET load: { 36.36 151.41 383.04 }
+sum 3.704
+alloc 76.174
+bigheap 117.493
+closures 83.411
+cycles 46.575
+dispatch 95.381
+file 50.7
+free 50.245
+hashmap 68.521
+lru 95.845
+matmul 10.12
+nbody 71.144
+recursion 6.141
+refpass 128.465
+sort 61.787
+strings 31.274
+trees 122.538
