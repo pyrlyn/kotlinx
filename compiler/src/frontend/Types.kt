@@ -22,6 +22,8 @@ sealed class Ty {
     object Pinned : Ty() { override fun toString() = "Pinned<ByteArray>" }
     object Args : Ty() { override fun toString() = "Array<String>" }
     data class Cls(val name: String) : Ty() { override fun toString() = name }
+    /** Nullable primitive (`Int?`, `Double?`, ...): null or a pointer to an `AnyBox<inner>` (reference counted). */
+    data class NBox(val inner: Ty) : Ty() { override fun toString() = "$inner?" }
     data class ListTy(val elem: Ty) : Ty() { override fun toString() = "ArrayList<$elem>" }
 }
 
@@ -32,7 +34,7 @@ val Ty.llvm: String get() = when (this) {
 }
 
 /** Reference-counted heap types. */
-val Ty.isRef: Boolean get() = this is Ty.Cls || this is Ty.ListTy || this is Ty.MapTy || this is Ty.Iface || this == Ty.SB || this == Ty.Str || this is Ty.Arr
+val Ty.isRef: Boolean get() = this is Ty.Cls || this is Ty.ListTy || this is Ty.MapTy || this is Ty.Iface || this is Ty.NBox || this == Ty.SB || this == Ty.Str || this is Ty.Arr
 /** Ref types whose refcount sits 8 bytes before the pointer (strings point at their chars). */
 val Ty.hasPrefixRc: Boolean get() = this == Ty.Str || this is Ty.Arr
 val Ty.isNum: Boolean get() = isInt || this == Ty.F64

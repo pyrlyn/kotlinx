@@ -1004,7 +1004,7 @@ class Parser(private val t: List<Tok>) {
             while (isId("reified") || isId("out") || isId("in")) next()
             val tl = t[p].line; val tp = ident()
             tps.add(tp)
-            if (isOp(":")) { next(); val b = type(); TypeParamBounds.bounds["$tl:$tp"] = b } else TypeParamBounds.unbounded.add("$tl:$tp")
+            if (isOp(":")) { next(); val b = type(); TypeParamBounds.bounds["$tl:$tp"] = b; if (b.name == "Any" && b.nullable) TypeParamBounds.unbounded.add("$tl:$tp") } else TypeParamBounds.unbounded.add("$tl:$tp")
             if (isOp(",")) next()
         }
         next()

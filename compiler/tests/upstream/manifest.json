@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 28,
   "N/A": 2984,
-  "PASS": 2348,
-  "UNSUPPORTED": 3115
+  "PASS": 2396,
+  "UNSUPPORTED": 3067
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1430,9 +1430,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/divisionByZero.kt"
   },
   "box/box/binaryOp/eqNullableDoubles.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Double, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableDoubles.kt"
   },
   "box/box/binaryOp/eqNullableDoublesToInt.kt": {
@@ -1451,15 +1450,13 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableDoublesWithTP.kt"
   },
   "box/box/binaryOp/eqNullableShortToShort.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableShortToShort.kt"
   },
   "box/box/binaryOp/eqNullableToPrimitiveWithSideEffects.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableToPrimitiveWithSideEffects.kt"
   },
   "box/box/binaryOp/intrinsic.kt": {
@@ -1524,9 +1521,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/overflowLong.kt"
   },
   "box/box/binaryOp/primitiveEqualsSafeCall.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/binaryOp/primitiveEqualsSafeCall.kt"
   },
   "box/box/boxing/boxBoolean.kt": {
@@ -1557,8 +1553,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing10.kt"
   },
   "box/box/boxing/boxing11.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing11.kt"
   },
@@ -1717,9 +1713,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt15871.kt"
   },
   "box/box/boxingOptimization/kt19767.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt19767.kt"
   },
   "box/box/boxingOptimization/kt19767_2.kt": {
@@ -1729,9 +1724,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt19767_2.kt"
   },
   "box/box/boxingOptimization/kt19767_chain.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt19767_chain.kt"
   },
   "box/box/boxingOptimization/kt46859.kt": {
@@ -1834,8 +1828,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/progressions.kt"
   },
   "box/box/boxingOptimization/safeCallWithElvis.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
+   "category": "nullable types",
+   "detail": "nullable right side of ?: on Int? is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/safeCallWithElvis.kt"
   },
@@ -4816,9 +4810,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt80795.kt"
   },
   "box/box/casts/kt81257.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Boolean, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/kt81257.kt"
   },
   "box/box/casts/kt81617.kt": {
@@ -5324,8 +5317,8 @@
    "upstream": "compiler/testData/codegen/box/classes/innerClass.kt"
   },
   "box/box/classes/kt1018.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected ArrayList<Int?>, found ArrayList<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt1018.kt"
   },
@@ -8351,7 +8344,7 @@
   },
   "box/box/controlStructures/forInArray/forNullableIntArray.kt": {
    "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
+   "detail": "type mismatch: expected ArrayList<Int?>, found ArrayList<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forNullableIntArray.kt"
   },
@@ -8825,9 +8818,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt1899.kt"
   },
   "box/box/controlStructures/kt2147.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2147.kt"
   },
   "box/box/controlStructures/kt2259.kt": {
@@ -9287,9 +9279,8 @@
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_errors.kt"
   },
   "box/box/controlflow/for_loops_let_with_nullable.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator != on Char and CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlflow/for_loops_let_with_nullable.kt"
   },
   "box/box/controlflow/for_loops_nested.kt": {
@@ -12077,9 +12068,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/long.kt"
   },
   "box/box/dataClasses/hashCode/null.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/null.kt"
   },
   "box/box/dataClasses/hashCode/short.kt": {
@@ -12159,9 +12149,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/genericParam.kt"
   },
   "box/box/dataClasses/toString/mixedParams.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/mixedParams.kt"
   },
   "box/box/dataClasses/toString/primitiveArrays.kt": {
@@ -12383,9 +12372,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/abstractClass.kt"
   },
   "box/box/defaultArguments/function/complexInheritance.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/complexInheritance.kt"
   },
   "box/box/defaultArguments/function/covariantOverride.kt": {
@@ -13958,8 +13946,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/infixRecursiveCall.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/insideElvis.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
+   "category": "nullable types",
+   "detail": "nullable right side of ?: on Int? is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/insideElvis.kt"
   },
@@ -14265,9 +14253,8 @@
    "upstream": "compiler/testData/codegen/box/elvis/genericElvisWithNullLHS.kt"
   },
   "box/box/elvis/genericNull.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/elvis/genericNull.kt"
   },
   "box/box/elvis/kt24209.kt": {
@@ -17531,8 +17518,8 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4784.kt"
   },
   "box/box/functions/localFunctions/kt4989.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
+   "category": "unknown path (stdlib API / unsupported decl)",
+   "detail": "unknown function 'path'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4989.kt"
   },
@@ -17707,9 +17694,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/differentTypesComparison.kt"
   },
   "box/box/ieee754/equalsDouble_properIeeeComparisons.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Boolean, found Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/equalsDouble_properIeeeComparisons.kt"
   },
   "box/box/ieee754/equalsFloat_properIeeeComparisons.kt": {
@@ -17725,9 +17711,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/equalsNaN_properIeeeComparisons.kt"
   },
   "box/box/ieee754/equalsNullableDouble_properIeeeComparisons.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Boolean, found Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/equalsNullableDouble_properIeeeComparisons.kt"
   },
   "box/box/ieee754/equalsNullableFloat_properIeeeComparisons.kt": {
@@ -17737,8 +17722,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/equalsNullableFloat_properIeeeComparisons.kt"
   },
   "box/box/ieee754/explicitCompareCall.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Boolean, found Unit",
+   "category": "other: unknown method Double?.compareTo()",
+   "detail": "unknown method Double?.compareTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/explicitCompareCall.kt"
   },
@@ -17754,8 +17739,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/generic.kt"
   },
   "box/box/ieee754/greaterDouble_properIeeeComparisons.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Boolean, found Unit",
+   "category": "other: cannot order references",
+   "detail": "cannot order references",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/greaterDouble_properIeeeComparisons.kt"
   },
@@ -17776,8 +17761,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/lessDouble_properIeeeAndNewInference.kt"
   },
   "box/box/ieee754/lessDouble_properIeeeComparisons.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Boolean, found Unit",
+   "category": "other: cannot order references",
+   "detail": "cannot order references",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/lessDouble_properIeeeComparisons.kt"
   },
@@ -17794,21 +17779,18 @@
    "upstream": "compiler/testData/codegen/box/ieee754/nullableAnyToReal.kt"
   },
   "box/box/ieee754/nullableDoubleEquals.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Double, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/nullableDoubleEquals.kt"
   },
   "box/box/ieee754/nullableDoubleEqualsLV13.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Double, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/nullableDoubleEqualsLV13.kt"
   },
   "box/box/ieee754/nullableDoubleNotEquals.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Double, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/nullableDoubleNotEquals.kt"
   },
   "box/box/ieee754/nullableFloatEquals.kt": {
@@ -17824,9 +17806,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/nullableFloatNotEquals.kt"
   },
   "box/box/ieee754/nullableIntEquals.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/nullableIntEquals.kt"
   },
   "box/box/ieee754/safeCall.kt": {
@@ -17870,15 +17851,13 @@
    "upstream": "compiler/testData/codegen/box/ieee754/whenNoSubject_properIeeeComparisons.kt"
   },
   "box/box/ieee754/whenNullableSmartCast.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Double, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/whenNullableSmartCast.kt"
   },
   "box/box/ieee754/when_properIeeeComparisons.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Double, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ieee754/when_properIeeeComparisons.kt"
   },
   "box/box/increment/argumentWithSideEffects.kt": {
@@ -20553,9 +20532,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableIntGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableIntNull.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableIntNull.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableIntNullGeneric.kt": {
@@ -21056,8 +21034,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingNullable.kt"
   },
   "box/box/inlineClasses/callableRefClassMergingPrimitives.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
+   "category": "strings / templates",
+   "detail": "unknown method Boolean.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingPrimitives.kt"
   },
@@ -21560,9 +21538,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkUnboxingResultFromTypeVariableGeneric.kt"
   },
   "box/box/inlineClasses/checkUnboxingResultFromTypeVariableGeneric2.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkUnboxingResultFromTypeVariableGeneric2.kt"
   },
   "box/box/inlineClasses/classInInlineClassInit.kt": {
@@ -22947,12 +22924,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387872\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387936\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531488\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966816\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23607,9 +23584,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt51254.kt"
   },
   "box/box/inlineClasses/kt52913.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt52913.kt"
   },
   "box/box/inlineClasses/kt54455.kt": {
@@ -23734,8 +23710,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/overridingFunCallingPrivateFunGeneric.kt"
   },
   "box/box/inlineClasses/passInlineClassAsVararg.kt": {
-   "category": "other: unknown property UInt.value",
-   "detail": "unknown property UInt.value",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected UInt, found UInt",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/passInlineClassAsVararg.kt"
   },
@@ -24600,8 +24576,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxValueOfNullableInlineClassUsingInlineFunction.kt"
   },
   "box/box/inlineClasses/useInlineClassesInsideElvisOperator.kt": {
-   "category": "other: unknown method UInt.asResult()",
-   "detail": "unknown method UInt.asResult()",
+   "category": "nullable types",
+   "detail": "nullable right side of ?: on UInt? is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/useInlineClassesInsideElvisOperator.kt"
   },
@@ -25489,8 +25465,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt12125.kt"
   },
   "box/box/intrinsics/kt12125_2.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Byte, found CPointer",
+   "category": "other: -- on Byte?",
+   "detail": "-- on Byte?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/kt12125_2.kt"
   },
@@ -25501,8 +25477,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt12125_inc.kt"
   },
   "box/box/intrinsics/kt12125_inc_2.kt": {
-   "category": "other: unknown method Byte.dec()",
-   "detail": "unknown method Byte.dec()",
+   "category": "other: unknown method Byte?.dec()",
+   "detail": "unknown method Byte?.dec()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/kt12125_inc_2.kt"
   },
@@ -26508,9 +26484,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/kt4174.kt"
   },
   "box/box/localClasses/kt45383.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localClasses/kt45383.kt"
   },
   "box/box/localClasses/localClass.kt": {
@@ -28338,9 +28313,8 @@
    "upstream": "compiler/testData/codegen/box/nothingValue/nothingValueException.kt"
   },
   "box/box/nothingValue/toStringOnNothing.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/nothingValue/toStringOnNothing.kt"
   },
   "box/box/nullCheckOptimization/isNullable.kt": {
@@ -29138,8 +29112,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/comparable.kt"
   },
   "box/box/operatorConventions/compareTo/customCompareTo.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Long, found CPointer",
+   "category": "other: cannot order references",
+   "detail": "cannot order references",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/customCompareTo.kt"
   },
@@ -29472,9 +29446,8 @@
    "upstream": "compiler/testData/codegen/box/platformTypes/primitives/unaryPlus.kt"
   },
   "box/box/primitiveTypes/booleanHashCode.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Boolean, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/booleanHashCode.kt"
   },
   "box/box/primitiveTypes/charToByte.kt": {
@@ -29516,33 +29489,29 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/boxedNanEquals.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveBoolean.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Boolean, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveBoolean.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveByte.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Byte, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveByte.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveChar.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Char, found CPointer",
+   "category": "operator/infix functions",
+   "detail": "operator != on Char? and Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveChar.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveInt.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveInt.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveLong.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Long, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveLong.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveShort.kt": {
@@ -29552,33 +29521,29 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/boxedEqPrimitiveShort.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedBoolean.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Boolean, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedBoolean.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedByte.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Byte, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedByte.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedChar.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Char, found CPointer",
+   "category": "operator/infix functions",
+   "detail": "operator != on Char and Char?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedChar.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedInt.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedInt.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedLong.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Long, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedLong.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/generated/primitiveEqBoxedShort.kt": {
@@ -29650,9 +29615,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/whenIntAsNullableAny.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/whenNullableBoxed.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'doTestInt' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/whenNullableBoxed.kt"
   },
   "box/box/primitiveTypes/equalsHashCodeToString.kt": {
@@ -29743,9 +29707,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt239.kt"
   },
   "box/box/primitiveTypes/kt242.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt242.kt"
   },
   "box/box/primitiveTypes/kt248.kt": {
@@ -29874,8 +29837,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt753.kt"
   },
   "box/box/primitiveTypes/kt756.kt": {
-   "category": "other: unknown method Int.unaryPlus()",
-   "detail": "unknown method Int.unaryPlus()",
+   "category": "strings / templates",
+   "detail": "unknown method Int?.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt756.kt"
   },
@@ -35375,9 +35338,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/Kt2495Test.kt"
   },
   "box/box/regressions/arrayLengthNPE.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/arrayLengthNPE.kt"
   },
   "box/box/regressions/commonSupertypeContravariant.kt": {
@@ -36126,9 +36088,8 @@
    "upstream": "compiler/testData/codegen/box/runUnitTests.kt"
   },
   "box/box/safeCall/genericNull.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/safeCall/genericNull.kt"
   },
   "box/box/safeCall/kt1572.kt": {
@@ -36143,9 +36104,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt245.kt"
   },
   "box/box/safeCall/kt247.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/safeCall/kt247.kt"
   },
   "box/box/safeCall/kt3430.kt": {
@@ -36167,9 +36127,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt52580.kt"
   },
   "box/box/safeCall/kt52743.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/safeCall/kt52743.kt"
   },
   "box/box/safeCall/parenthesizedSafeCallsAndOperators.kt": {
@@ -36191,7 +36150,7 @@
   },
   "box/box/safeCall/primitiveNotEqSafeCall.kt": {
    "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'doSimple' needs an explicit return type",
+   "detail": "expression-bodied function 'doChain' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/primitiveNotEqSafeCall.kt"
   },
@@ -36202,14 +36161,13 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallEqPrimitive.kt"
   },
   "box/box/safeCall/safeCallIOnUninitializedNonNullValue.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallIOnUninitializedNonNullValue.kt"
   },
   "box/box/safeCall/safeCallNotEqPrimitive.kt": {
    "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'doSimple' needs an explicit return type",
+   "detail": "expression-bodied function 'doChain' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallNotEqPrimitive.kt"
   },
@@ -36838,8 +36796,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/negativesmartCastAugmentedAssignment.kt"
   },
   "box/box/smartCasts/nullSmartCast.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
+   "category": "other: unknown method Int?.foo()",
+   "detail": "unknown method Int?.foo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/nullSmartCast.kt"
   },
@@ -37250,9 +37208,8 @@
    "upstream": "compiler/testData/codegen/box/strings/forInString.kt"
   },
   "box/box/strings/interpolation.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/interpolation.kt"
   },
   "box/box/strings/kt13213.kt": {
@@ -38979,9 +38936,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/boxConstValOfUnsignedType.kt"
   },
   "box/box/unsignedTypes/boxedUnsignedEqualsZero.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected UInt, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/boxedUnsignedEqualsZero.kt"
   },
   "box/box/unsignedTypes/checkBasicUnsignedLiterals.kt": {
@@ -39098,9 +39054,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/kt61418.kt"
   },
   "box/box/unsignedTypes/literalEqualsNullableUnsigned.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected UInt, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/literalEqualsNullableUnsigned.kt"
   },
   "box/box/unsignedTypes/nullableSmartcastUnsignedArray.kt": {
@@ -39110,9 +39065,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/nullableSmartcastUnsignedArray.kt"
   },
   "box/box/unsignedTypes/nullableUnsignedEqualsLiteral.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected UInt, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/nullableUnsignedEqualsLiteral.kt"
   },
   "box/box/unsignedTypes/signedToUnsignedConversions.kt": {
@@ -40069,9 +40023,8 @@
    "upstream": "compiler/testData/codegen/box/when/nothingTyped.kt"
   },
   "box/box/when/nullableWhen.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/nullableWhen.kt"
   },
   "box/box/when/oneUnitBranch.kt": {
@@ -40210,9 +40163,8 @@
    "upstream": "compiler/testData/codegen/box/when/whenArgumentIsEvaluatedOnlyOnce.kt"
   },
   "box/box/when/whenSafeCallSubjectEvaluatedOnce.kt": {
-   "category": "other: safe call result must be a reference",
-   "detail": "safe call result must be a reference",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/whenSafeCallSubjectEvaluatedOnce.kt"
   },
   "box/box/when/whenSubjectVariable/captureSubjectVariable.kt": {
