@@ -1,0 +1,18 @@
+# recvfn working tree 2026-10-30 05:15 EET load: { 21.48 19.30 17.72 }
+sum 3.724
+alloc 75.191
+bigheap 117.316
+closures 82.757
+cycles 45.228
+dispatch 94.737
+file 50.677
+free 50.754
+hashmap 71.731
+lru 87.049
+matmul 10.123
+nbody 70.139
+recursion 6.123
+refpass 127.355
+sort 61.989
+strings 31.505
+trees 122.83

@@ -1,0 +1,18 @@
+# jumps working tree 2026-10-30 06:24 EET load: { 44.76 29.08 24.82 }
+sum 3.704
+alloc 75.289
+bigheap 113.262
+closures 82.786
+cycles 44.953
+dispatch 95.398
+file 50.927
+free 49.876
+hashmap 68.04
+lru 86.427
+matmul 10.197
+nbody 70.427
+recursion 6.032
+refpass 126.461
+sort 62.767
+strings 31.199
+trees 123.276

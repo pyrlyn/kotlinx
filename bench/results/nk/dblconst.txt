@@ -1,0 +1,18 @@
+# dblconst working tree 2026-10-30 06:57 EET load: { 31.25 18.30 17.18 }
+sum 3.766
+alloc 75.532
+bigheap 111.014
+closures 82.038
+cycles 44.661
+dispatch 94.362
+file 50.067
+free 49.216
+hashmap 63.641
+lru 85.341
+matmul 10.068
+nbody 69.622
+recursion 5.974
+refpass 129.575
+sort 60.769
+strings 31.956
+trees 123.949

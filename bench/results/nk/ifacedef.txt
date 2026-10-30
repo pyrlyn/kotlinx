@@ -1,0 +1,18 @@
+# ifacedef working tree 2026-10-30 04:59 EET load: { 30.34 19.78 18.45 }
+sum 3.688
+alloc 75.421
+bigheap 115.313
+closures 83.459
+cycles 44.928
+dispatch 94.671
+file 50.804
+free 50.509
+hashmap 68.846
+lru 93.772
+matmul 10.163
+nbody 70.308
+recursion 6.106
+refpass 124.634
+sort 61.517
+strings 32.314
+trees 122.678
