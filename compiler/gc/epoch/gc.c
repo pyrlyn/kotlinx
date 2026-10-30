@@ -29,9 +29,10 @@
 // collector recognizes traced pointers without dereferencing (acyclic objects may be freed concurrently).
 // Generations: objects found externally referenced by a scan become stable (old) until touched; minor
 // detections do not trace them, major detections (amortized against the stable population) do.
-// Trial deletion's MarkGray/Scan run in parallel on KX_GC_THREADS threads for every detection with at
-// least PAR_MIN_ROOTS roots once the workload is large: by live traced objects (KX_GC_PAR_MIN_OBJECTS), by
-// traced heap bytes (KX_GC_PAR_MIN_HEAP_BYTES), or by default by expected traversal (KX_GC_PAR_MIN_WORK).
+// Trial deletion's MarkGray/Scan run in parallel on KX_GC_THREADS threads whenever a runtime cost model
+// predicts it is faster: expected visits (roots x visits per root) x measured serial ns per visit against
+// expected visits x measured parallel ns per visit plus the measured cost of waking the helpers. No
+// tuning thresholds.
 // Program exit drains the queue only for --leak-check / --alloc malloc builds or KX_GC_EXIT_DRAIN=1.
 // See compiler/gc/docs/architecture.md, section 7.
 #include <pthread.h>
@@ -378,9 +379,16 @@ static void apply_log(Log *l) {
 // so are stable (old-generation) objects. A wrong CRC (more than 2^24 references) can only make the
 // detector propose a wrong candidate, which the Sigma test rejects.
 #define MAX_THREADS 16
-#define PAR_MIN_ROOTS 1024          /* smaller detections run on the collector thread alone */
-#define PAR_MIN_WORK 65536          /* ... and so do detections expected to visit fewer objects (KX_GC_PAR_MIN_WORK) */
-static int64_t par_min_work = -1, par_min_objects = -1, par_min_heap = -1;
+/* Cost model, learned at run time: wall ns per visited object on one thread (ns_ser) and on all threads
+ * (ns_par, the real speedup including contention and imbalance), plus the fixed cost of one parallel
+ * phase (wake + barrier, calibrated by an empty parallel phase). ns_par starts at a perfect split; while
+ * the model keeps choosing serial it drifts back towards optimistic (PAR_RETRY_DECAY per detection), so a
+ * machine that was busy is retried later. The first parallel sample replaces the guess. */
+#define PAR_RETRY_DECAY 0.995
+#define PAR_MARGIN 0.8          /* parallel only if predicted at least 20% faster (hysteresis, not a size threshold) */
+static int par_sampled;
+static double ns_ser = 20.0, ns_par = -1.0, par_wake_ns = -1.0;
+static int64_t dbg_par_det;
 static double visits_per_root[2] = { 1.0, 1.0 };   /* [major]: running estimate from previous detections */
 #define SHARE_CHUNK 64
 static int c_major;                 /* current detection ignores the stable bit (traces the old generation too) */
@@ -580,19 +588,17 @@ static void detect(int major) {
     /* minor and major detections alike, when the expected traversal (roots x visits per root of the
      * previous detections of the same kind) pays for waking the helpers: the roots are split into
      * contiguous slices, idle workers take SHARE_CHUNK-sized pieces of a busy worker's stack */
-    if (par_min_work < 0) {
-        const char *e = getenv("KX_GC_PAR_MIN_WORK"); par_min_work = e && *e ? atoll(e) : PAR_MIN_WORK;
-        e = getenv("KX_GC_PAR_MIN_OBJECTS"); par_min_objects = e && *e ? atoll(e) : -1;
-        e = getenv("KX_GC_PAR_MIN_HEAP_BYTES"); par_min_heap = e && *e ? atoll(e) : -1;
+    if (par_wake_ns < 0 && n_threads > 1) {
+        int64_t w0 = rt_nanos(); run_phase(PHASE_MARK, NULL, 0, n_threads); run_phase(PHASE_SCAN, NULL, 0, n_threads);
+        par_wake_ns = (double)(rt_nanos() - w0) / 2.0;
     }
-    /* Gate (first one set wins): KX_GC_PAR_MIN_OBJECTS = live traced objects, KX_GC_PAR_MIN_HEAP_BYTES =
-     * traced slab bytes, else the expected-traversal estimate (KX_GC_PAR_MIN_WORK). */
-    int big;
-    if (par_min_objects >= 0) big = atomic_load_explicit(&t_allocs, memory_order_relaxed) - atomic_load_explicit(&t_frees, memory_order_relaxed) >= par_min_objects;
-    else if (par_min_heap >= 0) big = atomic_load_explicit(&t_heap_bytes, memory_order_relaxed) >= par_min_heap;
-    else big = (double)k * visits_per_root[major] >= (double)par_min_work;
-    int active = k >= PAR_MIN_ROOTS && big ? n_threads : 1;
+    if (ns_par < 0) ns_par = ns_ser / n_threads;
+    double v_est = (double)k * visits_per_root[major];
+    int active = n_threads > 1 && (size_t)n_threads <= k && v_est * ns_par + 2.0 * par_wake_ns < PAR_MARGIN * v_est * ns_ser ? n_threads : 1;
+    if (active == 1 && n_threads > 1 && ns_par > ns_ser / n_threads) ns_par = ns_par * PAR_RETRY_DECAY + (1 - PAR_RETRY_DECAY) * ns_ser / n_threads;
     atomic_store_explicit(&c_hit_stable, 0, memory_order_relaxed);
+    int64_t tmark_before = dbg_t_mark + dbg_t_scan;
+    if (active > 1) dbg_par_det++;
     int64_t t0 = rt_nanos();
     run_phase(PHASE_MARK, roots.items, k, active);
     int64_t t1 = rt_nanos();
@@ -601,6 +607,13 @@ static void detect(int major) {
     int64_t tv0 = c_traversed; collect_phases_stats();
     if (major) dbg_major_visits += c_traversed - tv0; else dbg_minor_visits += c_traversed - tv0;
     if (k) visits_per_root[major] = 0.5 * visits_per_root[major] + 0.5 * (double)(c_traversed - tv0 + (int64_t)k) / (double)k;
+    {   /* refresh the cost model from this detection's MarkGray + Scan wall time */
+        double v = (double)(c_traversed - tv0 + (int64_t)k), t = (double)(dbg_t_mark + dbg_t_scan - tmark_before);
+        if (v > 0 && t > 0) {
+            if (active == 1) ns_ser = 0.8 * ns_ser + 0.2 * (t / v);
+            else { double a = (t - 2.0 * par_wake_ns) / v; if (a < ns_ser / active) a = ns_ser / active; ns_par = par_sampled++ ? 0.5 * ns_par + 0.5 * a : a; }
+        }
+    }
     dbg_roots_k += (int64_t)k;
     int hit_stable = atomic_load_explicit(&c_hit_stable, memory_order_relaxed);
     for (size_t i = 0; i < k; i++) collect_white(roots.items[i]);
@@ -719,7 +732,7 @@ static void epoch_debug(void) {
     const char *e = getenv("KX_GC_DEBUG");
     if (e && *e) fprintf(stderr, "epoch: epochs=%lld logs=%lld detections=%lld sets=%lld pass=%lld fail-delta=%lld fail-sigma=%lld dead=%lld majors=%lld stable=%lld deferred=%zu\n",
         (long long)ep_epochs, (long long)dbg_logs, (long long)ep_detections, (long long)dbg_sets, (long long)dbg_pass, (long long)dbg_fail_delta, (long long)dbg_fail_sigma, (long long)dbg_dead, (long long)dbg_majors, (long long)c_stable_n, c_deferred.len);
-    if (e && *e) fprintf(stderr, "epoch: collector apply=%.1fms validate=%.1fms detect=%.1fms (mark %.1f scan %.1f) threads=%d\n", dbg_t_apply/1e6, dbg_t_valid/1e6, dbg_t_detect/1e6, dbg_t_mark/1e6, dbg_t_scan/1e6, n_threads);
+    if (e && *e) fprintf(stderr, "epoch: collector apply=%.1fms validate=%.1fms detect=%.1fms (mark %.1f scan %.1f) threads=%d parallel=%lld (ns/visit ser %.1f par %.1f wake %.0f)\n", dbg_t_apply/1e6, dbg_t_valid/1e6, dbg_t_detect/1e6, dbg_t_mark/1e6, dbg_t_scan/1e6, n_threads, (long long)dbg_par_det, ns_ser, ns_par, par_wake_ns);
     if (e && *e) fprintf(stderr, "epoch: roots=%lld minor-visits=%lld major-visits=%lld members=%lld\n", (long long)dbg_roots_k, (long long)dbg_minor_visits, (long long)dbg_major_visits, (long long)dbg_members);
     if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld\n", (long long)dbg_prom, (long long)dbg_dem_touch);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);

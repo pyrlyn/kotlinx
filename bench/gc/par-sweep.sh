@@ -1,4 +1,5 @@
 #!/bin/bash
+# HISTORICAL: the KX_GC_PAR_MIN_* thresholds were removed (cost model, see par-auto.sh); kept for d2-threshold*.
 # Parallel-detection threshold sweep (epoch): for each benchmark, threshold mode (live objects:
 # KX_GC_PAR_MIN_OBJECTS, traced heap bytes: KX_GC_PAR_MIN_HEAP_BYTES) and value, run KX_GC_THREADS=1/2/4
 # (median of RUNS, default 3) and record max GC pause and run time (the benchmark's own nanos).
