@@ -156,7 +156,7 @@ private fun boxCapturedVars(p: Program): Program {
     }
     val funs = p.funs.map { fn(it) }
     val classes = p.classes.map { cls(it) }
-    if (!used) return p
+    if (!used && !LiftedLocals.usesRef) return p
     val ref = ClassD("\$Ref", listOf(FieldD("v", TypeRef("T", emptyList(), false), true)), emptyList(), emptyList(), 0, typeParams = listOf("T"))
     return Program(funs, classes + ref, p.ifaces, globals, p.companions)
 }

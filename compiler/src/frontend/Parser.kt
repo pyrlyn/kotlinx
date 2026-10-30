@@ -21,7 +21,7 @@ object TypeParamBounds {
 }
 
 /** Names of lifted local declarations (a local function wins over a member of an implicit receiver). */
-object LiftedLocals { val names = HashSet<String>() }
+object LiftedLocals { val names = HashSet<String>(); var usesRef = false }
 
 private var argTmp = 0
 
@@ -835,6 +835,41 @@ class Parser(private val t: List<Tok>) {
                 if (decls.isEmpty()) return f
                 val outer = localsOf(f)
                 val assigned = assignedNames(f)
+                // A local `var` captured by a local class and assigned anywhere is shared through a `$Ref` cell:
+                // `var x = e` -> `val x = $Ref(e)`, uses `x` -> `x.v`; the class then captures the cell by value.
+                val refVars = HashMap<String, TypeRef>()
+                for (d in decls) if (d is ClassD && d.enumEntries == null && d.superClass == null && d.methods.none { it.name == "\$equals" }) {
+                    // (With a superclass, its constructor may call an override before the captured cell is stored.)
+                    val used = HashSet<String>(); localDeclNames(d, used)
+                    val assignedIn = HashSet<String>(); d.methods.forEach { assignedNames(it, assignedIn) }
+                    for (c in used - ownNames(d)) if (c in outer && c !in f.params.map { it.name } && (c in assigned || c in assignedIn)) {
+                        val t = localType(f, c) ?: continue
+                        refVars[c] = t
+                    }
+                }
+                if (refVars.isNotEmpty()) {
+                    // Shadowing (lambda parameters, a local declaration's own names) would be rewritten too: not supported.
+                    val lamParams = HashSet<String>()
+                    Subst(emptyMap(), rw = { x -> when (x) { is LambdaE -> lamParams.addAll(x.body.params.ifEmpty { listOf("it") }); is CallE -> x.lambda?.let { lamParams.addAll(it.params.ifEmpty { listOf("it") }) }; else -> {} }; null }).fn(f)
+                    refVars.keys.removeAll { it in lamParams || decls.any { d -> (d is ClassD && it in ownNames(d)) || (d is FunD && (it in localsOf(d) || d.params.any { p -> p.name == it })) || d is InterfaceD } }
+                }
+                if (refVars.isNotEmpty()) {
+                    LiftedLocals.usesRef = true
+                    lateinit var bx: Subst
+                    bx = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n in refVars) MemberE(NameE(x.n).also { it.line = x.line }, "v", false).also { it.line = x.line } else null }, srw = { x ->
+                        when {
+                            x is VarS && x.isVar && x.name in refVars -> {
+                                val t = refVars.getValue(x.name)
+                                VarS(x.name, false, TypeRef("\$Ref", listOf(t), false), CallE(NameE("\$Ref").also { it.line = x.line }, listOf(t), listOf(bx.e(x.init)), null).also { it.line = x.line }).also { it.line = x.line }
+                            }
+                            x is LocalDeclS && x.d is ClassD -> LocalDeclS(copyClass(bx, x.d, x.d.name)).also { it.line = x.line }
+                            x is LocalDeclS && x.d is FunD -> LocalDeclS(copyFun(bx.fn(x.d), x.d)).also { it.line = x.line }
+                            else -> null
+                        }
+                    })
+                    f = copyFun(bx.fn(f), f)
+                    continue
+                }
                 val rename = HashMap<String, String>()
                 val types = HashMap<String, TypeRef>()
                 val asLambda = HashSet<FunD>()
