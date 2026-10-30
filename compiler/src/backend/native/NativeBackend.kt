@@ -476,6 +476,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         f.params.forEachIndexed { i, p ->
             val t = sig.params[i]
             if (t == Ty.Args) { declare(p.name, t, false, false); return@forEachIndexed }
+            if (t == Ty.Unit) fail("parameters of type Unit / Unit? are not supported")
             params.add("${t.llvm} %a.${p.name}")
             val l = declare(p.name, t, false, false)
             emit("store ${t.llvm} %a.${p.name}, ptr ${l.slot}")
@@ -646,6 +647,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val params = arrayListOf("ptr %this")
         for (p in c.ctorParams) {
             val t = resolve(p.type)
+            if (t == Ty.Unit) fail("parameters of type Unit / Unit? are not supported")
             params.add("${t.llvm} %a.${p.name}")
             val l = declare(p.name, t, false, false)
             emit("store ${t.llvm} %a.${p.name}, ptr ${l.slot}")
