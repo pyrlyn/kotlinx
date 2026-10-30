@@ -1,18 +1,18 @@
-# m44 working tree 2026-10-30 16:42 EET load: { 29.19 38.07 41.86 }
-sum 3.729
-alloc 76.456
-bigheap 120.307
-closures 84.321
-cycles 45.272
-dispatch 95.058
-file 51.224
-free 51.573
-hashmap 71.979
-lru 94.8
-matmul 10.257
-nbody 70.53
-recursion 6.328
-refpass 130.495
-sort 62.663
-strings 31.702
-trees 122.486
+# m44 working tree 2026-10-30 17:20 EET load: { 34.79 34.21 33.16 }
+sum 3.9
+alloc 76.739
+bigheap 122.968
+closures 89.086
+cycles 45.458
+dispatch 94.827
+file 52.022
+free 52.81
+hashmap 77.411
+lru 110.551
+matmul 10.492
+nbody 70.19
+recursion 6.493
+refpass 130.645
+sort 62.149
+strings 32.41
+trees 123.962

@@ -32,7 +32,7 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   cycle collector with an adaptive root threshold. Leak tests (`compiler/tests/leaks`) check live count = 0, ASan and macOS `leaks`.
 - Tests: `compiler/test.sh` (golden `compiler/tests/*.kt|.out`, benchmark checksums, leak tests);
   upstream Kotlin tests in `compiler/tests/upstream` (unmodified, JetBrains/kotlin @ 19c36e1), 8475 candidates:
-  PASS 2322, MISCOMPILE 28, COMPILER_CRASH 0, UNSUPPORTED 3141, N/A 2984 (passing ones are kept and re-runnable with
+  PASS 2348, MISCOMPILE 28, COMPILER_CRASH 0, UNSUPPORTED 3115, N/A 2984 (passing ones are kept and re-runnable with
   `run.py`); `import.py --no-fetch` re-scans all candidates and keeps the newly passing ones.
 
 ## Resume
