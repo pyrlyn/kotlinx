@@ -25,7 +25,9 @@ object LiftedLocals { val names = HashSet<String>(); var usesRef = false }
 
 private var argTmp = 0
 
-class Parser(private val t: List<Tok>) {
+class Parser(toks: List<Tok>) {
+    /** Tokens padded with extra EOF tokens, so lookahead (`t[p + 1]`) at the end of an unclosed file is an error, not a crash. */
+    private val t: List<Tok> = if (toks.isNotEmpty() && toks.last().k == K.EOF) toks + List(8) { toks.last() } else toks
     /** Names of `infix fun`s declared in the source (`a name b` parses as `a.name(b)`). */
     private val userInfix: Set<String> = hashSetOf("to").also { set ->
         for (i in t.indices) if (t[i].k == K.ID && t[i].s == "infix") {

@@ -39,6 +39,10 @@ G
 printf 'fun main() {\n  println(nope)\n}\n' > "$out/bad.kt"
 msg=$("$NKC" "$out/bad.kt" -o "$out/bad" 2>&1)
 case "$msg" in *"line 2: unknown name 'nope'"*) echo "PASS error-message";; *) echo "FAIL error-message: $msg"; fail=1;; esac
+# An unclosed block at the end of the file is a compile error, not a crash.
+printf 'fun main() {\n  if (true) {\n' > "$out/eof.kt"
+msg=$("$NKC" "$out/eof.kt" -o "$out/eof" 2>&1)
+case "$msg" in *"error: line 3:"*) echo "PASS eof-error";; *) echo "FAIL eof-error: $msg"; fail=1;; esac
 for t in js wasm jvm; do
   msg=$("$NKC" --target=$t "$out/bad.kt" -o "$out/x" 2>&1); rc=$?
   if [ $rc -ne 0 ] && [ "$msg" = "target $t is not supported yet" ]; then echo "PASS target-$t"; else echo "FAIL target-$t: rc=$rc $msg"; fail=1; fi
