@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 28,
   "N/A": 2984,
-  "PASS": 2282,
-  "UNSUPPORTED": 3181
+  "PASS": 2299,
+  "UNSUPPORTED": 3164
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -5500,8 +5500,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2607.kt"
   },
   "box/box/classes/kt2626.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "enum classes",
+   "detail": "nested declarations are only supported in classes (at 'enum')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2626.kt"
   },
@@ -12347,9 +12347,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/kt30517.kt"
   },
   "box/box/defaultArguments/constructor/kt3060.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/constructor/kt3060.kt"
   },
   "box/box/defaultArguments/constructor/objectExpressionDelegatingToSecondaryConstructor.kt": {
@@ -12647,9 +12646,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/memberFunction.kt"
   },
   "box/box/defaultArguments/private/primaryConstructor.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/primaryConstructor.kt"
   },
   "box/box/defaultArguments/private/secondaryConstructor.kt": {
@@ -13689,9 +13687,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationToVar.kt"
   },
   "box/box/delegation/delegationWithPrivateConstructor.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationWithPrivateConstructor.kt"
   },
   "box/box/delegation/genericFunctionInGenericInterface.kt": {
@@ -14555,8 +14552,8 @@
    "upstream": "compiler/testData/codegen/box/enum/inPackage.kt"
   },
   "box/box/enum/inclassobj.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "enum classes",
+   "detail": "nested declarations are only supported in classes (at 'enum')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/inclassobj.kt"
   },
@@ -17197,8 +17194,8 @@
    "upstream": "compiler/testData/codegen/box/functions/delegatedPropertyWithMultipleOverriddens_generics.kt"
   },
   "box/box/functions/delegatedPropertyWithMultipleOverriddens_noGenerics.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'protected')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'bar' of MyArrayList hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/delegatedPropertyWithMultipleOverriddens_noGenerics.kt"
   },
@@ -17380,9 +17377,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt2481.kt"
   },
   "box/box/functions/kt2716.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/kt2716.kt"
   },
   "box/box/functions/kt2739.kt": {
@@ -20416,14 +20412,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boundCallableReferencePassedToInlineFunctionGeneric2.kt"
   },
   "box/box/inlineClasses/boxImplDoesNotExecuteInSecondaryConstructor.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInSecondaryConstructor.kt"
   },
   "box/box/inlineClasses/boxImplDoesNotExecuteInSecondaryConstructorGeneric.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "category": "generics",
+   "detail": "secondary constructors of generic classes are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInSecondaryConstructorGeneric.kt"
   },
@@ -22777,15 +22772,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/primaryConstructorGeneric.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/privateConstructor.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/privateConstructor.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/privateConstructorGeneric.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/privateConstructorGeneric.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/sealedClassConstructor.kt": {
@@ -22987,12 +22980,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952096\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823136\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -804516640\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1879837792\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25130,8 +25123,8 @@
    "upstream": "compiler/testData/codegen/box/innerClass/noPrimaryConstructor.kt"
   },
   "box/box/innerClass/qualifiedThis.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "annotations",
+   "detail": "expected ')' (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/qualifiedThis.kt"
   },
@@ -25490,8 +25483,8 @@
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/interface0.kt"
   },
   "box/box/interfaceCallsNCasts/kt83308.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/kt83308.kt"
   },
@@ -30074,21 +30067,18 @@
    "upstream": "compiler/testData/codegen/box/private/kt9855.kt"
   },
   "box/box/privateConstructors/base.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/privateConstructors/base.kt"
   },
   "box/box/privateConstructors/captured.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/privateConstructors/captured.kt"
   },
   "box/box/privateConstructors/companion.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/privateConstructors/companion.kt"
   },
   "box/box/privateConstructors/inline.kt": {
@@ -30097,50 +30087,47 @@
    "upstream": "compiler/testData/codegen/box/privateConstructors/inline.kt"
   },
   "box/box/privateConstructors/inner.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/privateConstructors/inner.kt"
   },
   "box/box/privateConstructors/kt4860.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
+   "category": "unknown A (stdlib API / unsupported decl)",
+   "detail": "unknown name 'A'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/privateConstructors/kt4860.kt"
   },
   "box/box/privateConstructors/secondary.kt": {
    "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
+   "detail": "constructor Outer expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/privateConstructors/secondary.kt"
   },
   "box/box/privateConstructors/withArguments.kt": {
    "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
+   "detail": "constructor Outer expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/privateConstructors/withArguments.kt"
   },
   "box/box/privateConstructors/withDefault.kt": {
    "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
+   "detail": "constructor Outer expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/privateConstructors/withDefault.kt"
   },
   "box/box/privateConstructors/withLinkedClasses.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/privateConstructors/withLinkedClasses.kt"
   },
   "box/box/privateConstructors/withLinkedObjects.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/privateConstructors/withLinkedObjects.kt"
   },
   "box/box/privateConstructors/withVarargs.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
+   "category": "other syntax (at 'i')",
+   "detail": "expected ':' (at 'i')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/privateConstructors/withVarargs.kt"
   },
@@ -30572,15 +30559,14 @@
    "upstream": "compiler/testData/codegen/box/properties/kt3930.kt"
   },
   "box/box/properties/kt4140.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "unknown TestObject (stdlib API / unsupported decl)",
+   "detail": "unknown name 'TestObject'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt4140.kt"
   },
   "box/box/properties/kt4252.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt4252.kt"
   },
   "box/box/properties/kt4252_2.kt": {
@@ -35538,8 +35524,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt13381.kt"
   },
   "box/box/regressions/kt14447.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt14447.kt"
   },
@@ -36550,9 +36536,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/clashingDefaultConstructors.kt"
   },
   "box/box/secondaryConstructors/dataClasses.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/dataClasses.kt"
   },
   "box/box/secondaryConstructors/defaultArgs.kt": {
@@ -36623,9 +36608,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/localClasses.kt"
   },
   "box/box/secondaryConstructors/superCallPrimary.kt": {
-   "category": "modifiers (private/const/lateinit/...)",
-   "detail": "unexpected top-level token (at 'protected')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/superCallPrimary.kt"
   },
   "box/box/secondaryConstructors/superCallSecondary.kt": {
@@ -37811,9 +37795,8 @@
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/accessorForAbstractProtected.kt"
   },
   "box/box/syntheticAccessors/accessorForGenericConstructor.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/accessorForGenericConstructor.kt"
   },
   "box/box/syntheticAccessors/accessorForGenericMethod.kt": {
@@ -38804,8 +38787,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasConstructor.kt"
   },
   "box/box/typealias/typeAliasConstructorAccessor.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at 'constructor')",
+   "category": "unknown OuterAlias (stdlib API / unsupported decl)",
+   "detail": "unknown function 'OuterAlias'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasConstructorAccessor.kt"
   },
