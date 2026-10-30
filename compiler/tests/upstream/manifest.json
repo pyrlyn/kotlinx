@@ -1,11 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "COMPILER_CRASH": 2,
-  "MISCOMPILE": 36,
+  "MISCOMPILE": 31,
   "N/A": 2984,
-  "PASS": 2050,
-  "UNSUPPORTED": 3403
+  "PASS": 2054,
+  "UNSUPPORTED": 3406
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -326,13 +325,13 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/argumentOrderInSuperCall.kt"
   },
   "box/box/argumentOrder/arguments.kt": {
-   "detail": "exit=0 stdout='fail1: 132 != 123 or xab != xab\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/arguments.kt"
   },
   "box/box/argumentOrder/captured.kt": {
-   "detail": "exit=0 stdout='fail 1: 0_1_9 != 1_0_9 or 0_1_9 != 0_1_9\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/captured.kt"
   },
   "box/box/argumentOrder/capturedInExtension.kt": {
@@ -342,13 +341,13 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/capturedInExtension.kt"
   },
   "box/box/argumentOrder/defaults.kt": {
-   "detail": "exit=0 stdout='fail: xOyK != KOxy or 1OK1 != 1OK1\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/defaults.kt"
   },
   "box/box/argumentOrder/extension.kt": {
-   "detail": "exit=0 stdout='fail 1: 0_1_L != 1_0_L or 1_0_1_L != 1_0_1_L\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/extension.kt"
   },
   "box/box/argumentOrder/extensionInClass.kt": {
@@ -358,8 +357,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/extensionInClass.kt"
   },
   "box/box/argumentOrder/kt17691WithEnabledFeature.kt": {
-   "category": "other: Unit cannot be used as Any",
-   "detail": "Unit cannot be used as Any",
+   "category": "other: cannot store Unit in '$a0'",
+   "detail": "cannot store Unit in '$a0'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt17691WithEnabledFeature.kt"
   },
@@ -380,18 +379,18 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/lambdaMigrationInClass.kt"
   },
   "box/box/argumentOrder/simple.kt": {
-   "detail": "exit=0 stdout='fail 1: OKL != KOL or OKL != OKL\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simple.kt"
   },
   "box/box/argumentOrder/simpleInClass.kt": {
-   "detail": "exit=0 stdout='fail 1: OKL != KOL or OKLZ != OKLZ\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simpleInClass.kt"
   },
   "box/box/argumentOrder/singleSideEffect.kt": {
-   "detail": "exit=0 stdout='fail: cba != abc\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/singleSideEffect.kt"
   },
   "box/box/argumentOrder/varargAndDefaultParameters_ForNative.kt": {
@@ -439,8 +438,9 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_selfComparison.kt"
   },
   "box/box/arithmetic/basic_shifts.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Int$myshr' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_shifts.kt"
   },
   "box/box/arithmetic/basic_uintTests.kt": {
@@ -461,8 +461,9 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/divisionByZero.kt"
   },
   "box/box/arithmetic/github1856.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "other: unknown method Int.inv()",
+   "detail": "unknown method Int.inv()",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/github1856.kt"
   },
   "box/box/arrays/arrayConstructorWithNonInlineLambda.kt": {
@@ -1397,20 +1398,20 @@
    "upstream": "compiler/testData/codegen/box/bce/withGetter.kt"
   },
   "box/box/binaryOp/bitwiseOp.kt": {
-   "category": "other: unknown method Byte.inv()",
-   "detail": "unknown method Byte.inv()",
+   "category": "other: unknown method Int.inv()",
+   "detail": "unknown method Int.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOp.kt"
   },
   "box/box/binaryOp/bitwiseOpAny.kt": {
-   "category": "other: unknown method Byte.inv()",
-   "detail": "unknown method Byte.inv()",
+   "category": "other: unknown method Int.inv()",
+   "detail": "unknown method Int.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpAny.kt"
   },
   "box/box/binaryOp/bitwiseOpNullable.kt": {
-   "category": "other: unknown method Byte.inv()",
-   "detail": "unknown method Byte.inv()",
+   "category": "other: unknown method Int.inv()",
+   "detail": "unknown method Int.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpNullable.kt"
   },
@@ -23107,12 +23108,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789728\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952352\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823200\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146694304\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25733,8 +25734,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1002bd3ab        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x1003db57f        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
-   "status": "COMPILER_CRASH",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
   "box/box/invokedynamic/extensionFunInvoke.kt": {
@@ -30067,19 +30068,19 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt737.kt"
   },
   "box/box/primitiveTypes/kt753.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "detail": "run timeout",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt753.kt"
   },
   "box/box/primitiveTypes/kt756.kt": {
-   "category": "other: unknown method Int.unaryPlus()",
-   "detail": "unknown method Int.unaryPlus()",
+   "category": "other: unknown method Int.inv()",
+   "detail": "unknown method Int.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt756.kt"
   },
   "box/box/primitiveTypes/kt757.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "detail": "run timeout",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt757.kt"
   },
   "box/box/primitiveTypes/kt79977.kt": {
@@ -39149,8 +39150,9 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/grok/kotlinx-features/compiler/build/upstream-tmp/nkup15bm5hyx/t.ll:202:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\ncommand failed (256): '/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt' -passes='lt",
-   "status": "COMPILER_CRASH",
+   "category": "other: parameters of type Unit / Unit? are not supported",
+   "detail": "parameters of type Unit / Unit? are not supported",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
   "box/box/unit/ifElse.kt": {
