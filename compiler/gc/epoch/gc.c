@@ -422,7 +422,9 @@ static void mg_child(void *t) {
     tw->traversed++;
     h = __atomic_add_fetch(header(t), 1ULL << CRC_SHIFT, __ATOMIC_RELAXED);
     while (((h >> KX_COLOR_SHIFT) & 3) != GRAY)
-        if (hcas(t, &h, with_color(h, GRAY) & ~DIRTY_BIT)) { stack_push(&tw->work, t); break; }
+        /* clear the Delta bit only on the first visit of this detection (CRC 1): an incremental major may
+         * see an object re-colored by a log applied between its steps, and must keep that touch visible */
+        if (hcas(t, &h, (h >> CRC_SHIFT) == 1 ? with_color(h, GRAY) & ~DIRTY_BIT : with_color(h, GRAY))) { stack_push(&tw->work, t); break; }
 }
 static void sb_child(void *t) {
     if (!t || !is_traced(t)) return;
@@ -532,7 +534,7 @@ static void collect_phases_stats(void) {
 }
 static PtrStack cw_m; static uint64_t cw_id;
 static void cw_child(void *t) {
-    if (t && is_traced(t) && !has(t, CAND_BIT) && color(t) == WHITE) {
+    if (t && is_traced(t) && !has(t, CAND_BIT) && color(t) == WHITE && ref_count(t) > 0) {
         if (has(t, STABLE_BIT)) { clr_bit(t, STABLE_BIT); c_stable_n--; }
         set_bit(t, CAND_BIT); set_crc(t, cw_id & CRC_MAX); stack_push(&cw_m, t); stack_push(&c_work, t);
     }
@@ -540,7 +542,7 @@ static void cw_child(void *t) {
 static PtrStack cw_ends;    /* end index in cw_m of every set of the current detection */
 static uint64_t cw_first_id;
 static void collect_white(void *s) {
-    if (color(s) != WHITE || has(s, CAND_BIT)) return;
+    if (color(s) != WHITE || has(s, CAND_BIT) || ref_count(s) == 0) return;   /* count 0: freed meanwhile */
     if (!cw_ends.len) cw_first_id = next_set_id;
     cw_id = next_set_id++;
     if (has(s, STABLE_BIT)) { clr_bit(s, STABLE_BIT); c_stable_n--; }
@@ -563,14 +565,27 @@ static void batch_close(uint64_t valid_after) {
 }
 #define SLICE_ROOTS 32768   /* KX_GC_SLICE_ROOTS; 0 = unbounded */
 static size_t slice_roots = SLICE_ROOTS;
-static size_t q_seen;
-static int64_t carry_q = -1;   /* KX_GC_CARRY_QUEUE: skip detection at this queue length (default 0 = never) */          /* queue length when the collector took the current log */
+static size_t q_seen;          /* queue length when the collector took the current log */
+static int64_t carry_q = -1;   /* KX_GC_CARRY_QUEUE: skip detection at this queue length (default 0 = never) */
 static uint64_t c_valid_after;                      /* hand-off count when the current detection ended */
 static PtrStack c_deferred;   /* buffered roots whose minor detection stopped at the old generation */
 /* Minor (major = 0): stable objects are opaque. Roots left non-white after a minor detection that hit a
  * stable object stay buffered in c_deferred; a major detection (every stable object traced) handles them
  * once MAJOR_RATIO times as many roots were deferred as there are stable objects (amortized O(1) per root). */
+static size_t detect_prepare(int major, PtrStack *rootsp);
+static void detect_finish(int major, PtrStack roots, size_t k, int hit_stable);
 static void detect(int major) {
+    PtrStack roots; size_t k = detect_prepare(major, &roots);
+    int active = major && k >= PAR_MIN_ROOTS ? n_threads : 1;
+    atomic_store_explicit(&c_hit_stable, 0, memory_order_relaxed);
+    int64_t t0 = rt_nanos();
+    run_phase(PHASE_MARK, roots.items, k, active);
+    int64_t t1 = rt_nanos();
+    run_phase(PHASE_SCAN, roots.items, k, active);
+    dbg_t_mark += t1 - t0; dbg_t_scan += rt_nanos() - t1;
+    detect_finish(major, roots, k, atomic_load_explicit(&c_hit_stable, memory_order_relaxed));
+}
+static size_t detect_prepare(int major, PtrStack *rootsp) {
     ep_detections++;
     c_major = major;
     if (major) { dbg_majors++; for (size_t i = 0; i < c_deferred.len; i++) { void *d = c_deferred.items[i]; if (color(d) == BLACK) set_color(d, PURPLE); stack_push(&c_roots, d); } c_deferred.len = 0; c_deferred_new = 0; }
@@ -595,17 +610,13 @@ static void detect(int major) {
         if (!s || has(s, CAND_BIT | DEAD_BIT)) continue;
         if (color(s) == PURPLE && ref_count(s) > 0) { set_color(s, GRAY); clr_bit(s, DIRTY_BIT); roots.items[k++] = s; }
     }
-    int active = major && k >= PAR_MIN_ROOTS ? n_threads : 1;
-    atomic_store_explicit(&c_hit_stable, 0, memory_order_relaxed);
-    int64_t t0 = rt_nanos();
-    run_phase(PHASE_MARK, roots.items, k, active);
-    int64_t t1 = rt_nanos();
-    run_phase(PHASE_SCAN, roots.items, k, active);
-    dbg_t_mark += t1 - t0; dbg_t_scan += rt_nanos() - t1;
+    *rootsp = roots;
+    return k;
+}
+static void detect_finish(int major, PtrStack roots, size_t k, int hit_stable) {
     int64_t tv0 = c_traversed; collect_phases_stats();
     if (major) dbg_major_visits += c_traversed - tv0; else dbg_minor_visits += c_traversed - tv0;
     dbg_roots_k += (int64_t)k;
-    int hit_stable = atomic_load_explicit(&c_hit_stable, memory_order_relaxed);
     for (size_t i = 0; i < k; i++) collect_white(roots.items[i]);
     if (!major && hit_stable)
         for (size_t i = 0; i < k; i++) {
@@ -615,6 +626,58 @@ static void detect(int major) {
     free(roots.items);
     pthread_mutex_lock(&mu); uint64_t h = handed; pthread_mutex_unlock(&mu);
     batch_close(h);
+}
+// Incremental major: the old-generation pass (MarkGray, then Scan) runs in steps of at most
+// KX_GC_MAJOR_STEP visits (default 2048), one step after every applied log and while the collector is
+// idle, so a major never stalls log application (and through back-pressure the mutator) for long.
+// Logs applied between steps change counts and colors exactly as a concurrently running mutator would in
+// Bacon & Rajan's concurrent collector: every touched object is dirty (the Delta bit is cleared only on an
+// object's first visit), and candidates are still checked by Delta + Sigma with current counts. While a
+// major is in progress: no minor detection (roots stay buffered), no validation (so the only objects
+// freed meanwhile are count-zero ones, which CollectWhite skips), and freed memory is not returned to the
+// mutator (an in-progress trace may still read it).
+#define MAJOR_STEP 2048
+static int im_state;                 /* 0 none, 1 MarkGray, 2 Scan */
+static PtrStack im_roots; static size_t im_k;
+static int64_t im_step_budget = -1, im_m0, im_w0, im_steps;
+static int incremental_major = -1;   /* KX_GC_INC_MAJOR (default 1) */
+static void major_adapt(void);
+static void im_begin(void) {
+    im_k = detect_prepare(1, &im_roots);
+    im_m0 = dbg_members + dbg_dead; im_w0 = c_traversed;
+    tw = &workers[0]; p_active = 1;
+    for (size_t i = 0; i < im_k; i++) stack_push(&workers[0].work, im_roots.items[i]);
+    im_state = 1;
+}
+/* One bounded step; returns 1 when the major finished. */
+static int im_step(int64_t budget) {
+    Worker *w = &workers[0]; tw = w; c_major = 1;
+    int64_t n = 0, t0 = rt_nanos();
+    if (im_state == 1) {
+        while (w->work.len && n < budget) { void *x = stack_pop(&w->work); VISIT(); vtab(x)->trav(x, mg_child); n++; }
+        dbg_t_mark += rt_nanos() - t0;
+        if (w->work.len) return 0;
+        for (size_t i = 0; i < im_k; i++) stack_push(&w->work, im_roots.items[i]);
+        im_state = 2; t0 = rt_nanos();
+    }
+    while (n < budget) {
+        if (w->black.len) { void *y = stack_pop(&w->black); vtab(y)->trav(y, sb_child); }
+        else if (w->work.len) {
+            void *x = stack_pop(&w->work); uint64_t h = hload(x);
+            if (((h >> KX_COLOR_SHIFT) & 3) == GRAY) {
+                int64_t ext = (int64_t)(h & KX_CNT_MASK) - (int64_t)(h >> CRC_SHIFT);
+                if (ext > 0) { set_color(x, BLACK); set_crc(x, 0); promote_atomic(x); stack_push(&w->black, x); }
+                else { set_color(x, WHITE); vtab(x)->trav(x, scan_child); }
+            }
+        } else break;
+        n++;
+    }
+    dbg_t_scan += rt_nanos() - t0; im_steps++;
+    if (w->work.len || w->black.len) return 0;
+    detect_finish(1, im_roots, im_k, 0);
+    im_roots = (PtrStack){0}; im_state = 0;
+    major_adapt();
+    return 1;
 }
 static uint64_t v_sid; static int64_t v_internal;
 static inline int in_set(void *t) { return has(t, CAND_BIT) && crc(t) == v_sid; }
@@ -669,6 +732,7 @@ static void publish_returns(void) {
 }
 /* Stop-the-world drain (mutator waits): detect and validate until no garbage is left. */
 static void full_cycle(void) {
+    while (im_state && !im_step(INT64_MAX)) {}
     for (;;) {
         size_t freed = validate_ready(0, 1);
         if (c_roots.len || c_deferred.len) { detect(1); freed += validate_ready(0, 1); }
@@ -676,20 +740,34 @@ static void full_cycle(void) {
         if (!freed && !c_roots.len && !c_deferred.len && !cands) break;
     }
 }
+/* Geometric major backoff for the incremental major (same rule as in collector_main). */
+static void major_adapt(void) {
+    int64_t found = dbg_members + dbg_dead - im_m0, work = c_traversed - im_w0;
+    if (work > 64 * found) { if (major_ratio < MAJOR_RATIO_MAX) major_ratio *= 2; }
+    else major_ratio = MAJOR_RATIO;
+}
 static void *collector_main(void *arg) {
     (void)arg;
     { const char *e = getenv("KX_GC_SLICE_ROOTS"); if (e && *e) slice_roots = (size_t)atoll(e); }
     start_helpers();
     pthread_mutex_lock(&mu);
     for (;;) {
-        while (!q_head && !full_req && !shutting) { coll_quiet = 1; pthread_cond_wait(&cv_work, &mu); }
+        while (!q_head && !full_req && !shutting) {
+            if (im_state) {   /* idle collector: advance the incremental major */
+                pthread_mutex_unlock(&mu);
+                int64_t td = rt_nanos(); int done = im_step(im_step_budget); dbg_t_detect += rt_nanos() - td;
+                if (done) publish_returns();
+                pthread_mutex_lock(&mu); continue;
+            }
+            coll_quiet = 1; pthread_cond_wait(&cv_work, &mu);
+        }
         coll_quiet = 0;
         if (q_head) {
             Log *l = q_head; q_head = l->next; if (!q_head) q_tail = NULL; q_len--; q_seen = q_len;
             pthread_cond_broadcast(&cv_done);
             pthread_mutex_unlock(&mu);
             int64_t ta = rt_nanos(); apply_log(l); dbg_logs++;
-            int64_t tb = rt_nanos(); size_t freed = validate_ready(l->seq, 0);
+            int64_t tb = rt_nanos(); size_t freed = im_state ? 0 : validate_ready(l->seq, 0);
             int64_t tc = rt_nanos(); dbg_t_apply += tb - ta; dbg_t_valid += tc - tb;
             int64_t major_at = major_ratio * (c_stable_n > (int64_t)c_threshold ? c_stable_n : (int64_t)c_threshold);
             /* Carry-over (opt-in, KX_GC_CARRY_QUEUE): while the queue holds that many logs, only apply logs and
@@ -697,7 +775,15 @@ static void *collector_main(void *arg) {
              * threshold. Detection work then never stacks up behind a full queue. */
             if (carry_q < 0) { const char *e = getenv("KX_GC_CARRY_QUEUE"); carry_q = e && *e ? atoll(e) : 0; }
             int behind = carry_q > 0 && (int64_t)q_seen >= carry_q && c_roots.len < 8 * c_threshold;
-            if (!behind && (c_roots.len >= c_threshold || c_deferred_new >= major_at)) {
+            if (incremental_major < 0) {
+                const char *e = getenv("KX_GC_INC_MAJOR"); incremental_major = e && *e ? *e != '0' : 1;
+                e = getenv("KX_GC_MAJOR_STEP"); im_step_budget = e && *e ? atoll(e) : MAJOR_STEP;
+            }
+            if (im_state) { int64_t td = rt_nanos(); im_step(im_step_budget); dbg_t_detect += rt_nanos() - td; }
+            else if (incremental_major && !behind && c_deferred_new >= major_at) {
+                dbg_majors++; gc_st.collections++; im_begin();
+            }
+            else if (!behind && (c_roots.len >= c_threshold || c_deferred_new >= major_at)) {
                 size_t nroots = c_roots.len;
                 int64_t m0 = dbg_members + dbg_dead, w0 = c_traversed;
                 int major = c_deferred_new >= major_at;
@@ -716,7 +802,7 @@ static void *collector_main(void *arg) {
                 else if (c_threshold > 10000) c_threshold /= 2;
             }
             gc_st.reclaimed += (int64_t)freed;
-            publish_returns();
+            if (!im_state) publish_returns();
             pthread_mutex_lock(&mu);
             applied = l->seq; l->next = log_pool; log_pool = l;
             if (q_len <= max_queued && atomic_load_explicit(&c_in_major, memory_order_relaxed)) atomic_store(&c_in_major, 0);
