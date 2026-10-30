@@ -1,4 +1,4 @@
-alloc_throughput 79.209
-cyclic_garbage 54.631
-live_heap_churn 467.52
-short_lived 76.772
+alloc_throughput 78.803
+cyclic_garbage 54.095
+live_heap_churn 513.328
+short_lived 82.229

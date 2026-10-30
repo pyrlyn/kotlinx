@@ -313,6 +313,84 @@
     "pause_max_ms": 8.445,
     "collections": 97
    }
+  },
+  {
+   "run": "micro-default",
+   "date": "2026-10-30T03:53:32+02:00",
+   "commit": "b6fa435dcb3fa1fce1b309fdbc14ba98d31d9d62",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 20.11 30.21 30.73 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 513.328,
+    "raw_ns": "472449125,479439042,545759625,523074083,537470541",
+    "peak_rss_mib": 25.6,
+    "pause_total_ms": 496.549,
+    "pause_max_ms": 5.853,
+    "collections": 130
+   }
+  },
+  {
+   "run": "micro-incremental",
+   "date": "2026-10-30T03:53:33+02:00",
+   "commit": "b6fa435dcb3fa1fce1b309fdbc14ba98d31d9d62",
+   "dirty": false,
+   "ref": null,
+   "gc": "incremental",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 20.11 30.21 30.73 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 457.423,
+    "raw_ns": "420476500,415196833,486865292,475383708,476408416",
+    "peak_rss_mib": 32.3,
+    "pause_total_ms": 426.909,
+    "pause_max_ms": 10.097,
+    "collections": 97
+   }
+  },
+  {
+   "run": "micro-epoch",
+   "date": "2026-10-30T03:53:35+02:00",
+   "commit": "b6fa435dcb3fa1fce1b309fdbc14ba98d31d9d62",
+   "dirty": false,
+   "ref": null,
+   "gc": "epoch",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 20.11 30.21 30.73 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 451.135,
+    "raw_ns": "381051167,460994084,457801292,435760541,459842041",
+    "peak_rss_mib": 54.7,
+    "pause_total_ms": 314.944,
+    "pause_max_ms": 17.906,
+    "collections": 391
+   }
   }
  ]
 }

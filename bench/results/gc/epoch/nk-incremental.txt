@@ -1,0 +1,18 @@
+# gc-incremental working tree 2026-10-30 00:15 EET load: { 119.00 74.72 146.04 }
+sum 7.657
+alloc 126.085
+bigheap 267.057
+closures 143.725
+cycles 84.28
+dispatch 162.658
+file 94.079
+free 109.85
+hashmap 129.497
+lru 180.251
+matmul 14.81
+nbody 109.461
+recursion 9.314
+refpass 203.013
+sort 118.811
+strings 49.451
+trees 205.599
