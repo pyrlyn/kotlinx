@@ -1,11 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "COMPILER_CRASH": 2,
-  "MISCOMPILE": 38,
+  "MISCOMPILE": 29,
   "N/A": 2984,
-  "PASS": 2103,
-  "UNSUPPORTED": 3348
+  "PASS": 2106,
+  "UNSUPPORTED": 3356
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -326,13 +325,13 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/argumentOrderInSuperCall.kt"
   },
   "box/box/argumentOrder/arguments.kt": {
-   "detail": "exit=0 stdout='fail1: 132 != 123 or xab != xab\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/arguments.kt"
   },
   "box/box/argumentOrder/captured.kt": {
-   "detail": "exit=0 stdout='fail 1: 0_1_9 != 1_0_9 or 0_1_9 != 0_1_9\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/captured.kt"
   },
   "box/box/argumentOrder/capturedInExtension.kt": {
@@ -342,13 +341,13 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/capturedInExtension.kt"
   },
   "box/box/argumentOrder/defaults.kt": {
-   "detail": "exit=0 stdout='fail: xOyK != KOxy or 1OK1 != 1OK1\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/defaults.kt"
   },
   "box/box/argumentOrder/extension.kt": {
-   "detail": "exit=0 stdout='fail 1: 0_1_L != 1_0_L or 1_0_1_L != 1_0_1_L\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/extension.kt"
   },
   "box/box/argumentOrder/extensionInClass.kt": {
@@ -358,8 +357,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/extensionInClass.kt"
   },
   "box/box/argumentOrder/kt17691WithEnabledFeature.kt": {
-   "category": "other: Unit cannot be used as Any",
-   "detail": "Unit cannot be used as Any",
+   "category": "other: cannot store Unit in '$a0'",
+   "detail": "cannot store Unit in '$a0'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt17691WithEnabledFeature.kt"
   },
@@ -380,18 +379,18 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/lambdaMigrationInClass.kt"
   },
   "box/box/argumentOrder/simple.kt": {
-   "detail": "exit=0 stdout='fail 1: OKL != KOL or OKL != OKL\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simple.kt"
   },
   "box/box/argumentOrder/simpleInClass.kt": {
-   "detail": "exit=0 stdout='fail 1: OKL != KOL or OKLZ != OKLZ\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simpleInClass.kt"
   },
   "box/box/argumentOrder/singleSideEffect.kt": {
-   "detail": "exit=0 stdout='fail: cba != abc\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/singleSideEffect.kt"
   },
   "box/box/argumentOrder/varargAndDefaultParameters_ForNative.kt": {
@@ -439,9 +438,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_selfComparison.kt"
   },
   "box/box/arithmetic/basic_shifts.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'ext$Int$myshr' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_shifts.kt"
   },
   "box/box/arithmetic/basic_uintTests.kt": {
@@ -462,9 +460,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/divisionByZero.kt"
   },
   "box/box/arithmetic/github1856.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/github1856.kt"
   },
   "box/box/arrays/arrayConstructorWithNonInlineLambda.kt": {
@@ -833,8 +830,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt47483.kt"
   },
   "box/box/arrays/kt503.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected ArrayList<IntArray>, found ArrayList<ArrayList<Int>>",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'array' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt503.kt"
   },
@@ -874,8 +871,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt945.kt"
   },
   "box/box/arrays/kt950.kt": {
-   "category": "strings / templates",
-   "detail": "HashMap keys must be Int/Long/Char, found String",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$MutableMap$set' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt950.kt"
   },
@@ -915,8 +912,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForValCaptured.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForValCaptured.kt"
   },
@@ -927,8 +924,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -967,8 +964,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Array'",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
@@ -1399,20 +1396,20 @@
    "upstream": "compiler/testData/codegen/box/bce/withGetter.kt"
   },
   "box/box/binaryOp/bitwiseOp.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOp.kt"
   },
   "box/box/binaryOp/bitwiseOpAny.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpAny.kt"
   },
   "box/box/binaryOp/bitwiseOpNullable.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpNullable.kt"
   },
@@ -1433,8 +1430,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/callNullable.kt"
   },
   "box/box/binaryOp/compareBoxedChars.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator on non-numeric types Char, Char",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/compareBoxedChars.kt"
   },
@@ -1456,13 +1453,15 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableDoublesToInt.kt"
   },
   "box/box/binaryOp/eqNullableDoublesToIntWithTP.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eq_double_any' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableDoublesToIntWithTP.kt"
   },
   "box/box/binaryOp/eqNullableDoublesWithTP.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: eq_double_any(0.0, -0.0)\\n'",
-   "status": "MISCOMPILE",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eq_double_doubleN' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/eqNullableDoublesWithTP.kt"
   },
   "box/box/binaryOp/eqNullableShortToShort.kt": {
@@ -1512,8 +1511,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/kt23030_properIeee754comparisons.kt"
   },
   "box/box/binaryOp/kt44402.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter A of f; pass it explicitly",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'f' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/kt44402.kt"
   },
@@ -1539,8 +1538,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/overflowLong.kt"
   },
   "box/box/binaryOp/primitiveEqualsSafeCall.kt": {
-   "category": "other: unknown method Int.equals()",
-   "detail": "unknown method Int.equals()",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/primitiveEqualsSafeCall.kt"
   },
@@ -1589,8 +1588,9 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing13.kt"
   },
   "box/box/boxing/boxing14.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$println' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/boxing14.kt"
   },
   "box/box/boxing/boxing15.kt": {
@@ -1706,8 +1706,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/checkcastAndInstanceOf2.kt"
   },
   "box/box/boxingOptimization/explicitEqualsOnDouble.kt": {
-   "category": "other: unknown method Double.equals()",
-   "detail": "unknown method Double.equals()",
+   "category": "other: Double.equals() is not supported",
+   "detail": "Double.equals() is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/explicitEqualsOnDouble.kt"
   },
@@ -2033,8 +2033,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/delegationProperty.kt"
   },
   "box/box/bridges/diamond.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/diamond.kt"
   },
@@ -2080,9 +2080,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeGenericCovariantOverride.kt"
   },
   "box/box/bridges/fakeGenericCovariantOverrideWithDelegation.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeGenericCovariantOverrideWithDelegation.kt"
   },
   "box/box/bridges/fakeOverride/abstractFakeOverride.kt": {
@@ -2268,8 +2267,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/internalMethodOverridePublishedApi.kt"
   },
   "box/box/bridges/kt12416.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/kt12416.kt"
   },
@@ -2338,9 +2337,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/manyTypeArgumentsSubstitutedSuccessively.kt"
   },
   "box/box/bridges/methodFromTrait.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/methodFromTrait.kt"
   },
   "box/box/bridges/methodWithDefaultParameter.kt": {
@@ -2482,9 +2480,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/simple.kt"
   },
   "box/box/bridges/simpleEnum.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/simpleEnum.kt"
   },
   "box/box/bridges/simpleGenericMethod.kt": {
@@ -2505,9 +2502,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/simpleReturnType.kt"
   },
   "box/box/bridges/simpleTraitImpl.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/simpleTraitImpl.kt"
   },
   "box/box/bridges/simpleUpperBound.kt": {
@@ -2562,8 +2558,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/differentErasureInSuperClassComplex.kt"
   },
   "box/box/bridges/substitutionInSuperClass/enum.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/enum.kt"
   },
@@ -2749,21 +2745,19 @@
    "upstream": "compiler/testData/codegen/box/bridges/traitImplInheritsTraitImpl.kt"
   },
   "box/box/bridges/twoParentsWithDifferentMethodsTwoBridges.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithDifferentMethodsTwoBridges.kt"
   },
   "box/box/bridges/twoParentsWithDifferentMethodsTwoBridges2.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithDifferentMethodsTwoBridges2.kt"
   },
   "box/box/bridges/twoParentsWithTheSameMethodOneBridge.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithTheSameMethodOneBridge.kt"
   },
   "box/box/bridges/typeParameterInExtensionReceiver.kt": {
@@ -4235,9 +4229,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromTopLevelUnitOneStringArg.kt"
   },
   "box/box/callableReference/function/traitImplMethodWithClassReceiver.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/traitImplMethodWithClassReceiver.kt"
   },
   "box/box/callableReference/function/traitMember.kt": {
@@ -4286,8 +4279,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt21014.kt"
   },
   "box/box/callableReference/kt21092a.kt": {
-   "category": "other: unknown member A::foo",
-   "detail": "unknown member A::foo",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$$prop$foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt21092a.kt"
   },
@@ -4643,8 +4636,8 @@
    "upstream": "compiler/testData/codegen/box/casts/asUnit.kt"
   },
   "box/box/casts/asWithGeneric.kt": {
-   "category": "nullable types",
-   "detail": "unchecked cast of null to non-nullable Int is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'test1' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/asWithGeneric.kt"
   },
@@ -4824,8 +4817,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt58707.kt"
   },
   "box/box/casts/kt59022.kt": {
-   "category": "nullable types",
-   "detail": "nullable cast from Any to String is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'unchecked' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt59022.kt"
   },
@@ -5090,9 +5083,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/property.kt"
   },
   "box/box/classDelegation/withBridge.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classDelegation/withBridge.kt"
   },
   "box/box/classLiteral/bareArray.kt": {
@@ -5239,9 +5231,8 @@
    "upstream": "compiler/testData/codegen/box/classes/delegationGenericLongArg.kt"
   },
   "box/box/classes/delegationMethodsWithArgs.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/delegationMethodsWithArgs.kt"
   },
   "box/box/classes/exceptionConstructor.kt": {
@@ -5420,9 +5411,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1726.kt"
   },
   "box/box/classes/kt1759.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt1759.kt"
   },
   "box/box/classes/kt1891.kt": {
@@ -5545,9 +5535,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2784.kt"
   },
   "box/box/classes/kt285.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt285.kt"
   },
   "box/box/classes/kt3001.kt": {
@@ -5622,8 +5611,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt504.kt"
   },
   "box/box/classes/kt508.kt": {
-   "category": "other: HashMap needs explicit key/value types and no arguments, e.g",
-   "detail": "HashMap needs explicit key/value types and no arguments, e.g. HashMap<Int, Long>()",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$MutableMap$set' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt508.kt"
   },
@@ -5809,8 +5798,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureExtensionReceiver.kt"
   },
   "box/box/closures/captureExtensionReceiverX2.kt": {
-   "category": "other: unknown property this@f",
-   "detail": "unknown property this@f",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureExtensionReceiverX2.kt"
   },
@@ -6298,8 +6287,9 @@
    "upstream": "compiler/testData/codegen/box/closures/kt3905.kt"
   },
   "box/box/closures/kt4106.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt4106.kt"
   },
   "box/box/closures/kt4137.kt": {
@@ -7346,8 +7336,9 @@
    "upstream": "compiler/testData/codegen/box/constants/long.kt"
   },
   "box/box/constants/privateConst.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/constants/privateConst.kt"
   },
   "box/box/contextParameters/ImplicitReceiverWithTheSameContextAndExtension.kt": {
@@ -8905,9 +8896,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2259.kt"
   },
   "box/box/controlStructures/kt2291.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2291.kt"
   },
   "box/box/controlStructures/kt237.kt": {
@@ -8964,9 +8954,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt3280.kt"
   },
   "box/box/controlStructures/kt416.kt": {
-   "category": "other: unknown method Int.plus()",
-   "detail": "unknown method Int.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt416.kt"
   },
   "box/box/controlStructures/kt42455.kt": {
@@ -8988,9 +8977,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt513.kt"
   },
   "box/box/controlStructures/kt628.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'test7' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt628.kt"
   },
   "box/box/controlStructures/kt769.kt": {
@@ -12552,15 +12540,13 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971.kt"
   },
   "box/box/defaultArguments/function/kt15971_2.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971_2.kt"
   },
   "box/box/defaultArguments/function/kt15971_3.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971_3.kt"
   },
   "box/box/defaultArguments/function/kt36188.kt": {
@@ -13764,8 +13750,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/genericProperty.kt"
   },
   "box/box/delegation/hiddenSuperOverrideIn1.0.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "other syntax (at ':')",
+   "detail": "expected end of statement (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/hiddenSuperOverrideIn1.0.kt"
   },
@@ -13903,9 +13889,8 @@
    "upstream": "compiler/testData/codegen/box/devirtualization/kt67218c.kt"
   },
   "box/box/devirtualization/kt67218i.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/devirtualization/kt67218i.kt"
   },
   "box/box/devirtualization/lateinitInterface.kt": {
@@ -14586,8 +14571,8 @@
    "upstream": "compiler/testData/codegen/box/enum/enumShort.kt"
   },
   "box/box/enum/enumValueOf.kt": {
-   "category": "stdlib: kotlin.test asserts",
-   "detail": "unknown function 'assertSame'",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumValueOf.kt"
   },
@@ -15064,8 +15049,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/annotationClassWithInner.kt"
   },
   "box/box/evaluate/booleanOperations.kt": {
-   "category": "other: unknown method Boolean.not()",
-   "detail": "unknown method Boolean.not()",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/booleanOperations.kt"
   },
@@ -15126,14 +15111,14 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intOperations.kt"
   },
   "box/box/evaluate/intrinsicConst/bitwiseOperations.kt": {
-   "category": "other: unknown method Byte.and()",
-   "detail": "unknown method Byte.and()",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/bitwiseOperations.kt"
   },
   "box/box/evaluate/intrinsicConst/charConstructor.kt": {
-   "category": "unknown Char (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Char'",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/charConstructor.kt"
   },
@@ -15144,19 +15129,21 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/companions.kt"
   },
   "box/box/evaluate/intrinsicConst/constTrim.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.trim()",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/constTrim.kt"
   },
   "box/box/evaluate/intrinsicConst/enumName.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/enumName.kt"
   },
   "box/box/evaluate/intrinsicConst/enumNameWithInit.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/enumNameWithInit.kt"
   },
   "box/box/evaluate/intrinsicConst/equals_after.kt": {
@@ -15166,8 +15153,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/equals_after.kt"
   },
   "box/box/evaluate/intrinsicConst/incDec.kt": {
-   "category": "other: unknown method Byte.inc()",
-   "detail": "unknown method Byte.inc()",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/incDec.kt"
   },
@@ -15178,8 +15165,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/kCallableName.kt"
   },
   "box/box/evaluate/intrinsicConst/kCallableNameWithSideEffect.kt": {
-   "category": "strings / templates",
-   "detail": "unknown property $Fn$A$String.name",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/kCallableNameWithSideEffect.kt"
   },
@@ -15195,14 +15182,15 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/kt58717.kt"
   },
   "box/box/evaluate/intrinsicConst/lowerAndUpperCase.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.lowercase()",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/lowerAndUpperCase.kt"
   },
   "box/box/evaluate/intrinsicConst/nullableEnumName.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/nullableEnumName.kt"
   },
   "box/box/evaluate/kt55912.kt": {
@@ -15321,8 +15309,9 @@
    "upstream": "compiler/testData/codegen/box/evaluate/stdlibConst.kt"
   },
   "box/box/evaluate/stringConcatenation.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/stringConcatenation.kt"
   },
   "box/box/evaluate/stringConcatenationWithObject.kt": {
@@ -15332,8 +15321,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/stringConcatenationWithObject.kt"
   },
   "box/box/evaluate/stringOperations.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/stringOperations.kt"
   },
@@ -15367,8 +15356,9 @@
    "upstream": "compiler/testData/codegen/box/evaluate/ulongOperations.kt"
   },
   "box/box/evaluate/unsignedConst.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$id' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/evaluate/unsignedConst.kt"
   },
   "box/box/evaluate/useCorrectToString.kt": {
@@ -15450,8 +15440,9 @@
    "upstream": "compiler/testData/codegen/box/expression/evaluationOrder/dangerousInline.kt"
   },
   "box/box/extensionFunctions/classMethodCallExtensionSuper.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Top$getString' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/classMethodCallExtensionSuper.kt"
   },
   "box/box/extensionFunctions/defaultMethodInterfaceCallExtensionSuper.kt": {
@@ -16901,8 +16892,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/nonAbstractMethod.kt"
   },
   "box/box/funInterface/nonTrivialProjectionInSuperType.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "cannot infer the type of lambda parameter 'a'",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/nonTrivialProjectionInSuperType.kt"
   },
@@ -17225,8 +17216,9 @@
    "upstream": "compiler/testData/codegen/box/functions/defaultargs.kt"
   },
   "box/box/functions/defaultargs1.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$toPrefixedString' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs1.kt"
   },
   "box/box/functions/defaultargs2.kt": {
@@ -17584,8 +17576,9 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt2895.kt"
   },
   "box/box/functions/localFunctions/kt3308.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt3308.kt"
   },
   "box/box/functions/localFunctions/kt3978.kt": {
@@ -17688,8 +17681,8 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/overloadedLocalFunction1.kt"
   },
   "box/box/functions/localFunctions/overloadedLocalFunction2.kt": {
-   "category": "other: invoke expects 2 arguments",
-   "detail": "invoke expects 2 arguments",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/overloadedLocalFunction2.kt"
   },
@@ -17929,8 +17922,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/nullableIntEquals.kt"
   },
   "box/box/ieee754/safeCall.kt": {
-   "category": "other: unknown method Double.equals()",
-   "detail": "unknown method Double.equals()",
+   "category": "other: Double.equals() is not supported",
+   "detail": "Double.equals() is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/safeCall.kt"
   },
@@ -17999,8 +17992,9 @@
    "upstream": "compiler/testData/codegen/box/increment/assignPlusOnSmartCast.kt"
   },
   "box/box/increment/augmentedAssignmentWithComplexRhs.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/augmentedAssignmentWithComplexRhs.kt"
   },
   "box/box/increment/classNaryGetSet.kt": {
@@ -18327,8 +18321,8 @@
    "upstream": "compiler/testData/codegen/box/inference/mapCollectChainWithNullResult.kt"
   },
   "box/box/inference/noCoercionToUniForNullableLambdaReturnType.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Unit.toString()",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'nullableK' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/noCoercionToUniForNullableLambdaReturnType.kt"
   },
@@ -18390,8 +18384,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt41164.kt"
   },
   "box/box/inference/pcla/issues/kt42139.kt": {
-   "category": "other: unknown type Sequence<List<Int>>",
-   "detail": "unknown type Sequence<List<Int>>",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'select' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt42139.kt"
   },
@@ -19386,8 +19380,8 @@
    "upstream": "compiler/testData/codegen/box/inference/referenceToCatchParameterFromLambdaExpression.kt"
   },
   "box/box/inference/safeCastWithElvis.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/safeCastWithElvis.kt"
   },
@@ -20381,8 +20375,8 @@
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/kt49370.kt"
   },
   "box/box/inlineArgsInPlace/kt49407.kt": {
-   "category": "other: unknown method Int.plus()",
-   "detail": "unknown method Int.plus()",
+   "category": "other: unknown method Long.mod()",
+   "detail": "unknown method Long.mod()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/kt49407.kt"
   },
@@ -20504,13 +20498,15 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInSecondaryConstructorGeneric.kt"
   },
   "box/box/inlineClasses/boxImplDoesNotExecuteInitBlock.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInitBlock.kt"
   },
   "box/box/inlineClasses/boxImplDoesNotExecuteInitBlockGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInitBlockGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverride.kt": {
@@ -20582,13 +20578,15 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxResultInlineClassOfConstructorCallGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxAny.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxAnyGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxFunLiteralAny.kt": {
@@ -20604,120 +20602,135 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxFunLiteralAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxInt.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxInt.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxIntGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxIntGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableAny.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyGeneric2.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyNull.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyNull.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyNullGeneric.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected X$String, found X$CPointer",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyNullGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyNullGeneric2.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected X$String, found X$CPointer",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableAnyNullGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableInt.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableInt.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableIntGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableIntGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableIntGeneric2.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableIntGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableIntNull.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableIntNull.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableIntNullGeneric.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected X$Int, found X$CPointer",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableIntNullGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableIntNullGeneric2.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected X$Int, found X$CPointer",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableIntNullGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableString.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableString.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableStringGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableStringGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableStringGeneric2.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableStringGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableStringNull.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableStringNull.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableStringNullGeneric.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected X$String, found X$CPointer",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableStringNullGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxNullableStringNullGeneric2.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected X$String, found X$CPointer",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxNullableStringNullGeneric2.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxString.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxString.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/boxStringGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'call' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxStringGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/kt27586_1.kt": {
@@ -21815,8 +21828,9 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromInlineLambdaGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambda.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambda.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambda2.kt": {
@@ -21830,8 +21844,9 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambda2Generic.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambdaGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/accessPrivateInlineClassMethodFromLambdaGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInLambda.kt": {
@@ -21911,13 +21926,15 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/kt30780Generic.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/lambdaInInlineClassFun.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/lambdaInInlineClassFun.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/lambdaInInlineClassFunGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/lambdaInInlineClassFunGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/objectInInlineClassFun.kt": {
@@ -21963,13 +21980,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/correctBoxingForBranchExpressionsGeneric.kt"
   },
   "box/box/inlineClasses/createInlineClassInArgumentPosition.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/createInlineClassInArgumentPosition.kt"
   },
   "box/box/inlineClasses/createInlineClassInArgumentPositionGeneric.kt": {
-   "category": "generics",
-   "detail": "generic class AsInt used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/createInlineClassInArgumentPositionGeneric.kt"
   },
@@ -22194,8 +22212,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/elvisWithInlineClassAndNullConstant.kt"
   },
   "box/box/inlineClasses/elvisWithInlineClassAndNullConstantGeneric.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected UInt, found UInt$Int",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'nonNull' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/elvisWithInlineClassAndNullConstantGeneric.kt"
   },
@@ -22220,8 +22238,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksInlineClassNonNull.kt"
   },
   "box/box/inlineClasses/equalityChecksInlineClassNonNullGeneric.kt": {
-   "category": "generics",
-   "detail": "generic class A used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isNullVacuousLeft' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksInlineClassNonNullGeneric.kt"
   },
@@ -22231,8 +22249,9 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksMixedNullability.kt"
   },
   "box/box/inlineClasses/equalityChecksMixedNullabilityGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isEqualNA' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksMixedNullabilityGeneric.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedInlineClassNonNull.kt": {
@@ -22241,8 +22260,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedInlineClassNonNull.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedInlineClassNonNullGeneric.kt": {
-   "category": "generics",
-   "detail": "generic class A used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isNotNullVacuousLeft' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedInlineClassNonNullGeneric.kt"
   },
@@ -22252,8 +22271,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedNonNull.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedNonNullGeneric.kt": {
-   "category": "generics",
-   "detail": "generic class A used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isNotNullVacuousLeft' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedNonNullGeneric.kt"
   },
@@ -22263,14 +22282,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedNullable.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedNullableGeneric.kt": {
-   "category": "generics",
-   "detail": "generic class A used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isNotNullVacuousLeft' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedNullableGeneric.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedNullableGeneric2.kt": {
-   "category": "generics",
-   "detail": "generic class A used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isNotNullVacuousLeft' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedNullableGeneric2.kt"
   },
@@ -22280,8 +22299,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedPrimitive.kt"
   },
   "box/box/inlineClasses/equalityChecksNegatedPrimitiveGeneric.kt": {
-   "category": "generics",
-   "detail": "generic class A used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isNotNullVacuousLeft' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNegatedPrimitiveGeneric.kt"
   },
@@ -22291,8 +22310,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNonNull.kt"
   },
   "box/box/inlineClasses/equalityChecksNonNullGeneric.kt": {
-   "category": "generics",
-   "detail": "generic class A used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isNullVacuousLeft' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNonNullGeneric.kt"
   },
@@ -22302,14 +22321,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNullable.kt"
   },
   "box/box/inlineClasses/equalityChecksNullableGeneric.kt": {
-   "category": "generics",
-   "detail": "generic class A used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isNullVacuousLeft' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNullableGeneric.kt"
   },
   "box/box/inlineClasses/equalityChecksNullableGeneric2.kt": {
-   "category": "generics",
-   "detail": "generic class A used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isNullVacuousLeft' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksNullableGeneric2.kt"
   },
@@ -22319,8 +22338,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksPrimitive.kt"
   },
   "box/box/inlineClasses/equalityChecksPrimitiveGeneric.kt": {
-   "category": "generics",
-   "detail": "generic class A used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isNullVacuousLeft' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksPrimitiveGeneric.kt"
   },
@@ -22409,13 +22428,15 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsEvaluationOrderPrimitiveGeneric.kt"
   },
   "box/box/inlineClasses/equalsOperatorWithGenericCall.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsOperatorWithGenericCall.kt"
   },
   "box/box/inlineClasses/equalsOperatorWithGenericCallGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalsOperatorWithGenericCallGeneric.kt"
   },
   "box/box/inlineClasses/extLambdaInInlineClassFun.kt": {
@@ -22983,8 +23004,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassFunctionInvoke.kt"
   },
   "box/box/inlineClasses/inlineClassFunctionInvokeGeneric.kt": {
-   "category": "generics",
-   "detail": "reference to generic function fooZ is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'fooZ' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassFunctionInvokeGeneric.kt"
   },
@@ -23009,8 +23030,9 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInStringTemplate.kt"
   },
   "box/box/inlineClasses/inlineClassInStringTemplateGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'test1_1' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInStringTemplateGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassPropertyReferenceGetAndSet.kt": {
@@ -23067,12 +23089,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1879837728\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342967008\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823200\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966688\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23283,15 +23305,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCall.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCallGeneric.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCall.kt": {
@@ -23349,15 +23369,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/interfaceSuperCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCall.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCallGeneric.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCallGeneric.kt"
   },
   "box/box/inlineClasses/iterateOverArrayOfInlineClassValues.kt": {
@@ -23575,8 +23593,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt28405.kt"
   },
   "box/box/inlineClasses/kt28585.kt": {
-   "category": "unknown mutableSetOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'mutableSetOf'",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt28585.kt"
   },
@@ -23633,15 +23651,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680Generic.kt"
   },
   "box/box/inlineClasses/kt38680a.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680a.kt"
   },
   "box/box/inlineClasses/kt38680aGeneric.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680aGeneric.kt"
   },
   "box/box/inlineClasses/kt38680b.kt": {
@@ -23768,8 +23784,9 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/mangledDefaultParameterFunction.kt"
   },
   "box/box/inlineClasses/mangledDefaultParameterFunctionGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/mangledDefaultParameterFunctionGeneric.kt"
   },
   "box/box/inlineClasses/mangledSuperCalls.kt": {
@@ -23822,8 +23839,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableEqeqNonNullGeneric.kt"
   },
   "box/box/inlineClasses/nullableGenericUnderlyingNull.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Wrapper$Int, found Wrapper$CPointer",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/nullableGenericUnderlyingNull.kt"
   },
@@ -24101,8 +24118,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/inlineMethodOnResult.kt"
   },
   "box/box/inlineClasses/result/lambdaTakesResultThroughBridge.kt": {
-   "category": "unknown x (stdlib API / unsupported decl)",
-   "detail": "unknown function 'x'",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Result$getOrNullNoinline' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/lambdaTakesResultThroughBridge.kt"
   },
@@ -24617,8 +24634,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingType.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt": {
-   "category": "generics",
-   "detail": "generic class Str used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'boxToTypeParameter' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt"
   },
@@ -24652,8 +24669,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGWI2.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGeneric.kt": {
-   "category": "generics",
-   "detail": "generic class I32 used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'boxToTypeParameter' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGeneric.kt"
   },
@@ -24663,8 +24680,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingType.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt": {
-   "category": "generics",
-   "detail": "generic class I32 used as Any is not supported",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'boxToTypeParameter' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithPrimitiveUnderlyingTypeGeneric.kt"
   },
@@ -25451,8 +25468,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/kt11833_2.kt"
   },
   "box/box/innerNested/superConstructorCall/localClassOuterDiffersFromInnerOuter.kt": {
-   "category": "unknown foo (stdlib API / unsupported decl)",
-   "detail": "unknown function 'foo'",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/localClassOuterDiffersFromInnerOuter.kt"
   },
@@ -25559,8 +25576,8 @@
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/conservativeItable.kt"
   },
   "box/box/interfaceCallsNCasts/diamond.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/diamond.kt"
   },
@@ -25588,9 +25605,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/charToInt.kt"
   },
   "box/box/intrinsics/ea35953.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/ea35953.kt"
   },
   "box/box/intrinsics/incWithLabel.kt": {
@@ -25647,9 +25663,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt8666.kt"
   },
   "box/box/intrinsics/longRangeWithExplicitDot.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/longRangeWithExplicitDot.kt"
   },
   "box/box/intrinsics/nonShortCircuitAnd.kt": {
@@ -25692,8 +25707,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x102a753ab        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x102b944d7        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
-   "status": "COMPILER_CRASH",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
   "box/box/invokedynamic/extensionFunInvoke.kt": {
@@ -27077,15 +27092,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensions.kt": {
@@ -27101,15 +27114,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensions.kt": {
@@ -27155,15 +27166,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensions.kt": {
@@ -27179,15 +27188,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensions.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensions.kt": {
@@ -28817,7 +28824,7 @@
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromLambdaInNestedClass.kt": {
    "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromLambdaInNestedClass.kt"
   },
@@ -29416,8 +29423,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusAssignWithComplexRHS.kt"
   },
   "box/box/operatorConventions/plusExplicit.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
+   "category": "unknown with (stdlib API / unsupported decl)",
+   "detail": "unknown function 'with'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusExplicit.kt"
   },
@@ -29516,8 +29523,8 @@
    "upstream": "compiler/testData/codegen/box/package/privateMembersInImportList.kt"
   },
   "box/box/package/privateTopLevelPropAndVarInInner.kt": {
-   "category": "unknown x (stdlib API / unsupported decl)",
-   "detail": "unknown name 'x'",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/package/privateTopLevelPropAndVarInInner.kt"
   },
@@ -29770,9 +29777,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectShort.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/intEqualsNull.kt": {
-   "category": "other: unknown method Int.equals()",
-   "detail": "unknown method Int.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/intEqualsNull.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/intEqualsNullableInt.kt": {
@@ -29874,15 +29880,13 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2251.kt"
   },
   "box/box/primitiveTypes/kt2269.kt": {
-   "category": "other: unknown method Int.equals()",
-   "detail": "unknown method Int.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2269.kt"
   },
   "box/box/primitiveTypes/kt2269NotOptimizable.kt": {
-   "category": "other: unknown method Int.equals()",
-   "detail": "unknown method Int.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2269NotOptimizable.kt"
   },
   "box/box/primitiveTypes/kt2275.kt": {
@@ -29892,9 +29896,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2275.kt"
   },
   "box/box/primitiveTypes/kt239.kt": {
-   "category": "other: unknown method Int.plus()",
-   "detail": "unknown method Int.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt239.kt"
   },
   "box/box/primitiveTypes/kt242.kt": {
@@ -29947,9 +29950,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt36952_identityEqualsWithBooleanInLocalFunction.kt"
   },
   "box/box/primitiveTypes/kt37505.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'testByte' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt37505.kt"
   },
   "box/box/primitiveTypes/kt4097.kt": {
@@ -29992,9 +29994,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt46864_long.kt"
   },
   "box/box/primitiveTypes/kt518.kt": {
-   "category": "other: unknown method Int.plus()",
-   "detail": "unknown method Int.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt518.kt"
   },
   "box/box/primitiveTypes/kt52230.kt": {
@@ -30026,19 +30027,19 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt737.kt"
   },
   "box/box/primitiveTypes/kt753.kt": {
-   "detail": "run timeout",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt753.kt"
   },
   "box/box/primitiveTypes/kt756.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Int.unaryPlus()",
+   "detail": "unknown method Int.unaryPlus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt756.kt"
   },
   "box/box/primitiveTypes/kt757.kt": {
-   "detail": "run timeout",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt757.kt"
   },
   "box/box/primitiveTypes/kt79977.kt": {
@@ -30148,9 +30149,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/smartCastOnNullableDoubleIdentityEquals.kt"
   },
   "box/box/primitiveTypes/stringEqualsHashCodeToString.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/stringEqualsHashCodeToString.kt"
   },
   "box/box/primitiveTypes/substituteIntForGeneric.kt": {
@@ -30396,8 +30396,9 @@
    "upstream": "compiler/testData/codegen/box/properties/classArtificialFieldInsideNested.kt"
   },
   "box/box/properties/classFieldInsideLambda.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideLambda.kt"
   },
   "box/box/properties/classFieldInsideLocalInSetter.kt": {
@@ -30413,13 +30414,15 @@
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideNested.kt"
   },
   "box/box/properties/classFieldInsideNestedLambda.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideNestedLambda.kt"
   },
   "box/box/properties/classFieldInsideNestedNestedLambda.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/classFieldInsideNestedNestedLambda.kt"
   },
   "box/box/properties/classObjectProperties.kt": {
@@ -30435,8 +30438,8 @@
    "upstream": "compiler/testData/codegen/box/properties/classPrivateArtificialFieldInsideNested.kt"
   },
   "box/box/properties/companionFieldInsideLambda.kt": {
-   "category": "unknown My (stdlib API / unsupported decl)",
-   "detail": "unknown name 'My'",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/companionFieldInsideLambda.kt"
   },
@@ -30446,8 +30449,9 @@
    "upstream": "compiler/testData/codegen/box/properties/companionPrivateField.kt"
   },
   "box/box/properties/companionPrivateFieldInsideLambda.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/companionPrivateFieldInsideLambda.kt"
   },
   "box/box/properties/complexPropertyInitializer.kt": {
@@ -30584,8 +30588,9 @@
    "upstream": "compiler/testData/codegen/box/properties/kt10715.kt"
   },
   "box/box/properties/kt10729.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt10729.kt"
   },
   "box/box/properties/kt1165.kt": {
@@ -30759,8 +30764,9 @@
    "upstream": "compiler/testData/codegen/box/properties/lateinit/accessorException.kt"
   },
   "box/box/properties/lateinit/accessorExceptionPublic.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/accessorExceptionPublic.kt"
   },
   "box/box/properties/lateinit/exceptionField.kt": {
@@ -30774,8 +30780,8 @@
    "upstream": "compiler/testData/codegen/box/properties/lateinit/exceptionGetter.kt"
   },
   "box/box/properties/lateinit/kt30548.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "detail": "exit=0 stdout=\"'Test.foo()' should throw\\n\" stderr=''",
+   "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/properties/lateinit/kt30548.kt"
   },
   "box/box/properties/lateinit/local/capturedLocalLateinit.kt": {
@@ -32132,9 +32138,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeLiteralWithMixedTypeBounds.kt"
   },
   "box/box/ranges/forInRangeWithImplicitReceiver.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeWithImplicitReceiver.kt"
   },
   "box/box/ranges/forInReversed/ForInReversedReversedRange.kt": {
@@ -35602,8 +35607,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/commonSupertypeContravariant.kt"
   },
   "box/box/regressions/commonSupertypeContravariant2.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected A, found B",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'select' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/commonSupertypeContravariant2.kt"
   },
@@ -35965,8 +35970,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/noCapturingForTypesWithTypeVariables.kt"
   },
   "box/box/regressions/noResolutionRecursion.kt": {
-   "category": "other: overloads are not supported: ext$T$at",
-   "detail": "overloads are not supported: ext$T$at",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$T$at' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/noResolutionRecursion.kt"
   },
@@ -36000,8 +36005,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/recursiveDnnTypeInLambda.kt"
   },
   "box/box/regressions/resolvedCallForGetOperator.kt": {
-   "category": "strings / templates",
-   "detail": "HashMap keys must be Int/Long/Char, found String",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'id' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/resolvedCallForGetOperator.kt"
   },
@@ -36190,8 +36195,8 @@
    "upstream": "compiler/testData/codegen/box/reified/nullableNothingArrayAsStringArray.kt"
   },
   "box/box/reified/overrideResolution.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/overrideResolution.kt"
   },
@@ -36443,26 +36448,26 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallWithElvisFolding.kt"
   },
   "box/box/sam/approximation/approxToIntermediateType.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "other syntax (at 'IFoo')",
+   "detail": "expected '(' (at 'IFoo')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/approxToIntermediateType.kt"
   },
   "box/box/sam/approximation/approxToSingleUpperBound.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "other syntax (at 'IFoo')",
+   "detail": "expected '(' (at 'IFoo')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/approxToSingleUpperBound.kt"
   },
   "box/box/sam/approximation/impossibleToApproxToRepresentable.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "other syntax (at 'IFoo')",
+   "detail": "expected '(' (at 'IFoo')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/impossibleToApproxToRepresentable.kt"
   },
   "box/box/sam/approximation/impossibleToApproxToRepresentable2.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "other syntax (at 'IFoo')",
+   "detail": "expected '(' (at 'IFoo')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/impossibleToApproxToRepresentable2.kt"
   },
@@ -37274,8 +37279,9 @@
    "upstream": "compiler/testData/codegen/box/statics/inheritedPropertyInObject.kt"
   },
   "box/box/statics/kt8089.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/kt8089.kt"
   },
   "box/box/statics/syntheticAccessor.kt": {
@@ -37433,25 +37439,26 @@
    "upstream": "compiler/testData/codegen/box/strings/concatDynamicWithSpecialSymbols.kt"
   },
   "box/box/strings/concatGenericWithNullablePrimitiveUpperBound.kt": {
-   "category": "other: concatNFloat expects 1 arguments",
-   "detail": "concatNFloat expects 1 arguments",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'concatNBoolean' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/concatGenericWithNullablePrimitiveUpperBound.kt"
   },
   "box/box/strings/concatGenericWithPrimitiveUpperBound.kt": {
-   "category": "other: concatFloat expects 1 arguments",
-   "detail": "concatFloat expects 1 arguments",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'concatBoolean' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/concatGenericWithPrimitiveUpperBound.kt"
   },
   "box/box/strings/concatGenericWithStringUpperBound.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'concat1' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/concatGenericWithStringUpperBound.kt"
   },
   "box/box/strings/concatNullableGenericWithPrimitiveUpperBound.kt": {
-   "category": "other: concatNFloat expects 1 arguments",
-   "detail": "concatNFloat expects 1 arguments",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'concatNBoolean' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/concatNullableGenericWithPrimitiveUpperBound.kt"
   },
@@ -37512,8 +37519,9 @@
    "upstream": "compiler/testData/codegen/box/strings/kt47917.kt"
   },
   "box/box/strings/kt50140.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'concat4' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/kt50140.kt"
   },
   "box/box/strings/kt5389_stringBuilderGet.kt": {
@@ -37571,9 +37579,8 @@
    "upstream": "compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt"
   },
   "box/box/strings/simpleStringPlus.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/simpleStringPlus.kt"
   },
   "box/box/strings/singleConcatNullable.kt": {
@@ -37616,9 +37623,8 @@
    "upstream": "compiler/testData/codegen/box/strings/twoArgumentNullableStringOperatorPlus.kt"
   },
   "box/box/strings/twoArgumentNullableStringPlus.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/twoArgumentNullableStringPlus.kt"
   },
   "box/box/strings/twoArgumentStringTemplate.kt": {
@@ -37674,13 +37680,13 @@
   },
   "box/box/super/innerClassLabeledSuper.kt": {
    "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "detail": "only member functions are supported in class/interface bodies (at 'test2')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuper.kt"
   },
   "box/box/super/innerClassLabeledSuper2.kt": {
    "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "detail": "only member functions are supported in class/interface bodies (at 'test2')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuper2.kt"
   },
@@ -37771,8 +37777,9 @@
    "upstream": "compiler/testData/codegen/box/super/kt4173_2.kt"
   },
   "box/box/super/kt4173_3.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/kt4173_3.kt"
   },
   "box/box/super/kt4982.kt": {
@@ -37782,8 +37789,8 @@
    "upstream": "compiler/testData/codegen/box/super/kt4982.kt"
   },
   "box/box/super/multipleSuperTraits.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/multipleSuperTraits.kt"
   },
@@ -38105,13 +38112,15 @@
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/kt10047.kt"
   },
   "box/box/syntheticAccessors/kt21258_indirect.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/kt21258_indirect.kt"
   },
   "box/box/syntheticAccessors/kt21258_simple.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/kt21258_simple.kt"
   },
   "box/box/syntheticAccessors/kt49316.kt": {
@@ -38274,8 +38283,9 @@
    "upstream": "compiler/testData/codegen/box/topLevelPrivate/privateInInlineNested.kt"
   },
   "box/box/topLevelPrivate/syntheticAccessor.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'eval' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/topLevelPrivate/syntheticAccessor.kt"
   },
   "box/box/trailingComma/noDisambiguation.kt": {
@@ -38328,14 +38338,13 @@
    "upstream": "compiler/testData/codegen/box/traits/inheritedVar.kt"
   },
   "box/box/traits/interfaceWithNonAbstractFunIndirect.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/interfaceWithNonAbstractFunIndirect.kt"
   },
   "box/box/traits/interfaceWithNonAbstractFunIndirectGeneric.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/interfaceWithNonAbstractFunIndirectGeneric.kt"
   },
@@ -38352,8 +38361,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt1936_1.kt"
   },
   "box/box/traits/kt2260.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt2260.kt"
   },
@@ -38364,9 +38373,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt2399.kt"
   },
   "box/box/traits/kt2541.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/kt2541.kt"
   },
   "box/box/traits/kt3315.kt": {
@@ -38375,9 +38383,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt3315.kt"
   },
   "box/box/traits/kt3500.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/kt3500.kt"
   },
   "box/box/traits/kt3579.kt": {
@@ -38416,9 +38423,8 @@
    "upstream": "compiler/testData/codegen/box/traits/multiple.kt"
   },
   "box/box/traits/privateInterfaceMethod.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/privateInterfaceMethod.kt"
   },
   "box/box/traits/receiverOfIntersectionType.kt": {
@@ -38445,9 +38451,8 @@
    "upstream": "compiler/testData/codegen/box/traits/traitImplDelegationWithCovariantOverride.kt"
   },
   "box/box/traits/traitImplDiamond.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/traitImplDiamond.kt"
   },
   "box/box/traits/traitImplGenericDelegation.kt": {
@@ -39095,8 +39100,9 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/grok/kotlinx-features/compiler/build/upstream-tmp/nkup9x848qdh/t.ll:202:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\ncommand failed (256): '/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt' -passes='lt",
-   "status": "COMPILER_CRASH",
+   "category": "other: parameters of type Unit / Unit? are not supported",
+   "detail": "parameters of type Unit / Unit? are not supported",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
   "box/box/unit/ifElse.kt": {
@@ -39135,8 +39141,8 @@
    "upstream": "compiler/testData/codegen/box/unit/kt56723.kt"
   },
   "box/box/unit/nullableUnit.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Unit, found CPointer",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'isNullGeneric' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/nullableUnit.kt"
   },
@@ -39485,8 +39491,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/kt1978.kt"
   },
   "box/box/vararg/kt37715.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found Double",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt37715.kt"
   },
@@ -39509,8 +39515,9 @@
    "upstream": "compiler/testData/codegen/box/vararg/kt6192.kt"
   },
   "box/box/vararg/kt796_797.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function 'ext$Array$get' needs an explicit return type",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt796_797.kt"
   },
   "box/box/vararg/referenceToContainsFromVarargParameter.kt": {

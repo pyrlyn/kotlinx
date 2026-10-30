@@ -476,6 +476,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         f.params.forEachIndexed { i, p ->
             val t = sig.params[i]
             if (t == Ty.Args) { declare(p.name, t, false, false); return@forEachIndexed }
+            if (t == Ty.Unit) fail("parameters of type Unit / Unit? are not supported")
             params.add("${t.llvm} %a.${p.name}")
             val l = declare(p.name, t, false, false)
             emit("store ${t.llvm} %a.${p.name}, ptr ${l.slot}")
@@ -646,6 +647,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val params = arrayListOf("ptr %this")
         for (p in c.ctorParams) {
             val t = resolve(p.type)
+            if (t == Ty.Unit) fail("parameters of type Unit / Unit? are not supported")
             params.add("${t.llvm} %a.${p.name}")
             val l = declare(p.name, t, false, false)
             emit("store ${t.llvm} %a.${p.name}, ptr ${l.slot}")
@@ -1731,6 +1733,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (callee is NameE && (lookup(callee.n) == null || (callee.n in classes && scopes.none { callee.n in it.vars }))) return genNamedCall(callee.n, e)
         if (callee is MemberE) {
             if (callee.safe) return safe(callee.recv) { r -> method(r, callee.n, e) }
+            // `x!!.f()`: a member of the non-null type wins over an extension on the nullable type (`fun Long?.inv()`).
+            if (callee.recv is UnE && callee.recv.op == "!!") {
+                val r = genExpr(callee.recv)
+                nonNullRecv = true
+                try { return method(r, callee.n, e) } finally { nonNullRecv = false }
+            }
             return method(genExpr(callee.recv), callee.n, e)
         }
         val f = genExpr(callee)
@@ -2409,6 +2417,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** `x++` with an `operator fun T?.inc()` extension: the operator call resolves to the extension. */
     private var incViaExt = false
 
+    /** Set while generating a call whose receiver is `x!!` (see [method]). */
+    private var nonNullRecv = false
     private fun method(r: Val, n: String, e0: CallE): Val {
         val t = r.t
         // Member extension of the enclosing class (dispatch receiver `this`).
@@ -2419,11 +2429,32 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (isAny(t) && n == "toString" && e0.args.isEmpty()) { val s = anyCall("anyToString__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return s }
         if (isAny(t) && n == "equals" && e0.args.size == 1) return compare("==", r, genExpr(e0.args[0]))
         if (isAny(t) && n == "hashCode" && e0.args.isEmpty()) { val h = anyCall("anyHashCode__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return h }
+        // Operators of numbers and strings called as methods: `1.plus(2)`, `"a".plus("b")`, `1.rangeTo(3)`, `x.equals(y)`.
+        val opOf = mapOf("plus" to "+", "minus" to "-", "times" to "*", "div" to "/", "rem" to "%", "rangeTo" to "..", "equals" to "==")
+        // `equals` is boxed equality: false for another type; Double.equals compares bits (0.0 != -0.0), not supported.
+        if (n == "equals" && t == Ty.F64 && e0.args.size == 1) fail("Double.equals() is not supported")
+        if (n == "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.Char || t == Ty.Str) && e0.args.size == 1 && e0.args[0] !is NamedE &&
+            extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false) {
+            val a = genExpr(e0.args[0])
+            if (a.t != t) { releaseIfOwned(a); releaseIfOwned(r); return Val("false", Ty.I1) }
+            return compare("==", r, a)
+        }
+        if (n != "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.F64 || t == Ty.Char || (t == Ty.Str && (n == "plus" || n == "equals"))) &&
+            n in opOf && e0.args.size == 1 && e0.args[0] !is NamedE && e0.lambda == null && extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false)
+            return withTemps(listOf(r)) { (x) -> genExpr(BinE(opOf.getValue(n), x, e0.args[0]).also { it.line = line }) }
         // Built-in members `inc()`/`dec()` of numbers and chars win over extensions.
         // Byte (I8) is excluded: its inc() must wrap at 8 bits.
         if ((t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.Char) && (n == "inc" || n == "dec") && e0.args.isEmpty() && !incViaExt)
             return withTemps(listOf(r)) { (x) -> genExpr(BinE(if (n == "inc") "+" else "-", x, IntL(1, false)).also { it.line = line }) }
-        if (!hasMember(t, n)) extFuns[n]?.firstOrNull { extMatches(t, it.params[0].type, it.typeParams) }?.let { f ->
+        val nn = nonNullRecv; nonNullRecv = false
+        // Bitwise members called as methods: `x.shl(2)`, `x.inv()` (they win over an extension when the receiver is `y!!`).
+        if ((t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64) && (nn || extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false) && e0.lambda == null && e0.args.none { it is NamedE }) {
+            if (n in setOf("and", "or", "xor", "shl", "shr", "ushr") && e0.args.size == 1)
+                return withTemps(listOf(r)) { (x) -> genExpr(BinE(n, x, e0.args[0]).also { it.line = line }) }
+            if (n == "inv" && e0.args.isEmpty())
+                return withTemps(listOf(r)) { (x) -> genExpr(BinE("xor", x, UnE("-", IntL(1, t == Ty.I64 || t == Ty.U64)).also { it.line = line }).also { it.line = line }) }
+        }
+        if (!hasMember(t, n)) extFuns[n]?.firstOrNull { extMatches(t, it.params[0].type, it.typeParams) && !(nn && it.params[0].type.nullable && t.llvm != "ptr") }?.let { f ->
             return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
         }
         dataMethod(r, n, e0)?.let { return it }
