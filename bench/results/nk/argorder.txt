@@ -1,0 +1,18 @@
+# argorder working tree 2026-10-30 03:55 EET load: { 34.73 33.39 32.00 }
+sum 3.744
+alloc 74.858
+bigheap 118.299
+closures 83.159
+cycles 45.374
+dispatch 94.598
+file 51.03
+free 50.272
+hashmap 69.749
+lru 95.573
+matmul 10.112
+nbody 70.054
+recursion 6.072
+refpass 131.066
+sort 62.858
+strings 31.806
+trees 122.053
