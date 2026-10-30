@@ -61,7 +61,9 @@ class Parser(private val t: List<Tok>) {
         val self = TypeRef(c.name, c.typeParams.map { TypeRef(it, emptyList(), false) }, false)
         var eq: E = BoolL(true)
         props.forEachIndexed { i, p ->
-            val one = BinE("==", nm(p.name), MemberE(nm("other"), p.name, false).also { it.line = l }).also { it.line = l }
+            // Double properties compare like Double.equals (bits: NaN == NaN, 0.0 != -0.0).
+            fun bits(e: E): E = if (p.type.name == "Double") CallE(MemberE(e, "\$bits", false).also { it.line = l }, emptyList(), emptyList(), null).also { it.line = l } else e
+            val one = BinE("==", bits(nm(p.name)), bits(MemberE(nm("other"), p.name, false).also { it.line = l })).also { it.line = l }
             eq = if (i == 0) one else BinE("&&", eq, one).also { it.line = l }
         }
         ms.add(FunD("\$equals", listOf(Param("other", self)), TypeRef("Boolean", emptyList(), false), null, eq, l))
@@ -1138,7 +1140,7 @@ class Parser(private val t: List<Tok>) {
             return if (isOp("?")) { next(); TypeRef(fn.name, fn.args, true) } else fn
         }
         var name = ident()
-        while (isOp(".")) { next(); name += "." + ident() }
+        while (isOp(".") && t[p + 1].k == K.ID) { next(); name += "." + ident() }
         val args = ArrayList<TypeRef>()
         if (isOp("<")) {
             next()
@@ -1151,8 +1153,15 @@ class Parser(private val t: List<Tok>) {
             next()
         }
         val nullable = if (isOp("?")) { next(); true } else false
-        aliases[name]?.let { a -> if (args.isEmpty()) return TypeRef(a.name, a.args, a.nullable || nullable) }
-        return TypeRef(name, args, nullable)
+        val base = aliases[name]?.takeIf { args.isEmpty() }?.let { a -> TypeRef(a.name, a.args, a.nullable || nullable) } ?: TypeRef(name, args, nullable)
+        // Function type with receiver `R.(A) -> X`: TypeRef "$FnR" with args = receiver + params + return.
+        if (isOp(".") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
+            next(); next()
+            val ps = nested(1) { val xs = ArrayList<TypeRef>(); while (!isOp(")")) { if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == ":") { p += 2 }; xs.add(type()); if (isOp(",")) next() }; xs }
+            expectOp(")"); expectOp("->")
+            return TypeRef("\$FnR", listOf(base) + ps + type(), false)
+        }
+        return base
     }
 
     /** Non-generic `typealias N = T`, collected before parsing so aliases may be used before their declaration. */
@@ -1524,6 +1533,13 @@ class Parser(private val t: List<Tok>) {
                 "when" -> whenExpr()
                 "try" -> tryExpr()
                 "throw" -> CallE(NameE("\$throw").also { it.line = tk.line }, emptyList(), listOf(expr()), null)
+                // `return` / `break` / `continue` used as an expression (`x ?: return 0`, `a + continue`): a block
+                // expression whose only statement jumps (type Nothing).
+                "return", "break", "continue" -> {
+                    p--
+                    val j = stmt()
+                    WhenE(null, listOf(null to Block(listOf(j)))).also { it.line = tk.line }
+                }
                 "this" -> if (t[p].k == K.OP && t[p].s == "@" && t[p + 1].k == K.ID) { p++; NameE("this@" + ident()) } else NameE("this")
                 else -> {
                     if (tk.s in GENERIC_CALLS && t[p].k == K.OP && t[p].s == "<") {

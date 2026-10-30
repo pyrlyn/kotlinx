@@ -285,6 +285,12 @@ fun <T> ArrayList<T>.firstOrNull(): T? = if (size == 0) null else get(0)
 fun <T> ArrayList<T>.lastOrNull(): T? = if (size == 0) null else get(size - 1)
 data class IndexedValue<T>(val index: Int, val value: T)
 fun <T> ArrayList<T>.withIndex(): ArrayList<IndexedValue<T>> { val r = ArrayList<IndexedValue<T>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
+fun String.withIndex(): ArrayList<IndexedValue<Char>> { val r = ArrayList<IndexedValue<Char>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
+fun IntArray.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
+"""
+/** `withIndex()` of progressions (needs both the range and the list prelude). */
+const val RANGE_LIST_EXT = """
+fun IntProgression.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
 private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex)\(|-=|\bin\b""")
 
@@ -301,11 +307,19 @@ val String.lastIndex: Int get() = length - 1
 """
 private val INDICES_USE = Regex("""\.(indices|lastIndex)\b""")
 
+/** `Array(n) { init }`, `List(n) { }`, `MutableList(n) { }`: arrays of references are lists. */
+const val LIST_INIT = """
+fun <T> Array(size: Int, init: (Int) -> T): ArrayList<T> { val r = ArrayList<T>(); var i = 0; while (i < size) { r.add(init(i)); i++ }; return r }
+fun <T> List(size: Int, init: (Int) -> T): ArrayList<T> { val r = ArrayList<T>(); var i = 0; while (i < size) { r.add(init(i)); i++ }; return r }
+fun <T> MutableList(size: Int, init: (Int) -> T): ArrayList<T> { val r = ArrayList<T>(); var i = 0; while (i < size) { r.add(init(i)); i++ }; return r }
+"""
+private val LIST_INIT_USE = Regex("""\b(Array|List|MutableList)\s*(<[^>]*>)?\s*\(""")
+
 fun withPrelude(src: String, p: Program): Program {
     val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
-    val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src)
-    if (!ranges && !exc && !pairs && !cmp && !lists) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (idx) INDICES else "")
+    val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src)
+    if (!ranges && !exc && !pairs && !cmp && !lists && !linit) return p
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },

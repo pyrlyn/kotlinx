@@ -392,6 +392,167 @@
     "raw_ns": "61395958,61301958,61203375,61241667,61862042",
     "flags": ""
    }
+  },
+  {
+   "run": "m30",
+   "date": "2026-10-30T09:40:34+02:00",
+   "commit": "eb3dea06cb0a55818dfae1c851f1d5403fdc078c",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 32.23 29.98 30.77 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 61.97,
+    "raw_ns": "61535792,61565334,64277625,62807875,61177459",
+    "flags": ""
+   }
+  },
+  {
+   "run": "m31",
+   "date": "2026-10-30T09:49:24+02:00",
+   "commit": "e329cc1eccd78223ad529cc31a97dfbc9030eca5",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 39.88 33.37 32.03 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 61.359,
+    "raw_ns": "61233917,61299958,61655750,61258041,61518959",
+    "flags": ""
+   }
+  },
+  {
+   "run": "m32",
+   "date": "2026-10-30T09:58:14+02:00",
+   "commit": "4b5df5887e89d703d9876e7006fef14694320b54",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 62.29 42.14 35.93 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 62.079,
+    "raw_ns": "62302375,61091917,62518833,63155792,61415333",
+    "flags": ""
+   }
+  },
+  {
+   "run": "m33",
+   "date": "2026-10-30T10:06:51+02:00",
+   "commit": "e39af535c37ea1c4a43f62cf230da0342fe8ec9e",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 37.76 30.14 31.23 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 61.949,
+    "raw_ns": "61311417,61309166,61578666,63317125,62957667",
+    "flags": ""
+   }
+  },
+  {
+   "run": "m35",
+   "date": "2026-10-30T10:15:12+02:00",
+   "commit": "83c73d987e0e21e4622f0ebed94ae6722e3cc69c",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 25.93 26.68 28.60 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 61.053,
+    "raw_ns": "60878917,60966333,61080417,61112250,65104292",
+    "flags": ""
+   }
+  },
+  {
+   "run": "m34",
+   "date": "2026-10-30T10:32:49+02:00",
+   "commit": "328b95287646e1f19d7dc97cbacc3b7bd166b38c",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 54.25 47.66 38.37 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 61.789,
+    "raw_ns": "61932500,61164959,61590709,61844167,62267166",
+    "flags": ""
+   }
+  },
+  {
+   "run": "m37",
+   "date": "2026-10-30T10:43:33+02:00",
+   "commit": "9afae56079df960d9c5382c6f1a3c9cba7b81c20",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 60.01 64.49 52.86 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 64.915,
+    "raw_ns": "68516250,68747000,62987042,63120708,63109125",
+    "flags": ""
+   }
   }
  ]
 }
