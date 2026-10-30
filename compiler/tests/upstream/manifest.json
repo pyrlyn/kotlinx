@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 29,
   "N/A": 2984,
-  "PASS": 2173,
-  "UNSUPPORTED": 3289
+  "PASS": 2188,
+  "UNSUPPORTED": 3274
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -363,8 +363,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt17691WithEnabledFeature.kt"
   },
   "box/box/argumentOrder/kt9277.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt9277.kt"
   },
@@ -824,8 +824,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt4357.kt"
   },
   "box/box/arrays/kt47483.kt": {
-   "category": "other: Array expects 2 arguments",
-   "detail": "Array expects 2 arguments",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of Array; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt47483.kt"
   },
@@ -1754,32 +1754,32 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt48394.kt"
   },
   "box/box/boxingOptimization/kt49092a.kt": {
-   "category": "other: foo expects 2 arguments",
-   "detail": "foo expects 2 arguments",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092a.kt"
   },
   "box/box/boxingOptimization/kt49092b.kt": {
-   "category": "other: foo expects 2 arguments",
-   "detail": "foo expects 2 arguments",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092b.kt"
   },
   "box/box/boxingOptimization/kt49092c.kt": {
-   "category": "other: foo expects 2 arguments",
-   "detail": "foo expects 2 arguments",
+   "category": "other: Unit cannot be used as Any",
+   "detail": "Unit cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092c.kt"
   },
   "box/box/boxingOptimization/kt49092d.kt": {
-   "category": "other: foo expects 2 arguments",
-   "detail": "foo expects 2 arguments",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092d.kt"
   },
   "box/box/boxingOptimization/kt49092e.kt": {
-   "category": "other: foo expects 2 arguments",
-   "detail": "foo expects 2 arguments",
+   "category": "other: Unit cannot be used as Any",
+   "detail": "Unit cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092e.kt"
   },
@@ -8055,15 +8055,14 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/bottles.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/breakFromOuter.kt": {
-   "category": "annotations",
-   "detail": "expected end of statement (at '@')",
+   "category": "strings / templates",
+   "detail": "cannot convert Nothing to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/breakFromOuter.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/breakInDoWhile.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/breakInDoWhile.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/breakInExpr.kt": {
@@ -8072,9 +8071,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/breakInExpr.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/breakInLoopConditions.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/breakInLoopConditions.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/continueInDoWhile.kt": {
@@ -8154,8 +8152,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/inlinedBreakContinue/withReturnValueNested.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/innerLoopWithStack.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
+   "category": "strings / templates",
+   "detail": "cannot convert Nothing to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/innerLoopWithStack.kt"
   },
@@ -8165,15 +8163,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/kt14581.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/kt16713.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/kt16713.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/kt16713_2.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/kt16713_2.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/kt17384.kt": {
@@ -8187,15 +8183,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/kt45704_elvisInInlineFun.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/kt9022And.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/kt9022And.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/kt9022Or.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/kt9022Or.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/pathologicalDoWhile.kt": {
@@ -8204,14 +8198,14 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/pathologicalDoWhile.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/popSizes.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'continue'",
+   "category": "strings / templates",
+   "detail": "cannot convert Nothing to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/popSizes.kt"
   },
   "box/box/controlStructures/breakContinueInExpressions/tryFinally1.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'continue'",
+   "category": "strings / templates",
+   "detail": "cannot convert Nothing to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/breakContinueInExpressions/tryFinally1.kt"
   },
@@ -8251,9 +8245,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/conditionOfEmptyIf.kt"
   },
   "box/box/controlStructures/continueInExpr.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'continue'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInExpr.kt"
   },
   "box/box/controlStructures/continueInFor.kt": {
@@ -8263,9 +8256,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInFor.kt"
   },
   "box/box/controlStructures/continueInForCondition.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'continue'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/continueInForCondition.kt"
   },
   "box/box/controlStructures/continueInWhen.kt": {
@@ -9010,8 +9002,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt88544.kt"
   },
   "box/box/controlStructures/kt9022Return.kt": {
-   "category": "other syntax (at '!')",
-   "detail": "expected end of statement (at '!')",
+   "category": "other: overloads are not supported: testOr",
+   "detail": "overloads are not supported: testOr",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt9022Return.kt"
   },
@@ -14098,9 +14090,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/returnInIfInFinally.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/returnInParentheses.kt": {
-   "category": "other syntax (at 'foo')",
-   "detail": "expected ')' (at 'foo')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/returnInParentheses.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/returnInTry.kt": {
@@ -14363,9 +14354,8 @@
    "upstream": "compiler/testData/codegen/box/elvis/withNothingConstraintAndExpectedType.kt"
   },
   "box/box/elvis/withReturn.kt": {
-   "category": "other syntax (at '\"...\"')",
-   "detail": "expected end of statement (at '\"...\"')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/elvis/withReturn.kt"
   },
   "box/box/enum/abstractMethodInEnum.kt": {
@@ -17469,8 +17459,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt47449.kt"
   },
   "box/box/functions/kt47527.kt": {
-   "category": "other syntax (at '\"...\"')",
-   "detail": "expected end of statement (at '\"...\"')",
+   "category": "other: unknown method Any.let()",
+   "detail": "unknown method Any.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt47527.kt"
   },
@@ -23063,12 +23053,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1342966880\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1879837792\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267645792\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531616\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23701,9 +23691,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt47762Generic.kt"
   },
   "box/box/inlineClasses/kt47823.kt": {
-   "category": "other syntax (at '\"...\"')",
-   "detail": "expected ')' (at '\"...\"')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt47823.kt"
   },
   "box/box/inlineClasses/kt50974_resultMultiModule.kt": {
@@ -31891,8 +31880,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInListIndicesContinue.kt"
   },
   "box/box/ranges/forInIndices/forInNonOptimizedIndices.kt": {
-   "category": "other syntax (at '0')",
-   "detail": "expected ')' (at '0')",
+   "category": "other: unknown type Collection<*>?",
+   "detail": "unknown type Collection<*>?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/forInNonOptimizedIndices.kt"
   },
@@ -32333,15 +32322,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/forWithPossibleOverflow/forInUntilIntMinValueReversed.kt"
   },
   "box/box/ranges/kt37370.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'continue'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/kt37370.kt"
   },
   "box/box/ranges/kt37370a.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'continue'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/kt37370a.kt"
   },
   "box/box/ranges/kt47492.kt": {
@@ -35016,15 +35003,14 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt35004.kt"
   },
   "box/box/ranges/unsigned/kt36953.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'break'",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ')')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt36953.kt"
   },
   "box/box/ranges/unsigned/kt36953_continue.kt": {
-   "category": "break / continue",
-   "detail": "unknown name 'continue'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt36953_continue.kt"
   },
   "box/box/ranges/unsigned/kt67383.kt": {
@@ -36234,9 +36220,8 @@
    "upstream": "compiler/testData/codegen/box/reified/withInlineTurnedOff.kt"
   },
   "box/box/returnInExpressionBody/returnInExpressionBody.kt": {
-   "category": "other syntax (at '\"...\"')",
-   "detail": "unexpected top-level token (at '\"...\"')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/returnInExpressionBody/returnInExpressionBody.kt"
   },
   "box/box/richErrors/asNonError.kt": {
