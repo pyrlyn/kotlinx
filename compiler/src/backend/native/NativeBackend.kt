@@ -2362,6 +2362,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun builderInfer(b: Block, recv: TypeRef, tps: List<String>, env: MutableMap<String, Ty>) {
         val (ctps, methods) = genericClasses[recv.name]?.let { cd -> cd.typeParams to cd.methods.groupBy { it.name }.mapValues { (_, fs) -> fs.first().params.map { it.type } } }
             ?: BUILDER_STD[recv.name] ?: return
+        /** Return types of the receiver's no-argument methods (`materialize(): CT`). */
+        val rets = genericClasses[recv.name]?.methods?.filter { it.params.isEmpty() && it.ret != null }?.groupBy { it.name }?.mapValues { it.value.first().ret!! } ?: emptyMap()
         if (ctps.size != recv.args.size) return
         val sub = ctps.zip(recv.args).toMap()
         fun subst(r: TypeRef): TypeRef = sub[r.name]?.let { if (r.nullable) TypeRef(it.name, it.args, true) else it } ?: TypeRef(r.name, r.args.map { subst(it) }, r.nullable)
@@ -2379,10 +2381,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 else -> {}
             }
         }
+        /** Lambda-local `val`s: name -> declared type or initializer (types flow through them). */
+        val locals = HashMap<String, VarS>()
         fun stImpl(s: S) {
             when (s) {
                 is ExprS -> ex(s.e)
-                is VarS -> ex(s.init)
+                is VarS -> { locals[s.name] = s; ex(s.init) }
                 is AssignS -> ex(s.value)
                 is RetS -> ex(s.e)
                 else -> {}
@@ -2390,15 +2394,49 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         stF = ::stImpl
         b.stmts.forEach { stImpl(it) }
+        fun free(r: TypeRef): Boolean = (r.name in tps && r.name !in env) || r.args.any { free(it) }
+        /** Follows lambda-local vals to the expression whose type is known outside the lambda. */
+        fun origin(a: E, depth: Int = 0): E { if (depth < 8 && a is NameE && lookup(a.n) == null) locals[a.n]?.let { v -> if (v.type == null && !v.isVar) return origin(v.init, depth + 1) }; return a }
+        /** `materialize()` (a receiver method returning a free type) flowing into a place of known type [t]. */
+        fun sink(a: E, t: Ty) {
+            val o = origin(a)
+            if (o is CallE && o.callee is NameE && o.args.isEmpty() && o.lambda == null && lookup(o.callee.n) == null) {
+                val r = rets[o.callee.n]?.let { subst(it) } ?: return
+                if (free(r) && t != Ty.Unit && t != Ty.RawPtr && t != Ty.Args) unify(r, t, tps, env)
+            }
+        }
+        // Nullable sinks are skipped: class types do not carry nullability, so `CT` would be bound non-null.
+        for (v in locals.values) if (v.type != null && !v.type.nullable) { val vt = try { resolve(v.type) } catch (x: CompileError) { null }; if (vt != null) sink(v.init, vt) }
+        for (c in calls) {
+            val n = (c.callee as NameE).n
+            if (n in methods || c.lambda != null || c.args.any { it is NamedE }) continue
+            val gd = funDecls[n]
+            if (gd != null && gd.typeParams.isNotEmpty() && gd.params.size == c.args.size) {
+                // `shareTypeInfo(x, materialize())` with `fun <T> shareTypeInfo(from: T, to: T)`: the other argument's type.
+                gd.params.forEachIndexed { i, p ->
+                    if (p.type.name !in gd.typeParams || p.type.nullable || p.type.args.isNotEmpty()) return@forEachIndexed
+                    val j = gd.params.indices.firstOrNull { j -> j != i && gd.params[j].type.name == p.type.name && !gd.params[j].type.nullable && origin(c.args[j]).let { o -> !(o is CallE && o.callee is NameE && o.callee.n in rets) } } ?: return@forEachIndexed
+                    val o = origin(c.args[j]); if (o is LambdaE || o is NamedE) return@forEachIndexed
+                    val t = probeType(o) ?: return@forEachIndexed
+                    sink(c.args[i], t)
+                }
+                continue
+            }
+            val ps = sigs[n]?.params ?: continue
+            if (ps.size != c.args.size) continue
+            val decl = funDecls[n]
+            c.args.forEachIndexed { i, a -> if (decl?.params?.getOrNull(i)?.type?.nullable != true) sink(a, ps[i]) }
+        }
         for (c in calls) {
             val n = (c.callee as NameE).n
             val ps = methods[n] ?: continue
             if (ps.size != c.args.size || c.lambda != null) continue
             c.args.forEachIndexed { i, a ->
                 val pr = subst(ps[i])
-                fun free(r: TypeRef): Boolean = (r.name in tps && r.name !in env) || r.args.any { free(it) }
                 if (!free(pr) || a is LambdaE || a is NamedE) return@forEachIndexed
-                val t = probeType(a) ?: return@forEachIndexed
+                val o = origin(a)
+                val t = (if (o is NameE && lookup(o.n) == null) locals[o.n]?.type?.let { try { resolve(it) } catch (x: CompileError) { null } } else null)
+                    ?: probeType(o) ?: return@forEachIndexed
                 if (t != Ty.Unit && t != Ty.RawPtr && t != Ty.Args) unify(pr, t, tps, env)
             }
         }

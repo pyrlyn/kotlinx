@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 14,
   "N/A": 2984,
-  "PASS": 2481,
-  "UNSUPPORTED": 2996
+  "PASS": 2491,
+  "UNSUPPORTED": 2986
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -4044,9 +4044,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/localFunctionName.kt"
   },
   "box/box/callableReference/function/local/localLocal.kt": {
-   "category": "other: unsupported callable reference ::bar",
-   "detail": "unsupported callable reference ::bar",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/localLocal.kt"
   },
   "box/box/callableReference/function/local/recursiveClosure.kt": {
@@ -5955,8 +5954,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/inProperty.kt"
   },
   "box/box/closures/captureOuterProperty/inPropertyDeepObjectChain.kt": {
-   "category": "unknown $anon1 (stdlib API / unsupported decl)",
-   "detail": "unknown function '$anon1'",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/inPropertyDeepObjectChain.kt"
   },
@@ -6074,15 +6073,13 @@
    "upstream": "compiler/testData/codegen/box/closures/closureCapturingGenericParam.kt"
   },
   "box/box/closures/closureInsideClosure/localFunInsideLocalFun.kt": {
-   "category": "unknown x (stdlib API / unsupported decl)",
-   "detail": "unknown function 'x'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/localFunInsideLocalFun.kt"
   },
   "box/box/closures/closureInsideClosure/localFunInsideLocalFunDifferentSignatures.kt": {
-   "category": "unknown x (stdlib API / unsupported decl)",
-   "detail": "unknown function 'x'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/localFunInsideLocalFunDifferentSignatures.kt"
   },
   "box/box/closures/closureInsideClosure/propertyAndFunctionNameClash.kt": {
@@ -6092,14 +6089,14 @@
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/propertyAndFunctionNameClash.kt"
   },
   "box/box/closures/closureInsideClosure/threeLevels.kt": {
-   "category": "unknown bar (stdlib API / unsupported decl)",
-   "detail": "unknown function 'bar'",
+   "category": "unknown baz (stdlib API / unsupported decl)",
+   "detail": "unknown function 'baz'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/threeLevels.kt"
   },
   "box/box/closures/closureInsideClosure/threeLevelsDifferentSignatures.kt": {
-   "category": "unknown bar (stdlib API / unsupported decl)",
-   "detail": "unknown function 'bar'",
+   "category": "unknown baz (stdlib API / unsupported decl)",
+   "detail": "unknown function 'baz'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/closureInsideClosure/threeLevelsDifferentSignatures.kt"
   },
@@ -15586,8 +15583,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt475.kt"
   },
   "box/box/extensionFunctions/kt5467.kt": {
-   "category": "other: unknown method Long.baz()",
-   "detail": "unknown method Long.baz()",
+   "category": "other: unknown property Long.this@foo",
+   "detail": "unknown property Long.this@foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt5467.kt"
   },
@@ -16952,9 +16949,8 @@
    "upstream": "compiler/testData/codegen/box/function/localFunction2.kt"
   },
   "box/box/function/localFunction3.kt": {
-   "category": "unknown local1 (stdlib API / unsupported decl)",
-   "detail": "unknown function 'local1'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/localFunction3.kt"
   },
   "box/box/function/manglingImportedFromObjectWithNI.kt": {
@@ -17279,8 +17275,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt1199.kt"
   },
   "box/box/functions/kt1413.kt": {
-   "category": "unknown local (stdlib API / unsupported decl)",
-   "detail": "unknown function 'local'",
+   "category": "unknown bar (stdlib API / unsupported decl)",
+   "detail": "unknown function 'bar'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt1413.kt"
   },
@@ -18719,9 +18715,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/LambdaArgumentAndBuildeeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/LambdaArgumentAndBuildeeReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/LambdaArgumentAndBuildeeReceiver.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ByAssignmentToALocalVariableMaterializeCase.kt": {
@@ -18771,14 +18766,13 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughGenericFunctionCall.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughLocalVariable.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/sourceSinkFeedContexts/ThroughLocalVariable.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/AnonymousObject.kt": {
-   "category": "unknown $anon0 (stdlib API / unsupported decl)",
-   "detail": "unknown function '$anon0'",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/AnonymousObject.kt"
   },
@@ -18831,9 +18825,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingInnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnumerationType.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnumerationType.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ExplicitlyGenericInnerClass.kt": {
@@ -18855,8 +18848,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/FunctionWithReceiverToUnit.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericLocalClass.kt": {
-   "category": "unknown Local (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Local'",
+   "category": "other: Local$l5 expects 1 type arguments",
+   "detail": "Local$l5 expects 1 type arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericLocalClass.kt"
   },
@@ -18909,14 +18902,13 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ImplicitlyGenericInnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/InnerClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/InnerClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/Int.kt": {
-   "category": "unknown test1 (stdlib API / unsupported decl)",
-   "detail": "unknown function 'test1'",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/Int.kt"
   },
@@ -18927,8 +18919,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/IntersectionType.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/LocalClass.kt": {
-   "category": "unknown Local (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Local'",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/LocalClass.kt"
   },
@@ -18975,9 +18967,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/NullaryFunctionWithReturnValue.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/String.kt": {
-   "category": "unknown test1 (stdlib API / unsupported decl)",
-   "detail": "unknown function 'test1'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/String.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/SuspendingFunction.kt": {
@@ -18993,9 +18984,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/TypeParameter.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ExtensionFunctions.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ExtensionFunctions.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ImmutableExtensionProperties.kt": {
@@ -22877,7 +22867,7 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269225184\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146694304\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -26248,8 +26238,8 @@
    "upstream": "compiler/testData/codegen/box/localClass/localFunctionCallFromLocalClass.kt"
   },
   "box/box/localClass/localFunctionInLocalClass.kt": {
-   "category": "unknown local (stdlib API / unsupported decl)",
-   "detail": "unknown function 'local'",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/localFunctionInLocalClass.kt"
   },
@@ -26507,8 +26497,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/recaptureVarCapturedInLocalClass1.kt"
   },
   "box/box/localClasses/recaptureVarCapturedInLocalClass2.kt": {
-   "category": "unknown localFun (stdlib API / unsupported decl)",
-   "detail": "unknown function 'localFun'",
+   "category": "class bodies / constructors",
+   "detail": "constructor CapturesX expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/recaptureVarCapturedInLocalClass2.kt"
   },
