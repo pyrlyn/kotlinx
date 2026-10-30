@@ -503,6 +503,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             params.add("${t.llvm} %a.${p.name}")
             val l = declare(p.name, t, false, false)
             emit("store ${t.llvm} %a.${p.name}, ptr ${l.slot}")
+            if (p.ctx) scopes.last().vars["\$ctx\$p${tmpN++}"] = l
         }
         if (f.exprBody != null) {
             val v = argFor(f.exprBody, retTy)
@@ -525,6 +526,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         allocas.append("  $slot = alloca $lt\n")
         val l = Local(slot, t, isVar)
         scopes.last().vars[name] = l
+        // Every implicit receiver (also shadowed ones) stays reachable for context arguments as `$ctx$N`.
+        if (name == "this") scopes.last().vars["\$ctx\$r${tmpN++}"] = l
         if (ownsRef && t.isRef) { allocas.append("  store ptr null, ptr $slot\n"); scopes.last().refs.add(l) }
         return l
     }
@@ -692,6 +695,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             params.add("${t.llvm} %a.${p.name}")
             val l = declare(p.name, t, false, false)
             emit("store ${t.llvm} %a.${p.name}, ptr ${l.slot}")
+            if (p.ctx) scopes.last().vars["\$ctx\$p${tmpN++}"] = l
         }
         c.superClass?.let { s ->
             val bd = classDecls.getValue(s)
@@ -945,7 +949,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     }
                 }
                 val tg = s.target
-                if (s.op != "=" && tg is MemberE && tg.recv !is NameE && !tg.safe) {
+                fun pure(x: E) = (x is NameE && lookup(x.n) != null) || x is IntL || (x is NameE && x.n == "this")
+                if (s.op != "=" && tg is IndexE && !(pure(tg.recv) && pure(tg.idx))) {
+                    // `a()[i()] += v`: receiver and index are evaluated once.
+                    withTemps(listOf(genExpr(tg.recv), genExpr(tg.idx))) { (r, i) ->
+                        val t2 = IndexE(r, i).also { it.line = s.line }
+                        assign(t2, BinE(s.op.dropLast(1), t2, s.value).also { it.line = s.line }); Val("", Ty.Unit)
+                    }
+                    return
+                }
+                if (s.op != "=" && tg is MemberE && !pure(tg.recv) && !tg.safe) {
                     // Compound assignment evaluates the receiver once.
                     withTemps(listOf(genExpr(tg.recv))) { (x) ->
                         val t2 = MemberE(x, tg.n, false).also { it.line = s.line }
@@ -1013,6 +1026,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is NameE -> {
                 val l = lookup(target.n)
                 if (l == null && owner != null && (owner!!.index(target.n) >= 0 || "\$set\$${target.n}" in owner!!.methods)) return assign(MemberE(NameE("this"), target.n, false), value)
+                if (l == null && "\$tset\$${target.n}" in funDecls) { releaseIfOwned(genNamedCall("\$tset\$${target.n}", CallE(NameE("\$tset\$${target.n}"), emptyList(), listOf(value), null).also { it.line = line })); return }
                 if (l == null) fail("unknown variable '${target.n}'")
                 if (!l.isVar) fail("val '${target.n}' cannot be reassigned")
                 var v = coerce(argFor(value, l.t, true), l.t)
@@ -1276,9 +1290,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (e.op.startsWith("::")) return genRef(e, if (e.e is NullL) null else e.e, e.op.removePrefix("::"))
                 val v = genExpr(e.e)
                 if (e.op == "!!") return genNonNull(v)
-                if (v.t is Ty.Cls || v.t is Ty.Iface) return method(v, if (e.op == "-") "unaryMinus" else "not", opCall("", null))
+                if (v.t is Ty.Cls || v.t is Ty.Iface) return method(v, when (e.op) { "-" -> "unaryMinus"; "+" -> "unaryPlus"; else -> "not" }, opCall("", null))
                 when (e.op) {
                     "!" -> Val(emitT("xor i1 ${coerce(v, Ty.I1).v}, true"), Ty.I1)
+                    "+" -> if (v.t.isNum) coerce(v, if (v.t == Ty.I8) Ty.I32 else v.t) else method(v, "unaryPlus", opCall("", null))
                     "-" -> when {
                         v.t.isFp -> Val(emitT("fneg ${v.t.llvm} ${v.v}"), v.t)
                         v.t.isInt -> { val w = coerce(v, if (v.t == Ty.I8) Ty.I32 else v.t); Val(emitT("sub ${w.t.llvm} 0, ${w.v}"), w.t) }
@@ -1995,7 +2010,41 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
     private fun Ty.v0isNull() = this == Ty.RawPtr
 
-    private fun genNamedCall(n: String, e0: CallE): Val {
+    /** Calls whose context arguments were filled in already. */
+    private val ctxFilled = HashSet<CallE>() // CallE has identity equality
+
+    private fun fits(from: Ty, to: Ty): Boolean = from == to || isAny(to) ||
+        (from is Ty.Cls && to is Ty.Iface && to.name in classes.getValue(from.name).supers) ||
+        (from is Ty.Cls && to is Ty.Cls && to.name in classes.getValue(from.name).ancestors) ||
+        (from is Ty.Iface && to is Ty.Iface && ifaceDecls[from.name]?.supers?.contains(to.name) == true)
+
+    /** The innermost implicit value (receiver, context parameter, `this` of the class) of type [t]. */
+    private fun ctxArg(t: Ty): E {
+        for (i in scopes.indices.reversed()) {
+            val vs = scopes[i].vars.entries.filter { it.key.startsWith("\$ctx\$") && fits(it.value.t, t) }
+            if (vs.isNotEmpty()) return NameE(vs.maxBy { it.key.drop(6).toIntOrNull() ?: -1 }.key).also { it.line = line }
+        }
+        owner?.let { o -> if (fits(Ty.Cls(o.name), t)) return NameE("this").also { it.line = line } }
+        fail("no context argument of type $t in scope")
+    }
+
+    /** [e] with the context arguments of [ps] inserted (positional, or named when [e] uses named arguments). */
+    private fun withCtx(ps: List<Param>?, e: CallE, tenvFor: (TypeRef) -> Ty = { resolve(it) }): CallE? {
+        if (ps == null || ps.none { it.ctx } || e in ctxFilled) return null
+        val named = e.args.any { it is NamedE }
+        val args = ArrayList(e.args)
+        if (named) { for (p in ps) if (p.ctx) args.add(0, NamedE(p.name, ctxArg(tenvFor(p.type)))) }
+        else ps.forEachIndexed { i, p -> if (p.ctx) args.add(minOf(i, args.size), ctxArg(tenvFor(p.type))) }
+        return CallE(e.callee, e.typeArgs, args, e.lambda).also { it.line = e.line; ctxFilled.add(it) }
+    }
+
+    private fun genNamedCall(n: String, e00: CallE): Val {
+        // A member of the implicit receiver wins over a top-level function with context parameters.
+        if (lookup(n) == null && n in funDecls && n !in LiftedLocals.names && e00 !in ctxFilled) lookup("this")?.let { l ->
+            val rt = l.t
+            if (rt is Ty.Cls && n in classes.getValue(rt.name).methods) return method(genExpr(NameE("this").also { it.line = line }), n, e00)
+        }
+        val e0 = if (lookup(n) == null) withCtx(funDecls[n]?.params, e00) ?: e00 else e00
         if (n in classDecls && lookup(n) == null) secondaryFor(n, e0)?.let { return genNamedCall(it, e0) }
         owner?.let { o -> val i = o.index(n); if (i >= 0 && n !in o.methods && fnSig(o.fields[i].second) != null) return invokeFn(property(Val("%this", Ty.Cls(o.name)), n), e0) }
         owner?.let { o -> if (n in o.methods) return callMethod(Val("%this", Ty.Cls(o.name)), o, n, e0) }
@@ -3038,8 +3087,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     /** Statically bound call of a class's own method. */
-    private fun callMethod(r: Val, ci: ClassInfo, n: String, e0: CallE): Val {
+    private fun callMethod(r: Val, ci: ClassInfo, n: String, e00: CallE): Val {
         val ps = methodParams(ci, n)
+        val e0 = withCtx(ps, e00) ?: e00
         if (ps != null && (e0.args.any { it is NamedE } || allArgs(e0).size < ps.size || ps.any { it.vararg })) {
             if (r.v == "%this") return callMethod0(r, ci, n, normalize(ps, e0, NameE("this").also { it.line = line }, ci))
             // The receiver is visible to default arguments as `$recv` (a fixed name keeps [normalize]'s memo valid).

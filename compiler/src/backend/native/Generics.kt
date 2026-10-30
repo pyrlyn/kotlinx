@@ -243,7 +243,7 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
 
     fun field(f: FieldD): FieldD = fieldMemo.getOrPut(f) { FieldD(f.name, f.type?.let { ty(it) }, f.isVar, f.init?.let { e(it) }, f.lateinit) }
 
-    fun fn(f: FunD): FunD = FunD(f.name, f.params.map { Param(it.name, ty(it.type), it.default?.let { d -> e(d) }) }, f.ret?.let { ty(it) },
+    fun fn(f: FunD): FunD = FunD(f.name, f.params.map { Param(it.name, ty(it.type), it.default?.let { d -> e(d) }, it.vararg, it.ctx) }, f.ret?.let { ty(it) },
         f.body?.let { block(it) }, f.exprBody?.let { e(it) }, f.line, f.typeParams)
 
     fun block(b: Block): Block = Block(b.stmts.map { s(it) }, b.params, b.paramTypes.map { it?.let { t -> ty(t) } })
