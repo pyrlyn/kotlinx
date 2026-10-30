@@ -32,6 +32,10 @@
 // geometric backoff while majors find no garbage) do.
 // Trial deletion's MarkGray/Scan run in parallel on KX_GC_THREADS threads for every detection with at
 // least PAR_MIN_ROOTS roots and an expected traversal of at least PAR_MIN_WORK objects (minor or major).
+// Bounded slices: a minor detection takes at most KX_GC_SLICE_ROOTS roots, validation at most
+// VALIDATE_BUDGET members per log; the leftovers carry over to the next log. Opt-in experiments:
+// KX_GC_CARRY_QUEUE=n skips detection while n logs are queued, KX_GC_MAJOR_SLACK=k lets the queue grow
+// k-fold during a major (both measured worse, see bench/results/gc/exp/d3-slices).
 // Program exit drains the queue only for --leak-check / --alloc malloc builds or KX_GC_EXIT_DRAIN=1.
 // See compiler/gc/docs/architecture.md, section 7.
 #include <pthread.h>
@@ -178,6 +182,8 @@ void rt_cc_dead(void *p) { (void)p; rt_panic("epoch GC: rt_cc_dead"); }
 #define LOG_CAP 32768
 #define MAX_QUEUED_DEFAULT 16   /* logs (256 KiB each) the collector may fall behind; KX_GC_MAX_QUEUED */
 static size_t max_queued;
+static int major_slack = -1;          /* KX_GC_MAJOR_SLACK: queue limit multiplier while a major runs (default 1: off; measured: the mutator fills any slack within a major) */
+static _Atomic int c_in_major;         /* collector is in a major detection */
 enum { OP_INC = 0, OP_DEC = 1, OP_MOD = 2 };
 typedef struct Log { struct Log *next; size_t n; uint64_t seq; uintptr_t a[LOG_CAP]; } Log;
 static Log *cur;                                   /* mutator */
@@ -215,7 +221,12 @@ static void handoff(void) {
         pthread_cond_signal(&cv_work);
     }
     if (!max_queued) { const char *e = getenv("KX_GC_MAX_QUEUED"); max_queued = e && atoi(e) > 0 ? (size_t)atoi(e) : MAX_QUEUED_DEFAULT; }
-    if (q_len > max_queued) { int64_t w0 = rt_nanos(); while (q_len > max_queued) pthread_cond_wait(&cv_done, &mu); int64_t d = rt_nanos() - w0; dbg_bp_ns += d; if (d > dbg_bp_max) dbg_bp_max = d; }
+    if (major_slack < 0) { const char *e = getenv("KX_GC_MAJOR_SLACK"); major_slack = e && *e ? atoi(e) : 1; if (major_slack < 1) major_slack = 1; }
+    /* a major detection is one long collector step: let the queue grow (bounded) instead of stopping the
+     * mutator; the backlog is carried over, and the raised limit stays until it is back under max_queued,
+     * so the mutator never waits for the whole backlog at once */
+#define Q_LIMIT() (atomic_load_explicit(&c_in_major, memory_order_relaxed) ? max_queued * (size_t)major_slack : max_queued)
+    if (q_len > Q_LIMIT()) { int64_t w0 = rt_nanos(); while (q_len > Q_LIMIT()) pthread_cond_wait(&cv_done, &mu); int64_t d = rt_nanos() - w0; dbg_bp_ns += d; if (d > dbg_bp_max) dbg_bp_max = d; }
     stack_move(&ret_local, &ret_shared);
     if (!cur) cur = log_new();
     pthread_mutex_unlock(&mu);
@@ -554,6 +565,10 @@ static void batch_close(uint64_t valid_after) {
     cands_tail = b;
     dbg_members += (int64_t)n; cw_m.len = 0; cw_ends.len = 0;
 }
+#define SLICE_ROOTS 32768   /* KX_GC_SLICE_ROOTS; 0 = unbounded */
+static size_t slice_roots = SLICE_ROOTS;
+static size_t q_seen;
+static int64_t carry_q = -1;   /* KX_GC_CARRY_QUEUE: skip detection at this queue length (default 0 = never) */          /* queue length when the collector took the current log */
 static uint64_t c_valid_after;                      /* hand-off count when the current detection ended */
 static PtrStack c_deferred;   /* buffered roots whose minor detection stopped at the old generation */
 /* Minor (major = 0): stable objects are opaque. Roots left non-white after a minor detection that hit a
@@ -564,6 +579,11 @@ static void detect(int major) {
     c_major = major;
     if (major) { dbg_majors++; for (size_t i = 0; i < c_deferred.len; i++) { void *d = c_deferred.items[i]; if (color(d) == BLACK) set_color(d, PURPLE); stack_push(&c_roots, d); } c_deferred.len = 0; c_deferred_new = 0; }
     PtrStack roots = c_roots; c_roots = (PtrStack){0};
+    /* bounded slice: a minor takes at most slice_roots roots, the rest stays buffered for the next one */
+    if (!major && slice_roots && roots.len > slice_roots) {
+        for (size_t i = slice_roots; i < roots.len; i++) stack_push(&c_roots, roots.items[i]);
+        roots.len = slice_roots;
+    }
     size_t k = 0;
     /* Pass 1: unbuffer, and free roots that died while buffered. Freeing cascades through dec_apply and
      * may free roots already unbuffered here (count 0, BLACK), so the roots to trace are chosen only
@@ -637,9 +657,11 @@ static size_t validate(uint64_t id, Members m) {
     return freed;
 }
 /* Validates every candidate set detected before hand-off `upto` (all sets when force). */
+#define VALIDATE_BUDGET 65536   /* candidate members validated per log; the rest waits for the next log */
 static size_t validate_ready(uint64_t upto, int force) {
-    size_t freed = 0;
-    while (cands && (force || cands->valid_after < upto)) {
+    size_t freed = 0, seen = 0;
+    while (cands && (force || cands->valid_after < upto) && (force || seen < VALIDATE_BUDGET)) {
+        seen += cands->nsets ? cands->ends[cands->nsets - 1] : 0;
         Batch *b = cands; cands = b->next; if (!cands) cands_tail = NULL;
         size_t start = 0;
         for (size_t i = 0; i < b->nsets; i++) {
@@ -665,24 +687,32 @@ static void full_cycle(void) {
 }
 static void *collector_main(void *arg) {
     (void)arg;
+    { const char *e = getenv("KX_GC_SLICE_ROOTS"); if (e && *e) slice_roots = (size_t)atoll(e); }
     start_helpers();
     pthread_mutex_lock(&mu);
     for (;;) {
         while (!q_head && !full_req && !shutting) { coll_quiet = 1; pthread_cond_wait(&cv_work, &mu); }
         coll_quiet = 0;
         if (q_head) {
-            Log *l = q_head; q_head = l->next; if (!q_head) q_tail = NULL; q_len--;
+            Log *l = q_head; q_head = l->next; if (!q_head) q_tail = NULL; q_len--; q_seen = q_len;
             pthread_cond_broadcast(&cv_done);
             pthread_mutex_unlock(&mu);
             int64_t ta = rt_nanos(); apply_log(l); dbg_logs++;
             int64_t tb = rt_nanos(); size_t freed = validate_ready(l->seq, 0);
             int64_t tc = rt_nanos(); dbg_t_apply += tb - ta; dbg_t_valid += tc - tb;
             int64_t major_at = major_ratio * (c_stable_n > (int64_t)c_threshold ? c_stable_n : (int64_t)c_threshold);
-            if (c_roots.len >= c_threshold || c_deferred_new >= major_at) {
+            /* Carry-over (opt-in, KX_GC_CARRY_QUEUE): while the queue holds that many logs, only apply logs and
+             * leave detection (roots stay buffered) for a later log, unless the buffer grew 8x past the
+             * threshold. Detection work then never stacks up behind a full queue. */
+            if (carry_q < 0) { const char *e = getenv("KX_GC_CARRY_QUEUE"); carry_q = e && *e ? atoll(e) : 0; }
+            int behind = carry_q > 0 && (int64_t)q_seen >= carry_q && c_roots.len < 8 * c_threshold;
+            if (!behind && (c_roots.len >= c_threshold || c_deferred_new >= major_at)) {
                 size_t nroots = c_roots.len;
                 int64_t m0 = dbg_members + dbg_dead, w0 = c_traversed;
                 int major = c_deferred_new >= major_at;
-                int64_t td = rt_nanos(); detect(major); dbg_t_detect += rt_nanos() - td;
+                if (major) { pthread_mutex_lock(&mu); atomic_store(&c_in_major, 1); pthread_cond_broadcast(&cv_done); pthread_mutex_unlock(&mu); }
+                int64_t td = rt_nanos(); detect(major);
+                dbg_t_detect += rt_nanos() - td;
                 gc_st.collections++;
                 /* adaptive: traversal work mostly spent on live data -> detect less often */
                 int64_t found = dbg_members + dbg_dead - m0, work = c_traversed - w0;
@@ -698,6 +728,7 @@ static void *collector_main(void *arg) {
             publish_returns();
             pthread_mutex_lock(&mu);
             applied = l->seq; l->next = log_pool; log_pool = l;
+            if (q_len <= max_queued && atomic_load_explicit(&c_in_major, memory_order_relaxed)) atomic_store(&c_in_major, 0);
             pthread_cond_broadcast(&cv_done);
         } else if (full_req) {
             pthread_mutex_unlock(&mu);
