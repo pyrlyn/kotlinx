@@ -143,7 +143,7 @@ changes the generated code for traced (cyclic) classes only:
 `rt_gc_write_barrier` is an empty function in every other implementation and is never emitted for them.
 
 Epoch boundary (log full, 32768 entries): the mutator hands the log over (one mutex round-trip) and frees
-dead objects returned by the collector under `KX_GC_FREE_BUDGET_US` (default 200 us); allocation also frees
+dead objects returned by the collector under `KX_GC_FREE_BUDGET_US` (default half the target pause, 1.5 ms); allocation also frees
 two returned objects per call. If the collector is more than `KX_GC_MAX_QUEUED` logs behind (default 16,
 256 KiB each), the boundary waits (back-pressure); that wait is counted as a pause.
 
@@ -199,7 +199,7 @@ collection event callback.
 | `NEWKOTLIN_BDWGC_DIR` | compile time: bdwgc install prefix for `--gc=boehm` |
 | `KX_GC_STATS=1` | run time: print `gc-stats: gc=... collections=... reclaimed=... pause_total=... pause_max=...` (ms) at exit |
 | `KX_GC_BUDGET_US` | run time, `incremental` only: per-step budget in microseconds (default 500) |
-| `KX_GC_FREE_BUDGET_US` | run time, `epoch` only: time per epoch boundary for freeing returned objects (default 200) |
+| `KX_GC_FREE_BUDGET_US` | run time, `epoch` only: time per epoch boundary for freeing returned objects (default half of `KX_GC_TARGET_PAUSE_US`: 1500) |
 | `KX_GC_THREADS` | run time, `epoch` only: collector threads for parallel trial deletion (default min(cores, 4)) |
 | `KX_GC_MAX_QUEUED` | run time, `epoch` only: logs the collector may fall behind before the program waits (default 16) |
 | `KX_GC_EXIT_DRAIN=1` | run time, `epoch` only: drain the queue at exit even without `--leak-check` / `--alloc malloc` |

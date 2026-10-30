@@ -10,8 +10,8 @@
 //     which logs the object as modified.
 //   * Epoch boundary (log full, LOG_CAP entries): the log is handed to the collector (one mutex
 //     round-trip) and the mutator frees objects the collector found dead, under a time budget
-//     (KX_GC_FREE_BUDGET_US, default 200 us). The boundary is the only pause; it blocks only if the
-//     collector falls more than KX_GC_MAX_QUEUED (default 16) logs behind (back-pressure).
+//     (KX_GC_FREE_BUDGET_US, default half of KX_GC_TARGET_PAUSE_US). The boundary is the only pause; it blocks only if the
+//     collector falls more than KX_GC_MAX_QUEUED (adaptive 2-64 by default) logs behind (back-pressure).
 // Collector (background thread), per log, in order:
 //   1. apply all increments, then all decrements (the mutator is single-threaded, so no count drops to
 //      zero early); every touched object is marked dirty. Count zero -> dead: decrement its traced children
@@ -203,7 +203,11 @@ static pthread_cond_t cv_work = PTHREAD_COND_INITIALIZER, cv_done = PTHREAD_COND
 static pthread_t coll_thread;
 static int coll_started;
 static int in_boundary;
+/* KX_GC_FREE_BUDGET_US: freeing budget per boundary, default half the target pause (measured: 200 us let
+ * returned garbage pile up, 3x peak RSS on cyclic_garbage; freeing only beyond a backlog of LOG_CAP
+ * objects kept 1.4x of it). The boundary still ends by the target pause. */
 static int64_t free_budget_ns = -1;
+#define FREE_BUDGET_MIN_NS 200000
 
 static void *collector_main(void *);
 static Log *log_new(void) {
@@ -280,9 +284,9 @@ __attribute__((noinline)) static void boundary(void) {
     }
     in_boundary = 1;
     int64_t t0 = rt_nanos();
-    if (free_budget_ns < 0) { const char *e = getenv("KX_GC_FREE_BUDGET_US"); free_budget_ns = (e && *e ? atoll(e) : 200) * 1000; }
     ep_epochs++;
     handoff();
+    if (free_budget_ns < 0) { const char *e = getenv("KX_GC_FREE_BUDGET_US"); free_budget_ns = e && *e ? atoll(e) * 1000 : (q_target_ns / 2 > FREE_BUDGET_MIN_NS ? q_target_ns / 2 : FREE_BUDGET_MIN_NS); }
     process_returns(free_budget_ns, t0);
     if (rt_nanos() - t0 > dbg_bmax) dbg_bmax = rt_nanos() - t0;
     note_pause(t0);
@@ -397,15 +401,19 @@ static void dec_apply(void *p) {
     }
     else possible_root(p);
 }
+/* Increments first, then decrements (see the header comment). The first pass compacts the decrements to
+ * the front of the log (it is collector-private once dequeued), so the second pass reads only those
+ * (software prefetch of the headers measured ~15% slower). */
 static void apply_log(Log *l) {
-    for (size_t i = 0; i < l->n; i++) {
+    size_t n = l->n, nd = 0;
+    for (size_t i = 0; i < n; i++) {
         uintptr_t e = l->a[i]; void *p = (void *)(e & ~(uintptr_t)3);
-        if ((e & 3) == OP_INC) { *header(p) += 1; touch_keep(p); }
+        if ((e & 3) == OP_INC) { *header(p) = (*header(p) + 1) | DIRTY_BIT; }
         else if ((e & 3) == OP_MOD) touch_keep(p);
+        else l->a[nd++] = e;
     }
-    for (size_t i = 0; i < l->n; i++) {
-        uintptr_t e = l->a[i];
-        if ((e & 3) == OP_DEC) dec_apply((void *)(e & ~(uintptr_t)3));
+    for (size_t i = 0; i < nd; i++) {
+        dec_apply((void *)(l->a[i] & ~(uintptr_t)3));
     }
 }
 
@@ -850,13 +858,15 @@ typedef struct { size_t n; void **a; } Members;
 static size_t validate(uint64_t id, Members m) {
     int ok = 1;
     v_sid = id & CRC_MAX;
-    for (size_t i = 0; i < m.n && ok; i++) if (has(m.a[i], DIRTY_BIT | DEAD_BIT)) ok = 0;   /* Delta */
-    if (!ok) dbg_fail_delta++;
-    if (ok) {                                                                                        /* Sigma */
-        int64_t ext = 0; v_internal = 0;
-        for (size_t i = 0; i < m.n; i++) { void *x = m.a[i]; ext += (int64_t)ref_count(x); vtab(x)->trav(x, count_child); }
-        if (ext - v_internal != 0) { ok = 0; dbg_fail_sigma++; }
+    /* Delta and Sigma in one pass over the members (one header load each): stop at the first touched or
+     * dead member, otherwise sum the counts and the member-to-member edges */
+    int64_t ext = 0; v_internal = 0;
+    for (size_t i = 0; i < m.n; i++) {
+        void *x = m.a[i]; uint64_t h = *header(x);
+        if (h & (DIRTY_BIT | DEAD_BIT)) { ok = 0; dbg_fail_delta++; break; }
+        ext += (int64_t)ref_count(x); vtab(x)->trav(x, count_child);
     }
+    if (ok && ext - v_internal != 0) { ok = 0; dbg_fail_sigma++; }
     size_t freed = 0;
     if (ok) {
         for (size_t i = 0; i < m.n; i++) { void *x = m.a[i]; vtab(x)->trav(x, free_cycle_child); }
@@ -897,17 +907,19 @@ static size_t validate_ready(uint64_t upto, int force) {
 // by EARLY_SCAN_MAX entries (KX_GC_EARLY_SCAN; 0 disables).
 #define EARLY_SCAN_MAX (32 * LOG_CAP)
 static int64_t early_scan_max = -1, dbg_early_ok, dbg_early_hit, dbg_early_skip;
-typedef struct { void **k; size_t cap, n; } PSet;
+/* Open-addressing pointer set; `used` lists the occupied slots so clearing costs O(n), not O(capacity) */
+typedef struct { void **k; size_t cap, n; PtrStack used; } PSet;
 static PSet es;
+static void ps_clear(PSet *s) { for (size_t i = 0; i < s->used.len; i++) s->k[(size_t)(uintptr_t)s->used.items[i]] = NULL; s->used.len = 0; s->n = 0; }
 static void ps_add(PSet *s, void *p) {
     if ((s->n + 1) * 2 > s->cap) {
-        void **old = s->k; size_t oc = s->cap; s->cap = oc ? oc * 2 : 1024; s->k = calloc(s->cap, sizeof(void *)); if (!s->k) rt_panic("OutOfMemoryError"); s->n = 0;
+        void **old = s->k; size_t oc = s->cap; s->cap = oc ? oc * 2 : 1024; s->k = calloc(s->cap, sizeof(void *)); if (!s->k) rt_panic("OutOfMemoryError"); s->n = 0; s->used.len = 0;
         for (size_t i = 0; i < oc; i++) if (old[i]) ps_add(s, old[i]);
         free(old);
     }
     size_t m = s->cap - 1, i = (size_t)(((uint64_t)(uintptr_t)p >> 3) * 0x9E3779B97F4A7C15ULL >> 20) & m;
     while (s->k[i]) { if (s->k[i] == p) return; i = (i + 1) & m; }
-    s->k[i] = p; s->n++;
+    s->k[i] = p; s->n++; stack_push(&s->used, (void *)(uintptr_t)i);
 }
 static int ps_has(PSet *s, void *p) {
     if (!s->cap) return 0;
@@ -935,7 +947,7 @@ static size_t try_early(uint64_t applied_seq) {
         b->tried = 1;
         if (!complete || (int64_t)entries > early_scan_max) { dbg_early_skip++; pp = &b->next; continue; }
         size_t n = b->nsets ? b->ends[b->nsets - 1] : 0;
-        es.n = 0; if (es.cap) memset(es.k, 0, es.cap * sizeof(void *));
+        ps_clear(&es);
         for (size_t i = 0; i < n; i++) { ps_add(&es, b->members[i]); vtab(b->members[i])->trav(b->members[i], es_child); }
         int hit = 0;
         for (size_t j = 0; j < np && !hit; j++)
