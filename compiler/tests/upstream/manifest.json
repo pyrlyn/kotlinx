@@ -1,11 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "COMPILER_CRASH": 2,
-  "MISCOMPILE": 38,
+  "MISCOMPILE": 29,
   "N/A": 2984,
-  "PASS": 2069,
-  "UNSUPPORTED": 3382
+  "PASS": 2083,
+  "UNSUPPORTED": 3379
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -326,13 +325,13 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/argumentOrderInSuperCall.kt"
   },
   "box/box/argumentOrder/arguments.kt": {
-   "detail": "exit=0 stdout='fail1: 132 != 123 or xab != xab\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/arguments.kt"
   },
   "box/box/argumentOrder/captured.kt": {
-   "detail": "exit=0 stdout='fail 1: 0_1_9 != 1_0_9 or 0_1_9 != 0_1_9\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/captured.kt"
   },
   "box/box/argumentOrder/capturedInExtension.kt": {
@@ -342,13 +341,13 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/capturedInExtension.kt"
   },
   "box/box/argumentOrder/defaults.kt": {
-   "detail": "exit=0 stdout='fail: xOyK != KOxy or 1OK1 != 1OK1\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/defaults.kt"
   },
   "box/box/argumentOrder/extension.kt": {
-   "detail": "exit=0 stdout='fail 1: 0_1_L != 1_0_L or 1_0_1_L != 1_0_1_L\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/extension.kt"
   },
   "box/box/argumentOrder/extensionInClass.kt": {
@@ -358,8 +357,8 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/extensionInClass.kt"
   },
   "box/box/argumentOrder/kt17691WithEnabledFeature.kt": {
-   "category": "other: Unit cannot be used as Any",
-   "detail": "Unit cannot be used as Any",
+   "category": "other: cannot store Unit in '$a0'",
+   "detail": "cannot store Unit in '$a0'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/argumentOrder/kt17691WithEnabledFeature.kt"
   },
@@ -380,18 +379,18 @@
    "upstream": "compiler/testData/codegen/box/argumentOrder/lambdaMigrationInClass.kt"
   },
   "box/box/argumentOrder/simple.kt": {
-   "detail": "exit=0 stdout='fail 1: OKL != KOL or OKL != OKL\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simple.kt"
   },
   "box/box/argumentOrder/simpleInClass.kt": {
-   "detail": "exit=0 stdout='fail 1: OKL != KOL or OKLZ != OKLZ\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/simpleInClass.kt"
   },
   "box/box/argumentOrder/singleSideEffect.kt": {
-   "detail": "exit=0 stdout='fail: cba != abc\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/argumentOrder/singleSideEffect.kt"
   },
   "box/box/argumentOrder/varargAndDefaultParameters_ForNative.kt": {
@@ -439,9 +438,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_selfComparison.kt"
   },
   "box/box/arithmetic/basic_shifts.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'ext$Int$myshr' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_shifts.kt"
   },
   "box/box/arithmetic/basic_uintTests.kt": {
@@ -462,9 +460,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/divisionByZero.kt"
   },
   "box/box/arithmetic/github1856.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/github1856.kt"
   },
   "box/box/arrays/arrayConstructorWithNonInlineLambda.kt": {
@@ -1399,20 +1396,20 @@
    "upstream": "compiler/testData/codegen/box/bce/withGetter.kt"
   },
   "box/box/binaryOp/bitwiseOp.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOp.kt"
   },
   "box/box/binaryOp/bitwiseOpAny.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpAny.kt"
   },
   "box/box/binaryOp/bitwiseOpNullable.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpNullable.kt"
   },
@@ -1541,8 +1538,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/overflowLong.kt"
   },
   "box/box/binaryOp/primitiveEqualsSafeCall.kt": {
-   "category": "other: unknown method Int.equals()",
-   "detail": "unknown method Int.equals()",
+   "category": "other: safe call result must be a reference",
+   "detail": "safe call result must be a reference",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/primitiveEqualsSafeCall.kt"
   },
@@ -1709,8 +1706,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/checkcastAndInstanceOf2.kt"
   },
   "box/box/boxingOptimization/explicitEqualsOnDouble.kt": {
-   "category": "other: unknown method Double.equals()",
-   "detail": "unknown method Double.equals()",
+   "category": "other: Double.equals() is not supported",
+   "detail": "Double.equals() is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/explicitEqualsOnDouble.kt"
   },
@@ -2036,8 +2033,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/delegationProperty.kt"
   },
   "box/box/bridges/diamond.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/diamond.kt"
   },
@@ -2083,8 +2080,9 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeGenericCovariantOverride.kt"
   },
   "box/box/bridges/fakeGenericCovariantOverrideWithDelegation.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeGenericCovariantOverrideWithDelegation.kt"
   },
   "box/box/bridges/fakeOverride/abstractFakeOverride.kt": {
@@ -2270,8 +2268,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/internalMethodOverridePublishedApi.kt"
   },
   "box/box/bridges/kt12416.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at ',')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/kt12416.kt"
   },
@@ -2340,8 +2338,9 @@
    "upstream": "compiler/testData/codegen/box/bridges/manyTypeArgumentsSubstitutedSuccessively.kt"
   },
   "box/box/bridges/methodFromTrait.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/methodFromTrait.kt"
   },
   "box/box/bridges/methodWithDefaultParameter.kt": {
@@ -2483,8 +2482,9 @@
    "upstream": "compiler/testData/codegen/box/bridges/simple.kt"
   },
   "box/box/bridges/simpleEnum.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/simpleEnum.kt"
   },
   "box/box/bridges/simpleGenericMethod.kt": {
@@ -2505,8 +2505,9 @@
    "upstream": "compiler/testData/codegen/box/bridges/simpleReturnType.kt"
   },
   "box/box/bridges/simpleTraitImpl.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/simpleTraitImpl.kt"
   },
   "box/box/bridges/simpleUpperBound.kt": {
@@ -2561,8 +2562,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/differentErasureInSuperClassComplex.kt"
   },
   "box/box/bridges/substitutionInSuperClass/enum.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/enum.kt"
   },
@@ -2748,19 +2749,21 @@
    "upstream": "compiler/testData/codegen/box/bridges/traitImplInheritsTraitImpl.kt"
   },
   "box/box/bridges/twoParentsWithDifferentMethodsTwoBridges.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithDifferentMethodsTwoBridges.kt"
   },
   "box/box/bridges/twoParentsWithDifferentMethodsTwoBridges2.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at ',')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithDifferentMethodsTwoBridges2.kt"
   },
   "box/box/bridges/twoParentsWithTheSameMethodOneBridge.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithTheSameMethodOneBridge.kt"
   },
   "box/box/bridges/typeParameterInExtensionReceiver.kt": {
@@ -4232,8 +4235,9 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/topLevelFromTopLevelUnitOneStringArg.kt"
   },
   "box/box/callableReference/function/traitImplMethodWithClassReceiver.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/traitImplMethodWithClassReceiver.kt"
   },
   "box/box/callableReference/function/traitMember.kt": {
@@ -5086,8 +5090,9 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/property.kt"
   },
   "box/box/classDelegation/withBridge.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classDelegation/withBridge.kt"
   },
   "box/box/classLiteral/bareArray.kt": {
@@ -5234,9 +5239,8 @@
    "upstream": "compiler/testData/codegen/box/classes/delegationGenericLongArg.kt"
   },
   "box/box/classes/delegationMethodsWithArgs.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/delegationMethodsWithArgs.kt"
   },
   "box/box/classes/exceptionConstructor.kt": {
@@ -5415,9 +5419,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1726.kt"
   },
   "box/box/classes/kt1759.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt1759.kt"
   },
   "box/box/classes/kt1891.kt": {
@@ -5540,8 +5543,9 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2784.kt"
   },
   "box/box/classes/kt285.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt285.kt"
   },
   "box/box/classes/kt3001.kt": {
@@ -8901,9 +8905,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2259.kt"
   },
   "box/box/controlStructures/kt2291.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt2291.kt"
   },
   "box/box/controlStructures/kt237.kt": {
@@ -8960,9 +8963,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt3280.kt"
   },
   "box/box/controlStructures/kt416.kt": {
-   "category": "other: unknown method Int.plus()",
-   "detail": "unknown method Int.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt416.kt"
   },
   "box/box/controlStructures/kt42455.kt": {
@@ -8984,9 +8986,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt513.kt"
   },
   "box/box/controlStructures/kt628.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'test7' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt628.kt"
   },
   "box/box/controlStructures/kt769.kt": {
@@ -12548,13 +12549,15 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971.kt"
   },
   "box/box/defaultArguments/function/kt15971_2.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971_2.kt"
   },
   "box/box/defaultArguments/function/kt15971_3.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/kt15971_3.kt"
   },
   "box/box/defaultArguments/function/kt36188.kt": {
@@ -13758,8 +13761,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/genericProperty.kt"
   },
   "box/box/delegation/hiddenSuperOverrideIn1.0.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected end of statement (at ':')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/hiddenSuperOverrideIn1.0.kt"
   },
@@ -13897,8 +13900,9 @@
    "upstream": "compiler/testData/codegen/box/devirtualization/kt67218c.kt"
   },
   "box/box/devirtualization/kt67218i.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/devirtualization/kt67218i.kt"
   },
   "box/box/devirtualization/lateinitInterface.kt": {
@@ -17930,8 +17934,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/nullableIntEquals.kt"
   },
   "box/box/ieee754/safeCall.kt": {
-   "category": "other: unknown method Double.equals()",
-   "detail": "unknown method Double.equals()",
+   "category": "other: Double.equals() is not supported",
+   "detail": "Double.equals() is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/safeCall.kt"
   },
@@ -20383,8 +20387,8 @@
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/kt49370.kt"
   },
   "box/box/inlineArgsInPlace/kt49407.kt": {
-   "category": "other: unknown method Int.plus()",
-   "detail": "unknown method Int.plus()",
+   "category": "other: unknown method Long.mod()",
+   "detail": "unknown method Long.mod()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/kt49407.kt"
   },
@@ -23097,12 +23101,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609822944\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952096\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146693920\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 789664\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -23313,13 +23317,15 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCall.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCallGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCall.kt": {
@@ -23377,13 +23383,15 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/interfaceSuperCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCall.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCallGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/overriddenDefaultInterfaceMethodCallGeneric.kt"
   },
   "box/box/inlineClasses/iterateOverArrayOfInlineClassValues.kt": {
@@ -23659,13 +23667,15 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680Generic.kt"
   },
   "box/box/inlineClasses/kt38680a.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680a.kt"
   },
   "box/box/inlineClasses/kt38680aGeneric.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680aGeneric.kt"
   },
   "box/box/inlineClasses/kt38680b.kt": {
@@ -25584,8 +25594,8 @@
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/conservativeItable.kt"
   },
   "box/box/interfaceCallsNCasts/diamond.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/diamond.kt"
   },
@@ -25613,9 +25623,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/charToInt.kt"
   },
   "box/box/intrinsics/ea35953.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/ea35953.kt"
   },
   "box/box/intrinsics/incWithLabel.kt": {
@@ -25672,9 +25681,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt8666.kt"
   },
   "box/box/intrinsics/longRangeWithExplicitDot.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/longRangeWithExplicitDot.kt"
   },
   "box/box/intrinsics/nonShortCircuitAnd.kt": {
@@ -25717,8 +25725,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
   "box/box/intrinsics/trimMarginWithBlankString.kt": {
-   "detail": "kotlin.IllegalArgumentException: marginPrefix must be non-blank string.\n    at 0   newkotlinc.kexe                     0x1023e93ab        kfun:kotlin.text#replaceIndentByMargin__at__kotlin.String(kotlin.String;kotlin.String){}kotlin.String + 2235 \n    at 1   newkotlinc.kexe                     0x10250965b        kfun:newkotlin.Parser.prefix#internal + 9387 \n    at 2   newkotlinc.kexe              ",
-   "status": "COMPILER_CRASH",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
   "box/box/invokedynamic/extensionFunInvoke.kt": {
@@ -27102,15 +27110,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensions.kt": {
@@ -27126,15 +27132,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensions.kt": {
@@ -27180,15 +27184,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensions.kt": {
@@ -27204,15 +27206,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensions.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt": {
-   "category": "other: unknown method Long.rangeTo()",
-   "detail": "unknown method Long.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensions.kt": {
@@ -29441,8 +29441,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusAssignWithComplexRHS.kt"
   },
   "box/box/operatorConventions/plusExplicit.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
+   "category": "unknown with (stdlib API / unsupported decl)",
+   "detail": "unknown function 'with'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusExplicit.kt"
   },
@@ -29795,9 +29795,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/generated/primitiveEqObjectShort.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/intEqualsNull.kt": {
-   "category": "other: unknown method Int.equals()",
-   "detail": "unknown method Int.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/intEqualsNull.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/intEqualsNullableInt.kt": {
@@ -29899,15 +29898,13 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2251.kt"
   },
   "box/box/primitiveTypes/kt2269.kt": {
-   "category": "other: unknown method Int.equals()",
-   "detail": "unknown method Int.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2269.kt"
   },
   "box/box/primitiveTypes/kt2269NotOptimizable.kt": {
-   "category": "other: unknown method Int.equals()",
-   "detail": "unknown method Int.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2269NotOptimizable.kt"
   },
   "box/box/primitiveTypes/kt2275.kt": {
@@ -29917,9 +29914,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2275.kt"
   },
   "box/box/primitiveTypes/kt239.kt": {
-   "category": "other: unknown method Int.plus()",
-   "detail": "unknown method Int.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt239.kt"
   },
   "box/box/primitiveTypes/kt242.kt": {
@@ -29972,9 +29968,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt36952_identityEqualsWithBooleanInLocalFunction.kt"
   },
   "box/box/primitiveTypes/kt37505.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'testByte' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt37505.kt"
   },
   "box/box/primitiveTypes/kt4097.kt": {
@@ -30017,9 +30012,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt46864_long.kt"
   },
   "box/box/primitiveTypes/kt518.kt": {
-   "category": "other: unknown method Int.plus()",
-   "detail": "unknown method Int.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt518.kt"
   },
   "box/box/primitiveTypes/kt52230.kt": {
@@ -30051,19 +30045,19 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt737.kt"
   },
   "box/box/primitiveTypes/kt753.kt": {
-   "detail": "run timeout",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt753.kt"
   },
   "box/box/primitiveTypes/kt756.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Int.unaryPlus()",
+   "detail": "unknown method Int.unaryPlus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt756.kt"
   },
   "box/box/primitiveTypes/kt757.kt": {
-   "detail": "run timeout",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt757.kt"
   },
   "box/box/primitiveTypes/kt79977.kt": {
@@ -30173,9 +30167,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/smartCastOnNullableDoubleIdentityEquals.kt"
   },
   "box/box/primitiveTypes/stringEqualsHashCodeToString.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.equals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/stringEqualsHashCodeToString.kt"
   },
   "box/box/primitiveTypes/substituteIntForGeneric.kt": {
@@ -32163,9 +32156,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeLiteralWithMixedTypeBounds.kt"
   },
   "box/box/ranges/forInRangeWithImplicitReceiver.kt": {
-   "category": "other: unknown method Int.rangeTo()",
-   "detail": "unknown method Int.rangeTo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInRangeWithImplicitReceiver.kt"
   },
   "box/box/ranges/forInReversed/ForInReversedReversedRange.kt": {
@@ -36221,8 +36213,8 @@
    "upstream": "compiler/testData/codegen/box/reified/nullableNothingArrayAsStringArray.kt"
   },
   "box/box/reified/overrideResolution.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at ',')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/overrideResolution.kt"
   },
@@ -36474,26 +36466,26 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallWithElvisFolding.kt"
   },
   "box/box/sam/approximation/approxToIntermediateType.kt": {
-   "category": "other syntax (at 'IFoo')",
-   "detail": "expected '(' (at 'IFoo')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/approxToIntermediateType.kt"
   },
   "box/box/sam/approximation/approxToSingleUpperBound.kt": {
-   "category": "other syntax (at 'IFoo')",
-   "detail": "expected '(' (at 'IFoo')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/approxToSingleUpperBound.kt"
   },
   "box/box/sam/approximation/impossibleToApproxToRepresentable.kt": {
-   "category": "other syntax (at 'IFoo')",
-   "detail": "expected '(' (at 'IFoo')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/impossibleToApproxToRepresentable.kt"
   },
   "box/box/sam/approximation/impossibleToApproxToRepresentable2.kt": {
-   "category": "other syntax (at 'IFoo')",
-   "detail": "expected '(' (at 'IFoo')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/impossibleToApproxToRepresentable2.kt"
   },
@@ -37605,9 +37597,8 @@
    "upstream": "compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt"
   },
   "box/box/strings/simpleStringPlus.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/simpleStringPlus.kt"
   },
   "box/box/strings/singleConcatNullable.kt": {
@@ -37650,9 +37641,8 @@
    "upstream": "compiler/testData/codegen/box/strings/twoArgumentNullableStringOperatorPlus.kt"
   },
   "box/box/strings/twoArgumentNullableStringPlus.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.plus()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/twoArgumentNullableStringPlus.kt"
   },
   "box/box/strings/twoArgumentStringTemplate.kt": {
@@ -37708,13 +37698,13 @@
   },
   "box/box/super/innerClassLabeledSuper.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'test2')",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuper.kt"
   },
   "box/box/super/innerClassLabeledSuper2.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'test2')",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuper2.kt"
   },
@@ -37817,8 +37807,8 @@
    "upstream": "compiler/testData/codegen/box/super/kt4982.kt"
   },
   "box/box/super/multipleSuperTraits.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '.')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/multipleSuperTraits.kt"
   },
@@ -38366,13 +38356,14 @@
    "upstream": "compiler/testData/codegen/box/traits/inheritedVar.kt"
   },
   "box/box/traits/interfaceWithNonAbstractFunIndirect.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/interfaceWithNonAbstractFunIndirect.kt"
   },
   "box/box/traits/interfaceWithNonAbstractFunIndirectGeneric.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/interfaceWithNonAbstractFunIndirectGeneric.kt"
   },
@@ -38389,8 +38380,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt1936_1.kt"
   },
   "box/box/traits/kt2260.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unexpected top-level token (at ':')",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt2260.kt"
   },
@@ -38401,8 +38392,9 @@
    "upstream": "compiler/testData/codegen/box/traits/kt2399.kt"
   },
   "box/box/traits/kt2541.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt2541.kt"
   },
   "box/box/traits/kt3315.kt": {
@@ -38411,8 +38403,9 @@
    "upstream": "compiler/testData/codegen/box/traits/kt3315.kt"
   },
   "box/box/traits/kt3500.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt3500.kt"
   },
   "box/box/traits/kt3579.kt": {
@@ -38451,8 +38444,9 @@
    "upstream": "compiler/testData/codegen/box/traits/multiple.kt"
   },
   "box/box/traits/privateInterfaceMethod.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/privateInterfaceMethod.kt"
   },
   "box/box/traits/receiverOfIntersectionType.kt": {
@@ -38479,8 +38473,9 @@
    "upstream": "compiler/testData/codegen/box/traits/traitImplDelegationWithCovariantOverride.kt"
   },
   "box/box/traits/traitImplDiamond.kt": {
-   "detail": "box",
-   "status": "PASS",
+   "category": "interfaces",
+   "detail": "default interface methods need an explicit return type (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/traitImplDiamond.kt"
   },
   "box/box/traits/traitImplGenericDelegation.kt": {
@@ -39128,8 +39123,9 @@
    "upstream": "compiler/testData/codegen/box/unit/UnitValue.kt"
   },
   "box/box/unit/closureReturnsNullableUnit.kt": {
-   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/grok/kotlinx-features/compiler/build/upstream-tmp/nkup4v7qgi2c/t.ll:202:30: error: void type only allowed for function results\ndefine internal i1 @k.isNull(void %a.x) nounwind {\n                             ^\ncommand failed (256): '/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt' -passes='lt",
-   "status": "COMPILER_CRASH",
+   "category": "other: parameters of type Unit / Unit? are not supported",
+   "detail": "parameters of type Unit / Unit? are not supported",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/closureReturnsNullableUnit.kt"
   },
   "box/box/unit/ifElse.kt": {
