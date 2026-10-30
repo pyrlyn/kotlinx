@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 29,
   "N/A": 2984,
-  "PASS": 2188,
-  "UNSUPPORTED": 3274
+  "PASS": 2212,
+  "UNSUPPORTED": 3250
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1294,8 +1294,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unit4.kt"
   },
   "box/box/bce/bceCases.kt": {
-   "category": "other: unknown method IntProgression.withIndex()",
-   "detail": "unknown method IntProgression.withIndex()",
+   "category": "other: unknown method ArrayList<Int>.reversed()",
+   "detail": "unknown method ArrayList<Int>.reversed()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bce/bceCases.kt"
   },
@@ -1374,9 +1374,8 @@
    "upstream": "compiler/testData/codegen/box/bce/forUntilWithStep.kt"
   },
   "box/box/bce/forWithIndex.kt": {
-   "category": "other: unknown method IntProgression.withIndex()",
-   "detail": "unknown method IntProgression.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/forWithIndex.kt"
   },
   "box/box/bce/inheritance.kt": {
@@ -8405,9 +8404,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexBreakAndContinue.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexContinuesAsUnmodified.kt": {
-   "category": "other: unknown method IntArray.withIndex()",
-   "detail": "unknown method IntArray.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexContinuesAsUnmodified.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNameBasedDestructuringShortForm.kt": {
@@ -8455,9 +8453,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndexWithSmartCast.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInEmptyArrayWithIndex.kt": {
-   "category": "other: unknown method IntArray.withIndex()",
-   "detail": "unknown method IntArray.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInEmptyArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInGenericArrayOfIntsWithIndex.kt": {
@@ -8477,9 +8474,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInGenericArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndex.kt": {
-   "category": "other: unknown method IntArray.withIndex()",
-   "detail": "unknown method IntArray.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndexWithSmartCast.kt": {
@@ -8524,21 +8520,18 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSeqWithIndexStops.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceTypeParameterWithIndex.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceTypeParameterWithIndex.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndex.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndex.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexBreakAndContinue.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexBreakAndContinue.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexCheckSideEffects.kt": {
@@ -8566,15 +8559,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSequenceWithIndexNoIndexVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInEmptyStringWithIndex.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInEmptyStringWithIndex.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndex.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndex.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNameBasedDestructuringFullForm.kt": {
@@ -8590,21 +8581,18 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNameBasedDestructuringShortForm.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoElementVar.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoElementVar.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoIndexOrElementVar.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoIndexOrElementVar.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoIndexVar.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoIndexVar.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNotDestructured.kt": {
@@ -8614,9 +8602,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNotDestructured.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexWithExplicitlyTypedIndexVariable.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInIterableWithIndex/forInEmptyListWithIndex.kt": {
@@ -23053,12 +23040,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1879837792\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -267646048\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 1074531616\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823264\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -31971,63 +31958,53 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIntRangeToConstWithContinue.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInDownToWithIndex.kt": {
-   "category": "other: unknown method IntProgression.withIndex()",
-   "detail": "unknown method IntProgression.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInDownToWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInIndicesWithIndex.kt": {
-   "category": "other: unknown method IntRange.withIndex()",
-   "detail": "unknown method IntRange.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInIndicesWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInRangeToWithIndex.kt": {
-   "category": "other: unknown method IntRange.withIndex()",
-   "detail": "unknown method IntRange.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInRangeToWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInReversedStepWithIndex.kt": {
-   "category": "other: unknown method IntProgression.withIndex()",
-   "detail": "unknown method IntProgression.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInReversedStepWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInReversedWithIndex.kt": {
-   "category": "other: unknown method IntProgression.withIndex()",
-   "detail": "unknown method IntProgression.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInReversedWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInStepReversedWithIndex.kt": {
-   "category": "other: unknown method IntProgression.withIndex()",
-   "detail": "unknown method IntProgression.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInStepReversedWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInStepWithIndex.kt": {
-   "category": "other: unknown method IntProgression.withIndex()",
-   "detail": "unknown method IntProgression.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInStepWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInUntilWithIndex.kt": {
-   "category": "other: unknown method IntRange.withIndex()",
-   "detail": "unknown method IntRange.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInUntilWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexBreakAndContinue.kt": {
-   "category": "other: unknown method IntProgression.withIndex()",
-   "detail": "unknown method IntProgression.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexBreakAndContinue.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexNoIndexOrElementVar.kt": {
-   "category": "other: unknown method IntRange.withIndex()",
-   "detail": "unknown method IntRange.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexNoIndexOrElementVar.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexNotDestructured.kt": {
@@ -32037,8 +32014,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexNotDestructured.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexReversed.kt": {
-   "category": "other: unknown method IntRange.withIndex()",
-   "detail": "unknown method IntRange.withIndex()",
+   "category": "other: unknown method ArrayList<IndexedValue$Int>.reversed()",
+   "detail": "unknown method ArrayList<IndexedValue$Int>.reversed()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexReversed.kt"
   },
@@ -32055,9 +32032,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/kt42909.kt": {
-   "category": "other: unknown method IntRange.withIndex()",
-   "detail": "unknown method IntRange.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/kt42909.kt"
   },
   "box/box/ranges/forInRangeLiteralWithMixedTypeBounds.kt": {
