@@ -1,0 +1,18 @@
+# bitwise working tree 2026-10-30 04:05 EET load: { 23.07 20.50 24.44 }
+sum 3.67
+alloc 75.3
+bigheap 113.905
+closures 83.243
+cycles 46.073
+dispatch 94.697
+file 51.634
+free 49.874
+hashmap 69.345
+lru 86.969
+matmul 10.159
+nbody 70.262
+recursion 6.041
+refpass 127.816
+sort 61.958
+strings 33.792
+trees 121.061
