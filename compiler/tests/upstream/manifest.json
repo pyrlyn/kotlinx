@@ -1,10 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "MISCOMPILE": 31,
+  "MISCOMPILE": 29,
   "N/A": 2984,
-  "PASS": 2054,
-  "UNSUPPORTED": 3406
+  "PASS": 2058,
+  "UNSUPPORTED": 3404
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -438,9 +438,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_selfComparison.kt"
   },
   "box/box/arithmetic/basic_shifts.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'ext$Int$myshr' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_shifts.kt"
   },
   "box/box/arithmetic/basic_uintTests.kt": {
@@ -461,9 +460,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/divisionByZero.kt"
   },
   "box/box/arithmetic/github1856.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arithmetic/github1856.kt"
   },
   "box/box/arrays/arrayConstructorWithNonInlineLambda.kt": {
@@ -1398,20 +1396,20 @@
    "upstream": "compiler/testData/codegen/box/bce/withGetter.kt"
   },
   "box/box/binaryOp/bitwiseOp.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOp.kt"
   },
   "box/box/binaryOp/bitwiseOpAny.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpAny.kt"
   },
   "box/box/binaryOp/bitwiseOpNullable.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Byte.inv()",
+   "detail": "unknown method Byte.inv()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/bitwiseOpNullable.kt"
   },
@@ -23108,12 +23106,12 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEqualsGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1072952352\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1609823008\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146694304\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: 269224928\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -30068,19 +30066,19 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt737.kt"
   },
   "box/box/primitiveTypes/kt753.kt": {
-   "detail": "run timeout",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt753.kt"
   },
   "box/box/primitiveTypes/kt756.kt": {
-   "category": "other: unknown method Int.inv()",
-   "detail": "unknown method Int.inv()",
+   "category": "other: unknown method Int.unaryPlus()",
+   "detail": "unknown method Int.unaryPlus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt756.kt"
   },
   "box/box/primitiveTypes/kt757.kt": {
-   "detail": "run timeout",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt757.kt"
   },
   "box/box/primitiveTypes/kt79977.kt": {
