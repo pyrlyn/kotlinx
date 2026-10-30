@@ -20,7 +20,8 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
                        pkg-config or Homebrew), system malloc/free, or free-list pool
   --gc <name>          memory manager, compiler/gc/<name>/gc.c (also --gc=<name>; default: ${'$'}NEWKOTLIN_GC or
                        default): default (RC + cycle collector), incremental (budgeted
-                       cycle collector steps), rc (RC only, cycles leak), boehm (RC + bdwgc)
+                       cycle collector steps), epoch (deferred RC + background cycle
+                       collection), rc (RC only, cycles leak), boehm (RC + bdwgc)
   -S                   only write LLVM IR to <output>"""
 
 private fun readFile(path: String): String {
@@ -158,6 +159,12 @@ fun main(args: Array<String>) {
     val cc = ccArg ?: findCc()
     if (!target.implemented) { fprintf(stderr, "target %s is not supported yet\n", target.flag); exit(1); return }
     if (input == null || output == null) { fprintf(stderr, "%s\n", USAGE); exit(2); return }
+    // A GC whose caps file lists "deferred" needs deferred-RC code generation (see NativeBackend.deferredRc).
+    run {
+        val dir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../gc")
+        val caps = if (access("$dir/$gc/caps", F_OK) == 0) (try { readFile("$dir/$gc/caps") } catch (e: CompileError) { "" }) else ""
+        deferredRc = caps.split(Regex("\\s+")).contains("deferred")
+    }
     val ir = try { compileToIr(readFile(input)) } catch (e: CompileError) {
         fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1); return
     }

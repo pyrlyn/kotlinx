@@ -51,6 +51,15 @@ class NeedClass(val cd: ClassD) : Exception()
 /** Code needs a function-type interface `$Fn<params..., ret>`; [compileGenerics] adds it and retries. */
 class NeedIface(val d: InterfaceD) : Exception()
 
+/**
+ * Deferred reference counting for possibly cyclic objects (GC implementations whose `caps` contain `deferred`,
+ * e.g. --gc=epoch): retain/release of traced objects are logged with rt_gc_log_inc / rt_gc_log_dec instead of
+ * touching the header, stores of reference fields into traced objects are release stores followed by
+ * rt_gc_write_barrier, collector traversal loads are acquire loads, and FBIP reuse is off for traced classes.
+ * Acyclic objects keep inline RC. Set by the driver before code generation.
+ */
+var deferredRc = false
+
 class NativeBackend(private val prog: Program, private val genericClasses: Map<String, ClassD> = emptyMap(),
                     /** Instance class name -> (generic class, type arguments), for inference against `Box<T>` parameters. */
                     private val instOrigin: Map<String, Pair<String, List<TypeRef>>> = emptyMap(),
@@ -162,7 +171,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         else -> null
     }
 
-    private fun retain(v: String, t: Ty) = emit("call void @${if (t.hasPrefixRc) "rt_hdr_retain" else "rt_retain"}(ptr $v)")
+    private fun retain(v: String, t: Ty) = emit("call void @${when {
+        t.hasPrefixRc -> "rt_hdr_retain"
+        !deferredRc -> "rt_retain"
+        t is Ty.Cls && t.name !in poly -> if (t.name in cyclic) "rt_gc_log_inc" else "rt_retain"
+        t is Ty.Cls || t is Ty.Iface -> "rt_retain_dyn"   // class instance of unknown dynamic class
+        else -> "rt_retain"                                // lists, maps, builders: runtime objects, never traced
+    }}(ptr $v)")
     private fun release(v: Val) { releaseFn(v.t)?.let { emit("call void $it(ptr ${v.v})") } }
     private fun releaseIfOwned(v: Val) { if (v.owned && v.t.isRef) release(v) }
     /** Turns a value into a +1 reference that can be stored. */
@@ -418,7 +433,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // rt_cc_possible_root. Header word layout: low 32 bits count, bits 32-33 color, bit 34 buffered (runtime.c).
         f.append("define internal void @rel.${c.name}(ptr %p) alwaysinline {\nentry:\n")
         f.append("  %isnull = icmp eq ptr %p, null\n  br i1 %isnull, label %done, label %dec\n")
-        if (cyc) {
+        if (cyc && deferredRc) {
+            f.append("dec:\n  call void @rt_gc_log_dec(ptr %p)\n  br label %done\n")
+        } else if (cyc) {
             f.append("dec:\n  %c = load i64, ptr %p\n  %c1 = sub i64 %c, 1\n  %cnt = and i64 %c1, 4294967295\n  %z = icmp eq i64 %cnt, 0\n  br i1 %z, label %zero, label %keep\n")
             f.append("keep:\n  %c2 = or i64 %c1, 12884901888\n  store i64 %c2, ptr %p\n  %buf = and i64 %c1, 17179869184\n  %isbuf = icmp ne i64 %buf, 0\n  br i1 %isbuf, label %done, label %root\n")
             f.append("root:\n  store i64 %c1, ptr %p\n  call void @rt_cc_possible_root(ptr %p)\n  br label %done\n")
@@ -446,7 +463,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Collector hooks: trace class/interface children; release other reference fields; free memory only.
         f.append("define internal void @trav.${c.name}(ptr %p, ptr %fn) {\nentry:\n")
         c.fields.forEachIndexed { i, (_, t) ->
-            if (isTraced(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void %fn(ptr %v$i)\n")
+            if (isTraced(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ${if (deferredRc && cyc) "atomic ptr, ptr %f$i acquire, align 8" else "ptr, ptr %f$i"}\n  call void %fn(ptr %v$i)\n")
         }
         f.append("  ret void\n}\n\ndefine internal void @relo.${c.name}(ptr %p) {\nentry:\n")
         c.fields.forEachIndexed { i, (_, t) ->
@@ -685,7 +702,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         fun store(n: String, v0: Val) {
             val idx = ci.index(n); val ft = ci.fields[idx].second
             val v = consume(coerce(v0, ft))
-            emit("store ${ft.llvm} ${v.v}, ptr ${emitT("getelementptr ${ci.llType}, ptr %this, i32 0, i32 ${idx + 2}")}${tbField(ft.llvm)}")
+            val fp = emitT("getelementptr ${ci.llType}, ptr %this, i32 0, i32 ${idx + 2}")
+            if (deferredRc && ci.name in cyclic && ft.llvm == "ptr") {
+                emit("store atomic ptr ${v.v}, ptr $fp release, align 8")
+                emit("call void @rt_gc_write_barrier(ptr %this)")
+            } else emit("store ${ft.llvm} ${v.v}, ptr $fp${tbField(ft.llvm)}")
         }
         for (f in c.fields) if (f.init == null) store(f.name, genArg(NameE(f.name).also { it.line = c.line }))
         for (x in c.inits) {
@@ -784,6 +805,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (old.name in poly || ci.name in poly || old.ancestors.isNotEmpty()) continue // static type may not be the dynamic one
             if (old.fields.map { it.second.llvm } != layout) continue
             if ((old.name in cyclic) != (ci.name in cyclic)) continue // reuse stays within one region
+            if (deferredRc && ci.name in cyclic) continue // deferred RC: the header count is not current
             if (uses[i].any { it.node.n == n && it.node !in inArgs }) continue
             if (uses[i].count { it.node.n == n } == 1 && uses[i].first { it.node.n == n }.let { u -> call.args.any { it === u.node } }) continue // moved instead
             reuseFor[call] = l
@@ -1018,7 +1040,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (ft.isRef) {
                     v = consume(v)
                     val old = emitT("load ptr, ptr $ptr${tbField("ptr")}")
-                    emit("store ptr ${v.v}, ptr $ptr${tbField("ptr")}")
+                    if (deferredRc && ci.name in cyclic) {
+                        emit("store atomic ptr ${v.v}, ptr $ptr release, align 8")
+                        emit("call void @rt_gc_write_barrier(ptr ${r.v})")
+                    } else emit("store ptr ${v.v}, ptr $ptr${tbField("ptr")}")
                     release(Val(old, ft))
                 } else emit("store ${ft.llvm} ${v.v}, ptr $ptr${tbField(ft.llvm)}")
                 releaseIfOwned(r)
@@ -3295,6 +3320,32 @@ declare ptr @rt_str_from_c(ptr)
 declare void @rt_cc_possible_root(ptr)
 declare void @rt_cc_dead(ptr)
 declare void @rt_free(ptr, i64)
+declare void @rt_gc_log_inc(ptr)
+declare void @rt_gc_log_dec(ptr)
+declare void @rt_gc_write_barrier(ptr)
+
+define internal void @rt_retain_dyn(ptr %p) alwaysinline {
+entry:
+  %isnull = icmp eq ptr %p, null
+  br i1 %isnull, label %done, label %chk
+chk:
+  %vtp = getelementptr i8, ptr %p, i64 8
+  %vt = load ptr, ptr %vtp
+  %cp = getelementptr i8, ptr %vt, i64 32
+  %cy = load ptr, ptr %cp
+  %iscy = icmp ne ptr %cy, null
+  br i1 %iscy, label %log, label %inc
+log:
+  call void @rt_gc_log_inc(ptr %p)
+  br label %done
+inc:
+  %c = load i64, ptr %p
+  %c1 = add i64 %c, 1
+  store i64 %c1, ptr %p
+  br label %done
+done:
+  ret void
+}
 
 define internal void @rt_retain(ptr %p) alwaysinline {
 entry:

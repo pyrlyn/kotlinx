@@ -9,13 +9,16 @@ cd "$(dirname "$0")/.."
 NKC=${NKC:-../bin/newkotlinc}
 gcs=${*:-default boehm}
 mkdir -p results/gc ../compiler/build/gcmicro
-for g in $gcs; do
-  for m in time rss pause_total pause_max collections; do : > results/gc/micro-$g-$m.txt; done
-  for src in gc/micro/*.kt; do
-    c=$(basename "$src" .kt); b=../compiler/build/gcmicro/$g.$c
-    "$NKC" --gc="$g" "$src" -o "$b"
-    "$b" >/dev/null
-    ts=""; for r in 1 2 3 4 5; do ts="$ts $("$b" | grep -oE 'nanos=[0-9]+' | cut -d= -f2)"; done
+for g in $gcs; do for m in time rss pause_total pause_max collections; do : > results/gc/micro-$g-$m.txt; done; done
+# Interleaved: every timed run goes through all GCs before the next one, so load drift hits all alike.
+for src in gc/micro/*.kt; do
+  c=$(basename "$src" .kt)
+  for g in $gcs; do b=../compiler/build/gcmicro/$g.$c; "$NKC" --gc="$g" "$src" -o "$b"; "$b" >/dev/null; eval "ts_$g=''"; done
+  for r in 1 2 3 4 5; do
+    for g in $gcs; do eval "ts_$g=\"\$ts_$g \$(../compiler/build/gcmicro/$g.$c | grep -oE 'nanos=[0-9]+' | cut -d= -f2)\""; done
+  done
+  for g in $gcs; do
+    b=../compiler/build/gcmicro/$g.$c; eval "ts=\$ts_$g"
     python3 -c "v=sorted(map(int,'$ts'.split()))[1:4]; print('$c', round(sum(v)/3/1e6, 3))" >> results/gc/micro-$g-time.txt
     rss=$( { /usr/bin/time -l "$b" >/dev/null; } 2>&1 | awk '/maximum resident set size/ {print $1}')
     echo "$c $(python3 -c "print(round($rss/1048576, 1))")" >> results/gc/micro-$g-rss.txt
