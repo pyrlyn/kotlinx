@@ -168,7 +168,7 @@ static int64_t boundary_keep = -1;
 #define BOUNDARY_KEEP_DEFAULT 0   /* was 16384: a standing backlog of 16K dead objects freed by allocations cost
                                    * cycles 1.6-1.9x (183 -> 270-340 ms); the boundary budget already bounds the pause */
 static void free_returned(void *p);
-void *rt_alloc_trace(int64_t size) {
+static inline void *alloc_trace(int64_t size) {
     atomic_store_explicit(&t_allocs, atomic_load_explicit(&t_allocs, memory_order_relaxed) + 1, memory_order_relaxed);
     /* Allocation-paced freeing: every traced allocation frees some returned dead objects, so reclamation
      * keeps pace with allocation without a pause. The rate grows with the backlog (2 per allocation, up to
@@ -372,13 +372,23 @@ __attribute__((noinline)) static void boundary(void) {
     note_pause(t0);
     in_boundary = 0;
 }
+/* KX_GC_YOUNG_PROBE=1 (measurement only, for the nursery proposal in docs/next-epoch-nursery.md): counts
+ * logged retains/releases whose target was allocated in the current epoch, i.e. the entries a per-epoch
+ * nursery could apply without a log. Approximate (a direct-mapped table; collisions undercount). */
+#define YP_BITS 20
+static int yp_on = -1; static struct { uintptr_t p; int64_t ep; } *yp_tab; static int64_t yp_ops, yp_young;
+static inline size_t yp_slot(uintptr_t p) { return (size_t)((p >> 3) * 0x9E3779B97F4A7C15ULL >> (64 - YP_BITS)); }
+static void yp_init(void) { const char *e = getenv("KX_GC_YOUNG_PROBE"); yp_on = e && *e == '1'; if (yp_on) yp_tab = calloc((size_t)1 << YP_BITS, sizeof *yp_tab); if (!yp_tab) yp_on = 0; }
+static void yp_alloc(void *p) { if (yp_on < 0) yp_init(); if (yp_on) { size_t i = yp_slot((uintptr_t)p); yp_tab[i].p = (uintptr_t)p; yp_tab[i].ep = ep_epochs; } }
+static void yp_op(void *p) { if (yp_on < 0) yp_init(); if (!yp_on) return; yp_ops++; size_t i = yp_slot((uintptr_t)p); if (yp_tab[i].p == (uintptr_t)p && yp_tab[i].ep == ep_epochs) yp_young++; }
 static inline void log_op(uintptr_t e) {
     if (__builtin_expect(cur == NULL, 0)) { pthread_mutex_lock(&mu); cur = log_new(); pthread_mutex_unlock(&mu); }
     cur->a[cur->n++] = e;
     if (__builtin_expect(cur->n == LOG_CAP, 0)) boundary();
 }
-void rt_gc_log_inc(void *p) { if (p) log_op((uintptr_t)p | OP_INC); }
-void rt_gc_log_dec(void *p) { if (p) log_op((uintptr_t)p | OP_DEC); }
+void *rt_alloc_trace(int64_t size) { void *p = alloc_trace(size); if (__builtin_expect(yp_on != 0, 0)) yp_alloc(p); return p; }
+void rt_gc_log_inc(void *p) { if (p) { if (__builtin_expect(yp_on != 0, 0)) yp_op(p); log_op((uintptr_t)p | OP_INC); } }
+void rt_gc_log_dec(void *p) { if (p) { if (__builtin_expect(yp_on != 0, 0)) yp_op(p); log_op((uintptr_t)p | OP_DEC); } }
 void rt_gc_write_barrier(void *obj) { log_op((uintptr_t)obj | OP_MOD); }
 
 // ---- collector (background thread): header bits are collector-owned for traced objects ----
@@ -1223,6 +1233,7 @@ static void epoch_debug(void) {
     if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld early ok=%lld hit=%lld skip=%lld qmax=%zu q=%zu\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits, (long long)dbg_early_ok, (long long)dbg_early_hit, (long long)dbg_early_skip, dbg_q_max, max_queued);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
     if (e && *e) fprintf(stderr, "epoch: freed paced=%lld boundary=%lld keep=%lld madvised=%lld stack-released=%lld\n", (long long)dbg_paced, (long long)dbg_bfreed, (long long)boundary_keep, (long long)dbg_madvised, (long long)dbg_stack_released);
+    if (yp_on > 0) fprintf(stderr, "epoch: young-probe ops=%lld young=%lld (%.1f%%)\n", (long long)yp_ops, (long long)yp_young, yp_ops ? 100.0 * yp_young / yp_ops : 0.0);
     if (e && *e) fprintf(stderr, "epoch: exit live-traced=%lld ret-pending=%zu roots=%zu deferred=%zu cands=%d\n", (long long)(atomic_load(&t_allocs) - atomic_load(&t_frees)), ret_local.len - ret_pos, c_roots.len, c_deferred.len, cands != NULL);
     if (e && *e) {
         size_t wk = 0; for (int i = 0; i < n_threads; i++) wk += workers[i].work.cap + workers[i].black.cap + workers[i].marked.cap;
