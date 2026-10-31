@@ -468,6 +468,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         f.append("done:\n  ret void\n}\n\n")
         f.append("define internal void @relz.${c.name}(ptr %p) noinline {\nentry:\n")
+        // A field can lead back to a @relz, so a chain nests one C frame per node: past the stack limit the object
+        // waits on the runtime's pending stack (rt_rel_defer). Comparing the stack pointer costs no store and no
+        // saved register, which a depth counter did (+11% on short lists). Leaf classes cannot nest and skip the check.
+        if (c.fields.any { (_, t) -> isTraced(t) || t is Ty.ListTy }) f.append("  %sp = call ptr @llvm.stacksave.p0()\n  %lim = load ptr, ptr @rt_rel_limit\n  %deep = icmp ult ptr %sp, %lim\n  br i1 %deep, label %defer, label %body, !prof !1\n" +
+            "defer:\n  call void @rt_rel_defer(ptr %p)\n  ret void\n" +
+            "body:\n")
         c.fields.forEachIndexed { i, (_, t) ->
             releaseFn(t)?.let { fn ->
                 f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void $fn(ptr %v$i)\n")
@@ -3792,6 +3798,9 @@ declare ptr @rt_str_from_c(ptr)
 declare void @rt_cc_possible_root(ptr)
 declare void @rt_cc_dead(ptr)
 declare void @rt_free(ptr, i64)
+@rt_rel_limit = external global ptr
+declare void @rt_rel_defer(ptr)
+declare ptr @llvm.stacksave.p0()
 declare void @rt_gc_log_inc(ptr)
 declare void @rt_gc_log_dec(ptr)
 declare void @rt_gc_write_barrier(ptr)

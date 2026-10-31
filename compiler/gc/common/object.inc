@@ -1,5 +1,6 @@
 // Object header and vtable accessors plus a growable pointer stack, shared by the cycle-collecting
-// RC implementations (default, incremental). Included by exactly one gc.c, after regions.inc.
+// RC implementations (default, incremental). Included by exactly one gc.c, after regions.inc, and by the
+// runtime for its release stack (rt_rel_defer).
 //
 // Header word (word 0 of every object, see kxgc.h):
 //

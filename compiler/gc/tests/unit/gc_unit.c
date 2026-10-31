@@ -59,6 +59,18 @@ int main(void) {
     { int64_t *m = rt_gc_mem_calloc(64); for (int i = 0; i < 8; i++) CHECK(m[i] == 0);
       m[7] = 42; m = rt_gc_mem_realloc(m, 4096); CHECK(m[7] == 42); rt_gc_mem_free(m);
       void *z = rt_gc_mem_realloc(NULL, 16); CHECK(z != NULL); rt_gc_mem_free(z); }
+#ifdef KX_CAP_CYCLES
+    /* no collection starts while deferred releases run, however many roots are buffered */
+    { enum { N = 300000 }; static Obj *objs[N]; KxGcStats before, during;
+      for (int i = 0; i < N; i++) { objs[i] = new_obj(i); objs[i]->hdr++; }
+      rt_gc_stats(&before);
+      rt_rel_draining = 1;
+      for (int i = 0; i < N; i++) obj_rel(objs[i]);
+      rt_rel_draining = 0;
+      rt_gc_stats(&during); CHECK(during.collections == before.collections);
+      for (int i = 0; i < N; i++) { obj_rel(objs[i]); objs[i] = NULL; } /* bdwgc would scan a dangling pointer */
+      rt_gc_collect(); }
+#endif
     /* stress: many self cycles */
 #ifdef KX_CAP_CYCLES
     for (int i = 0; i < 200000; i++) { Obj *s = new_obj(i); s->next = s; s->hdr++; obj_rel(s); }
