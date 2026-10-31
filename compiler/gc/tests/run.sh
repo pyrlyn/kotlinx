@@ -55,6 +55,16 @@ if [[ " $(echo $gcs) " == *" epoch "* ]]; then
     else echo "FAIL gc-epoch queue_spike (qmax=$q logs=$logs, want <= 16 / <= 20)"; fail=1; fi
   else echo "FAIL gc-epoch queue_spike: compile"; fail=1; fi
 fi
+# Incremental: a live root scanned black by an earlier slice must leave the buffer with the step that stopped
+# there. Left behind, a later step frees it in the middle of its own release (double free under ASan).
+if [[ " $(echo $gcs) " == *" incremental "* ]]; then
+  t=compiler/gc/tests/incremental/slice_black.kt
+  if "$NKC" --gc=incremental --alloc malloc --cflags "-O1 -g -fsanitize=address -fno-omit-frame-pointer" "$t" -o "$out/incremental.slice_black" 2>/dev/null; then
+    got=$(KX_GC_BUDGET_US=300 "$out/incremental.slice_black" 2>"$out/incremental.slice_black.err"); rc=$?
+    if [ $rc -eq 0 ] && [ "$got" = "53215861" ]; then echo "PASS gc-incremental slice_black"
+    else echo "FAIL gc-incremental slice_black (rc=$rc)"; head -20 "$out/incremental.slice_black.err"; fail=1; fi
+  else echo "FAIL gc-incremental slice_black: compile"; fail=1; fi
+fi
 # Selecting an unknown implementation is a compile error.
 if "$NKC" --gc=nope compiler/gc/tests/kt/reuse.kt -o "$out/nope" 2>/dev/null; then echo "FAIL gc-unknown"; fail=1; else echo "PASS gc-unknown"; fi
 rm -rf "$out"
