@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2513,
-  "UNSUPPORTED": 2978
+  "PASS": 2519,
+  "UNSUPPORTED": 2972
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -14313,14 +14313,14 @@
    "upstream": "compiler/testData/codegen/box/enum/constructorWithReordering.kt"
   },
   "box/box/enum/deepInnerClassInEnumEntryClass.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/deepInnerClassInEnumEntryClass.kt"
   },
   "box/box/enum/deepInnerClassInEnumEntryClass2.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "other syntax (at 'inner')",
+   "detail": "nested declarations are only supported in classes (at 'inner')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/deepInnerClassInEnumEntryClass2.kt"
   },
@@ -14415,20 +14415,20 @@
    "upstream": "compiler/testData/codegen/box/enum/enumEntryNamedLikeModifier.kt"
   },
   "box/box/enum/enumEntryReferenceFromInnerClassConstructor1.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "other: unknown method Test.bar()",
+   "detail": "unknown method Test.bar()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryReferenceFromInnerClassConstructor1.kt"
   },
   "box/box/enum/enumEntryReferenceFromInnerClassConstructor2.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "unknown FOO (stdlib API / unsupported decl)",
+   "detail": "unknown name 'FOO'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryReferenceFromInnerClassConstructor2.kt"
   },
   "box/box/enum/enumEntryReferenceFromInnerClassConstructor3.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "other: unknown method Test.bar()",
+   "detail": "unknown method Test.bar()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumEntryReferenceFromInnerClassConstructor3.kt"
   },
@@ -14481,8 +14481,8 @@
    "upstream": "compiler/testData/codegen/box/enum/enum_equals.kt"
   },
   "box/box/enum/getEnumEntityByOrdinal.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "strings / templates",
+   "detail": "unknown method String.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/getEnumEntityByOrdinal.kt"
   },
@@ -14526,20 +14526,20 @@
    "upstream": "compiler/testData/codegen/box/enum/inner.kt"
   },
   "box/box/enum/innerClassInEnumEntryClass.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "other: property 'y' of Inner needs an explicit type",
+   "detail": "property 'y' of Inner needs an explicit type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/innerClassInEnumEntryClass.kt"
   },
   "box/box/enum/innerClassMethodInEnumEntryClass.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "other: unknown method Inner.foo()",
+   "detail": "unknown method Inner.foo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/innerClassMethodInEnumEntryClass.kt"
   },
   "box/box/enum/innerClassMethodInEnumEntryClass2.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "loops / labels",
+   "detail": "unknown label this@X (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/innerClassMethodInEnumEntryClass2.kt"
   },
@@ -14565,9 +14565,8 @@
    "upstream": "compiler/testData/codegen/box/enum/k54079.kt"
   },
   "box/box/enum/kt1119.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/kt1119.kt"
   },
   "box/box/enum/kt18731.kt": {
@@ -14581,14 +14580,14 @@
    "upstream": "compiler/testData/codegen/box/enum/kt18731_2.kt"
   },
   "box/box/enum/kt20651.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '=')",
+   "category": "unknown FOO (stdlib API / unsupported decl)",
+   "detail": "unknown name 'FOO'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt20651.kt"
   },
   "box/box/enum/kt20651_inlineLambda.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '=')",
+   "category": "unknown FOO (stdlib API / unsupported decl)",
+   "detail": "unknown name 'FOO'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt20651_inlineLambda.kt"
   },
@@ -14637,68 +14636,64 @@
    "upstream": "compiler/testData/codegen/box/enum/kt46605.kt"
   },
   "box/box/enum/kt7257.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/kt7257.kt"
   },
   "box/box/enum/kt7257_anonObjectInit.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "unknown value2 (stdlib API / unsupported decl)",
+   "detail": "unknown name 'value2'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_anonObjectInit.kt"
   },
   "box/box/enum/kt7257_anonObjectMethod.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "unknown value2 (stdlib API / unsupported decl)",
+   "detail": "unknown name 'value2'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_anonObjectMethod.kt"
   },
   "box/box/enum/kt7257_boundReference1.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "other: unknown method Inner.foo()",
+   "detail": "unknown method Inner.foo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_boundReference1.kt"
   },
   "box/box/enum/kt7257_boundReference2.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_boundReference2.kt"
   },
   "box/box/enum/kt7257_boundReferenceWithImplicitReceiver.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_boundReferenceWithImplicitReceiver.kt"
   },
   "box/box/enum/kt7257_explicitReceiver.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_explicitReceiver.kt"
   },
   "box/box/enum/kt7257_fullyQualifiedReceiver.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_fullyQualifiedReceiver.kt"
   },
   "box/box/enum/kt7257_namedLocalFun.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "enum classes",
+   "detail": "init blocks in enum entry bodies are not supported (at ';')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_namedLocalFun.kt"
   },
   "box/box/enum/kt7257_notInline.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_notInline.kt"
   },
   "box/box/enum/kt9711.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '=')",
+   "category": "other: unknown method X.value()",
+   "detail": "unknown method X.value()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt9711.kt"
   },
@@ -14714,8 +14709,8 @@
    "upstream": "compiler/testData/codegen/box/enum/lambdaInDefault.kt"
   },
   "box/box/enum/loop.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'init')",
+   "category": "enum classes",
+   "detail": "init blocks in enum entry bodies are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/loop.kt"
   },
@@ -14745,9 +14740,8 @@
    "upstream": "compiler/testData/codegen/box/enum/ordinal.kt"
   },
   "box/box/enum/ordinalsWithEnumEntitiesOverrides.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/ordinalsWithEnumEntitiesOverrides.kt"
   },
   "box/box/enum/overloadedEnumValues.kt": {
@@ -18784,8 +18778,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingClass.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingEnumerationEntryType.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'init')",
+   "category": "enum classes",
+   "detail": "init blocks in enum entry bodies are not supported (at ';')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingEnumerationEntryType.kt"
   },

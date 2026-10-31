@@ -1497,9 +1497,13 @@ class Parser(toks: List<Tok>) {
                     // Entry with a body: a hidden subclass `E__A` of the enum class that forwards the constructor arguments.
                     val sub = "${name}__$en"
                     val saved = curClass; curClass = sub
-                    val body = try { members() } finally { curClass = saved }
+                    // The entry body is a class body: it may declare properties and init blocks.
+                    val efs = ArrayList<FieldD>(); val eins = ArrayList<Any>()
+                    val body = try { members(efs, eins) } finally { curClass = saved }
+                    // Entries are created eagerly before top-level properties; Kotlin initializes them lazily.
+                    if (eins.any { it is Block }) fail("init blocks in enum entry bodies are not supported")
                     val cps = ctorParams.map { Param(it.name, it.type) }
-                    hoisted.add(ClassD(sub, emptyList(), listOf(name), body, line, cps, emptyList(), cps.map { NameE(it.name) }))
+                    hoisted.add(ClassD(sub, efs, listOf(name), body, line, cps, eins, cps.map { NameE(it.name) }))
                     enumBodies["$name$$en"] = sub
                 }
                 es.add(en to args)
