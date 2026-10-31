@@ -1,10 +1,10 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "MISCOMPILE": 14,
+  "MISCOMPILE": 5,
   "N/A": 2984,
-  "PASS": 2501,
-  "UNSUPPORTED": 2976
+  "PASS": 2504,
+  "UNSUPPORTED": 2982
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -5294,13 +5294,15 @@
    "upstream": "compiler/testData/codegen/box/classes/inner/kt6708.kt"
   },
   "box/box/classes/inner/properOuter.kt": {
-   "detail": "exit=0 stdout='B_A\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class C extending its outer class is not supported (at '<eof>')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/inner/properOuter.kt"
   },
   "box/box/classes/inner/properSuperLinking.kt": {
-   "detail": "exit=0 stdout='FailFail\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class B extending its outer class is not supported (at '<eof>')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/inner/properSuperLinking.kt"
   },
   "box/box/classes/innerClass.kt": {
@@ -5926,8 +5928,9 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/properValueCapturedByClosure1.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/properValueCapturedByClosure2.kt": {
-   "detail": "exit=0 stdout='Fail: Outer.ok\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class Inner extending its outer class is not supported (at '<eof>')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/properValueCapturedByClosure2.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/referenceToCapturedVariablesInMultipleLambdas.kt": {
@@ -11861,8 +11864,8 @@
    "upstream": "compiler/testData/codegen/box/cycles/cycle_for.kt"
   },
   "box/box/dataClasses/arrayParams.kt": {
-   "category": "strings / templates",
-   "detail": "cannot convert IntArray to string",
+   "category": "data classes",
+   "detail": "data classes with Array properties are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/arrayParams.kt"
   },
@@ -11948,8 +11951,9 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/alreadyDeclared.kt"
   },
   "box/box/dataClasses/equals/genericarray.kt": {
-   "detail": "exit=0 stdout='fail\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "category": "data classes",
+   "detail": "data classes with Array properties are not supported (at '",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/genericarray.kt"
   },
   "box/box/dataClasses/equals/intarray.kt": {
@@ -12101,8 +12105,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/alreadyDeclared.kt"
   },
   "box/box/dataClasses/toString/arrayParams.kt": {
-   "category": "strings / templates",
-   "detail": "cannot convert IntArray to string",
+   "category": "data classes",
+   "detail": "data classes with Array properties are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/arrayParams.kt"
   },
@@ -20950,8 +20954,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMerging.kt"
   },
   "box/box/inlineClasses/callableRefClassMergingGenerics.kt": {
-   "detail": "exit=0 stdout='FAIL n3: null\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingGenerics.kt"
   },
   "box/box/inlineClasses/callableRefClassMergingNestedValueClass.kt": {
@@ -21798,8 +21802,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultFunctionsFromAnyForInlineClass.kt"
   },
   "box/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt": {
-   "detail": "exit=0 stdout='Fail 4\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/defaultInterfaceMethodsInInlineClass.kt": {
@@ -22858,8 +22862,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387808\\n'",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassesAsInlineFunParameters.kt": {
@@ -23363,8 +23367,9 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt28585.kt"
   },
   "box/box/inlineClasses/kt31994.kt": {
-   "detail": "exit=-11 stdout='' stderr=''",
-   "status": "MISCOMPILE",
+   "category": "class bodies / constructors",
+   "detail": "safe call of an inner class constructor is not supported (at '<eof>')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt31994.kt"
   },
   "box/box/inlineClasses/kt32793.kt": {
@@ -25012,8 +25017,9 @@
    "upstream": "compiler/testData/codegen/box/innerClass/simple.kt"
   },
   "box/box/innerClass/superOuter.kt": {
-   "detail": "exit=0 stdout='Fail\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class Inner extending its outer class is not supported (at '<eof>')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/superOuter.kt"
   },
   "box/box/innerNested/considerPropertyInitValueFromNestedClass.kt": {
@@ -26058,8 +26064,8 @@
    "upstream": "compiler/testData/codegen/box/lateinit/initialized.kt"
   },
   "box/box/lateinit/innerIsInitialized.kt": {
-   "category": "strings / templates",
-   "detail": "unknown property $Fn$String.isInitialized",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class InnerSubclass extending its outer class is not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lateinit/innerIsInitialized.kt"
   },

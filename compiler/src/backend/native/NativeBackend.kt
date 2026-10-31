@@ -2936,7 +2936,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             t == Ty.RawPtr && n == "toKString" -> Val(emitT("call ptr @rt_str_from_c(ptr ${r.v})"), Ty.Str, true)
             t == Ty.Str && n == "toKString" -> return r
-            t == Ty.Str && n == "toString" -> return r
+            // A null String (e.g. `T = String?` in a generic) prints as "null"; literals are immortal, so ownership holds.
+            t == Ty.Str && n == "toString" -> return if (r.v.startsWith("@")) r else Val(emitT("select i1 ${emitT("icmp eq ptr ${r.v}, null")}, ptr ${cstr("null")}, ptr ${r.v}"), Ty.Str, r.owned)
             t == Ty.Pinned && n == "addressOf" -> {
                 val i = coerce(genExpr(e.args.single()), Ty.I64)
                 Val(emitT("getelementptr i8, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 8")}, i64 ${i.v}"), Ty.RawPtr)

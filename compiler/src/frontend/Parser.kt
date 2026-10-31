@@ -49,6 +49,8 @@ class Parser(toks: List<Tok>) {
     /** Data class: generated toString, componentN, hashCode and `$equals` (structural `==`) over the constructor properties. */
     private fun dataClass(c: ClassD): ClassD {
         val props = c.ctorParams.filter { p -> c.fields.any { it.name == p.name } }
+        // `Array<T>` is a list here: its `==` would compare contents, not identity as in Kotlin.
+        if (props.any { it.type.name == "Array" }) fail("data classes with Array properties are not supported")
         val have = c.methods.map { it.name }.toSet()
         val ms = ArrayList(c.methods)
         val l = c.line
@@ -327,7 +329,10 @@ class Parser(toks: List<Tok>) {
                     val c = classDecl()
                     if (c.fields.size != 1 || c.ctorParams.size != 1) fail("a value class needs exactly one property", tk)
                     // hashCode of a value class is its property's hashCode.
-                    val hashable = c.fields[0].type?.let { it.name in setOf("Int", "Long", "Short", "Byte", "Char", "Boolean", "String", "Double", "Float", "UInt", "ULong") && !it.nullable } == true
+                    // A type parameter counts by its declared bound (`value class Z<T: Int>(val x: T)`).
+                    val ft0 = c.fields[0].type
+                    val ft = if (ft0 != null && ft0.name in c.typeParams && !ft0.nullable) TypeParamBounds.bounds["${c.line}:${ft0.name}"] else ft0
+                    val hashable = ft?.let { it.name in setOf("Int", "Long", "Short", "Byte", "Char", "Boolean", "String", "Double", "Float", "UInt", "ULong") && !it.nullable } == true
                     val ms = if (!hashable || c.methods.any { it.name == "hashCode" && it.params.isEmpty() }) c.methods else c.methods + FunD("hashCode", emptyList(), TypeRef("Int", emptyList(), false), null,
                         CallE(MemberE(NameE(c.fields[0].name).also { it.line = c.line }, "hashCode", false).also { it.line = c.line }, emptyList(), emptyList(), null).also { it.line = c.line }, c.line)
                     classes.add(ClassD(c.name, c.fields, c.supers, ms, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true, c.superTypeArgs))
@@ -753,6 +758,17 @@ class Parser(toks: List<Tok>) {
         val byName = classes.associateBy { it.name }
         val qualified = nestedIn.entries.associate { (n, o) -> "$o.$n" to TypeRef(n, emptyList(), false) }
         for (o in innerOf.values) if (byName[o]?.typeParams?.isNotEmpty() == true) fail("inner classes of generic classes are not supported")
+        // An inner class extending its outer class (or one of its ancestors): an unqualified member name could mean the
+        // inherited member or the outer instance's one; that is not told apart (qualified `this.x` / `this@Outer.x` is fine).
+        for ((ic, o) in innerOf) {
+            val outerChain = generateSequence(byName[o]) { c -> c.superClass?.let { byName[it] } }.toList()
+            val chainNames = outerChain.map { it.name }.toSet()
+            val icd = byName[ic] ?: continue
+            if (generateSequence(icd.superClass) { s -> byName[s]?.superClass }.none { it in chainNames }) continue
+            val members = outerChain.flatMap { c -> c.fields.map { it.name } + c.methods.map { it.name.removePrefix("\$prop\$") } + c.ctorParams.map { it.name } }.toSet() + innerOf.filterValues { it in chainNames }.keys
+            val used = HashSet<String>(); localDeclNames(icd, used)
+            if ((used - ownNames(icd)).any { it in members }) fail("inner class $ic extending its outer class is not supported")
+        }
         fun names(c: ClassD) = c.fields.map { it.name }.toSet() + c.methods.map { it.name.removePrefix("\$prop\$") }
         fun locals(f: FunD): Set<String> {
             val out = HashSet<String>(f.params.map { it.name })
@@ -779,6 +795,7 @@ class Parser(toks: List<Tok>) {
                         val ref: E = if (o == ctx) NameE("this").also { it.line = x.line } else if (o == outerName) outerRef(x.line) else fail("inner class ${x.callee.n} needs an outer instance")
                         CallE(x.callee, x.typeArgs, listOf(ref) + x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line }
                     }
+                    x is CallE && x.callee is MemberE && x.callee.n in innerOf && x.callee.safe -> fail("safe call of an inner class constructor is not supported")
                     x is CallE && x.callee is MemberE && x.callee.n in innerOf && !(x.callee.recv is NameE && x.callee.recv.n in byName) ->
                         CallE(NameE(x.callee.n).also { it.line = x.line }, x.typeArgs, listOf(sub.e(x.callee.recv)) + x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line }
                     x is CallE && x.callee is NameE && x.callee.n in outerNames ->
