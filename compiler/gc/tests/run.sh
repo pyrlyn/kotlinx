@@ -85,6 +85,23 @@ if [[ " $(echo $gcs) " == *" epoch "* ]]; then
     done
   else echo "FAIL gc-epoch paced_free: compile"; fail=1; fi
 fi
+# Epoch: freed big blocks are released with madvise (madvised > 0), KX_GC_MADVISE=0 turns it off, and
+# both free everything with the same checksum.
+if [[ " $(echo $gcs) " == *" epoch "* ]]; then
+  t=compiler/gc/tests/epoch/madvise_big.kt; want="checksum=800000"
+  if "$NKC" --gc=epoch "$t" -o "$out/epoch.madv" 2>/dev/null && "$NKC" --gc=epoch --leak-check "$t" -o "$out/epoch.madv.lc" 2>/dev/null; then
+    for m in 1 0; do
+      dbg=$(KX_GC_MADVISE=$m KX_GC_DEBUG=1 KX_GC_EXIT_DRAIN=1 "$out/epoch.madv" 2>&1); got=$(echo "$dbg" | grep '^checksum=')
+      mv=$(echo "$dbg" | grep -oE 'madvised=[0-9]+' | grep -oE '[0-9]+$')
+      ok=0; if [ -n "$mv" ]; then if [ $m = 1 ]; then [ "$mv" -gt 0 ] && ok=1; else [ "$mv" -eq 0 ] && ok=1; fi; fi
+      if [ "$got" = "$want" ] && [ $ok = 1 ]; then echo "PASS gc-epoch madvise_big madvise=$m (madvised=$mv)"
+      else echo "FAIL gc-epoch madvise_big madvise=$m (got=$got madvised=$mv)"; fail=1; fi
+      got=$(KX_GC_MADVISE=$m "$out/epoch.madv.lc" 2>"$out/epoch.madv.lcerr"); rc=$?
+      if [ $rc -eq 0 ] && [ "$got" = "$want" ] && grep -q "leak-check: OK" "$out/epoch.madv.lcerr"; then echo "PASS gc-epoch madvise_big leaks madvise=$m"
+      else echo "FAIL gc-epoch madvise_big leaks madvise=$m (rc=$rc)"; head "$out/epoch.madv.lcerr"; fail=1; fi
+    done
+  else echo "FAIL gc-epoch madvise_big: compile"; fail=1; fi
+fi
 # Incremental: a live root scanned black by an earlier slice must leave the buffer with the step that stopped
 # there. Left behind, a later step frees it in the middle of its own release (double free under ASan).
 if [[ " $(echo $gcs) " == *" incremental "* ]]; then

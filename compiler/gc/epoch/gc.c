@@ -195,6 +195,18 @@ void *rt_alloc_trace(int64_t size) {
     p = bump; bump += cls << 3;
     return p;
 }
+/* madvise for freed big blocks: everything after the first OS page (which holds the Big free-list link) is
+ * handed back with MADV_FREE, so peak RSS drops while the block waits for reuse; a reused block's contents
+ * are undefined anyway. KX_GC_MADVISE=0 disables it. Small-object slabs are not released (their cells
+ * are spread over free lists, no per-slab live count yet). */
+static int64_t dbg_madvised;
+static void big_release(void *p, size_t bytes) {
+    static long os_page; static int enabled = -1;
+    if (enabled < 0) { const char *e = getenv("KX_GC_MADVISE"); enabled = !(e && *e == '0'); os_page = sysconf(_SC_PAGESIZE); }
+    if (!enabled || os_page <= 0 || bytes < 2 * (size_t)os_page) return;
+    char *from = (char *)p + os_page; size_t len = bytes - (size_t)os_page;
+    if (madvise(from, len, MADV_FREE) == 0) dbg_madvised += (int64_t)len;
+}
 void rt_free_trace(void *p, int64_t size) {
     atomic_store_explicit(&t_frees, atomic_load_explicit(&t_frees, memory_order_relaxed) + 1, memory_order_relaxed);
     LEAK(-1);
@@ -205,6 +217,7 @@ void rt_free_trace(void *p, int64_t size) {
     if (cls > CLASSES) {
         size_t bytes = ((size_t)size + PAGE - 1) & ~(size_t)(PAGE - 1);
         Big *b = p; b->size = bytes; b->next = big_free; big_free = b; POISON((char *)p + sizeof(Big), bytes - sizeof(Big));
+        big_release(p, bytes);
         return;
     }
     *(void **)p = free_list[cls]; free_list[cls] = p;
@@ -1190,7 +1203,7 @@ static void epoch_debug(void) {
     if (e && *e) fprintf(stderr, "epoch: roots=%lld minor-visits=%lld major-visits=%lld members=%lld\n", (long long)dbg_roots_k, (long long)dbg_minor_visits, (long long)dbg_major_visits, (long long)dbg_members);
     if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld early ok=%lld hit=%lld skip=%lld qmax=%zu q=%zu\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits, (long long)dbg_early_ok, (long long)dbg_early_hit, (long long)dbg_early_skip, dbg_q_max, max_queued);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
-    if (e && *e) fprintf(stderr, "epoch: freed paced=%lld boundary=%lld keep=%lld\n", (long long)dbg_paced, (long long)dbg_bfreed, (long long)boundary_keep);
+    if (e && *e) fprintf(stderr, "epoch: freed paced=%lld boundary=%lld keep=%lld madvised=%lld\n", (long long)dbg_paced, (long long)dbg_bfreed, (long long)boundary_keep, (long long)dbg_madvised);
     if (e && *e) fprintf(stderr, "epoch: exit live-traced=%lld ret-pending=%zu roots=%zu deferred=%zu cands=%d\n", (long long)(atomic_load(&t_allocs) - atomic_load(&t_frees)), ret_local.len - ret_pos, c_roots.len, c_deferred.len, cands != NULL);
     if (e && *e) {
         size_t wk = 0; for (int i = 0; i < n_threads; i++) wk += workers[i].work.cap + workers[i].black.cap + workers[i].marked.cap;
