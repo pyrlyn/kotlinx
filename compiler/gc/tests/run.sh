@@ -64,6 +64,11 @@ if [[ " $(echo $gcs) " == *" incremental "* ]]; then
     if [ $rc -eq 0 ] && [ "$got" = "53215861" ]; then echo "PASS gc-incremental slice_black"
     else echo "FAIL gc-incremental slice_black (rc=$rc)"; head -20 "$out/incremental.slice_black.err"; fail=1; fi
   else echo "FAIL gc-incremental slice_black: compile"; fail=1; fi
+  # A step over budget on its first slice finishes in one pass instead of re-tracing a shared graph per slice.
+  t=compiler/gc/tests/incremental/one_pass.c
+  if "$CC" -O1 -g -Icompiler/gc "$t" compiler/runtime/runtime.c compiler/gc/incremental/gc.c -o "$out/incremental.one_pass" 2>"$out/incremental.one_pass.err" \
+     && KX_GC_BUDGET_US=0 "$out/incremental.one_pass" 2>>"$out/incremental.one_pass.err"; then echo "PASS gc-incremental one_pass"
+  else echo "FAIL gc-incremental one_pass"; head -20 "$out/incremental.one_pass.err"; fail=1; fi
 fi
 # Selecting an unknown implementation is a compile error.
 if "$NKC" --gc=nope compiler/gc/tests/kt/reuse.kt -o "$out/nope" 2>/dev/null; then echo "FAIL gc-unknown"; fail=1; else echo "PASS gc-unknown"; fi
