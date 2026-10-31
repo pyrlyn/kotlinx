@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2567,
-  "UNSUPPORTED": 2924
+  "PASS": 2589,
+  "UNSUPPORTED": 2902
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -891,15 +891,13 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentExtensions.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/arrays/multiDecl/MultiDeclForValCaptured.kt": {
@@ -918,15 +916,13 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/arrays/multiDecl/kt15560.kt": {
@@ -956,15 +952,13 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/arrays/nonLocalReturnArrayConstructor.kt": {
@@ -13689,8 +13683,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/withDefaultsMultipleFilesOrder.kt"
   },
   "box/box/destructuringDeclInLambdaParam/extensionComponents.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "other syntax (at ',')",
+   "detail": "expected ')' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/extensionComponents.kt"
   },
@@ -26682,15 +26676,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forIterator/MultiDeclForValCaptured.kt": {
@@ -26709,15 +26701,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclFor.kt": {
@@ -26733,14 +26723,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -26774,14 +26764,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "other: cannot iterate over Range",
+   "detail": "cannot iterate over Range",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "other: cannot iterate over Range",
+   "detail": "cannot iterate over Range",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -26802,15 +26792,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensions.kt": {
@@ -26824,15 +26812,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclFor.kt": {
@@ -26848,14 +26834,14 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "other: cannot iterate over Range",
+   "detail": "cannot iterate over Range",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "other: cannot iterate over Range",
+   "detail": "cannot iterate over Range",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
@@ -26876,15 +26862,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensions.kt": {
@@ -26898,15 +26882,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentExtensions.kt": {
@@ -26920,15 +26902,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/int/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentExtensions.kt": {
@@ -26942,15 +26922,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentExtensionsValCaptured.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/kt9828_hashMap.kt": {
@@ -28817,8 +28795,8 @@
    "upstream": "compiler/testData/codegen/box/objects/objectWithSuperclassAndTrait.kt"
   },
   "box/box/objects/privateExtensionFromInitializer_kt4543.kt": {
-   "category": "unknown result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'result'",
+   "category": "other: unknown method A.f()",
+   "detail": "unknown method A.f()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/privateExtensionFromInitializer_kt4543.kt"
   },

@@ -709,7 +709,8 @@ class Parser(toks: List<Tok>) {
                     if (f.recv.name in memberTps) fail("member extensions on a type parameter are not supported")
                     if (f.name in setOf("unaryPlus", "unaryMinus", "not", "inc", "dec", "plus", "minus", "times", "div", "rem", "get", "set", "invoke",
                             "contains", "compareTo", "rangeTo", "rangeUntil", "iterator", "next", "hasNext", "equals", "getValue", "setValue", "provideDelegate")
-                        || f.name.endsWith("Assign") || f.name.startsWith("component")) fail("operator member extension functions are not supported")
+                        || f.name.endsWith("Assign")) fail("operator member extension functions are not supported")
+                    // `componentN` member extensions are called by destructuring as `d.componentN()` (an ordinary call).
                     val sub = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n == "this") NameE("\$this_ext").also { it.line = x.line } else null })
                     ms.add(FunD("mext\$${f.name}", listOf(Param("\$this_ext", f.recv)) + f.params, f.ret, f.body?.let { sub.block(it) },
                         f.exprBody?.let { sub.e(it) }, f.line, emptyList(), f.recv))
