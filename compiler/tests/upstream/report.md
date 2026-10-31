@@ -8,26 +8,26 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2964 |
-| PASS | 2527 |
+| UNSUPPORTED | 2961 |
+| PASS | 2530 |
 
-Kept in tree (re-runnable with `run.py`): 2527
+Kept in tree (re-runnable with `run.py`): 2530
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 245 |
+| strings / templates | 246 |
 | interfaces | 191 |
 | generics | 185 |
 | operator/infix functions | 179 |
-| lambdas / function types / references | 135 |
-| property accessors / delegation | 108 |
+| lambdas / function types / references | 136 |
+| property accessors / delegation | 89 |
 | class bodies / constructors | 85 |
 | type inference / mismatch | 73 |
 | objects / companion objects | 63 |
 | local / extension functions | 52 |
-| type inference (expression bodies) | 44 |
+| type inference (expression bodies) | 45 |
 | other: expected '=' (at ' | 44 |
 | other syntax (at '.') | 43 |
 | inline/value classes | 42 |
@@ -36,13 +36,14 @@ Kept in tree (re-runnable with `run.py`): 2527
 | nullable types | 37 |
 | destructuring declarations | 29 |
 | other syntax (at ':') | 28 |
-| annotations | 26 |
+| annotations | 27 |
 | other syntax (at ',') | 22 |
 | other syntax (at 'FunIFace') | 18 |
 | other: unknown type Number | 17 |
-| unknown x (stdlib API / unsupported decl) | 16 |
+| unknown x (stdlib API / unsupported decl) | 17 |
 | when expressions | 15 |
 | other: unknown type * | 15 |
+| unknown lazy (stdlib API / unsupported decl) | 15 |
 | other syntax (at 'where') | 15 |
 | other: local classes that capture local variables are not supported | 15 |
 | other syntax (at 'suspend') | 14 |
@@ -50,7 +51,6 @@ Kept in tree (re-runnable with `run.py`): 2527
 | other syntax (at '<eof>') | 13 |
 | other syntax (at 'var') | 13 |
 | other syntax (at 'val') | 12 |
-| unknown lazy (stdlib API / unsupported decl) | 12 |
 | other: unsupported call | 11 |
 | other: unknown type Nothing | 11 |
 | default arguments | 11 |
