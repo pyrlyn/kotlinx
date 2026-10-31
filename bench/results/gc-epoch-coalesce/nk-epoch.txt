@@ -1,0 +1,17 @@
+sum 3.708
+alloc 76.041
+bigheap 87.384
+closures 82.692
+cycles 160.967
+dispatch 95.502
+file 51.192
+free 51.003
+hashmap 65.234
+lru 301.509
+matmul 10.098
+nbody 72.038
+recursion 6.075
+refpass 129.456
+sort 60.769
+strings 31.797
+trees 119.48

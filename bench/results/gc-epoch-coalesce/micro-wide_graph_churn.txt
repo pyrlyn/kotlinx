@@ -1,0 +1,14 @@
+epoch time 3422.642
+epoch rss 841.0
+epoch pause_total 2332.567
+epoch pause_max 168.605
+epoch collections 843
+default time 92347.9
+default rss 725.5
+default pause_total 94595.160
+default pause_max 1508.284
+default collections 97
+epoch: backpressure total=1897.611ms max=141.933ms boundary max=141.933ms last collect=0.000ms
+epoch: freed paced=594576 boundary=3412558 keep=0 madvised=0 stack-released=0 coalesced=36
+epoch: exit live-traced=9992866 ret-pending=995360 roots=195962 deferred=8349907 cands=0
+epoch: mem MiB slabs=542.6 logs=18(4.5) batches-peak=0.4 stacks(cap): roots=2.0 deferred=64.0 work=0.0 ret=0.2 ret-shared=0.2 ret-local=8.0 im-seen=0.0 hold=0.0 cw=0.4 dying=0.0 workers=25.0 es=0.5
