@@ -25,7 +25,20 @@ for g in $gcs; do
     if eval "$CC" $o -g -Icompiler/gc $def $extra compiler/gc/tests/unit/gc_unit.c compiler/runtime/runtime.c "compiler/gc/$g/gc.c" -o "$out/unit-$g" 2>"$out/unit-$g.err" \
        && "$out/unit-$g" >"$out/unit-$g.log" 2>&1; then echo "PASS gc-unit $g $o"
     else echo "FAIL gc-unit $g $o"; cat "$out/unit-$g.err" "$out/unit-$g.log" 2>/dev/null | head -20; fail=1; fi
+    if [ "$g" = default ] || [ "$g" = incremental ]; then
+      testdef=""; [ "$g" = incremental ] && testdef=-DTEST_INCREMENTAL
+      if "$CC" $o -g -Icompiler/gc $testdef compiler/gc/tests/unit/traversal.c compiler/runtime/runtime.c -o "$out/traversal-$g" 2>"$out/traversal-$g.err" \
+         && "$out/traversal-$g" >"$out/traversal-$g.log" 2>&1; then echo "PASS gc-traversal $g $o"
+      else echo "FAIL gc-traversal $g $o"; cat "$out/traversal-$g.err" "$out/traversal-$g.log" 2>/dev/null | head -20; fail=1; fi
+    fi
   done
+  if [ "$g" = default ] || [ "$g" = incremental ]; then
+    testdef=""; [ "$g" = incremental ] && testdef=-DTEST_INCREMENTAL
+    if "$CC" -O1 -g -fsanitize=address -fno-omit-frame-pointer -DRT_PLAIN_MALLOC -Icompiler/gc $testdef \
+       compiler/gc/tests/unit/traversal.c compiler/runtime/runtime.c -o "$out/traversal-$g.asan" 2>"$out/traversal-$g.asanerr" \
+       && "$out/traversal-$g.asan" >"$out/traversal-$g.asanlog" 2>&1; then echo "PASS gc-traversal-asan $g"
+    else echo "FAIL gc-traversal-asan $g"; cat "$out/traversal-$g.asanerr" "$out/traversal-$g.asanlog" 2>/dev/null | head -20; fail=1; fi
+  fi
   for t in compiler/gc/tests/kt/*.kt; do
     n=$(basename "$t" .kt); exp=$(cat "compiler/gc/tests/kt/$n.out")
     if grep -q '^// gc-needs: cycles' "$t" && ! has cycles; then echo "SKIP gc $g $n (no cycle collection)"; continue; fi

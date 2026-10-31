@@ -124,6 +124,11 @@ Ownership rules:
   buffer and may trigger another collection right after. `rt_gc_collect` and program exit repeat until the
   buffer stays empty.
 - All passes use explicit stacks; deep structures cannot overflow the C stack.
+- MarkGray and Scan claim objects when queued, so shared children and repeated edges do not add
+  duplicate work entries. MarkGray still subtracts every edge and ScanBlack restores every edge.
+  During Scan, WHITE includes queued candidates: a positive count restores the candidate to BLACK;
+  candidates already restored by another ScanBlack are skipped when popped. CollectWhite runs only
+  after Scan finishes. Pending traversal entries are bounded by visited objects, rather than edges.
 
 Adaptive threshold: if a collection reclaimed less than 1/4 of what it traced (the roots were live, e.g.
 relinked LRU nodes), the threshold doubles, up to 2^18; a productive collection resets it to 10 000.
