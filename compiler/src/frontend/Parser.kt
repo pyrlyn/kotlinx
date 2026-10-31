@@ -161,11 +161,42 @@ class Parser(toks: List<Tok>) {
      * Top-level computed property `val x: T get() = ...` / `var x: T get() ... set(v) ...` (no backing field, possibly
      * with context parameters): the getter `$get$x()` (read like an object accessor), the setter `$tset$x(v)`.
      */
+    /**
+     * Delegated property `val x: T by d` (no `KProperty` metadata): a hidden field `$dg$x = d`, the getter
+     * `d.getValue(thisRef, null)` and for `var` the setter `d.setValue(thisRef, null, v)`.
+     */
+    private fun delegated(n: String, ty: TypeRef?, isVar: Boolean, thisRef: E, gname: String, sname: String): Pair<FieldD, List<FunD>> {
+        val line = next().line; skipNLOnly()
+        if (ty == null && isVar) fail("delegated var properties need an explicit type")
+        val dn = "\$dg\$$n"
+        val d = expr()
+        fun call(m: String, extra: List<E>) = CallE(MemberE(NameE(dn).also { it.line = line }, m, false).also { it.line = line }, emptyList(), listOf(thisRef, NullL()) + extra, null).also { it.line = line }
+        val g = FunD(gname, emptyList(), ty, null, call("getValue", emptyList()), line)
+        val s = if (isVar) FunD(sname, listOf(Param("v\$", ty!!)), TypeRef("Unit", emptyList(), false),
+            Block(listOf(ExprS(call("setValue", listOf(NameE("v\$")))).also { it.line = line })), null, line) else null
+        // Without a declared type the getter's type is inferred from `getValue`.
+        return FieldD(dn, null, false, d) to listOfNotNull(g, s)
+    }
+    /** Top-level delegated property: its hidden global, added by program() in declaration order. */
+    private var pendingGlobal: VarS? = null
+
     private fun topProperty(funs: MutableList<FunD>): Boolean {
         val save = p
         val isVar = next().s == "var"
+        if (peek().k == K.ID && t[p + 1].k == K.ID && t[p + 1].s == "by") {
+            val n = ident()
+            val (df, acc) = delegated(n, null, isVar, NullL(), "\$get\$$n", "\$tset\$$n")
+            pendingGlobal = VarS(df.name, false, null, df.init!!).also { it.line = acc[0].line }
+            funs.addAll(acc); return true
+        }
         if (peek().k != K.ID || !(t[p + 1].k == K.OP && t[p + 1].s == ":")) { p = save; return false }
         val n = ident(); next(); val ty = type()
+        if (isId("by")) {
+            if (pendingCtx != null) noCtx()
+            val (df, acc) = delegated(n, ty, isVar, NullL(), "\$get\$$n", "\$tset\$$n")
+            pendingGlobal = VarS(df.name, false, null, df.init!!).also { it.line = acc[0].line }
+            funs.addAll(acc); return true
+        }
         val ctx = pendingCtx ?: emptyList()
         var get: FunD? = null; var set: FunD? = null
         while (true) {
@@ -201,6 +232,10 @@ class Parser(toks: List<Tok>) {
      * (Also: `++`/`--` on a `Short` variable is marked to wrap at 16 bits, since Short is stored as Int.)
      */
     private fun rejectUnmodeled(funs: MutableList<FunD>, classes: MutableList<ClassD>, ifaces: List<InterfaceD>) {
+        // Using an enum entry initializes the enum class and its companion in Kotlin; here companion init blocks
+        // run only when the companion itself is used.
+        for (e in enumClasses) { val co = companionOf[e]?.first ?: continue
+            if (classes.any { it.name == co && it.inits.any { i -> i is Block } }) fail("init blocks in companions of enum classes are not supported") }
         val byName = classes.associateBy { it.name }
         val ifByName = ifaces.associateBy { it.name }
         for (c in classes) {
@@ -394,7 +429,7 @@ class Parser(toks: List<Tok>) {
                 }
                 tk.k == K.ID && tk.s == "data" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(dataClass(classDecl())) }
                 tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "operator", "infix", "tailrec", "const", "open", "final", "abstract", "sealed") -> p++
-                tk.k == K.ID && (tk.s == "val" || tk.s == "var") && topProperty(funs) -> {}
+                tk.k == K.ID && (tk.s == "val" || tk.s == "var") && topProperty(funs) -> { pendingGlobal?.let { globals.add(it) }; pendingGlobal = null }
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && (t[p + 1].k == K.OP && t[p + 1].s == "<" ||
                     t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> funs.add(extProperty())
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> { noCtx(); globals.add(stmt() as VarS); if (pendingStmts.isNotEmpty()) fail("top-level destructuring declarations are not supported", tk) }
@@ -548,6 +583,7 @@ class Parser(toks: List<Tok>) {
                     val isVar = next().s == "var"
                     val n = ident()
                     val ty = if (isOp(":")) { next(); type() } else null
+                    if (isId("by")) { val (df, acc) = delegated(n, ty, isVar, NameE("this"), "\$prop\$$n", "\$set\$$n"); props.add(df); inits.add(df); ms.addAll(acc); continue }
                     getter("\$prop\$$n", ty, emptyList(), null)?.let { ms.add(it); continue }
                     // `abstract val x: T` in a class: an abstract getter, like an interface property.
                     if (isAbstract && !isVar && ty != null && !isOp("=")) { ms.add(FunD("\$prop\$$n", emptyList(), ty, null, null, peek().line)); continue }

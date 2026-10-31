@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2519,
-  "UNSUPPORTED": 2972
+  "PASS": 2527,
+  "UNSUPPORTED": 2964
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -6864,7 +6864,7 @@
   },
   "box/box/companionBlocksAndExtensions/propertyDelegation_block.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'Delegate')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/propertyDelegation_block.kt"
   },
@@ -7330,7 +7330,7 @@
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/boundReceiver.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'makeA')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/boundReceiver.kt"
   },
@@ -7341,44 +7341,44 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/localProperty.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/multipleBoundValues.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "other: unsupported callable reference ::contextualizedProp",
+   "detail": "unsupported callable reference ::contextualizedProp",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/multipleBoundValues.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/singleContextArgUnboundReceiver.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/singleContextArgUnboundReceiver.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/smartCastContextArg.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "lambdas / function types / references",
+   "detail": "delegated var properties need an explicit type (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/smartCastContextArg.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/thisAsContextArg.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "lambdas / function types / references",
+   "detail": "delegated var properties need an explicit type (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/thisAsContextArg.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/unboundReceiver.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/unboundReceiver.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/unboundReceiverVar.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'A')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/unboundReceiverVar.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/varProperty.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "lambdas / function types / references",
+   "detail": "delegated var properties need an explicit type (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/varProperty.kt"
   },
@@ -12656,7 +12656,7 @@
   },
   "box/box/delegatedProperty/beforeDeclarationContainerOptimization.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'D')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/beforeDeclarationContainerOptimization.kt"
   },
@@ -12716,26 +12716,26 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateForExtPropertyInClass.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/custom.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "other: unsupported callable reference ::x",
+   "detail": "unsupported callable reference ::x",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/custom.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/kt49793_companionObject.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt49793_companionObject.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/kt49793_interfaceCompanionObject.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "property accessors / delegation",
+   "detail": "delegated var properties need an explicit type (at 'instance')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt49793_interfaceCompanionObject.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/kt49793_object.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt49793_object.kt"
   },
@@ -12758,104 +12758,103 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/memberExtensionWithBoundReceiverSameType.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/mutable.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "lambdas / function types / references",
+   "detail": "delegated var properties need an explicit type (at '::')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/mutable.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/openProperty.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/openProperty.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/simple.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function '$get$y' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/simple.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/withSideEffects.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "other: unknown method $Fn$Int.getValue()",
+   "detail": "unknown method $Fn$Int.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/withSideEffects.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/withSideEffectsFromFileClass.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/withSideEffectsFromFileClass.kt"
   },
   "box/box/delegatedProperty/delegateToCastReceiver.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToCastReceiver.kt"
   },
   "box/box/delegatedProperty/delegateToConst/delegateToConst.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "other: unknown method Int.getValue()",
+   "detail": "unknown method Int.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConst/delegateToConst.kt"
   },
   "box/box/delegatedProperty/delegateToConst/delegateToConstProperty.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "strings / templates",
+   "detail": "unknown method String.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConst/delegateToConstProperty.kt"
   },
   "box/box/delegatedProperty/delegateToConst/delegateToNull.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "other: unknown method CPointer.getValue()",
+   "detail": "unknown method CPointer.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConst/delegateToNull.kt"
   },
   "box/box/delegatedProperty/delegateToConstVal.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "other: unsupported callable reference ::TOP_LEVEL_PROPERTY_VALUE",
+   "detail": "unsupported callable reference ::TOP_LEVEL_PROPERTY_VALUE",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConstVal.kt"
   },
   "box/box/delegatedProperty/delegateToConstructorParameter.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConstructorParameter.kt"
   },
   "box/box/delegatedProperty/delegateToFailingCastReceiver.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFailingCastReceiver.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/chain.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/chain.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/delegateToFinalInstanceProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "other: unknown method Int.getValue()",
+   "detail": "unknown method Int.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/delegateToFinalInstanceProperty.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/delegateToFinalObjectProperty.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "other: unknown method Int.getValue()",
+   "detail": "unknown method Int.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/delegateToFinalObjectProperty.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/delegateToFinalProperty.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "other: unknown method Int.getValue()",
+   "detail": "unknown method Int.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/delegateToFinalProperty.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/finalPropertyInAnotherFile.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "other: unknown method Int.getValue()",
+   "detail": "unknown method Int.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/finalPropertyInAnotherFile.kt"
   },
@@ -12877,15 +12876,13 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndLocalDelegatedProperty.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/delegateToEnum.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/delegateToEnum.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/delegateToEnumInAClass.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/delegateToEnumInAClass.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/delegateToSingleton.kt": {
@@ -12900,56 +12897,51 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/noInitializationOfOuterClass.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffects.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffects.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffectsFromFileClass.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsFromFileClass.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/withSideEffectsToEnum.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "objects / companion objects",
+   "detail": "init blocks in companions of enum classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/withSideEffectsToEnum.kt"
   },
   "box/box/delegatedProperty/delegateToSmartCastReceiver.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'a')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSmartCastReceiver.kt"
   },
   "box/box/delegatedProperty/delegateToThis/delegateToOuterThis.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToThis/delegateToOuterThis.kt"
   },
   "box/box/delegatedProperty/delegateToThis/delegateToThis.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToThis/delegateToThis.kt"
   },
   "box/box/delegatedProperty/delegateToThis/delegateToThisByExtension.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToThis/delegateToThisByExtension.kt"
   },
   "box/box/delegatedProperty/delegateWithPrivateSet.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateWithPrivateSet.kt"
   },
   "box/box/delegatedProperty/delegatedByExtensionMemberProperty.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "other: unknown method A.b()",
+   "detail": "unknown method A.b()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedByExtensionMemberProperty.kt"
   },
@@ -12965,8 +12957,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedOverride.kt"
   },
   "box/box/delegatedProperty/delegatedPropertyInEnum.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "other: unknown method A.$prop$a()",
+   "detail": "unknown method A.$prop$a()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedPropertyInEnum.kt"
   },
@@ -13063,8 +13055,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt45431.kt"
   },
   "box/box/delegatedProperty/kt6722.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt6722.kt"
   },
@@ -13075,20 +13067,20 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt9712.kt"
   },
   "box/box/delegatedProperty/lazy.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/lazy.kt"
   },
   "box/box/delegatedProperty/lazyDelegateInObject.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/lazyDelegateInObject.kt"
   },
   "box/box/delegatedProperty/lazyInAnonymousObject.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/lazyInAnonymousObject.kt"
   },
@@ -13198,8 +13190,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/localDelegatedBoundValueWithSideEffect.kt"
   },
   "box/box/delegatedProperty/map.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "strings / templates",
+   "detail": "HashMap keys must be Int/Long/Char, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/map.kt"
   },
@@ -13209,8 +13201,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/noTypeVariablesLeft.kt"
   },
   "box/box/delegatedProperty/observable.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "property accessors / delegation",
+   "detail": "unknown name 'Delegates'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/observable.kt"
   },
@@ -13269,7 +13261,7 @@
   },
   "box/box/delegatedProperty/optimizedDelegatedProperties/mixedArgumentSizes.kt": {
    "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "detail": "extension properties need a getter (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/optimizedDelegatedProperties/mixedArgumentSizes.kt"
   },
@@ -13285,7 +13277,7 @@
   },
   "box/box/delegatedProperty/protectedVarWithPrivateSet.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/protectedVarWithPrivateSet.kt"
   },
@@ -13296,8 +13288,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/commonCaseForInference.kt"
   },
   "box/box/delegatedProperty/provideDelegate/delegatedPropertyWithIdProvideDelegate.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "strings / templates",
+   "detail": "HashMap keys must be Int/Long/Char, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/delegatedPropertyWithIdProvideDelegate.kt"
   },
@@ -13416,20 +13408,20 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/provideDelegateByExtensionFunction.kt"
   },
   "box/box/delegatedProperty/provideDelegate/setValue.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "other syntax (at ',')",
+   "detail": "expected ')' (at ',')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/setValue.kt"
   },
   "box/box/delegatedProperty/referenceEnclosingClassFieldInReceiver.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/referenceEnclosingClassFieldInReceiver.kt"
   },
   "box/box/delegatedProperty/referenceEnclosingClassFieldInReceiver2.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/referenceEnclosingClassFieldInReceiver2.kt"
   },
@@ -13479,8 +13471,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/useKPropertyLater.kt"
   },
   "box/box/delegatedProperty/valByMapDelegatedProperty.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "strings / templates",
+   "detail": "HashMap keys must be Int/Long/Char, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/valByMapDelegatedProperty.kt"
   },
@@ -13651,8 +13643,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/hiddenSuperOverrideIn1.0.kt"
   },
   "box/box/delegation/ifWithCallableReferenceInLazy.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/ifWithCallableReferenceInLazy.kt"
   },
@@ -14378,8 +14370,8 @@
    "upstream": "compiler/testData/codegen/box/enum/emptyEnumValuesValueOf.kt"
   },
   "box/box/enum/enumCompanionInit.kt": {
-   "category": "unknown X (stdlib API / unsupported decl)",
-   "detail": "unknown name 'X'",
+   "category": "objects / companion objects",
+   "detail": "init blocks in companions of enum classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/enumCompanionInit.kt"
   },
@@ -14498,20 +14490,20 @@
    "upstream": "compiler/testData/codegen/box/enum/inclassobj.kt"
   },
   "box/box/enum/initEntriesInCompanionObject.kt": {
-   "category": "unknown Foo (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Foo'",
+   "category": "objects / companion objects",
+   "detail": "init blocks in companions of enum classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEntriesInCompanionObject.kt"
   },
   "box/box/enum/initEntriesInCompanionObject2.kt": {
-   "category": "enum classes",
-   "detail": "unknown function 'enumValueOf'",
+   "category": "objects / companion objects",
+   "detail": "init blocks in companions of enum classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEntriesInCompanionObject2.kt"
   },
   "box/box/enum/initEntriesInValueOf.kt": {
-   "category": "unknown Foo (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Foo'",
+   "category": "objects / companion objects",
+   "detail": "init blocks in companions of enum classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/initEntriesInValueOf.kt"
   },
@@ -14559,8 +14551,8 @@
    "upstream": "compiler/testData/codegen/box/enum/interfaceCallWithEntryClass.kt"
   },
   "box/box/enum/k54079.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/k54079.kt"
   },
@@ -18420,8 +18412,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt54767a.kt"
   },
   "box/box/inference/pcla/issues/kt54767b.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt54767b.kt"
   },
@@ -18534,8 +18526,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt64066.kt"
   },
   "box/box/inference/pcla/issues/kt64069.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt64069.kt"
   },
@@ -21500,14 +21492,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/conformToComparableAndCallInterfaceMethodGeneric.kt"
   },
   "box/box/inlineClasses/constructorCallableReference.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/constructorCallableReference.kt"
   },
   "box/box/inlineClasses/constructorCallableReferenceGeneric.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/constructorCallableReferenceGeneric.kt"
   },
@@ -23680,37 +23672,37 @@
   },
   "box/box/inlineClasses/propertyDelegation/delegateClassVarToInlineClass.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'Delegate')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateClassVarToInlineClass.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateClassVarToInlineClassGeneric.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'Delegate')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateClassVarToInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateClassVarToInlineClassWithProvideDelegate.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'DelegateFactory')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateClassVarToInlineClassWithProvideDelegate.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateClassVarToInlineClassWithProvideDelegateGeneric.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'DelegateFactory')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateClassVarToInlineClassWithProvideDelegateGeneric.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateCompanionVarToInlineClass.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'Delegate')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateCompanionVarToInlineClass.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateCompanionVarToInlineClassGeneric.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'Delegate')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateCompanionVarToInlineClassGeneric.kt"
   },
@@ -23728,37 +23720,37 @@
   },
   "box/box/inlineClasses/propertyDelegation/delegateObjectVarToInlineClass.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'Delegate')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateObjectVarToInlineClass.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateObjectVarToInlineClassGeneric.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'Delegate')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateObjectVarToInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegatePrivateCompanionVarToInlineClass.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'Delegate')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegatePrivateCompanionVarToInlineClass.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegatePrivateCompanionVarToInlineClassGeneric.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'Delegate')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegatePrivateCompanionVarToInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateTopLevelVarToInlineClass.kt": {
    "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'Delegate')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateTopLevelVarToInlineClass.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateTopLevelVarToInlineClassGeneric.kt": {
    "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'Delegate')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateTopLevelVarToInlineClassGeneric.kt"
   },
@@ -35646,8 +35638,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/objectCaptureOuterConstructorProperty.kt"
   },
   "box/box/regressions/objectInsideDelegation.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied function '$get$withoutType' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/objectInsideDelegation.kt"
   },
@@ -37631,7 +37623,7 @@
   },
   "box/box/syntheticAccessors/accessorForPrivatePropertyReference.kt": {
    "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "detail": "delegated var properties need an explicit type (at 'A')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/accessorForPrivatePropertyReference.kt"
   },
@@ -44702,8 +44694,8 @@
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/isFrozen.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/bigClassWithMixedValues.kt": {
-   "category": "property accessors / delegation",
-   "detail": "body properties need an initializer (at 'by')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/bigClassWithMixedValues.kt"
   },
