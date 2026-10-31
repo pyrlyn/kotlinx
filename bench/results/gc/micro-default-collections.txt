@@ -1,4 +1,7 @@
 alloc_throughput 0
+big_live_churn 36
 cyclic_garbage 250
+huge_live_churn 92
 live_heap_churn 130
 short_lived 0
+wide_graph_churn 97

@@ -1,0 +1,140 @@
+commit 2c9e4a9 2026-10-31 19:38:34 +0200 load { 18.90 11.38 10.36 }
+PASS gc-unit boehm -O1
+PASS gc-unit boehm -O3
+PASS gc boehm acyclic_root
+PASS gc boehm acyclic_stress
+PASS gc boehm cycles
+PASS gc boehm cycles_in_lists
+PASS gc boehm deep_chain
+PASS gc boehm deep_chain_cycle
+PASS gc boehm exit_chain
+PASS gc boehm rc_survivors
+PASS gc boehm relink_stress
+PASS gc boehm reuse
+PASS gc-unit default -O1
+PASS gc-traversal default -O1
+PASS gc-unit default -O3
+PASS gc-traversal default -O3
+PASS gc-traversal-asan default
+PASS gc default acyclic_root
+PASS gc-leaks default acyclic_root
+PASS gc-asan default acyclic_root
+PASS gc default acyclic_stress
+PASS gc-leaks default acyclic_stress
+PASS gc-asan default acyclic_stress
+PASS gc default cycles
+PASS gc-leaks default cycles
+PASS gc-asan default cycles
+PASS gc default cycles_in_lists
+PASS gc-leaks default cycles_in_lists
+PASS gc-asan default cycles_in_lists
+PASS gc default deep_chain
+PASS gc-leaks default deep_chain
+PASS gc-asan default deep_chain
+PASS gc default deep_chain_cycle
+PASS gc-leaks default deep_chain_cycle
+PASS gc-asan default deep_chain_cycle
+PASS gc default exit_chain
+PASS gc-leaks default exit_chain
+PASS gc-asan default exit_chain
+PASS gc default rc_survivors
+PASS gc-leaks default rc_survivors
+PASS gc-asan default rc_survivors
+PASS gc default relink_stress
+PASS gc-leaks default relink_stress
+PASS gc-asan default relink_stress
+PASS gc default reuse
+PASS gc-leaks default reuse
+PASS gc-asan default reuse
+SKIP gc-unit epoch -O1 (deferred RC)
+SKIP gc-unit epoch -O3 (deferred RC)
+PASS gc epoch acyclic_root
+PASS gc-leaks epoch acyclic_root
+PASS gc-asan epoch acyclic_root
+PASS gc epoch acyclic_stress
+PASS gc-leaks epoch acyclic_stress
+PASS gc-asan epoch acyclic_stress
+PASS gc epoch cycles
+PASS gc-leaks epoch cycles
+PASS gc-asan epoch cycles
+PASS gc epoch cycles_in_lists
+PASS gc-leaks epoch cycles_in_lists
+PASS gc-asan epoch cycles_in_lists
+PASS gc epoch deep_chain
+PASS gc-leaks epoch deep_chain
+PASS gc-asan epoch deep_chain
+PASS gc epoch deep_chain_cycle
+PASS gc-leaks epoch deep_chain_cycle
+PASS gc-asan epoch deep_chain_cycle
+PASS gc epoch exit_chain
+PASS gc-leaks epoch exit_chain
+PASS gc-asan epoch exit_chain
+PASS gc epoch rc_survivors
+PASS gc-leaks epoch rc_survivors
+PASS gc-asan epoch rc_survivors
+PASS gc epoch relink_stress
+PASS gc-leaks epoch relink_stress
+PASS gc-asan epoch relink_stress
+PASS gc epoch reuse
+PASS gc-leaks epoch reuse
+PASS gc-asan epoch reuse
+PASS gc-unit incremental -O1
+PASS gc-traversal incremental -O1
+PASS gc-unit incremental -O3
+PASS gc-traversal incremental -O3
+PASS gc-traversal-asan incremental
+PASS gc incremental acyclic_root
+PASS gc-leaks incremental acyclic_root
+PASS gc-asan incremental acyclic_root
+PASS gc incremental acyclic_stress
+PASS gc-leaks incremental acyclic_stress
+PASS gc-asan incremental acyclic_stress
+PASS gc incremental cycles
+PASS gc-leaks incremental cycles
+PASS gc-asan incremental cycles
+PASS gc incremental cycles_in_lists
+PASS gc-leaks incremental cycles_in_lists
+PASS gc-asan incremental cycles_in_lists
+PASS gc incremental deep_chain
+PASS gc-leaks incremental deep_chain
+PASS gc-asan incremental deep_chain
+PASS gc incremental deep_chain_cycle
+PASS gc-leaks incremental deep_chain_cycle
+PASS gc-asan incremental deep_chain_cycle
+PASS gc incremental exit_chain
+PASS gc-leaks incremental exit_chain
+PASS gc-asan incremental exit_chain
+PASS gc incremental rc_survivors
+PASS gc-leaks incremental rc_survivors
+PASS gc-asan incremental rc_survivors
+PASS gc incremental relink_stress
+PASS gc-leaks incremental relink_stress
+PASS gc-asan incremental relink_stress
+PASS gc incremental reuse
+PASS gc-leaks incremental reuse
+PASS gc-asan incremental reuse
+PASS gc-unit rc -O1
+PASS gc-unit rc -O3
+SKIP gc rc acyclic_root (no cycle collection)
+PASS gc rc acyclic_stress
+PASS gc-leaks rc acyclic_stress
+PASS gc-asan rc acyclic_stress
+SKIP gc rc cycles (no cycle collection)
+SKIP gc rc cycles_in_lists (no cycle collection)
+PASS gc rc deep_chain
+PASS gc-leaks rc deep_chain
+PASS gc-asan rc deep_chain
+SKIP gc rc deep_chain_cycle (no cycle collection)
+SKIP gc rc exit_chain (no cycle collection)
+PASS gc rc rc_survivors
+PASS gc-leaks rc rc_survivors
+PASS gc-asan rc rc_survivors
+SKIP gc rc relink_stress (no cycle collection)
+PASS gc rc reuse
+PASS gc-leaks rc reuse
+PASS gc-asan rc reuse
+PASS gc-epoch queue_spike (qmax=16 logs=18)
+PASS gc-incremental slice_black
+PASS gc-incremental one_pass
+PASS gc-unknown
+GC ALL PASSED
