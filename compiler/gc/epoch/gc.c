@@ -11,7 +11,7 @@
 //   * Epoch boundary (log full, LOG_CAP entries): the log is handed to the collector (one mutex
 //     round-trip) and the mutator frees objects the collector found dead, under a time budget
 //     (KX_GC_FREE_BUDGET_US, default half of KX_GC_TARGET_PAUSE_US). The boundary is the only pause; it blocks only if the
-//     collector falls more than KX_GC_MAX_QUEUED (adaptive 2-64 by default) logs behind (back-pressure).
+//     collector falls more than KX_GC_MAX_QUEUED (adaptive 2-16 by default) logs behind (back-pressure).
 // Collector (background thread), per log, in order:
 //   1. apply all increments, then all decrements (the mutator is single-threaded, so no count drops to
 //      zero early); every touched object is marked dirty. Count zero -> dead: decrement its traced children
@@ -20,11 +20,11 @@
 //   2. when the root buffer is large: concurrent trial deletion (MarkGray / Scan / CollectWhite) on a
 //      separate cyclic count (CRC, header bits 40-63), so real counts are never disturbed while the
 //      mutator keeps running; each white component becomes a candidate cycle.
-//   3. a candidate cycle is checked after the next log whose hand-off happened after detection ended:
-//      Delta test (no member was touched by any RC operation or write barrier since detection) and Sigma
-//      test (sum of member counts minus member-to-member edges is zero: no external references). Passing
-//      cycles are freed (traced children outside the cycle decremented, members returned to the mutator);
-//      failing members go back to the root buffer.
+//   3. a candidate cycle gets the Sigma test when detection ends (sum of member counts minus
+//      member-to-member edges is zero: no external references) and the Delta test after the next log whose
+//      hand-off happened after that (no member was touched by any RC operation or write barrier since
+//      detection). Passing cycles are freed (traced children outside the cycle decremented, members
+//      returned to the mutator); failing members go back to the root buffer.
 // Traced objects live in 64 KiB-aligned size-class slabs registered in a page bitmap, so the
 // collector recognizes traced pointers without dereferencing (acyclic objects may be freed concurrently).
 // Generations: objects found externally referenced by a scan become stable (old) until decremented; minor
@@ -455,8 +455,10 @@ static void apply_log(Log *l) {
 // reference from outside the traversed subgraph. Both phases change headers only with atomic
 // operations; CollectWhite and everything else run on the collector thread alone, separated from the
 // parallel phases by the phase barrier. Objects in a candidate set are opaque, and in a minor detection
-// so are stable (old-generation) objects. A wrong CRC (more than 2^24 references) can only make the
-// detector propose a wrong candidate, which the Sigma test rejects.
+// so are stable (old-generation) objects. A wrong CRC can only make the detector propose a wrong candidate,
+// which validation rejects. It does happen: the trace counts an edge the mutator stored after the last
+// applied log. Such a candidate can be live, so see close_sets for why the Sigma test must run before the
+// Delta test.
 #define MAX_THREADS 16
 /* Cost model, learned at run time: wall ns per visited object on one thread (ns_ser) and on all threads
  * (ns_par, the real speedup including contention and imbalance), plus the fixed cost of one parallel
@@ -474,7 +476,7 @@ static int c_major;                 /* current detection ignores the stable bit 
 static _Atomic int c_hit_stable;    /* current minor detection stopped at a stable object */
 static _Atomic int64_t c_stable_delta;
 static int n_threads = 1;
-typedef struct { PtrStack work, black; int64_t traversed; } Worker;
+typedef struct { PtrStack work, black, marked; int64_t traversed; } Worker;   /* marked: see settle */
 static Worker workers[MAX_THREADS];
 static __thread Worker *tw;
 static pthread_mutex_t pmu = PTHREAD_MUTEX_INITIALIZER;
@@ -494,6 +496,9 @@ static inline void promote_atomic(void *p) {
 }
 static int c_im;                    /* an incremental major is tracing (single-threaded) */
 static PtrStack im_seen, c_hold, sm_retry;   /* sm_retry: side-minor roots retried after the major */     /* objects it visited; freed objects it visited (held until it ends) */
+/* Scan can reach an object MarkGray did not: the edge was stored after MarkGray left its source. Its stacks
+ * keep the object across steps, so its memory must be held like that of every other visited object. */
+static inline void im_note(void *t) { if (c_im && !has(t, SEEN_BIT)) { set_bit(t, SEEN_BIT); stack_push(&im_seen, t); } }
 static void mg_child(void *t) {
     if (!t || !is_traced(t)) return;
     uint64_t h = hload(t);
@@ -505,7 +510,8 @@ static void mg_child(void *t) {
         /* clear the Delta bit only on the first visit of this detection (CRC 1): an incremental major may
          * see an object re-colored by a log applied between its steps, and must keep that touch visible */
         if (hcas(t, &h, (((h >> CRC_SHIFT) & CRC_MAX) == 1 ? with_color(h, GRAY) & ~DIRTY_BIT : with_color(h, GRAY)) | (c_im ? SEEN_BIT : 0))) {
-            if (c_im && !(h & SEEN_BIT)) stack_push(&im_seen, t);
+            if (!c_im) stack_push(&tw->marked, t);
+            else if (!(h & SEEN_BIT)) stack_push(&im_seen, t);
             stack_push(&tw->work, t); break;
         }
 }
@@ -514,9 +520,9 @@ static void sb_child(void *t) {
     uint64_t h = hload(t);
     if (h & (CAND_BIT | DEAD_BIT)) return;
     while (((h >> KX_COLOR_SHIFT) & 3) != BLACK)
-        if (hcas(t, &h, with_color(h, BLACK) & ~CRC_MASK)) { promote_atomic(t); stack_push(&tw->black, t); break; }
+        if (hcas(t, &h, with_color(h, BLACK) & ~CRC_MASK)) { im_note(t); promote_atomic(t); stack_push(&tw->black, t); break; }
 }
-static void scan_child(void *t) { if (t && is_traced(t) && !(hload(t) & CAND_BIT)) stack_push(&tw->work, t); }
+static void scan_child(void *t) { if (t && is_traced(t) && !(hload(t) & CAND_BIT)) { im_note(t); stack_push(&tw->work, t); } }
 static void scan_one(void *x) {
     uint64_t h = hload(x);
     while (((h >> KX_COLOR_SHIFT) & 3) == GRAY) {
@@ -663,6 +669,7 @@ static PtrStack c_deferred;   /* buffered roots whose minor detection stopped at
  * once MAJOR_RATIO times as many roots were deferred as there are stable objects (amortized O(1) per root). */
 static size_t detect_prepare(int major, PtrStack *rootsp);
 static void detect_finish(int major, PtrStack roots, size_t k, int hit_stable);
+static void close_sets(void);
 static void detect(int major) {
     PtrStack roots; size_t k = detect_prepare(major, &roots);
     /* minor and one-pass major detections alike, when the expected traversal pays for waking the helpers */
@@ -696,7 +703,7 @@ static void detect(int major) {
 static size_t detect_prepare(int major, PtrStack *rootsp) {
     ep_detections++;
     c_major = major;
-    if (major) { dbg_majors++; for (size_t i = 0; i < c_deferred.len; i++) { void *d = c_deferred.items[i]; if (color(d) == BLACK) set_color(d, PURPLE); stack_push(&c_roots, d); } c_deferred.len = 0; c_deferred_new = 0; }
+    if (major) { dbg_majors++; stack_move(&c_roots, &c_deferred); c_deferred_new = 0; }
     PtrStack roots = c_roots; c_roots = (PtrStack){0};
     /* bounded slice: a minor takes at most slice_roots roots, the rest stays buffered for the next one */
     if (!major && slice_roots && roots.len > slice_roots) {
@@ -713,27 +720,42 @@ static size_t detect_prepare(int major, PtrStack *rootsp) {
         if (has(s, ZOMBIE_BIT)) { clr_bit(s, ZOMBIE_BIT); ret_push(s); roots.items[i] = NULL; continue; }
         if (has(s, DEAD_BIT) && !has(s, CAND_BIT)) { clr_bit(s, DEAD_BIT); release_dead(s); roots.items[i] = NULL; }
     }
+    /* The color says nothing here: a root waiting in the buffer can be recolored by another root's trace,
+     * and dropping it then loses the only root of a cycle that runs through the old generation. */
     for (size_t i = 0; i < roots.len; i++) {
         void *s = roots.items[i];
         if (!s || has(s, CAND_BIT | DEAD_BIT)) continue;
-        if (color(s) == PURPLE && ref_count(s) > 0) { set_color(s, GRAY); clr_bit(s, DIRTY_BIT); roots.items[k++] = s; }
+        if (ref_count(s) > 0) { set_color(s, GRAY); set_crc(s, 0); clr_bit(s, DIRTY_BIT); roots.items[k++] = s; }
     }
     *rootsp = roots;
     return k;
+}
+/* Scan and CollectWhite follow the fields as they are now, MarkGray followed them as they were, so an object
+ * that lost the edge MarkGray reached it through is left gray or white with its CRC. MarkGray would not trace
+ * through it next time, and a cycle counted through it short of its edges would look live for good. */
+static void settle(void *x) {
+    if (has(x, CAND_BIT)) return;
+    if (color(x) == GRAY || color(x) == WHITE) set_color(x, BLACK);
+    set_crc(x, 0);
 }
 static void detect_finish(int major, PtrStack roots, size_t k, int hit_stable) {
     int64_t tv0 = c_traversed; collect_phases_stats();
     if (major) dbg_major_visits += c_traversed - tv0; else dbg_minor_visits += c_traversed - tv0;
     dbg_roots_k += (int64_t)k;
     for (size_t i = 0; i < k; i++) collect_white(roots.items[i]);
+    for (int w = 0; w < n_threads; w++) {
+        PtrStack *m = &workers[w].marked;
+        for (size_t i = 0; i < m->len; i++) settle(m->items[i]);
+        m->len = 0;
+    }
+    for (size_t i = 0; i < im_seen.len; i++) settle(im_seen.items[i]);
     if (!major && hit_stable)
         for (size_t i = 0; i < k; i++) {
             void *s = roots.items[i];
             if (!has(s, CAND_BIT) && !has(s, KX_BUF_BIT)) { set_bit(s, KX_BUF_BIT); stack_push(&c_deferred, s); c_deferred_new++; }
         }
     free(roots.items);
-    pthread_mutex_lock(&mu); uint64_t h = handed; pthread_mutex_unlock(&mu);
-    batch_close(h);
+    close_sets();
 }
 // Incremental major: the old-generation pass (MarkGray, then Scan) runs in bounded steps (see below),
 // one step after every applied log and more while the collector is
@@ -803,8 +825,7 @@ static int im_step(int64_t budget) {
     im_seen.len = 0;
     if ((int64_t)c_hold.len > dbg_held_max) dbg_held_max = (int64_t)c_hold.len;
     stack_move(&c_ret, &c_hold);
-    for (size_t i = 0; i < sm_retry.len; i++) { void *x = sm_retry.items[i]; if (color(x) == BLACK) set_color(x, PURPLE); stack_push(&c_roots, x); }
-    sm_retry.len = 0;
+    stack_move(&c_roots, &sm_retry);
     major_adapt();
     return 1;
 }
@@ -877,7 +898,7 @@ static void side_minor(void) {
     }
     for (size_t i = 0; i < roots.len; i++) {
         void *x = roots.items[i];
-        if (!x || has(x, CAND_BIT | DEAD_BIT) || ref_count(x) == 0 || color(x) != PURPLE) continue;
+        if (!x || has(x, CAND_BIT | DEAD_BIT) || ref_count(x) == 0) continue;
         if (has(x, SEEN_BIT)) { set_bit(x, KX_BUF_BIT); stack_push(&sm_retry, x); continue; }
         set_color(x, BLACK);                  /* leaves the root buffer; the major may trace it like any object */
         SmEnt *e = sm_find(x, 1);
@@ -913,27 +934,38 @@ static void side_minor(void) {
     }
     dbg_roots_k += (int64_t)sm_roots.len;
     memset(sm_tab, 0, sm_cap * sizeof(SmEnt)); sm_n = 0;
-    pthread_mutex_lock(&mu); uint64_t h = handed; pthread_mutex_unlock(&mu);
-    batch_close(h);
+    close_sets();
 }
 static uint64_t v_sid; static int64_t v_internal;
 static inline int in_set(void *t) { return has(t, CAND_BIT) && crc(t) == v_sid; }
 static void count_child(void *t) { if (t && is_traced(t) && in_set(t)) v_internal++; }
 static void free_cycle_child(void *t) { if (t && is_traced(t) && !in_set(t)) dec_apply(t); }
-/* Delta + Sigma tests; frees a passing cycle, re-roots a failing one. Returns objects freed. */
+/* Sigma test of the current detection's sets, then the batch. A failing set is left dirty, so validation
+ * rejects it. The test reads fields as they are now and counts as of the last applied log. Reading `handed`
+ * only after it makes that safe: every store it saw is logged at or before the batch's Delta log, so if
+ * Delta passes, no store changed a member after the test and the counts it read were still current.
+ * The other order is a use after free: a live wrong candidate can pass Sigma on a store whose increment
+ * is still queued, and that log is then applied to freed memory. */
+static void close_sets(void) {
+    size_t start = 0;
+    for (size_t s = 0; s < cw_ends.len; s++) {
+        size_t end = (size_t)(uintptr_t)cw_ends.items[s];
+        int64_t sum = 0;
+        v_sid = (cw_first_id + s) & CRC_MAX; v_internal = 0;
+        for (size_t i = start; i < end; i++) { void *x = cw_m.items[i]; sum += (int64_t)ref_count(x); vtab(x)->trav(x, count_child); }
+        if (sum != v_internal) { touch_keep(cw_m.items[start]); dbg_fail_sigma++; }
+        start = end;
+    }
+    pthread_mutex_lock(&mu); uint64_t h = handed; pthread_mutex_unlock(&mu);
+    batch_close(h);
+}
+/* Delta test; frees a passing cycle, re-roots a failing one. Returns objects freed. */
 typedef struct { size_t n; void **a; } Members;
 static size_t validate(uint64_t id, Members m) {
     int ok = 1;
     v_sid = id & CRC_MAX;
-    /* Delta and Sigma in one pass over the members (one header load each): stop at the first touched or
-     * dead member, otherwise sum the counts and the member-to-member edges */
-    int64_t ext = 0; v_internal = 0;
-    for (size_t i = 0; i < m.n; i++) {
-        void *x = m.a[i]; uint64_t h = *header(x);
-        if (h & (DIRTY_BIT | DEAD_BIT)) { ok = 0; dbg_fail_delta++; break; }
-        ext += (int64_t)ref_count(x); vtab(x)->trav(x, count_child);
-    }
-    if (ok && ext - v_internal != 0) { ok = 0; dbg_fail_sigma++; }
+    for (size_t i = 0; i < m.n; i++)
+        if (*header(m.a[i]) & (DIRTY_BIT | DEAD_BIT)) { ok = 0; dbg_fail_delta++; break; }
     size_t freed = 0;
     if (ok) {
         for (size_t i = 0; i < m.n; i++) { void *x = m.a[i]; vtab(x)->trav(x, free_cycle_child); }
@@ -1143,7 +1175,7 @@ static void epoch_debug(void) {
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
     if (e && *e) fprintf(stderr, "epoch: exit live-traced=%lld ret-pending=%zu roots=%zu deferred=%zu cands=%d\n", (long long)(atomic_load(&t_allocs) - atomic_load(&t_frees)), ret_local.len - ret_pos, c_roots.len, c_deferred.len, cands != NULL);
     if (e && *e) {
-        size_t wk = 0; for (int i = 0; i < n_threads; i++) wk += workers[i].work.cap + workers[i].black.cap;
+        size_t wk = 0; for (int i = 0; i < n_threads; i++) wk += workers[i].work.cap + workers[i].black.cap + workers[i].marked.cap;
         fprintf(stderr, "epoch: mem MiB slabs=%.1f logs=%lld(%.1f) batches-peak=%.1f stacks(cap): roots=%.1f deferred=%.1f work=%.1f ret=%.1f ret-shared=%.1f ret-local=%.1f im-seen=%.1f hold=%.1f cw=%.1f dying=%.1f workers=%.1f es=%.1f\n",
             dbg_slab_bytes / 1048576.0, (long long)dbg_log_allocs, dbg_log_allocs * (double)sizeof(Log) / 1048576.0, dbg_batch_peak / 1048576.0,
             c_roots.cap * 8 / 1048576.0, c_deferred.cap * 8 / 1048576.0, c_work.cap * 8 / 1048576.0, c_ret.cap * 8 / 1048576.0, ret_shared.cap * 8 / 1048576.0, ret_local.cap * 8 / 1048576.0,
