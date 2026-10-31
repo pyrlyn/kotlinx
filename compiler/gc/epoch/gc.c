@@ -165,7 +165,8 @@ static int64_t dbg_paced, dbg_bfreed;                   /* objects freed by allo
 /* KX_GC_BOUNDARY_KEEP: returned objects a boundary leaves to allocation-paced freeing (it frees only the
  * excess, within the free budget). 0 = free everything at the boundary (the previous behavior). */
 static int64_t boundary_keep = -1;
-#define BOUNDARY_KEEP_DEFAULT 16384
+#define BOUNDARY_KEEP_DEFAULT 0   /* was 16384: a standing backlog of 16K dead objects freed by allocations cost
+                                   * cycles 1.6-1.9x (183 -> 270-340 ms); the boundary budget already bounds the pause */
 static void free_returned(void *p);
 void *rt_alloc_trace(int64_t size) {
     atomic_store_explicit(&t_allocs, atomic_load_explicit(&t_allocs, memory_order_relaxed) + 1, memory_order_relaxed);
@@ -200,12 +201,29 @@ void *rt_alloc_trace(int64_t size) {
  * are undefined anyway. KX_GC_MADVISE=0 disables it. Small-object slabs are not released (their cells
  * are spread over free lists, no per-slab live count yet). */
 static int64_t dbg_madvised;
+#ifdef MADV_FREE_REUSABLE
+#define KX_MADV MADV_FREE_REUSABLE   /* macOS: leaves the resident set (and the footprint) at once */
+#else
+#define KX_MADV MADV_DONTNEED
+#endif
 static void big_release(void *p, size_t bytes) {
     static long os_page; static int enabled = -1;
     if (enabled < 0) { const char *e = getenv("KX_GC_MADVISE"); enabled = !(e && *e == '0'); os_page = sysconf(_SC_PAGESIZE); }
     if (!enabled || os_page <= 0 || bytes < 2 * (size_t)os_page) return;
     char *from = (char *)p + os_page; size_t len = bytes - (size_t)os_page;
-    if (madvise(from, len, MADV_FREE) == 0) dbg_madvised += (int64_t)len;
+    if (madvise(from, len, KX_MADV) == 0) dbg_madvised += (int64_t)len;
+}
+/* An empty collector stack above STACK_RELEASE_MIN bytes gives its pages back (capacity is kept, the pages
+ * fault in again on the next use); the huge_live_churn major left 380 MiB of such stacks resident. */
+#define STACK_RELEASE_MIN (1u << 20)
+static int64_t dbg_stack_released;
+static void stack_release(PtrStack *st) {
+    static long os_page;
+    if (!os_page) os_page = sysconf(_SC_PAGESIZE);
+    if (st->len || st->cap * sizeof(void *) < STACK_RELEASE_MIN || os_page <= 0) return;
+    uintptr_t a = ((uintptr_t)st->items + (uintptr_t)os_page - 1) & ~(uintptr_t)(os_page - 1);
+    uintptr_t e = ((uintptr_t)(st->items + st->cap)) & ~(uintptr_t)(os_page - 1);
+    if (e > a && madvise((void *)a, e - a, KX_MADV) == 0) dbg_stack_released += (int64_t)(e - a);
 }
 void rt_free_trace(void *p, int64_t size) {
     atomic_store_explicit(&t_frees, atomic_load_explicit(&t_frees, memory_order_relaxed) + 1, memory_order_relaxed);
@@ -852,7 +870,8 @@ static int im_step(int64_t budget) {
     detect_finish(1, im_roots, im_k, 0);
     im_roots = (PtrStack){0}; im_state = 0; c_im = 0;
     for (size_t i = 0; i < im_seen.len; i++) clr_bit(im_seen.items[i], SEEN_BIT);
-    im_seen.len = 0;
+    im_seen.len = 0; stack_release(&im_seen);
+    for (int i = 0; i < n_threads; i++) { stack_release(&workers[i].work); stack_release(&workers[i].black); stack_release(&workers[i].marked); }
     if ((int64_t)c_hold.len > dbg_held_max) dbg_held_max = (int64_t)c_hold.len;
     stack_move(&c_ret, &c_hold);
     stack_move(&c_roots, &sm_retry);
@@ -1203,7 +1222,7 @@ static void epoch_debug(void) {
     if (e && *e) fprintf(stderr, "epoch: roots=%lld minor-visits=%lld major-visits=%lld members=%lld\n", (long long)dbg_roots_k, (long long)dbg_minor_visits, (long long)dbg_major_visits, (long long)dbg_members);
     if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld early ok=%lld hit=%lld skip=%lld qmax=%zu q=%zu\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits, (long long)dbg_early_ok, (long long)dbg_early_hit, (long long)dbg_early_skip, dbg_q_max, max_queued);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
-    if (e && *e) fprintf(stderr, "epoch: freed paced=%lld boundary=%lld keep=%lld madvised=%lld\n", (long long)dbg_paced, (long long)dbg_bfreed, (long long)boundary_keep, (long long)dbg_madvised);
+    if (e && *e) fprintf(stderr, "epoch: freed paced=%lld boundary=%lld keep=%lld madvised=%lld stack-released=%lld\n", (long long)dbg_paced, (long long)dbg_bfreed, (long long)boundary_keep, (long long)dbg_madvised, (long long)dbg_stack_released);
     if (e && *e) fprintf(stderr, "epoch: exit live-traced=%lld ret-pending=%zu roots=%zu deferred=%zu cands=%d\n", (long long)(atomic_load(&t_allocs) - atomic_load(&t_frees)), ret_local.len - ret_pos, c_roots.len, c_deferred.len, cands != NULL);
     if (e && *e) {
         size_t wk = 0; for (int i = 0; i < n_threads; i++) wk += workers[i].work.cap + workers[i].black.cap + workers[i].marked.cap;
