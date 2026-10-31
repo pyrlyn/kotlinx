@@ -2858,6 +2858,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
             return withTemps(listOf(r)) { (x) -> callMethod(Val("%this", Ty.Cls(o.name)), o, "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
         } }
+        // Member extension of an implicit receiver (`with(obj) { x.ext() }`, a lambda with receiver).
+        lookup("this")?.let { l -> val rt = l.t
+            if (rt is Ty.Cls && rt.name != owner?.name) classes[rt.name]?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, emptyList()) && !hasMember(t, n) }?.let {
+                if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
+                return withTemps(listOf(r)) { (x) -> method(genExpr(NameE("this").also { it.line = line }), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
+            } }
+            if (rt is Ty.Iface && ifaces[rt.name]?.methods?.get("mext\$$n")?.params?.firstOrNull() == t && !hasMember(t, n))
+                return withTemps(listOf(r)) { (x) -> method(genExpr(NameE("this").also { it.line = line }), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
+        }
         if (isAny(t) && n == "toString" && e0.args.isEmpty()) { val s = anyCall("anyToString__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return s }
         if (isAny(t) && n == "equals" && e0.args.size == 1) return compare("==", r, genExpr(e0.args[0]))
         if (isAny(t) && n == "hashCode" && e0.args.isEmpty()) { val h = anyCall("anyHashCode__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return h }
