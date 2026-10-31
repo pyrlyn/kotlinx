@@ -232,6 +232,7 @@ collection event callback.
 | `KX_GC_STATS=1` | run time: print `gc-stats: gc=... collections=... reclaimed=... pause_total=... pause_max=...` (ms) at exit |
 | `KX_GC_BUDGET_US` | run time, `incremental` only: per-step budget in microseconds (default 500) |
 | `KX_GC_FREE_BUDGET_US` | run time, `epoch` only: time per epoch boundary for freeing returned objects (default half of `KX_GC_TARGET_PAUSE_US`: 1500) |
+| `KX_GC_BOUNDARY_KEEP` | run time, `epoch` only: returned dead objects an epoch boundary leaves to allocation-paced freeing (default 16384; 0 frees everything at the boundary) |
 | `KX_GC_THREADS` | run time, `epoch` only: collector threads for parallel trial deletion (default min(cores, 4)) |
 | `KX_GC_MAX_QUEUED` | run time, `epoch` only: logs the collector may fall behind before the program waits (default: adaptive, 2-16) |
 | `KX_GC_EXIT_DRAIN=1` | run time, `epoch` only: drain the queue at exit even without `--leak-check` / `--alloc malloc` |

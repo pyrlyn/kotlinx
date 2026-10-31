@@ -10,7 +10,8 @@
 //     which logs the object as modified.
 //   * Epoch boundary (log full, LOG_CAP entries): the log is handed to the collector (one mutex
 //     round-trip) and the mutator frees objects the collector found dead, under a time budget
-//     (KX_GC_FREE_BUDGET_US, default half of KX_GC_TARGET_PAUSE_US). The boundary is the only pause; it blocks only if the
+//     (KX_GC_FREE_BUDGET_US, default half of KX_GC_TARGET_PAUSE_US) only beyond a backlog of KX_GC_BOUNDARY_KEEP
+//     objects; the rest is freed by traced allocations (paced by the backlog). The boundary is the only pause; it blocks only if the
 //     collector falls more than KX_GC_MAX_QUEUED (adaptive 2-16 by default) logs behind (back-pressure).
 // Collector (background thread), per log, in order:
 //   1. apply all increments, then all decrements (the mutator is single-threaded, so no count drops to
@@ -160,12 +161,23 @@ static void stack_move(PtrStack *to, PtrStack *from) { for (size_t i = 0; i < fr
 
 static int64_t dbg_bp_ns, dbg_bp_max, dbg_exit_ns, dbg_bmax;
 static PtrStack ret_local; static size_t ret_pos;       /* mutator: dead objects returned by the collector */
+static int64_t dbg_paced, dbg_bfreed;                   /* objects freed by allocation pacing / at boundaries */
+/* KX_GC_BOUNDARY_KEEP: returned objects a boundary leaves to allocation-paced freeing (it frees only the
+ * excess, within the free budget). 0 = free everything at the boundary (the previous behavior). */
+static int64_t boundary_keep = -1;
+#define BOUNDARY_KEEP_DEFAULT 16384
 static void free_returned(void *p);
 void *rt_alloc_trace(int64_t size) {
     atomic_store_explicit(&t_allocs, atomic_load_explicit(&t_allocs, memory_order_relaxed) + 1, memory_order_relaxed);
-    /* Lazy freeing: every traced allocation frees up to two returned dead objects, so reclamation keeps
-     * pace with allocation without a pause. */
-    for (int k = 0; k < 2 && ret_pos < ret_local.len; k++) free_returned(ret_local.items[ret_pos++]);
+    /* Allocation-paced freeing: every traced allocation frees some returned dead objects, so reclamation
+     * keeps pace with allocation without a pause. The rate grows with the backlog (2 per allocation, up to
+     * 16 when more than 64K objects wait), so the backlog drains while the program allocates. */
+    if (ret_pos < ret_local.len) {
+        size_t back = ret_local.len - ret_pos;
+        int k = back > 65536 ? 16 : back > 16384 ? 8 : back > 4096 ? 4 : 2;
+        for (; k > 0 && ret_pos < ret_local.len; k--) { free_returned(ret_local.items[ret_pos++]); dbg_paced++; }
+        if (ret_pos == ret_local.len) { ret_local.len = 0; ret_pos = 0; }
+    }
     LEAK(1);
 #ifdef RT_LEAKCHECK
     rg_alloc[1]++;
@@ -297,12 +309,16 @@ static void free_returned(void *p) {
     vtab(p)->relo(p);
     vtab(p)->freemem(p);
 }
-static void process_returns(int64_t budget_ns, int64_t t0) {
-    while (ret_pos < ret_local.len) {
-        free_returned(ret_local.items[ret_pos++]);
+static void process_returns(int64_t budget_ns, int64_t t0, size_t keep) {
+    while (ret_pos + keep < ret_local.len) {
+        free_returned(ret_local.items[ret_pos++]); dbg_bfreed++;
         if (budget_ns >= 0 && (ret_pos & 31) == 0 && rt_nanos() - t0 > budget_ns) break;
     }
     if (ret_pos == ret_local.len) { ret_local.len = 0; ret_pos = 0; }
+    else if (ret_pos >= 4096 && ret_pos * 2 >= ret_local.len) {   /* keep the pending tail at the front */
+        memmove(ret_local.items, ret_local.items + ret_pos, (ret_local.len - ret_pos) * sizeof(void *));
+        ret_local.len -= ret_pos; ret_pos = 0;
+    }
 }
 static void note_pause(int64_t t0) { stats_add_pause(&gc_st, rt_nanos() - t0); }
 __attribute__((noinline)) static void boundary(void) {
@@ -319,7 +335,8 @@ __attribute__((noinline)) static void boundary(void) {
     ep_epochs++;
     handoff();
     if (free_budget_ns < 0) { const char *e = getenv("KX_GC_FREE_BUDGET_US"); free_budget_ns = e && *e ? atoll(e) * 1000 : (q_target_ns / 2 > FREE_BUDGET_MIN_NS ? q_target_ns / 2 : FREE_BUDGET_MIN_NS); }
-    process_returns(free_budget_ns, t0);
+    if (boundary_keep < 0) { const char *e = getenv("KX_GC_BOUNDARY_KEEP"); boundary_keep = e && *e ? atoll(e) : BOUNDARY_KEEP_DEFAULT; if (boundary_keep < 0) boundary_keep = 0; }
+    process_returns(free_budget_ns, t0, (size_t)boundary_keep);
     if (rt_nanos() - t0 > dbg_bmax) dbg_bmax = rt_nanos() - t0;
     note_pause(t0);
     in_boundary = 0;
@@ -1173,6 +1190,7 @@ static void epoch_debug(void) {
     if (e && *e) fprintf(stderr, "epoch: roots=%lld minor-visits=%lld major-visits=%lld members=%lld\n", (long long)dbg_roots_k, (long long)dbg_minor_visits, (long long)dbg_major_visits, (long long)dbg_members);
     if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld early ok=%lld hit=%lld skip=%lld qmax=%zu q=%zu\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits, (long long)dbg_early_ok, (long long)dbg_early_hit, (long long)dbg_early_skip, dbg_q_max, max_queued);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
+    if (e && *e) fprintf(stderr, "epoch: freed paced=%lld boundary=%lld keep=%lld\n", (long long)dbg_paced, (long long)dbg_bfreed, (long long)boundary_keep);
     if (e && *e) fprintf(stderr, "epoch: exit live-traced=%lld ret-pending=%zu roots=%zu deferred=%zu cands=%d\n", (long long)(atomic_load(&t_allocs) - atomic_load(&t_frees)), ret_local.len - ret_pos, c_roots.len, c_deferred.len, cands != NULL);
     if (e && *e) {
         size_t wk = 0; for (int i = 0; i < n_threads; i++) wk += workers[i].work.cap + workers[i].black.cap + workers[i].marked.cap;
@@ -1211,7 +1229,7 @@ void rt_gc_collect(void) {
         stack_move(&ret_local, &ret_shared);
         pthread_mutex_unlock(&mu);
         size_t returned = ret_local.len - ret_pos;
-        process_returns(-1, t0);
+        process_returns(-1, t0, 0);
         if (!had_ops && !returned && !(cur && cur->n)) break;
     }
     dbg_exit_ns = rt_nanos() - t0;
