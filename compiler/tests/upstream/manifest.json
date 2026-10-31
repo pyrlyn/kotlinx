@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2527,
-  "UNSUPPORTED": 2964
+  "PASS": 2530,
+  "UNSUPPORTED": 2961
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -7335,8 +7335,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/boundReceiver.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/localProperty.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/localProperty.kt"
   },
@@ -8286,9 +8286,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInArrayWithArrayVarUpdatedInLoopBody13.kt"
   },
   "box/box/controlStructures/forInArray/forInDelegatedPropertyUpdatedInLoopBody.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInDelegatedPropertyUpdatedInLoopBody.kt"
   },
   "box/box/controlStructures/forInArray/forInDoubleArrayWithUpcast.kt": {
@@ -13120,8 +13119,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/inlineOperators.kt"
   },
   "box/box/delegatedProperty/local/kt12891.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt12891.kt"
   },
@@ -13131,8 +13130,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt13557.kt"
   },
   "box/box/delegatedProperty/local/kt16864.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "unknown key (stdlib API / unsupported decl)",
+   "detail": "unknown name 'key'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt16864.kt"
   },
@@ -13142,14 +13141,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt19690.kt"
   },
   "box/box/delegatedProperty/local/kt21085.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt21085.kt"
   },
   "box/box/delegatedProperty/local/kt23117.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "unknown bunny (stdlib API / unsupported decl)",
+   "detail": "unknown name 'bunny'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt23117.kt"
   },
@@ -13184,8 +13183,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/localVarNoExplicitType.kt"
   },
   "box/box/delegatedProperty/localDelegatedBoundValueWithSideEffect.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "other: unknown method $Fn$Int.getValue()",
+   "detail": "unknown method $Fn$Int.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/localDelegatedBoundValueWithSideEffect.kt"
   },
@@ -13254,8 +13253,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/optimizedDelegatedProperties/kt48825.kt"
   },
   "box/box/delegatedProperty/optimizedDelegatedProperties/lazy.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/optimizedDelegatedProperties/lazy.kt"
   },
@@ -13375,14 +13374,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/local.kt"
   },
   "box/box/delegatedProperty/provideDelegate/localCaptured.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found $Lam3$String$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/localCaptured.kt"
   },
   "box/box/delegatedProperty/provideDelegate/localDifferentReceivers.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "other: unknown method MyClass.getValue()",
+   "detail": "unknown method MyClass.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/localDifferentReceivers.kt"
   },
@@ -18406,8 +18405,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt54664.kt"
   },
   "box/box/inference/pcla/issues/kt54767a.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "unknown lazy (stdlib API / unsupported decl)",
+   "detail": "unknown function 'lazy'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt54767a.kt"
   },
@@ -19078,8 +19077,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/pclaRootIsTrySyntheticCall.kt"
   },
   "box/box/inference/pcla/pclaRootIsTrySyntheticCallWithDelegate.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "lambdas / function types / references",
+   "detail": "cannot infer the type of lambda parameter 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/pclaRootIsTrySyntheticCallWithDelegate.kt"
   },
@@ -19135,8 +19134,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/substitutelambdaExtensionReceiverType.kt"
   },
   "box/box/inference/pcla/topDownCompletionBreakedByNonBuilderInferenceSession.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionBreakedByNonBuilderInferenceSession.kt"
   },
@@ -23659,14 +23658,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/privateConstructorFunInterfaceMultiModuleGeneric.kt"
   },
   "box/box/inlineClasses/propertyDelegation/captureLocalVarDelegatedToInlineClass.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "exceptions",
+   "detail": "unknown function 'AssertionError'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/captureLocalVarDelegatedToInlineClass.kt"
   },
   "box/box/inlineClasses/propertyDelegation/captureLocalVarDelegatedToInlineClassGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "exceptions",
+   "detail": "unknown function 'AssertionError'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/captureLocalVarDelegatedToInlineClassGeneric.kt"
   },
@@ -23707,14 +23706,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateCompanionVarToInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateLocalVarToInlineClass.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "exceptions",
+   "detail": "unknown function 'AssertionError'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateLocalVarToInlineClass.kt"
   },
   "box/box/inlineClasses/propertyDelegation/delegateLocalVarToInlineClassGeneric.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
+   "category": "exceptions",
+   "detail": "unknown function 'AssertionError'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/delegateLocalVarToInlineClassGeneric.kt"
   },
@@ -23775,15 +23774,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/kt27070Generic.kt"
   },
   "box/box/inlineClasses/propertyDelegation/kt42933.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/kt42933.kt"
   },
   "box/box/inlineClasses/propertyDelegation/kt42933Generic.kt": {
-   "category": "property accessors / delegation",
-   "detail": "expected '=' (at 'by')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/propertyDelegation/kt42933Generic.kt"
   },
   "box/box/inlineClasses/propertyLoweringOrder.kt": {

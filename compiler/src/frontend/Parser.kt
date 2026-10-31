@@ -1370,8 +1370,25 @@ class Parser(toks: List<Tok>) {
                 FunD(name, params, r, Block(ds + RetS(e).also { it.line = line }), null, line, typeParams, recv)
             }
         }
-        else if (isOp("{")) FunD(name, params, ret, block(), null, line, typeParams, recv)
+        else if (isOp("{")) {
+            val outer = localDelegs; localDelegs = HashSet()
+            val b = try { block().let { if (localDelegs.isEmpty()) it else delegLocals(it, localDelegs) } } finally { localDelegs = outer }
+            FunD(name, params, ret, b, null, line, typeParams, recv)
+        }
         else FunD(name, params, ret, null, null, line, typeParams, recv) // abstract (interface) member
+    }
+
+    /** Delegated local variables (`val x by d`) of the function body being parsed. */
+    private var localDelegs = HashSet<String>()
+    /** Reads of a delegated local `x` become `$dg$x.getValue(null, null)`, assignments `$dg$x.setValue(null, null, v)`. */
+    private fun delegLocals(b: Block, names: Set<String>): Block {
+        fun call(n: String, m: String, line: Int, extra: List<E>) = CallE(MemberE(NameE("\$dg\$$n").also { it.line = line }, m, false).also { it.line = line }, emptyList(), listOf<E>(NullL(), NullL()) + extra, null).also { it.line = line }
+        var sb: Subst? = null
+        sb = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n in names) call(x.n, "getValue", x.line, emptyList()) else null },
+            srw = { s -> if (s is AssignS && (s.target as? NameE)?.n in names) {
+                if (s.op != "=") fail("compound assignment to a delegated local is not supported")
+                ExprS(call((s.target as NameE).n, "setValue", s.line, listOf(sb!!.e(s.value)))).also { it.line = s.line } } else null })
+        return sb.block(b)
     }
 
     /** A secondary constructor: parameters, delegation (`this`/`super`/none) with its arguments, optional body. */
@@ -1718,6 +1735,11 @@ class Parser(toks: List<Tok>) {
                 } else {
                 val name = ident()
                 val ty = if (isOp(":")) { next(); type() } else null
+                if (isId("by")) {
+                    next(); skipNLOnly()
+                    localDelegs.add(name)
+                    return VarS("\$dg\$$name", false, null, expr()).also { it.line = line }
+                }
                 expectOp("="); skipNLOnly()
                 VarS(name, isVar, ty, expr())
                 }
