@@ -8,17 +8,17 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2978 |
-| PASS | 2513 |
+| UNSUPPORTED | 2972 |
+| PASS | 2519 |
 
-Kept in tree (re-runnable with `run.py`): 2513
+Kept in tree (re-runnable with `run.py`): 2519
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| interfaces | 235 |
-| strings / templates | 232 |
+| strings / templates | 235 |
+| interfaces | 209 |
 | generics | 185 |
 | operator/infix functions | 178 |
 | property accessors / delegation | 142 |
@@ -44,19 +44,19 @@ Kept in tree (re-runnable with `run.py`): 2513
 | other: unknown type * | 15 |
 | other syntax (at 'where') | 15 |
 | other: local classes that capture local variables are not supported | 15 |
+| unknown x (stdlib API / unsupported decl) | 15 |
+| enum classes | 14 |
 | other syntax (at 'suspend') | 14 |
-| unknown x (stdlib API / unsupported decl) | 14 |
 | other syntax (at '<eof>') | 13 |
 | other syntax (at 'var') | 13 |
 | other syntax (at 'val') | 12 |
-| enum classes | 11 |
 | other: unsupported call | 11 |
 | other: unknown type Nothing | 11 |
 | default arguments | 11 |
 | unknown A (stdlib API / unsupported decl) | 10 |
 | types: UIntArray | 10 |
 | unknown Any (stdlib API / unsupported decl) | 10 |
-| other: local declarations are only supported in function bodies | 10 |
+| other syntax (at 'inner') | 10 |
 
 ## N/A reasons
 
