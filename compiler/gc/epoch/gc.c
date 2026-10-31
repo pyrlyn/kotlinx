@@ -98,7 +98,7 @@ void rt_free(void *p, int64_t size) {
     free(p);
 }
 void *rt_gc_mem_alloc(size_t n) { void *p = malloc(n); if (!p && n) rt_panic("OutOfMemoryError"); return p; }
-void *rt_gc_mem_calloc(size_t n) { void *p = calloc(1, n); if (!p) rt_panic("OutOfMemoryError"); return p; }
+void *rt_gc_mem_calloc(size_t n) { void *p = calloc(1, n); if (!p && n) rt_panic("OutOfMemoryError"); return p; }
 void *rt_gc_mem_realloc(void *p, size_t n) { p = realloc(p, n); if (!p && n) rt_panic("OutOfMemoryError"); return p; }
 void rt_gc_mem_free(void *p) { free(p); }
 
