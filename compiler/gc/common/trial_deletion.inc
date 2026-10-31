@@ -26,18 +26,22 @@ static PtrStack cc_garbage;   /* garbage found by CollectWhite, freed by the cal
 static PtrStack cc_acyclic;   /* acyclic children of garbage, released after CollectRoots */
 static size_t cc_traced;      /* objects visited by mark_gray in the current collection */
 
-/* MarkGray child visitor: trial-delete the internal reference to a cyclic child. */
+/* Claim before pushing: multiple incoming edges need one visit but one decrement per edge. */
+static void mark_gray_claim(void *obj) {
+    if (color(obj) == GRAY) return;
+    set_color(obj, GRAY);
+    stack_push(&cc_work, obj);
+}
+/* MarkGray child visitor: trial-delete every internal reference, even to a queued child. */
 static void mark_gray_child(void *child) {
-    if (child && is_cyclic(child)) { (*header(child))--; stack_push(&cc_work, child); }
+    if (child && is_cyclic(child)) { (*header(child))--; mark_gray_claim(child); }
 }
 static void mark_gray(void *root) {
     size_t traced = 0;
-    stack_push(&cc_work, root);
+    mark_gray_claim(root);
     while (cc_work.len) {
         void *obj = stack_pop(&cc_work);
-        if (color(obj) == GRAY) continue;
         CC_VISIT(obj);
-        set_color(obj, GRAY);
         traced++;
         vtab(obj)->trav(obj, mark_gray_child);
     }
@@ -56,14 +60,21 @@ static void scan_black(void *obj) {
     while (cc_blacken.len) { void *x = stack_pop(&cc_blacken); vtab(x)->trav(x, scan_black_child); }
 }
 
-static void scan_child(void *child) { if (child && is_cyclic(child)) stack_push(&cc_work, child); }
+/* WHITE also marks queued scan candidates. A positive count still restores the object when popped;
+ * another candidate's ScanBlack may restore it sooner, in which case the queued entry is skipped. */
+static void scan_claim(void *obj) {
+    if (color(obj) != GRAY) return;
+    set_color(obj, WHITE);
+    stack_push(&cc_work, obj);
+}
+static void scan_child(void *child) { if (child && is_cyclic(child)) scan_claim(child); }
 static void scan(void *root) {
-    stack_push(&cc_work, root);
+    scan_claim(root);
     while (cc_work.len) {
         void *obj = stack_pop(&cc_work);
-        if (color(obj) != GRAY) continue;
+        if (color(obj) != WHITE) continue;
         if (ref_count(obj) > 0) scan_black(obj);   /* externally referenced: live */
-        else { set_color(obj, WHITE); vtab(obj)->trav(obj, scan_child); }
+        else vtab(obj)->trav(obj, scan_child);
     }
 }
 
