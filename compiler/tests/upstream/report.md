@@ -8,23 +8,23 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2976 |
-| PASS | 2501 |
-| MISCOMPILE | 14 |
+| UNSUPPORTED | 2982 |
+| PASS | 2504 |
+| MISCOMPILE | 5 |
 
-Kept in tree (re-runnable with `run.py`): 2501
+Kept in tree (re-runnable with `run.py`): 2504
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 241 |
+| strings / templates | 238 |
 | interfaces | 234 |
 | generics | 184 |
 | operator/infix functions | 178 |
 | property accessors / delegation | 142 |
 | lambdas / function types / references | 131 |
-| class bodies / constructors | 84 |
+| class bodies / constructors | 85 |
 | type inference / mismatch | 74 |
 | objects / companion objects | 58 |
 | local / extension functions | 52 |
@@ -49,6 +49,7 @@ Kept in tree (re-runnable with `run.py`): 2501
 | unknown x (stdlib API / unsupported decl) | 14 |
 | other syntax (at 'var') | 13 |
 | other syntax (at 'val') | 12 |
+| other syntax (at '<eof>') | 12 |
 | enum classes | 11 |
 | other: unsupported call | 11 |
 | other: unknown type Nothing | 11 |
@@ -57,7 +58,6 @@ Kept in tree (re-runnable with `run.py`): 2501
 | types: UIntArray | 10 |
 | unknown Any (stdlib API / unsupported decl) | 10 |
 | other: local declarations are only supported in function bodies | 10 |
-| other: override of 'foo' in C changes its signature | 9 |
 
 ## N/A reasons
 
@@ -94,17 +94,8 @@ Minimal repros in `bugs/`:
 
 Affected upstream tests:
 
-- MISCOMPILE `box/box/classes/inner/properOuter.kt` — exit=0 stdout='B_A\n' stderr=''
-- MISCOMPILE `box/box/classes/inner/properSuperLinking.kt` — exit=0 stdout='FailFail\n' stderr=''
 - MISCOMPILE `box/box/classes/kt2477.kt` — exit=0 stdout='FAIL\n' stderr=''
-- MISCOMPILE `box/box/closures/captureInSuperConstructorCall/properValueCapturedByClosure2.kt` — exit=0 stdout='Fail: Outer.ok\n' stderr=''
-- MISCOMPILE `box/box/dataClasses/equals/genericarray.kt` — exit=0 stdout='fail\n' stderr=''
 - MISCOMPILE `box/box/initializers/correctOrder3.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: Expected <1>, actual <0>.\n'
-- MISCOMPILE `box/box/inlineClasses/callableRefClassMergingGenerics.kt` — exit=0 stdout='FAIL n3: null\n' stderr=''
-- MISCOMPILE `box/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt` — exit=0 stdout='Fail 4\n' stderr=''
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -1341387808\n'
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
-- MISCOMPILE `box/box/inlineClasses/kt31994.kt` — exit=-11 stdout='' stderr=''
-- MISCOMPILE `box/box/innerClass/superOuter.kt` — exit=0 stdout='Fail\n' stderr=''
 - MISCOMPILE `box/box/intrinsics/kt12125.kt` — exit=0 stdout='fail 2: -32769\n' stderr=''
