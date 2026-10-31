@@ -1,0 +1,39 @@
+date: 2026-10-31 01:36 EET
+machine: Apple M3 Max, 16 cpus, 64 GB
+os: macOS 27.0.1
+load at start: 48.04 35.68 34.13
+case sum load before: 48.04 35.68 34.13
+case sum load after: 44.34 35.29 34.01
+case alloc load before: 44.34 35.29 34.01
+case alloc load after: 45.50 36.51 34.50
+case bigheap load before: 45.50 36.51 34.50
+case bigheap load after: 42.73 36.76 34.67
+case closures load before: 42.73 36.76 34.67
+case closures load after: 40.64 37.21 34.93
+case cycles load before: 40.64 37.21 34.93
+case cycles load after: 49.91 39.91 35.99
+case dispatch load before: 49.91 39.91 35.99
+case dispatch load after: 46.31 40.00 36.14
+case file load before: 46.31 40.00 36.14
+case file load after: 41.87 39.28 35.96
+case free load before: 41.87 39.28 35.96
+case free load after: 38.35 38.69 35.85
+case hashmap load before: 38.35 38.69 35.85
+case hashmap load after: 31.03 36.97 35.31
+case lru load before: 31.03 36.97 35.31
+case lru load after: 26.73 34.83 34.58
+case matmul load before: 26.73 34.83 34.58
+case matmul load after: 26.51 34.50 34.47
+case nbody load before: 26.51 34.50 34.47
+case nbody load after: 22.26 33.17 33.99
+case recursion load before: 22.26 33.17 33.99
+case recursion load after: 24.24 33.27 34.02
+case refpass load before: 24.24 33.27 34.02
+case refpass load after: 26.10 33.08 33.93
+case sort load before: 26.10 33.08 33.93
+case sort load after: 27.12 32.73 33.78
+case strings load before: 27.12 32.73 33.78
+case strings load after: 24.97 31.92 33.47
+case trees load before: 24.97 31.92 33.47
+case trees load after: 21.14 29.83 32.61
+load at end: 21.14 29.83 32.61
