@@ -187,6 +187,86 @@ class Parser(toks: List<Tok>) {
         return true
     }
 
+    /** Names of member properties with context parameters (accessed through `$cget$x` / `$cset$x` methods). */
+    private val ctxProps = HashSet<String>()
+
+    /**
+     * Member property with context parameters, `context(c: C) var x: T get() ... set(v) ...` (no backing field):
+     * the getter method `$cget$x(c)`, the setter `$cset$x(c, v)`; abstract in interfaces / abstract classes.
+     * Reads `r.x` and assignments `r.x = v` are rewritten to these calls by [rewriteCtxProps].
+     */
+    private fun ctxMemberProp(ms: MutableList<FunD>, abstractOk: Boolean) {
+        val line = peek().line
+        val isVar = next().s == "var"
+        if (isOp("<")) fail("generic properties with context parameters are not supported")
+        val n = ident()
+        if (!isOp(":")) fail("properties with context parameters need an explicit type")
+        next(); val ty = type()
+        val ctx = takeCtx()
+        var get: FunD? = null; var set: FunD? = null
+        while (true) {
+            val at = p
+            while (t[p].k == K.NL) p++
+            if (get == null && isId("get") && t[p + 1].k == K.OP && t[p + 1].s == "(") { get = getter("\$cget\$$n", ty, emptyList(), null); continue }
+            if (set == null && isVar && isId("set") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
+                val sl = next().line; next()
+                val pn = ident(); if (isOp(":")) { next(); type() }
+                expectOp(")")
+                val body = if (isOp("=")) { next(); skipNLOnly(); Block(listOf(ExprS(expr()).also { it.line = sl })) } else block()
+                set = FunD("\$cset\$$n", ctx + Param(pn, ty), TypeRef("Unit", emptyList(), false), body, null, sl)
+                continue
+            }
+            p = at; break
+        }
+        if (get == null && set == null) {
+            if (!abstractOk) fail("properties with context parameters need a getter")
+            ms.add(FunD("\$cget\$$n", ctx, ty, null, null, line))
+            if (isVar) ms.add(FunD("\$cset\$$n", ctx + Param("v\$", ty), TypeRef("Unit", emptyList(), false), null, null, line))
+        } else {
+            if (get == null || (isVar && set == null)) fail("properties with context parameters need both accessors")
+            ms.add(FunD(get.name, ctx + get.params, get.ret, get.body, get.exprBody, get.line))
+            set?.let { ms.add(it) }
+        }
+        ctxProps.add(n)
+    }
+
+    /** `r.x` -> `r.$cget$x()`, `r.x = v` -> `r.$cset$x(v)` (and unqualified `x` inside classes) for [ctxProps]. */
+    private fun rewriteCtxProps(funs: MutableList<FunD>, classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>, globals: MutableList<VarS>) {
+        if (ctxProps.isEmpty()) return
+        for (c in classes) if (c.fields.any { it.name in ctxProps } || c.ctorParams.any { it.name in ctxProps }) fail("a property '${c.fields.first { it.name in ctxProps }.name}' with and without context parameters is not supported")
+        fun get(r: E?, n: String, l: Int): E = CallE((if (r == null) NameE("\$cget\$$n") else MemberE(r, "\$cget\$$n", false)).also { it.line = l }, emptyList(), emptyList(), null).also { it.line = l }
+        lateinit var sb: Subst
+        sb = Subst(emptyMap(), rw = { x ->
+            when {
+                x is CallE && x.callee is MemberE && x.callee.n in ctxProps -> fail("calling a property with context parameters is not supported")
+                x is MemberE && x.n in ctxProps -> { if (x.safe) fail("safe access to a property with context parameters is not supported"); get(sb.e(x.recv), x.n, x.line) }
+                x is NameE && x.n in ctxProps -> get(null, x.n, x.line)
+                x is PostIncE && ((x.target is MemberE && x.target.n in ctxProps) || (x.target is NameE && x.target.n in ctxProps)) -> fail("++/-- on a property with context parameters is not supported")
+                else -> null
+            }
+        }, srw = { s ->
+            val tg = (s as? AssignS)?.target
+            val n = when (tg) { is MemberE -> tg.n; is NameE -> tg.n; else -> null }
+            if (s !is AssignS || n == null || n !in ctxProps) null
+            else {
+                if (tg is MemberE && tg.safe) fail("safe assignment to a property with context parameters is not supported")
+                val r = (tg as? MemberE)?.recv
+                if (s.op != "=" && r != null && r !is NameE) fail("compound assignment to a context property needs a simple receiver")
+                val rr = r?.let { sb.e(it) }
+                val v = if (s.op == "=") sb.e(s.value) else BinE(s.op.dropLast(1), get(rr, n, s.line), sb.e(s.value)).also { it.line = s.line }
+                val callee = (if (rr == null) NameE("\$cset\$$n") else MemberE(rr, "\$cset\$$n", false)).also { it.line = s.line }
+                ExprS(CallE(callee, emptyList(), listOf(v), null).also { it.line = s.line }).also { it.line = s.line }
+            }
+        })
+        fun fn(f: FunD) = sb.fn(f).let { g -> FunD(g.name, g.params, g.ret, g.body, g.exprBody, g.line, f.typeParams, f.recv) }
+        for (i in funs.indices) funs[i] = fn(funs[i])
+        for (i in classes.indices) { val c = classes[i]
+            classes[i] = ClassD(c.name, c.fields.map { sb.field(it) }, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams.map { Param(it.name, it.type, it.default?.let { d -> sb.e(d) }, it.vararg, it.ctx) },
+                c.inits.map { if (it is FieldD) sb.field(it) else sb.block(it as Block) }, c.superArgs?.map { sb.e(it) }, c.typeParams, c.enumEntries?.map { (n, a) -> n to a.map { sb.e(it) } }, c.isValue, c.superTypeArgs) }
+        for (i in ifaces.indices) { val d = ifaces[i]; ifaces[i] = InterfaceD(d.name, d.methods.map { fn(it) }, d.line, d.typeParams, d.supers) }
+        for (i in globals.indices) { val g = globals[i]; globals[i] = VarS(g.name, g.isVar, g.type, sb.e(g.init)).also { it.line = g.line } }
+    }
+
     /** Extension property `val <T> Recv.name: Type get() = ...` (getter only): an extension function `$prop$name`. */
     private fun extProperty(): FunD {
         val ctx = takeCtx()
@@ -271,6 +351,7 @@ class Parser(toks: List<Tok>) {
         classes.addAll(companions); funs.addAll(ctorFactories)
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
         classes.addAll(topAnon); topAnon.clear()
+        rewriteCtxProps(funs, classes, ifaces, globals)
         liftLocals(funs, classes, ifaces)
         resolveNested(funs, classes, ifaces, globals)
         resolveExtensions(funs, classes)
@@ -397,8 +478,9 @@ class Parser(toks: List<Tok>) {
                 var isConst = false; var isLate = false
                 var isPrivate = false; var isAbstract = false
                 if (isContextDecl()) { contextDecl(); continue }
-                if (pendingCtx != null && !isId("fun") && !(peek().k == K.ID && peek().s in MEMBER_MODS)) noCtx()
+                if (pendingCtx != null && !isId("fun") && !isId("val") && !isId("var") && !(peek().k == K.ID && peek().s in MEMBER_MODS)) noCtx()
                 while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) { if (peek().s == "const") isConst = true; if (peek().s == "lateinit") isLate = true; if (peek().s == "private") isPrivate = true; if (peek().s == "abstract") isAbstract = true; p++ }
+                if (pendingCtx != null && (isId("val") || isId("var"))) { ctxMemberProp(ms, props == null || isAbstract); continue }
                 if (isPrivate && curIface != null && isId("fun") && t[p + 1].k == K.ID) privateIfaceFuns.getOrPut(curIface!!) { HashSet() }.add(t[p + 1].s)
                 if (props != null && inits != null && (isId("val") || isId("var"))) {
                     val isVar = next().s == "var"

@@ -7,23 +7,23 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| UNSUPPORTED | 2986 |
 | N/A | 2984 |
-| PASS | 2491 |
+| UNSUPPORTED | 2976 |
+| PASS | 2501 |
 | MISCOMPILE | 14 |
 
-Kept in tree (re-runnable with `run.py`): 2491
+Kept in tree (re-runnable with `run.py`): 2501
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 238 |
+| strings / templates | 241 |
 | interfaces | 234 |
-| generics | 183 |
+| generics | 184 |
 | operator/infix functions | 178 |
-| lambdas / function types / references | 147 |
-| property accessors / delegation | 138 |
+| property accessors / delegation | 142 |
+| lambdas / function types / references | 131 |
 | class bodies / constructors | 84 |
 | type inference / mismatch | 74 |
 | objects / companion objects | 58 |
@@ -37,10 +37,8 @@ Kept in tree (re-runnable with `run.py`): 2491
 | nullable types | 37 |
 | destructuring declarations | 29 |
 | other syntax (at ':') | 28 |
-| annotations | 23 |
+| annotations | 24 |
 | other syntax (at ',') | 21 |
-| other syntax (at 'var') | 19 |
-| other syntax (at 'val') | 18 |
 | other syntax (at 'FunIFace') | 18 |
 | other: unknown type Number | 17 |
 | when expressions | 15 |
@@ -49,6 +47,8 @@ Kept in tree (re-runnable with `run.py`): 2491
 | other: local classes that capture local variables are not supported | 15 |
 | other syntax (at 'suspend') | 14 |
 | unknown x (stdlib API / unsupported decl) | 14 |
+| other syntax (at 'var') | 13 |
+| other syntax (at 'val') | 12 |
 | enum classes | 11 |
 | other: unsupported call | 11 |
 | other: unknown type Nothing | 11 |
@@ -102,7 +102,7 @@ Affected upstream tests:
 - MISCOMPILE `box/box/initializers/correctOrder3.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: Expected <1>, actual <0>.\n'
 - MISCOMPILE `box/box/inlineClasses/callableRefClassMergingGenerics.kt` — exit=0 stdout='FAIL n3: null\n' stderr=''
 - MISCOMPILE `box/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt` — exit=0 stdout='Fail 4\n' stderr=''
-- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -2146694304\n'
+- MISCOMPILE `box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: -1341387808\n'
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
 - MISCOMPILE `box/box/inlineClasses/kt31994.kt` — exit=-11 stdout='' stderr=''
