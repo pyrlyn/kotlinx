@@ -75,14 +75,34 @@ void rt_rel_defer(void *obj) {
     rt_rel_draining = 0;
 }
 
+/* Every collector pause, kept only to report percentiles at exit (KX_GC_STATS=1). */
+static int64_t *gc_pauses; static size_t gc_pauses_len, gc_pauses_cap;
+void rt_gc_note_pause(int64_t pause_ns) {
+    if (gc_pauses_len == gc_pauses_cap) {
+        size_t cap = gc_pauses_cap ? gc_pauses_cap * 2 : 1024;
+        int64_t *p = realloc(gc_pauses, cap * sizeof *p);
+        if (!p) return; /* statistics only: drop the sample rather than fail */
+        gc_pauses = p; gc_pauses_cap = cap;
+    }
+    gc_pauses[gc_pauses_len++] = pause_ns;
+}
+static int cmp_i64(const void *a, const void *b) { int64_t x = *(const int64_t *)a, y = *(const int64_t *)b; return (x > y) - (x < y); }
+/* Nearest-rank percentile in ms; 0 with no pauses. */
+static double gc_pause_pct(double q) {
+    if (!gc_pauses_len) return 0;
+    size_t i = (size_t)(q * gc_pauses_len + 0.999999); if (i < 1) i = 1; if (i > gc_pauses_len) i = gc_pauses_len;
+    return gc_pauses[i - 1] / 1e6;
+}
+
 /* At exit: final collection; KX_GC_STATS=1 prints the GC's statistics to stderr (bench/gc/micro.sh). */
 void rt_exit_flush(void) {
     rt_gc_collect(); fflush(stdout);
     const char *e = getenv("KX_GC_STATS");
     if (e && *e && *e != '0') {
         KxGcStats st; rt_gc_stats(&st);
-        fprintf(stderr, "gc-stats: gc=%s collections=%lld reclaimed=%lld pause_total=%.3f pause_max=%.3f\n", rt_gc_name(),
-                (long long)st.collections, (long long)st.reclaimed, st.pause_ns_total / 1e6, st.pause_ns_max / 1e6);
+        fprintf(stderr, "gc-stats: gc=%s collections=%lld reclaimed=%lld pause_total=%.3f pause_max=%.3f pause_p50=%.3f pause_p99=%.3f\n",
+                rt_gc_name(), (long long)st.collections, (long long)st.reclaimed, st.pause_ns_total / 1e6, st.pause_ns_max / 1e6,
+                (qsort(gc_pauses, gc_pauses_len, sizeof *gc_pauses, cmp_i64), gc_pause_pct(0.50)), gc_pause_pct(0.99));
     }
 }
 

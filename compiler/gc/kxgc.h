@@ -66,6 +66,8 @@ void rt_gc_stats(KxGcStats *out);
 // ---- provided by the runtime ----
 void rt_panic(const char *msg) __attribute__((noreturn));
 int64_t rt_nanos(void);
+/* Records one collector pause for the pause percentiles printed with KX_GC_STATS=1. */
+void rt_gc_note_pause(int64_t pause_ns);
 /* Non-zero while the runtime releases objects that a deep release deferred (rt_rel_defer). They sit at count
  * zero with their fields unreleased, as no object does in a collection, where a release runs to the end
  * before the next step: a buffered one would pass for dead. A collection must not start meanwhile. */

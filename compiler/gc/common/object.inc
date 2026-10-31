@@ -59,4 +59,5 @@ static inline void *stack_pop(PtrStack *s) { return s->items[--s->len]; }
 static inline void stats_add_pause(KxGcStats *st, int64_t pause_ns) {
     st->pause_ns_total += pause_ns;
     if (pause_ns > st->pause_ns_max) st->pause_ns_max = pause_ns;
+    rt_gc_note_pause(pause_ns);
 }
