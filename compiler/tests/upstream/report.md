@@ -8,29 +8,28 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2937 |
-| PASS | 2554 |
+| UNSUPPORTED | 2924 |
+| PASS | 2567 |
 
-Kept in tree (re-runnable with `run.py`): 2554
+Kept in tree (re-runnable with `run.py`): 2567
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
 | strings / templates | 253 |
-| generics | 194 |
-| interfaces | 188 |
-| operator/infix functions | 179 |
+| generics | 208 |
+| interfaces | 200 |
+| operator/infix functions | 186 |
 | lambdas / function types / references | 143 |
 | property accessors / delegation | 90 |
 | class bodies / constructors | 86 |
 | type inference / mismatch | 79 |
-| local / extension functions | 63 |
-| objects / companion objects | 63 |
+| objects / companion objects | 64 |
 | type inference (expression bodies) | 45 |
+| other syntax (at '.') | 44 |
 | other: expected '=' (at ' | 44 |
 | inline/value classes | 43 |
-| other syntax (at '.') | 43 |
 | inheritance (open/abstract/sealed) | 40 |
 | other: unknown type T | 39 |
 | nullable types | 38 |
@@ -46,6 +45,7 @@ Kept in tree (re-runnable with `run.py`): 2554
 | other: local classes that capture local variables are not supported | 15 |
 | other syntax (at 'suspend') | 14 |
 | enum classes | 13 |
+| local / extension functions | 13 |
 | other syntax (at '<eof>') | 13 |
 | other syntax (at 'var') | 13 |
 | other syntax (at 'val') | 12 |

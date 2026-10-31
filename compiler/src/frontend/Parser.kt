@@ -227,6 +227,8 @@ class Parser(toks: List<Tok>) {
         return true
     }
 
+    /** Type parameters of the interface whose body is being parsed. */
+    private var memberTps: List<String> = emptyList()
     /** Top-level `fun interface` declarations by name. */
     private val funIfaces = LinkedHashMap<String, InterfaceD>()
 
@@ -701,8 +703,10 @@ class Parser(toks: List<Tok>) {
                 val f = function()
                 if (f.recv != null) {
                     // Member extension `fun R.f(...)`: method `mext$f($this_ext: R, ...)`; `this` is the extension receiver.
-                    if (curClass == null || props == null) fail("member extension functions are only supported in classes")
+                    if (curClass == null && curObject == null && curIface == null) fail("member extension functions are only supported in classes, objects and interfaces")
                     if (f.typeParams.isNotEmpty()) fail("generic member extension functions are not supported")
+                    // Unqualified calls would bind to the dispatch receiver before the extension receiver.
+                    if (f.recv.name in memberTps) fail("member extensions on a type parameter are not supported")
                     if (f.name in setOf("unaryPlus", "unaryMinus", "not", "inc", "dec", "plus", "minus", "times", "div", "rem", "get", "set", "invoke",
                             "contains", "compareTo", "rangeTo", "rangeUntil", "iterator", "next", "hasNext", "equals", "getValue", "setValue", "provideDelegate")
                         || f.name.endsWith("Assign") || f.name.startsWith("component")) fail("operator member extension functions are not supported")
@@ -1346,8 +1350,8 @@ class Parser(toks: List<Tok>) {
             }
             ifaceSupers[name] = ss
         }
-        val savedIface = curIface; curIface = name
-        val ms0 = try { if (isOp("{")) members() else emptyList() } finally { curIface = savedIface }
+        val savedIface = curIface; curIface = name; val savedTps = memberTps; memberTps = tps
+        val ms0 = try { if (isOp("{")) members() else emptyList() } finally { curIface = savedIface; memberTps = savedTps }
         val ms = inferIfaceRets(name, renamePrivate(name, ms0))
         val defs = ms.filter { it.body != null || it.exprBody != null }
         if (defs.isNotEmpty() && tps.isNotEmpty()) genericIfaceTps[name] = tps

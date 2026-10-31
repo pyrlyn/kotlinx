@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2554,
-  "UNSUPPORTED": 2937
+  "PASS": 2567,
+  "UNSUPPORTED": 2924
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2658,8 +2658,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test24.kt"
   },
   "box/box/bridges/test25.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "types: UByteArray",
+   "detail": "unknown type UByteArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test25.kt"
   },
@@ -2727,8 +2727,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithTheSameMethodOneBridge.kt"
   },
   "box/box/bridges/typeParameterInExtensionReceiver.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "generic member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/typeParameterInExtensionReceiver.kt"
   },
@@ -2883,8 +2883,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionFunctionWithPassedSupertype.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionInSamWithPassedSupertype.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "interfaces",
+   "detail": "this fun interface method is not supported (at 'SamInterface')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionInSamWithPassedSupertype.kt"
   },
@@ -3830,14 +3830,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelUnitOneStringArg.kt"
   },
   "box/box/callableReference/function/extensionFunctionAsASuperTypePassToSAMInterface.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "other syntax (at '.')",
+   "detail": "unexpected top-level token (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionAsASuperTypePassToSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionFunctionInSAMInterface.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "interfaces",
+   "detail": "this fun interface method is not supported (at 'SamInterface')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionInSAMInterface.kt"
   },
@@ -3860,8 +3860,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionWithExtensionInSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionInDelegatedSam.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "interfaces",
+   "detail": "this fun interface method is not supported (at 'Base')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionInDelegatedSam.kt"
   },
@@ -4097,8 +4097,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedConstructorFromTopLevelOneStringArg.kt"
   },
   "box/box/callableReference/function/nestedExtensionInSAMInterface.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "interfaces",
+   "detail": "this fun interface method is not supported (at 'SamInterface')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedExtensionInSAMInterface.kt"
   },
@@ -4347,14 +4347,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionProperty.kt"
   },
   "box/box/callableReference/property/extensionPropertyInDelegatedSam.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "interfaces",
+   "detail": "this fun interface method is not supported (at 'Base')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyInDelegatedSam.kt"
   },
   "box/box/callableReference/property/extensionPropertyInSamInterface.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "interfaces",
+   "detail": "this fun interface method is not supported (at 'SamInterface')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyInSamInterface.kt"
   },
@@ -6196,14 +6196,14 @@
    "upstream": "compiler/testData/codegen/box/closures/kt11634_4.kt"
   },
   "box/box/closures/kt19389.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt19389.kt"
   },
   "box/box/closures/kt19389_set.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt19389_set.kt"
   },
@@ -7452,8 +7452,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/choosingTheNearestContext.kt"
   },
   "box/box/contextParameters/classCastException.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "other: no context argument of type Context in scope",
+   "detail": "no context argument of type Context in scope",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/classCastException.kt"
   },
@@ -7687,8 +7687,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/kt52373.kt"
   },
   "box/box/contextParameters/kt52459.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "member extensions on a type parameter are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt52459.kt"
   },
@@ -12047,14 +12047,13 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/hashCode/short.kt"
   },
   "box/box/dataClasses/kt49715.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/kt49715.kt"
   },
   "box/box/dataClasses/kt49715_behaviorChange.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/kt49715_behaviorChange.kt"
   },
@@ -12381,15 +12380,13 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionDoubleTwoArgs.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionInClassObject.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionInClassObject.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionInObject.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/defaultArguments/function/extentionFunctionInObject.kt"
   },
   "box/box/defaultArguments/function/extentionFunctionWithOneDefArg.kt": {
@@ -13555,15 +13552,13 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationEvaluationOrder2.kt"
   },
   "box/box/delegation/delegationExtFun1.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationExtFun1.kt"
   },
   "box/box/delegation/delegationExtFun2.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationExtFun2.kt"
   },
   "box/box/delegation/delegationExtProp.kt": {
@@ -13694,8 +13689,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/withDefaultsMultipleFilesOrder.kt"
   },
   "box/box/destructuringDeclInLambdaParam/extensionComponents.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/extensionComponents.kt"
   },
@@ -15221,9 +15216,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/unsignedConst.kt"
   },
   "box/box/evaluate/useCorrectToString.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/evaluate/useCorrectToString.kt"
   },
   "box/box/evaluate/ushortOperations.kt": {
@@ -15368,9 +15362,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsType.kt"
   },
   "box/box/extensionFunctions/extensionFunctionClassLevelLocal.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Local$String.bar()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionClassLevelLocal.kt"
   },
   "box/box/extensionFunctions/extensionFunctionDifferentReceivers.kt": {
@@ -15386,8 +15379,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionFakeOverride.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInDelegatedSam.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "interfaces",
+   "detail": "this fun interface method is not supported (at 'Base')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInDelegatedSam.kt"
   },
@@ -15403,8 +15396,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInNestedClass.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInSAMInterface.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "interfaces",
+   "detail": "this fun interface method is not supported (at 'SamInterface')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInSAMInterface.kt"
   },
@@ -15426,8 +15419,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionNestedInExtensionFunction.kt"
   },
   "box/box/extensionFunctions/extensionFunctionOverride.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "interfaces",
+   "detail": "interface properties need a type (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionOverride.kt"
   },
@@ -15455,15 +15448,13 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionWithNestedReceiver.kt"
   },
   "box/box/extensionFunctions/extensionFunctionWithReceiverConflict.kt": {
-   "category": "other: unknown method A.foo()",
-   "detail": "unknown method A.foo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionWithReceiverConflict.kt"
   },
   "box/box/extensionFunctions/extensionMemberWithTypeParameter.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.foo()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionMemberWithTypeParameter.kt"
   },
   "box/box/extensionFunctions/extensionReceiverIsNotInlined.kt": {
@@ -15472,8 +15463,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionReceiverIsNotInlined.kt"
   },
   "box/box/extensionFunctions/functionWithTheSameDispatchAndExtensionReceiver.kt": {
-   "category": "other: unknown method A.foo()",
-   "detail": "unknown method A.foo()",
+   "category": "unknown this@A (stdlib API / unsupported decl)",
+   "detail": "unknown name 'this@A'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/functionWithTheSameDispatchAndExtensionReceiver.kt"
   },
@@ -15529,8 +15520,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3285.kt"
   },
   "box/box/extensionFunctions/kt3298.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3298.kt"
   },
@@ -15575,8 +15566,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt865.kt"
   },
   "box/box/extensionFunctions/memberExtensionEqualsHashCodeToStringInInterface.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/memberExtensionEqualsHashCodeToStringInInterface.kt"
   },
@@ -15670,8 +15661,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyInNestedClass.kt"
   },
   "box/box/extensionProperties/extensionPropertyInSAMInterface.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "interfaces",
+   "detail": "this fun interface method is not supported (at 'SamInterface')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyInSAMInterface.kt"
   },
@@ -16119,8 +16110,8 @@
    "upstream": "compiler/testData/codegen/box/fir/listAssignmentInWhen.kt"
   },
   "box/box/fir/localInvokeExtension.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "interfaces",
+   "detail": "member extension functions are only supported in classes, objects and interfaces (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/localInvokeExtension.kt"
   },
@@ -16603,8 +16594,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceTypealias.kt"
   },
   "box/box/funInterface/funInterfaceWithReceiver.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "interfaces",
+   "detail": "this fun interface method is not supported (at 'FunWithReceiver')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceWithReceiver.kt"
   },
@@ -17839,8 +17830,8 @@
    "upstream": "compiler/testData/codegen/box/increment/kt36956.kt"
   },
   "box/box/increment/memberExtOnLong.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/memberExtOnLong.kt"
   },
@@ -20896,14 +20887,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeGenerationWithInlineClassOverAnyGeneric2.kt"
   },
   "box/box/inlineClasses/bridgesWhenInlineClassImplementsGenericInterface.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgesWhenInlineClassImplementsGenericInterface.kt"
   },
   "box/box/inlineClasses/bridgesWhenInlineClassImplementsGenericInterfaceGeneric.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "other: unknown property Base$InlinedBase$Int.x",
+   "detail": "unknown property Base$InlinedBase$Int.x",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgesWhenInlineClassImplementsGenericInterfaceGeneric.kt"
   },
@@ -21770,14 +21760,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultFunctionsFromAnyForInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/defaultInterfaceMethodsInInlineClass.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "member extensions on a type parameter are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultInterfaceMethodsInInlineClass.kt"
   },
   "box/box/inlineClasses/defaultInterfaceMethodsInInlineClassGeneric.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "member extensions on a type parameter are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/defaultInterfaceMethodsInInlineClassGeneric.kt"
   },
@@ -22966,26 +22956,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegatedToInlineClassLongGeneric.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypes.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "member extensions on a type parameter are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypes.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypesGeneric.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "member extensions on a type parameter are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegationToInlineClassWithInlineClassParameterTypesGeneric.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationWithInlineClassParameterTypes.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "member extensions on a type parameter are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegationWithInlineClassParameterTypes.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberFunDelegationWithInlineClassParameterTypesGeneric.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "member extensions on a type parameter are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberFunDelegationWithInlineClassParameterTypesGeneric.kt"
   },
@@ -23020,15 +23010,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverrideGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCall.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCallGeneric.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceExtensionFunCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCall.kt": {
@@ -23042,14 +23030,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/defaultInterfaceMethodCallGeneric.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCall.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "member extensions on a type parameter are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCall.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCallGeneric.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "member extensions on a type parameter are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/genericDefaultInterfaceExtensionFunCallGeneric.kt"
   },
@@ -23829,8 +23817,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/doubleOverride.kt"
   },
   "box/box/inlineClasses/result/extensionOverride.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "strings / templates",
+   "detail": "unknown type Result<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/extensionOverride.kt"
   },
@@ -25082,8 +25070,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/kt46829.kt"
   },
   "box/box/innerNested/kt5363.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "strings / templates",
+   "detail": "unknown method String.extension()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/kt5363.kt"
   },
@@ -28829,8 +28817,8 @@
    "upstream": "compiler/testData/codegen/box/objects/objectWithSuperclassAndTrait.kt"
   },
   "box/box/objects/privateExtensionFromInitializer_kt4543.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "unknown result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/privateExtensionFromInitializer_kt4543.kt"
   },
@@ -28953,14 +28941,14 @@
    "upstream": "compiler/testData/codegen/box/objects/useAnonymousObjectFunction.kt"
   },
   "box/box/objects/useImportedMember.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "generic member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useImportedMember.kt"
   },
   "box/box/objects/useImportedMemberFromCompanion.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "generic member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useImportedMemberFromCompanion.kt"
   },
@@ -35507,8 +35495,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt5953.kt"
   },
   "box/box/regressions/kt6153.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "generic member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt6153.kt"
   },
@@ -36610,9 +36598,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/invokeRecieverSmartcastK2.kt"
   },
   "box/box/smartCasts/kt17725.kt": {
-   "category": "other: unknown method Bob.bar()",
-   "detail": "unknown method Bob.bar()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/smartCasts/kt17725.kt"
   },
   "box/box/smartCasts/kt19100.kt": {
@@ -38056,8 +38043,8 @@
    "upstream": "compiler/testData/codegen/box/traits/traitImplGenericDelegation.kt"
   },
   "box/box/traits/traitWithPrivateExtension.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "generics",
+   "detail": "member extensions on a type parameter are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/traitWithPrivateExtension.kt"
   },
@@ -39154,8 +39141,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/callableRefDefault.kt"
   },
   "box/box/versionOverloads/companions.kt": {
-   "category": "local / extension functions",
-   "detail": "member extension functions are only supported in classes (at '",
+   "category": "objects / companion objects",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/companions.kt"
   },
