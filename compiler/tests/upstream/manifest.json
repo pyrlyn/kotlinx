@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2530,
-  "UNSUPPORTED": 2961
+  "PASS": 2537,
+  "UNSUPPORTED": 2954
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -4449,8 +4449,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt14330_2.kt"
   },
   "box/box/callableReference/property/kt15447.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt15447.kt"
   },
@@ -13054,9 +13054,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt45431.kt"
   },
   "box/box/delegatedProperty/kt6722.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt6722.kt"
   },
   "box/box/delegatedProperty/kt9712.kt": {
@@ -13066,20 +13065,19 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/kt9712.kt"
   },
   "box/box/delegatedProperty/lazy.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/lazy.kt"
   },
   "box/box/delegatedProperty/lazyDelegateInObject.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
+   "category": "other: CPointer cannot be used as Any",
+   "detail": "CPointer cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/lazyDelegateInObject.kt"
   },
   "box/box/delegatedProperty/lazyInAnonymousObject.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
+   "category": "strings / templates",
+   "detail": "unknown method String.takeIf()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/lazyInAnonymousObject.kt"
   },
@@ -13119,9 +13117,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/inlineOperators.kt"
   },
   "box/box/delegatedProperty/local/kt12891.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/local/kt12891.kt"
   },
   "box/box/delegatedProperty/local/kt13557.kt": {
@@ -13253,9 +13250,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/optimizedDelegatedProperties/kt48825.kt"
   },
   "box/box/delegatedProperty/optimizedDelegatedProperties/lazy.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/optimizedDelegatedProperties/lazy.kt"
   },
   "box/box/delegatedProperty/optimizedDelegatedProperties/mixedArgumentSizes.kt": {
@@ -13642,8 +13638,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/hiddenSuperOverrideIn1.0.kt"
   },
   "box/box/delegation/ifWithCallableReferenceInLazy.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
+   "category": "other: unknown method Test.test_1()",
+   "detail": "unknown method Test.test_1()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/ifWithCallableReferenceInLazy.kt"
   },
@@ -14550,9 +14546,8 @@
    "upstream": "compiler/testData/codegen/box/enum/interfaceCallWithEntryClass.kt"
   },
   "box/box/enum/k54079.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/k54079.kt"
   },
   "box/box/enum/kt1119.kt": {
@@ -18405,15 +18400,13 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt54664.kt"
   },
   "box/box/inference/pcla/issues/kt54767a.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt54767a.kt"
   },
   "box/box/inference/pcla/issues/kt54767b.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt54767b.kt"
   },
   "box/box/inference/pcla/issues/kt55056.kt": {
@@ -18525,8 +18518,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt64066.kt"
   },
   "box/box/inference/pcla/issues/kt64069.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of getT; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt64069.kt"
   },
@@ -20518,8 +20511,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/kt27586_1.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/kt27586_2.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
+   "category": "unknown runCatching (stdlib API / unsupported decl)",
+   "detail": "unknown function 'runCatching'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/kt27586_2.kt"
   },
@@ -21491,14 +21484,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/conformToComparableAndCallInterfaceMethodGeneric.kt"
   },
   "box/box/inlineClasses/constructorCallableReference.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of lazy; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/constructorCallableReference.kt"
   },
   "box/box/inlineClasses/constructorCallableReferenceGeneric.kt": {
-   "category": "unknown lazy (stdlib API / unsupported decl)",
-   "detail": "unknown function 'lazy'",
+   "category": "other: unsupported callable reference ::IC",
+   "detail": "unsupported callable reference ::IC",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/constructorCallableReferenceGeneric.kt"
   },

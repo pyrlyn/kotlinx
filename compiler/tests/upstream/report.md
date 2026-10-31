@@ -8,18 +8,18 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2961 |
-| PASS | 2530 |
+| UNSUPPORTED | 2954 |
+| PASS | 2537 |
 
-Kept in tree (re-runnable with `run.py`): 2530
+Kept in tree (re-runnable with `run.py`): 2537
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 246 |
+| strings / templates | 248 |
 | interfaces | 191 |
-| generics | 185 |
+| generics | 187 |
 | operator/infix functions | 179 |
 | lambdas / function types / references | 136 |
 | property accessors / delegation | 89 |
@@ -43,7 +43,6 @@ Kept in tree (re-runnable with `run.py`): 2530
 | unknown x (stdlib API / unsupported decl) | 17 |
 | when expressions | 15 |
 | other: unknown type * | 15 |
-| unknown lazy (stdlib API / unsupported decl) | 15 |
 | other syntax (at 'where') | 15 |
 | other: local classes that capture local variables are not supported | 15 |
 | other syntax (at 'suspend') | 14 |
@@ -57,6 +56,7 @@ Kept in tree (re-runnable with `run.py`): 2530
 | unknown A (stdlib API / unsupported decl) | 10 |
 | types: UIntArray | 10 |
 | unknown Any (stdlib API / unsupported decl) | 10 |
+| other syntax (at 'inner') | 10 |
 
 ## N/A reasons
 

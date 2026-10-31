@@ -169,14 +169,21 @@ class Parser(toks: List<Tok>) {
         val line = next().line; skipNLOnly()
         if (ty == null && isVar) fail("delegated var properties need an explicit type")
         val dn = "\$dg\$$n"
-        val d = expr()
+        val d = dropLazyMode(expr())
         fun call(m: String, extra: List<E>) = CallE(MemberE(NameE(dn).also { it.line = line }, m, false).also { it.line = line }, emptyList(), listOf(thisRef, NullL()) + extra, null).also { it.line = line }
-        val g = FunD(gname, emptyList(), ty, null, call("getValue", emptyList()), line)
+        // `by lazy { }` (the prelude's Lazy): read its `value`.
+        val g = FunD(gname, emptyList(), ty, null, if (isLazyCall(d)) MemberE(NameE(dn).also { it.line = line }, "value", false).also { it.line = line } else call("getValue", emptyList()), line)
         val s = if (isVar) FunD(sname, listOf(Param("v\$", ty!!)), TypeRef("Unit", emptyList(), false),
             Block(listOf(ExprS(call("setValue", listOf(NameE("v\$")))).also { it.line = line })), null, line) else null
         // Without a declared type the getter's type is inferred from `getValue`.
         return FieldD(dn, null, false, d) to listOfNotNull(g, s)
     }
+    /** `lazy(LazyThreadSafetyMode.X) { }` -> `lazy { }` (single-threaded, the mode does not matter). */
+    private fun dropLazyMode(d: E): E = if (isLazyCall(d) && d is CallE && d.lambda != null && d.args.size == 1 && (d.args[0] as? MemberE)?.recv.let { it is NameE && it.n == "LazyThreadSafetyMode" })
+        CallE(d.callee, d.typeArgs, emptyList(), d.lambda).also { it.line = d.line } else d
+    private fun isLazyCall(d: E) = d is CallE && (d.callee as? NameE)?.n == "lazy"
+    /** Delegated locals initialized with `lazy { }`. */
+    private var lazyLocals = HashSet<String>()
     /** Top-level delegated property: its hidden global, added by program() in declaration order. */
     private var pendingGlobal: VarS? = null
 
@@ -1384,7 +1391,8 @@ class Parser(toks: List<Tok>) {
     private fun delegLocals(b: Block, names: Set<String>): Block {
         fun call(n: String, m: String, line: Int, extra: List<E>) = CallE(MemberE(NameE("\$dg\$$n").also { it.line = line }, m, false).also { it.line = line }, emptyList(), listOf<E>(NullL(), NullL()) + extra, null).also { it.line = line }
         var sb: Subst? = null
-        sb = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n in names) call(x.n, "getValue", x.line, emptyList()) else null },
+        sb = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n in names) (if (x.n in lazyLocals) MemberE(NameE("\$dg\$${x.n}").also { it.line = x.line }, "value", false).also { it.line = x.line }
+            else call(x.n, "getValue", x.line, emptyList())) else null },
             srw = { s -> if (s is AssignS && (s.target as? NameE)?.n in names) {
                 if (s.op != "=") fail("compound assignment to a delegated local is not supported")
                 ExprS(call((s.target as NameE).n, "setValue", s.line, listOf(sb!!.e(s.value)))).also { it.line = s.line } } else null })
@@ -1738,7 +1746,8 @@ class Parser(toks: List<Tok>) {
                 if (isId("by")) {
                     next(); skipNLOnly()
                     localDelegs.add(name)
-                    return VarS("\$dg\$$name", false, null, expr()).also { it.line = line }
+                    val d = dropLazyMode(expr()); if (isLazyCall(d)) lazyLocals.add(name) else lazyLocals.remove(name)
+                    return VarS("\$dg\$$name", false, null, d).also { it.line = line }
                 }
                 expectOp("="); skipNLOnly()
                 VarS(name, isVar, ty, expr())

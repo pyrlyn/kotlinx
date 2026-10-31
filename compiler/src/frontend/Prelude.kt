@@ -331,11 +331,26 @@ fun <T, R> with(receiver: T, block: T.() -> R): R = block(receiver)
 """
 private val SCOPE_USE = Regex("""\.(apply)\s*[({]|\.(also|let|run)\s*\(|\bwith\s*\(""")
 
+/** `lazy { }`: computes the value on first use (single-threaded; `by lazy(LazyThreadSafetyMode.X) { }` drops the mode).
+ * `by lazy { }` reads `.value` (see Parser.delegated). */
+const val LAZY = """
+class Lazy<T>(val initializer: () -> T) {
+    private var done = false
+    private var cached: ArrayList<T> = ArrayList<T>()
+    val value: T get() { if (!done) { cached.add(initializer()); done = true }; return cached.get(0) }
+    fun isInitialized(): Boolean = done
+    override fun toString(): String = if (done) "" + cached.get(0) else "Lazy value not initialized yet."
+}
+fun <T> lazy(initializer: () -> T): Lazy<T> = Lazy(initializer)
+fun <T> lazyOf(value: T): Lazy<T> = Lazy({ value })
+"""
+private val LAZY_USE = Regex("""\blazy(Of)?\b""")
+
 fun withPrelude(src: String, p: Program): Program {
     val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
-    val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src)
-    if (!ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "")
+    val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src); val lz = LAZY_USE.containsMatchIn(src)
+    if (!ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon && !lz) return p
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "") + (if (lz) LAZY else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },
