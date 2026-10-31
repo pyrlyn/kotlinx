@@ -3,8 +3,8 @@
  "counts": {
   "MISCOMPILE": 14,
   "N/A": 2984,
-  "PASS": 2491,
-  "UNSUPPORTED": 2986
+  "PASS": 2501,
+  "UNSUPPORTED": 2976
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -7314,8 +7314,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/adaptations.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/companion.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "context parameters are only supported on functions (at 'val')",
+   "category": "other syntax (at '\"...\"')",
+   "detail": "expected identifier (at '\"...\"')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/companion.kt"
   },
@@ -7326,8 +7326,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/boundExtensionReceiver.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/boundReceiver.kt": {
-   "category": "other syntax (at 'var')",
-   "detail": "context parameters are only supported on functions (at 'var')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/boundReceiver.kt"
   },
@@ -7344,8 +7344,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/multipleBoundValues.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/singleContextArgUnboundReceiver.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "context parameters are only supported on functions (at 'val')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/singleContextArgUnboundReceiver.kt"
   },
@@ -7362,14 +7362,14 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/thisAsContextArg.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/unboundReceiver.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "context parameters are only supported on functions (at 'val')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/unboundReceiver.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/unboundReceiverVar.kt": {
-   "category": "other syntax (at 'var')",
-   "detail": "context parameters are only supported on functions (at 'var')",
+   "category": "property accessors / delegation",
+   "detail": "body properties need an initializer (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/unboundReceiverVar.kt"
   },
@@ -7386,8 +7386,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/equality.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/fakeOverride.kt": {
-   "category": "class bodies / constructors",
-   "detail": "context parameters are only supported on functions (at 'class')",
+   "category": "annotations",
+   "detail": "unexpected operator (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/fakeOverride.kt"
   },
@@ -7416,14 +7416,14 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/nullableContextArg.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/propertyEquality.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "context parameters are only supported on functions (at 'val')",
+   "category": "unknown context (stdlib API / unsupported decl)",
+   "detail": "unknown function 'context'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/propertyEquality.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/shapes.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "context parameters are only supported on functions (at 'val')",
+   "category": "other syntax (at '\"...\"')",
+   "detail": "expected identifier (at '\"...\"')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/shapes.kt"
   },
@@ -7457,9 +7457,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/classCastException.kt"
   },
   "box/box/contextParameters/classMemberAndTopLevelExtensionWithContext.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/classMemberAndTopLevelExtensionWithContext.kt"
   },
   "box/box/contextParameters/classMemberAndTopLevelWithContext.kt": {
@@ -7499,15 +7498,13 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/contextOnInvokeResolve.kt"
   },
   "box/box/contextParameters/contextParameterToDefaultArgument.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextParameterToDefaultArgument.kt"
   },
   "box/box/contextParameters/contextPropertyInInterface.kt": {
-   "category": "other syntax (at 'var')",
-   "detail": "context parameters are only supported on functions (at 'var')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextPropertyInInterface.kt"
   },
   "box/box/contextParameters/contextResolveDependingOnCallSite.kt": {
@@ -7549,15 +7546,13 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualInlineCall.kt"
   },
   "box/box/contextParameters/contextualLocalFunAndTopLevelFun.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualLocalFunAndTopLevelFun.kt"
   },
   "box/box/contextParameters/contextualLocalFunWithExtensiionReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualLocalFunWithExtensiionReceiver.kt"
   },
   "box/box/contextParameters/contextualLocalFunWithTypeParam.kt": {
@@ -7601,8 +7596,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/functionalType.kt"
   },
   "box/box/contextParameters/genericPropertyWithContextParameters.kt": {
-   "category": "other syntax (at 'var')",
-   "detail": "context parameters are only supported on functions (at 'var')",
+   "category": "generics",
+   "detail": "generic properties with context parameters are not supported (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/genericPropertyWithContextParameters.kt"
   },
@@ -7737,8 +7732,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/kt74998.kt"
   },
   "box/box/contextParameters/propertyCompoundAssignment.kt": {
-   "category": "other syntax (at 'var')",
-   "detail": "context parameters are only supported on functions (at 'var')",
+   "category": "other syntax (at '<eof>')",
+   "detail": "compound assignment to a context property needs a simple receiver (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/propertyCompoundAssignment.kt"
   },
@@ -7781,15 +7776,13 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/sameNameWithLocalProperty.kt"
   },
   "box/box/contextParameters/sameNameWithLocalValueParameter.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/sameNameWithLocalValueParameter.kt"
   },
   "box/box/contextParameters/sameNameWithMemberProperty.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/sameNameWithMemberProperty.kt"
   },
   "box/box/contextParameters/sameNameWithOuterContext.kt": {
@@ -7810,8 +7803,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/specificity.kt"
   },
   "box/box/contextParameters/substitutedContextReceivers.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "context parameters are only supported on functions (at 'val')",
+   "category": "other: unknown type X",
+   "detail": "unknown type X",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/substitutedContextReceivers.kt"
   },
@@ -7847,9 +7840,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/useFromAnotherModuleWithDefaultParameterValues.kt"
   },
   "box/box/contextParameters/withExtensionReceiverAndThis.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/withExtensionReceiverAndThis.kt"
   },
   "box/box/contextParameters/withExtensionReceiverInSupertype.kt": {
@@ -15394,8 +15386,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsType.kt"
   },
   "box/box/extensionFunctions/extensionFunctionClassLevelLocal.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
+   "category": "strings / templates",
+   "detail": "unknown method Local$String.bar()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionClassLevelLocal.kt"
   },
@@ -15481,14 +15473,14 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionWithNestedReceiver.kt"
   },
   "box/box/extensionFunctions/extensionFunctionWithReceiverConflict.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
+   "category": "other: unknown method A.foo()",
+   "detail": "unknown method A.foo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionWithReceiverConflict.kt"
   },
   "box/box/extensionFunctions/extensionMemberWithTypeParameter.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
+   "category": "strings / templates",
+   "detail": "unknown method String.foo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionMemberWithTypeParameter.kt"
   },
@@ -15498,8 +15490,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionReceiverIsNotInlined.kt"
   },
   "box/box/extensionFunctions/functionWithTheSameDispatchAndExtensionReceiver.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
+   "category": "other: unknown method A.foo()",
+   "detail": "unknown method A.foo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/functionWithTheSameDispatchAndExtensionReceiver.kt"
   },
@@ -15662,9 +15654,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/accessorForPrivateSetter.kt"
   },
   "box/box/extensionProperties/contextPropertyInInterface.kt": {
-   "category": "other syntax (at 'var')",
-   "detail": "context parameters are only supported on functions (at 'var')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/contextPropertyInInterface.kt"
   },
   "box/box/extensionProperties/extensionMemberWithTypeParameter.kt": {
@@ -22867,7 +22858,7 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAny.kt"
   },
   "box/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -2146694304\\n'",
+   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.AssertionError: -1341387808\\n'",
    "status": "MISCOMPILE",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassWithDefaultFunctionsFromAnyGeneric.kt"
   },
@@ -25481,8 +25472,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
   "box/box/invokedynamic/extensionFunInvoke.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
+   "category": "other: invoke expects 1 arguments",
+   "detail": "invoke expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/invokedynamic/extensionFunInvoke.kt"
   },
@@ -26374,8 +26365,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/innerOfLocalCaptureExtensionReceiver.kt"
   },
   "box/box/localClasses/kt10835.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
+   "category": "class bodies / constructors",
+   "detail": "constructor Y expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/kt10835.kt"
   },
@@ -28214,8 +28205,8 @@
    "upstream": "compiler/testData/codegen/box/nameClashes/constructorLocalVar.kt"
   },
   "box/box/nonLocalReturns/kt9644let.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
+   "category": "other: unknown method IntRange.forEach()",
+   "detail": "unknown method IntRange.forEach()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nonLocalReturns/kt9644let.kt"
   },
@@ -29172,9 +29163,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusAssignWithComplexRHS.kt"
   },
   "box/box/operatorConventions/plusExplicit.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusExplicit.kt"
   },
   "box/box/operatorConventions/reassignmentLhsCaching.kt": {
@@ -39363,8 +39353,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/multiplatformExpectDefaults.kt"
   },
   "box/box/versionOverloads/multipleContextParameters.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "non-local return from a 'with' lambda is not supported",
+   "category": "strings / templates",
+   "detail": "unknown method Char.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/multipleContextParameters.kt"
   },

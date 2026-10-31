@@ -665,7 +665,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val savedFuncs = funcs.length; val savedLine = line
                 val t = try {
                     beginBody(ci, Ty.Unit); line = f.line
-                    f.params.forEachIndexed { i, p -> declare(p.name, params[i], false, false) }
+                    f.params.forEachIndexed { i, p -> val l = declare(p.name, params[i], false, false); if (p.ctx) scopes.last().vars["\$ctx\$p${tmpN++}"] = l }
                     genExpr(f.exprBody!!).t
                 } catch (e: CompileError) { lastErr = e; null } finally { funcs.setLength(savedFuncs); line = savedLine }
                 if (t == null) continue
@@ -2320,6 +2320,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             fun isBound(r: TypeRef): Boolean = (r.name !in f.typeParams || r.name in env) && r.args.all { isBound(it) }
             fun res(r: TypeRef): Ty? = if (!isBound(r)) null else { val sv = tenv; tenv = sv + env; try { resolve(r) } finally { tenv = sv } }
             val isFn = pt.name == "\$Fn" || pt.name == "\$FnR"
+            if (f.name == "with" && hasReturn(a.body.stmts) && all.size == 2 && i == 1 && a.body.params.isEmpty() && rawN[0] != null) return inlineWith(rawN[0]!!, a.body)
             if (f.name in SCOPE_FUN_NAMES && hasReturn(a.body.stmts)) fail("non-local return from a '${f.name}' lambda is not supported")
             if (pt.name == "\$FnR" && pt.args.size >= 2 && !isBound(pt.args[0])) builderInfer(a.body, pt.args[0], f.typeParams, env)
             val lps = if (isFn) pt.args.dropLast(1).map { res(it) }.takeIf { l -> l.all { it != null } }?.map { it!! } else null
@@ -2442,6 +2443,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
     }
 
+    /**
+     * `with(r) { ... return x ... }`: the lambda is expanded in place, so `return` leaves the enclosing function
+     * (non-local return). The receiver is a local `this` (also the implicit context value).
+     */
+    private fun inlineWith(r: Val, b: Block): Val {
+        scopes.add(Scope())
+        val l = declare("this", r.t, false, r.owned && r.t.isRef)
+        emit("store ${r.t.llvm} ${r.v}, ptr ${l.slot}")
+        val v = genBlockBody(b, true)
+        if (!term && v.t.isRef && !v.owned && v.v != "null" && v.v != "") retain(v.v, v.t)
+        if (!term) releaseScope(scopes.last())
+        scopes.removeAt(scopes.size - 1)
+        return if (v.t.isRef) Val(v.v, v.t, true) else v
+    }
+
     private val SCOPE_FUN_NAMES = setOf("ext\$T\$apply", "ext\$T\$also", "ext\$T\$let", "ext\$T\$run", "with")
 
     /** Does a block contain an unlabeled `return` outside nested lambdas (a non-local return if the lambda were inline)? */
@@ -2452,6 +2468,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is WhenE -> x.branches.any { b(it.second) }
             is TryE -> b(x.body) || x.catches.any { b(it.body) } || b(x.fin)
             is BinE -> e(x.l) || e(x.r)
+            // A nested `with` with a return is expanded in place too: its return leaves the enclosing function.
+            is CallE -> x.callee is NameE && x.callee.n == "with" && (b(x.lambda) || x.args.any { it is LambdaE && b(it.body) })
             else -> false
         }
         return ss.any { s -> when (s) {
@@ -3195,7 +3213,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** Interface call through the object's vtable (slot = global interface-method index + VT_HEADER). */
     private fun callIface(r: Val, ii: IfaceInfo, n: String, e0: CallE): Val {
         val sig = ii.methods[n] ?: fail("unknown method ${ii.name}.$n()")
-        val e = ifaceDecls[ii.name]?.methods?.firstOrNull { it.name == n }?.let { normalize(it.params, e0) } ?: e0
+        val idecl = ifaceDecls[ii.name]?.methods?.firstOrNull { it.name == n }
+        val e1 = withCtx(idecl?.params, e0) ?: e0
+        val e = idecl?.let { normalize(it.params, e1) } ?: e1
         val args = methodArgs(sig, e)
         val vt = emitT("load ptr, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 8")}")
         val fp = emitT("load ptr, ptr ${emitT("getelementptr ptr, ptr $vt, i64 ${slots.indexOf(n) + VT_HEADER}")}")
