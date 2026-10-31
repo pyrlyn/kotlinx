@@ -107,11 +107,12 @@ static inline size_t min_size(size_t a, size_t b) { return a < b ? a : b; }
 /* Runs slices over roots[0..len) and returns how many roots were processed.
  * Bounded mode stops after the first slice that ends over budget, with one exception: if the very first
  * slice is already over budget, the cost is a large graph shared by the roots (re-traced by every slice),
- * so slicing would multiply work without shortening the pause; the step then runs to completion. */
+ * so slicing would multiply work without shortening the pause; the step then takes all remaining roots
+ * as one slice, as does an unbounded step from the start. */
 static size_t run_slices(void **roots, size_t len, int unbounded, int64_t start, int64_t budget, size_t *reclaimed) {
     size_t done = 0;
     while (done < len) {
-        size_t n = min_size(len - done, CC_SLICE);
+        size_t n = unbounded ? len - done : min_size(len - done, CC_SLICE);
         *reclaimed += collect_slice(roots + done, n);
         done += n;
         if (unbounded || rt_nanos() - start <= budget) continue;
