@@ -227,6 +227,67 @@ class Parser(toks: List<Tok>) {
         return true
     }
 
+    /** Top-level `fun interface` declarations by name. */
+    private val funIfaces = LinkedHashMap<String, InterfaceD>()
+
+    /**
+     * `fun interface I { fun m(a: A): R }`: a class `I$Sam(f$: (A) -> R) : I` whose `m` calls `f$`.
+     * `I { ... }` / `I(f)` construct it; a lambda passed where a parameter of a top-level function, constructor or
+     * (uniquely named) method has type `I` is wrapped the same way (SAM conversion).
+     */
+    private fun samLower(funs: MutableList<FunD>, classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>, globals: MutableList<VarS>) {
+        if (funIfaces.isEmpty()) return
+        for ((n, d) in funIfaces) {
+            if (ifaceSupers[n].orEmpty().isNotEmpty()) fail("fun interfaces with super-interfaces are not supported", Tok(K.ID, n, d.line))
+            val defs = ifaceDefaults[n].orEmpty().map { it.name }.toSet()
+            val abs = d.methods.filter { it.name !in defs }
+            val m = abs.singleOrNull() ?: fail("a fun interface needs exactly one abstract method", Tok(K.ID, n, d.line))
+            if (m.recv != null || m.typeParams.isNotEmpty() || m.name.startsWith("\$")) fail("this fun interface method is not supported", Tok(K.ID, n, d.line))
+            val ret = m.ret ?: TypeRef("Unit", emptyList(), false)
+            val fnT = TypeRef("\$Fn", m.params.map { it.type } + ret, false)
+            val body = CallE(NameE("f\$").also { it.line = d.line }, emptyList(), m.params.map { NameE(it.name).also { e -> e.line = d.line } }, null).also { it.line = d.line }
+            val tas = d.typeParams.map { TypeRef(it, emptyList(), false) }
+            classes.add(ClassD("$n\$Sam", listOf(FieldD("f\$", fnT, false)), listOf(n), listOf(FunD(m.name, m.params, ret, null, body, d.line)), d.line,
+                typeParams = d.typeParams, superTypeArgs = if (tas.isEmpty()) emptyMap() else mapOf(n to tas)))
+        }
+        // Parameter types of callables by name (methods only when the name is declared once).
+        val sigs = HashMap<String, List<TypeRef>>()
+        val counts = HashMap<String, Int>()
+        for (f in funs) if (f.recv == null) { sigs[f.name] = f.params.map { it.type }; counts[f.name] = (counts[f.name] ?: 0) + 1 }
+        for (c in classes) { sigs[c.name] = c.ctorParams.map { it.type }; counts[c.name] = (counts[c.name] ?: 0) + 1
+            for (f in c.methods) { sigs[f.name] = f.params.map { it.type }; counts[f.name] = (counts[f.name] ?: 0) + 1 } }
+        for (d in ifaces) for (f in d.methods) { sigs[f.name] = f.params.map { it.type }; counts[f.name] = (counts[f.name] ?: 0) + 1 }
+        // A generic fun interface needs its type arguments from the context (`I<String> { }` or the parameter type).
+        fun sam(t: TypeRef?) = t != null && t.name in funIfaces && t.args.size == funIfaces[t.name]!!.typeParams.size
+        var sb: Subst? = null
+        fun wrap(i: String, x: E, line: Int, tas: List<TypeRef> = emptyList()) = CallE(NameE("$i\$Sam").also { it.line = line }, tas, listOf(x), null).also { it.line = line }
+        sb = Subst(emptyMap(), rw = rw@{ x ->
+            if (x !is CallE) return@rw null
+            val s = sb!!
+            val callee = x.callee
+            val cn = (callee as? NameE)?.n ?: (callee as? MemberE)?.n ?: return@rw null
+            val args = x.args.map { s.e(it) }
+            val lam = x.lambda?.let { s.block(it) }
+            if (callee is NameE && cn in funIfaces && x.typeArgs.size == funIfaces[cn]!!.typeParams.size) {
+                val a = if (lam != null && args.isEmpty()) LambdaE(lam).also { it.line = x.line } else args.singleOrNull() ?: return@rw null
+                return@rw wrap(cn, a, x.line, x.typeArgs)
+            }
+            val ps = sigs[cn] ?: return@rw null
+            if (counts[cn] != 1 || args.any { it is NamedE }) return@rw null
+            if (ps.indices.none { sam(ps[it]) }) return@rw null
+            val na = args.mapIndexed { i, a -> if (a is LambdaE && sam(ps.getOrNull(i))) wrap(ps[i].name, a, x.line, ps[i].args) else a }
+            val (na2, lam2) = if (lam != null && sam(ps.getOrNull(na.size))) (na + wrap(ps[na.size].name, LambdaE(lam).also { it.line = x.line }, x.line, ps[na.size].args)) to null else na to lam
+            CallE(if (callee is MemberE) MemberE(s.e(callee.recv), callee.n, callee.safe).also { it.line = callee.line } else callee, x.typeArgs, na2, lam2).also { it.line = x.line; it.infix = x.infix }
+        })
+        val s = sb
+        fun fn(f: FunD) = s.fn(f).let { g -> FunD(g.name, g.params, g.ret, g.body, g.exprBody, g.line, f.typeParams, f.recv) }
+        for (i in funs.indices) funs[i] = fn(funs[i])
+        for (i in classes.indices) { val c = classes[i]
+            classes[i] = ClassD(c.name, c.fields.map { s.field(it) }, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams.map { Param(it.name, it.type, it.default?.let { d -> s.e(d) }, it.vararg, it.ctx) },
+                c.inits.map { if (it is FieldD) s.field(it) else s.block(it as Block) }, c.superArgs?.map { s.e(it) }, c.typeParams, c.enumEntries?.map { (n, a) -> n to a.map { s.e(it) } }, c.isValue, c.superTypeArgs) }
+        for (i in globals.indices) { val g = globals[i]; globals[i] = VarS(g.name, g.isVar, g.type, s.e(g.init)).also { it.line = g.line } }
+    }
+
     /** (class, name) of private members of classes. */
     private val privateMembers = HashSet<Pair<String, String>>()
 
@@ -440,6 +501,7 @@ class Parser(toks: List<Tok>) {
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && (t[p + 1].k == K.OP && t[p + 1].s == "<" ||
                     t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> funs.add(extProperty())
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> { noCtx(); globals.add(stmt() as VarS); if (pendingStmts.isNotEmpty()) fail("top-level destructuring declarations are not supported", tk) }
+                tk.k == K.ID && tk.s == "fun" && t[p + 1].k == K.ID && t[p + 1].s == "interface" -> { p++; ifaces.add(interfaceDecl().also { funIfaces[it.name] = it }) }
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
                 isContextDecl() -> contextDecl()
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var" || tk.s == "class" || tk.s == "object" || tk.s == "interface") && pendingCtx != null -> noCtx()
@@ -453,6 +515,7 @@ class Parser(toks: List<Tok>) {
         classes.addAll(companions); funs.addAll(ctorFactories)
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
         classes.addAll(topAnon); topAnon.clear()
+        samLower(funs, classes, ifaces, globals)
         rejectUnmodeled(funs, classes, ifaces)
         rewriteCtxProps(funs, classes, ifaces, globals)
         liftLocals(funs, classes, ifaces)

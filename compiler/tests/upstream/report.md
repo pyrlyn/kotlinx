@@ -8,55 +8,55 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2954 |
-| PASS | 2537 |
+| UNSUPPORTED | 2937 |
+| PASS | 2554 |
 
-Kept in tree (re-runnable with `run.py`): 2537
+Kept in tree (re-runnable with `run.py`): 2554
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 248 |
-| interfaces | 191 |
-| generics | 187 |
+| strings / templates | 253 |
+| generics | 194 |
+| interfaces | 188 |
 | operator/infix functions | 179 |
-| lambdas / function types / references | 136 |
-| property accessors / delegation | 89 |
-| class bodies / constructors | 85 |
-| type inference / mismatch | 73 |
+| lambdas / function types / references | 143 |
+| property accessors / delegation | 90 |
+| class bodies / constructors | 86 |
+| type inference / mismatch | 79 |
+| local / extension functions | 63 |
 | objects / companion objects | 63 |
-| local / extension functions | 52 |
 | type inference (expression bodies) | 45 |
 | other: expected '=' (at ' | 44 |
+| inline/value classes | 43 |
 | other syntax (at '.') | 43 |
-| inline/value classes | 42 |
 | inheritance (open/abstract/sealed) | 40 |
 | other: unknown type T | 39 |
-| nullable types | 37 |
+| nullable types | 38 |
 | destructuring declarations | 29 |
 | other syntax (at ':') | 28 |
 | annotations | 27 |
 | other syntax (at ',') | 22 |
-| other syntax (at 'FunIFace') | 18 |
+| other syntax (at 'where') | 20 |
 | other: unknown type Number | 17 |
 | unknown x (stdlib API / unsupported decl) | 17 |
 | when expressions | 15 |
 | other: unknown type * | 15 |
-| other syntax (at 'where') | 15 |
 | other: local classes that capture local variables are not supported | 15 |
 | other syntax (at 'suspend') | 14 |
 | enum classes | 13 |
 | other syntax (at '<eof>') | 13 |
 | other syntax (at 'var') | 13 |
 | other syntax (at 'val') | 12 |
-| other: unsupported call | 11 |
+| other: unsupported call | 12 |
+| other: unknown type R | 12 |
+| other syntax (at '(') | 11 |
 | other: unknown type Nothing | 11 |
 | default arguments | 11 |
 | unknown A (stdlib API / unsupported decl) | 10 |
 | types: UIntArray | 10 |
 | unknown Any (stdlib API / unsupported decl) | 10 |
-| other syntax (at 'inner') | 10 |
 
 ## N/A reasons
 
