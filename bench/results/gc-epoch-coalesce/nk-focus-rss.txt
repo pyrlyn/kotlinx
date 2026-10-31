@@ -1,0 +1,9 @@
+lru main peak-RSS-MiB: 56.3 53.8 54.3
+lru off peak-RSS-MiB: 53.2 53.1 53.6
+lru on peak-RSS-MiB: 53.2 53.1 53.2
+cycles main peak-RSS-MiB: 8.9 8.9 8.8
+cycles off peak-RSS-MiB: 8.9 8.8 8.9
+cycles on peak-RSS-MiB: 10.6 10.0 10.1
+bigheap main peak-RSS-MiB: 216.8 214.0 214.0
+bigheap off peak-RSS-MiB: 216.8 214.0 214.0
+bigheap on peak-RSS-MiB: 215.3 215.6 215.4
