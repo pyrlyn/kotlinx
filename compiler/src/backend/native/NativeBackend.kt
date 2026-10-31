@@ -1292,6 +1292,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     l != null && l.t == Ty.Args -> Val("null", Ty.Args)
                     l != null -> Val(emitT("load ${l.t.llvm}, ptr ${l.slot}"), l.t)
                     e.n == "this" && owner != null -> Val("%this", Ty.Cls(owner!!.name))
+                    // In a member extension the extension receiver's members win over the dispatch receiver's.
+                    extRecvHas(e.n, false) -> property(genExpr(NameE("\$this_ext").also { it.line = e.line }), e.n)
                     owner != null && (owner!!.index(e.n) >= 0 || "\$prop\$${e.n}" in owner!!.methods) -> property(Val("%this", Ty.Cls(owner!!.name)), e.n)
                     e.n in CONSTS -> Val("${CONSTS.getValue(e.n)}", Ty.I32)
                     // The `Unit` object as a value (`return Unit`, `else -> Unit`).
@@ -2088,6 +2090,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun genNamedCall(n: String, e00: CallE): Val {
         // A member of the implicit receiver wins over a top-level function with context parameters.
+        if (lookup(n) == null && extRecvHas(n, true)) return method(genExpr(NameE("\$this_ext").also { it.line = line }), n, e00)
         if (lookup(n) == null && n in funDecls && n !in LiftedLocals.names && e00 !in ctxFilled) lookup("this")?.let { l ->
             val rt = l.t
             if (rt is Ty.Cls && n in classes.getValue(rt.name).methods) return method(genExpr(NameE("this").also { it.line = line }), n, e00)
@@ -2567,6 +2570,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
     }
 
+    /** The extension receiver `$this_ext` of the member extension being compiled has property / method [n]. */
+    private fun extRecvHas(n: String, call: Boolean): Boolean {
+        val t = lookup("\$this_ext")?.t as? Ty.Cls ?: return false
+        val c = classes[t.name] ?: return false
+        return if (call) n in c.methods else c.index(n) >= 0 || "\$prop\$$n" in c.methods
+    }
     private fun hasMember(t: Ty, n: String): Boolean = when (t) {
         is Ty.Cls -> classes.getValue(t.name).let { n in it.methods || it.index(n) >= 0 }
         is Ty.Iface -> ifaces[t.name]?.methods?.containsKey(n) == true
