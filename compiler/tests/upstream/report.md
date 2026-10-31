@@ -8,55 +8,55 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2972 |
-| PASS | 2519 |
+| UNSUPPORTED | 2964 |
+| PASS | 2527 |
 
-Kept in tree (re-runnable with `run.py`): 2519
+Kept in tree (re-runnable with `run.py`): 2527
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 235 |
-| interfaces | 209 |
+| strings / templates | 245 |
+| interfaces | 191 |
 | generics | 185 |
-| operator/infix functions | 178 |
-| property accessors / delegation | 142 |
-| lambdas / function types / references | 131 |
+| operator/infix functions | 179 |
+| lambdas / function types / references | 135 |
+| property accessors / delegation | 108 |
 | class bodies / constructors | 85 |
 | type inference / mismatch | 73 |
-| objects / companion objects | 58 |
+| objects / companion objects | 63 |
 | local / extension functions | 52 |
+| type inference (expression bodies) | 44 |
 | other: expected '=' (at ' | 44 |
 | other syntax (at '.') | 43 |
-| type inference (expression bodies) | 42 |
 | inline/value classes | 42 |
 | inheritance (open/abstract/sealed) | 40 |
 | other: unknown type T | 39 |
 | nullable types | 37 |
 | destructuring declarations | 29 |
 | other syntax (at ':') | 28 |
-| annotations | 24 |
-| other syntax (at ',') | 21 |
+| annotations | 26 |
+| other syntax (at ',') | 22 |
 | other syntax (at 'FunIFace') | 18 |
 | other: unknown type Number | 17 |
+| unknown x (stdlib API / unsupported decl) | 16 |
 | when expressions | 15 |
 | other: unknown type * | 15 |
 | other syntax (at 'where') | 15 |
 | other: local classes that capture local variables are not supported | 15 |
-| unknown x (stdlib API / unsupported decl) | 15 |
-| enum classes | 14 |
 | other syntax (at 'suspend') | 14 |
+| enum classes | 13 |
 | other syntax (at '<eof>') | 13 |
 | other syntax (at 'var') | 13 |
 | other syntax (at 'val') | 12 |
+| unknown lazy (stdlib API / unsupported decl) | 12 |
 | other: unsupported call | 11 |
 | other: unknown type Nothing | 11 |
 | default arguments | 11 |
 | unknown A (stdlib API / unsupported decl) | 10 |
 | types: UIntArray | 10 |
 | unknown Any (stdlib API / unsupported decl) | 10 |
-| other syntax (at 'inner') | 10 |
 
 ## N/A reasons
 
