@@ -52,8 +52,10 @@ static size_t mark_roots(void **roots, size_t n) {
     return kept;
 }
 
-/* Releases the untraced fields of all garbage, then frees it. Returns the number of objects freed. */
+/* Releases the acyclic children and untraced fields of all garbage, then frees it. Returns the number of
+ * objects freed. */
 static size_t free_garbage(void) {
+    release_acyclic_children();
     for (size_t i = 0; i < cc_garbage.len; i++) vtab(cc_garbage.items[i])->relo(cc_garbage.items[i]);
     for (size_t i = 0; i < cc_garbage.len; i++) vtab(cc_garbage.items[i])->freemem(cc_garbage.items[i]);
     size_t freed = cc_garbage.len;
@@ -86,6 +88,7 @@ static void collect_cycles(void) {
     if (cc_roots.len >= cc_threshold) collect_cycles();   /* freeing garbage buffered new roots */
 }
 
-void rt_gc_collect(void) { collect_cycles(); }
+/* Runs until the buffer is empty: freeing garbage can buffer the roots of garbage it alone kept reachable. */
+void rt_gc_collect(void) { while (cc_roots.len && !cc_running) collect_cycles(); }
 const char *rt_gc_name(void) { return "default"; }
 void rt_gc_stats(KxGcStats *out) { *out = gc_stats; }

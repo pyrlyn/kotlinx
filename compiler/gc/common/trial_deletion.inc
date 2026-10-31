@@ -7,11 +7,13 @@
 //   ScanRoots    scan(root)           a GRAY object whose count is still > 0 is referenced from outside
 //                                     the subgraph: restore it and everything it reaches (scan_black);
 //                                     a GRAY object at 0 becomes WHITE (garbage candidate).
-//   CollectRoots collect_white(root)  move every WHITE object to `garbage`; acyclic children get their
-//                                     reference released through the normal RC path.
+//   CollectRoots collect_white(root)  move every WHITE object to `garbage` and its acyclic children to
+//                                     `acyclic`.
 //
-// After CollectRoots the caller releases the untraced fields of every garbage object (vtab->relo) and
-// only then frees them, because garbage objects may still point at each other.
+// After CollectRoots the caller releases the acyclic children (release_acyclic_children) and the untraced
+// fields of every garbage object (vtab->relo), and only then frees the garbage, because garbage objects may
+// still point at each other. No reference is released during CollectRoots: a release can run generated
+// code that frees a root of this collection, or buffers it, while the CollectRoots loop still reads it.
 // Iterative (explicit stacks) so deep structures cannot overflow the C stack.
 
 #ifndef CC_CLAIM_SKIPS_BUFFERED
@@ -21,6 +23,7 @@
 static PtrStack cc_work;      /* MarkGray / Scan / CollectWhite work list */
 static PtrStack cc_blacken;   /* ScanBlack work list (separate: scan_black runs inside scan) */
 static PtrStack cc_garbage;   /* garbage found by CollectWhite, freed by the caller */
+static PtrStack cc_acyclic;   /* acyclic children of garbage, released after CollectRoots */
 static size_t cc_traced;      /* objects visited by mark_gray in the current collection */
 
 /* MarkGray child visitor: trial-delete the internal reference to a cyclic child. */
@@ -78,7 +81,7 @@ static int collect_white_claim(void *obj) {
 static void collect_white_child(void *child) {
     if (!child) return;
     if (is_cyclic(child)) collect_white_claim(child);
-    else vtab(child)->rel(child); /* acyclic child: drop the garbage object's reference normally */
+    else stack_push(&cc_acyclic, child);
 }
 static void collect_white(void *root) {
     if (!collect_white_claim(root)) return;
@@ -87,6 +90,10 @@ static void collect_white(void *root) {
         vtab(obj)->trav(obj, collect_white_child);
         stack_push(&cc_garbage, obj); /* freed after all roots are processed: other garbage may still point here */
     }
+}
+/* Drops the garbage objects' references to acyclic children through the normal RC path. */
+static void release_acyclic_children(void) {
+    while (cc_acyclic.len) { void *child = stack_pop(&cc_acyclic); vtab(child)->rel(child); }
 }
 
 /* Adaptive trigger. CC_THRESHOLD buffered roots start a collection. A collection whose trial deletion

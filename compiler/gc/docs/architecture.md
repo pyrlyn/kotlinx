@@ -100,16 +100,19 @@ Bacon & Rajan 2001, synchronous trial deletion
    and decrements every internal reference.
 4. **ScanRoots.** `scan`: a GRAY object with count > 0 is referenced from outside, so it and everything it
    reaches are restored (`scan_black`, re-incrementing counts). GRAY objects at 0 become WHITE.
-5. **CollectRoots.** `collect_white` moves WHITE objects to the garbage list; references to acyclic
-   children are released through the normal RC path.
-6. **Free.** First `relo` on every garbage object, then `freemem` on all of them (garbage may still point
-   to other garbage until everything is released).
+5. **CollectRoots.** `collect_white` moves WHITE objects to the garbage list and their acyclic children to
+   a list of their own. Nothing is released yet: a release can free or buffer a root of this collection
+   while the loop over the roots still reads it.
+6. **Free.** First the references to acyclic children go through the normal RC path, then `relo` on every
+   garbage object, then `freemem` on all of them (garbage may still point to other garbage until
+   everything is released).
 
 Ownership rules:
 - A buffered object is owned by the root buffer: nobody else may free it. Whoever removes it from the
   buffer clears the bit and takes over freeing it.
 - A collection is never re-entered (`cc_running`); roots buffered while freeing garbage go to a fresh
-  buffer and may trigger another collection right after.
+  buffer and may trigger another collection right after. `rt_gc_collect` and program exit repeat until the
+  buffer stays empty.
 - All passes use explicit stacks; deep structures cannot overflow the C stack.
 
 Adaptive threshold: if a collection reclaimed less than 1/4 of what it traced (the roots were live, e.g.
@@ -121,8 +124,9 @@ Limitation: cycles through an ArrayList/HashMap are not traced by the RC impleme
 
 `incremental` processes the root buffer in slices of 64 roots; trial deletion is correct for any subset
 of candidate roots. After each slice it checks the time budget (`KX_GC_BUDGET_US`, default 500 us). Left
-over roots stay buffered and the next step starts after 2000 new roots. A garbage object that is a root of
-a later slice is released but left BLACK with count 0 (like `rt_cc_dead`); its own slice frees it. If the
+over roots stay buffered and the next step starts after 2000 new roots, except live ones an earlier slice
+already scanned black: those leave the buffer, because BLACK in the buffer must keep meaning dead. A garbage
+object that is a root of a later slice is released but left BLACK with count 0 (like `rt_cc_dead`); its own slice frees it. If the
 very first slice already exceeds the budget, the step finishes in one pass, since every further slice
 would re-trace the same large graph. `rt_gc_collect` and program exit run without a budget.
 
@@ -144,16 +148,28 @@ changes the generated code for traced (cyclic) classes only:
 
 Epoch boundary (log full, 32768 entries): the mutator hands the log over (one mutex round-trip) and frees
 dead objects returned by the collector under `KX_GC_FREE_BUDGET_US` (default half the target pause, 1.5 ms); allocation also frees
-two returned objects per call. If the collector is more than `KX_GC_MAX_QUEUED` logs behind (default 16,
-256 KiB each), the boundary waits (back-pressure); that wait is counted as a pause.
+two returned objects per call. If the collector is more than `KX_GC_MAX_QUEUED` logs behind (adaptive 2-16
+by default, starting at 4; 256 KiB each), the boundary waits (back-pressure); that wait is counted as a pause.
 
 The collector, per log: applies all increments, then all decrements (single mutator, so no count drops to
 zero early), marking each touched object dirty; count zero frees the object (its traced children are
 decremented, the memory goes back to the mutator), non-zero buffers it as a possible root. When the buffer
-is large it runs trial deletion; each white component becomes a candidate set. All sets of one detection
-form one batch (one allocation), validated once a log handed over after the detection has been applied:
-Delta test (no member dirty) and Sigma test (sum of member counts equals the member-to-member edges).
-Passing sets are freed, failing members are re-buffered.
+is large it runs trial deletion; each white component becomes a candidate set. When the detection ends,
+each set gets the Sigma test (sum of member counts equals the member-to-member edges). All sets of one
+detection form one batch (one allocation), validated once a log handed over after the detection has been
+applied: the Delta test (no member dirty). Passing sets are freed, failing members are re-buffered.
+
+The order matters. A candidate can be a live object: the trace counts an edge the mutator stored after the
+last applied log, and the object looks white. Sigma reads current fields but counts as of the
+last applied log, so while the mutator runs it can pass on a store whose increment is still queued, and the
+queued log then hits freed memory. Run before the hand-off count is read, every store Sigma saw is covered by
+the later Delta test, which proves the counts it read were current. Sigma after Delta proves nothing.
+
+The mutator also runs between MarkGray and Scan, so an object that lost the edge MarkGray reached it through
+stays gray or white with its CRC. Every object MarkGray visited is therefore listed, and anything not in a
+candidate set is reset once CollectWhite is done: MarkGray does not trace through a gray object, and a cycle
+counted short of an edge looks live for good. For the same reason the root buffer ignores colors: a root
+waiting there can be recolored by another root's trace, and is detected from anyway.
 
 Trial deletion counts in the CRC field (header bits 40-63) the references coming from traversed objects
 and compares it with the real count, so real counts are never disturbed. MarkGray and Scan run in parallel
@@ -164,7 +180,8 @@ Parallel phases are used for major detections of at least 2048 roots; small and 
 the collector thread alone (measured: more threads only add synchronization there).
 
 Generations: an object that Scan finds externally referenced (black) is promoted to the old generation
-(header bit 39, `stable`). Any RC operation or write barrier on it demotes it. A minor detection treats
+(header bit 39, `stable`). A decrement demotes it; an increment or write barrier only marks it dirty, since
+neither can make it garbage. A minor detection treats
 stable objects as opaque live objects, so it never re-traces the live graph: its cost is proportional to
 the objects touched since the last scan. Garbage cycles that run through stable objects are still found:
 a root whose minor detection stopped at a stable object and did not turn white stays buffered in a
@@ -201,7 +218,7 @@ collection event callback.
 | `KX_GC_BUDGET_US` | run time, `incremental` only: per-step budget in microseconds (default 500) |
 | `KX_GC_FREE_BUDGET_US` | run time, `epoch` only: time per epoch boundary for freeing returned objects (default half of `KX_GC_TARGET_PAUSE_US`: 1500) |
 | `KX_GC_THREADS` | run time, `epoch` only: collector threads for parallel trial deletion (default min(cores, 4)) |
-| `KX_GC_MAX_QUEUED` | run time, `epoch` only: logs the collector may fall behind before the program waits (default 16) |
+| `KX_GC_MAX_QUEUED` | run time, `epoch` only: logs the collector may fall behind before the program waits (default: adaptive, 2-16) |
 | `KX_GC_EXIT_DRAIN=1` | run time, `epoch` only: drain the queue at exit even without `--leak-check` / `--alloc malloc` |
 | `KX_GC_DEBUG=1` | run time, `epoch` only: print epoch/detection/validation counters at each full collection |
 

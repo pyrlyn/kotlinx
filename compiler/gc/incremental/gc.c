@@ -70,10 +70,11 @@ static void scan_and_collect_roots(void **roots, size_t kept) {
     for (size_t i = 0; i < kept; i++) collect_white(roots[i]);
 }
 
-/* Releases the untraced fields of everything CollectWhite found, then frees it. Garbage that is still
- * buffered (a root of a later slice) is left BLACK with count 0 and freed by that slice's mark_roots.
- * Returns the number of objects freed now. */
+/* Releases the acyclic children and untraced fields of everything CollectWhite found, then frees it. Garbage
+ * that is still buffered (a root of a later slice) is left BLACK with count 0 and freed by that slice's
+ * mark_roots. Returns the number of objects freed now. */
 static size_t free_garbage(void) {
+    release_acyclic_children();
     for (size_t i = 0; i < cc_garbage.len; i++) vtab(cc_garbage.items[i])->relo(cc_garbage.items[i]);
     size_t freed = 0;
     for (size_t i = 0; i < cc_garbage.len; i++) {
@@ -121,9 +122,16 @@ static size_t run_slices(void **roots, size_t len, int unbounded, int64_t start,
     return done;
 }
 
-/* Puts roots that a bounded step did not reach back into the (fresh) buffer; they keep the buffered bit. */
+/* Puts roots that a bounded step did not reach back into the (fresh) buffer; they keep the buffered bit.
+ * A live root that an earlier slice scanned black leaves the buffer now, as its own slice would have done.
+ * It must not stay: once the program drops it, a step started while its fields are being released would
+ * take the black count-zero object for a dead one (mark_roots) and free it under the release. */
 static void requeue_roots(void **roots, size_t from, size_t len) {
-    for (size_t i = from; i < len; i++) stack_push(&cc_roots, roots[i]);
+    for (size_t i = from; i < len; i++) {
+        void *root = roots[i];
+        if (color(root) == BLACK && ref_count(root) > 0) clear_buffered(root);
+        else stack_push(&cc_roots, root);
+    }
 }
 
 /* Next trigger: an unfinished step resumes after CC_STEP_ROOTS more roots, otherwise the adaptive threshold. */
