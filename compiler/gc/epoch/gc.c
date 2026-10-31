@@ -377,8 +377,37 @@ static inline void log_op(uintptr_t e) {
     cur->a[cur->n++] = e;
     if (__builtin_expect(cur->n == LOG_CAP, 0)) boundary();
 }
-void rt_gc_log_inc(void *p) { if (p) log_op((uintptr_t)p | OP_INC); }
-void rt_gc_log_dec(void *p) { if (p) log_op((uintptr_t)p | OP_DEC); }
+/* Coalescing (KX_GC_COALESCE, default 1; 0 = off): once the current log holds a retain and a release of p, a
+ * further release cancels a further retain of p in the same log, so the repeated pair never reaches the
+ * collector. apply_log applies all retains of a log before its releases, so only the net count matters, and
+ * it is unchanged; p still appears with a retain (DIRTY bit) and a release (zero-count / possible-root
+ * handling) in the log. The first pair must stay: a fresh object starts at count 0 and is only freed through
+ * a logged release. Direct-mapped caches give the index of p's last logged retain and release; a hit is
+ * checked against the log entry itself, so stale indexes (other log, overwritten slot) are harmless. The
+ * cancelled retain becomes 0 (skipped by apply_log). */
+#define CO_BITS 8
+static uint32_t co_idx[1u << CO_BITS], co_dec[1u << CO_BITS];
+static int co_on = -1;
+static int64_t dbg_coalesced;
+static inline size_t co_slot(uintptr_t p) { return (size_t)((p >> 4) ^ (p >> (4 + CO_BITS))) & ((1u << CO_BITS) - 1); }
+static void co_init(void) { const char *e = getenv("KX_GC_COALESCE"); co_on = !(e && *e == '0'); }
+void rt_gc_log_inc(void *p) {
+    if (!p) return;
+    if (__builtin_expect(co_on < 0, 0)) co_init();
+    if (co_on && cur) co_idx[co_slot((uintptr_t)p)] = (uint32_t)cur->n;
+    log_op((uintptr_t)p | OP_INC);
+}
+void rt_gc_log_dec(void *p) {
+    if (!p) return;
+    if (co_on > 0 && cur) {
+        size_t sl = co_slot((uintptr_t)p); uint32_t i = co_idx[sl], d = co_dec[sl];
+        if (i < cur->n && d < i && cur->a[i] == ((uintptr_t)p | OP_INC) && cur->a[d] == ((uintptr_t)p | OP_DEC)) {
+            cur->a[i] = 0; dbg_coalesced++; return;
+        }
+        co_dec[sl] = (uint32_t)cur->n;
+    }
+    log_op((uintptr_t)p | OP_DEC);
+}
 void rt_gc_write_barrier(void *obj) { log_op((uintptr_t)obj | OP_MOD); }
 
 // ---- collector (background thread): header bits are collector-owned for traced objects ----
@@ -488,6 +517,7 @@ static void apply_log(Log *l) {
     size_t n = l->n, nd = 0;
     for (size_t i = 0; i < n; i++) {
         uintptr_t e = l->a[i]; void *p = (void *)(e & ~(uintptr_t)3);
+        if (__builtin_expect(e == 0, 0)) continue;   /* retain cancelled by coalescing */
         if ((e & 3) == OP_INC) { *header(p) = (*header(p) + 1) | DIRTY_BIT; }
         else if ((e & 3) == OP_MOD) touch_keep(p);
         else l->a[nd++] = e;
@@ -1222,7 +1252,7 @@ static void epoch_debug(void) {
     if (e && *e) fprintf(stderr, "epoch: roots=%lld minor-visits=%lld major-visits=%lld members=%lld\n", (long long)dbg_roots_k, (long long)dbg_minor_visits, (long long)dbg_major_visits, (long long)dbg_members);
     if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld early ok=%lld hit=%lld skip=%lld qmax=%zu q=%zu\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits, (long long)dbg_early_ok, (long long)dbg_early_hit, (long long)dbg_early_skip, dbg_q_max, max_queued);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
-    if (e && *e) fprintf(stderr, "epoch: freed paced=%lld boundary=%lld keep=%lld madvised=%lld stack-released=%lld\n", (long long)dbg_paced, (long long)dbg_bfreed, (long long)boundary_keep, (long long)dbg_madvised, (long long)dbg_stack_released);
+    if (e && *e) fprintf(stderr, "epoch: freed paced=%lld boundary=%lld keep=%lld madvised=%lld stack-released=%lld coalesced=%lld\n", (long long)dbg_paced, (long long)dbg_bfreed, (long long)boundary_keep, (long long)dbg_madvised, (long long)dbg_stack_released, (long long)dbg_coalesced);
     if (e && *e) fprintf(stderr, "epoch: exit live-traced=%lld ret-pending=%zu roots=%zu deferred=%zu cands=%d\n", (long long)(atomic_load(&t_allocs) - atomic_load(&t_frees)), ret_local.len - ret_pos, c_roots.len, c_deferred.len, cands != NULL);
     if (e && *e) {
         size_t wk = 0; for (int i = 0; i < n_threads; i++) wk += workers[i].work.cap + workers[i].black.cap + workers[i].marked.cap;

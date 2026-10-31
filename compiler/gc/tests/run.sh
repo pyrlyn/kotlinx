@@ -102,6 +102,23 @@ if [[ " $(echo $gcs) " == *" epoch "* ]]; then
     done
   else echo "FAIL gc-epoch madvise_big: compile"; fail=1; fi
 fi
+# Epoch: coalescing of retain/release pairs (KX_GC_COALESCE) is on by default, off with 0; both give the
+# same checksum and free everything (--leak-check), also under ASan via --leak-check builds.
+if [[ " $(echo $gcs) " == *" epoch "* ]]; then
+  t=compiler/gc/tests/epoch/coalesce.kt; want="checksum=600299402"
+  if "$NKC" --gc=epoch "$t" -o "$out/epoch.co" 2>/dev/null && "$NKC" --gc=epoch --leak-check "$t" -o "$out/epoch.co.lc" 2>/dev/null; then
+    for m in 1 0; do
+      dbg=$(KX_GC_COALESCE=$m KX_GC_DEBUG=1 KX_GC_EXIT_DRAIN=1 "$out/epoch.co" 2>&1); got=$(echo "$dbg" | grep '^checksum=')
+      co=$(echo "$dbg" | grep -oE 'coalesced=[0-9]+' | grep -oE '[0-9]+$')
+      ok=0; if [ -n "$co" ]; then if [ $m = 1 ]; then [ "$co" -gt 0 ] && ok=1; else [ "$co" -eq 0 ] && ok=1; fi; fi
+      if [ "$got" = "$want" ] && [ $ok = 1 ]; then echo "PASS gc-epoch coalesce=$m (coalesced=$co)"
+      else echo "FAIL gc-epoch coalesce=$m (got=$got coalesced=$co)"; fail=1; fi
+      got=$(KX_GC_COALESCE=$m "$out/epoch.co.lc" 2>"$out/epoch.co.lcerr"); rc=$?
+      if [ $rc -eq 0 ] && [ "$got" = "$want" ] && grep -q "leak-check: OK" "$out/epoch.co.lcerr"; then echo "PASS gc-epoch coalesce leaks coalesce=$m"
+      else echo "FAIL gc-epoch coalesce leaks coalesce=$m (rc=$rc)"; head "$out/epoch.co.lcerr"; fail=1; fi
+    done
+  else echo "FAIL gc-epoch coalesce: compile"; fail=1; fi
+fi
 # Incremental: a live root scanned black by an earlier slice must leave the buffer with the step that stopped
 # there. Left behind, a later step frees it in the middle of its own release (double free under ASan).
 if [[ " $(echo $gcs) " == *" incremental "* ]]; then
