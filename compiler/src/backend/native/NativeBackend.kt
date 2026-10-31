@@ -1257,7 +1257,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             is PostIncE -> {
                 val pre = e.op.startsWith("pre")
-                val op = e.op.removePrefix("pre")
+                val w16 = e.op.endsWith("s16") // Short variable: the new value wraps at 16 bits
+                val op = e.op.removePrefix("pre").removeSuffix("s16")
                 val mname = if (op == "++") "inc" else "dec"
                 onceRecv(e.target) { tg ->
                     val old = genExpr(tg)
@@ -1269,7 +1270,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     withTemps(listOf(old)) { (x) ->
                         val savedIv = incViaExt; incViaExt = custom
                         try { assign(tg, (if (custom) CallE(MemberE(x, mname, false).also { it.line = e.line }, emptyList(), emptyList(), null)
-                            else BinE(if (op == "++") "+" else "-", x, IntL(1, false))).also { it.line = e.line }) } finally { incViaExt = savedIv }
+                            else BinE(if (op == "++") "+" else "-", x, IntL(1, false)).also { it.line = e.line }.let { b -> if (w16) CallE(MemberE(b, "toShort", false).also { it.line = e.line }, emptyList(), emptyList(), null) else b }).also { it.line = e.line }) } finally { incViaExt = savedIv }
                         genExpr(if (pre) tg else x)
                     }
                 }

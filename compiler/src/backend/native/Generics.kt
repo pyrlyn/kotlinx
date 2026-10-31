@@ -18,7 +18,9 @@ fun compileGenerics(p00: Program): String {
     val ifaceInst = LinkedHashMap<String, InterfaceD>()
     /** Generic supertype `I<Int>` -> its instance name, instantiating it if needed. */
     fun ensure(n: String, args0: List<TypeRef>): String {
-        val args = args0.map { canon(it) }
+        // Nested user generics (`I<Box<String>>`) use their instance name, as the backend spells them (`I$Box$String`).
+        fun flat(t: TypeRef): TypeRef = if (t.args.isNotEmpty() && (t.name in generic || t.name in genericIfaces)) TypeRef(ensure(t.name, t.args), emptyList(), t.nullable) else t
+        val args = args0.map { canon(flat(it)) }
         val m = mangle(n, args)
         generic[n]?.let { cd -> if (m !in inst) { origin[m] = n to args; inst[m] = Subst(cd.typeParams.zip(args).toMap()).cls(cd, m) } }
         genericIfaces[n]?.let { d -> if (m !in ifaceInst) { origin[m] = n to args; ifaceInst[m] = Subst(d.typeParams.zip(args).toMap()).iface(d, m) } }

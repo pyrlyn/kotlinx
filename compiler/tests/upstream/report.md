@@ -8,24 +8,23 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2982 |
-| PASS | 2504 |
-| MISCOMPILE | 5 |
+| UNSUPPORTED | 2978 |
+| PASS | 2513 |
 
-Kept in tree (re-runnable with `run.py`): 2504
+Kept in tree (re-runnable with `run.py`): 2513
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 238 |
-| interfaces | 234 |
-| generics | 184 |
+| interfaces | 235 |
+| strings / templates | 232 |
+| generics | 185 |
 | operator/infix functions | 178 |
 | property accessors / delegation | 142 |
 | lambdas / function types / references | 131 |
 | class bodies / constructors | 85 |
-| type inference / mismatch | 74 |
+| type inference / mismatch | 73 |
 | objects / companion objects | 58 |
 | local / extension functions | 52 |
 | other: expected '=' (at ' | 44 |
@@ -47,9 +46,9 @@ Kept in tree (re-runnable with `run.py`): 2504
 | other: local classes that capture local variables are not supported | 15 |
 | other syntax (at 'suspend') | 14 |
 | unknown x (stdlib API / unsupported decl) | 14 |
+| other syntax (at '<eof>') | 13 |
 | other syntax (at 'var') | 13 |
 | other syntax (at 'val') | 12 |
-| other syntax (at '<eof>') | 12 |
 | enum classes | 11 |
 | other: unsupported call | 11 |
 | other: unknown type Nothing | 11 |
@@ -94,8 +93,3 @@ Minimal repros in `bugs/`:
 
 Affected upstream tests:
 
-- MISCOMPILE `box/box/classes/kt2477.kt` — exit=0 stdout='FAIL\n' stderr=''
-- MISCOMPILE `box/box/initializers/correctOrder3.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: Expected <1>, actual <0>.\n'
-- MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
-- MISCOMPILE `box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3Generic.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: ClassCastException: class D cannot 
-- MISCOMPILE `box/box/intrinsics/kt12125.kt` — exit=0 stdout='fail 2: -32769\n' stderr=''

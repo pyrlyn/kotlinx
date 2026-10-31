@@ -189,6 +189,61 @@ class Parser(toks: List<Tok>) {
         return true
     }
 
+    /** (class, name) of private members of classes. */
+    private val privateMembers = HashSet<Pair<String, String>>()
+
+    /**
+     * Semantics this compiler does not model, rejected instead of miscompiled:
+     * - a private member of a superclass with the same name as an interface member of the subclass (Kotlin keeps
+     *   them apart; here they would share one slot);
+     * - a property initialized to a default value (0, false, null) after an `init` block or initializer that calls a
+     *   function (Kotlin does not re-store default values, so a value set by that call survives);
+     * (Also: `++`/`--` on a `Short` variable is marked to wrap at 16 bits, since Short is stored as Int.)
+     */
+    private fun rejectUnmodeled(funs: MutableList<FunD>, classes: MutableList<ClassD>, ifaces: List<InterfaceD>) {
+        val byName = classes.associateBy { it.name }
+        val ifByName = ifaces.associateBy { it.name }
+        for (c in classes) {
+            val anc = generateSequence(c.superClass?.let { byName[it] }) { a -> a.superClass?.let { byName[it] } }.toList()
+            val ifNames = c.supers.mapNotNull { ifByName[it] }.flatMap { d -> d.methods.map { it.name.removePrefix("\$prop\$") } }.toSet()
+            for (a in anc) for ((pc, n) in privateMembers) if (pc == a.name && n in ifNames) fail("private member '$n' of ${a.name} and an interface member of ${c.name} with the same name are not supported")
+            // Methods of the class called (unqualified or on `this`) by initializers so far, and the names they assign.
+            val methods = c.methods.associateBy { it.name }
+            val writes = HashSet<String>()
+            fun scan(x: Any?) {
+                val s = Subst(emptyMap(), rw = { e ->
+                    if (e is CallE) { val n = (e.callee as? NameE)?.n ?: (e.callee as? MemberE)?.takeIf { (it.recv as? NameE)?.n == "this" }?.n
+                        n?.let { methods[it] }?.let { assignedNames(it, writes) } }
+                    null })
+                when (x) { is E -> s.e(x); is Block -> s.block(x) }
+            }
+            for (i in c.inits) {
+                if (i is FieldD) {
+                    val z = i.init
+                    if (i.name in writes && !i.lateinit && (z is NullL || z is BoolL && !z.v || z is IntL && z.v == 0L || z is DblL && z.v == 0.0))
+                        fail("property '${i.name}' initialized to a default value after an initializer that sets it is not supported")
+                    scan(z)
+                } else scan(i)
+            }
+        }
+        fun shortsFix(f: FunD): FunD {
+            val shorts = HashSet<String>()
+            Subst(emptyMap(), srw = { s ->
+                if (s is VarS && s.isVar && (s.type?.name == "Short" || (s.init is MemberE && (s.init.recv as? NameE)?.n == "Short") ||
+                        (s.init is CallE && (s.init.callee as? MemberE)?.n == "toShort"))) shorts.add(s.name)
+                null
+            }).fn(f)
+            if (shorts.isEmpty()) return f
+            // `s++` / `--s` on a Short: the op gets the suffix "s16", so the backend wraps the new value at 16 bits.
+            val g = Subst(emptyMap(), rw = { e -> if (e is PostIncE && (e.target as? NameE)?.n in shorts && !e.op.endsWith("s16")) PostIncE(e.target, e.op + "s16").also { it.line = e.line } else null },
+                srw = { s -> if (s is IncS && (s.target as? NameE)?.n in shorts && !s.op.endsWith("s16")) IncS(s.target, s.op + "s16").also { it.line = s.line } else null }).fn(f)
+            return FunD(g.name, g.params, g.ret, g.body, g.exprBody, g.line, f.typeParams, f.recv)
+        }
+        for (i in funs.indices) funs[i] = shortsFix(funs[i])
+        for (i in classes.indices) { val c = classes[i]; val ms = c.methods.map { shortsFix(it) }
+            if (ms.zip(c.methods).any { (a, b) -> a !== b }) classes[i] = ClassD(c.name, c.fields, c.supers, ms, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs) }
+    }
+
     /** Names of member properties with context parameters (accessed through `$cget$x` / `$cset$x` methods). */
     private val ctxProps = HashSet<String>()
 
@@ -356,6 +411,7 @@ class Parser(toks: List<Tok>) {
         classes.addAll(companions); funs.addAll(ctorFactories)
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
         classes.addAll(topAnon); topAnon.clear()
+        rejectUnmodeled(funs, classes, ifaces)
         rewriteCtxProps(funs, classes, ifaces, globals)
         liftLocals(funs, classes, ifaces)
         resolveNested(funs, classes, ifaces, globals)
@@ -486,6 +542,7 @@ class Parser(toks: List<Tok>) {
                 if (pendingCtx != null && !isId("fun") && !isId("val") && !isId("var") && !(peek().k == K.ID && peek().s in MEMBER_MODS)) noCtx()
                 while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) { if (peek().s == "const") isConst = true; if (peek().s == "lateinit") isLate = true; if (peek().s == "private") isPrivate = true; if (peek().s == "abstract") isAbstract = true; p++ }
                 if (pendingCtx != null && (isId("val") || isId("var"))) { ctxMemberProp(ms, props == null || isAbstract); continue }
+                if (isPrivate && curClass != null && (isId("val") || isId("var") || isId("fun")) && t[p + 1].k == K.ID) privateMembers.add(curClass!! to t[p + 1].s)
                 if (isPrivate && curIface != null && isId("fun") && t[p + 1].k == K.ID) privateIfaceFuns.getOrPut(curIface!!) { HashSet() }.add(t[p + 1].s)
                 if (props != null && inits != null && (isId("val") || isId("var"))) {
                     val isVar = next().s == "var"

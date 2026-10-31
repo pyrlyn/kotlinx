@@ -1,10 +1,9 @@
 {
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
-  "MISCOMPILE": 5,
   "N/A": 2984,
-  "PASS": 2504,
-  "UNSUPPORTED": 2982
+  "PASS": 2513,
+  "UNSUPPORTED": 2978
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2517,13 +2516,13 @@
   },
   "box/box/bridges/substitutionInSuperClass/differentErasureInSuperClass.kt": {
    "category": "strings / templates",
-   "detail": "overloads are not supported: A$String.foo",
+   "detail": "overloads are not supported: A$A$String.foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/differentErasureInSuperClass.kt"
   },
   "box/box/bridges/substitutionInSuperClass/differentErasureInSuperClassComplex.kt": {
    "category": "strings / templates",
-   "detail": "overloads are not supported: A$String.foo",
+   "detail": "overloads are not supported: A$A$String.foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/differentErasureInSuperClassComplex.kt"
   },
@@ -5428,8 +5427,9 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2417.kt"
   },
   "box/box/classes/kt2477.kt": {
-   "detail": "exit=0 stdout='FAIL\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "category": "interfaces",
+   "detail": "private member 'c' of C and an interface member of D with the same name are not supported (at '<eof>')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2477.kt"
   },
   "box/box/classes/kt2480.kt": {
@@ -19265,8 +19265,9 @@
    "upstream": "compiler/testData/codegen/box/initializers/correctOrder2.kt"
   },
   "box/box/initializers/correctOrder3.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.IllegalStateException: Expected <1>, actual <0>.\\n'",
-   "status": "MISCOMPILE",
+   "category": "other syntax (at '<eof>')",
+   "detail": "property 'field' initialized to a default value after an initializer that sets it is not supported (at '<eof>')",
+   "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/initializers/correctOrder3.kt"
   },
   "box/box/initializers/files/globalInitedAfterAccessingFile.kt": {
@@ -20234,7 +20235,7 @@
   },
   "box/box/inlineClasses/UIntArraySortExampleGeneric.kt": {
    "category": "interfaces",
-   "detail": "unknown interface Iterator$UInt$Int$$",
+   "detail": "unknown interface Iterator$UInt$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/UIntArraySortExampleGeneric.kt"
   },
@@ -20636,8 +20637,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/genericOverride.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/genericOverrideGeneric.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected IFoo$X$String, found TestX",
+   "category": "generics",
+   "detail": "generic class X used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/genericOverrideGeneric.kt"
   },
@@ -20716,9 +20717,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithInlineClass.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithInlineClassGeneric.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected I$IC$String, found C",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullAny.kt": {
@@ -20727,9 +20727,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullAnyGeneric.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected IFoo$X$String, found Test",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullAnyGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAny.kt": {
@@ -20738,26 +20737,24 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAny.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyG.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected IFoo$X$String, found Test",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyG.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyG2.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected IFoo$X$String, found Test",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyG2.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyNG.kt": {
    "category": "strings / templates",
-   "detail": "type mismatch: expected IFoo$X$String, found Test",
+   "detail": "type mismatch: expected X$String, found X$CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyNG.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyNG2.kt": {
    "category": "strings / templates",
-   "detail": "type mismatch: expected IFoo$X$String, found Test",
+   "detail": "type mismatch: expected X$String, found X$CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/overrideGenericWithNullableInlineClassUpperBoundWithNonNullNullableAnyNG2.kt"
   },
@@ -20862,9 +20859,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/uncastInlineClassToAnyAndBack.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/uncastInlineClassToAnyAndBackGeneric.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected IFoo$X$String, found TestX",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/uncastInlineClassToAnyAndBackGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/unrelatedGenerics.kt": {
@@ -21505,9 +21501,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/conformToComparableAndCallInterfaceMethod.kt"
   },
   "box/box/inlineClasses/conformToComparableAndCallInterfaceMethodGeneric.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Comparable$Foo$Int, found Foo$Int",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/conformToComparableAndCallInterfaceMethodGeneric.kt"
   },
   "box/box/inlineClasses/constructorCallableReference.kt": {
@@ -22713,7 +22708,7 @@
   },
   "box/box/inlineClasses/inlineClassCollection/inlineCollectionOfInlineClassGeneric.kt": {
    "category": "interfaces",
-   "detail": "unknown interface Collection$Z$Int$$",
+   "detail": "unknown interface Collection$Z$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineCollectionOfInlineClassGeneric.kt"
   },
@@ -22725,7 +22720,7 @@
   },
   "box/box/inlineClasses/inlineClassCollection/inlineListOfInlineClassGeneric.kt": {
    "category": "interfaces",
-   "detail": "unknown interface List$Z$Int$$",
+   "detail": "unknown interface List$Z$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassCollection/inlineListOfInlineClassGeneric.kt"
   },
@@ -23041,8 +23036,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2Generic.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.IllegalStateException: ClassCastException: class D cannot be cast to class B\\n'",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride2Generic.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3.kt": {
@@ -23051,8 +23046,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3Generic.kt": {
-   "detail": "exit=1 stdout='' stderr='Exception in thread \"main\" java.lang.IllegalStateException: ClassCastException: class D cannot be cast to class B\\n'",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverride3Generic.kt"
   },
   "box/box/inlineClasses/interfaceMethodCalls/complexGenericMethodWithInlineClassOverrideGeneric.kt": {
@@ -25395,8 +25390,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt10131a.kt"
   },
   "box/box/intrinsics/kt12125.kt": {
-   "detail": "exit=0 stdout='fail 2: -32769\\n' stderr=''",
-   "status": "MISCOMPILE",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/kt12125.kt"
   },
   "box/box/intrinsics/kt12125_2.kt": {
