@@ -27,7 +27,7 @@ void rt_cc_possible_root(void *obj) {
     if (is_buffered(obj)) return;
     set_buffered(obj);
     stack_push(&cc_roots, obj);
-    if (cc_roots.len >= cc_threshold && !cc_running) collect_cycles();
+    if (cc_roots.len >= cc_threshold && !cc_running && !rt_rel_draining) collect_cycles();
 }
 
 /* Count reached zero and the children were released: free now, unless the root buffer still holds it

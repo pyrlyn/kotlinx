@@ -68,6 +68,16 @@ Only two cases leave generated code:
 
 An implementation that never sets the buffered bit gets plain RC (`rc`, `boehm`).
 
+Releasing a field can free its object, so `@relz.C` frames nest once per node of a chain. `@relz.C` compares
+the stack pointer with `rt_rel_limit` (4 MiB below the start of the program, or half the stack limit if that
+is less; classes with no class, interface or list field cannot nest and skip the check). Past it, it calls
+`rt_rel_defer` with the object, still at count zero with its fields unreleased. The first such call empties
+the runtime's pending stack before it returns, with the limit moved below its own frame by an eighth of that
+room, so the C stack stays bounded and no pending object outlives that call. Because a parent can now be freed before a
+deferred child, and a buffered child at count zero looks dead to `mark_roots` once it is black, `default` and
+`incremental` start no collection while `rt_rel_draining` is set; the roots buffered meanwhile trigger one
+at the next possible root. bdwgc cannot run in that window either, since nothing there allocates from it.
+
 ## 4. Regions
 
 The compiler classifies each class (`NativeBackend.cyclic`): a class that lies on a cycle of

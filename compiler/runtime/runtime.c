@@ -4,10 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/resource.h>
 #include <time.h>
 #include <unistd.h>
 
 #include "kxgc.h" /* memory manager interface; implementation in compiler/gc/<name>/gc.c (newkotlinc --gc) */
+#include "common/object.inc"
 
 // ---- leak check (newkotlinc --leak-check => -DRT_LEAKCHECK) ----------------
 // Counts live runtime objects per kind; at exit prints a report to stderr and exits with 3
@@ -33,6 +35,45 @@ void rt_leak_obj(int64_t d) { LK(LK_OBJ, d); }
 #endif
 
 int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW); }
+
+// ---- bounded release ---------------------------------------------------------
+// Below rt_rel_limit on the C stack @relz.C leaves its object here instead of nesting another frame. The
+// first call empties the stack itself, with the limit moved just below its own frame, so the release goes
+// no deeper than rel_drain_room past that call, and every object is released before it returns. Recursion
+// would have released the deferred objects before their parents are freed; the difference is visible only
+// to the collector, which does not start meanwhile (kxgc.h). bdwgc, which cannot see this stack, does not
+// either: it collects only inside an allocation, and nothing here allocates from it.
+// Only the mutator thread releases objects (the epoch collector returns dead ones to it), so one limit is enough.
+#define REL_STACK (4 * 1024 * 1024)
+char *rt_rel_limit;
+int rt_rel_draining;
+static size_t rel_drain_room;
+static PtrStack rel_pending;
+
+__attribute__((constructor)) static void rel_limit_init(void) {
+    struct rlimit r;
+    size_t room = REL_STACK;
+    if (getrlimit(RLIMIT_STACK, &r) == 0 && r.rlim_cur / 2 < room) room = r.rlim_cur / 2;
+    rt_rel_limit = (char *)__builtin_frame_address(0) - room;
+    rel_drain_room = room / 8; /* limit + drain must fit a small stack too */
+}
+
+void rt_rel_defer(void *obj) {
+    stack_push(&rel_pending, obj);
+    if (rt_rel_draining) return;
+    rt_rel_draining = 1;
+    char *limit = rt_rel_limit;
+    rt_rel_limit = (char *)__builtin_frame_address(0) - rel_drain_room;
+    while (rel_pending.len) {
+        void *o = stack_pop(&rel_pending);
+        /* rel takes a count of 1 to zero, the path into @relz.C. A dying acyclic object still reads 1 here,
+         * since generated code publishes the zero only for cyclic ones, so this cannot be an increment. */
+        *header(o) = (*header(o) & ~KX_CNT_MASK) | 1;
+        vtab(o)->rel(o);
+    }
+    rt_rel_limit = limit;
+    rt_rel_draining = 0;
+}
 
 /* At exit: final collection; KX_GC_STATS=1 prints the GC's statistics to stderr (bench/gc/micro.sh). */
 void rt_exit_flush(void) {
