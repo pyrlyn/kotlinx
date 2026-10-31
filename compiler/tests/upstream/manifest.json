@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2537,
-  "UNSUPPORTED": 2954
+  "PASS": 2554,
+  "UNSUPPORTED": 2937
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -157,8 +157,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/innerAnnotationInstantiation.kt"
   },
   "box/box/annotations/instances/instanceEquality.kt": {
-   "category": "other syntax (at 'I')",
-   "detail": "expected '(' (at 'I')",
+   "category": "other: unknown type A1",
+   "detail": "unknown type A1",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/instanceEquality.kt"
   },
@@ -2820,9 +2820,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextFunctionWithPassedSuperType.kt"
   },
   "box/box/callableReference/adaptedReferences/contextFunctionWithSam.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextFunctionWithSam.kt"
   },
   "box/box/callableReference/adaptedReferences/contextFunctionWithVararg.kt": {
@@ -2832,14 +2831,13 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextFunctionWithVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/contextPropertyWithSam.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextPropertyWithSam.kt"
   },
   "box/box/callableReference/adaptedReferences/contextTypeWithSam.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
+   "category": "other syntax (at '(')",
+   "detail": "expected '=' (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextTypeWithSam.kt"
   },
@@ -2885,8 +2883,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionFunctionWithPassedSupertype.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionInSamWithPassedSupertype.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionInSamWithPassedSupertype.kt"
   },
@@ -2932,8 +2930,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableBoundaries.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableCallSites.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected '(' (at 'F')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '?:')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableCallSites.kt"
   },
@@ -3156,8 +3154,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/suspendConversion/nullableParameter.kt"
   },
   "box/box/callableReference/adaptedReferences/suspendConversion/propertyReferenceToSuspendFunction.kt": {
-   "category": "other syntax (at 'Some')",
-   "detail": "expected '(' (at 'Some')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/suspendConversion/propertyReferenceToSuspendFunction.kt"
   },
@@ -3672,8 +3670,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/funInterfaceConstructor/funInterfaceConstructedObjectsEquality.kt"
   },
   "box/box/callableReference/funInterfaceConstructor/funInterfaceConstructor.kt": {
-   "category": "other syntax (at 'KSupplier')",
-   "detail": "expected '(' (at 'KSupplier')",
+   "category": "other: unsupported callable reference ::KSupplier",
+   "detail": "unsupported callable reference ::KSupplier",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/funInterfaceConstructor/funInterfaceConstructor.kt"
   },
@@ -3688,8 +3686,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/funInterfaceConstructor/funInterfaceConstructorIsKFunction.kt"
   },
   "box/box/callableReference/funInterfaceConstructor/funInterfaceConstructorOfImplicitKFunctionType.kt": {
-   "category": "other syntax (at 'KRunnable')",
-   "detail": "expected '(' (at 'KRunnable')",
+   "category": "other: unsupported callable reference ::KRunnable",
+   "detail": "unsupported callable reference ::KRunnable",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/funInterfaceConstructor/funInterfaceConstructorOfImplicitKFunctionType.kt"
   },
@@ -3832,14 +3830,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelUnitOneStringArg.kt"
   },
   "box/box/callableReference/function/extensionFunctionAsASuperTypePassToSAMInterface.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionAsASuperTypePassToSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionFunctionInSAMInterface.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionInSAMInterface.kt"
   },
@@ -3850,26 +3848,26 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionLocal.kt"
   },
   "box/box/callableReference/function/extensionFunctionPassToSAMInterface.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionPassToSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionFunctionWithExtensionInSAMInterface.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionWithExtensionInSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionInDelegatedSam.kt": {
-   "category": "other syntax (at 'Base')",
-   "detail": "expected '(' (at 'Base')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionInDelegatedSam.kt"
   },
   "box/box/callableReference/function/extensionPassedToDelegatedSam.kt": {
-   "category": "other syntax (at 'Base')",
-   "detail": "expected '(' (at 'Base')",
+   "category": "strings / templates",
+   "detail": "unknown name 'String'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionPassedToDelegatedSam.kt"
   },
@@ -4099,8 +4097,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedConstructorFromTopLevelOneStringArg.kt"
   },
   "box/box/callableReference/function/nestedExtensionInSAMInterface.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedExtensionInSAMInterface.kt"
   },
@@ -4277,8 +4275,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt49526.kt"
   },
   "box/box/callableReference/kt49526_sam.kt": {
-   "category": "other syntax (at 'KFun')",
-   "detail": "expected '(' (at 'KFun')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected C1, found C2",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt49526_sam.kt"
   },
@@ -4349,20 +4347,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionProperty.kt"
   },
   "box/box/callableReference/property/extensionPropertyInDelegatedSam.kt": {
-   "category": "other syntax (at 'Base')",
-   "detail": "expected '(' (at 'Base')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyInDelegatedSam.kt"
   },
   "box/box/callableReference/property/extensionPropertyInSamInterface.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyInSamInterface.kt"
   },
   "box/box/callableReference/property/extensionPropertyPassedToDelegatedSam.kt": {
-   "category": "other syntax (at 'Base')",
-   "detail": "expected '(' (at 'Base')",
+   "category": "strings / templates",
+   "detail": "unknown name 'String'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyPassedToDelegatedSam.kt"
   },
@@ -7395,8 +7393,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/fakeOverride.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/funInterfaceEquality.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected '(' (at 'F')",
+   "category": "unknown context (stdlib API / unsupported decl)",
+   "detail": "unknown function 'context'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/funInterfaceEquality.kt"
   },
@@ -7489,8 +7487,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/contextAndNoContextOverloads.kt"
   },
   "box/box/contextParameters/contextFunInSam.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda expects 2 parameters, has 1",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextFunInSam.kt"
   },
@@ -7645,8 +7643,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/kt51277.kt"
   },
   "box/box/contextParameters/kt51284.kt": {
-   "category": "other syntax (at 'SAM')",
-   "detail": "expected '(' (at 'SAM')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda expects 2 parameters, has 1",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt51284.kt"
   },
@@ -9784,8 +9782,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/featureIntersection/funInterface/kt47549.kt"
   },
   "box/box/coroutines/featureIntersection/funInterface/kt47549_1.kt": {
-   "category": "other syntax (at 'I')",
-   "detail": "expected '(' (at 'I')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/featureIntersection/funInterface/kt47549_1.kt"
   },
@@ -13604,8 +13602,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationToIntersectionType3.kt"
   },
   "box/box/delegation/delegationToSAMInterface.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected '(' (at 'F')",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationToSAMInterface.kt"
   },
@@ -14159,8 +14157,8 @@
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/nestedLambdas.kt"
   },
   "box/box/directInvokeOptimization/samConversion.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'FunInterface1')",
+   "category": "other: unsupported call",
+   "detail": "unsupported call",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/samConversion.kt"
   },
@@ -15388,8 +15386,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionFakeOverride.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInDelegatedSam.kt": {
-   "category": "other syntax (at 'Base')",
-   "detail": "expected '(' (at 'Base')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInDelegatedSam.kt"
   },
@@ -15405,8 +15403,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInNestedClass.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInSAMInterface.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInSAMInterface.kt"
   },
@@ -15440,8 +15438,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionWithExtensionAsAReceiver.kt"
   },
   "box/box/extensionFunctions/extensionFunctionWithExtensionInSAMInterface.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionWithExtensionInSAMInterface.kt"
   },
@@ -15672,8 +15670,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyInNestedClass.kt"
   },
   "box/box/extensionProperties/extensionPropertyInSAMInterface.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'SamInterface')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyInSAMInterface.kt"
   },
@@ -16517,15 +16515,13 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/vararg.kt"
   },
   "box/box/funInterface/basicFunInterface.kt": {
-   "category": "other syntax (at 'Foo')",
-   "detail": "expected '(' (at 'Foo')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/basicFunInterface.kt"
   },
   "box/box/funInterface/basicFunInterfaceConversion.kt": {
-   "category": "other syntax (at 'Foo')",
-   "detail": "expected '(' (at 'Foo')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/basicFunInterfaceConversion.kt"
   },
   "box/box/funInterface/basicFunInterfaceConversionClash.kt": {
@@ -16534,26 +16530,26 @@
    "upstream": "compiler/testData/codegen/box/funInterface/basicFunInterfaceConversionClash.kt"
   },
   "box/box/funInterface/castFromAny.kt": {
-   "category": "other syntax (at 'KRunnable')",
-   "detail": "expected '(' (at 'KRunnable')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected $Fn$Unit, found Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/castFromAny.kt"
   },
   "box/box/funInterface/contravariantIntersectionType.kt": {
-   "category": "other syntax (at 'Consumer')",
-   "detail": "expected '(' (at 'Consumer')",
+   "category": "other: unknown method Any.doOnSuccess()",
+   "detail": "unknown method Any.doOnSuccess()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionType.kt"
   },
   "box/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype.kt": {
-   "category": "other syntax (at 'Consumer')",
-   "detail": "expected '(' (at 'Consumer')",
+   "category": "other: unknown method Any.doOnSuccess()",
+   "detail": "unknown method Any.doOnSuccess()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype.kt"
   },
   "box/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype2.kt": {
-   "category": "other syntax (at 'IFoo')",
-   "detail": "expected '(' (at 'IFoo')",
+   "category": "other: unknown method Any.check()",
+   "detail": "unknown method Any.check()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/contravariantIntersectionTypeWithNonTrivialCommonSupertype2.kt"
   },
@@ -16574,62 +16570,58 @@
   },
   "box/box/funInterface/equality/localFunctionReferences.kt": {
    "category": "interfaces",
-   "detail": "expected '(' (at 'FunInterface')",
+   "detail": "type mismatch: expected FunInterface, found $Fn$Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/equality/localFunctionReferences.kt"
   },
   "box/box/funInterface/equality/simpleLambdas.kt": {
-   "category": "interfaces",
-   "detail": "expected '(' (at 'FunInterface')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/equality/simpleLambdas.kt"
   },
   "box/box/funInterface/funConversionInVararg.kt": {
-   "category": "other syntax (at 'MyRunnable')",
-   "detail": "expected '(' (at 'MyRunnable')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected MyRunnable, found $Fn$Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/funConversionInVararg.kt"
   },
   "box/box/funInterface/funInterfaceCallInLambda.kt": {
-   "category": "other syntax (at 'Action')",
-   "detail": "expected '(' (at 'Action')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceCallInLambda.kt"
   },
   "box/box/funInterface/funInterfaceInheritance.kt": {
-   "category": "other syntax (at 'Base')",
-   "detail": "expected '(' (at 'Base')",
+   "category": "interfaces",
+   "detail": "fun interfaces with super-interfaces are not supported (at 'I')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceInheritance.kt"
   },
   "box/box/funInterface/funInterfaceTypealias.kt": {
-   "category": "other syntax (at 'KRunnable')",
-   "detail": "expected '(' (at 'KRunnable')",
+   "category": "unknown KRunnableAlias (stdlib API / unsupported decl)",
+   "detail": "unknown function 'KRunnableAlias'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceTypealias.kt"
   },
   "box/box/funInterface/funInterfaceWithReceiver.kt": {
-   "category": "other syntax (at 'FunWithReceiver')",
-   "detail": "expected '(' (at 'FunWithReceiver')",
+   "category": "local / extension functions",
+   "detail": "member extension functions are only supported in classes (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceWithReceiver.kt"
   },
   "box/box/funInterface/funInterfaceWithSuspendMethod.kt": {
-   "category": "other syntax (at 'SuspendFun')",
-   "detail": "expected '(' (at 'SuspendFun')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceWithSuspendMethod.kt"
   },
   "box/box/funInterface/functionAndFunInterfaceSharedClassSplit.kt": {
-   "category": "other syntax (at 'Parser')",
-   "detail": "expected '(' (at 'Parser')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/functionAndFunInterfaceSharedClassSplit.kt"
   },
   "box/box/funInterface/implIsNotFunction.kt": {
-   "category": "other syntax (at 'Foo')",
-   "detail": "expected '(' (at 'Foo')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/implIsNotFunction.kt"
   },
   "box/box/funInterface/inlinedSamWrapper.kt": {
@@ -16638,27 +16630,26 @@
    "upstream": "compiler/testData/codegen/box/funInterface/inlinedSamWrapper.kt"
   },
   "box/box/funInterface/intersectionTypeToFunInterfaceConversion.kt": {
-   "category": "other syntax (at 'KRunnable')",
-   "detail": "expected '(' (at 'KRunnable')",
+   "category": "other syntax (at 'where')",
+   "detail": "unexpected top-level token (at 'where')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/intersectionTypeToFunInterfaceConversion.kt"
   },
   "box/box/funInterface/irrelevantPrivateDeclarations.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected '(' (at 'A')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'set')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/irrelevantPrivateDeclarations.kt"
   },
   "box/box/funInterface/kt41670.kt": {
    "category": "interfaces",
-   "detail": "expected '(' (at 'Interface')",
+   "detail": "interface properties need a type (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/kt41670.kt"
   },
   "box/box/funInterface/kt45444_privateFunInterface.kt": {
-   "category": "other syntax (at 'Listener')",
-   "detail": "expected '(' (at 'Listener')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/kt45444_privateFunInterface.kt"
   },
   "box/box/funInterface/kt46512_indyFunInterfaceOverCallableReference.kt": {
@@ -16668,8 +16659,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/kt46512_indyFunInterfaceOverCallableReference.kt"
   },
   "box/box/funInterface/kt46908_functionSupertype.kt": {
-   "category": "other syntax (at 'Foo')",
-   "detail": "expected '(' (at 'Foo')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/kt46908_functionSupertype.kt"
   },
@@ -16680,14 +16671,14 @@
    "upstream": "compiler/testData/codegen/box/funInterface/kt49384.kt"
   },
   "box/box/funInterface/kt49384_getSame.kt": {
-   "category": "other syntax (at 'Foo')",
-   "detail": "expected '(' (at 'Foo')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertSame'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/kt49384_getSame.kt"
   },
   "box/box/funInterface/kt64587.kt": {
-   "category": "other syntax (at 'Child')",
-   "detail": "expected '(' (at 'Child')",
+   "category": "interfaces",
+   "detail": "fun interfaces with super-interfaces are not supported (at 'Child')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/kt64587.kt"
   },
@@ -16712,8 +16703,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/kt79092.kt"
   },
   "box/box/funInterface/multiFieldValueClassCallableRefToFunInterface.kt": {
-   "category": "other syntax (at 'Renderer')",
-   "detail": "expected '(' (at 'Renderer')",
+   "category": "inline/value classes",
+   "detail": "a value class needs exactly one property (at 'value')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/multiFieldValueClassCallableRefToFunInterface.kt"
   },
@@ -16723,20 +16714,20 @@
    "upstream": "compiler/testData/codegen/box/funInterface/multimodule.kt"
   },
   "box/box/funInterface/noConversionForSubtype.kt": {
-   "category": "other syntax (at 'SimpleRibCoroutineWorker')",
-   "detail": "expected '(' (at 'SimpleRibCoroutineWorker')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/noConversionForSubtype.kt"
   },
   "box/box/funInterface/noConversionForSubtypeGeneric.kt": {
-   "category": "other syntax (at 'SimpleRibCoroutineWorker')",
-   "detail": "expected '(' (at 'SimpleRibCoroutineWorker')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/noConversionForSubtypeGeneric.kt"
   },
   "box/box/funInterface/nonAbstractMethod.kt": {
-   "category": "other syntax (at 'F')",
-   "detail": "expected '(' (at 'F')",
+   "category": "interfaces",
+   "detail": "fun interfaces with super-interfaces are not supported (at 'F')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/nonAbstractMethod.kt"
   },
@@ -16747,44 +16738,43 @@
    "upstream": "compiler/testData/codegen/box/funInterface/nonTrivialProjectionInSuperType.kt"
   },
   "box/box/funInterface/nullableSam.kt": {
-   "category": "other syntax (at 'KRunnable')",
-   "detail": "expected '(' (at 'KRunnable')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected KRunnable, found $Fn$Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/nullableSam.kt"
   },
   "box/box/funInterface/partialSam.kt": {
-   "category": "other syntax (at 'Fn')",
-   "detail": "expected '(' (at 'Fn')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/partialSam.kt"
   },
   "box/box/funInterface/primitiveConversions.kt": {
-   "category": "other syntax (at 'CharToAny')",
-   "detail": "expected '(' (at 'CharToAny')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/primitiveConversions.kt"
   },
   "box/box/funInterface/receiverEvaluatedOnce.kt": {
-   "category": "other syntax (at 'KRunnable')",
-   "detail": "expected '(' (at 'KRunnable')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected KRunnable, found $Fn$Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/receiverEvaluatedOnce.kt"
   },
   "box/box/funInterface/samConstructorExplicitInvocation.kt": {
-   "category": "other syntax (at 'S')",
-   "detail": "expected '(' (at 'S')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/samConstructorExplicitInvocation.kt"
   },
   "box/box/funInterface/samConversionToGenericInterfaceInGenericFun.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type R",
+   "detail": "unknown type R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/samConversionToGenericInterfaceInGenericFun.kt"
   },
   "box/box/funInterface/subtypeOfFunctionalTypeToFunInterfaceConversion.kt": {
-   "category": "other syntax (at 'KRunnable')",
-   "detail": "expected '(' (at 'KRunnable')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/subtypeOfFunctionalTypeToFunInterfaceConversion.kt"
   },
@@ -16794,14 +16784,14 @@
    "upstream": "compiler/testData/codegen/box/funInterface/suspendFunInterfaceConversionCodegen.kt"
   },
   "box/box/funInterface/suspendFunctionAndFunInterfaceSharedClassSplit.kt": {
-   "category": "other syntax (at 'Susp')",
-   "detail": "expected '(' (at 'Susp')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/suspendFunctionAndFunInterfaceSharedClassSplit.kt"
   },
   "box/box/funInterface/typealiasedFunInterface.kt": {
-   "category": "other syntax (at 'Foo')",
-   "detail": "expected '(' (at 'Foo')",
+   "category": "generics",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/typealiasedFunInterface.kt"
   },
@@ -18006,8 +17996,8 @@
    "upstream": "compiler/testData/codegen/box/inference/eagerLambdaAnalysisOnConstructorCall.kt"
   },
   "box/box/inference/eagerLambdaAnalysisSamAndLambda.kt": {
-   "category": "other syntax (at 'Sam')",
-   "detail": "expected '(' (at 'Sam')",
+   "category": "lambdas / function types / references",
+   "detail": "overloads are not supported: unitLambdaAndTypeSam",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/eagerLambdaAnalysisSamAndLambda.kt"
   },
@@ -22226,26 +22216,24 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/fieldNameClashGeneric.kt"
   },
   "box/box/inlineClasses/funInterface/argumentIC.kt": {
-   "category": "other syntax (at 'ResultHandler')",
-   "detail": "expected '(' (at 'ResultHandler')",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of Result; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/argumentIC.kt"
   },
   "box/box/inlineClasses/funInterface/argumentICGeneric.kt": {
-   "category": "other syntax (at 'ResultHandler')",
-   "detail": "expected '(' (at 'ResultHandler')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/argumentICGeneric.kt"
   },
   "box/box/inlineClasses/funInterface/argumentICGeneric2.kt": {
-   "category": "other syntax (at 'ResultHandler')",
-   "detail": "expected '(' (at 'ResultHandler')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/argumentICGeneric2.kt"
   },
   "box/box/inlineClasses/funInterface/argumentResult.kt": {
-   "category": "other syntax (at 'ResultHandler')",
-   "detail": "expected '(' (at 'ResultHandler')",
+   "category": "other: unknown type Result<Boolean>",
+   "detail": "unknown type Result<Boolean>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/argumentResult.kt"
   },
@@ -22270,26 +22258,24 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/mangledSamWrappersGeneric.kt"
   },
   "box/box/inlineClasses/funInterface/returnIC.kt": {
-   "category": "other syntax (at 'ResultHandler')",
-   "detail": "expected '(' (at 'ResultHandler')",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of Result; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/returnIC.kt"
   },
   "box/box/inlineClasses/funInterface/returnICGeneric.kt": {
-   "category": "other syntax (at 'ResultHandler')",
-   "detail": "expected '(' (at 'ResultHandler')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/returnICGeneric.kt"
   },
   "box/box/inlineClasses/funInterface/returnICGeneric2.kt": {
-   "category": "other syntax (at 'ResultHandler')",
-   "detail": "expected '(' (at 'ResultHandler')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/returnICGeneric2.kt"
   },
   "box/box/inlineClasses/funInterface/returnResult.kt": {
-   "category": "other syntax (at 'ResultHandler')",
-   "detail": "expected '(' (at 'ResultHandler')",
+   "category": "other: unknown type Result<Boolean>",
+   "detail": "unknown type Result<Boolean>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/returnResult.kt"
   },
@@ -24059,104 +24045,104 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/typeChecksForInlineClassesGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/any.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type R",
+   "detail": "unknown type R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/any.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/anyGeneric.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type R",
+   "detail": "unknown type R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/anyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/anyN.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type R",
+   "detail": "unknown type R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/anyN.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/anyNGeneric.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type R",
+   "detail": "unknown type R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/anyNGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/anyNGeneric2.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type R",
+   "detail": "unknown type R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/anyNGeneric2.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/iface.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "strings / templates",
+   "detail": "cannot convert Foo to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/iface.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/ifaceChild.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type R",
+   "detail": "unknown type R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/ifaceChild.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/ifaceChildGeneric.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type R",
+   "detail": "unknown type R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/ifaceChildGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/ifaceGeneric.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type R",
+   "detail": "unknown type R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/ifaceGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/nullableResult.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "unknown Result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/nullableResult.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/primitive.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type T5",
+   "detail": "unknown type T5",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/primitive.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/primitiveGeneric.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type R",
+   "detail": "unknown type R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/primitiveGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/result.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "unknown Result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/result.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/resultAny.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "unknown Result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/resultAny.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/resultAnyGeneric.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "unknown Result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/resultAnyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/string.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type R",
+   "detail": "unknown type R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/string.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/stringGeneric.kt": {
-   "category": "other syntax (at 'FunIFace')",
-   "detail": "expected '(' (at 'FunIFace')",
+   "category": "other: unknown type R",
+   "detail": "unknown type R",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/stringGeneric.kt"
   },
@@ -36078,26 +36064,26 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallWithElvisFolding.kt"
   },
   "box/box/sam/approximation/approxToIntermediateType.kt": {
-   "category": "other syntax (at 'IFoo')",
-   "detail": "expected '(' (at 'IFoo')",
+   "category": "other syntax (at 'where')",
+   "detail": "unexpected top-level token (at 'where')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/approxToIntermediateType.kt"
   },
   "box/box/sam/approximation/approxToSingleUpperBound.kt": {
-   "category": "other syntax (at 'IFoo')",
-   "detail": "expected '(' (at 'IFoo')",
+   "category": "other syntax (at 'where')",
+   "detail": "unexpected top-level token (at 'where')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/approxToSingleUpperBound.kt"
   },
   "box/box/sam/approximation/impossibleToApproxToRepresentable.kt": {
-   "category": "other syntax (at 'IFoo')",
-   "detail": "expected '(' (at 'IFoo')",
+   "category": "other syntax (at 'where')",
+   "detail": "unexpected top-level token (at 'where')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/impossibleToApproxToRepresentable.kt"
   },
   "box/box/sam/approximation/impossibleToApproxToRepresentable2.kt": {
-   "category": "other syntax (at 'IFoo')",
-   "detail": "expected '(' (at 'IFoo')",
+   "category": "other syntax (at 'where')",
+   "detail": "unexpected top-level token (at 'where')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/impossibleToApproxToRepresentable2.kt"
   },
@@ -36114,44 +36100,44 @@
    "upstream": "compiler/testData/codegen/box/sam/constructors/nonLiteralComparator.kt"
   },
   "box/box/sam/constructors/sameWrapperClass2.kt": {
-   "category": "other syntax (at 'SAM')",
-   "detail": "expected '(' (at 'SAM')",
+   "category": "class bodies / constructors",
+   "detail": "class literals are not supported (at 'class')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/constructors/sameWrapperClass2.kt"
   },
   "box/box/sam/constructors/suspendSamConstructorAdaptation.kt": {
    "category": "interfaces",
-   "detail": "expected '(' (at 'FunInterface')",
+   "detail": "only member functions are supported in class/interface bodies (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/constructors/suspendSamConstructorAdaptation.kt"
   },
   "box/box/sam/funInterfaceExtendsSuspendFunction.kt": {
-   "category": "other syntax (at 'Foo')",
-   "detail": "expected '(' (at 'Foo')",
+   "category": "other syntax (at '(')",
+   "detail": "unexpected top-level token (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/funInterfaceExtendsSuspendFunction.kt"
   },
   "box/box/sam/funInterfaceExtendsSuspendFunction2.kt": {
-   "category": "other syntax (at 'Foo')",
-   "detail": "expected '(' (at 'Foo')",
+   "category": "other syntax (at '(')",
+   "detail": "unexpected top-level token (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/funInterfaceExtendsSuspendFunction2.kt"
   },
   "box/box/sam/inProjectedSam.kt": {
-   "category": "other syntax (at 'Element')",
-   "detail": "expected '(' (at 'Element')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Element, found $Fn$Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/inProjectedSam.kt"
   },
   "box/box/sam/kt51821.kt": {
-   "category": "other syntax (at 'A')",
-   "detail": "expected '(' (at 'A')",
+   "category": "unknown it (stdlib API / unsupported decl)",
+   "detail": "unknown name 'it'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/kt51821.kt"
   },
   "box/box/sam/kt56188.kt": {
-   "category": "other syntax (at 'Supplier')",
-   "detail": "expected '(' (at 'Supplier')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Supplier$String, found $Fn$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/kt56188.kt"
   },
@@ -36171,32 +36157,29 @@
    "upstream": "compiler/testData/codegen/box/sam/kt64116.kt"
   },
   "box/box/sam/samWithAbstractToString.kt": {
-   "category": "other syntax (at 'SomeFun')",
-   "detail": "expected '(' (at 'SomeFun')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/sam/samWithAbstractToString.kt"
   },
   "box/box/sam/samWithAbstractToString2.kt": {
-   "category": "other syntax (at 'SomeFun')",
-   "detail": "expected '(' (at 'SomeFun')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/sam/samWithAbstractToString2.kt"
   },
   "box/box/sam/samWithAbstractToString3.kt": {
-   "category": "other syntax (at 'SomeFun')",
-   "detail": "expected '(' (at 'SomeFun')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/sam/samWithAbstractToString3.kt"
   },
   "box/box/sam/samWithNullableUpperBound.kt": {
-   "category": "other syntax (at 'Consumer')",
-   "detail": "expected '(' (at 'Consumer')",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of K; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/samWithNullableUpperBound.kt"
   },
   "box/box/sam/topLevelConversions.kt": {
-   "category": "other syntax (at 'MyFun')",
-   "detail": "expected '(' (at 'MyFun')",
+   "category": "modifiers (private/const/lateinit/...)",
+   "detail": "unexpected top-level token (at 'lateinit')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/topLevelConversions.kt"
   },
@@ -37500,8 +37483,8 @@
    "upstream": "compiler/testData/codegen/box/suspendConversion/basicSuspendConversionForCallableReference.kt"
   },
   "box/box/suspendConversion/chainedFunSuspendConversionForSimpleExpression.kt": {
-   "category": "other syntax (at 'SuspendRunnable')",
-   "detail": "expected '(' (at 'SuspendRunnable')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/suspendConversion/chainedFunSuspendConversionForSimpleExpression.kt"
   },
@@ -37529,8 +37512,8 @@
    "upstream": "compiler/testData/codegen/box/suspendConversion/severalConversionsInOneCall.kt"
   },
   "box/box/suspendConversion/suspendAndFunConversionInDisabledMode.kt": {
-   "category": "other syntax (at 'Runnable')",
-   "detail": "expected '(' (at 'Runnable')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/suspendConversion/suspendAndFunConversionInDisabledMode.kt"
   },
@@ -37580,8 +37563,8 @@
    "upstream": "compiler/testData/codegen/box/suspendConversion/suspendConversionOnVarargElements.kt"
   },
   "box/box/suspendConversion/suspendConversionWithFunInterfaces.kt": {
-   "category": "other syntax (at 'SuspendRunnable')",
-   "detail": "expected '(' (at 'SuspendRunnable')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'suspend')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/suspendConversion/suspendConversionWithFunInterfaces.kt"
   },
@@ -38802,14 +38785,14 @@
    "upstream": "compiler/testData/codegen/box/unitConversion/unitConversionForSubtype.kt"
   },
   "box/box/unitConversion/unitConversionWithKotlinSam.kt": {
-   "category": "other syntax (at 'KRunnable')",
-   "detail": "expected '(' (at 'KRunnable')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected KRunnable, found $Fn$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unitConversion/unitConversionWithKotlinSam.kt"
   },
   "box/box/unitConversion/unitConversionWithSamSubtype.kt": {
-   "category": "other syntax (at 'KRunnable')",
-   "detail": "expected '(' (at 'KRunnable')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unitConversion/unitConversionWithSamSubtype.kt"
   },
