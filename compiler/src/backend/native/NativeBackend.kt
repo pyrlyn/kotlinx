@@ -367,6 +367,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val main = sigs["main"] ?: throw CompileError("no main function")
         genGlobals()
         for (f in prog.funs) if (f.typeParams.isEmpty()) genFun(f, null)
+        // Throwable's message/cause are plain fields: an overriding getter would not be dispatched to.
+        if (excMode) for (c in prog.classes) if (c.name !in PRELUDE_EXCEPTIONS && "Throwable" in classes.getValue(c.name).ancestors)
+            c.methods.firstOrNull { it.name == "\$prop\$message" || it.name == "\$prop\$cause" }?.let { fail("overriding Throwable.${it.name.removePrefix("\$prop\$")} in ${c.name} is not supported") }
         for (c in prog.classes) for (m in c.methods) if ((m.body != null || m.exprBody != null) && m.typeParams.isEmpty()) genFun(m, classes.getValue(c.name))
         for (c in prog.classes) if (c.hasCtorBody || c.name in poly) genInit(c, classes.getValue(c.name))
         for (c in prog.classes) if (c.hasCtorBody) genCtor(c, classes.getValue(c.name))

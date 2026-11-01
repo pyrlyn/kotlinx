@@ -8,35 +8,35 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2924 |
-| PASS | 2567 |
+| UNSUPPORTED | 2898 |
+| PASS | 2593 |
 
-Kept in tree (re-runnable with `run.py`): 2567
+Kept in tree (re-runnable with `run.py`): 2593
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 253 |
+| strings / templates | 254 |
 | generics | 208 |
 | interfaces | 200 |
-| operator/infix functions | 186 |
+| operator/infix functions | 157 |
 | lambdas / function types / references | 143 |
 | property accessors / delegation | 90 |
-| class bodies / constructors | 86 |
-| type inference / mismatch | 79 |
+| class bodies / constructors | 84 |
+| type inference / mismatch | 81 |
 | objects / companion objects | 64 |
 | type inference (expression bodies) | 45 |
 | other syntax (at '.') | 44 |
 | other: expected '=' (at ' | 44 |
 | inline/value classes | 43 |
-| inheritance (open/abstract/sealed) | 40 |
 | other: unknown type T | 39 |
+| inheritance (open/abstract/sealed) | 39 |
 | nullable types | 38 |
 | destructuring declarations | 29 |
 | other syntax (at ':') | 28 |
 | annotations | 27 |
-| other syntax (at ',') | 22 |
+| other syntax (at ',') | 23 |
 | other syntax (at 'where') | 20 |
 | other: unknown type Number | 17 |
 | unknown x (stdlib API / unsupported decl) | 17 |

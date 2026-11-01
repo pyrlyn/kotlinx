@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2589,
-  "UNSUPPORTED": 2902
+  "PASS": 2593,
+  "UNSUPPORTED": 2898
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2991,8 +2991,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/localFunctionWithDefault.kt"
   },
   "box/box/callableReference/adaptedReferences/manyDefaultsAndVararg.kt": {
-   "category": "exceptions",
-   "detail": "unknown superclass Exception",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/manyDefaultsAndVararg.kt"
   },
@@ -5186,9 +5186,8 @@
    "upstream": "compiler/testData/codegen/box/classes/delegationMethodsWithArgs.kt"
   },
   "box/box/classes/exceptionConstructor.kt": {
-   "category": "exceptions",
-   "detail": "unknown superclass Exception",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/exceptionConstructor.kt"
   },
   "box/box/classes/extensionFunWithDefaultParam.kt": {
@@ -36786,9 +36785,8 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/removeSetInt.kt"
   },
   "box/box/specialBuiltins/throwable.kt": {
-   "category": "class bodies / constructors",
-   "detail": "constructor Throwable expects 1 arguments",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwable.kt"
   },
   "box/box/specialBuiltins/throwableCause.kt": {
@@ -36798,21 +36796,20 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableCause.kt"
   },
   "box/box/specialBuiltins/throwableComplex.kt": {
-   "category": "other: no field cause in Throwable",
-   "detail": "no field cause in Throwable",
+   "category": "other: overriding Throwable.message in Override is not supported",
+   "detail": "overriding Throwable.message in Override is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableComplex.kt"
   },
   "box/box/specialBuiltins/throwableImpl.kt": {
-   "category": "class bodies / constructors",
-   "detail": "constructor Throwable expects 1 arguments",
+   "category": "other: overriding Throwable.message in MyThrowable is not supported",
+   "detail": "overriding Throwable.message in MyThrowable is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableImpl.kt"
   },
   "box/box/specialBuiltins/throwableImplWithSecondaryConstructor.kt": {
-   "category": "other: no field cause in MyThrowable",
-   "detail": "no field cause in MyThrowable",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/throwableImplWithSecondaryConstructor.kt"
   },
   "box/box/specialBuiltins/valuesInsideEnum.kt": {
@@ -44689,9 +44686,8 @@
    "upstream": "native/native.tests/testData/codegen/reflection/objc/protocol.kt"
   },
   "native/native.tests/codegen/serialization/deserialized_fields.kt": {
-   "category": "inheritance (open/abstract/sealed)",
-   "detail": "unknown superclass Throwable",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/serialization/deserialized_fields.kt"
   },
   "native/native.tests/codegen/serialization/deserialized_inline0.kt": {
