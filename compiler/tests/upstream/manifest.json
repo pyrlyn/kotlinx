@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2589,
-  "UNSUPPORTED": 2902
+  "PASS": 2590,
+  "UNSUPPORTED": 2901
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -44474,9 +44474,8 @@
    "upstream": "native/native.tests/testData/codegen/intrinsics/interop_sourceCodeStruct.kt"
   },
   "native/native.tests/codegen/intrinsics/isExperimentalMM.kt": {
-   "category": "unknown isExperimentalMM (stdlib API / unsupported decl)",
-   "detail": "unknown function 'isExperimentalMM'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/intrinsics/isExperimentalMM.kt"
   },
   "native/native.tests/codegen/intrinsics/uninitializedInstance.kt": {

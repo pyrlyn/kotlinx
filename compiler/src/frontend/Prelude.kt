@@ -346,11 +346,21 @@ fun <T> lazyOf(value: T): Lazy<T> = Lazy({ value })
 """
 private val LAZY_USE = Regex("""\blazy(Of)?\b""")
 
+/** Kotlin/Native memory model queries: KotlinX has one memory model, reported as the new ("experimental") one. */
+const val MEMORY_MODEL = """
+enum class MemoryModel { STRICT, RELAXED, EXPERIMENTAL }
+object Platform {
+    val memoryModel: MemoryModel get() = MemoryModel.EXPERIMENTAL
+}
+fun isExperimentalMM(): Boolean = true
+"""
+private val MEMORY_MODEL_USE = Regex("""\bisExperimentalMM\b|\bPlatform\.memoryModel\b|\bMemoryModel\.""")
+
 fun withPrelude(src: String, p: Program): Program {
     val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
-    val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src); val lz = LAZY_USE.containsMatchIn(src)
-    if (!ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon && !lz) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "") + (if (lz) LAZY else "")
+    val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src); val lz = LAZY_USE.containsMatchIn(src); val mmod = MEMORY_MODEL_USE.containsMatchIn(src)
+    if (!ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon && !lz && !mmod) return p
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "") + (if (lz) LAZY else "") + (if (mmod) MEMORY_MODEL else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },
