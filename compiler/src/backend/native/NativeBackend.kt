@@ -367,6 +367,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val main = sigs["main"] ?: throw CompileError("no main function")
         genGlobals()
         for (f in prog.funs) if (f.typeParams.isEmpty()) genFun(f, null)
+        // Throwable's message/cause are plain fields: an overriding getter would not be dispatched to.
+        if (excMode) for (c in prog.classes) if (c.name !in PRELUDE_EXCEPTIONS && "Throwable" in classes.getValue(c.name).ancestors)
+            c.methods.firstOrNull { it.name == "\$prop\$message" || it.name == "\$prop\$cause" }?.let { fail("overriding Throwable.${it.name.removePrefix("\$prop\$")} in ${c.name} is not supported") }
         for (c in prog.classes) for (m in c.methods) if ((m.body != null || m.exprBody != null) && m.typeParams.isEmpty()) genFun(m, classes.getValue(c.name))
         for (c in prog.classes) if (c.hasCtorBody || c.name in poly) genInit(c, classes.getValue(c.name))
         for (c in prog.classes) if (c.hasCtorBody) genCtor(c, classes.getValue(c.name))
@@ -745,7 +748,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         for (f in c.fields) if (f.init == null) store(f.name, genArg(NameE(f.name).also { it.line = c.line }))
         for (x in c.inits) {
-            if (x is FieldD) store(x.name, argFor(x.init!!, ci.fields[ci.index(x.name)].second, true))
+            if (x is FieldD) {
+                val ft = ci.fields[ci.index(x.name)].second
+                // Like Kotlin/JVM and Kotlin/Native: an initializer that sets the default value is dropped (the
+                // constructor already zeroed the field), so a value stored by a superclass init survives.
+                if (isDefaultInit(x.init!!, ft)) continue
+                store(x.name, argFor(x.init, ft, true))
+            }
             else {
                 genBlockBody(x as Block, false)
                 if (term) fail("return is not allowed in an init block of ${c.name}")
@@ -754,6 +763,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         releaseAll()
         emit("ret void")
         funcs.append("define internal void @init.${ci.name}(${params.joinToString(", ")}) nounwind {\nentry:\n").append(allocas).append(body).append("}\n\n")
+    }
+
+    /** `false`, `0`, `0L`, `0.0` (not `-0.0`), `'\\u0000'`, `0.toByte()`... for a non-reference field, or `null`. */
+    private fun isDefaultInit(e: E, ft: Ty): Boolean {
+        if (e is NullL) return true
+        if (ft.llvm == "ptr") return false
+        return when (e) {
+            is IntL -> e.v == 0L
+            is CharL -> e.v == 0L
+            is DblL -> e.v.toRawBits() == 0L
+            is BoolL -> !e.v
+            is CallE -> e.args.isEmpty() && e.lambda == null && (e.callee as? MemberE)?.let { m ->
+                m.n in setOf("toByte", "toShort", "toChar", "toInt", "toLong", "toFloat", "toDouble") && m.recv.let { it is IntL && it.v == 0L } } == true
+            else -> false
+        }
     }
 
     /** Constructor function for classes with plain parameters, initializers or a superclass: returns an owned object. */
@@ -2868,6 +2892,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val res = Val(emitT("phi i32 [ 0, %$from ], [ ${h.v}, %$vEnd ]"), Ty.I32)
             releaseIfOwned(r); return res
         }
+        // `isPermanent()` (kotlin.native.internal): an object is permanent (statically initialized) when it has no
+        // initializer code other than `const val`s.
+        if (n == "isPermanent" && e0.args.isEmpty() && t is Ty.Cls && prog.globals.any { it.name == "\$o\$${t.name}" }) {
+            val c = classDecls.getValue(t.name)
+            releaseIfOwned(r)
+            val permanent = c.inits.all { it is FieldD && "${c.name}.${it.name}" in ConstFields.names }
+            return Val(if (permanent) "true" else "false", Ty.I1)
+        }
+        if (n == "collectReferenceFieldValues" && e0.args.isEmpty() && e0.lambda == null) return collectRefFields(r)
         // Member extension of the enclosing class (dispatch receiver `this`).
         owner?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, emptyList()) && !hasMember(t, n) }?.let {
             if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
@@ -3452,6 +3485,42 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     /** Binds already computed values to fresh hidden locals for the duration of [f] (owned references are released after). */
+    /** Underlying type of a (possibly nested) value class, with the field path to it. */
+    private fun unwrapValue(t: Ty, path: List<String>): Pair<Ty, List<String>> {
+        if (t !is Ty.Cls || classDecls[t.name]?.isValue != true) return t to path
+        val (fn, ft) = classes.getValue(t.name).fields.single()
+        return unwrapValue(ft, path + fn)
+    }
+
+    /**
+     * `x.collectReferenceFieldValues()` (kotlin.native.internal): the non-null reference values stored in the object's
+     * fields as a `List<Any>`, with value classes inlined (as Kotlin/Native lays them out). Primitives, strings and
+     * primitive arrays have none; a value class over a reference yields that reference.
+     */
+    private fun collectRefFields(r: Val): Val {
+        val t = r.t
+        val leaves: List<List<String>> = when {
+            t is Ty.Cls && classDecls[t.name]?.isValue == true -> unwrapValue(t, emptyList()).let { (u, p) -> if (u.isRef) listOf(p) else emptyList() }
+            t is Ty.Cls && classDecls[t.name] != null -> classes.getValue(t.name).fields.mapNotNull { (fn, ft) ->
+                unwrapValue(ft, listOf(fn)).let { (u, p) -> if (u.isRef) p else null } }
+            t.llvm != "ptr" || t == Ty.Str || t is Ty.Arr -> emptyList()
+            else -> fail("collectReferenceFieldValues() on $t is not supported")
+        }
+        // Element type: the leaves' common class when there is one (no `Any` boxing needed), else `Any`.
+        val leafTys = leaves.map { p -> p.fold(t) { acc, fn -> classes.getValue((acc as Ty.Cls).name).fields.first { it.first == fn }.second } }.toSet()
+        val elem = (leafTys.singleOrNull() as? Ty.Cls)?.name ?: if ("Any" in ifaces) "Any" else if (leaves.isEmpty()) "String"
+            else fail("collectReferenceFieldValues() on $t needs Any (fields of different reference types)")
+        val list = genExpr(CallE(NameE("ArrayList").also { it.line = line }, listOf(TypeRef(elem, emptyList(), false)), emptyList(), null).also { it.line = line })
+        return withTemps(listOf(r, list)) { (x, l) ->
+            for (p in leaves) {
+                val v: E = p.fold(x) { acc, fn -> MemberE(acc, fn, false).also { it.line = line } }
+                val add = CallE(MemberE(l, "add", false).also { it.line = line }, emptyList(), listOf(if (elem == "Any") AsE(v, TypeRef("Any", emptyList(), false), false).also { it.line = line } else v), null).also { it.line = line }
+                genStmt(ExprS(IfE(BinE("!=", v, NullL().also { it.line = line }).also { it.line = line }, Block(listOf(ExprS(add).also { it.line = line })), null).also { it.line = line }).also { it.line = line })
+            }
+            genExpr(l)
+        }
+    }
+
     private fun withTemps(vals: List<Val>, f: (List<E>) -> Val): Val {
         scopes.add(Scope())
         val names = vals.map { v ->
