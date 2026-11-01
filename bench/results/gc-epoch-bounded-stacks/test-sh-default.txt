@@ -1,0 +1,434 @@
+PASS accessors
+PASS annotations
+PASS anonymous_objects
+PASS any_boxing
+PASS arg_order
+PASS array_of_nulls
+PASS assert_plusassign
+PASS bitwise_methods
+PASS bounds_nullable
+PASS bug_char_postinc_in_template
+PASS bug_ulong_compare
+PASS bug_ulong_literal_lexer_crash
+PASS bug_when_null_branch_on_int
+PASS bug_when_string_nullable_null_segfault
+PASS builder_inference
+PASS callable_refs
+PASS char_list_eq
+PASS charsequence
+PASS class_by
+PASS context_parameters
+PASS crash_fixes
+PASS custom_incdec
+PASS data_classes
+PASS decl_headers
+PASS default_args
+PASS deferred_props
+PASS double_consts
+PASS double_format
+PASS enum_bodies
+PASS enums
+PASS extensions
+PASS features
+PASS float
+PASS generic_classes
+PASS generic_iface_defaults
+PASS generic_infer_return
+PASS generic_methods
+PASS generic_supertypes
+PASS generics
+PASS iface_companion
+PASS iface_default_infer
+PASS iface_defaults
+PASS iface_inherit
+PASS iface_props
+PASS indices
+PASS infer_return
+PASS jump_exprs
+PASS lambdas
+PASS lateinit_capture
+PASS lateinit_companion
+PASS lazy_objects
+PASS list_init
+PASS list_methods
+PASS local_class_capture
+PASS local_decls
+PASS loop_labels
+PASS member_ext
+PASS nested_classes
+PASS nullable_primitives
+PASS object_super
+PASS objects
+PASS operator_calls
+PASS operators
+PASS parser_gaps
+PASS preinc_char
+PASS progressions
+PASS range_values
+PASS receiver_fn_types
+PASS scope_fns
+PASS secondary_ctors
+PASS shadow_and_iface_merge
+PASS short_type
+PASS small_decls
+PASS super_calls
+PASS throw
+PASS toplevel_props
+PASS try_catch
+PASS type_checks
+PASS ubyte_type
+PASS unit_value
+PASS unsigned_ranges
+PASS untyped_globals
+PASS value_classes
+PASS vararg
+PASS with_index
+PASS bench sum
+PASS bench alloc
+PASS bench recursion
+PASS bench file
+PASS bench strings
+PASS bench hashmap
+PASS bench sort
+PASS bench nbody
+PASS bench matmul
+PASS bench dispatch
+PASS bench closures
+PASS bench trees
+PASS bench free
+PASS bench refpass
+PASS bench cycles
+PASS bench lru
+PASS error-message
+PASS eof-error
+PASS target-js
+PASS target-wasm
+PASS target-jvm
+PASS leak-count annotations
+PASS asan annotations
+PASS leaks annotations
+PASS leak-count any_boxing
+PASS asan any_boxing
+PASS leaks any_boxing
+PASS leak-count assert_plusassign
+PASS asan assert_plusassign
+PASS leaks assert_plusassign
+PASS leak-count bounds_nullable
+PASS asan bounds_nullable
+PASS leaks bounds_nullable
+PASS leak-count branch_moves
+PASS asan branch_moves
+PASS leaks branch_moves
+PASS leak-count break_continue
+PASS asan break_continue
+PASS leaks break_continue
+PASS leak-count callable_refs
+PASS asan callable_refs
+PASS leaks callable_refs
+PASS leak-count char_list_eq
+PASS asan char_list_eq
+PASS leaks char_list_eq
+PASS leak-count class_bodies
+PASS asan class_bodies
+PASS leaks class_bodies
+PASS leak-count class_by
+PASS asan class_by
+PASS leaks class_by
+PASS leak-count collections
+PASS asan collections
+PASS leaks collections
+PASS leak-count control
+PASS asan control
+PASS leaks control
+PASS leak-count cycles
+PASS asan cycles
+PASS leaks cycles
+PASS leak-count data_classes
+PASS asan data_classes
+PASS leaks data_classes
+PASS leak-count default_args
+PASS asan default_args
+PASS leaks default_args
+PASS leak-count deferred_props
+PASS asan deferred_props
+PASS leaks deferred_props
+PASS leak-count dlist
+PASS asan dlist
+PASS leaks dlist
+PASS leak-count enums
+PASS asan enums
+PASS leaks enums
+PASS leak-count extensions
+PASS asan extensions
+PASS leaks extensions
+PASS leak-count fbip
+PASS asan fbip
+PASS leaks fbip
+PASS leak-count generic_classes
+PASS asan generic_classes
+PASS leaks generic_classes
+PASS leak-count generic_methods
+PASS asan generic_methods
+PASS leaks generic_methods
+PASS leak-count generic_supertypes
+PASS asan generic_supertypes
+PASS leaks generic_supertypes
+PASS leak-count generics
+PASS asan generics
+PASS leaks generics
+PASS leak-count iface_companion
+PASS asan iface_companion
+PASS leaks iface_companion
+PASS leak-count iface_defaults
+PASS asan iface_defaults
+PASS leaks iface_defaults
+PASS leak-count iface_inherit
+PASS asan iface_inherit
+PASS leaks iface_inherit
+PASS leak-count iface_props
+PASS asan iface_props
+PASS leaks iface_props
+PASS leak-count infer_return
+PASS asan infer_return
+PASS leaks infer_return
+PASS leak-count inheritance
+PASS asan inheritance
+PASS leaks inheritance
+PASS leak-count lambdas
+PASS asan lambdas
+PASS leaks lambdas
+PASS leak-count lateinit_capture
+PASS asan lateinit_capture
+PASS leaks lateinit_capture
+PASS leak-count lazy_objects
+PASS asan lazy_objects
+PASS leaks lazy_objects
+PASS leak-count list_methods
+PASS asan list_methods
+PASS leaks list_methods
+PASS leak-count local_decls
+PASS asan local_decls
+PASS leaks local_decls
+PASS leak-count loop_labels
+PASS asan loop_labels
+PASS leaks loop_labels
+PASS leak-count member_ext
+PASS asan member_ext
+PASS leaks member_ext
+PASS leak-count nested_classes
+PASS asan nested_classes
+PASS leaks nested_classes
+PASS leak-count objects
+PASS asan objects
+PASS leaks objects
+PASS leak-count operators
+PASS asan operators
+PASS leaks operators
+PASS leak-count parser_gaps
+PASS asan parser_gaps
+PASS leaks parser_gaps
+PASS leak-count perceus
+PASS asan perceus
+PASS leaks perceus
+PASS leak-count preinc_char
+PASS asan preinc_char
+PASS leaks preinc_char
+PASS leak-count progressions
+PASS asan progressions
+PASS leaks progressions
+PASS leak-count range_values
+PASS asan range_values
+PASS leaks range_values
+PASS leak-count regions_acyclic
+PASS regions regions_acyclic
+PASS asan regions_acyclic
+PASS leaks regions_acyclic
+PASS leak-count regions_cyclic
+PASS regions regions_cyclic
+PASS asan regions_cyclic
+PASS leaks regions_cyclic
+PASS leak-count scope_fns
+PASS asan scope_fns
+PASS leaks scope_fns
+PASS leak-count secondary_ctors
+PASS asan secondary_ctors
+PASS leaks secondary_ctors
+PASS leak-count short_type
+PASS asan short_type
+PASS leaks short_type
+PASS leak-count singletons
+PASS asan singletons
+PASS leaks singletons
+PASS leak-count small_decls
+PASS asan small_decls
+PASS leaks small_decls
+PASS leak-count strings_arrays
+PASS asan strings_arrays
+PASS leaks strings_arrays
+PASS leak-count try_catch
+PASS asan try_catch
+PASS leaks try_catch
+PASS leak-count type_checks
+PASS asan type_checks
+PASS leaks type_checks
+PASS leak-count ubyte_type
+PASS asan ubyte_type
+PASS leaks ubyte_type
+PASS leak-count unsigned_ranges
+PASS asan unsigned_ranges
+PASS leaks unsigned_ranges
+PASS leak-count value_classes
+PASS asan value_classes
+PASS leaks value_classes
+PASS leak-count vararg
+PASS asan vararg
+PASS leaks vararg
+LEAKS ALL PASSED
+PASS gc-unit boehm -O1
+PASS gc-unit boehm -O3
+PASS gc boehm acyclic_root
+PASS gc boehm acyclic_stress
+PASS gc boehm cycles
+PASS gc boehm cycles_in_lists
+PASS gc boehm deep_chain
+PASS gc boehm deep_chain_cycle
+PASS gc boehm exit_chain
+PASS gc boehm rc_survivors
+PASS gc boehm relink_stress
+PASS gc boehm reuse
+PASS gc-unit default -O1
+PASS gc-traversal default -O1
+PASS gc-unit default -O3
+PASS gc-traversal default -O3
+PASS gc-traversal-asan default
+PASS gc default acyclic_root
+PASS gc-leaks default acyclic_root
+PASS gc-asan default acyclic_root
+PASS gc default acyclic_stress
+PASS gc-leaks default acyclic_stress
+PASS gc-asan default acyclic_stress
+PASS gc default cycles
+PASS gc-leaks default cycles
+PASS gc-asan default cycles
+PASS gc default cycles_in_lists
+PASS gc-leaks default cycles_in_lists
+PASS gc-asan default cycles_in_lists
+PASS gc default deep_chain
+PASS gc-leaks default deep_chain
+PASS gc-asan default deep_chain
+PASS gc default deep_chain_cycle
+PASS gc-leaks default deep_chain_cycle
+PASS gc-asan default deep_chain_cycle
+PASS gc default exit_chain
+PASS gc-leaks default exit_chain
+PASS gc-asan default exit_chain
+PASS gc default rc_survivors
+PASS gc-leaks default rc_survivors
+PASS gc-asan default rc_survivors
+PASS gc default relink_stress
+PASS gc-leaks default relink_stress
+PASS gc-asan default relink_stress
+PASS gc default reuse
+PASS gc-leaks default reuse
+PASS gc-asan default reuse
+SKIP gc-unit epoch -O1 (deferred RC)
+SKIP gc-unit epoch -O3 (deferred RC)
+PASS gc epoch acyclic_root
+PASS gc-leaks epoch acyclic_root
+PASS gc-asan epoch acyclic_root
+PASS gc epoch acyclic_stress
+PASS gc-leaks epoch acyclic_stress
+PASS gc-asan epoch acyclic_stress
+PASS gc epoch cycles
+PASS gc-leaks epoch cycles
+PASS gc-asan epoch cycles
+PASS gc epoch cycles_in_lists
+PASS gc-leaks epoch cycles_in_lists
+PASS gc-asan epoch cycles_in_lists
+PASS gc epoch deep_chain
+PASS gc-leaks epoch deep_chain
+PASS gc-asan epoch deep_chain
+PASS gc epoch deep_chain_cycle
+PASS gc-leaks epoch deep_chain_cycle
+PASS gc-asan epoch deep_chain_cycle
+PASS gc epoch exit_chain
+PASS gc-leaks epoch exit_chain
+PASS gc-asan epoch exit_chain
+PASS gc epoch rc_survivors
+PASS gc-leaks epoch rc_survivors
+PASS gc-asan epoch rc_survivors
+PASS gc epoch relink_stress
+PASS gc-leaks epoch relink_stress
+PASS gc-asan epoch relink_stress
+PASS gc epoch reuse
+PASS gc-leaks epoch reuse
+PASS gc-asan epoch reuse
+PASS gc-unit incremental -O1
+PASS gc-traversal incremental -O1
+PASS gc-unit incremental -O3
+PASS gc-traversal incremental -O3
+PASS gc-traversal-asan incremental
+PASS gc incremental acyclic_root
+PASS gc-leaks incremental acyclic_root
+PASS gc-asan incremental acyclic_root
+PASS gc incremental acyclic_stress
+PASS gc-leaks incremental acyclic_stress
+PASS gc-asan incremental acyclic_stress
+PASS gc incremental cycles
+PASS gc-leaks incremental cycles
+PASS gc-asan incremental cycles
+PASS gc incremental cycles_in_lists
+PASS gc-leaks incremental cycles_in_lists
+PASS gc-asan incremental cycles_in_lists
+PASS gc incremental deep_chain
+PASS gc-leaks incremental deep_chain
+PASS gc-asan incremental deep_chain
+PASS gc incremental deep_chain_cycle
+PASS gc-leaks incremental deep_chain_cycle
+PASS gc-asan incremental deep_chain_cycle
+PASS gc incremental exit_chain
+PASS gc-leaks incremental exit_chain
+PASS gc-asan incremental exit_chain
+PASS gc incremental rc_survivors
+PASS gc-leaks incremental rc_survivors
+PASS gc-asan incremental rc_survivors
+PASS gc incremental relink_stress
+PASS gc-leaks incremental relink_stress
+PASS gc-asan incremental relink_stress
+PASS gc incremental reuse
+PASS gc-leaks incremental reuse
+PASS gc-asan incremental reuse
+PASS gc-unit rc -O1
+PASS gc-unit rc -O3
+SKIP gc rc acyclic_root (no cycle collection)
+PASS gc rc acyclic_stress
+PASS gc-leaks rc acyclic_stress
+PASS gc-asan rc acyclic_stress
+SKIP gc rc cycles (no cycle collection)
+SKIP gc rc cycles_in_lists (no cycle collection)
+PASS gc rc deep_chain
+PASS gc-leaks rc deep_chain
+PASS gc-asan rc deep_chain
+SKIP gc rc deep_chain_cycle (no cycle collection)
+SKIP gc rc exit_chain (no cycle collection)
+PASS gc rc rc_survivors
+PASS gc-leaks rc rc_survivors
+PASS gc-asan rc rc_survivors
+SKIP gc rc relink_stress (no cycle collection)
+PASS gc rc reuse
+PASS gc-leaks rc reuse
+PASS gc-asan rc reuse
+PASS gc-epoch queue_spike (qmax=16 logs=18)
+PASS gc-epoch paced_free (paced=3880628 boundary=219372)
+PASS gc-epoch paced_free leaks keep=16384
+PASS gc-epoch paced_free leaks keep=0
+PASS gc-epoch madvise_big madvise=1 (madvised=1966080000)
+PASS gc-epoch madvise_big leaks madvise=1
+PASS gc-epoch madvise_big madvise=0 (madvised=0)
+PASS gc-epoch madvise_big leaks madvise=0
+PASS gc-incremental slice_black
+PASS gc-incremental one_pass
+PASS gc-unknown
+GC ALL PASSED
+ALL PASSED
+exit 0

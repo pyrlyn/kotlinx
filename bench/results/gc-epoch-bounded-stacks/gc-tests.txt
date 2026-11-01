@@ -1,0 +1,78 @@
+SKIP gc-unit epoch -O1 (deferred RC)
+SKIP gc-unit epoch -O3 (deferred RC)
+PASS gc epoch acyclic_root
+PASS gc-leaks epoch acyclic_root
+PASS gc-asan epoch acyclic_root
+PASS gc epoch acyclic_stress
+PASS gc-leaks epoch acyclic_stress
+PASS gc-asan epoch acyclic_stress
+PASS gc epoch cycles
+PASS gc-leaks epoch cycles
+PASS gc-asan epoch cycles
+PASS gc epoch cycles_in_lists
+PASS gc-leaks epoch cycles_in_lists
+PASS gc-asan epoch cycles_in_lists
+PASS gc epoch deep_chain
+PASS gc-leaks epoch deep_chain
+PASS gc-asan epoch deep_chain
+PASS gc epoch deep_chain_cycle
+PASS gc-leaks epoch deep_chain_cycle
+PASS gc-asan epoch deep_chain_cycle
+PASS gc epoch exit_chain
+PASS gc-leaks epoch exit_chain
+PASS gc-asan epoch exit_chain
+PASS gc epoch rc_survivors
+PASS gc-leaks epoch rc_survivors
+PASS gc-asan epoch rc_survivors
+PASS gc epoch relink_stress
+PASS gc-leaks epoch relink_stress
+PASS gc-asan epoch relink_stress
+PASS gc epoch reuse
+PASS gc-leaks epoch reuse
+PASS gc-asan epoch reuse
+PASS gc-unit default -O1
+PASS gc-traversal default -O1
+PASS gc-unit default -O3
+PASS gc-traversal default -O3
+PASS gc-traversal-asan default
+PASS gc default acyclic_root
+PASS gc-leaks default acyclic_root
+PASS gc-asan default acyclic_root
+PASS gc default acyclic_stress
+PASS gc-leaks default acyclic_stress
+PASS gc-asan default acyclic_stress
+PASS gc default cycles
+PASS gc-leaks default cycles
+PASS gc-asan default cycles
+PASS gc default cycles_in_lists
+PASS gc-leaks default cycles_in_lists
+PASS gc-asan default cycles_in_lists
+PASS gc default deep_chain
+PASS gc-leaks default deep_chain
+PASS gc-asan default deep_chain
+PASS gc default deep_chain_cycle
+PASS gc-leaks default deep_chain_cycle
+PASS gc-asan default deep_chain_cycle
+PASS gc default exit_chain
+PASS gc-leaks default exit_chain
+PASS gc-asan default exit_chain
+PASS gc default rc_survivors
+PASS gc-leaks default rc_survivors
+PASS gc-asan default rc_survivors
+PASS gc default relink_stress
+PASS gc-leaks default relink_stress
+PASS gc-asan default relink_stress
+PASS gc default reuse
+PASS gc-leaks default reuse
+PASS gc-asan default reuse
+PASS gc-epoch queue_spike (qmax=16 logs=18)
+PASS gc-epoch paced_free (paced=3872436 boundary=227564)
+PASS gc-epoch paced_free leaks keep=16384
+PASS gc-epoch paced_free leaks keep=0
+PASS gc-epoch madvise_big madvise=1 (madvised=1966080000)
+PASS gc-epoch madvise_big leaks madvise=1
+PASS gc-epoch madvise_big madvise=0 (madvised=0)
+PASS gc-epoch madvise_big leaks madvise=0
+PASS gc-unknown
+GC ALL PASSED
+exit 0

@@ -155,6 +155,110 @@ static void *page_alloc(size_t bytes) {
     for (size_t o = 0; o < bytes; o += PAGE) reg_add((uintptr_t)p + o);
     return p;
 }
+// ---- per-slab bookkeeping: empty small-object slabs go back to the OS (KX_GC_SLAB_RELEASE, default 1) ----
+/* Every small-object slab (one 64 KiB page) holds cells of one size class and has a side descriptor
+ * (never inside the slab, so a released slab has no resident page left): its own free list, bump pointer
+ * and live-cell count. A class allocates from its current slab, then from its partial slabs (some cells
+ * free), then from the pool of empty slabs, then from a fresh page. A slab whose last cell is freed (and
+ * that is not its class's current slab) leaves the partial list and waits on slab_pending; the next epoch
+ * boundary moves it to the pool, keeping SLAB_RESIDENT_KEEP of them resident and madvising the rest
+ * (adjacent slabs coalesced into one call). A released slab faults in zero pages when it is reused.
+ * Only the mutator allocates and frees traced memory, so none of this needs a lock.
+ * KX_GC_SLAB_RELEASE=0: the previous allocator (global per-class free lists, one shared bump slab). */
+typedef struct Slab { struct Slab *next, *prev; void *free; char *base, *bump; uint32_t live; uint16_t cls; uint8_t in_partial, resident; } Slab;
+#define SLAB_DIR_TOP (1u << (PAGE_BITS_LOG - 16))
+static Slab **slab_dir[SLAB_DIR_TOP];
+static Slab *slab_cur[CLASSES + 1], *slab_partial[CLASSES + 1], *slab_pool;
+static PtrStack slab_pending;
+static int slab_release = -1;
+#define SLAB_RESIDENT_KEEP 16   /* empty slabs kept resident in the pool (no madvise / refault churn) */
+static int64_t slab_pool_resident, dbg_slab_released, dbg_slab_reused, dbg_slab_madv_calls;
+static inline Slab *slab_of(void *p) {
+    uintptr_t pg = (uintptr_t)p >> PAGE_SHIFT;
+    Slab **d = slab_dir[pg >> 16];
+    return d ? d[pg & 0xffff] : NULL;
+}
+static Slab *slab_new(void) {
+    char *base = page_alloc(PAGE);
+    uintptr_t pg = (uintptr_t)base >> PAGE_SHIFT;
+    Slab **d = slab_dir[pg >> 16];
+    if (!d) { d = slab_dir[pg >> 16] = calloc(1u << 16, sizeof(Slab *)); if (!d) rt_panic("OutOfMemoryError"); }
+    Slab *s = calloc(1, sizeof *s); if (!s) rt_panic("OutOfMemoryError");
+    s->base = base; s->resident = 1; d[pg & 0xffff] = s;
+    return s;
+}
+static void partial_unlink(Slab *s, size_t cls) {
+    if (s->prev) s->prev->next = s->next; else slab_partial[cls] = s->next;
+    if (s->next) s->next->prev = s->prev;
+    s->next = s->prev = NULL; s->in_partial = 0;
+}
+static __attribute__((noinline)) void *slab_refill(size_t cls) {
+    Slab *s = slab_partial[cls];
+    if (s) partial_unlink(s, cls);
+    else if ((s = slab_pool)) {
+        slab_pool = s->next; s->next = NULL; dbg_slab_reused++;
+        if (s->resident) slab_pool_resident--;
+        s->resident = 1; s->free = NULL; s->bump = s->base; s->live = 0;
+        UNPOISON(s->base, PAGE);   /* bump-allocated again, possibly for another size class: old cell poison is stale */
+    } else { s = slab_new(); s->bump = s->base; }
+    s->cls = (uint16_t)cls; slab_cur[cls] = s;
+    void *p;
+    if (s->free) { p = s->free; UNPOISON(p, cls << 3); s->free = *(void **)p; }
+    else { p = s->bump; s->bump += cls << 3; }
+    s->live++;
+    return p;
+}
+static inline void *slab_alloc(size_t cls) {
+    Slab *s = slab_cur[cls];
+    if (__builtin_expect(s != NULL, 1)) {
+        void *p = s->free;
+        if (p) { UNPOISON(p, cls << 3); s->free = *(void **)p; s->live++; return p; }
+        if (s->bump + (cls << 3) <= s->base + PAGE) { p = s->bump; s->bump += cls << 3; s->live++; return p; }
+    }
+    return slab_refill(cls);
+}
+static inline void slab_free(void *p, size_t cls) {
+    Slab *s = slab_of(p);
+    *(void **)p = s->free; s->free = p;
+    POISON((char *)p + 8, (cls << 3) - 8);
+    if (s == slab_cur[cls]) { s->live--; return; }
+    if (--s->live == 0) {
+        if (s->in_partial) partial_unlink(s, cls);
+        stack_push(&slab_pending, s);
+    } else if (!s->in_partial) {
+        s->in_partial = 1; s->prev = NULL; s->next = slab_partial[cls];
+        if (s->next) s->next->prev = s; slab_partial[cls] = s;
+    }
+}
+static int slab_cmp(const void *a, const void *b) { uintptr_t x = (uintptr_t)(*(Slab *const *)a)->base, y = (uintptr_t)(*(Slab *const *)b)->base; return x < y ? -1 : x > y; }
+#ifdef MADV_FREE_REUSABLE
+#define KX_MADV MADV_FREE_REUSABLE   /* macOS: leaves the resident set (and the footprint) at once */
+#else
+#define KX_MADV MADV_DONTNEED
+#endif
+/* Epoch boundary: empty slabs into the pool; beyond SLAB_RESIDENT_KEEP resident ones, back to the OS. */
+static void slab_flush(void) {
+    if (!slab_pending.len) return;
+    size_t n = 0;
+    for (size_t i = 0; i < slab_pending.len; i++) {
+        Slab *s = slab_pending.items[i];
+        if (s->live || s == slab_cur[s->cls]) continue;   /* reused (became current, or a cell was taken) since */
+        s->next = slab_pool; slab_pool = s;
+        if (slab_pool_resident < SLAB_RESIDENT_KEEP) { slab_pool_resident++; continue; }
+        s->resident = 0; slab_pending.items[n++] = s;
+    }
+    if (n > 1) qsort(slab_pending.items, n, sizeof(void *), slab_cmp);
+    for (size_t i = 0; i < n;) {
+        size_t j = i + 1;
+        while (j < n && ((Slab *)slab_pending.items[j])->base == ((Slab *)slab_pending.items[j - 1])->base + PAGE) j++;
+        char *from = ((Slab *)slab_pending.items[i])->base;
+        UNPOISON(from, (j - i) * PAGE);
+        if (madvise(from, (j - i) * (size_t)PAGE, KX_MADV) == 0) dbg_slab_released += (int64_t)(j - i);
+        dbg_slab_madv_calls++;
+        i = j;
+    }
+    slab_pending.len = 0;
+}
 // ---- small vector ----
 /* Moves every pointer of `from` onto `to`. */
 static void stack_move(PtrStack *to, PtrStack *from) { for (size_t i = 0; i < from->len; i++) stack_push(to, from->items[i]); from->len = 0; }
@@ -190,6 +294,8 @@ void *rt_alloc_trace(int64_t size) {
         for (Big **b = &big_free; *b; b = &(*b)->next) if ((*b)->size == bytes) { p = *b; *b = (*b)->next; UNPOISON(p, bytes); return p; }
         return page_alloc(bytes);
     }
+    if (__builtin_expect(slab_release < 0, 0)) { const char *e = getenv("KX_GC_SLAB_RELEASE"); slab_release = !(e && *e == '0'); }
+    if (slab_release) return slab_alloc(cls);
     p = free_list[cls];
     if (p) { UNPOISON(p, cls << 3); free_list[cls] = *(void **)p; return p; }
     if (bump + (cls << 3) > bump_end) { bump = page_alloc(PAGE); bump_end = bump + PAGE; }
@@ -198,14 +304,8 @@ void *rt_alloc_trace(int64_t size) {
 }
 /* madvise for freed big blocks: everything after the first OS page (which holds the Big free-list link) is
  * handed back with MADV_FREE, so peak RSS drops while the block waits for reuse; a reused block's contents
- * are undefined anyway. KX_GC_MADVISE=0 disables it. Small-object slabs are not released (their cells
- * are spread over free lists, no per-slab live count yet). */
+ * are undefined anyway. KX_GC_MADVISE=0 disables it. Empty small-object slabs: see slab_flush. */
 static int64_t dbg_madvised;
-#ifdef MADV_FREE_REUSABLE
-#define KX_MADV MADV_FREE_REUSABLE   /* macOS: leaves the resident set (and the footprint) at once */
-#else
-#define KX_MADV MADV_DONTNEED
-#endif
 static void big_release(void *p, size_t bytes) {
     static long os_page; static int enabled = -1;
     if (enabled < 0) { const char *e = getenv("KX_GC_MADVISE"); enabled = !(e && *e == '0'); os_page = sysconf(_SC_PAGESIZE); }
@@ -238,6 +338,7 @@ void rt_free_trace(void *p, int64_t size) {
         big_release(p, bytes);
         return;
     }
+    if (slab_release > 0) { slab_free(p, cls); return; }
     *(void **)p = free_list[cls]; free_list[cls] = p;
     POISON((char *)p + 8, (cls << 3) - 8);
 }
@@ -368,6 +469,7 @@ __attribute__((noinline)) static void boundary(void) {
     if (free_budget_ns < 0) { const char *e = getenv("KX_GC_FREE_BUDGET_US"); free_budget_ns = e && *e ? atoll(e) * 1000 : (q_target_ns / 2 > FREE_BUDGET_MIN_NS ? q_target_ns / 2 : FREE_BUDGET_MIN_NS); }
     if (boundary_keep < 0) { const char *e = getenv("KX_GC_BOUNDARY_KEEP"); boundary_keep = e && *e ? atoll(e) : BOUNDARY_KEEP_DEFAULT; if (boundary_keep < 0) boundary_keep = 0; }
     process_returns(free_budget_ns, t0, (size_t)boundary_keep);
+    slab_flush();
     if (rt_nanos() - t0 > dbg_bmax) dbg_bmax = rt_nanos() - t0;
     note_pause(t0);
     in_boundary = 0;
@@ -716,6 +818,16 @@ static PtrStack c_deferred;   /* buffered roots whose minor detection stopped at
  * stable object stay buffered in c_deferred; a major detection (every stable object traced) handles them
  * once MAJOR_RATIO times as many roots were deferred as there are stable objects (amortized O(1) per root). */
 static size_t detect_prepare(int major, PtrStack *rootsp);
+/* KX_GC_LEAN_STACKS (default 1): the incremental major keeps its roots in one array only. MarkGray and Scan
+ * walk im_roots with a cursor instead of pushing every root onto the work stack, and roots are not listed in
+ * im_seen (their SEEN bit is set; they are settled and cleared from im_roots). The work stacks then hold
+ * only the traversal frontier. On huge_live_churn (10M roots) that removes three root-sized copies
+ * (deferred, work, im-seen: ~380 MiB of collector stacks at the peak). KX_GC_LEAN_STACKS=0: previous behavior. */
+static int lean_stacks_v = -1;
+static inline int lean_stacks(void) {
+    if (__builtin_expect(lean_stacks_v < 0, 0)) { const char *e = getenv("KX_GC_LEAN_STACKS"); lean_stacks_v = !(e && *e == '0'); }
+    return lean_stacks_v;
+}
 static void detect_finish(int major, PtrStack roots, size_t k, int hit_stable);
 static void close_sets(void);
 static void detect(int major) {
@@ -751,7 +863,13 @@ static void detect(int major) {
 static size_t detect_prepare(int major, PtrStack *rootsp) {
     ep_detections++;
     c_major = major;
-    if (major) { dbg_majors++; stack_move(&c_roots, &c_deferred); c_deferred_new = 0; }
+    if (major) {
+        dbg_majors++; c_deferred_new = 0;
+        /* lean stacks: hand the deferred buffer over instead of copying it, and drop its storage (stack_move
+         * keeps the capacity, so on huge_live_churn 128 MiB of an emptied deferred stack stayed resident) */
+        if (lean_stacks() && !c_roots.len) { free(c_roots.items); c_roots = c_deferred; c_deferred = (PtrStack){0}; }
+        else { stack_move(&c_roots, &c_deferred); if (lean_stacks()) { free(c_deferred.items); c_deferred = (PtrStack){0}; } }
+    }
     PtrStack roots = c_roots; c_roots = (PtrStack){0};
     /* bounded slice: a minor takes at most slice_roots roots, the rest stays buffered for the next one */
     if (!major && slice_roots && roots.len > slice_roots) {
@@ -797,6 +915,7 @@ static void detect_finish(int major, PtrStack roots, size_t k, int hit_stable) {
         m->len = 0;
     }
     for (size_t i = 0; i < im_seen.len; i++) settle(im_seen.items[i]);
+    if (c_im && lean_stacks()) for (size_t i = 0; i < k; i++) { settle(roots.items[i]); clr_bit(roots.items[i], SEEN_BIT); }
     if (!major && hit_stable)
         for (size_t i = 0; i < k; i++) {
             void *s = roots.items[i];
@@ -822,7 +941,7 @@ static void detect_finish(int major, PtrStack roots, size_t k, int hit_stable) {
 #define MAJOR_STEP 2048       /* visits per step when KX_GC_MAJOR_STEP_US=0 */
 #define MAJOR_STEP_US 1000    /* default: steps of 512 visits until 1 ms per log has passed */
 static int im_state;                 /* 0 none, 1 MarkGray, 2 Scan */
-static PtrStack im_roots; static size_t im_k;
+static PtrStack im_roots; static size_t im_k, im_cur;   /* im_cur: lean-stacks cursor into im_roots */
 static int64_t im_step_budget = -1, im_m0, im_w0, im_steps;
 static int incremental_major = -1;   /* KX_GC_INC_MAJOR (default 1) */
 static int side_minors = 1;          /* KX_GC_SIDE_MINOR (default 1): minors keep running during a major */
@@ -836,27 +955,35 @@ static void ret_push(void *p) {
 static void im_begin(void) {
     im_k = detect_prepare(1, &im_roots);
     c_im = 1;
-    for (size_t i = 0; i < im_k; i++) { set_bit(im_roots.items[i], SEEN_BIT); stack_push(&im_seen, im_roots.items[i]); }
+    int lean = lean_stacks();
+    for (size_t i = 0; i < im_k; i++) { set_bit(im_roots.items[i], SEEN_BIT); if (!lean) stack_push(&im_seen, im_roots.items[i]); }
     im_m0 = dbg_members + dbg_dead; im_w0 = c_traversed;
-    tw = &workers[0]; p_active = 1;
-    for (size_t i = 0; i < im_k; i++) stack_push(&workers[0].work, im_roots.items[i]);
+    tw = &workers[0]; p_active = 1; im_cur = 0;
+    if (!lean) for (size_t i = 0; i < im_k; i++) stack_push(&workers[0].work, im_roots.items[i]);
     im_state = 1;
 }
 /* One bounded step; returns 1 when the major finished. */
 static int im_step(int64_t budget) {
     Worker *w = &workers[0]; tw = w; c_major = 1;
     int64_t n = 0, t0 = rt_nanos();
+    int lean = lean_stacks();
     if (im_state == 1) {
-        while (w->work.len && n < budget) { void *x = stack_pop(&w->work); if (im_dead(x)) continue; VISIT(); vtab(x)->trav(x, mg_child); n++; }
+        while (n < budget) {
+            void *x;
+            if (w->work.len) x = stack_pop(&w->work);
+            else if (lean && im_cur < im_k) x = im_roots.items[im_cur++];
+            else break;
+            if (im_dead(x)) continue; VISIT(); vtab(x)->trav(x, mg_child); n++;
+        }
         dbg_t_mark += rt_nanos() - t0;
-        if (w->work.len) return 0;
-        for (size_t i = 0; i < im_k; i++) stack_push(&w->work, im_roots.items[i]);
-        im_state = 2; t0 = rt_nanos();
+        if (w->work.len || (lean && im_cur < im_k)) return 0;
+        if (!lean) for (size_t i = 0; i < im_k; i++) stack_push(&w->work, im_roots.items[i]);
+        im_cur = 0; im_state = 2; t0 = rt_nanos();
     }
     while (n < budget) {
         if (w->black.len) { void *y = stack_pop(&w->black); if (!im_dead(y)) vtab(y)->trav(y, sb_child); }
-        else if (w->work.len) {
-            void *x = stack_pop(&w->work); uint64_t h = hload(x);
+        else if (w->work.len || (lean && im_cur < im_k)) {
+            void *x = w->work.len ? stack_pop(&w->work) : im_roots.items[im_cur++]; uint64_t h = hload(x);
             if (((h >> KX_COLOR_SHIFT) & 3) == GRAY) {
                 int64_t ext = (int64_t)(h & KX_CNT_MASK) - (int64_t)((h >> CRC_SHIFT) & CRC_MAX);
                 if (ext > 0) { set_color(x, BLACK); set_crc(x, 0); promote_atomic(x); stack_push(&w->black, x); }
@@ -866,7 +993,7 @@ static int im_step(int64_t budget) {
         n++;
     }
     dbg_t_scan += rt_nanos() - t0; im_steps++;
-    if (w->work.len || w->black.len) return 0;
+    if (w->work.len || w->black.len || (lean && im_cur < im_k)) return 0;
     detect_finish(1, im_roots, im_k, 0);
     im_roots = (PtrStack){0}; im_state = 0; c_im = 0;
     for (size_t i = 0; i < im_seen.len; i++) clr_bit(im_seen.items[i], SEEN_BIT);
@@ -1223,6 +1350,7 @@ static void epoch_debug(void) {
     if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld early ok=%lld hit=%lld skip=%lld qmax=%zu q=%zu\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits, (long long)dbg_early_ok, (long long)dbg_early_hit, (long long)dbg_early_skip, dbg_q_max, max_queued);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
     if (e && *e) fprintf(stderr, "epoch: freed paced=%lld boundary=%lld keep=%lld madvised=%lld stack-released=%lld\n", (long long)dbg_paced, (long long)dbg_bfreed, (long long)boundary_keep, (long long)dbg_madvised, (long long)dbg_stack_released);
+    if (e && *e) fprintf(stderr, "epoch: slabs release=%d released=%lld (%.1f MiB) madvise-calls=%lld reused=%lld pool-resident=%lld\n", slab_release, (long long)dbg_slab_released, dbg_slab_released * (double)PAGE / 1048576.0, (long long)dbg_slab_madv_calls, (long long)dbg_slab_reused, (long long)slab_pool_resident);
     if (e && *e) fprintf(stderr, "epoch: exit live-traced=%lld ret-pending=%zu roots=%zu deferred=%zu cands=%d\n", (long long)(atomic_load(&t_allocs) - atomic_load(&t_frees)), ret_local.len - ret_pos, c_roots.len, c_deferred.len, cands != NULL);
     if (e && *e) {
         size_t wk = 0; for (int i = 0; i < n_threads; i++) wk += workers[i].work.cap + workers[i].black.cap + workers[i].marked.cap;
