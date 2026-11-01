@@ -8,30 +8,30 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2882 |
-| PASS | 2609 |
+| UNSUPPORTED | 2878 |
+| PASS | 2613 |
 
-Kept in tree (re-runnable with `run.py`): 2609
+Kept in tree (re-runnable with `run.py`): 2613
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 253 |
+| strings / templates | 254 |
 | generics | 209 |
 | interfaces | 200 |
 | operator/infix functions | 157 |
 | lambdas / function types / references | 143 |
 | property accessors / delegation | 90 |
-| class bodies / constructors | 85 |
+| class bodies / constructors | 83 |
 | type inference / mismatch | 78 |
 | objects / companion objects | 64 |
 | type inference (expression bodies) | 45 |
 | other syntax (at '.') | 44 |
 | other: expected '=' (at ' | 44 |
 | inline/value classes | 43 |
-| inheritance (open/abstract/sealed) | 40 |
 | other: unknown type T | 39 |
+| inheritance (open/abstract/sealed) | 39 |
 | nullable types | 38 |
 | destructuring declarations | 29 |
 | other syntax (at ':') | 28 |

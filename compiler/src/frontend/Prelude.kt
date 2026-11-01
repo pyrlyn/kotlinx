@@ -215,11 +215,11 @@ fun kt_stepUL(p: ULongProgression, n: Long): ULongProgression {
 }
 """
 
-/** Standard exception classes (`message` only); a missing message argument is passed as null. */
+/** Standard exception classes (`message`, plus `cause` on Throwable); a missing message argument is passed as null. */
 private val EXCEPTION_CLASSES = """
-open class Throwable(val message: String?)
-open class Exception(message: String?) : Throwable(message)
-open class Error(message: String?) : Throwable(message)
+open class Throwable(val message: String?, val cause: Throwable? = null)
+open class Exception(message: String?) : Throwable(message, null)
+open class Error(message: String?) : Throwable(message, null)
 open class RuntimeException(message: String?) : Exception(message)
 open class IllegalStateException(message: String?) : RuntimeException(message)
 open class IllegalArgumentException(message: String?) : RuntimeException(message)
@@ -247,7 +247,8 @@ val PROGRESSIONS = mapOf("UIntProgression" to "U", "UIntRange" to "U", "ULongPro
 private val UNSIGNED_USE = Regex("""\bU(Int|Long)\b|\d[uU]""")
 private val RANGE_USE = Regex("""\.\.|\brangeTo\b|\buntil\b|\bdownTo\b|\bstep\b|Range\b|Progression\b""")
 
-private val EXC_USE = Regex("""\btry\b|\bassertFails""")
+// A class extending a standard exception (`class E : Throwable("m")`) needs the prelude classes too.
+private val EXC_USE = Regex("""\btry\b|\bassertFails|:\s*(Throwable|Exception|Error|[A-Z]\w*(Exception|Error))\s*\(""")
 
 /**
  * Merges the prelude into [p] when the source may use it. Exception classes are included for programs with
