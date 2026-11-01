@@ -133,12 +133,14 @@ static int64_t dbg_slab_bytes, dbg_log_allocs, dbg_batch_bytes, dbg_batch_peak;
  * collector timing). Written by the mutator only (page_alloc). */
 static PtrStack slab_bases;
 static _Atomic int64_t t_allocs, t_frees;   /* traced objects allocated / freed (mutator-written; debug) */
+static void page_bits_init(void) {
+    if (page_bits) return;
+    page_bits = mmap(NULL, (1ULL << PAGE_BITS_LOG) / 8, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON | MAP_NORESERVE, -1, 0);
+    if (page_bits == MAP_FAILED) rt_panic("OutOfMemoryError");
+}
 static void *page_alloc(size_t bytes) {
     void *p = NULL; dbg_slab_bytes += (int64_t)bytes;
-    if (!page_bits) {
-        page_bits = mmap(NULL, (1ULL << PAGE_BITS_LOG) / 8, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON | MAP_NORESERVE, -1, 0);
-        if (page_bits == MAP_FAILED) rt_panic("OutOfMemoryError");
-    }
+    page_bits_init();
     if (bytes == PAGE) {   /* small-object slabs: carved from 2 MiB mmap chunks (no per-slab malloc header or alignment slack) */
         static char *ch, *ch_end;
         if (ch == ch_end) {
@@ -168,6 +170,9 @@ static int64_t boundary_keep = -1;
 #define BOUNDARY_KEEP_DEFAULT 0   /* was 16384: a standing backlog of 16K dead objects freed by allocations cost
                                    * cycles 1.6-1.9x (183 -> 270-340 ms); the boundary budget already bounds the pause */
 static void free_returned(void *p);
+static int ix_on;
+static void ix_init(void);
+static inline void *ix_alloc(size_t sz);
 void *rt_alloc_trace(int64_t size) {
     atomic_store_explicit(&t_allocs, atomic_load_explicit(&t_allocs, memory_order_relaxed) + 1, memory_order_relaxed);
     /* Allocation-paced freeing: every traced allocation frees some returned dead objects, so reclamation
@@ -185,6 +190,8 @@ void *rt_alloc_trace(int64_t size) {
 #endif
     size_t cls = ((size_t)size + 7) >> 3;
     void *p;
+    if (__builtin_expect(ix_on < 0, 0)) ix_init();
+    if (ix_on && cls <= CLASSES) return ix_alloc(cls << 3);
     if (cls > CLASSES) {
         size_t bytes = ((size_t)size + PAGE - 1) & ~(size_t)(PAGE - 1);
         for (Big **b = &big_free; *b; b = &(*b)->next) if ((*b)->size == bytes) { p = *b; *b = (*b)->next; UNPOISON(p, bytes); return p; }
@@ -225,6 +232,142 @@ static void stack_release(PtrStack *st) {
     uintptr_t e = ((uintptr_t)(st->items + st->cap)) & ~(uintptr_t)(os_page - 1);
     if (e > a && madvise((void *)a, e - a, KX_MADV) == 0) dbg_stack_released += (int64_t)(e - a);
 }
+// ---- Immix-style small-object allocator (opt-in: KX_GC_IMMIX=1) ----
+/* Objects of up to CLASSES*8 bytes live in 32 KiB blocks of 128-byte lines (Blackburn & McKinley, "Immix",
+ * PLDI 2008), without the evacuation half: objects never move (the RC header, Perceus in-place reuse and
+ * raw pointers held by the C runtime all stay valid). Frees are exact (RC / cycle collector), so every
+ * line keeps the number of live objects overlapping it; a line is free when that count is zero, with no
+ * conservative marking. Allocation bumps through runs of free lines of the current block; an exhausted
+ * block is replaced by a recycled one (one with at least IX_RECYCLE_MIN free lines) or a fresh one.
+ * Freed lines are returned to the OS at OS-page granularity: blocks with a line freed since the last epoch
+ * boundary are checked there, and every fully free OS page of them is madvise'd (KX_GC_IMMIX_RELEASE=0
+ * disables that). Block metadata lives outside the blocks (per 2 MiB chunk), so a released page holds no
+ * allocator state. Mutator thread only. */
+#define IX_BLOCK_SHIFT 15
+#define IX_BLOCK (1u << IX_BLOCK_SHIFT)
+#define IX_LINE_SHIFT 7
+#define IX_LINE (1u << IX_LINE_SHIFT)
+#define IX_LINES (IX_BLOCK >> IX_LINE_SHIFT)
+#define IX_CHUNK_SHIFT 21
+#define IX_CHUNK (1u << IX_CHUNK_SHIFT)
+#define IX_PER_CHUNK (1u << (IX_CHUNK_SHIFT - IX_BLOCK_SHIFT))
+#define IX_RECYCLE_MIN 8
+typedef struct IxBlock {
+    uint8_t line[IX_LINES];        /* live objects overlapping each line */
+    char *base; struct IxBlock *next, *pnext;
+    uint16_t free_lines;           /* zero-count lines outside the current bump run */
+    uint8_t listed, pending, cur, released;   /* released: bit per OS page handed back */
+} IxBlock;
+typedef struct { IxBlock b[IX_PER_CHUNK]; } IxChunk;
+static int ix_rel = 1;
+static int ix_on = -1;
+static IxChunk **ix_chunks;                  /* (addr >> 21) -> chunk metadata, reserved lazily */
+static char *ix_bump, *ix_limit; static IxBlock *ix_cur; static unsigned ix_cursor;
+static IxBlock *ix_recycle, *ix_pending;
+static IxChunk *ix_fresh; static unsigned ix_fresh_next = IX_PER_CHUNK;
+static unsigned ix_page_lines, ix_pages;     /* lines per OS page, OS pages per block (0: no release) */
+static int64_t dbg_ix_blocks, dbg_ix_recycled, dbg_ix_released, dbg_ix_reclaimed;
+static void page_bits_init(void);
+static void ix_init(void) {
+    const char *e = getenv("KX_GC_IMMIX"); ix_on = e && *e && *e != '0';
+    e = getenv("KX_GC_IMMIX_RELEASE"); ix_rel = !(e && *e == '0');
+    if (!ix_on) return;
+    ix_chunks = mmap(NULL, (1ULL << (47 - IX_CHUNK_SHIFT)) * sizeof(IxChunk *), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON | MAP_NORESERVE, -1, 0);
+    if (ix_chunks == MAP_FAILED) rt_panic("OutOfMemoryError");
+    long os = sysconf(_SC_PAGESIZE);
+    if (os >= (long)IX_LINE && os <= (long)IX_BLOCK && IX_BLOCK / (unsigned)os <= 8) { ix_page_lines = (unsigned)os >> IX_LINE_SHIFT; ix_pages = IX_BLOCK / (unsigned)os; }
+}
+static inline IxBlock *ix_meta(void *p) {
+    return &ix_chunks[(uintptr_t)p >> IX_CHUNK_SHIFT]->b[((uintptr_t)p >> IX_BLOCK_SHIFT) & (IX_PER_CHUNK - 1)];
+}
+static IxBlock *ix_new_block(void) {
+    if (ix_fresh_next == IX_PER_CHUNK) {
+        page_bits_init();
+        size_t want = 2 * (size_t)IX_CHUNK;
+        char *m = mmap(NULL, want, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+        if (m == MAP_FAILED) rt_panic("OutOfMemoryError");
+        char *a = (char *)(((uintptr_t)m + IX_CHUNK - 1) & ~(uintptr_t)(IX_CHUNK - 1));
+        if (a > m) munmap(m, (size_t)(a - m));
+        if (a + IX_CHUNK < m + want) munmap(a + IX_CHUNK, (size_t)(m + want - (a + IX_CHUNK)));
+        ix_fresh = calloc(1, sizeof(IxChunk)); if (!ix_fresh) rt_panic("OutOfMemoryError");
+        for (unsigned i = 0; i < IX_PER_CHUNK; i++) ix_fresh->b[i].base = a + (size_t)i * IX_BLOCK;
+        ix_chunks[(uintptr_t)a >> IX_CHUNK_SHIFT] = ix_fresh;
+        for (size_t o = 0; o < IX_CHUNK; o += PAGE) reg_add((uintptr_t)a + o);
+        stack_push(&slab_bases, a); dbg_slab_bytes += IX_CHUNK;
+        ix_fresh_next = 0;
+    }
+    IxBlock *b = &ix_fresh->b[ix_fresh_next++];
+    b->free_lines = IX_LINES; dbg_ix_blocks++;
+    return b;
+}
+static inline int ix_claimed(IxBlock *b, unsigned l) {
+    char *ls = b->base + ((size_t)l << IX_LINE_SHIFT);
+    return b == ix_cur && ls + IX_LINE > ix_bump && ls < ix_limit;
+}
+/* Gives the unused rest of the current bump run back to the block's free-line count. */
+static void ix_abandon_run(void) {
+    if (!ix_cur || ix_bump >= ix_limit) { ix_bump = ix_limit = NULL; return; }
+    unsigned l0 = (unsigned)((ix_bump - ix_cur->base) >> IX_LINE_SHIFT), l1 = (unsigned)((ix_limit - ix_cur->base) >> IX_LINE_SHIFT);
+    for (unsigned l = l0; l < l1; l++) if (!ix_cur->line[l]) ix_cur->free_lines++;
+    ix_bump = ix_limit = NULL;
+}
+__attribute__((noinline)) static void ix_refill(size_t sz) {
+    unsigned need = (unsigned)((sz + IX_LINE - 1) >> IX_LINE_SHIFT);
+    for (;;) {
+        if (ix_cur) {
+            ix_abandon_run();
+            IxBlock *b = ix_cur; unsigned l = ix_cursor;
+            while (l < IX_LINES) {
+                while (l < IX_LINES && b->line[l]) l++;
+                unsigned s = l;
+                while (l < IX_LINES && !b->line[l]) l++;
+                if (l - s >= need) {
+                    b->free_lines -= (uint16_t)(l - s); ix_cursor = l;
+                    ix_bump = b->base + ((size_t)s << IX_LINE_SHIFT); ix_limit = b->base + ((size_t)l << IX_LINE_SHIFT);
+                    if (b->released && ix_pages) for (unsigned pg = s / ix_page_lines; pg <= (l - 1) / ix_page_lines; pg++)
+                        if (b->released & (1u << pg)) { b->released &= (uint8_t)~(1u << pg); dbg_ix_reclaimed++; }
+                    return;
+                }
+            }
+            b->cur = 0; ix_cur = NULL;   /* re-listed by the next free that leaves it with enough free lines */
+        }
+        IxBlock *b = ix_recycle;
+        if (b) { ix_recycle = b->next; b->listed = 0; dbg_ix_recycled++; } else b = ix_new_block();
+        ix_cur = b; b->cur = 1; ix_cursor = 0;
+    }
+}
+static inline void *ix_alloc(size_t sz) {
+    if (__builtin_expect(ix_bump + sz > ix_limit || !ix_bump, 0)) ix_refill(sz);
+    char *p = ix_bump; ix_bump += sz;
+    IxBlock *b = ix_cur;
+    unsigned l0 = (unsigned)((p - b->base) >> IX_LINE_SHIFT), l1 = (unsigned)((p + sz - 1 - b->base) >> IX_LINE_SHIFT);
+    for (unsigned l = l0; l <= l1; l++) b->line[l]++;
+    UNPOISON(p, sz);
+    return p;
+}
+static inline void ix_free(void *p, size_t sz) {
+    IxBlock *b = ix_meta(p);
+    unsigned l0 = (unsigned)(((char *)p - b->base) >> IX_LINE_SHIFT), l1 = (unsigned)(((char *)p + sz - 1 - b->base) >> IX_LINE_SHIFT);
+    int freed = 0;
+    for (unsigned l = l0; l <= l1; l++) if (--b->line[l] == 0 && !ix_claimed(b, l)) { b->free_lines++; freed = 1; }
+    if (!freed) return;
+    if (!b->pending && ix_rel && ix_pages) { b->pending = 1; b->pnext = ix_pending; ix_pending = b; }
+    if (!b->listed && !b->cur && b->free_lines >= IX_RECYCLE_MIN) { b->listed = 1; b->next = ix_recycle; ix_recycle = b; }
+}
+/* Epoch boundary: hand every fully free OS page of the blocks touched since the last boundary back. */
+static void ix_release_pending(void) {
+    IxBlock *b = ix_pending; ix_pending = NULL;
+    for (; b; b = b->pnext) {
+        b->pending = 0;
+        for (unsigned pg = 0; pg < ix_pages; pg++) {
+            if (b->released & (1u << pg)) continue;
+            unsigned s = pg * ix_page_lines, e = s + ix_page_lines, l = s;
+            while (l < e && !b->line[l] && !ix_claimed(b, l)) l++;
+            if (l < e) continue;
+            if (madvise(b->base + ((size_t)s << IX_LINE_SHIFT), (size_t)ix_page_lines << IX_LINE_SHIFT, KX_MADV) == 0) { b->released |= (uint8_t)(1u << pg); dbg_ix_released++; }
+        }
+    }
+}
 void rt_free_trace(void *p, int64_t size) {
     atomic_store_explicit(&t_frees, atomic_load_explicit(&t_frees, memory_order_relaxed) + 1, memory_order_relaxed);
     LEAK(-1);
@@ -238,6 +381,7 @@ void rt_free_trace(void *p, int64_t size) {
         big_release(p, bytes);
         return;
     }
+    if (ix_on > 0) { ix_free(p, cls << 3); POISON(p, cls << 3); return; }
     *(void **)p = free_list[cls]; free_list[cls] = p;
     POISON((char *)p + 8, (cls << 3) - 8);
 }
@@ -368,6 +512,7 @@ __attribute__((noinline)) static void boundary(void) {
     if (free_budget_ns < 0) { const char *e = getenv("KX_GC_FREE_BUDGET_US"); free_budget_ns = e && *e ? atoll(e) * 1000 : (q_target_ns / 2 > FREE_BUDGET_MIN_NS ? q_target_ns / 2 : FREE_BUDGET_MIN_NS); }
     if (boundary_keep < 0) { const char *e = getenv("KX_GC_BOUNDARY_KEEP"); boundary_keep = e && *e ? atoll(e) : BOUNDARY_KEEP_DEFAULT; if (boundary_keep < 0) boundary_keep = 0; }
     process_returns(free_budget_ns, t0, (size_t)boundary_keep);
+    if (ix_pending) ix_release_pending();
     if (rt_nanos() - t0 > dbg_bmax) dbg_bmax = rt_nanos() - t0;
     note_pause(t0);
     in_boundary = 0;
@@ -1223,6 +1368,7 @@ static void epoch_debug(void) {
     if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld early ok=%lld hit=%lld skip=%lld qmax=%zu q=%zu\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits, (long long)dbg_early_ok, (long long)dbg_early_hit, (long long)dbg_early_skip, dbg_q_max, max_queued);
     if (e && *e) fprintf(stderr, "epoch: backpressure total=%.3fms max=%.3fms boundary max=%.3fms last collect=%.3fms\n", dbg_bp_ns/1e6, dbg_bp_max/1e6, dbg_bmax/1e6, dbg_exit_ns/1e6);
     if (e && *e) fprintf(stderr, "epoch: freed paced=%lld boundary=%lld keep=%lld madvised=%lld stack-released=%lld\n", (long long)dbg_paced, (long long)dbg_bfreed, (long long)boundary_keep, (long long)dbg_madvised, (long long)dbg_stack_released);
+    if (e && *e && ix_on > 0) fprintf(stderr, "epoch: immix blocks=%lld recycled=%lld pages-released=%lld pages-reclaimed=%lld\n", (long long)dbg_ix_blocks, (long long)dbg_ix_recycled, (long long)dbg_ix_released, (long long)dbg_ix_reclaimed);
     if (e && *e) fprintf(stderr, "epoch: exit live-traced=%lld ret-pending=%zu roots=%zu deferred=%zu cands=%d\n", (long long)(atomic_load(&t_allocs) - atomic_load(&t_frees)), ret_local.len - ret_pos, c_roots.len, c_deferred.len, cands != NULL);
     if (e && *e) {
         size_t wk = 0; for (int i = 0; i < n_threads; i++) wk += workers[i].work.cap + workers[i].black.cap + workers[i].marked.cap;
