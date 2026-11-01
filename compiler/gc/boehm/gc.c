@@ -16,6 +16,7 @@ static void on_collection_event(GC_EventType e) {
     else if (e == GC_EVENT_END) {
         int64_t dt = rt_nanos() - collection_start_ns;
         gc_st.pause_ns_total += dt; if (dt > gc_st.pause_ns_max) gc_st.pause_ns_max = dt;
+        rt_gc_note_pause(dt);
     }
 }
 __attribute__((constructor(101))) static void boehm_init(void) { GC_INIT(); GC_set_on_collection_event(on_collection_event); }

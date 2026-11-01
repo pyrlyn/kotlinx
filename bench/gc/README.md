@@ -47,3 +47,11 @@ Every script also writes one file per benchmark, appending a run each time:
 machine (model, CPU, OS, load), toolchain (clang, opt), GC, flags and metrics (mean ms + raw timings;
 for micro also peak RSS, total/max pause, collections). Writer: `bench/record.py`. The PR #3 results are
 imported there (runs `gc-before`, `gc-after`, `gc-default`, `gc-boehm`, `micro-*`).
+
+## Epoch experiment: main vs gc-improvement-experiment
+
+`./main-vs-branch.sh <main-tree> <branch-tree> <out-dir>` builds each tree, runs `paced-run.sh` (GC tests,
+micro benchmarks incl. p50/p99/max pause and peak RSS) and `compare.sh epoch default` (full nkbench suite).
+The main tree needs `pause-percentiles.patch` applied (statistics only). Results:
+`bench/results/gc-main-vs-branch/` (`main-*`, `branch-*` before madvise, `branch-madvise-*` micro after it,
+`upstream-branch-<gc>.txt` upstream suite counts). Measured with machine load around 20: treat ±10% as noise.
