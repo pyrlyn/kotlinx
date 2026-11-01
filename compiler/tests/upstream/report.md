@@ -8,10 +8,10 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2878 |
-| PASS | 2613 |
+| UNSUPPORTED | 2877 |
+| PASS | 2614 |
 
-Kept in tree (re-runnable with `run.py`): 2613
+Kept in tree (re-runnable with `run.py`): 2614
 
 ## Unsupported features (roadmap, by test count)
 
