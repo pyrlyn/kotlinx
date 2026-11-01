@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2593,
-  "UNSUPPORTED": 2898
+  "PASS": 2613,
+  "UNSUPPORTED": 2878
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1096,9 +1096,8 @@
    "upstream": "compiler/testData/codegen/box/basics/const_infinity.kt"
   },
   "box/box/basics/expression_as_statement.kt": {
-   "category": "unknown Any (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Any'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/expression_as_statement.kt"
   },
   "box/box/basics/k42000_1.kt": {
@@ -1921,8 +1920,8 @@
    "upstream": "compiler/testData/codegen/box/branching/when_through.kt"
   },
   "box/box/branching/when_with_try1.kt": {
-   "category": "unknown Any (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Any'",
+   "category": "strings / templates",
+   "detail": "unknown method String.toInt()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/branching/when_with_try1.kt"
   },
@@ -4922,9 +4921,8 @@
    "upstream": "compiler/testData/codegen/box/casts/objectToPrimitiveWithAssertion.kt"
   },
   "box/box/casts/parallelHierarchy.kt": {
-   "category": "unknown Any (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Any'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/parallelHierarchy.kt"
   },
   "box/box/casts/toNativePointers.kt": {
@@ -5080,9 +5078,8 @@
    "upstream": "compiler/testData/codegen/box/classLiteral/primitiveClassEquality.kt"
   },
   "box/box/classes/boxPrimitiveTypeInClinitOfClassObject.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/boxPrimitiveTypeInClinitOfClassObject.kt"
   },
   "box/box/classes/classNamedAsOldPackageFacade.kt": {
@@ -5367,9 +5364,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1759.kt"
   },
   "box/box/classes/kt1891.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt1891.kt"
   },
   "box/box/classes/kt1918.kt": {
@@ -5533,9 +5529,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt471.kt"
   },
   "box/box/classes/kt48.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt48.kt"
   },
   "box/box/classes/kt496.kt": {
@@ -16092,8 +16087,8 @@
    "upstream": "compiler/testData/codegen/box/fir/initializationInLocalInnerClassWithSecondaryConstructor.kt"
   },
   "box/box/fir/kt68806.kt": {
-   "category": "unknown Any (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Any'",
+   "category": "unknown sequence (stdlib API / unsupported decl)",
+   "detail": "unknown function 'sequence'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/kt68806.kt"
   },
@@ -35254,9 +35249,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/generic.kt"
   },
   "box/box/regressions/hashCodeNPE.kt": {
-   "category": "unknown Any (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Any'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/hashCodeNPE.kt"
   },
   "box/box/regressions/internalTopLevelOtherPackage.kt": {
@@ -35377,8 +35371,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt32949.kt"
   },
   "box/box/regressions/kt33638.kt": {
-   "category": "unknown emptyList (stdlib API / unsupported decl)",
-   "detail": "unknown function 'emptyList'",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of emptyList; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt33638.kt"
   },
@@ -35495,8 +35489,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt68727.kt"
   },
   "box/box/regressions/kt71119.kt": {
-   "category": "unknown Any (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Any'",
+   "category": "other: unknown type _",
+   "detail": "unknown type _",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt71119.kt"
   },
@@ -36328,9 +36322,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/enums.kt"
   },
   "box/box/secondaryConstructors/fieldInitializerOptimization.kt": {
-   "category": "unknown Any (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Any'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/fieldInitializerOptimization.kt"
   },
   "box/box/secondaryConstructors/generics.kt": {
@@ -44247,9 +44240,8 @@
    "upstream": "native/native.tests/testData/codegen/exceptions/stack_trace_inline_libbacktrace.kt"
   },
   "native/native.tests/codegen/exceptions/throw_cleanup.kt": {
-   "category": "unknown Any (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Any'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/exceptions/throw_cleanup.kt"
   },
   "native/native.tests/codegen/exceptions/throw_from_except_constr.kt": {
@@ -44594,33 +44586,28 @@
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/compileTime.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkComputedField.kt": {
-   "category": "other: unknown method ClassWithComputedField.isPermanent()",
-   "detail": "unknown method ClassWithComputedField.isPermanent()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkComputedField.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkConstructor.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unknown method ClassWithConstructor.isPermanent()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkConstructor.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkEmptyClass.kt": {
-   "category": "other: unknown method EmptyClass.isPermanent()",
-   "detail": "unknown method EmptyClass.isPermanent()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkEmptyClass.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkField.kt": {
-   "category": "other: unknown method ClassWithField.isPermanent()",
-   "detail": "unknown method ClassWithField.isPermanent()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkField.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkInit.kt": {
-   "category": "other: unknown method ClassWithConstants.isPermanent()",
-   "detail": "unknown method ClassWithConstants.isPermanent()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkInit.kt"
   },
   "native/native.tests/codegen/objectDeclaration/isFrozen.kt": {
@@ -44635,39 +44622,34 @@
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/bigClassWithMixedValues.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnArray.kt": {
-   "category": "other: unknown method ArrayList<Int>.collectReferenceFieldValues()",
-   "detail": "unknown method ArrayList<Int>.collectReferenceFieldValues()",
+   "category": "other: collectReferenceFieldValues() on ArrayList<Int> is not suppo",
+   "detail": "collectReferenceFieldValues() on ArrayList<Int> is not supported",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnArray.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnPrimitive.kt": {
-   "category": "other: unknown method Int.collectReferenceFieldValues()",
-   "detail": "unknown method Int.collectReferenceFieldValues()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnPrimitive.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnPrimitiveArray.kt": {
-   "category": "other: unknown method IntArray.collectReferenceFieldValues()",
-   "detail": "unknown method IntArray.collectReferenceFieldValues()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnPrimitiveArray.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnString.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.collectReferenceFieldValues()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnString.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnValueClass.kt": {
-   "category": "other: unknown method BoxA.collectReferenceFieldValues()",
-   "detail": "unknown method BoxA.collectReferenceFieldValues()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnValueClass.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnValueOverPrimitiveClass.kt": {
-   "category": "other: unknown method BoxInt.collectReferenceFieldValues()",
-   "detail": "unknown method BoxInt.collectReferenceFieldValues()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnValueOverPrimitiveClass.kt"
   },
   "native/native.tests/codegen/reflection/objc/class.kt": {
@@ -44691,8 +44673,8 @@
    "upstream": "native/native.tests/testData/codegen/serialization/deserialized_fields.kt"
   },
   "native/native.tests/codegen/serialization/deserialized_inline0.kt": {
-   "category": "unknown maxOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'maxOf'",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assert'",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/serialization/deserialized_inline0.kt"
   },
@@ -44713,15 +44695,13 @@
    "upstream": "native/native.tests/testData/codegen/variables/var1.kt"
   },
   "native/native.tests/codegen/variables/var2.kt": {
-   "category": "unknown Any (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Any'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/variables/var2.kt"
   },
   "native/native.tests/codegen/variables/var3.kt": {
-   "category": "unknown Any (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Any'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/variables/var3.kt"
   },
   "native/native.tests/codegen/variables/var4.kt": {

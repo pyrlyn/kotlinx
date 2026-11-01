@@ -8,23 +8,23 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2898 |
-| PASS | 2593 |
+| UNSUPPORTED | 2878 |
+| PASS | 2613 |
 
-Kept in tree (re-runnable with `run.py`): 2593
+Kept in tree (re-runnable with `run.py`): 2613
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
 | strings / templates | 254 |
-| generics | 208 |
+| generics | 209 |
 | interfaces | 200 |
 | operator/infix functions | 157 |
 | lambdas / function types / references | 143 |
 | property accessors / delegation | 90 |
-| class bodies / constructors | 84 |
-| type inference / mismatch | 81 |
+| class bodies / constructors | 83 |
+| type inference / mismatch | 78 |
 | objects / companion objects | 64 |
 | type inference (expression bodies) | 45 |
 | other syntax (at '.') | 44 |
@@ -56,7 +56,7 @@ Kept in tree (re-runnable with `run.py`): 2593
 | default arguments | 11 |
 | unknown A (stdlib API / unsupported decl) | 10 |
 | types: UIntArray | 10 |
-| unknown Any (stdlib API / unsupported decl) | 10 |
+| other syntax (at 'inner') | 10 |
 
 ## N/A reasons
 

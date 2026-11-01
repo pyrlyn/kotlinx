@@ -668,6 +668,7 @@ class Parser(toks: List<Tok>) {
                     accessors(n, ty, f, isVar)?.let { (bf, acc) -> props.add(bf); inits.add(bf); ms.addAll(acc); continue }
                     props.add(f); inits.add(f)
                     val constOwner = curClass ?: curObject
+                    if (isConst && constOwner != null) ConstFields.names.add("$constOwner.$n")
                     if (isConst && constOwner != null && (f.init is IntL || f.init is BoolL || f.init is CharL || f.init is DblL || (f.init is StrL && (f.init as StrL).parts.all { it is String })))
                         { constVals["$constOwner.$n"] = f.init!!; if ('$' in constOwner) constVals["${constOwner.substringBefore('$')}.$n"] = f.init!! }
                     continue
