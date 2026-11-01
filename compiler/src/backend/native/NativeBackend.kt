@@ -745,7 +745,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         for (f in c.fields) if (f.init == null) store(f.name, genArg(NameE(f.name).also { it.line = c.line }))
         for (x in c.inits) {
-            if (x is FieldD) store(x.name, argFor(x.init!!, ci.fields[ci.index(x.name)].second, true))
+            if (x is FieldD) {
+                val ft = ci.fields[ci.index(x.name)].second
+                // Like Kotlin/JVM and Kotlin/Native: an initializer that sets the default value is dropped (the
+                // constructor already zeroed the field), so a value stored by a superclass init survives.
+                if (isDefaultInit(x.init!!, ft)) continue
+                store(x.name, argFor(x.init, ft, true))
+            }
             else {
                 genBlockBody(x as Block, false)
                 if (term) fail("return is not allowed in an init block of ${c.name}")
@@ -754,6 +760,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         releaseAll()
         emit("ret void")
         funcs.append("define internal void @init.${ci.name}(${params.joinToString(", ")}) nounwind {\nentry:\n").append(allocas).append(body).append("}\n\n")
+    }
+
+    /** `false`, `0`, `0L`, `0.0` (not `-0.0`), `'\\u0000'`, `0.toByte()`... for a non-reference field, or `null`. */
+    private fun isDefaultInit(e: E, ft: Ty): Boolean {
+        if (e is NullL) return true
+        if (ft.llvm == "ptr") return false
+        return when (e) {
+            is IntL -> e.v == 0L
+            is CharL -> e.v == 0L
+            is DblL -> e.v.toRawBits() == 0L
+            is BoolL -> !e.v
+            is CallE -> e.args.isEmpty() && e.lambda == null && (e.callee as? MemberE)?.let { m ->
+                m.n in setOf("toByte", "toShort", "toChar", "toInt", "toLong", "toFloat", "toDouble") && m.recv.let { it is IntL && it.v == 0L } } == true
+            else -> false
+        }
     }
 
     /** Constructor function for classes with plain parameters, initializers or a superclass: returns an owned object. */
@@ -2867,6 +2888,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             br(le); startBlock(le)
             val res = Val(emitT("phi i32 [ 0, %$from ], [ ${h.v}, %$vEnd ]"), Ty.I32)
             releaseIfOwned(r); return res
+        }
+        // `isPermanent()` (kotlin.native.internal): an object is permanent (statically initialized) when it has no
+        // initializer code other than `const val`s.
+        if (n == "isPermanent" && e0.args.isEmpty() && t is Ty.Cls && prog.globals.any { it.name == "\$o\$${t.name}" }) {
+            val c = classDecls.getValue(t.name)
+            releaseIfOwned(r)
+            val permanent = c.inits.all { it is FieldD && "${c.name}.${it.name}" in ConstFields.names }
+            return Val(if (permanent) "true" else "false", Ty.I1)
         }
         if (n == "collectReferenceFieldValues" && e0.args.isEmpty() && e0.lambda == null) return collectRefFields(r)
         // Member extension of the enclosing class (dispatch receiver `this`).

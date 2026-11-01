@@ -64,6 +64,9 @@ class Block(val stmts: List<S>, val params: List<String> = emptyList(), val para
     var rewritten: Block? = null
 }
 
+/** `Owner.name` of every `const val` member (declared in a class or object body), for `isPermanent()`. */
+object ConstFields { val names = HashSet<String>() }
+
 object LamIds {
     private var next = 0
     fun id(b: Block): Int { if (b.lamId < 0) b.lamId = next++; return b.lamId }
