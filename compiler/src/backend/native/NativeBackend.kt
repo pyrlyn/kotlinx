@@ -2868,6 +2868,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val res = Val(emitT("phi i32 [ 0, %$from ], [ ${h.v}, %$vEnd ]"), Ty.I32)
             releaseIfOwned(r); return res
         }
+        // `isPermanent()` (kotlin.native.internal): an object is permanent (statically initialized) when it has no
+        // initializer code other than `const val`s.
+        if (n == "isPermanent" && e0.args.isEmpty() && t is Ty.Cls && prog.globals.any { it.name == "\$o\$${t.name}" }) {
+            val c = classDecls.getValue(t.name)
+            releaseIfOwned(r)
+            val permanent = c.inits.all { it is FieldD && "${c.name}.${it.name}" in ConstFields.names }
+            return Val(if (permanent) "true" else "false", Ty.I1)
+        }
         // Member extension of the enclosing class (dispatch receiver `this`).
         owner?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, emptyList()) && !hasMember(t, n) }?.let {
             if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")

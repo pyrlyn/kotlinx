@@ -8,10 +8,10 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2924 |
-| PASS | 2567 |
+| UNSUPPORTED | 2897 |
+| PASS | 2594 |
 
-Kept in tree (re-runnable with `run.py`): 2567
+Kept in tree (re-runnable with `run.py`): 2594
 
 ## Unsupported features (roadmap, by test count)
 
@@ -20,11 +20,11 @@ Kept in tree (re-runnable with `run.py`): 2567
 | strings / templates | 253 |
 | generics | 208 |
 | interfaces | 200 |
-| operator/infix functions | 186 |
+| operator/infix functions | 157 |
 | lambdas / function types / references | 143 |
 | property accessors / delegation | 90 |
-| class bodies / constructors | 86 |
-| type inference / mismatch | 79 |
+| class bodies / constructors | 85 |
+| type inference / mismatch | 81 |
 | objects / companion objects | 64 |
 | type inference (expression bodies) | 45 |
 | other syntax (at '.') | 44 |
@@ -36,7 +36,7 @@ Kept in tree (re-runnable with `run.py`): 2567
 | destructuring declarations | 29 |
 | other syntax (at ':') | 28 |
 | annotations | 27 |
-| other syntax (at ',') | 22 |
+| other syntax (at ',') | 23 |
 | other syntax (at 'where') | 20 |
 | other: unknown type Number | 17 |
 | unknown x (stdlib API / unsupported decl) | 17 |

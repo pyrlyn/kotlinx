@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2589,
-  "UNSUPPORTED": 2902
+  "PASS": 2594,
+  "UNSUPPORTED": 2897
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -44597,33 +44597,28 @@
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/compileTime.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkComputedField.kt": {
-   "category": "other: unknown method ClassWithComputedField.isPermanent()",
-   "detail": "unknown method ClassWithComputedField.isPermanent()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkComputedField.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkConstructor.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unknown method ClassWithConstructor.isPermanent()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkConstructor.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkEmptyClass.kt": {
-   "category": "other: unknown method EmptyClass.isPermanent()",
-   "detail": "unknown method EmptyClass.isPermanent()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkEmptyClass.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkField.kt": {
-   "category": "other: unknown method ClassWithField.isPermanent()",
-   "detail": "unknown method ClassWithField.isPermanent()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkField.kt"
   },
   "native/native.tests/codegen/objectDeclaration/globalConstants_checkInit.kt": {
-   "category": "other: unknown method ClassWithConstants.isPermanent()",
-   "detail": "unknown method ClassWithConstants.isPermanent()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/globalConstants_checkInit.kt"
   },
   "native/native.tests/codegen/objectDeclaration/isFrozen.kt": {
