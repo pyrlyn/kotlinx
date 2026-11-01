@@ -2897,6 +2897,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val permanent = c.inits.all { it is FieldD && "${c.name}.${it.name}" in ConstFields.names }
             return Val(if (permanent) "true" else "false", Ty.I1)
         }
+        if (n == "collectReferenceFieldValues" && e0.args.isEmpty() && e0.lambda == null) return collectRefFields(r)
         // Member extension of the enclosing class (dispatch receiver `this`).
         owner?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, emptyList()) && !hasMember(t, n) }?.let {
             if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
@@ -3481,6 +3482,42 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     /** Binds already computed values to fresh hidden locals for the duration of [f] (owned references are released after). */
+    /** Underlying type of a (possibly nested) value class, with the field path to it. */
+    private fun unwrapValue(t: Ty, path: List<String>): Pair<Ty, List<String>> {
+        if (t !is Ty.Cls || classDecls[t.name]?.isValue != true) return t to path
+        val (fn, ft) = classes.getValue(t.name).fields.single()
+        return unwrapValue(ft, path + fn)
+    }
+
+    /**
+     * `x.collectReferenceFieldValues()` (kotlin.native.internal): the non-null reference values stored in the object's
+     * fields as a `List<Any>`, with value classes inlined (as Kotlin/Native lays them out). Primitives, strings and
+     * primitive arrays have none; a value class over a reference yields that reference.
+     */
+    private fun collectRefFields(r: Val): Val {
+        val t = r.t
+        val leaves: List<List<String>> = when {
+            t is Ty.Cls && classDecls[t.name]?.isValue == true -> unwrapValue(t, emptyList()).let { (u, p) -> if (u.isRef) listOf(p) else emptyList() }
+            t is Ty.Cls && classDecls[t.name] != null -> classes.getValue(t.name).fields.mapNotNull { (fn, ft) ->
+                unwrapValue(ft, listOf(fn)).let { (u, p) -> if (u.isRef) p else null } }
+            t.llvm != "ptr" || t == Ty.Str || t is Ty.Arr -> emptyList()
+            else -> fail("collectReferenceFieldValues() on $t is not supported")
+        }
+        // Element type: the leaves' common class when there is one (no `Any` boxing needed), else `Any`.
+        val leafTys = leaves.map { p -> p.fold(t) { acc, fn -> classes.getValue((acc as Ty.Cls).name).fields.first { it.first == fn }.second } }.toSet()
+        val elem = (leafTys.singleOrNull() as? Ty.Cls)?.name ?: if ("Any" in ifaces) "Any" else if (leaves.isEmpty()) "String"
+            else fail("collectReferenceFieldValues() on $t needs Any (fields of different reference types)")
+        val list = genExpr(CallE(NameE("ArrayList").also { it.line = line }, listOf(TypeRef(elem, emptyList(), false)), emptyList(), null).also { it.line = line })
+        return withTemps(listOf(r, list)) { (x, l) ->
+            for (p in leaves) {
+                val v: E = p.fold(x) { acc, fn -> MemberE(acc, fn, false).also { it.line = line } }
+                val add = CallE(MemberE(l, "add", false).also { it.line = line }, emptyList(), listOf(if (elem == "Any") AsE(v, TypeRef("Any", emptyList(), false), false).also { it.line = line } else v), null).also { it.line = line }
+                genStmt(ExprS(IfE(BinE("!=", v, NullL().also { it.line = line }).also { it.line = line }, Block(listOf(ExprS(add).also { it.line = line })), null).also { it.line = line }).also { it.line = line })
+            }
+            genExpr(l)
+        }
+    }
+
     private fun withTemps(vals: List<Val>, f: (List<E>) -> Val): Val {
         scopes.add(Scope())
         val names = vals.map { v ->

@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2604,
-  "UNSUPPORTED": 2887
+  "PASS": 2609,
+  "UNSUPPORTED": 2882
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -35372,8 +35372,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt32949.kt"
   },
   "box/box/regressions/kt33638.kt": {
-   "category": "unknown emptyList (stdlib API / unsupported decl)",
-   "detail": "unknown function 'emptyList'",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of emptyList; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt33638.kt"
   },
@@ -44625,39 +44625,34 @@
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/bigClassWithMixedValues.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnArray.kt": {
-   "category": "other: unknown method ArrayList<Int>.collectReferenceFieldValues()",
-   "detail": "unknown method ArrayList<Int>.collectReferenceFieldValues()",
+   "category": "other: collectReferenceFieldValues() on ArrayList<Int> is not suppo",
+   "detail": "collectReferenceFieldValues() on ArrayList<Int> is not supported",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnArray.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnPrimitive.kt": {
-   "category": "other: unknown method Int.collectReferenceFieldValues()",
-   "detail": "unknown method Int.collectReferenceFieldValues()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnPrimitive.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnPrimitiveArray.kt": {
-   "category": "other: unknown method IntArray.collectReferenceFieldValues()",
-   "detail": "unknown method IntArray.collectReferenceFieldValues()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnPrimitiveArray.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnString.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.collectReferenceFieldValues()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnString.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnValueClass.kt": {
-   "category": "other: unknown method BoxA.collectReferenceFieldValues()",
-   "detail": "unknown method BoxA.collectReferenceFieldValues()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnValueClass.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/callOnValueOverPrimitiveClass.kt": {
-   "category": "other: unknown method BoxInt.collectReferenceFieldValues()",
-   "detail": "unknown method BoxInt.collectReferenceFieldValues()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/callOnValueOverPrimitiveClass.kt"
   },
   "native/native.tests/codegen/reflection/objc/class.kt": {
