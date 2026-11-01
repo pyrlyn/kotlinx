@@ -199,6 +199,7 @@ static __attribute__((noinline)) void *slab_refill(size_t cls) {
         slab_pool = s->next; s->next = NULL; dbg_slab_reused++;
         if (s->resident) slab_pool_resident--;
         s->resident = 1; s->free = NULL; s->bump = s->base; s->live = 0;
+        UNPOISON(s->base, PAGE);   /* bump-allocated again, possibly for another size class: old cell poison is stale */
     } else { s = slab_new(); s->bump = s->base; }
     s->cls = (uint16_t)cls; slab_cur[cls] = s;
     void *p;
