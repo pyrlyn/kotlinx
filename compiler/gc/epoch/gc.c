@@ -818,6 +818,16 @@ static PtrStack c_deferred;   /* buffered roots whose minor detection stopped at
  * stable object stay buffered in c_deferred; a major detection (every stable object traced) handles them
  * once MAJOR_RATIO times as many roots were deferred as there are stable objects (amortized O(1) per root). */
 static size_t detect_prepare(int major, PtrStack *rootsp);
+/* KX_GC_LEAN_STACKS (default 1): the incremental major keeps its roots in one array only. MarkGray and Scan
+ * walk im_roots with a cursor instead of pushing every root onto the work stack, and roots are not listed in
+ * im_seen (their SEEN bit is set; they are settled and cleared from im_roots). The work stacks then hold
+ * only the traversal frontier. On huge_live_churn (10M roots) that removes three root-sized copies
+ * (deferred, work, im-seen: ~380 MiB of collector stacks at the peak). KX_GC_LEAN_STACKS=0: previous behavior. */
+static int lean_stacks_v = -1;
+static inline int lean_stacks(void) {
+    if (__builtin_expect(lean_stacks_v < 0, 0)) { const char *e = getenv("KX_GC_LEAN_STACKS"); lean_stacks_v = !(e && *e == '0'); }
+    return lean_stacks_v;
+}
 static void detect_finish(int major, PtrStack roots, size_t k, int hit_stable);
 static void close_sets(void);
 static void detect(int major) {
@@ -853,7 +863,13 @@ static void detect(int major) {
 static size_t detect_prepare(int major, PtrStack *rootsp) {
     ep_detections++;
     c_major = major;
-    if (major) { dbg_majors++; stack_move(&c_roots, &c_deferred); c_deferred_new = 0; }
+    if (major) {
+        dbg_majors++; c_deferred_new = 0;
+        /* lean stacks: hand the deferred buffer over instead of copying it, and drop its storage (stack_move
+         * keeps the capacity, so on huge_live_churn 128 MiB of an emptied deferred stack stayed resident) */
+        if (lean_stacks() && !c_roots.len) { free(c_roots.items); c_roots = c_deferred; c_deferred = (PtrStack){0}; }
+        else { stack_move(&c_roots, &c_deferred); if (lean_stacks()) { free(c_deferred.items); c_deferred = (PtrStack){0}; } }
+    }
     PtrStack roots = c_roots; c_roots = (PtrStack){0};
     /* bounded slice: a minor takes at most slice_roots roots, the rest stays buffered for the next one */
     if (!major && slice_roots && roots.len > slice_roots) {
@@ -899,6 +915,7 @@ static void detect_finish(int major, PtrStack roots, size_t k, int hit_stable) {
         m->len = 0;
     }
     for (size_t i = 0; i < im_seen.len; i++) settle(im_seen.items[i]);
+    if (c_im && lean_stacks()) for (size_t i = 0; i < k; i++) { settle(roots.items[i]); clr_bit(roots.items[i], SEEN_BIT); }
     if (!major && hit_stable)
         for (size_t i = 0; i < k; i++) {
             void *s = roots.items[i];
@@ -924,7 +941,7 @@ static void detect_finish(int major, PtrStack roots, size_t k, int hit_stable) {
 #define MAJOR_STEP 2048       /* visits per step when KX_GC_MAJOR_STEP_US=0 */
 #define MAJOR_STEP_US 1000    /* default: steps of 512 visits until 1 ms per log has passed */
 static int im_state;                 /* 0 none, 1 MarkGray, 2 Scan */
-static PtrStack im_roots; static size_t im_k;
+static PtrStack im_roots; static size_t im_k, im_cur;   /* im_cur: lean-stacks cursor into im_roots */
 static int64_t im_step_budget = -1, im_m0, im_w0, im_steps;
 static int incremental_major = -1;   /* KX_GC_INC_MAJOR (default 1) */
 static int side_minors = 1;          /* KX_GC_SIDE_MINOR (default 1): minors keep running during a major */
@@ -938,27 +955,35 @@ static void ret_push(void *p) {
 static void im_begin(void) {
     im_k = detect_prepare(1, &im_roots);
     c_im = 1;
-    for (size_t i = 0; i < im_k; i++) { set_bit(im_roots.items[i], SEEN_BIT); stack_push(&im_seen, im_roots.items[i]); }
+    int lean = lean_stacks();
+    for (size_t i = 0; i < im_k; i++) { set_bit(im_roots.items[i], SEEN_BIT); if (!lean) stack_push(&im_seen, im_roots.items[i]); }
     im_m0 = dbg_members + dbg_dead; im_w0 = c_traversed;
-    tw = &workers[0]; p_active = 1;
-    for (size_t i = 0; i < im_k; i++) stack_push(&workers[0].work, im_roots.items[i]);
+    tw = &workers[0]; p_active = 1; im_cur = 0;
+    if (!lean) for (size_t i = 0; i < im_k; i++) stack_push(&workers[0].work, im_roots.items[i]);
     im_state = 1;
 }
 /* One bounded step; returns 1 when the major finished. */
 static int im_step(int64_t budget) {
     Worker *w = &workers[0]; tw = w; c_major = 1;
     int64_t n = 0, t0 = rt_nanos();
+    int lean = lean_stacks();
     if (im_state == 1) {
-        while (w->work.len && n < budget) { void *x = stack_pop(&w->work); if (im_dead(x)) continue; VISIT(); vtab(x)->trav(x, mg_child); n++; }
+        while (n < budget) {
+            void *x;
+            if (w->work.len) x = stack_pop(&w->work);
+            else if (lean && im_cur < im_k) x = im_roots.items[im_cur++];
+            else break;
+            if (im_dead(x)) continue; VISIT(); vtab(x)->trav(x, mg_child); n++;
+        }
         dbg_t_mark += rt_nanos() - t0;
-        if (w->work.len) return 0;
-        for (size_t i = 0; i < im_k; i++) stack_push(&w->work, im_roots.items[i]);
-        im_state = 2; t0 = rt_nanos();
+        if (w->work.len || (lean && im_cur < im_k)) return 0;
+        if (!lean) for (size_t i = 0; i < im_k; i++) stack_push(&w->work, im_roots.items[i]);
+        im_cur = 0; im_state = 2; t0 = rt_nanos();
     }
     while (n < budget) {
         if (w->black.len) { void *y = stack_pop(&w->black); if (!im_dead(y)) vtab(y)->trav(y, sb_child); }
-        else if (w->work.len) {
-            void *x = stack_pop(&w->work); uint64_t h = hload(x);
+        else if (w->work.len || (lean && im_cur < im_k)) {
+            void *x = w->work.len ? stack_pop(&w->work) : im_roots.items[im_cur++]; uint64_t h = hload(x);
             if (((h >> KX_COLOR_SHIFT) & 3) == GRAY) {
                 int64_t ext = (int64_t)(h & KX_CNT_MASK) - (int64_t)((h >> CRC_SHIFT) & CRC_MAX);
                 if (ext > 0) { set_color(x, BLACK); set_crc(x, 0); promote_atomic(x); stack_push(&w->black, x); }
@@ -968,7 +993,7 @@ static int im_step(int64_t budget) {
         n++;
     }
     dbg_t_scan += rt_nanos() - t0; im_steps++;
-    if (w->work.len || w->black.len) return 0;
+    if (w->work.len || w->black.len || (lean && im_cur < im_k)) return 0;
     detect_finish(1, im_roots, im_k, 0);
     im_roots = (PtrStack){0}; im_state = 0; c_im = 0;
     for (size_t i = 0; i < im_seen.len; i++) clr_bit(im_seen.items[i], SEEN_BIT);
