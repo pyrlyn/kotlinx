@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2825,
-  "UNSUPPORTED": 2666
+  "PASS": 2831,
+  "UNSUPPORTED": 2660
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -6431,9 +6431,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/abstractClasses.kt"
   },
   "box/box/companionBlocksAndExtensions/basicBlockAndExtension.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/basicBlockAndExtension.kt"
   },
   "box/box/companionBlocksAndExtensions/callableReferencesGenericCompanionBlockMembers.kt": {
@@ -6477,32 +6476,30 @@
   },
   "box/box/companionBlocksAndExtensions/companionExtensionImplicitInvoke.kt": {
    "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
+   "detail": "multiple companion declarations are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionExtensionImplicitInvoke.kt"
   },
   "box/box/companionBlocksAndExtensions/companionExtensions.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionExtensions.kt"
   },
   "box/box/companionBlocksAndExtensions/companionExtensionsWithContext.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
+   "category": "other: several context(...) lists are not supported (at '",
+   "detail": "several context(...) lists are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionExtensionsWithContext.kt"
   },
   "box/box/companionBlocksAndExtensions/companionExtensionsWithSeveralContextParameters.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
+   "category": "other: several context(...) lists are not supported (at '",
+   "detail": "several context(...) lists are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionExtensionsWithSeveralContextParameters.kt"
   },
   "box/box/companionBlocksAndExtensions/constProperties.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/constProperties.kt"
   },
   "box/box/companionBlocksAndExtensions/crossModuleExtensions.kt": {
@@ -6517,9 +6514,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/ebf.kt"
   },
   "box/box/companionBlocksAndExtensions/generics.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/generics.kt"
   },
   "box/box/companionBlocksAndExtensions/inheritance.kt": {
@@ -6571,8 +6567,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersEnumTriggeredByCompanionBlockMember.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersExtensions.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
+   "category": "other: unknown variable 'initialized'",
+   "detail": "unknown variable 'initialized'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersExtensions.kt"
   },
@@ -6658,8 +6654,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/inline_block.kt"
   },
   "box/box/companionBlocksAndExtensions/inline_extensions.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/inline_extensions.kt"
   },
@@ -6714,8 +6710,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/kt89921.kt"
   },
   "box/box/companionBlocksAndExtensions/lateinit.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
+   "category": "strings / templates",
+   "detail": "unknown property $Fn$String.isInitialized",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/lateinit.kt"
   },
@@ -6800,8 +6796,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/propertyDelegation_block.kt"
   },
   "box/box/companionBlocksAndExtensions/propertyDelegation_extensions.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
+   "category": "property accessors / delegation",
+   "detail": "delegated var properties need an explicit type (at 'Delegate')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/propertyDelegation_extensions.kt"
   },
@@ -14890,9 +14886,8 @@
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/charConstructor.kt"
   },
   "box/box/evaluate/intrinsicConst/companions.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/evaluate/intrinsicConst/companions.kt"
   },
   "box/box/evaluate/intrinsicConst/constTrim.kt": {
@@ -38902,9 +38897,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/callableRefDefault.kt"
   },
   "box/box/versionOverloads/companions.kt": {
-   "category": "objects / companion objects",
-   "detail": "unexpected top-level token (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/companions.kt"
   },
   "box/box/versionOverloads/comparableVersionDefaults.kt": {
