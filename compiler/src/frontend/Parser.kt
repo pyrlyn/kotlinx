@@ -47,6 +47,23 @@ class Parser(toks: List<Tok>) {
     private var anonN = 0
 
     /** Data class: generated toString, componentN, hashCode and `$equals` (structural `==`) over the constructor properties. */
+    /** Value classes as declared (single- and multi-field), for [checkValueRecursion]. */
+    private val valueDecls = ArrayList<ClassD>()
+
+    /** Recursive value classes, and self-bounded multi-field ones, are not supported (unbounded unwrapping / instantiation). */
+    private fun checkValueRecursion() {
+        val names = valueDecls.map { it.name }.toSet()
+        fun mentions(t: TypeRef?): Boolean = t != null && (t.name in names || t.args.any { mentions(it) })
+        fun refs(t: TypeRef?): List<String> = if (t == null) emptyList() else listOfNotNull(t.name.takeIf { it in names }) + t.args.flatMap { refs(it) }
+        val edges = valueDecls.associate { c -> c.name to c.fields.flatMap { refs(it.type) }.toSet() }
+        fun reaches(from: String, to: String, seen: HashSet<String> = HashSet()): Boolean =
+            edges[from].orEmpty().any { it == to || (seen.add(it) && reaches(it, to, seen)) }
+        for (c in valueDecls) {
+            if (reaches(c.name, c.name)) fail("recursive value classes are not supported (${c.name})")
+            if (c.fields.size >= 2 && c.typeParams.any { tp -> mentions(TypeParamBounds.bounds["${c.line}:$tp"]) }) fail("self-bounded value classes are not supported (${c.name})")
+        }
+    }
+
     private fun dataClass(c: ClassD): ClassD {
         val props = c.ctorParams.filter { p -> c.fields.any { it.name == p.name } }
         // `Array<T>` is a list here: its `==` would compare contents, not identity as in Kotlin.
@@ -525,6 +542,10 @@ class Parser(toks: List<Tok>) {
                 tk.k == K.ID && (tk.s == "value" || tk.s == "inline") && t[p + 1].k == K.ID && t[p + 1].s == "class" -> {
                     p++
                     val c = classDecl()
+                    // Multi-field value class (`+FullValueClasses`): no identity, structural equals/hashCode/toString,
+                    // so it is compiled like a data class (boxed; the flattened representation is an optimization).
+                    valueDecls.add(c)
+                    if (c.fields.size >= 2 && c.ctorParams.size == c.fields.size && c.fields.none { it.isVar } && c.superClass == null) { classes.add(dataClass(c)); continue }
                     if (c.fields.size != 1 || c.ctorParams.size != 1) fail("a value class needs exactly one property", tk)
                     // hashCode of a value class is its property's hashCode.
                     // A type parameter counts by its declared bound (`value class Z<T: Int>(val x: T)`).
@@ -552,6 +573,7 @@ class Parser(toks: List<Tok>) {
                 else -> fail("unexpected top-level token")
             }
         }
+        checkValueRecursion()
         classes.addAll(companions); funs.addAll(ctorFactories)
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
         classes.addAll(topAnon); topAnon.clear()
