@@ -157,6 +157,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "Unit" -> Ty.Unit
         "Nothing" -> if (t.nullable) fail("unknown type Nothing?") else Ty.Nothing
         "String" -> Ty.Str
+        "Number" -> if ("Any" in ifaces && "Number" !in classes) Ty.Iface("Any") else fail("unknown type Number")
         "Char" -> Ty.Char
         "ByteArray" -> Ty.Arr(Ty.I8)
         "IntArray" -> Ty.Arr(Ty.I32)
@@ -2743,7 +2744,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (v.t is Ty.NBox) return isCheck(Val(v.v, Ty.Iface("Any"), false), t)
         if (Regex("Function\\d+").matches(t.name)) fail("type checks against ${t.name} are not supported")
         val star = t.args.any { it.name == "*" }
-        val target = if (star) null else resolveOrNull(t)
+        val target = if (star || t.name == "Number") null else resolveOrNull(t)
         if (v.t.llvm != "ptr") return if (target == v.t || (target == null && t.name == "Any")) "true" else "false"
         if (v.v == "null") return if (t.nullable) "true" else "false"
         val nonNull = if (t.nullable) "true" else emitT("icmp ne ptr ${v.v}, null")
@@ -2824,8 +2825,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (e.type.name == "Any" && "Any" in ifaces && (boxName(v.t) != null || v.t is Ty.Iface || v.t is Ty.Cls && v.t.name.substringBefore('$') !in genericClasses))
             // `x as Any` of a reference that may be null at run time (an unchecked `T` result): NullPointerException.
             return coerce(if (!e.type.nullable && !e.safe && v.t.llvm == "ptr" && v.v != "null") genNonNull(v) else v, Ty.Iface("Any"))
+        if (e.type.name == "Number" && !isAny(v.t) && !v.t.isNum) fail("cast to Number is not supported")
         val star = e.type.args.any { it.name == "*" }
         val target = if (e.type.name == "Any") v.t else if (star) (v.t.takeIf { v.t is Ty.Cls || v.t is Ty.Iface } ?: fail("unsupported cast to ${e.type.name}<*>")) else resolve(TypeRef(e.type.name, e.type.args, false))
+        // Instances of one generic class with different type arguments are distinct monomorphized classes.
+        if (v.t is Ty.Cls && target is Ty.Cls && v.t != target && '$' in v.t.name && v.t.name.substringBefore('$') == target.name.substringBefore('$'))
+            fail("unchecked cast between instances of generic class ${e.type.name} is not supported")
         if (v.v == "null" && target.llvm != "ptr") fail("unchecked cast of null to non-nullable $target is not supported")
         // `x as Int` with `x: Int?` (also `v as T` in an instance with T = Int): null check, then unbox.
         if (v.t is Ty.NBox && target.llvm != "ptr" && !e0.type.nullable && !e0.safe) {
@@ -3079,6 +3084,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         if (isAny(t) && n == "toString" && e0.args.isEmpty()) { val s = anyCall("anyToString__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return s }
         if (isAny(t) && n == "equals" && e0.args.size == 1) return compare("==", r, genExpr(e0.args[0]))
+        if (isAny(t) && e0.args.isEmpty() && n.startsWith("to") && "numTo${n.drop(2)}__" in funDecls) { val c = anyCall("numTo${n.drop(2)}__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return c }
         if (isAny(t) && n == "hashCode" && e0.args.isEmpty()) { val h = anyCall("anyHashCode__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return h }
         // Internal: canonical bits of a Double (all NaNs equal), used by data class equals.
         if (t.isFp && n == "\$bits" && e0.args.isEmpty()) {
