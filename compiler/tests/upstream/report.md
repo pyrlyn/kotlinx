@@ -8,39 +8,39 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2821 |
-| PASS | 2670 |
+| UNSUPPORTED | 2812 |
+| PASS | 2679 |
 
-Kept in tree (re-runnable with `run.py`): 2670
+Kept in tree (re-runnable with `run.py`): 2679
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 234 |
+| strings / templates | 241 |
 | generics | 222 |
-| interfaces | 206 |
-| operator/infix functions | 160 |
-| lambdas / function types / references | 144 |
+| interfaces | 207 |
+| lambdas / function types / references | 145 |
+| operator/infix functions | 123 |
 | type inference / mismatch | 84 |
 | property accessors / delegation | 84 |
 | class bodies / constructors | 83 |
-| objects / companion objects | 65 |
+| objects / companion objects | 67 |
 | type inference (expression bodies) | 45 |
 | inline/value classes | 43 |
 | other: unknown type T | 40 |
-| inheritance (open/abstract/sealed) | 39 |
+| inheritance (open/abstract/sealed) | 40 |
 | nullable types | 38 |
 | destructuring declarations | 30 |
 | other syntax (at ':') | 28 |
 | annotations | 27 |
 | other syntax (at ',') | 23 |
-| other: unknown type Number | 17 |
+| other: unknown type Number | 19 |
 | unknown x (stdlib API / unsupported decl) | 17 |
 | other: unknown type * | 16 |
+| other: unknown type Nothing | 16 |
 | when expressions | 15 |
 | other syntax (at '.') | 15 |
-| other: unknown type Nothing | 15 |
 | other: local classes that capture local variables are not supported | 15 |
 | other syntax (at 'suspend') | 14 |
 | enum classes | 13 |

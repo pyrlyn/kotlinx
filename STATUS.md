@@ -34,6 +34,8 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   (`scoped { emit(key) }`); `r.f(x)` counts as a use of a local function value `f` in last-use analysis.
 - Locals without an initializer (`val x: T` assigned later): a variable starting at the type's zero value;
   definite assignment is not checked.
+- Referential equality `===` / `!==`: pointer identity for class/interface/array/collection values and against null,
+  value equality for primitives; strings and boxed `Any` values are refused (interning/box caching differ).
 - Not yet: user generics, function types and general lambdas, inheritance from classes (open/abstract/sealed), objects and
   companions, enums, inline/value classes, extension and operator functions, default/named arguments, exceptions,
   labeled jumps. `compiler/tests/upstream/report.md` ranks the missing features by upstream test count.
