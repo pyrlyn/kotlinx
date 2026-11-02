@@ -8,26 +8,25 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2877 |
-| PASS | 2614 |
+| UNSUPPORTED | 2862 |
+| PASS | 2629 |
 
-Kept in tree (re-runnable with `run.py`): 2614
+Kept in tree (re-runnable with `run.py`): 2629
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 254 |
-| generics | 209 |
-| interfaces | 200 |
-| operator/infix functions | 157 |
-| lambdas / function types / references | 143 |
-| property accessors / delegation | 90 |
+| strings / templates | 255 |
+| generics | 211 |
+| interfaces | 195 |
+| operator/infix functions | 159 |
+| lambdas / function types / references | 147 |
 | class bodies / constructors | 83 |
-| type inference / mismatch | 78 |
-| objects / companion objects | 64 |
+| property accessors / delegation | 83 |
+| type inference / mismatch | 79 |
+| objects / companion objects | 65 |
 | type inference (expression bodies) | 45 |
-| other syntax (at '.') | 44 |
 | other: expected '=' (at ' | 44 |
 | inline/value classes | 43 |
 | other: unknown type T | 39 |
@@ -42,21 +41,22 @@ Kept in tree (re-runnable with `run.py`): 2614
 | unknown x (stdlib API / unsupported decl) | 17 |
 | when expressions | 15 |
 | other: unknown type * | 15 |
+| other syntax (at '.') | 15 |
 | other: local classes that capture local variables are not supported | 15 |
 | other syntax (at 'suspend') | 14 |
 | enum classes | 13 |
 | local / extension functions | 13 |
 | other syntax (at '<eof>') | 13 |
+| other: unsupported call | 13 |
 | other syntax (at 'var') | 13 |
 | other syntax (at 'val') | 12 |
-| other: unsupported call | 12 |
 | other: unknown type R | 12 |
 | other syntax (at '(') | 11 |
 | other: unknown type Nothing | 11 |
 | default arguments | 11 |
 | unknown A (stdlib API / unsupported decl) | 10 |
 | types: UIntArray | 10 |
-| other syntax (at 'inner') | 10 |
+| unknown Int (stdlib API / unsupported decl) | 10 |
 
 ## N/A reasons
 

@@ -429,21 +429,59 @@ class Parser(toks: List<Tok>) {
         for (i in globals.indices) { val g = globals[i]; globals[i] = VarS(g.name, g.isVar, g.type, sb.e(g.init)).also { it.line = g.line } }
     }
 
-    /** Extension property `val <T> Recv.name: Type get() = ...` (getter only): an extension function `$prop$name`. */
-    private fun extProperty(): FunD {
+    /**
+     * Extension property `val <T> Recv.name: Type get() = ...` / `var Recv.name: Type get() ... set(v) ...`: the getter is an
+     * extension function `$prop$name`, the setter (for `var`) an extension function `$set$name(v)`.
+     */
+    private fun extProperty(): List<FunD> {
         val ctx = takeCtx()
-        return extProperty0().let { g -> FunD(g.name, ctx + g.params, g.ret, g.body, g.exprBody, g.line, g.typeParams, g.recv) }
+        return extProperty0().map { g -> FunD(g.name, ctx + g.params, g.ret, g.body, g.exprBody, g.line, g.typeParams, g.recv) }
     }
 
-    private fun extProperty0(): FunD {
-        next()
+    private fun extProperty0(): List<FunD> {
+        val isVar = next().s == "var"
         val tps = typeParams()
         val rt = type()
         val (recv, name) = if (isOp("?.")) { next(); TypeRef(rt.name, rt.args, true) to ident() } else if (isOp(".")) { next(); rt to ident() }
             else if (rt.args.isEmpty() && rt.name.contains('.')) TypeRef(rt.name.substringBeforeLast('.'), emptyList(), false) to rt.name.substringAfterLast('.')
             else fail("expected extension property")
         val ty = if (isOp(":")) { next(); type() } else null
-        return getter("\$prop\$$name", ty, tps, recv) ?: fail("extension properties need a getter")
+        return extAccessors(name, ty, tps, recv, isVar)
+    }
+
+    /** Getter and (for `var`) setter of an extension property, in either order, each optionally with a visibility modifier. */
+    private fun extAccessors(name: String, ty: TypeRef?, tps: List<String>, recv: TypeRef, isVar: Boolean): List<FunD> {
+        var get: FunD? = null; var set: FunD? = null
+        while (true) {
+            val at = p
+            while (t[p].k == K.NL) p++
+            while (peek().k == K.ID && peek().s in setOf("private", "protected", "internal", "public") && t[p + 1].k == K.ID && t[p + 1].s in setOf("get", "set")) p++
+            if (get == null && isId("get") && t[p + 1].k == K.OP && t[p + 1].s == "(") { get = getter("\$prop\$$name", ty, tps, recv); continue }
+            if (set == null && isVar && isId("set") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
+                val line = next().line; next()
+                val pn = ident(); if (isOp(":")) { next(); type() }
+                expectOp(")")
+                val body = if (isOp("=")) { next(); skipNLOnly(); Block(listOf(ExprS(expr()).also { it.line = line })) } else block()
+                set = FunD("\$set\$$name", listOf(Param(pn, ty ?: fail("extension properties with a setter need an explicit type"))), TypeRef("Unit", emptyList(), false), body, null, line, tps, recv)
+                continue
+            }
+            p = at; break
+        }
+        if (get == null) fail("extension properties need a getter")
+        if (isVar && set == null) fail("extension var properties need a setter")
+        return listOfNotNull(get, set)
+    }
+
+    /** Member extension `fun R.f(...)`: method `mext$f($this_ext: R, ...)`; `this` is the extension receiver. */
+    private fun memberExt(f: FunD, memberTps: Collection<String>): FunD {
+        val recv = f.recv!!
+        if (curClass == null && curObject == null && curIface == null) fail("member extension functions are only supported in classes, objects and interfaces")
+        if (f.typeParams.isNotEmpty()) fail("generic member extension functions are not supported")
+        // Unqualified calls would bind to the dispatch receiver before the extension receiver.
+        if (recv.name in memberTps) fail("member extensions on a type parameter are not supported")
+        val sub = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n == "this") NameE("\$this_ext").also { it.line = x.line } else null })
+        return FunD("mext\$${f.name}", listOf(Param("\$this_ext", recv)) + f.params, f.ret, f.body?.let { sub.block(it) },
+            f.exprBody?.let { sub.e(it) }, f.line, emptyList(), recv)
     }
 
     private fun resolveExtensions(funs: MutableList<FunD>, classes: MutableList<ClassD>) {
@@ -501,7 +539,7 @@ class Parser(toks: List<Tok>) {
                 tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "operator", "infix", "tailrec", "const", "open", "final", "abstract", "sealed") -> p++
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && topProperty(funs) -> { pendingGlobal?.let { globals.add(it) }; pendingGlobal = null }
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && (t[p + 1].k == K.OP && t[p + 1].s == "<" ||
-                    t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> funs.add(extProperty())
+                    t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> funs.addAll(extProperty())
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> { noCtx(); globals.add(stmt() as VarS); if (pendingStmts.isNotEmpty()) fail("top-level destructuring declarations are not supported", tk) }
                 tk.k == K.ID && tk.s == "fun" && t[p + 1].k == K.ID && t[p + 1].s == "interface" -> { p++; ifaces.add(interfaceDecl().also { funIfaces[it.name] = it }) }
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
@@ -651,6 +689,11 @@ class Parser(toks: List<Tok>) {
                 if (pendingCtx != null && (isId("val") || isId("var"))) { ctxMemberProp(ms, props == null || isAbstract); continue }
                 if (isPrivate && curClass != null && (isId("val") || isId("var") || isId("fun")) && t[p + 1].k == K.ID) privateMembers.add(curClass!! to t[p + 1].s)
                 if (isPrivate && curIface != null && isId("fun") && t[p + 1].k == K.ID) privateIfaceFuns.getOrPut(curIface!!) { HashSet() }.add(t[p + 1].s)
+                // Member extension property `val R.x: T get() = ...` (optionally `var` with a setter): member extensions `$prop$x` / `$set$x`.
+                if ((isId("val") || isId("var")) && t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "?.")) {
+                    for (f in extProperty0()) ms.add(memberExt(f, memberTps))
+                    continue
+                }
                 if (props != null && inits != null && (isId("val") || isId("var"))) {
                     val isVar = next().s == "var"
                     val n = ident()
@@ -703,18 +746,11 @@ class Parser(toks: List<Tok>) {
                 if (!isId("fun")) fail("only member functions are supported in class/interface bodies")
                 val f = function()
                 if (f.recv != null) {
-                    // Member extension `fun R.f(...)`: method `mext$f($this_ext: R, ...)`; `this` is the extension receiver.
-                    if (curClass == null && curObject == null && curIface == null) fail("member extension functions are only supported in classes, objects and interfaces")
-                    if (f.typeParams.isNotEmpty()) fail("generic member extension functions are not supported")
-                    // Unqualified calls would bind to the dispatch receiver before the extension receiver.
-                    if (f.recv.name in memberTps) fail("member extensions on a type parameter are not supported")
                     if (f.name in setOf("unaryPlus", "unaryMinus", "not", "inc", "dec", "plus", "minus", "times", "div", "rem", "get", "set", "invoke",
                             "contains", "compareTo", "rangeTo", "rangeUntil", "iterator", "next", "hasNext", "equals", "getValue", "setValue", "provideDelegate")
                         || f.name.endsWith("Assign")) fail("operator member extension functions are not supported")
                     // `componentN` member extensions are called by destructuring as `d.componentN()` (an ordinary call).
-                    val sub = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n == "this") NameE("\$this_ext").also { it.line = x.line } else null })
-                    ms.add(FunD("mext\$${f.name}", listOf(Param("\$this_ext", f.recv)) + f.params, f.ret, f.body?.let { sub.block(it) },
-                        f.exprBody?.let { sub.e(it) }, f.line, emptyList(), f.recv))
+                    ms.add(memberExt(f, memberTps))
                     continue
                 }
                 ms.add(f)
