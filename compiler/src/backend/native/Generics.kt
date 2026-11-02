@@ -23,7 +23,14 @@ fun compileGenerics(p00: Program): String {
         val args = args0.map { canon(flat(it)) }
         val m = mangle(n, args)
         generic[n]?.let { cd -> if (m !in inst) { origin[m] = n to args; inst[m] = Subst(cd.typeParams.zip(args).toMap()).cls(cd, m) } }
-        genericIfaces[n]?.let { d -> if (m !in ifaceInst) { origin[m] = n to args; ifaceInst[m] = Subst(d.typeParams.zip(args).toMap()).iface(d, m) } }
+        genericIfaces[n]?.let { d -> if (m !in ifaceInst) {
+            origin[m] = n to args
+            val sub = Subst(d.typeParams.zip(args).toMap())
+            val i0 = sub.iface(d, m)
+            ifaceInst[m] = i0
+            // Super-interfaces of the instance (generic ones instantiated with the substituted arguments).
+            ifaceInst[m] = InterfaceD(m, i0.methods, i0.line, emptyList(), d.supers.map { s -> IfaceSuperArgs.map[n]?.get(s)?.let { ensure(s, it.map { a -> sub.ty(a) }) } ?: s })
+        } }
         return m
     }
     fun fixSupers(c: ClassD): ClassD = if (c.superTypeArgs.isEmpty()) c else
@@ -38,7 +45,11 @@ fun compileGenerics(p00: Program): String {
             if (inst.size == before) break
         }
         cls = cls + inst.values
-        val prog = Program(p0.funs, cls, p0.ifaces.filter { it.typeParams.isEmpty() } + ifaceInst.values + extraIfaces.values, p0.globals)
+        val plainIfaces = p0.ifaces.filter { it.typeParams.isEmpty() }.map { d ->
+            val sa = IfaceSuperArgs.map[d.name] ?: return@map d
+            InterfaceD(d.name, d.methods, d.line, d.typeParams, d.supers.map { s -> sa[s]?.let { ensure(s, it) } ?: s })
+        }
+        val prog = Program(p0.funs, cls, plainIfaces + ifaceInst.values + extraIfaces.values, p0.globals)
         try {
             return NativeBackend(prog, generic, origin, genericIfaces).generate()
         } catch (n: NeedClass) {

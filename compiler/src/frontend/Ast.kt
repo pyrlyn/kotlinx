@@ -101,6 +101,11 @@ class ClassD(val name: String, val fields: List<FieldD>, val supers: List<String
 }
 class InterfaceD(val name: String, val methods: List<FunD>, val line: Int, val typeParams: List<String> = emptyList(),
                  /** All super-interfaces (transitively), filled by the parser. */ val supers: List<String> = emptyList())
+/**
+ * Type arguments of generic super-interfaces (direct and inherited) by interface name: `interface B : A<String>` ->
+ * "B" -> {"A": [String]}. Generics instantiates `A$String` and points B's super at it.
+ */
+object IfaceSuperArgs { val map = HashMap<String, Map<String, List<TypeRef>>>() }
 /** `globals`: top-level properties, initialized in declaration order before `main`. */
 class Program(val funs: List<FunD>, val classes: List<ClassD>, val ifaces: List<InterfaceD>, val globals: List<VarS> = emptyList(),
               /** Class name -> (companion object name, names the companion object declares, incl. its own name). */

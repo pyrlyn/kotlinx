@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2688,
-  "UNSUPPORTED": 2803
+  "PASS": 2701,
+  "UNSUPPORTED": 2790
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -979,8 +979,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/primitiveArrays.kt"
   },
   "box/box/arrays/stdlib.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "unknown interface Iterator (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/stdlib.kt"
   },
@@ -1977,14 +1977,13 @@
    "upstream": "compiler/testData/codegen/box/bridges/delegation.kt"
   },
   "box/box/bridges/delegationComplex.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/delegationComplex.kt"
   },
   "box/box/bridges/delegationComplexWithList.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "interfaces",
+   "detail": "unknown interface List (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/delegationComplexWithList.kt"
   },
@@ -1996,7 +1995,7 @@
   },
   "box/box/bridges/diamond.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/diamond.kt"
   },
@@ -2219,7 +2218,7 @@
   },
   "box/box/bridges/kt12416.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at ',')",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/kt12416.kt"
   },
@@ -2261,8 +2260,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/kt318.kt"
   },
   "box/box/bridges/kt42137.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/kt42137.kt"
   },
@@ -2394,8 +2393,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/propertyAccessorsWithoutBody.kt"
   },
   "box/box/bridges/propertyDiamond.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "other: unknown type K",
+   "detail": "unknown type K",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/propertyDiamond.kt"
   },
@@ -2418,8 +2417,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/propertySetter.kt"
   },
   "box/box/bridges/returnTypeSignature.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at ',')",
+   "category": "other: unknown type Collection<C>",
+   "detail": "unknown type Collection<C>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/returnTypeSignature.kt"
   },
@@ -2507,7 +2506,7 @@
   },
   "box/box/bridges/substitutionInSuperClass/enum.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/enum.kt"
   },
@@ -2695,7 +2694,7 @@
   },
   "box/box/bridges/twoParentsWithDifferentMethodsTwoBridges2.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at ',')",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithDifferentMethodsTwoBridges2.kt"
   },
@@ -2993,8 +2992,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/noNameClashForReferencesToSameFunction.kt"
   },
   "box/box/callableReference/adaptedReferences/referenceToFakeOverrideWithTypeParameter.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "other: unknown type S",
+   "detail": "unknown type S",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/referenceToFakeOverrideWithTypeParameter.kt"
   },
@@ -4957,9 +4956,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToInOutTypeParameters.kt"
   },
   "box/box/classDelegation/delegationToInTypeParameter.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToInTypeParameter.kt"
   },
   "box/box/classDelegation/delegationToOutTypeParameter.kt": {
@@ -4968,8 +4966,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToOutTypeParameter.kt"
   },
   "box/box/classDelegation/delegationToStarProjectedType.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToStarProjectedType.kt"
   },
@@ -4984,9 +4982,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/delegationToTypeParameterWithRecursiveBond.kt"
   },
   "box/box/classDelegation/generic.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classDelegation/generic.kt"
   },
   "box/box/classDelegation/hiddenDelegateAndLateinitVar.kt": {
@@ -5293,9 +5290,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1247.kt"
   },
   "box/box/classes/kt1345.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt1345.kt"
   },
   "box/box/classes/kt1439.kt": {
@@ -5373,8 +5369,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2384.kt"
   },
   "box/box/classes/kt2390.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at ',')",
+   "category": "other: unknown type Collection<Project>",
+   "detail": "unknown type Collection<Project>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt2390.kt"
   },
@@ -8197,8 +8193,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/emptyDoWhile.kt"
   },
   "box/box/controlStructures/emptyFor.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ';')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/emptyFor.kt"
   },
@@ -12446,14 +12442,14 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/implementedByFake.kt"
   },
   "box/box/defaultArguments/implementedByFake2.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "unknown prop (stdlib API / unsupported decl)",
+   "detail": "unknown name 'prop'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/implementedByFake2.kt"
   },
   "box/box/defaultArguments/implementedByFake3.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
+   "category": "unknown prop (stdlib API / unsupported decl)",
+   "detail": "unknown name 'prop'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/implementedByFake3.kt"
   },
@@ -13434,14 +13430,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/varInInnerClass.kt"
   },
   "box/box/delegation/delegatedAnonymousObject_noParametersOnDelegate.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at ',')",
+   "category": "property accessors / delegation",
+   "detail": "expected end of statement (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegatedAnonymousObject_noParametersOnDelegate.kt"
   },
   "box/box/delegation/delegatedAnonymousObject_someParametersOnDelegate.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at ',')",
+   "category": "other: unknown type T4",
+   "detail": "unknown type T4",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegatedAnonymousObject_someParametersOnDelegate.kt"
   },
@@ -13548,8 +13544,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationToIntersectionType.kt"
   },
   "box/box/delegation/delegationToIntersectionType3.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "property accessors / delegation",
+   "detail": "expected end of statement (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationToIntersectionType3.kt"
   },
@@ -13605,9 +13601,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/kt44199.kt"
   },
   "box/box/delegation/kt8154.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/kt8154.kt"
   },
   "box/box/delegation/nestedNameClash.kt": {
@@ -15255,9 +15250,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/classMethodCallExtensionSuper.kt"
   },
   "box/box/extensionFunctions/defaultMethodInterfaceCallExtensionSuper.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/defaultMethodInterfaceCallExtensionSuper.kt"
   },
   "box/box/extensionFunctions/delegatedPropertyWithExtensionType.kt": {
@@ -15307,8 +15301,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsAnonymous.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAsSupertype.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "other syntax (at '.')",
+   "detail": "unexpected top-level token (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsSupertype.kt"
   },
@@ -15784,7 +15778,7 @@
   },
   "box/box/fakeOverride/kt49371.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fakeOverride/kt49371.kt"
   },
@@ -16591,8 +16585,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/kt46512_indyFunInterfaceOverCallableReference.kt"
   },
   "box/box/funInterface/kt46908_functionSupertype.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "interfaces",
+   "detail": "fun interfaces with super-interfaces are not supported (at 'Foo')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/kt46908_functionSupertype.kt"
   },
@@ -16681,7 +16675,7 @@
   },
   "box/box/funInterface/primitiveConversions.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "detail": "fun interfaces with super-interfaces are not supported (at 'GenericCharToAny')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/primitiveConversions.kt"
   },
@@ -16692,8 +16686,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/receiverEvaluatedOnce.kt"
   },
   "box/box/funInterface/samConstructorExplicitInvocation.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "interfaces",
+   "detail": "fun interfaces with super-interfaces are not supported (at 'C')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/samConstructorExplicitInvocation.kt"
   },
@@ -17020,7 +17014,7 @@
   },
   "box/box/functions/delegatedPropertyWithMultipleOverriddens_generics.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
+   "detail": "cannot infer type parameter E6 of MyArrayList; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/delegatedPropertyWithMultipleOverriddens_generics.kt"
   },
@@ -17848,9 +17842,8 @@
    "upstream": "compiler/testData/codegen/box/increment/prefixNullableIncrement.kt"
   },
   "box/box/inference/approximateNonTopLevelCapturedTypes.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/approximateNonTopLevelCapturedTypes.kt"
   },
   "box/box/inference/builderInferenceLeakingVariable.kt": {
@@ -20532,14 +20525,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/genericOverrideGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/genericOverrideSpecialized.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "strings / templates",
+   "detail": "cannot convert IBar to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/genericOverrideSpecialized.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/genericOverrideSpecializedGeneric.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "strings / templates",
+   "detail": "cannot convert IBar to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/genericOverrideSpecializedGeneric.kt"
   },
@@ -20787,15 +20780,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxUnboxOfInlineClassForCapturedVarsGeneric.kt"
   },
   "box/box/inlineClasses/bridgeForFunctionReturningInlineClass.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeForFunctionReturningInlineClass.kt"
   },
   "box/box/inlineClasses/bridgeForFunctionReturningInlineClassGeneric.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeForFunctionReturningInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/bridgeGenerationWithInlineClassOverAny.kt": {
@@ -21238,15 +21229,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingAfterAssertionOperatorGeneric.kt"
   },
   "box/box/inlineClasses/checkBoxingForComplexClassHierarchy.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingForComplexClassHierarchy.kt"
   },
   "box/box/inlineClasses/checkBoxingForComplexClassHierarchyGeneric.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/checkBoxingForComplexClassHierarchyGeneric.kt"
   },
   "box/box/inlineClasses/checkBoxingForNonLocalAndLabeledReturns.kt": {
@@ -23305,15 +23294,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680aGeneric.kt"
   },
   "box/box/inlineClasses/kt38680b.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680b.kt"
   },
   "box/box/inlineClasses/kt38680bGeneric.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680bGeneric.kt"
   },
   "box/box/inlineClasses/kt44141.kt": {
@@ -23382,7 +23369,7 @@
   },
   "box/box/inlineClasses/kt51157.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt51157.kt"
   },
@@ -25215,13 +25202,13 @@
   },
   "box/box/interfaceCallsNCasts/diamond.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/diamond.kt"
   },
   "box/box/interfaceCallsNCasts/finalMethod.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
+   "category": "unknown defaultX (stdlib API / unsupported decl)",
+   "detail": "unknown function 'defaultX'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/finalMethod.kt"
   },
@@ -25232,8 +25219,8 @@
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/interface0.kt"
   },
   "box/box/interfaceCallsNCasts/kt83308.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "other: expected identifier (at '",
+   "detail": "expected identifier (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/kt83308.kt"
   },
@@ -28888,8 +28875,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/augmentedAssignmentWithArrayLHS.kt"
   },
   "box/box/operatorConventions/compareTo/comparable.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "interfaces",
+   "detail": "unknown interface Comparable (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/compareTo/comparable.kt"
   },
@@ -35471,8 +35458,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/lambdaWrongReturnType.kt"
   },
   "box/box/regressions/noAssertionsWhenNullableTypeParameterReplacedWithIntersectionType.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/noAssertionsWhenNullableTypeParameterReplacedWithIntersectionType.kt"
   },
@@ -35523,8 +35510,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/resolvedCallForGetOperator.kt"
   },
   "box/box/regressions/supertypeDepth.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected A, found B",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/supertypeDepth.kt"
   },
@@ -35708,7 +35695,7 @@
   },
   "box/box/reified/overrideResolution.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at ',')",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/overrideResolution.kt"
   },
@@ -36121,8 +36108,8 @@
    "upstream": "compiler/testData/codegen/box/sealed/delegatingConstructor.kt"
   },
   "box/box/sealed/kt49752.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "category": "data classes",
+   "detail": "nested declarations are only supported in classes (at 'data')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sealed/kt49752.kt"
   },
@@ -36440,7 +36427,7 @@
   },
   "box/box/smartCasts/genericInheritanceWithNonGenericNoAmbiguity.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/genericInheritanceWithNonGenericNoAmbiguity.kt"
   },
@@ -36613,8 +36600,8 @@
    "upstream": "compiler/testData/codegen/box/specialBuiltins/bridgeNotEmptyMap.kt"
   },
   "box/box/specialBuiltins/bridges.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
+   "category": "interfaces",
+   "detail": "unknown interface Collection (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/specialBuiltins/bridges.kt"
   },
@@ -37144,13 +37131,13 @@
   },
   "box/box/super/diamondWithGenericParameterType.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/diamondWithGenericParameterType.kt"
   },
   "box/box/super/diamondWithGenericReturnType.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '{')",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/diamondWithGenericReturnType.kt"
   },
@@ -37826,7 +37813,7 @@
   },
   "box/box/traits/interfaceWithNonAbstractFunIndirectGeneric.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/interfaceWithNonAbstractFunIndirectGeneric.kt"
   },
@@ -37848,8 +37835,8 @@
    "upstream": "compiler/testData/codegen/box/traits/kt2260.kt"
   },
   "box/box/traits/kt2399.kt": {
-   "category": "generics",
-   "detail": "generic super-interfaces are not supported (at ',')",
+   "category": "other: unknown type Collection<ProjectInfo>",
+   "detail": "unknown type Collection<ProjectInfo>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt2399.kt"
   },
@@ -37937,7 +37924,7 @@
   },
   "box/box/traits/traitImplGenericDelegation.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "detail": "default methods inherited from a generic super-interface are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/traitImplGenericDelegation.kt"
   },
@@ -38322,7 +38309,7 @@
   },
   "box/box/typealias/abbreviationWithCapturedType.kt": {
    "category": "generics",
-   "detail": "generic super-interfaces are not supported (at '",
+   "detail": "generic type aliases are not supported (at 'typealias')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/abbreviationWithCapturedType.kt"
   },

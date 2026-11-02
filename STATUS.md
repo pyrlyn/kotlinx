@@ -38,6 +38,9 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   value equality for primitives; strings and boxed `Any` values are refused (interning/box caching differ).
 - Multi-field value classes (`+FullValueClasses`): compiled like data classes (boxed, structural equals/hashCode/
   toString); recursive and self-bounded multi-field value classes are refused.
+- Generic super-interfaces of interfaces (`interface B : A<String>`, `interface I2<T> : I<T>`): inherited methods are
+  substituted, the instance `A$String` becomes a super of B and of implementing classes. Inherited default methods from
+  a generic super-interface are still unsupported.
 - Not yet: user generics, function types and general lambdas, inheritance from classes (open/abstract/sealed), objects and
   companions, enums, inline/value classes, extension and operator functions, default/named arguments, exceptions,
   labeled jumps. `compiler/tests/upstream/report.md` ranks the missing features by upstream test count.
