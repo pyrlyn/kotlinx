@@ -1083,6 +1083,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is NameE -> {
                 val l = lookup(target.n)
                 if (l == null && owner != null && (owner!!.index(target.n) >= 0 || "\$set\$${target.n}" in owner!!.methods)) return assign(MemberE(NameE("this"), target.n, false), value)
+                // Inside a member extension: a property of the extension receiver (its field or setter).
+                if (l == null && (lookup("\$this_ext")?.t as? Ty.Cls)?.let { classes[it.name] }?.let { it.index(target.n) >= 0 || "\$set\$${target.n}" in it.methods } == true)
+                    return assign(MemberE(NameE("\$this_ext").also { it.line = target.line }, target.n, false).also { it.line = target.line }, value)
                 if (l == null && "\$tset\$${target.n}" in funDecls) { releaseIfOwned(genNamedCall("\$tset\$${target.n}", CallE(NameE("\$tset\$${target.n}"), emptyList(), listOf(value), null).also { it.line = line })); return }
                 if (l == null) fail("unknown variable '${target.n}'")
                 if (!l.isVar) fail("val '${target.n}' cannot be reassigned")
@@ -1096,6 +1099,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             is MemberE -> {
                 val r = genExpr(target.recv)
+                // Extension property setters: member extension `$set$x` of a receiver in scope, or top-level `ext$R$$set$x`.
+                val esm = "\$set\$${target.n}"
+                if (!hasMember(r.t, target.n)) {
+                    if (hasMext(esm, r.t)) { releaseIfOwned(method(r, esm, CallE(NameE(esm), emptyList(), listOf(value), null).also { it.line = line })); return }
+                    extFuns[esm]?.firstOrNull { extMatches(r.t, it.params[0].type, it.typeParams) }?.let { f ->
+                        releaseIfOwned(withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), emptyList(), listOf(x, value), null).also { it.line = line }) }); return
+                    }
+                }
                 val ct = r.t as? Ty.Cls ?: fail("cannot assign to ${r.t}.${target.n}")
                 val ci = classes.getValue(ct.name)
                 val sm = "\$set\$${target.n}"
@@ -1757,6 +1768,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (ci.index(n) < 0 && pm in ci.methods) { val v = callMethod(r, ci, pm, CallE(NameE(pm), emptyList(), emptyList(), null)); releaseIfOwned(r); return v }
         }
         (r.t as? Ty.Iface)?.let { t -> ifaces[t.name]?.takeIf { pm in it.methods }?.let { ii -> val v = callIface(r, ii, pm, CallE(NameE(pm), emptyList(), emptyList(), null).also { it.line = line }); releaseIfOwned(r); return v } }
+        if (!hasMember(r.t, n) && hasMext(pm, r.t)) return method(r, pm, CallE(NameE(pm), emptyList(), emptyList(), null).also { it.line = line })
         if (!hasMember(r.t, n)) extFuns[pm]?.firstOrNull { extMatches(r.t, it.params[0].type, it.typeParams) }?.let { f ->
             return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), emptyList(), listOf(x), null).also { it.line = line }) }
         }
@@ -2600,6 +2612,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val c = classes[t.name] ?: return false
         return if (call) n in c.methods else c.index(n) >= 0 || "\$prop\$$n" in c.methods
     }
+    /** A member extension `mext$m` applicable to [t] exists on the enclosing class or the implicit receiver `this`. */
+    private fun hasMext(m: String, t: Ty): Boolean {
+        val k = "mext\$$m"
+        if (owner?.methods?.get(k)?.let { extMatches(t, it.params[0].type, emptyList()) } == true) return true
+        val rt = lookup("this")?.t ?: return false
+        if (rt is Ty.Cls && rt.name != owner?.name) return classes[rt.name]?.methods?.get(k)?.let { extMatches(t, it.params[0].type, emptyList()) } == true
+        if (rt is Ty.Iface) return ifaces[rt.name]?.methods?.get(k)?.params?.firstOrNull() == t
+        return false
+    }
+
     private fun hasMember(t: Ty, n: String): Boolean = when (t) {
         is Ty.Cls -> classes.getValue(t.name).let { n in it.methods || it.index(n) >= 0 }
         is Ty.Iface -> ifaces[t.name]?.methods?.containsKey(n) == true

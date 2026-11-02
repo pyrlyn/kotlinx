@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2614,
-  "UNSUPPORTED": 2877
+  "PASS": 2629,
+  "UNSUPPORTED": 2862
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -3383,8 +3383,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/kt44636_localExtension.kt"
   },
   "box/box/callableReference/bound/multiCase.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "generics",
+   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiCase.kt"
   },
@@ -4334,8 +4334,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/enumNameOrdinal.kt"
   },
   "box/box/callableReference/property/extensionProperty.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionProperty.kt"
   },
@@ -4376,8 +4376,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyWithExtensionReceiver.kt"
   },
   "box/box/callableReference/property/extensionPropertyWithExtensionType.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyWithExtensionType.kt"
   },
@@ -4434,8 +4434,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt14330.kt"
   },
   "box/box/callableReference/property/kt14330_2.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt14330_2.kt"
   },
@@ -4507,8 +4507,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMember.kt"
   },
   "box/box/callableReference/property/simpleMutableExtension.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMutableExtension.kt"
   },
@@ -7310,7 +7310,7 @@
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/boundExtensionReceiver.kt": {
    "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "detail": "delegated var properties need an explicit type (at 'makeReceiver')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/boundExtensionReceiver.kt"
   },
@@ -7417,8 +7417,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/shapes.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/simple.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "other syntax (at '\"...\"')",
+   "detail": "expected identifier (at '\"...\"')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/simple.kt"
   },
@@ -11861,15 +11861,14 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/changingVarParam.kt"
   },
   "box/box/dataClasses/components/kt49812.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "other: unknown type Result<Boolean>",
+   "detail": "unknown type Result<Boolean>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/components/kt49812.kt"
   },
   "box/box/dataClasses/components/kt49936.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/components/kt49936.kt"
   },
   "box/box/dataClasses/copy/constructorWithDefaultParam.kt": {
@@ -12722,20 +12721,20 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt49793_object.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/kt79979_memberExtension.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "extension properties need a getter (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/kt79979_memberExtension.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/memberExtensionWithBoundReceiver.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "extension properties need a getter (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/memberExtensionWithBoundReceiver.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/memberExtensionWithBoundReceiverSameType.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "extension properties need a getter (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/memberExtensionWithBoundReceiverSameType.kt"
   },
@@ -12846,14 +12845,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/initializeContainerOfTopLevelProperties.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndImportFromObject.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "unknown $dg$result (stdlib API / unsupported decl)",
+   "detail": "unknown name '$dg$result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndImportFromObject.kt"
   },
   "box/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndLocalDelegatedProperty.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "other: no field result in O",
+   "detail": "no field result in O",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToFinalProperty/memberExtensionPropertyAndLocalDelegatedProperty.kt"
   },
@@ -13550,8 +13549,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationExtFun2.kt"
   },
   "box/box/delegation/delegationExtProp.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "extension properties need a getter (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/delegationExtProp.kt"
   },
@@ -15407,8 +15406,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionNestedInExtensionFunction.kt"
   },
   "box/box/extensionFunctions/extensionFunctionOverride.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "extension properties need a getter (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionOverride.kt"
   },
@@ -15530,8 +15529,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt4228.kt"
   },
   "box/box/extensionFunctions/kt475.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt475.kt"
   },
@@ -15609,8 +15608,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/virtual.kt"
   },
   "box/box/extensionProperties/accessorForPrivateSetter.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "type inference / mismatch",
+   "detail": "cannot assign to Int.foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/accessorForPrivateSetter.kt"
   },
@@ -15620,9 +15619,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/contextPropertyInInterface.kt"
   },
   "box/box/extensionProperties/extensionMemberWithTypeParameter.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionMemberWithTypeParameter.kt"
   },
   "box/box/extensionProperties/extensionPropertyDelegated.kt": {
@@ -15637,15 +15635,14 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyDifferentReceiver.kt"
   },
   "box/box/extensionProperties/extensionPropertyInInnerClass.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "loops / labels",
+   "detail": "unknown label this@Outer (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyInInnerClass.kt"
   },
   "box/box/extensionProperties/extensionPropertyInNestedClass.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyInNestedClass.kt"
   },
   "box/box/extensionProperties/extensionPropertyInSAMInterface.kt": {
@@ -15691,8 +15688,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithInline.kt"
   },
   "box/box/extensionProperties/extensionProperyWithExtensionType.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "lambdas / function types / references",
+   "detail": "typed parameters in a lambda with receiver are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionProperyWithExtensionType.kt"
   },
@@ -15708,45 +15705,39 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/genericValForPrimitiveType.kt"
   },
   "box/box/extensionProperties/genericVarForPrimitiveType.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "other: unsupported call",
+   "detail": "unsupported call",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/genericVarForPrimitiveType.kt"
   },
   "box/box/extensionProperties/inClass.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/inClass.kt"
   },
   "box/box/extensionProperties/inClassLongTypeInReceiver.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/inClassLongTypeInReceiver.kt"
   },
   "box/box/extensionProperties/inClassWithGetter.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/inClassWithGetter.kt"
   },
   "box/box/extensionProperties/inClassWithPrivateGetter.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/inClassWithPrivateGetter.kt"
   },
   "box/box/extensionProperties/inClassWithPrivateSetter.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/inClassWithPrivateSetter.kt"
   },
   "box/box/extensionProperties/inClassWithSetter.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/inClassWithSetter.kt"
   },
   "box/box/extensionProperties/kt46952.kt": {
@@ -15755,21 +15746,19 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/kt46952.kt"
   },
   "box/box/extensionProperties/kt9897.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "other: overloads are not supported: Test.mext$$prop$someProperty",
+   "detail": "overloads are not supported: Test.mext$$prop$someProperty",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/kt9897.kt"
   },
   "box/box/extensionProperties/kt9897_topLevel.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/kt9897_topLevel.kt"
   },
   "box/box/extensionProperties/nonAbstractInInterface.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/nonAbstractInInterface.kt"
   },
   "box/box/extensionProperties/propertyWithExtensionNestedType.kt": {
@@ -15784,9 +15773,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/topLevel.kt"
   },
   "box/box/extensionProperties/topLevelLongTypeInReceiver.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/topLevelLongTypeInReceiver.kt"
   },
   "box/box/fakeOverride/diamondFunction.kt": {
@@ -18943,14 +18931,14 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ImmutableProperties.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutableExtensionPropertiesMaterializeCase.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutableExtensionPropertiesMaterializeCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutableExtensionPropertiesYieldCase.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutableExtensionPropertiesYieldCase.kt"
   },
@@ -18985,8 +18973,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/ExtensionFunctions.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/ExtensionProperties.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/ExtensionProperties.kt"
   },
@@ -20193,9 +20181,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/UIntSafeAsInt.kt"
   },
   "box/box/inlineClasses/annotatedMemberExtensionProperty.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/annotatedMemberExtensionProperty.kt"
   },
   "box/box/inlineClasses/annotatedMemberExtensionPropertyGeneric.kt": {
@@ -22182,15 +22169,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/extLambdaInInlineClassFunGeneric.kt"
   },
   "box/box/inlineClasses/fieldNameClash.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/fieldNameClash.kt"
   },
   "box/box/inlineClasses/fieldNameClashGeneric.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/fieldNameClashGeneric.kt"
   },
   "box/box/inlineClasses/funInterface/argumentIC.kt": {
@@ -22906,8 +22891,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/kt38337Generic.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberExtValDelegationWithInlineClassParameterTypes.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "extension properties need a getter (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberExtValDelegationWithInlineClassParameterTypes.kt"
   },
@@ -22918,8 +22903,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberExtValDelegationWithInlineClassParameterTypesGeneric.kt"
   },
   "box/box/inlineClasses/interfaceDelegation/memberExtVarDelegationWithInlineClassParameterTypes.kt": {
-   "category": "interfaces",
-   "detail": "interface properties need a type (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "extension properties need a getter (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/interfaceDelegation/memberExtVarDelegationWithInlineClassParameterTypes.kt"
   },
@@ -25024,8 +25009,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/innerWithDefaultArgument.kt"
   },
   "box/box/innerNested/innerWithDefaultArgumentGenericExtensionProperty.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "generics",
+   "detail": "inner classes of generic classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/innerWithDefaultArgumentGenericExtensionProperty.kt"
   },
@@ -25842,7 +25827,7 @@
   },
   "box/box/labels/propertyAccessorInnerExtensionFun.kt": {
    "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "detail": "unknown property Int.this@getter",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessorInnerExtensionFun.kt"
   },
@@ -25853,8 +25838,8 @@
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessorObject.kt"
   },
   "box/box/labels/propertyInClassAccessor.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "unknown name 'this@innerGetter'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/labels/propertyInClassAccessor.kt"
   },
@@ -26286,8 +26271,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/inLocalExtensionFunction.kt"
   },
   "box/box/localClasses/inLocalExtensionProperty.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "unknown this@a (stdlib API / unsupported decl)",
+   "detail": "unknown name 'this@a'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/inLocalExtensionProperty.kt"
   },
@@ -28269,8 +28254,8 @@
    "upstream": "compiler/testData/codegen/box/objectExpression/multipleAnonymousObjectsInsideInlineFunction.kt"
   },
   "box/box/objectIntrinsics/objects.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "objects / companion objects",
+   "detail": "unknown type Int.Companion",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objectIntrinsics/objects.kt"
   },
@@ -28522,8 +28507,8 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/protectedCompanionObjectAccessedFromNestedClass.kt"
   },
   "box/box/objects/compoundAssignmentToArrayAccessToExtensionPropertyImportedFromObject.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "other: no field x in A",
+   "detail": "no field x in A",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToArrayAccessToExtensionPropertyImportedFromObject.kt"
   },
@@ -28534,8 +28519,8 @@
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToArrayAccessToPropertyImportedFromObject.kt"
   },
   "box/box/objects/compoundAssignmentToExtensionPropertyImportedFromObject.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "property accessors / delegation",
+   "detail": "extension properties with a setter need an explicit type (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/compoundAssignmentToExtensionPropertyImportedFromObject.kt"
   },
@@ -30179,8 +30164,8 @@
    "upstream": "compiler/testData/codegen/box/properties/fieldSimple.kt"
   },
   "box/box/properties/generalAccess.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/generalAccess.kt"
   },
@@ -30337,8 +30322,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt4252_2.kt"
   },
   "box/box/properties/kt4340.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "other: unknown property Int.times3",
+   "detail": "unknown property Int.times3",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt4340.kt"
   },
@@ -30645,8 +30630,8 @@
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/varClass.kt"
   },
   "box/box/propertyCallableReference/varExtension.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'set')",
+   "category": "other: unknown method $Fn$A$Int.set()",
+   "detail": "unknown method $Fn$A$Int.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/varExtension.kt"
   },
@@ -35955,8 +35940,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt3430.kt"
   },
   "box/box/safeCall/kt4733.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "body properties need an initializer (at '.')",
+   "category": "other: overloads are not supported: Test.mext$$prop$foo",
+   "detail": "overloads are not supported: Test.mext$$prop$foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/kt4733.kt"
   },
