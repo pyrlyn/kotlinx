@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2813,
-  "UNSUPPORTED": 2678
+  "PASS": 2815,
+  "UNSUPPORTED": 2676
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -5578,7 +5578,7 @@
   },
   "box/box/classes/nestedInitBlocksWithLambda.kt": {
    "category": "property accessors / delegation",
-   "detail": "secondary constructors must delegate to this(...) (at '",
+   "detail": "a parameterless constructor next to other non-delegating constructors is not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/nestedInitBlocksWithLambda.kt"
   },
@@ -17858,9 +17858,8 @@
    "upstream": "compiler/testData/codegen/box/inference/coerctionToUnitForLastExpressionWithStarProjection.kt"
   },
   "box/box/inference/eagerLambdaAnalysisOnConstructorCall.kt": {
-   "category": "property accessors / delegation",
-   "detail": "secondary constructors must delegate to this(...) (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/eagerLambdaAnalysisOnConstructorCall.kt"
   },
   "box/box/inference/eagerLambdaAnalysisSamAndLambda.kt": {
@@ -24759,8 +24758,8 @@
    "upstream": "compiler/testData/codegen/box/innerClass/multipleModules.kt"
   },
   "box/box/innerClass/noPrimaryConstructor.kt": {
-   "category": "property accessors / delegation",
-   "detail": "secondary constructors must delegate to this(...) (at '",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class Inner needs an outer instance (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/noPrimaryConstructor.kt"
   },
@@ -26008,8 +26007,8 @@
    "upstream": "compiler/testData/codegen/box/localClass/localHierarchy.kt"
   },
   "box/box/localClass/noPrimaryConstructor.kt": {
-   "category": "property accessors / delegation",
-   "detail": "secondary constructors must delegate to this(...) (at '",
+   "category": "class bodies / constructors",
+   "detail": "constructor Local expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/noPrimaryConstructor.kt"
   },
@@ -36051,9 +36050,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/accessToNestedObject.kt"
   },
   "box/box/secondaryConstructors/basicNoPrimaryManySinks.kt": {
-   "category": "property accessors / delegation",
-   "detail": "secondary constructors must delegate to this(...) (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/basicNoPrimaryManySinks.kt"
   },
   "box/box/secondaryConstructors/basicNoPrimaryOneSink.kt": {
@@ -36102,8 +36100,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/dataClasses.kt"
   },
   "box/box/secondaryConstructors/defaultArgs.kt": {
-   "category": "property accessors / delegation",
-   "detail": "secondary constructors must delegate to this(...) (at '",
+   "category": "other: unknown parameter 'arg2'",
+   "detail": "unknown parameter 'arg2'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/defaultArgs.kt"
   },
@@ -36129,7 +36127,7 @@
   },
   "box/box/secondaryConstructors/enums.kt": {
    "category": "property accessors / delegation",
-   "detail": "secondary constructors must delegate to this(...) (at '",
+   "detail": "a parameterless constructor next to other non-delegating constructors is not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/enums.kt"
   },
@@ -36150,8 +36148,8 @@
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/inlineIntoTwoConstructors.kt"
   },
   "box/box/secondaryConstructors/innerClasses.kt": {
-   "category": "property accessors / delegation",
-   "detail": "secondary constructors must delegate to this(...) (at '",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class A1 needs an outer instance (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/secondaryConstructors/innerClasses.kt"
   },
