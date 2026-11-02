@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2679,
-  "UNSUPPORTED": 2812
+  "PASS": 2688,
+  "UNSUPPORTED": 2803
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -3374,33 +3374,31 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiCase.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassAdaptedBoundReferences.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "category": "generics",
+   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassAdaptedBoundReferences.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassAndReferenceBoundReceivers.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "category": "strings / templates",
+   "detail": "unsupported callable reference String::render",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassAndReferenceBoundReceivers.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassBoundMemberReferences.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassBoundMemberReferences.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassBoundValuesOrder.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "category": "other: unsupported callable reference ::render",
+   "detail": "unsupported callable reference ::render",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassBoundValuesOrder.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassGenericUpperBoundReceiver.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassGenericUpperBoundReceiver.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassKFunctionReceiver.kt": {
@@ -3409,27 +3407,24 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassKFunctionReceiver.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassPrimitiveFieldLayouts.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassPrimitiveFieldLayouts.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassReceiverEvaluatedOnce.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassReceiverEvaluatedOnce.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassReflectionBoundValue.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "category": "other: equality of function values is not supported",
+   "detail": "equality of function values is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassReflectionBoundValue.kt"
   },
   "box/box/callableReference/bound/nestedMultiFieldValueClassBoundReceivers.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/nestedMultiFieldValueClassBoundReceivers.kt"
   },
   "box/box/callableReference/bound/nullReceiver.kt": {
@@ -16272,8 +16267,8 @@
    "upstream": "compiler/testData/codegen/box/fp/toBitsZeroAndNanFloat.kt"
   },
   "box/box/fullValueClasses/basicSyntax.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "category": "strings / templates",
+   "detail": "unknown method String.replace()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/basicSyntax.kt"
   },
@@ -16318,9 +16313,8 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/initializationOrderWithAbstractProperty.kt"
   },
   "box/box/fullValueClasses/inline.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/inline.kt"
   },
   "box/box/fullValueClasses/inner.kt": {
@@ -16329,20 +16323,19 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/inner.kt"
   },
   "box/box/fullValueClasses/interopWithInlineClasses.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/interopWithInlineClasses.kt"
   },
   "box/box/fullValueClasses/kt70461.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unexpected top-level token (at ':')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/kt70461.kt"
   },
   "box/box/fullValueClasses/lateinit.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "category": "modifiers (private/const/lateinit/...)",
+   "detail": "unexpected top-level token (at 'lateinit')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/lateinit.kt"
   },
@@ -16362,9 +16355,8 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/multiModuleRegularFromAbstractValue.kt"
   },
   "box/box/fullValueClasses/nestedEquals.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/nestedEquals.kt"
   },
   "box/box/fullValueClasses/nonFinal.kt": {
@@ -16411,13 +16403,13 @@
   },
   "box/box/fullValueClasses/recursionThroughNullableSingleFieldClass.kt": {
    "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "detail": "recursive value classes are not supported (A) (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/recursionThroughNullableSingleFieldClass.kt"
   },
   "box/box/fullValueClasses/recursive.kt": {
    "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "detail": "recursive value classes are not supported (B) (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/recursive.kt"
   },
@@ -16449,8 +16441,8 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/valueObject.kt"
   },
   "box/box/fullValueClasses/vararg.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "category": "other: overloads are not supported: f",
+   "detail": "overloads are not supported: f",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/vararg.kt"
   },
@@ -16643,9 +16635,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/kt79092.kt"
   },
   "box/box/funInterface/multiFieldValueClassCallableRefToFunInterface.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/multiFieldValueClassCallableRefToFunInterface.kt"
   },
   "box/box/funInterface/multimodule.kt": {
@@ -36854,8 +36845,8 @@
    "upstream": "compiler/testData/codegen/box/strictEquals/directEqualsCall.kt"
   },
   "box/box/strictEquals/fullValueClass.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "category": "other: unknown property Any.x",
+   "detail": "unknown property Any.x",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strictEquals/fullValueClass.kt"
   },
@@ -39111,8 +39102,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/expectActualMember.kt"
   },
   "box/box/versionOverloads/fullValueClassPrimaryConstructor.kt": {
-   "category": "inline/value classes",
-   "detail": "a value class needs exactly one property (at 'value')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Point expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/fullValueClassPrimaryConstructor.kt"
   },

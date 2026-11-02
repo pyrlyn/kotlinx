@@ -8,32 +8,32 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2812 |
-| PASS | 2679 |
+| UNSUPPORTED | 2803 |
+| PASS | 2688 |
 
-Kept in tree (re-runnable with `run.py`): 2679
+Kept in tree (re-runnable with `run.py`): 2688
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 241 |
-| generics | 222 |
+| strings / templates | 243 |
+| generics | 223 |
 | interfaces | 207 |
 | lambdas / function types / references | 145 |
 | operator/infix functions | 123 |
+| class bodies / constructors | 84 |
 | type inference / mismatch | 84 |
 | property accessors / delegation | 84 |
-| class bodies / constructors | 83 |
 | objects / companion objects | 67 |
 | type inference (expression bodies) | 45 |
-| inline/value classes | 43 |
+| inheritance (open/abstract/sealed) | 41 |
 | other: unknown type T | 40 |
-| inheritance (open/abstract/sealed) | 40 |
 | nullable types | 38 |
 | destructuring declarations | 30 |
 | other syntax (at ':') | 28 |
 | annotations | 27 |
+| inline/value classes | 24 |
 | other syntax (at ',') | 23 |
 | other: unknown type Number | 19 |
 | unknown x (stdlib API / unsupported decl) | 17 |
@@ -55,8 +55,8 @@ Kept in tree (re-runnable with `run.py`): 2679
 | unknown A (stdlib API / unsupported decl) | 10 |
 | types: UIntArray | 10 |
 | unknown Int (stdlib API / unsupported decl) | 10 |
+| modifiers (private/const/lateinit/...) | 10 |
 | other syntax (at 'inner') | 10 |
-| other: local declarations are only supported in function bodies | 10 |
 
 ## N/A reasons
 

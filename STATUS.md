@@ -36,6 +36,8 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   definite assignment is not checked.
 - Referential equality `===` / `!==`: pointer identity for class/interface/array/collection values and against null,
   value equality for primitives; strings and boxed `Any` values are refused (interning/box caching differ).
+- Multi-field value classes (`+FullValueClasses`): compiled like data classes (boxed, structural equals/hashCode/
+  toString); recursive and self-bounded multi-field value classes are refused.
 - Not yet: user generics, function types and general lambdas, inheritance from classes (open/abstract/sealed), objects and
   companions, enums, inline/value classes, extension and operator functions, default/named arguments, exceptions,
   labeled jumps. `compiler/tests/upstream/report.md` ranks the missing features by upstream test count.
