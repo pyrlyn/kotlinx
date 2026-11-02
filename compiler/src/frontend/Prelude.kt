@@ -254,6 +254,30 @@ private val EXC_USE = Regex("""\btry\b|\bassertFails|:\s*(Throwable|Exception|Er
  * Merges the prelude into [p] when the source may use it. Exception classes are included for programs with
  * `try` (or `assertFailsWith`); their presence switches the backend to catchable exceptions.
  */
+/** `Result<T>`: a success value or a failure exception (a class, not an inline value class). */
+const val RESULT = """
+class Result<T>(val value__: T?, val exc__: Throwable?) {
+    val isSuccess: Boolean get() = exc__ == null
+    val isFailure: Boolean get() = exc__ != null
+    fun getOrNull(): T? = if (exc__ == null) value__ else null
+    fun exceptionOrNull(): Throwable? = exc__
+    fun getOrThrow(): T { val e = exc__; if (e != null) throw e; return value__ as T }
+    fun getOrDefault(defaultValue: T): T = if (exc__ == null) value__ as T else defaultValue
+    fun <R> fold(onSuccess: (T) -> R, onFailure: (Throwable) -> R): R { val e = exc__; return if (e == null) onSuccess(value__ as T) else onFailure(e) }
+    override fun toString(): String = if (exc__ == null) "Success(" + value__ + ")" else "Failure(" + exc__ + ")"
+    override fun equals(other: Any?): Boolean = other is Result<*> && other.toString() == toString()
+    override fun hashCode(): Int = toString().hashCode()
+    companion object {
+        fun <T> success(value: T): Result<T> = Result<T>(value, null)
+        fun <T> failure(exception: Throwable): Result<T> = Result<T>(null, exception)
+    }
+}
+fun <T> runCatching(block: () -> T): Result<T> {
+    try { return Result<T>(block(), null) } catch (e: Throwable) { return Result<T>(null, e) }
+}
+"""
+private val RESULT_USE = Regex("""\bResult\b|\brunCatching\b""")
+
 /** `Pair`, `Triple` and `to`. */
 const val PAIRS = """
 data class Pair<A, B>(val first: A, val second: B) {
@@ -386,10 +410,10 @@ data class KClass(val simpleName: String?, val qualifiedName: String?) {
 private val KCLASS_USE = Regex("""::\s*class\b""")
 
 fun withPrelude(src: String, p: Program): Program {
-    val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val exc = EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
+    val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val result = RESULT_USE.containsMatchIn(src); val exc = result || EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
     val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src); val lz = LAZY_USE.containsMatchIn(src); val anyObj = ANY_OBJ_USE.containsMatchIn(src); val mm = MIN_MAX_USE.containsMatchIn(src); val el = EMPTY_LIST_USE.containsMatchIn(src); val mmod = MEMORY_MODEL_USE.containsMatchIn(src); val kcls = KCLASS_USE.containsMatchIn(src)
     if (!kcls && !ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon && !lz && !anyObj && !mm && !el && !mmod) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "") + (if (lz) LAZY else "") + (if (anyObj) ANY_OBJ else "") + (if (mm) MIN_MAX else "") + (if (el) EMPTY_LIST else "") + (if (mmod) MEMORY_MODEL else "") + (if (kcls) KCLASS else "")
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (result) RESULT else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "") + (if (lz) LAZY else "") + (if (anyObj) ANY_OBJ else "") + (if (mm) MIN_MAX else "") + (if (el) EMPTY_LIST else "") + (if (mmod) MEMORY_MODEL else "") + (if (kcls) KCLASS else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },
@@ -399,7 +423,8 @@ fun withPrelude(src: String, p: Program): Program {
 /** Primitive types that are boxed (into `AnyBox<T>` classes) when used as `Any`. */
 val ANY_BOXED = listOf("Int", "Long", "Double", "Float", "Boolean", "Char", "String", "UInt", "ULong", "Byte")
 // Nullable primitives (`Int?`) and safe calls (`a?.x` may yield one) are boxed like `Any`.
-private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UInt|ULong|Byte|Short|UByte|UShort)\?|\?\.""")
+// A nullable type parameter (`T?`, short names) may be instantiated with a primitive, which is boxed too.
+private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UInt|ULong|Byte|Short|UByte|UShort)\?|\?\.|\b[A-Z]\?|\bResult\b|\brunCatching\b""")
 
 /**
  * `Any`: a built-in interface with no methods that every class implements. Primitives and strings are boxed into

@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2748,
-  "UNSUPPORTED": 2743
+  "PASS": 2775,
+  "UNSUPPORTED": 2716
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -767,9 +767,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt1291.kt"
   },
   "box/box/arrays/kt238.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/kt238.kt"
   },
   "box/box/arrays/kt2997.kt": {
@@ -1215,9 +1214,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unchecked_cast3.kt"
   },
   "box/box/basics/unchecked_cast4.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ')')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/unchecked_cast4.kt"
   },
   "box/box/basics/unchecked_cast5.kt": {
@@ -1845,8 +1843,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/taintedValuesBox.kt"
   },
   "box/box/boxingOptimization/unsafeRemoving.kt": {
-   "category": "other: identity comparison of Int? and Int? is not supported",
-   "detail": "identity comparison of Int? and Int? is not supported",
+   "category": "lambdas / function types / references",
+   "detail": "lambdas returning a nullable Int are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/unsafeRemoving.kt"
   },
@@ -4656,9 +4654,8 @@
    "upstream": "compiler/testData/codegen/box/casts/genericLambdaBridgeCast.kt"
   },
   "box/box/casts/genericReturnCast.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/genericReturnCast.kt"
   },
   "box/box/casts/intersectionTypeMultipleBounds.kt": {
@@ -5079,8 +5076,8 @@
    "upstream": "compiler/testData/codegen/box/classes/classObjectNotOfEnum.kt"
   },
   "box/box/classes/classObjectWithPrivateGenericMember.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ')')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied method 'create' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/classObjectWithPrivateGenericMember.kt"
   },
@@ -5258,9 +5255,8 @@
    "upstream": "compiler/testData/codegen/box/classes/innerClass.kt"
   },
   "box/box/classes/kt1018.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected ArrayList<Int?>, found ArrayList<Int>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt1018.kt"
   },
   "box/box/classes/kt1157.kt": {
@@ -8254,9 +8250,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forIntArray.kt"
   },
   "box/box/controlStructures/forInArray/forNullableIntArray.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected ArrayList<Int?>, found ArrayList<Int>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forNullableIntArray.kt"
   },
   "box/box/controlStructures/forInArray/forPrimitiveIntArray.kt": {
@@ -11806,8 +11801,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/changingVarParam.kt"
   },
   "box/box/dataClasses/components/kt49812.kt": {
-   "category": "other: unknown type Result<Boolean>",
-   "detail": "unknown type Result<Boolean>",
+   "category": "generics",
+   "detail": "generic class Result used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/components/kt49812.kt"
   },
@@ -13329,8 +13324,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/provideDelegateByExtensionFunction.kt"
   },
   "box/box/delegatedProperty/provideDelegate/setValue.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ')' (at ',')",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/setValue.kt"
   },
@@ -18649,8 +18644,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingEnumerationType.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingExplicitlyGenericInnerClass.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ')')",
+   "category": "other: Inner expects 1 type arguments",
+   "detail": "Inner expects 1 type arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingExplicitlyGenericInnerClass.kt"
   },
@@ -18678,8 +18673,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnumerationType.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ExplicitlyGenericInnerClass.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ')')",
+   "category": "other: Inner expects 1 type arguments",
+   "detail": "Inner expects 1 type arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ExplicitlyGenericInnerClass.kt"
   },
@@ -19008,21 +19003,20 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionBreakedByNonBuilderInferenceSession.kt"
   },
   "box/box/inference/pcla/topDownCompletionWithThreeBuilderInferenceCalls.kt": {
-   "category": "strings / templates",
-   "detail": "no field builder1 in A1$String",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of A1; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionWithThreeBuilderInferenceCalls.kt"
   },
   "box/box/inference/pcla/topDownCompletionWithThreeBuilderInferenceCallsSameLevel.kt": {
-   "category": "strings / templates",
-   "detail": "no field builder1 in A1$String",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of A1; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionWithThreeBuilderInferenceCallsSameLevel.kt"
   },
   "box/box/inference/pcla/topDownCompletionWithTwoBuilderInferenceCalls.kt": {
-   "category": "strings / templates",
-   "detail": "no field builder1 in A1$String",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionWithTwoBuilderInferenceCalls.kt"
   },
   "box/box/inference/pcla/withoutAnnotation.kt": {
@@ -20379,15 +20373,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/boxStringGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/kt27586_1.kt": {
-   "category": "strings / templates",
-   "detail": "unknown type Result<String>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/kt27586_1.kt"
   },
   "box/box/inlineClasses/boxReturnValueInLambda/kt27586_2.kt": {
-   "category": "unknown runCatching (stdlib API / unsupported decl)",
-   "detail": "unknown function 'runCatching'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueInLambda/kt27586_2.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/boxReturnValueInDefaultMethod.kt": {
@@ -21122,7 +21114,7 @@
   },
   "box/box/inlineClasses/callableReferences/let/result.kt": {
    "category": "strings / templates",
-   "detail": "unknown type Result<String>",
+   "detail": "type mismatch: expected $Fn$CPointer$Unit, found $Fn$Result$String$Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/let/result.kt"
   },
@@ -22109,9 +22101,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/argumentICGeneric2.kt"
   },
   "box/box/inlineClasses/funInterface/argumentResult.kt": {
-   "category": "other: unknown type Result<Boolean>",
-   "detail": "unknown type Result<Boolean>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/argumentResult.kt"
   },
   "box/box/inlineClasses/funInterface/kt51121.kt": {
@@ -22151,9 +22142,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/returnICGeneric2.kt"
   },
   "box/box/inlineClasses/funInterface/returnResult.kt": {
-   "category": "other: unknown type Result<Boolean>",
-   "detail": "unknown type Result<Boolean>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/funInterface/returnResult.kt"
   },
   "box/box/inlineClasses/funInterfaceDoubleSuffux.kt": {
@@ -23274,15 +23264,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt38680bGeneric.kt"
   },
   "box/box/inlineClasses/kt44141.kt": {
-   "category": "other: unknown type Result<Int>",
-   "detail": "unknown type Result<Int>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt44141.kt"
   },
   "box/box/inlineClasses/kt44867.kt": {
-   "category": "strings / templates",
-   "detail": "unknown type Result<String>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt44867.kt"
   },
   "box/box/inlineClasses/kt44978.kt": {
@@ -23301,8 +23289,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt45084Generic.kt"
   },
   "box/box/inlineClasses/kt45991.kt": {
-   "category": "other: unknown type Result<Int>",
-   "detail": "unknown type Result<Int>",
+   "category": "lambdas / function types / references",
+   "detail": "cannot infer the type of lambda parameter 'res'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt45991.kt"
   },
@@ -23421,9 +23409,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/noAssertionsOnInlineClassBasedOnNullableType.kt"
   },
   "box/box/inlineClasses/noAssertionsOnInlineClassBasedOnNullableTypeGeneric.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found CPointer",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/noAssertionsOnInlineClassBasedOnNullableTypeGeneric.kt"
   },
   "box/box/inlineClasses/nullableEqeqNonNull.kt": {
@@ -23684,39 +23671,37 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/removeInInlineCollectionOfInlineClassAsInt.kt"
   },
   "box/box/inlineClasses/result/directCall1.kt": {
-   "category": "other: unknown type Result<Any>",
-   "detail": "unknown type Result<Any>",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Result$Any, found Result$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/directCall1.kt"
   },
   "box/box/inlineClasses/result/directCall2.kt": {
-   "category": "other: unknown type Result<Any>",
-   "detail": "unknown type Result<Any>",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Result$Any, found Result$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/directCall2.kt"
   },
   "box/box/inlineClasses/result/doubleOverride.kt": {
-   "category": "strings / templates",
-   "detail": "unknown type Result<String>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/doubleOverride.kt"
   },
   "box/box/inlineClasses/result/extensionOverride.kt": {
-   "category": "strings / templates",
-   "detail": "unknown type Result<String>",
+   "category": "other: unknown method D.get()",
+   "detail": "unknown method D.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/extensionOverride.kt"
   },
   "box/box/inlineClasses/result/inlineMethodOnResult.kt": {
-   "category": "other: unknown type Result<Any>",
-   "detail": "unknown type Result<Any>",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Result$Any, found Result$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/inlineMethodOnResult.kt"
   },
   "box/box/inlineClasses/result/lambdaTakesResultThroughBridge.kt": {
-   "category": "unknown x (stdlib API / unsupported decl)",
-   "detail": "unknown function 'x'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/lambdaTakesResultThroughBridge.kt"
   },
   "box/box/inlineClasses/result/returnGenericMultiModule.kt": {
@@ -23730,15 +23715,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/result/returnGenericSingleModule.kt"
   },
   "box/box/inlineClasses/resultGeneric.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown function 'Result'",
+   "category": "strings / templates",
+   "detail": "constructor Result$String expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/resultGeneric.kt"
   },
   "box/box/inlineClasses/resultInlining.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/resultInlining.kt"
   },
   "box/box/inlineClasses/resultRunCatchingOrElse.kt": {
@@ -23747,27 +23731,23 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/resultRunCatchingOrElse.kt"
   },
   "box/box/inlineClasses/returnResult/class.kt": {
-   "category": "strings / templates",
-   "detail": "unknown type Result<String>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/class.kt"
   },
   "box/box/inlineClasses/returnResult/classAnyOverride.kt": {
-   "category": "strings / templates",
-   "detail": "unknown type Result<String>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/classAnyOverride.kt"
   },
   "box/box/inlineClasses/returnResult/classGenericOverride.kt": {
-   "category": "strings / templates",
-   "detail": "unknown type Result<String>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/classGenericOverride.kt"
   },
   "box/box/inlineClasses/returnResult/classResultOverride.kt": {
-   "category": "strings / templates",
-   "detail": "unknown type Result<String>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/classResultOverride.kt"
   },
   "box/box/inlineClasses/returnResult/interface.kt": {
@@ -23777,9 +23757,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/interface.kt"
   },
   "box/box/inlineClasses/returnResult/topLevel.kt": {
-   "category": "strings / templates",
-   "detail": "unknown type Result<String>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/topLevel.kt"
   },
   "box/box/inlineClasses/safeAsOfTypeParameterWithInlineClassBound.kt": {
@@ -23969,8 +23948,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/ifaceGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/nullableResult.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
+   "category": "lambdas / function types / references",
+   "detail": "lambdas returning a nullable Int are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/nullableResult.kt"
   },
@@ -23986,20 +23965,19 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/primitiveGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/result.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/result.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/resultAny.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Result$Any, found Result$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/resultAny.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/resultAnyGeneric.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Result$Any, found Result$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/resultAnyGeneric.kt"
   },
@@ -24072,8 +24050,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/ifaceGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/nullableResult.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
+   "category": "lambdas / function types / references",
+   "detail": "lambdas returning a nullable Int are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/nullableResult.kt"
   },
@@ -24089,20 +24067,19 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/primitiveGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/result.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/result.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/resultAny.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Result$Any, found Result$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/resultAny.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/resultAnyGeneric.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Result$Any, found Result$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/resultAnyGeneric.kt"
   },
@@ -24169,9 +24146,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/nullableResult.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/nullableResult.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/primitive.kt": {
@@ -24186,20 +24162,19 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/primitiveGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/result.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/result.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAny.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Result$Any, found Result$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAny.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAnyGeneric.kt": {
-   "category": "unknown Result (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Result'",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Result$Any, found Result$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAnyGeneric.kt"
   },
@@ -24979,8 +24954,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/nestedEnumConstant.kt"
   },
   "box/box/innerNested/nestedGeneric.kt": {
-   "category": "unknown Nested (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Nested'",
+   "category": "other: Nested expects 1 type arguments",
+   "detail": "Nested expects 1 type arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/nestedGeneric.kt"
   },
@@ -25319,8 +25294,8 @@
    "upstream": "compiler/testData/codegen/box/ir/anonymousObjectInForLoopIteratorAndBody.kt"
   },
   "box/box/ir/anonymousObjectInGenericFun.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ')')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied method 'foo' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/anonymousObjectInGenericFun.kt"
   },
@@ -26145,9 +26120,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/defaultParameterInConstructor.kt"
   },
   "box/box/localClasses/inCallableReferenceLHS.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ')')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localClasses/inCallableReferenceLHS.kt"
   },
   "box/box/localClasses/inExtensionFunction.kt": {
@@ -28585,9 +28559,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt52540.kt"
   },
   "box/box/objects/kt535.kt": {
-   "category": "nullable types",
-   "detail": "expected end of statement (at '?')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/kt535.kt"
   },
   "box/box/objects/kt694.kt": {
@@ -30939,8 +30912,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/smartCastOnBothEnds.kt"
   },
   "box/box/ranges/contains/smartCastOnBothEndsGeneric.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator != on Char and CPointer",
+   "category": "other: cannot build a range of Float and Float",
+   "detail": "cannot build a range of Float and Float",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/smartCastOnBothEndsGeneric.kt"
   },
@@ -35117,8 +35090,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/functionLiteralAsLastExpressionInBlock.kt"
   },
   "box/box/regressions/generic.kt": {
-   "category": "other: unknown property findAll",
-   "detail": "unknown property findAll",
+   "category": "strings / templates",
+   "detail": "unknown method String.startsWith()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/generic.kt"
   },
@@ -35591,8 +35564,8 @@
    "upstream": "compiler/testData/codegen/box/reified/isString.kt"
   },
   "box/box/reified/isTNullable.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ')')",
+   "category": "nullable types",
+   "detail": "unknown method CPointer.isTypeOfOrNull()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/isTNullable.kt"
   },
@@ -37606,8 +37579,8 @@
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/superCallFromMultipleSubclasses.kt"
   },
   "box/box/toArray/kt3177-toTypedArray.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ')')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.toTypedArray()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/toArray/kt3177-toTypedArray.kt"
   },
