@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2739,
-  "UNSUPPORTED": 2752
+  "PASS": 2748,
+  "UNSUPPORTED": 2743
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -4544,8 +4544,8 @@
    "upstream": "compiler/testData/codegen/box/casts/asSafeForConstants.kt"
   },
   "box/box/casts/asToNothing.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
+   "category": "nullable types",
+   "detail": "unchecked cast of null to non-nullable Nothing is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/asToNothing.kt"
   },
@@ -8901,9 +8901,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/quicksort.kt"
   },
   "box/box/controlStructures/returnsNothing/ifElse.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/ifElse.kt"
   },
   "box/box/controlStructures/returnsNothing/inlineMethod.kt": {
@@ -8912,21 +8911,18 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/inlineMethod.kt"
   },
   "box/box/controlStructures/returnsNothing/propertyGetter.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/propertyGetter.kt"
   },
   "box/box/controlStructures/returnsNothing/tryCatch.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/tryCatch.kt"
   },
   "box/box/controlStructures/returnsNothing/when.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/when.kt"
   },
   "box/box/controlStructures/slowDsl/slowHtmlLikeDsl.kt": {
@@ -14164,8 +14160,8 @@
    "upstream": "compiler/testData/codegen/box/elvis/nullNullOk.kt"
   },
   "box/box/elvis/ofNonNullableResultType.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
+   "category": "unknown run (stdlib API / unsupported decl)",
+   "detail": "unknown function 'run'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/elvis/ofNonNullableResultType.kt"
   },
@@ -15177,8 +15173,8 @@
    "upstream": "compiler/testData/codegen/box/exceptions/extend0.kt"
   },
   "box/box/exceptions/kt69534.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
+   "category": "exceptions",
+   "detail": "unknown name 'error'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/exceptions/kt69534.kt"
   },
@@ -15295,8 +15291,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionClassLevelLocal.kt"
   },
   "box/box/extensionFunctions/extensionFunctionDifferentReceivers.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
+   "category": "other: unknown method CPointer.bar()",
+   "detail": "unknown method CPointer.bar()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionDifferentReceivers.kt"
   },
@@ -16273,8 +16269,8 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/fakeOverrides.kt"
   },
   "box/box/fullValueClasses/inapplicableTypes.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Unit, Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/inapplicableTypes.kt"
   },
@@ -16790,8 +16786,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaultsWithVarArg2.kt"
   },
   "box/box/function/eqeq.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
+   "category": "other: unknown type Nothing?",
+   "detail": "unknown type Nothing?",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/eqeq.kt"
   },
@@ -16936,15 +16932,13 @@
    "upstream": "compiler/testData/codegen/box/functions/bigArity/subclass.kt"
   },
   "box/box/functions/coerceVoidToArray.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/coerceVoidToArray.kt"
   },
   "box/box/functions/coerceVoidToObject.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/coerceVoidToObject.kt"
   },
   "box/box/functions/defaultargs.kt": {
@@ -23372,8 +23366,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt57973.kt"
   },
   "box/box/inlineClasses/kt70461.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
+   "category": "other: ArrayList(capacity) is not supported",
+   "detail": "ArrayList(capacity) is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt70461.kt"
   },
@@ -28038,9 +28032,8 @@
    "upstream": "compiler/testData/codegen/box/nonLocalReturns/suspendConversion.kt"
   },
   "box/box/nothingValue/inNestedCall.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/nothingValue/inNestedCall.kt"
   },
   "box/box/nothingValue/nothingValueException.kt": {
@@ -38232,15 +38225,13 @@
    "upstream": "compiler/testData/codegen/box/typeInfo/smartCastThis.kt"
   },
   "box/box/typeMapping/kt2831.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/typeMapping/kt2831.kt"
   },
   "box/box/typeMapping/kt3286.kt": {
-   "category": "other: unknown type Nothing",
-   "detail": "unknown type Nothing",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/typeMapping/kt3286.kt"
   },
   "box/box/typeMapping/kt3863.kt": {
