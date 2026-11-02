@@ -1415,6 +1415,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             is BinE -> genBin(e)
             is UnE -> {
+                if (e.op == "#class") return classLiteral(e.e)
                 if (e.op.startsWith("::")) return genRef(e, if (e.e is NullL) null else e.e, e.op.removePrefix("::"))
                 val v = genExpr(e.e)
                 if (e.op == "!!") return genNonNull(v)
@@ -3716,6 +3717,41 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * `a === b` / `a !== b`: reference identity for class, interface and array values (and against `null`); for primitives
      * it is value equality. Strings and boxed values (Any) are refused: interning and box caching differ from Kotlin/Native.
      */
+    /** Standard classes by simple name -> qualified name, for `X::class`. */
+    private val STD_KCLASS = mapOf("Any" to "kotlin.Any", "String" to "kotlin.String", "CharSequence" to "kotlin.CharSequence",
+        "Number" to "kotlin.Number", "Int" to "kotlin.Int", "Long" to "kotlin.Long", "Short" to "kotlin.Short", "Byte" to "kotlin.Byte",
+        "Double" to "kotlin.Double", "Float" to "kotlin.Float", "Boolean" to "kotlin.Boolean", "Char" to "kotlin.Char", "Unit" to "kotlin.Unit",
+        "UInt" to "kotlin.UInt", "ULong" to "kotlin.ULong", "Nothing" to "kotlin.Nothing") + PRELUDE_EXCEPTIONS.associateWith { "kotlin.$it" }
+
+    /** Simple name of a value's static type when that is also its runtime class (primitives, strings, final classes). */
+    private fun runtimeClassName(t: Ty): String? = when (t) {
+        Ty.I32 -> "Int"; Ty.I64 -> "Long"; Ty.F64 -> "Double"; Ty.F32 -> "Float"; Ty.I1 -> "Boolean"; Ty.Char -> "Char"; Ty.I8 -> "Byte"
+        Ty.U32 -> "UInt"; Ty.U64 -> "ULong"; Ty.Str -> "String"
+        is Ty.Cls -> t.name.takeIf { n -> '$' !in n && classes.values.none { n in it.ancestors } && (n in classDecls || n in PRELUDE_EXCEPTIONS) }
+        else -> null
+    }
+
+    /**
+     * `T::class` / `e::class`: a `KClass(simpleName, qualifiedName)`. A type name is resolved statically (type parameters
+     * are concrete after monomorphization); for an expression (evaluated for its side effects) the static type must be
+     * its runtime class. User classes have no package: their qualified name is the simple name.
+     */
+    private fun classLiteral(x: E): Val {
+        val tn = (x as? NameE)?.n?.takeIf { lookup(it) == null && it != "this" && owner?.let { o -> o.index(it) >= 0 } != true }
+        val n: String = if (tn != null && tn in STD_KCLASS && tn !in classDecls) tn else if (tn != null) {
+            val t = try { resolve(TypeRef(tn, emptyList(), false)) } catch (er: Exception) { fail("class literal of unknown type $tn is not supported") }
+            if (tn in STD_KCLASS) tn else runtimeClassName(t) ?: fail("class literal of $t is not supported")
+        } else {
+            val v = genExpr(x)
+            releaseIfOwned(v)
+            runtimeClassName(v.t) ?: fail("class literal of a ${v.t} value is not supported (runtime class unknown)")
+        }
+        if (n !in STD_KCLASS && n !in classDecls) fail("class literal of $n is not supported")
+        val q = STD_KCLASS[n] ?: n
+        fun str(s: String) = StrL(listOf(s)).also { it.line = line }
+        return genExpr(CallE(NameE("KClass").also { it.line = line }, emptyList(), listOf(str(n), str(q)), null).also { it.line = line })
+    }
+
     private fun identity(e: BinE): Val {
         val eq = if (e.op == "===") "==" else "!="
         if (e.l is NullL || e.r is NullL) return genExpr(BinE(eq, e.l, e.r).also { it.line = e.line })

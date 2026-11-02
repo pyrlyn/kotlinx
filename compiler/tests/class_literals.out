@@ -1,0 +1,6 @@
+kotlin.Int kotlin.String kotlin.Any
+Klass Klass
+true false 2
+true
+Long String Double
+class kotlin.ArithmeticException

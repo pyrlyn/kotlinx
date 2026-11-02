@@ -2167,7 +2167,8 @@ class Parser(toks: List<Tok>) {
                 "[" -> { p++; val i = nested(1) { expr() }; expectOp("]"); IndexE(e, i) }
                 "!!" -> { p++; UnE("!!", e).also { it.line = tk.line } }
                 // Callable reference `recv::name`: UnE("::name", recv).
-                "::" -> { p++; if (isId("class")) fail("class literals are not supported"); UnE("::" + ident(), e) }
+                // Class literal `T::class` / `e::class`: UnE("#class", e) (resolved by the backend to a KClass).
+                "::" -> { p++; if (isId("class")) { next(); UnE("#class", e) } else UnE("::" + ident(), e) }
                 "++", "--" -> if (e is NameE || e is MemberE || e is IndexE) { p++; PostIncE(e, tk.s) } else break
                 "{" -> if (!noBraceCall && (e is MemberE || (e is NameE && e.n !in NO_TRAILING))) CallE(e, emptyList(), emptyList(), block(lambda = true)) else break
                 else -> break

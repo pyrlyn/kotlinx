@@ -8,25 +8,25 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2783 |
-| PASS | 2708 |
+| UNSUPPORTED | 2779 |
+| PASS | 2712 |
 
-Kept in tree (re-runnable with `run.py`): 2708
+Kept in tree (re-runnable with `run.py`): 2712
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 246 |
+| strings / templates | 250 |
 | interfaces | 213 |
-| generics | 190 |
+| generics | 191 |
 | lambdas / function types / references | 146 |
-| operator/infix functions | 124 |
-| class bodies / constructors | 87 |
+| operator/infix functions | 125 |
 | property accessors / delegation | 86 |
 | type inference / mismatch | 85 |
-| objects / companion objects | 67 |
-| type inference (expression bodies) | 45 |
+| objects / companion objects | 68 |
+| class bodies / constructors | 62 |
+| type inference (expression bodies) | 47 |
 | inheritance (open/abstract/sealed) | 41 |
 | nullable types | 38 |
 | destructuring declarations | 30 |
@@ -52,11 +52,11 @@ Kept in tree (re-runnable with `run.py`): 2708
 | other syntax (at 'val') | 12 |
 | other: unknown type R | 12 |
 | other syntax (at '(') | 11 |
+| unknown Int (stdlib API / unsupported decl) | 11 |
 | default arguments | 11 |
 | unknown A (stdlib API / unsupported decl) | 10 |
+| stdlib: kotlin.test asserts | 10 |
 | types: UIntArray | 10 |
-| unknown Int (stdlib API / unsupported decl) | 10 |
-| modifiers (private/const/lateinit/...) | 10 |
 
 ## N/A reasons
 
