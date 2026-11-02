@@ -1882,6 +1882,9 @@ class Parser(toks: List<Tok>) {
                     val d = dropLazyMode(expr()); if (isLazyCall(d)) lazyLocals.add(name) else lazyLocals.remove(name)
                     return VarS("\$dg\$$name", false, null, d).also { it.line = line }
                 }
+                // `val x: T` without an initializer (assigned later, definite assignment is not checked): a variable
+                // starting at the type's zero value (null for references).
+                if (ty != null && !isOp("=")) return VarS(name, true, ty, zeroOf(ty)).also { it.line = line }
                 expectOp("="); skipNLOnly()
                 VarS(name, isVar, ty, expr())
                 }

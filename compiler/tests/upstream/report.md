@@ -8,31 +8,30 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2841 |
-| PASS | 2650 |
+| UNSUPPORTED | 2821 |
+| PASS | 2670 |
 
-Kept in tree (re-runnable with `run.py`): 2650
+Kept in tree (re-runnable with `run.py`): 2670
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 232 |
-| generics | 218 |
+| strings / templates | 234 |
+| generics | 222 |
 | interfaces | 206 |
 | operator/infix functions | 160 |
 | lambdas / function types / references | 144 |
+| type inference / mismatch | 84 |
+| property accessors / delegation | 84 |
 | class bodies / constructors | 83 |
-| type inference / mismatch | 83 |
-| property accessors / delegation | 83 |
 | objects / companion objects | 65 |
 | type inference (expression bodies) | 45 |
-| other: expected '=' (at ' | 44 |
 | inline/value classes | 43 |
 | other: unknown type T | 40 |
 | inheritance (open/abstract/sealed) | 39 |
 | nullable types | 38 |
-| destructuring declarations | 29 |
+| destructuring declarations | 30 |
 | other syntax (at ':') | 28 |
 | annotations | 27 |
 | other syntax (at ',') | 23 |
@@ -41,6 +40,7 @@ Kept in tree (re-runnable with `run.py`): 2650
 | other: unknown type * | 16 |
 | when expressions | 15 |
 | other syntax (at '.') | 15 |
+| other: unknown type Nothing | 15 |
 | other: local classes that capture local variables are not supported | 15 |
 | other syntax (at 'suspend') | 14 |
 | enum classes | 13 |
@@ -51,12 +51,12 @@ Kept in tree (re-runnable with `run.py`): 2650
 | other syntax (at 'val') | 12 |
 | other: unknown type R | 12 |
 | other syntax (at '(') | 11 |
-| other: unknown type Nothing | 11 |
 | default arguments | 11 |
 | unknown A (stdlib API / unsupported decl) | 10 |
 | types: UIntArray | 10 |
 | unknown Int (stdlib API / unsupported decl) | 10 |
 | other syntax (at 'inner') | 10 |
+| other: local declarations are only supported in function bodies | 10 |
 
 ## N/A reasons
 

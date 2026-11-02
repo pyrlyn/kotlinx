@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2650,
-  "UNSUPPORTED": 2841
+  "PASS": 2670,
+  "UNSUPPORTED": 2821
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2816,7 +2816,7 @@
   },
   "box/box/callableReference/adaptedReferences/contextTypeWithSam.kt": {
    "category": "other syntax (at '(')",
-   "detail": "expected '=' (at '(')",
+   "detail": "unexpected top-level token (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextTypeWithSam.kt"
   },
@@ -7597,13 +7597,13 @@
   },
   "box/box/contextParameters/invokeMultipleContextParametersOfSameType.kt": {
    "category": "other syntax (at '(')",
-   "detail": "expected '=' (at '(')",
+   "detail": "expected end of statement (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/invokeMultipleContextParametersOfSameType.kt"
   },
   "box/box/contextParameters/invokeOnTypeWithContext.kt": {
    "category": "other syntax (at '(')",
-   "detail": "expected '=' (at '(')",
+   "detail": "expected end of statement (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/invokeOnTypeWithContext.kt"
   },
@@ -7845,14 +7845,14 @@
    "upstream": "compiler/testData/codegen/box/contracts/contractOnContextParameter.kt"
   },
   "box/box/contracts/destructuredVariable.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "destructuring declarations",
+   "detail": "expected identifier (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/destructuredVariable.kt"
   },
   "box/box/contracts/exactlyOnceNotInline.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "unknown contract (stdlib API / unsupported decl)",
+   "detail": "unknown function 'contract'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/exactlyOnceNotInline.kt"
   },
@@ -7880,8 +7880,8 @@
    "upstream": "compiler/testData/codegen/box/contracts/forLoop.kt"
   },
   "box/box/contracts/functionParameter.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "unknown contract (stdlib API / unsupported decl)",
+   "detail": "unknown function 'contract'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/functionParameter.kt"
   },
@@ -7925,8 +7925,8 @@
    "upstream": "compiler/testData/codegen/box/contracts/listAppend.kt"
   },
   "box/box/contracts/nestedLambdaInNonInlineCallExactlyOnce.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "unknown contract (stdlib API / unsupported decl)",
+   "detail": "unknown function 'contract'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/nestedLambdaInNonInlineCallExactlyOnce.kt"
   },
@@ -7948,14 +7948,13 @@
    "upstream": "compiler/testData/codegen/box/contracts/require.kt"
   },
   "box/box/contracts/runLambdaForVal.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contracts/runLambdaForVal.kt"
   },
   "box/box/contracts/valInWhen.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "other syntax (at 'o')",
+   "detail": "expected ')' (at 'o')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/valInWhen.kt"
   },
@@ -8706,9 +8705,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/inRangeConditionsInWhen.kt"
   },
   "box/box/controlStructures/kt12908.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt12908.kt"
   },
   "box/box/controlStructures/kt1441.kt": {
@@ -8733,9 +8731,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt1688.kt"
   },
   "box/box/controlStructures/kt17110.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt17110.kt"
   },
   "box/box/controlStructures/kt1742.kt": {
@@ -8934,8 +8931,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/quicksort.kt"
   },
   "box/box/controlStructures/returnsNothing/ifElse.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "other: unknown type Nothing",
+   "detail": "unknown type Nothing",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/ifElse.kt"
   },
@@ -8945,20 +8942,20 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/inlineMethod.kt"
   },
   "box/box/controlStructures/returnsNothing/propertyGetter.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "other: unknown type Nothing",
+   "detail": "unknown type Nothing",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/propertyGetter.kt"
   },
   "box/box/controlStructures/returnsNothing/tryCatch.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "other: unknown type Nothing",
+   "detail": "unknown type Nothing",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/tryCatch.kt"
   },
   "box/box/controlStructures/returnsNothing/when.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "other: unknown type Nothing",
+   "detail": "unknown type Nothing",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/returnsNothing/when.kt"
   },
@@ -10812,7 +10809,7 @@
   },
   "box/box/coroutines/intrinsicSemantics/resultExceptionOrNullInLambda.kt": {
    "category": "other syntax (at '(')",
-   "detail": "expected '=' (at '(')",
+   "detail": "expected end of statement (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/intrinsicSemantics/resultExceptionOrNullInLambda.kt"
   },
@@ -12142,9 +12139,8 @@
    "upstream": "compiler/testData/codegen/box/dataflow/scope1.kt"
   },
   "box/box/dataflow/uninitialized_val.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataflow/uninitialized_val.kt"
   },
   "box/box/deadCodeElimination/emptyVariableRange.kt": {
@@ -16929,9 +16925,8 @@
    "upstream": "compiler/testData/codegen/box/function/sum_mixed.kt"
   },
   "box/box/function/sum_silly.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/sum_silly.kt"
   },
   "box/box/function/unreachableStatementAfterReturn.kt": {
@@ -17294,9 +17289,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt785.kt"
   },
   "box/box/functions/kt873.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/kt873.kt"
   },
   "box/box/functions/localFunction.kt": {
@@ -17737,9 +17731,8 @@
    "upstream": "compiler/testData/codegen/box/increment/arrayElement.kt"
   },
   "box/box/increment/assignPlusOnSmartCast.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/assignPlusOnSmartCast.kt"
   },
   "box/box/increment/augmentedAssignmentWithComplexRhs.kt": {
@@ -17803,39 +17796,36 @@
    "upstream": "compiler/testData/codegen/box/increment/nullable.kt"
   },
   "box/box/increment/postfixIncrementDoubleSmartCast.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/postfixIncrementDoubleSmartCast.kt"
   },
   "box/box/increment/postfixIncrementOnClass.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "strings / templates",
+   "detail": "cannot convert Base to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/postfixIncrementOnClass.kt"
   },
   "box/box/increment/postfixIncrementOnClassSmartCast.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "other: ++ on Base",
+   "detail": "++ on Base",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/postfixIncrementOnClassSmartCast.kt"
   },
   "box/box/increment/postfixIncrementOnShortSmartCast.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/postfixIncrementOnShortSmartCast.kt"
   },
   "box/box/increment/postfixIncrementOnSmartCast.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/postfixIncrementOnSmartCast.kt"
   },
   "box/box/increment/postfixNullableClassIncrement.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/postfixNullableClassIncrement.kt"
   },
   "box/box/increment/postfixNullableIncrement.kt": {
@@ -17844,27 +17834,25 @@
    "upstream": "compiler/testData/codegen/box/increment/postfixNullableIncrement.kt"
   },
   "box/box/increment/prefixIncrementOnClass.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "strings / templates",
+   "detail": "cannot convert Base to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/prefixIncrementOnClass.kt"
   },
   "box/box/increment/prefixIncrementOnClassSmartCast.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "other: ++ on Base",
+   "detail": "++ on Base",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/prefixIncrementOnClassSmartCast.kt"
   },
   "box/box/increment/prefixIncrementOnSmartCast.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/prefixIncrementOnSmartCast.kt"
   },
   "box/box/increment/prefixNullableClassIncrement.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/prefixNullableClassIncrement.kt"
   },
   "box/box/increment/prefixNullableIncrement.kt": {
@@ -18724,7 +18712,7 @@
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingImplicitlyGenericInnerClass.kt": {
    "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "detail": "expected end of statement (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/EnclosingImplicitlyGenericInnerClass.kt"
   },
@@ -18807,7 +18795,7 @@
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ImplicitlyGenericInnerClass.kt": {
    "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "detail": "expected end of statement (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/ImplicitlyGenericInnerClass.kt"
   },
@@ -18883,7 +18871,7 @@
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/SuspendingFunction.kt": {
    "category": "other syntax (at '(')",
-   "detail": "expected '=' (at '(')",
+   "detail": "expected end of statement (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/SuspendingFunction.kt"
   },
@@ -19123,14 +19111,14 @@
    "upstream": "compiler/testData/codegen/box/inference/suspendExtensionRecevierFromConstraint.kt"
   },
   "box/box/inference/tryCatchAtAssignment.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of materialize; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/tryCatchAtAssignment.kt"
   },
   "box/box/inference/tryCatchAtAssignmentWithSmartCast.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of materialize; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/tryCatchAtAssignmentWithSmartCast.kt"
   },
@@ -19152,14 +19140,14 @@
    "upstream": "compiler/testData/codegen/box/inference/varargInConstructor.kt"
   },
   "box/box/inference/whenAtAssignment.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of materialize; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/whenAtAssignment.kt"
   },
   "box/box/inference/whenAtAssignmentWithSmartCast.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of materialize; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/whenAtAssignmentWithSmartCast.kt"
   },
@@ -19955,8 +19943,8 @@
    "upstream": "compiler/testData/codegen/box/inline/positionBasedDestructuring.kt"
   },
   "box/box/inline/privateProperty.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "property accessors / delegation",
+   "detail": "unexpected top-level token (at 'get')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/privateProperty.kt"
   },
@@ -24867,7 +24855,7 @@
   },
   "box/box/innerClass/inCallableReferenceLHSwithGenericFun.kt": {
    "category": "other syntax (at '.')",
-   "detail": "expected '=' (at '.')",
+   "detail": "expected end of statement (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/inCallableReferenceLHSwithGenericFun.kt"
   },
@@ -25223,15 +25211,13 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectOuterDiffersFromInnerOuter.kt"
   },
   "box/box/instructions/swap/swapRefToSharedVarInt.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/instructions/swap/swapRefToSharedVarInt.kt"
   },
   "box/box/instructions/swap/swapRefToSharedVarLong.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/instructions/swap/swapRefToSharedVarLong.kt"
   },
   "box/box/interfaceCallsNCasts/conservativeItable.kt": {
@@ -25315,8 +25301,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt12125_inc_2.kt"
   },
   "box/box/intrinsics/kt52163_doubleCompareToInt.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "other: unknown method Double?.compareTo()",
+   "detail": "unknown method Double?.compareTo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/kt52163_doubleCompareToInt.kt"
   },
@@ -25655,9 +25641,8 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/doWhileWithContinue.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/doWhileWithNestedContinue.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/doWhileWithNestedContinue.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/inLabeledBlock.kt": {
@@ -25666,9 +25651,8 @@
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/inLabeledBlock.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/inNestedLoop.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jsAstOptimizations/whileConditionFolding/inNestedLoop.kt"
   },
   "box/box/jsAstOptimizations/whileConditionFolding/labeledBreak.kt": {
@@ -29925,8 +29909,8 @@
    "upstream": "compiler/testData/codegen/box/properties/backingField/anySupertypeValueClassAnyMethodsWithExplicitBackingField.kt"
   },
   "box/box/properties/backingField/backingFieldAndPropertyWithTheSameName.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "other syntax (at 'field')",
+   "detail": "unexpected top-level token (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/backingFieldAndPropertyWithTheSameName.kt"
   },
@@ -29937,8 +29921,8 @@
    "upstream": "compiler/testData/codegen/box/properties/backingField/backingFieldInitializedInInit.kt"
   },
   "box/box/properties/backingField/backingFieldWithSmartTypeParameters.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "other syntax (at 'field')",
+   "detail": "unexpected top-level token (at 'field')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/backingField/backingFieldWithSmartTypeParameters.kt"
   },
@@ -35279,8 +35263,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt1845.kt"
   },
   "box/box/regressions/kt18779.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "exceptions",
+   "detail": "no field exception in Result",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt18779.kt"
   },
@@ -39639,9 +39623,8 @@
    "upstream": "compiler/testData/codegen/box/when/exhaustiveBreakContinue.kt"
   },
   "box/box/when/exhaustiveWhenInitialization.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/exhaustiveWhenInitialization.kt"
   },
   "box/box/when/exhaustiveWhenReturn.kt": {
@@ -39728,15 +39711,13 @@
    "upstream": "compiler/testData/codegen/box/when/kt5448.kt"
   },
   "box/box/when/kt55993.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/kt55993.kt"
   },
   "box/box/when/kt59346.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/kt59346.kt"
   },
   "box/box/when/kt60212.kt": {
@@ -39828,9 +39809,8 @@
    "upstream": "compiler/testData/codegen/box/when/range.kt"
   },
   "box/box/when/sealedWhenInitialization.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/sealedWhenInitialization.kt"
   },
   "box/box/when/stringOptimization/duplicatingItems.kt": {
@@ -39918,8 +39898,8 @@
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationSparse.kt"
   },
   "box/box/when/switchOptimizationStatement.kt": {
-   "category": "other: expected '=' (at '",
-   "detail": "expected '=' (at '",
+   "category": "other: unknown method IntRange.map()",
+   "detail": "unknown method IntRange.map()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/switchOptimizationStatement.kt"
   },
