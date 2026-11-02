@@ -30,6 +30,8 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   inline bound (generic code is monomorphized, further intersection bounds only constrain callers).
 - Bridges: an override whose return representation differs from the interface method (`Int`/`String` for `Any`)
   gets a boxing bridge `@br.C.m` in the interface slot; class-typed virtual calls use the `m#narrow` slot.
+- Lambdas with receiver: typed parameters (`{ x: Int -> }`), builder inference from unqualified receiver properties
+  (`scoped { emit(key) }`); `r.f(x)` counts as a use of a local function value `f` in last-use analysis.
 - Not yet: user generics, function types and general lambdas, inheritance from classes (open/abstract/sealed), objects and
   companions, enums, inline/value classes, extension and operator functions, default/named arguments, exceptions,
   labeled jumps. `compiler/tests/upstream/report.md` ranks the missing features by upstream test count.

@@ -25,6 +25,9 @@ object Uses {
         }
     }
 
+    /** Synthetic name node per `r.f(...)` call (stable identity across analyses). */
+    private val recvCallName = HashMap<CallE, NameE>()
+
     private fun block(b: Block, out: MutableList<Use>) { for (s in b.stmts) stmt(s, false, out) }
 
     /** `pos` = this expression is in an ownership-taking position. */
@@ -35,6 +38,8 @@ object Uses {
             is StrL -> for (p in e.parts) if (p is E) expr(p, straight, false, out)
             is CallE -> {
                 expr(e.callee, straight, false, out)
+                // `r.f(x)` may invoke a local of function type with receiver (`val f: R.(X) -> Y`): a (borrowing) use of `f`.
+                (e.callee as? MemberE)?.let { m -> if (!m.safe) out.add(Use(recvCallName.getOrPut(e) { NameE(m.n).also { it.line = e.line } }, false)) }
                 for (a in e.args) expr(a, straight, true, out)
                 e.lambda?.let { block(it, out) }
             }

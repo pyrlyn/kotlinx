@@ -8,10 +8,10 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2845 |
-| PASS | 2646 |
+| UNSUPPORTED | 2841 |
+| PASS | 2650 |
 
-Kept in tree (re-runnable with `run.py`): 2646
+Kept in tree (re-runnable with `run.py`): 2650
 
 ## Unsupported features (roadmap, by test count)
 
@@ -21,7 +21,7 @@ Kept in tree (re-runnable with `run.py`): 2646
 | generics | 218 |
 | interfaces | 206 |
 | operator/infix functions | 160 |
-| lambdas / function types / references | 148 |
+| lambdas / function types / references | 144 |
 | class bodies / constructors | 83 |
 | type inference / mismatch | 83 |
 | property accessors / delegation | 83 |
