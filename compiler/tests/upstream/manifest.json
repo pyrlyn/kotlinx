@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2837,
-  "UNSUPPORTED": 2654
+  "PASS": 2840,
+  "UNSUPPORTED": 2651
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1824,8 +1824,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/simpleUninitializedMerge.kt"
   },
   "box/box/boxingOptimization/taintedValues.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'getOrElse' needs an explicit return type",
+   "category": "unknown mapOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'mapOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/taintedValues.kt"
   },
@@ -5077,8 +5077,8 @@
    "upstream": "compiler/testData/codegen/box/classes/classObjectsWithParentClasses.kt"
   },
   "box/box/classes/comanionObjectFieldVsClassField.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'foo' needs an explicit return type",
+   "category": "strings / templates",
+   "detail": "unknown method String.substring()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/comanionObjectFieldVsClassField.kt"
   },
@@ -5872,8 +5872,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/captureFunctionInProperty.kt"
   },
   "box/box/closures/captureOuterProperty/inFunction.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'bar' needs an explicit return type",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown name 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureOuterProperty/inFunction.kt"
   },
@@ -6654,8 +6654,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/inline_extensions.kt"
   },
   "box/box/companionBlocksAndExtensions/innerClasses.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'readOuterVal' needs an explicit return type",
+   "category": "unknown outerVal (stdlib API / unsupported decl)",
+   "detail": "unknown name 'outerVal'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/innerClasses.kt"
   },
@@ -12480,8 +12480,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/clashingNames.kt"
   },
   "box/box/defaultArguments/private/memberExtensionFunction.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'bar' needs an explicit return type",
+   "category": "other: unknown method Int.foo()",
+   "detail": "unknown method Int.foo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/private/memberExtensionFunction.kt"
   },
@@ -12673,8 +12673,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/openProperty.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/simple.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function '$get$y' needs an explicit return type",
+   "category": "unknown $dg$y (stdlib API / unsupported decl)",
+   "detail": "unknown name '$dg$y'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/simple.kt"
   },
@@ -15483,8 +15483,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/shared.kt"
   },
   "box/box/extensionFunctions/simple.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'foo' needs an explicit return type",
+   "category": "strings / templates",
+   "detail": "unknown method StringBuilder.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/simple.kt"
   },
@@ -16942,8 +16942,8 @@
    "upstream": "compiler/testData/codegen/box/functions/defaultargs5.kt"
   },
   "box/box/functions/defaultargs6.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "other: default argument referring to a non-trivial argument is not ",
+   "detail": "default argument referring to a non-trivial argument is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/defaultargs6.kt"
   },
@@ -17081,8 +17081,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3772.kt"
   },
   "box/box/functions/invoke/kt3821invokeOnThis.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'foo' needs an explicit return type",
+   "category": "unknown this (stdlib API / unsupported decl)",
+   "detail": "unknown function 'this'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3821invokeOnThis.kt"
   },
@@ -17222,9 +17222,8 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunction.kt"
   },
   "box/box/functions/localFunctions/boundTypeParameterInSupertype.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/boundTypeParameterInSupertype.kt"
   },
   "box/box/functions/localFunctions/boundTypeParameterInVararg.kt": {
@@ -17517,8 +17516,8 @@
    "upstream": "compiler/testData/codegen/box/ieee754/explicitCompareCall.kt"
   },
   "box/box/ieee754/explicitEqualsCall.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'equals1' needs an explicit return type",
+   "category": "other: Double.equals() is not supported",
+   "detail": "Double.equals() is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ieee754/explicitEqualsCall.kt"
   },
@@ -18901,8 +18900,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/pclaRootIsElvisSynthetic.kt"
   },
   "box/box/inference/pcla/pclaRootIsIfWhenSyntheticCall.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'foo1' needs an explicit return type",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of buildConsumer; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/pclaRootIsIfWhenSyntheticCall.kt"
   },
@@ -18970,8 +18969,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/substitutelambdaExtensionReceiverType.kt"
   },
   "box/box/inference/pcla/topDownCompletionBreakedByNonBuilderInferenceSession.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'foo' needs an explicit return type",
+   "category": "unknown builder3 (stdlib API / unsupported decl)",
+   "detail": "unknown function 'builder3'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/topDownCompletionBreakedByNonBuilderInferenceSession.kt"
   },
@@ -20138,20 +20137,20 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInitBlockGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverride.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'foo' needs an explicit return type",
+   "category": "other: unknown method V.let()",
+   "detail": "unknown method V.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverride.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverrideGeneric.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'foo' needs an explicit return type",
+   "category": "strings / templates",
+   "detail": "unknown method V$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverrideGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableForFakeOverrideGeneric2.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'foo' needs an explicit return type",
+   "category": "strings / templates",
+   "detail": "unknown method V$String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableForFakeOverrideGeneric2.kt"
   },
@@ -20161,14 +20160,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingType.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'boxToNullableAny' needs an explicit return type",
+   "category": "generics",
+   "detail": "generic class Str used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt"
   },
   "box/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric2.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'boxToNullableAny' needs an explicit return type",
+   "category": "generics",
+   "detail": "generic class Str used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric2.kt"
   },
@@ -23614,14 +23613,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/referToPropertyInCompanionObjectOfInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/referToUnderlyingPropertyInsideInlineClass.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'plus' needs an explicit return type",
+   "category": "other: unknown property UInt.value",
+   "detail": "unknown property UInt.value",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/referToUnderlyingPropertyInsideInlineClass.kt"
   },
   "box/box/inlineClasses/referToUnderlyingPropertyInsideInlineClassGeneric.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'plus' needs an explicit return type",
+   "category": "other: unknown property UInt.value",
+   "detail": "unknown property UInt.value",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/referToUnderlyingPropertyInsideInlineClassGeneric.kt"
   },
@@ -25104,9 +25103,8 @@
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/finalMethod.kt"
   },
   "box/box/interfaceCallsNCasts/interface0.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/interfaceCallsNCasts/interface0.kt"
   },
   "box/box/interfaceCallsNCasts/kt83308.kt": {
@@ -25962,8 +25960,8 @@
    "upstream": "compiler/testData/codegen/box/literals/strdedup1.kt"
   },
   "box/box/localClass/innerTakesCapturedFromOuter.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'toString' needs an explicit return type",
+   "category": "unknown i (stdlib API / unsupported decl)",
+   "detail": "unknown name 'i'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClass/innerTakesCapturedFromOuter.kt"
   },
@@ -26169,8 +26167,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/localClass.kt"
   },
   "box/box/localClasses/localClassCaptureExtensionReceiver.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'result' needs an explicit return type",
+   "category": "unknown this@id (stdlib API / unsupported decl)",
+   "detail": "unknown name 'this@id'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localClassCaptureExtensionReceiver.kt"
   },
@@ -28100,8 +28098,8 @@
    "upstream": "compiler/testData/codegen/box/objects/anonymousObjectReturnsFromTopLevelFun.kt"
   },
   "box/box/objects/classCallsProtectedInheritedByCompanion.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'bar' needs an explicit return type",
+   "category": "unknown foo (stdlib API / unsupported decl)",
+   "detail": "unknown function 'foo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/classCallsProtectedInheritedByCompanion.kt"
   },
@@ -28143,20 +28141,20 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/kt27117_lv13.kt"
   },
   "box/box/objects/companionObjectAccess/kt27121.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown function 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/kt27121.kt"
   },
   "box/box/objects/companionObjectAccess/kt27121_lv12.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown function 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/kt27121_lv12.kt"
   },
   "box/box/objects/companionObjectAccess/kt27121_lv13.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown function 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/kt27121_lv13.kt"
   },
@@ -28296,8 +28294,8 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromInlineLambdaInNestedClass.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromLambdaInNestedClass.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
+   "category": "unknown result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromLambdaInNestedClass.kt"
   },
@@ -28307,14 +28305,14 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromMethodInlinedInNestedClass.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromNestedClass.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
+   "category": "unknown result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromNestedClass.kt"
   },
   "box/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromNestedClassSeveralTimes.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
+   "category": "unknown xo (stdlib API / unsupported decl)",
+   "detail": "unknown function 'xo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectAccessedFromNestedClassSeveralTimes.kt"
   },
@@ -28324,8 +28322,8 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/privateCompanionObjectUsedInNestedClass.kt"
   },
   "box/box/objects/companionObjectAccess/protectedCompanionObjectAccessedFromNestedClass.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'test' needs an explicit return type",
+   "category": "unknown result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/protectedCompanionObjectAccessedFromNestedClass.kt"
   },
@@ -28532,8 +28530,8 @@
    "upstream": "compiler/testData/codegen/box/objects/methodOnObject.kt"
   },
   "box/box/objects/nestedDerivedClassCallsProtectedFromCompanion.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'bar' needs an explicit return type",
+   "category": "unknown foo (stdlib API / unsupported decl)",
+   "detail": "unknown function 'foo'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/nestedDerivedClassCallsProtectedFromCompanion.kt"
   },
@@ -29604,8 +29602,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/substituteIntForGeneric.kt"
   },
   "box/box/primitiveTypes/unboxComparable.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'bar' needs an explicit return type",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found Comparable$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/unboxComparable.kt"
   },
@@ -30041,8 +30039,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt1170.kt"
   },
   "box/box/properties/kt1398.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'something' needs an explicit return type",
+   "category": "strings / templates",
+   "detail": "unknown method String.uppercase()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/kt1398.kt"
   },
@@ -34727,8 +34725,8 @@
    "upstream": "compiler/testData/codegen/box/reflection/functions/typeParameterInReturnType.kt"
   },
   "box/box/reflection/kClassCompanion.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'getSimpleName' needs an explicit return type",
+   "category": "objects / companion objects",
+   "detail": "class literal of a A$Companion value is not supported (runtime class unknown)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reflection/kClassCompanion.kt"
   },
@@ -35064,9 +35062,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt10934.kt"
   },
   "box/box/regressions/kt13381.kt": {
-   "category": "interfaces",
-   "detail": "default interface methods need an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/kt13381.kt"
   },
   "box/box/regressions/kt14447.kt": {
@@ -35363,8 +35360,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/objectCaptureOuterConstructorProperty.kt"
   },
   "box/box/regressions/objectInsideDelegation.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function '$get$withoutType' needs an explicit return type",
+   "category": "unknown $dg$withoutType (stdlib API / unsupported decl)",
+   "detail": "unknown name '$dg$withoutType'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/objectInsideDelegation.kt"
   },
@@ -35779,8 +35776,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/primitiveEqSafeCall.kt"
   },
   "box/box/safeCall/primitiveNotEqSafeCall.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'doChain' needs an explicit return type",
+   "category": "strings / templates",
+   "detail": "unknown method String.subSequence()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/primitiveNotEqSafeCall.kt"
   },
@@ -35796,8 +35793,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallIOnUninitializedNonNullValue.kt"
   },
   "box/box/safeCall/safeCallNotEqPrimitive.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied function 'doChain' needs an explicit return type",
+   "category": "strings / templates",
+   "detail": "unknown method String.subSequence()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallNotEqPrimitive.kt"
   },
@@ -38134,8 +38131,8 @@
    "upstream": "compiler/testData/codegen/box/typeInfo/primitiveTypeInfo.kt"
   },
   "box/box/typeInfo/smartCastThis.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method 'bar' needs an explicit return type",
+   "category": "other: unknown method A.foo()",
+   "detail": "unknown method A.foo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typeInfo/smartCastThis.kt"
   },
@@ -38176,8 +38173,8 @@
    "upstream": "compiler/testData/codegen/box/typeMapping/nullableNothing.kt"
   },
   "box/box/typealias/abbreviationWithCapturedType.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "method '$prop$columns' needs an explicit return type",
+   "category": "unknown partitionKey (stdlib API / unsupported decl)",
+   "detail": "unknown name 'partitionKey'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/abbreviationWithCapturedType.kt"
   },
