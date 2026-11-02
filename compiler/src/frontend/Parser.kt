@@ -1631,9 +1631,13 @@ class Parser(toks: List<Tok>) {
     private fun inferIfaceRets(name: String, ms: List<FunD>): List<FunD> {
         val known = HashMap<String, TypeRef>()
         for (s in ifaceSupers[name].orEmpty()) ifaceRets[s]?.let { known.putAll(it) }
-        ms.forEach { m -> m.ret?.let { known[m.name] = it } }
         fun simple(n: String) = TypeRef(n, emptyList(), false)
+        // Abstract members without a return type return Unit.
+        ms.forEach { m -> m.ret?.let { known[m.name] = it } ?: run { if (m.body == null && m.exprBody == null) known[m.name] = simple("Unit") } }
+        var params: Map<String, TypeRef> = emptyMap()
         fun guess(e: E): TypeRef? = when (e) {
+            // A parameter, or an interface property read through its getter `$prop$x`.
+            is NameE -> params[e.n] ?: known["\$prop\$${e.n}"]
             is StrL -> simple("String")
             is IntL -> simple(if (e.unsigned) (if (e.long) "ULong" else "UInt") else if (e.long) "Long" else "Int")
             is BoolL -> simple("Boolean")
@@ -1655,7 +1659,7 @@ class Parser(toks: List<Tok>) {
                 val c = e.callee
                 when {
                     c is MemberE && c.n == "toString" && e.args.isEmpty() -> simple("String")
-                    c is NameE -> known[c.n]
+                    c is NameE -> known[c.n] ?: companionRet(name, c.n)
                     c is MemberE && c.recv is NameE && (c.recv as NameE).n == "this" -> known[c.n]
                     else -> null
                 }
@@ -1667,9 +1671,26 @@ class Parser(toks: List<Tok>) {
             var changed = false
             out = out.map { m ->
                 if (m.ret != null || m.exprBody == null || m.typeParams.isNotEmpty()) m
-                else guess(m.exprBody)?.let { t -> changed = true; known[m.name] = t; FunD(m.name, m.params, t, m.body, m.exprBody, m.line, m.typeParams, m.recv) } ?: m
+                else {
+                    params = m.params.associate { it.name to it.type }
+                    val t = guess(m.exprBody)
+                    if (t == null) m else { changed = true; known[m.name] = t; FunD(m.name, m.params, t, m.body, m.exprBody, m.line, m.typeParams, m.recv) }
+                }
             }
             if (!changed) return out
+        }
+    }
+
+    /** Declared (or literal) return type of method [n] of the companion object of [owner], already parsed. */
+    private fun companionRet(owner: String, n: String): TypeRef? {
+        val co = companionOf[owner]?.first ?: return null
+        val m = companions.firstOrNull { it.name == co }?.methods?.singleOrNull { it.name == n } ?: return null
+        m.ret?.let { return it }
+        return when (val e = m.exprBody) {
+            is StrL -> TypeRef("String", emptyList(), false)
+            is BoolL -> TypeRef("Boolean", emptyList(), false)
+            is IntL -> if (e.unsigned) null else TypeRef(if (e.long) "Long" else "Int", emptyList(), false)
+            else -> null
         }
     }
 
