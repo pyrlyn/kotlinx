@@ -3314,14 +3314,29 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
         }
         val fnT = fnTy(ptys, rt, asRecvFn)
-        val name = mangle("\$Lam${LamIds.id(b0)}", (caps.map { it.second } + ptys + rt).map { tyRef(it) })
+        // Inside a generic function instance, a body naming its type parameters (`it as T`) is compiled as its own
+        // class with them substituted (the class is generated outside the instance's type bindings).
+        val usedTps = if (tenv.isEmpty()) emptyList() else typeNamesIn(lamBody).filter { it in tenv }.distinct().sorted()
+        val body1 = if (usedTps.isEmpty()) lamBody else Subst(usedTps.associateWith { tyRef(tenv.getValue(it)) }).block(lamBody)
+        val name = mangle("\$Lam${LamIds.id(b0)}", (caps.map { it.second } + ptys + rt + usedTps.map { tenv.getValue(it) }).map { tyRef(it) })
         if (name !in classes) {
             val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i])) }, tyRef(rt), null,
-                WhenE(null, listOf(null to lamBody)).also { it.line = line }, line)
+                WhenE(null, listOf(null to body1)).also { it.line = line }, line)
             throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name), listOf(m), line))
         }
         val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "this" else n).also { it.line = line } }, null))
         return Val(v.v, fnT, v.owned)
+    }
+
+    /** Names used as types anywhere in [b] (declarations, casts, type arguments). */
+    private fun typeNamesIn(b: Block): Set<String> {
+        val out = HashSet<String>()
+        val probe = object : AbstractMap<String, TypeRef>() {
+            override val entries: Set<Map.Entry<String, TypeRef>> get() = emptySet()
+            override fun get(key: String): TypeRef? { out.add(key); return null }
+        }
+        Subst(probe).block(b)
+        return out
     }
 
     private fun finishCall(call: String, ret: Ty, args: List<Val>): Val {

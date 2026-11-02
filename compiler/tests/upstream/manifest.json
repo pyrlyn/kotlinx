@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2731,
-  "UNSUPPORTED": 2760
+  "PASS": 2739,
+  "UNSUPPORTED": 2752
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -7500,9 +7500,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualLocalFunWithExtensiionReceiver.kt"
   },
   "box/box/contextParameters/contextualLocalFunWithTypeParam.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualLocalFunWithTypeParam.kt"
   },
   "box/box/contextParameters/contextualLocalFunction.kt": {
@@ -16671,8 +16670,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/samConstructorExplicitInvocation.kt"
   },
   "box/box/funInterface/samConversionToGenericInterfaceInGenericFun.kt": {
-   "category": "other: unknown type R",
-   "detail": "unknown type R",
+   "category": "nullable types",
+   "detail": "nullable cast from Any to String is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/samConversionToGenericInterfaceInGenericFun.kt"
   },
@@ -17266,9 +17265,8 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/boundTypeParameterInSupertype.kt"
   },
   "box/box/functions/localFunctions/boundTypeParameterInVararg.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/boundTypeParameterInVararg.kt"
   },
   "box/box/functions/localFunctions/callBetweenLocalFunctions.kt": {
@@ -17283,9 +17281,8 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/callInlineLocalInLambda.kt"
   },
   "box/box/functions/localFunctions/captureUpperBoundedTypeParameter.kt": {
-   "category": "other: unknown type V",
-   "detail": "unknown type V",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/captureUpperBoundedTypeParameter.kt"
   },
   "box/box/functions/localFunctions/definedWithinLambda.kt": {
@@ -23927,33 +23924,30 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/typeChecksForInlineClassesGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/any.kt": {
-   "category": "other: unknown type R",
-   "detail": "unknown type R",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/any.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/anyGeneric.kt": {
-   "category": "other: unknown type R",
-   "detail": "unknown type R",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/anyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/anyN.kt": {
-   "category": "other: unknown type R",
-   "detail": "unknown type R",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/anyN.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/anyNGeneric.kt": {
-   "category": "other: unknown type R",
-   "detail": "unknown type R",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/anyNGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/anyNGeneric2.kt": {
-   "category": "other: unknown type R",
-   "detail": "unknown type R",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/anyNGeneric2.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/iface.kt": {
@@ -23963,20 +23957,20 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/iface.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/ifaceChild.kt": {
-   "category": "other: unknown type R",
-   "detail": "unknown type R",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/ifaceChild.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/ifaceChildGeneric.kt": {
-   "category": "other: unknown type R",
-   "detail": "unknown type R",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/ifaceChildGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/ifaceGeneric.kt": {
-   "category": "other: unknown type R",
-   "detail": "unknown type R",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/ifaceGeneric.kt"
   },
@@ -23987,15 +23981,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/nullableResult.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/primitive.kt": {
-   "category": "other: unknown type T5",
-   "detail": "unknown type T5",
+   "category": "generics",
+   "detail": "cannot infer type parameter T7 of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/primitive.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/primitiveGeneric.kt": {
-   "category": "other: unknown type R",
-   "detail": "unknown type R",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/primitiveGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/result.kt": {
@@ -24017,15 +24010,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/resultAnyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/string.kt": {
-   "category": "other: unknown type R",
-   "detail": "unknown type R",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/string.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/stringGeneric.kt": {
-   "category": "other: unknown type R",
-   "detail": "unknown type R",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt": {
@@ -35086,8 +35078,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/commonSupertypeContravariant2.kt"
   },
   "box/box/regressions/dataClassInInlineFunctionWithTypeParameters.kt": {
-   "category": "other: unknown type S",
-   "detail": "unknown type S",
+   "category": "generics",
+   "detail": "generic class Accumulator used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/dataClassInInlineFunctionWithTypeParameters.kt"
   },
