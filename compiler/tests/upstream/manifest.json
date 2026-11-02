@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2831,
-  "UNSUPPORTED": 2660
+  "PASS": 2837,
+  "UNSUPPORTED": 2654
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1720,39 +1720,33 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt48394.kt"
   },
   "box/box/boxingOptimization/kt49092a.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092a.kt"
   },
   "box/box/boxingOptimization/kt49092b.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092b.kt"
   },
   "box/box/boxingOptimization/kt49092c.kt": {
-   "category": "other: Unit cannot be used as Any",
-   "detail": "Unit cannot be used as Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092c.kt"
   },
   "box/box/boxingOptimization/kt49092d.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092d.kt"
   },
   "box/box/boxingOptimization/kt49092e.kt": {
-   "category": "other: Unit cannot be used as Any",
-   "detail": "Unit cannot be used as Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092e.kt"
   },
   "box/box/boxingOptimization/kt49092f.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt49092f.kt"
   },
   "box/box/boxingOptimization/kt49548.kt": {
