@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2646,
-  "UNSUPPORTED": 2845
+  "PASS": 2650,
+  "UNSUPPORTED": 2841
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -6133,9 +6133,8 @@
    "upstream": "compiler/testData/codegen/box/closures/enclosingThis.kt"
   },
   "box/box/closures/extensionClosure.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "typed parameters in a lambda with receiver are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/extensionClosure.kt"
   },
   "box/box/closures/kt10044.kt": {
@@ -15327,9 +15326,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsSupertype.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAsType.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "typed parameters in a lambda with receiver are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsType.kt"
   },
   "box/box/extensionFunctions/extensionFunctionClassLevelLocal.kt": {
@@ -15672,9 +15670,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithInline.kt"
   },
   "box/box/extensionProperties/extensionProperyWithExtensionType.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "typed parameters in a lambda with receiver are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionProperyWithExtensionType.kt"
   },
   "box/box/extensionProperties/genericContextOverride.kt": {
@@ -17223,7 +17220,7 @@
   },
   "box/box/functions/kt2481.kt": {
    "category": "interfaces",
-   "detail": "super calls to interface members are not supported (no superclass in $Lam0$String)",
+   "detail": "super calls to interface members are not supported (no superclass in $Lam0$B$String)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt2481.kt"
   },
@@ -18149,9 +18146,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt43710b.kt"
   },
   "box/box/inference/pcla/issues/kt44241.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt44241.kt"
   },
   "box/box/inference/pcla/issues/kt45083.kt": {

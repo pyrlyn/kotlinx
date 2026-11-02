@@ -2465,6 +2465,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (ctps.size != recv.args.size) return
         val sub = ctps.zip(recv.args).toMap()
         fun subst(r: TypeRef): TypeRef = sub[r.name]?.let { if (r.nullable) TypeRef(it.name, it.args, true) else it } ?: TypeRef(r.name, r.args.map { subst(it) }, r.nullable)
+        /** A property of the (generic) receiver read unqualified (`emit(key)`): its type once its type arguments are bound. */
+        fun recvField(n: String): Ty? {
+            val ft = genericClasses[recv.name]?.fields?.firstOrNull { it.name == n }?.type?.let { subst(it) } ?: return null
+            fun bound(r: TypeRef): Boolean = (r.name !in tps || r.name in env) && r.args.all { bound(it) }
+            if (!bound(ft)) return null
+            val sv = tenv; tenv = sv + env
+            return try { resolve(ft) } catch (x: CompileError) { null } finally { tenv = sv }
+        }
         val calls = ArrayList<CallE>()
         var stF: (S) -> Unit = {}
         fun ex(e: E?) {
@@ -2534,6 +2542,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (!free(pr) || a is LambdaE || a is NamedE) return@forEachIndexed
                 val o = origin(a)
                 val t = (if (o is NameE && lookup(o.n) == null) locals[o.n]?.type?.let { try { resolve(it) } catch (x: CompileError) { null } } else null)
+                    ?: (if (o is NameE && lookup(o.n) == null) recvField(o.n) else null)
                     ?: probeType(o) ?: return@forEachIndexed
                 if (t != Ty.Unit && t != Ty.RawPtr && t != Ty.Args) unify(pr, t, tps, env)
             }
@@ -3244,7 +3253,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val rest = ps.drop(1)
             val names = if (declared.isEmpty()) (if (rest.size == 1) listOf("it") else if (rest.isEmpty()) emptyList() else fail("lambda needs ${rest.size} parameters")) else declared
             if (names.size != rest.size) fail("lambda expects ${rest.size} parameters, has ${names.size}")
-            if (b0.paramTypes.any { it != null }) fail("typed parameters in a lambda with receiver are not supported")
+            // Declared parameter types (`{ x: Int -> }`) must agree with the function type.
+            b0.paramTypes.forEachIndexed { i, pt -> if (pt != null && resolve(pt) != rest[i]) fail("lambda parameter '${names[i]}' is declared ${resolve(pt)}, expected ${rest[i]}") }
             val b1 = RecvLambdas.map.getOrPut(b0) { Block(b0.stmts, listOf("this") + names.mapIndexed { i, n -> if (n == "_") "\$_$i" else n }, emptyList()) }
             return genLambda(LambdaE(b1).also { it.line = e.line }, ps, ret, false, asRecvFn = true)
         }
