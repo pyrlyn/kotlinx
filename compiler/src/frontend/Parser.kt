@@ -1388,6 +1388,7 @@ class Parser(toks: List<Tok>) {
             }
             ifaceSupers[name] = ss
         }
+        whereClause(tps)
         val savedIface = curIface; curIface = name; val savedTps = memberTps; memberTps = tps
         val ms0 = try { if (isOp("{")) members() else emptyList() } finally { curIface = savedIface; memberTps = savedTps }
         val ms = inferIfaceRets(name, renamePrivate(name, ms0))
@@ -1402,6 +1403,31 @@ class Parser(toks: List<Tok>) {
     }
 
     /** `<T, reified U : Bound>`: type parameter names; upper bounds are parsed but not checked (monomorphization). */
+    /** Declaration line of each type parameter of the last parsed `<...>` list (for bounds given in a `where` clause). */
+    private val tpLines = HashMap<String, Int>()
+
+    /**
+     * `where T : A, T : B, U : C` after a declaration header: the first bound of each type parameter is recorded like an
+     * inline bound (generic code is monomorphized, so further bounds of an intersection only constrain callers).
+     */
+    private fun whereClause(tps: List<String>) {
+        val save = p
+        while (t[p].k == K.NL) p++
+        if (!isId("where")) { p = save; return }
+        next()
+        nested(1) {
+            while (true) {
+                val tp = ident(); expectOp(":"); val b = type()
+                if (tp !in tps) fail("unknown type parameter in where clause")
+                val key = "${tpLines[tp]}:$tp"
+                if (key in TypeParamBounds.unbounded) { TypeParamBounds.unbounded.remove(key); TypeParamBounds.bounds[key] = b
+                    if (b.name == "Any" && b.nullable) TypeParamBounds.unbounded.add(key) }
+                if (!isOp(",")) break
+                next()
+            }
+        }
+    }
+
     private fun typeParams(): List<String> {
         val tps = ArrayList<String>()
         if (!isOp("<")) return tps
@@ -1409,7 +1435,7 @@ class Parser(toks: List<Tok>) {
         while (!isOp(">")) {
             while (isId("reified") || isId("out") || isId("in")) next()
             val tl = t[p].line; val tp = ident()
-            tps.add(tp)
+            tps.add(tp); tpLines[tp] = tl
             if (isOp(":")) { next(); val b = type(); TypeParamBounds.bounds["$tl:$tp"] = b; if (b.name == "Any" && b.nullable) TypeParamBounds.unbounded.add("$tl:$tp") } else TypeParamBounds.unbounded.add("$tl:$tp")
             if (isOp(",")) next()
         }
@@ -1470,6 +1496,7 @@ class Parser(toks: List<Tok>) {
         }
         expectOp(")")
         val ret = if (isOp(":")) { next(); type() } else null
+        whereClause(typeParams)
         return if (isOp("=")) {
             next(); skipNLOnly()
             val outerDecls = pendingDecls; pendingDecls = ArrayList(); bodyLevel++
@@ -1651,6 +1678,7 @@ class Parser(toks: List<Tok>) {
     private fun classBody(name: String, isEnum: Boolean, fields: ArrayList<FieldD>, ctorParams: List<Param>, inits: ArrayList<Any>,
                           supers: List<String>, superArgs: List<E>?, typeParams: List<String>, line: Int): ClassD {
         val sta = takeSuperArgs()
+        whereClause(typeParams)
         var entries: List<Pair<String, List<E>>>? = null
         val ms = if (isEnum) {
             val es = ArrayList<Pair<String, List<E>>>()

@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2629,
-  "UNSUPPORTED": 2862
+  "PASS": 2632,
+  "UNSUPPORTED": 2859
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -4696,15 +4696,14 @@
    "upstream": "compiler/testData/codegen/box/casts/genericReturnCast.kt"
   },
   "box/box/casts/intersectionTypeMultipleBounds.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "strings / templates",
+   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeMultipleBounds.kt"
   },
   "box/box/casts/intersectionTypeMultipleBoundsImplicitReceiver.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeMultipleBoundsImplicitReceiver.kt"
   },
   "box/box/casts/intersectionTypeSmartcast.kt": {
@@ -4714,15 +4713,14 @@
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeSmartcast.kt"
   },
   "box/box/casts/intersectionTypeWithMultipleBoundsAsReceiver.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of ext$S$bip; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeWithMultipleBoundsAsReceiver.kt"
   },
   "box/box/casts/intersectionTypeWithoutGenericsAsReceiver.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeWithoutGenericsAsReceiver.kt"
   },
   "box/box/casts/isNullablePrimitive.kt": {
@@ -16058,8 +16056,8 @@
    "upstream": "compiler/testData/codegen/box/fir/functionsDifferInTypeParameterBounds2.kt"
   },
   "box/box/fir/functionsDifferInTypeParameterBounds3.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'where')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/functionsDifferInTypeParameterBounds3.kt"
   },
@@ -16597,8 +16595,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/inlinedSamWrapper.kt"
   },
   "box/box/funInterface/intersectionTypeToFunInterfaceConversion.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "lambdas / function types / references",
+   "detail": "expected identifier (at '(')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/intersectionTypeToFunInterfaceConversion.kt"
   },
@@ -23871,14 +23869,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/topLevel.kt"
   },
   "box/box/inlineClasses/safeAsOfTypeParameterWithInlineClassBound.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "other: safe cast from Z to Int is not supported",
+   "detail": "safe cast from Z to Int is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/safeAsOfTypeParameterWithInlineClassBound.kt"
   },
   "box/box/inlineClasses/safeAsOfTypeParameterWithInlineClassBoundGeneric.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "other: safe cast from Z$Int to Int is not supported",
+   "detail": "safe cast from Z$Int to Int is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/safeAsOfTypeParameterWithInlineClassBoundGeneric.kt"
   },
@@ -24324,14 +24322,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingTypeGeneric.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullableInlineClassUnderlyingTypeGWI.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "generics",
+   "detail": "generic class I32 used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullableInlineClassUnderlyingTypeGWI.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullableInlineClassUnderlyingTypeGWI2.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "generics",
+   "detail": "generic class I32 used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullableInlineClassUnderlyingTypeGWI2.kt"
   },
@@ -24341,14 +24339,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingType.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGWI.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "generics",
+   "detail": "generic class I32 used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGWI.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGWI2.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "generics",
+   "detail": "generic class I32 used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxNullableValueOfInlineClassWithNullablePrimitiveUnderlyingTypeGWI2.kt"
   },
@@ -28910,8 +28908,8 @@
    "upstream": "compiler/testData/codegen/box/objects/useImportedMemberFromCompanion.kt"
   },
   "box/box/operatorConventions/BoundedGenericValueInRangeCheck.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "generics",
+   "detail": "cannot infer type parameter X of testContainsNestedTypeArgs; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/BoundedGenericValueInRangeCheck.kt"
   },
@@ -31049,8 +31047,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/smartCastOnBothEnds.kt"
   },
   "box/box/ranges/contains/smartCastOnBothEndsGeneric.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "operator/infix functions",
+   "detail": "operator != on Char and CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/contains/smartCastOnBothEndsGeneric.kt"
   },
@@ -36008,26 +36006,26 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallWithElvisFolding.kt"
   },
   "box/box/sam/approximation/approxToIntermediateType.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected G$A, found G$B",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/approxToIntermediateType.kt"
   },
   "box/box/sam/approximation/approxToSingleUpperBound.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected G$A, found G$B",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/approxToSingleUpperBound.kt"
   },
   "box/box/sam/approximation/impossibleToApproxToRepresentable.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected G$A, found G$B",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/impossibleToApproxToRepresentable.kt"
   },
   "box/box/sam/approximation/impossibleToApproxToRepresentable2.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected G$A, found G$B",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/approximation/impossibleToApproxToRepresentable2.kt"
   },
@@ -36174,8 +36172,8 @@
    "upstream": "compiler/testData/codegen/box/sealed/delegatingConstructor.kt"
   },
   "box/box/sealed/kt49752.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "generics",
+   "detail": "generic super-interfaces are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sealed/kt49752.kt"
   },
@@ -37922,14 +37920,13 @@
    "upstream": "compiler/testData/codegen/box/traits/kt3500.kt"
   },
   "box/box/traits/kt3579.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/traits/kt3579.kt"
   },
   "box/box/traits/kt3579_2.kt": {
-   "category": "other syntax (at 'where')",
-   "detail": "unexpected top-level token (at 'where')",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt3579_2.kt"
   },
