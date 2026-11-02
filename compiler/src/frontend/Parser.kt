@@ -564,6 +564,7 @@ class Parser(toks: List<Tok>) {
                 tk.k == K.EOF -> break
                 tk.k == K.OP && tk.s == "@" -> skipLine()
                 tk.k == K.ID && tk.s == "typealias" && t[p + 1].k == K.ID && t[p + 2].k == K.OP && t[p + 2].s == "=" -> { p += 3; type() }
+                tk.k == K.ID && tk.s == "typealias" && t[p + 1].k == K.ID && t[p + 1].s in genericAliases -> { p += 2; typeParams(); expectOp("="); type() }
                 tk.k == K.ID && tk.s == "typealias" -> fail("generic type aliases are not supported", tk)
                 // Annotation declarations have no runtime effect here.
                 tk.k == K.ID && tk.s == "annotation" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classDecl() }
@@ -1876,7 +1877,10 @@ class Parser(toks: List<Tok>) {
             next()
         }
         val nullable = if (isOp("?")) { next(); true } else false
-        val base = aliases[name]?.takeIf { args.isEmpty() }?.let { a -> TypeRef(a.name, a.args, a.nullable || nullable) } ?: TypeRef(name, args, nullable)
+        val base = aliases[name]?.takeIf { args.isEmpty() }?.let { a -> TypeRef(a.name, a.args, a.nullable || nullable) }
+            ?: genericAliases[name]?.takeIf { it.first.size == args.size }?.let { (tps, rhs) ->
+                val a = Subst(tps.zip(args).toMap()).ty(rhs); TypeRef(a.name, a.args, a.nullable || nullable) }
+            ?: TypeRef(name, args, nullable)
         // Function type with receiver `R.(A) -> X`: TypeRef "$FnR" with args = receiver + params + return.
         if (isOp(".") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
             next(); next()
@@ -1889,6 +1893,8 @@ class Parser(toks: List<Tok>) {
 
     /** Non-generic `typealias N = T`, collected before parsing so aliases may be used before their declaration. */
     private val aliases = HashMap<String, TypeRef>()
+    /** Generic `typealias N<A, B> = T`: type parameters and right-hand side (substituted at each use with arguments). */
+    private val genericAliases = HashMap<String, Pair<List<String>, TypeRef>>()
 
     private fun collectAliases() {
         // CharSequence: only String implements it here (StringBuilder is not a CharSequence value), so it is String.
@@ -1903,6 +1909,17 @@ class Parser(toks: List<Tok>) {
                 p += 3
                 val name = t[p - 2].s
                 aliases[name] = type()
+                continue
+            }
+            if (depth == 0 && tk.k == K.ID && tk.s == "typealias" && t[p + 1].k == K.ID && t[p + 2].k == K.OP && t[p + 2].s == "<") {
+                val save2 = p
+                try {
+                    p += 2
+                    val name = t[p - 1].s
+                    val tps = typeParams()
+                    if (isOp("=")) { next(); genericAliases[name] = tps to type(); continue }
+                } catch (_: CompileError) {}
+                p = save2 + 1
                 continue
             }
             p++
@@ -2298,8 +2315,13 @@ class Parser(toks: List<Tok>) {
                         // `f<T>(args) { lambda }` or `f<T> { lambda }`
                         val a = if (isOp("(")) args() else emptyList()
                         val lam = if (!noBraceCall && t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
-                        CallE(NameE(tk.s).also { it.line = tk.line }, ta, a, lam)
-                    } ?: NameE(tk.s)
+                        // Constructor through a generic type alias: `ST<Int>(...)` -> the aliased class with substituted arguments.
+                        val al = genericAliases[tk.s]?.takeIf { it.first.size == ta.size }?.let { (tps, rhs) -> Subst(tps.zip(ta).toMap()).ty(rhs) }
+                        if (al != null) CallE(NameE(al.name).also { it.line = tk.line }, al.args, a, lam)
+                        else CallE(NameE(tk.s).also { it.line = tk.line }, ta, a, lam)
+                    } ?: genericAliases[tk.s]?.takeIf { (tps, rhs) -> t[p].k == K.OP && t[p].s == "(" && rhs.args.map { it.name } == tps && rhs.args.none { it.args.isNotEmpty() || it.nullable } }
+                        ?.let { NameE(it.second.name) }
+                    ?: NameE(tk.s)
                 }
             }
             K.OP -> if (tk.s == "{") { p--; LambdaE(block(lambda = true)) } else if (tk.s == "(") { val x = nested(1) { expr() }; expectOp(")"); x } else fail("unexpected operator", tk)
