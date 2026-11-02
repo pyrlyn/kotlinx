@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2775,
-  "UNSUPPORTED": 2716
+  "PASS": 2779,
+  "UNSUPPORTED": 2712
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -3490,8 +3490,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/callableReferenceOfObjectMethod.kt"
   },
   "box/box/callableReference/callableReferenceOnObjectTypealias.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "unknown OnSomeObject (stdlib API / unsupported decl)",
+   "detail": "unknown name 'OnSomeObject'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/callableReferenceOnObjectTypealias.kt"
   },
@@ -6845,8 +6845,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/topLevelInitTriggersCompanionBlock.kt"
   },
   "box/box/companionBlocksAndExtensions/typeAlias.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "objects / companion objects",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/typeAlias.kt"
   },
@@ -7654,7 +7654,7 @@
   },
   "box/box/contextParameters/kt65953.kt": {
    "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "detail": "expected ':' (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/kt65953.kt"
   },
@@ -13594,8 +13594,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/smartCastedDelegation.kt"
   },
   "box/box/delegation/viaTypeAlias.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "interfaces",
+   "detail": "only interfaces can be delegated with 'by' (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/viaTypeAlias.kt"
   },
@@ -16684,8 +16684,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/suspendFunctionAndFunInterfaceSharedClassSplit.kt"
   },
   "box/box/funInterface/typealiasedFunInterface.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "unknown TA (stdlib API / unsupported decl)",
+   "detail": "unknown function 'TA'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/typealiasedFunInterface.kt"
   },
@@ -16915,9 +16915,8 @@
    "upstream": "compiler/testData/codegen/box/functions/bigArity/invokeMemberCallableReference.kt"
   },
   "box/box/functions/bigArity/nestedBigArityFunCalls.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/bigArity/nestedBigArityFunCalls.kt"
   },
   "box/box/functions/bigArity/subclass.kt": {
@@ -17853,8 +17852,8 @@
    "upstream": "compiler/testData/codegen/box/inference/capturedTypeWhenSubject.kt"
   },
   "box/box/inference/capturedTypesSubstitutionIntoAbbreviation.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/capturedTypesSubstitutionIntoAbbreviation.kt"
   },
@@ -18478,8 +18477,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66359a.kt"
   },
   "box/box/inference/pcla/issues/kt66359b.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66359b.kt"
   },
@@ -38234,14 +38233,14 @@
    "upstream": "compiler/testData/codegen/box/typeMapping/nullableNothing.kt"
   },
   "box/box/typealias/abbreviationWithCapturedType.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "type inference (expression bodies)",
+   "detail": "method '$prop$columns' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/abbreviationWithCapturedType.kt"
   },
   "box/box/typealias/callTypeAliasWithInnerRhsInStaticScope.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "other: unknown method C.TA()",
+   "detail": "unknown method C.TA()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/callTypeAliasWithInnerRhsInStaticScope.kt"
   },
@@ -38268,15 +38267,13 @@
    "upstream": "compiler/testData/codegen/box/typealias/genericTypeAliasConstructor.kt"
   },
   "box/box/typealias/genericTypeAliasConstructor2.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt"
   },
   "box/box/typealias/genericTypeAliasConstructor_implicitTypeArguments.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/typealias/genericTypeAliasConstructor_implicitTypeArguments.kt"
   },
   "box/box/typealias/importNestedTypealiasFromAnotherModule.kt": {
@@ -38334,8 +38331,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/nestedTypeAliasesAndTypeArguments.kt"
   },
   "box/box/typealias/objectLiteralConstructor.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown superclass AddLastDesc$SendBuffered",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/objectLiteralConstructor.kt"
   },
@@ -38345,14 +38342,14 @@
    "upstream": "compiler/testData/codegen/box/typealias/privateInKlib.kt"
   },
   "box/box/typealias/simple.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "unknown it (stdlib API / unsupported decl)",
+   "detail": "unknown name 'it'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/simple.kt"
   },
   "box/box/typealias/typeAliasAsBareType.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "other: unknown type Collection<Int>",
+   "detail": "unknown type Collection<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasAsBareType.kt"
   },
@@ -38375,21 +38372,20 @@
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasConstructorAccessor.kt"
   },
   "box/box/typealias/typeAliasConstructorForArray.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "unknown BoolArray (stdlib API / unsupported decl)",
+   "detail": "unknown function 'BoolArray'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasConstructorForArray.kt"
   },
   "box/box/typealias/typeAliasConstructorInSuperCall.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "unknown superclass CT$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasConstructorInSuperCall.kt"
   },
   "box/box/typealias/typeAliasFunction.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasFunction.kt"
   },
   "box/box/typealias/typeAliasInAnonymousObjectType.kt": {
@@ -38427,8 +38423,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/typeAliasUsedAcrossModules.kt"
   },
   "box/box/typealias/typeArgumentsMappingForTopLevelTAWithInnerRHS.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "other syntax (at '.')",
+   "detail": "unexpected top-level token (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/typealias/typeArgumentsMappingForTopLevelTAWithInnerRHS.kt"
   },
@@ -39557,8 +39553,8 @@
    "upstream": "compiler/testData/codegen/box/when/implicitExhaustiveAndReturn.kt"
   },
   "box/box/when/inferredTypeParameters.kt": {
-   "category": "generics",
-   "detail": "generic type aliases are not supported (at 'typealias')",
+   "category": "other syntax (at 'x')",
+   "detail": "expected ')' (at 'x')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/inferredTypeParameters.kt"
   },
