@@ -793,14 +793,30 @@ class Parser(toks: List<Tok>) {
      * Interface inheritance: each interface gets its ancestors' methods and defaults (unless redeclared) and records
      * all ancestors; classes implementing an interface also implement its ancestors.
      */
+    /** Interface -> type arguments of its directly declared generic super-interfaces. */
+    private val ifaceSuperRefs = HashMap<String, HashMap<String, List<TypeRef>>>()
+
     private fun flattenIfaces(classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>) {
         if (ifaceSupers.isEmpty()) return
         val byName = ifaces.associateBy { it.name }
-        fun anc(n: String, seen: MutableSet<String> = LinkedHashSet()): Set<String> {
-            for (s in ifaceSupers[n].orEmpty()) { if (s !in byName) fail("unknown interface $s"); if (seen.add(s)) anc(s, seen) }
+        /** Type arguments of every generic ancestor of [n], in terms of [n]'s own type parameters. */
+        val ancArgs = HashMap<String, HashMap<String, List<TypeRef>>>()
+        fun anc(n: String, seen: MutableSet<String> = LinkedHashSet(), sub: Map<String, TypeRef> = emptyMap(), top: String = n): Set<String> {
+            for (s in ifaceSupers[n].orEmpty()) {
+                val sd = byName[s] ?: fail("unknown interface $s")
+                val args = ifaceSuperRefs[n]?.get(s)?.map { Subst(sub).ty(it) }
+                if (sd.typeParams.isNotEmpty() && args == null) fail("generic interface $s needs type arguments in $top")
+                if (args != null) {
+                    if (args.size != sd.typeParams.size) fail("wrong number of type arguments for $s")
+                    val prev = ancArgs.getOrPut(top) { HashMap() }.put(s, args)
+                    if (prev != null && prev.toString() != args.toString()) fail("$top inherits $s with different type arguments")
+                }
+                if (seen.add(s)) anc(s, seen, if (args != null) sd.typeParams.zip(args).toMap() else emptyMap(), top)
+            }
             return seen
         }
         val ancestors = ifaces.associate { it.name to anc(it.name).toList() }
+        for ((n, m) in ancArgs) IfaceSuperArgs.map[n] = m
         ifaceAnc.putAll(ancestors)
         for (i in ifaces.indices) {
             val d = ifaces[i]; val a = ancestors.getValue(d.name)
@@ -808,7 +824,9 @@ class Parser(toks: List<Tok>) {
             val ms = ArrayList(d.methods)
             val defs = ArrayList(ifaceDefaults[d.name].orEmpty())
             for (s in a) {
-                for (m in byName.getValue(s).methods) if (ms.none { it.name == m.name }) ms.add(m)
+                val sd = byName.getValue(s)
+                val sub = ancArgs[d.name]?.get(s)?.let { Subst(sd.typeParams.zip(it).toMap()) }
+                for (m in sd.methods) if (ms.none { it.name == m.name }) ms.add(sub?.fn(m) ?: m)
                 if (s in genericIfaceTps) fail("default methods inherited from a generic super-interface are not supported")
             }
             // Inherited defaults: the most specific declaration wins (`interface D : B, C` with `C : A` overriding A's).
@@ -819,7 +837,18 @@ class Parser(toks: List<Tok>) {
         for (i in classes.indices) {
             val c = classes[i]
             val extra = c.supers.flatMap { ancestors[it].orEmpty() }.filter { it !in c.supers }.distinct()
-            if (extra.isNotEmpty()) classes[i] = ClassD(c.name, c.fields, c.supers + extra, c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
+            // Inherited generic interfaces: their type arguments, through the direct super's own arguments.
+            val sta = HashMap(c.superTypeArgs)
+            for (d in c.supers) {
+                val dd = byName[d] ?: continue
+                val dsub = Subst(dd.typeParams.zip(c.superTypeArgs[d].orEmpty()).toMap())
+                for ((s, args) in ancArgs[d].orEmpty()) {
+                    val a = args.map { dsub.ty(it) }
+                    val prev = sta.put(s, a)
+                    if (prev != null && prev.toString() != a.toString()) fail("${c.name} inherits $s with different type arguments")
+                }
+            }
+            if (extra.isNotEmpty() || sta.size != c.superTypeArgs.size) classes[i] = ClassD(c.name, c.fields, c.supers + extra, c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, sta)
         }
     }
 
@@ -1404,7 +1433,7 @@ class Parser(toks: List<Tok>) {
             val ss = ArrayList<String>()
             while (true) {
                 val st = type()
-                if (st.args.isNotEmpty()) fail("generic super-interfaces are not supported")
+                if (st.args.isNotEmpty()) ifaceSuperRefs.getOrPut(name) { HashMap() }[st.name] = st.args
                 ss.add(st.name)
                 if (isOp(",")) next() else break
             }
