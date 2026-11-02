@@ -322,6 +322,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (bi != null) listOf(bi.name) + bi.ancestors else emptyList(), impl)
         }
         for (c in classes.values) for (a in c.ancestors) poly.add(a)
+        // Classes with abstract methods dispatch virtually even before a subclass is known (the subclass of a generic
+        // instance, e.g. an anonymous object in a generic function, may only be discovered later).
+        for (c in classes.values) if (c.methods.keys.any { it !in c.impl && c.methods.getValue(it).typeParams.isEmpty() }) poly.add(c.name)
         for (c in classes.values) if (c.name in poly || c.ancestors.isNotEmpty()) for ((m, d) in c.methods) if (d.typeParams.isEmpty() && m !in slots) slots.add(m)
         for (c in classOrder) {
             for (m in c.methods) {
