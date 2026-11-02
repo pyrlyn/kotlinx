@@ -1961,7 +1961,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val vFrom = cur
         br(le)
         startBlock(le)
-        return Val(emitT("phi ptr [ null, %$from ], [ ${v.v}, %$vFrom ]"), v.t, v.t is Ty.NBox)
+        // An owned call result (`f()?.g()`, or a field retained from a temporary receiver) stays owned.
+        return Val(emitT("phi ptr [ null, %$from ], [ ${v.v}, %$vFrom ]"), v.t, v.t is Ty.NBox || v.owned)
     }
 
     /** Stdlib scope functions with a lambda literal (`let`, `also`, `run`, `repeat`), lowered to plain blocks. */
@@ -2820,7 +2821,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
         }
         val v = genExpr(e.e)
-        if (e.type.name == "Any" && "Any" in ifaces && (boxName(v.t) != null || v.t is Ty.Iface || v.t is Ty.Cls && v.t.name.substringBefore('$') !in genericClasses)) return coerce(v, Ty.Iface("Any"))
+        if (e.type.name == "Any" && "Any" in ifaces && (boxName(v.t) != null || v.t is Ty.Iface || v.t is Ty.Cls && v.t.name.substringBefore('$') !in genericClasses))
+            // `x as Any` of a reference that may be null at run time (an unchecked `T` result): NullPointerException.
+            return coerce(if (!e.type.nullable && !e.safe && v.t.llvm == "ptr" && v.v != "null") genNonNull(v) else v, Ty.Iface("Any"))
         val star = e.type.args.any { it.name == "*" }
         val target = if (e.type.name == "Any") v.t else if (star) (v.t.takeIf { v.t is Ty.Cls || v.t is Ty.Iface } ?: fail("unsupported cast to ${e.type.name}<*>")) else resolve(TypeRef(e.type.name, e.type.args, false))
         if (v.v == "null" && target.llvm != "ptr") fail("unchecked cast of null to non-nullable $target is not supported")
@@ -2838,9 +2841,25 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         if (statically(v.t, target) && (e.type.nullable || e.safe) && v.v != "null") return Val(v.v, target, v.owned)
         val unboxing = isAny(v.t) && boxName(target) != null
+        // `a as T` (T unbounded, so nullable) unboxing from Any in an instance where T is a primitive or String:
+        // a null passes through for String; otherwise checked like a non-null cast.
+        if (unboxing && !e.safe && e.type.nullable && e !== e0) {
+            if (target == Ty.Str) {
+                val ln = label("asn.null"); val lv = label("asn.val"); val le = label("asn.end")
+                condBr(emitT("icmp eq ptr ${v.v}, null"), ln, lv)
+                startBlock(ln); br(le)
+                startBlock(lv)
+                val r = genAsChecked(v, e0.type, target)
+                val vFrom = cur; br(le)
+                startBlock(le)
+                return Val(emitT("phi ptr [ null, %$ln ], [ ${r.v}, %$vFrom ]"), target, r.owned)
+            }
+            return genAsChecked(v, e0.type, target)
+        }
         if (unboxing && (e.safe || e.type.nullable)) fail("nullable cast from Any to $target is not supported")
         // A safe cast of a reference to a primitive type would need a nullable primitive result (was invalid IR).
         if (e.safe && target.llvm != "ptr") fail("safe cast from ${v.t} to $target is not supported")
+        if (!e.safe) return genAsChecked(v, e.type, target)
         val ok = isCheck(v, e.type)
         val lok = label("as.ok"); val lbad = label("as.bad")
         if (e.safe) {
@@ -2852,10 +2871,25 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             br(lok); startBlock(lok)
             return Val(emitT("phi ptr [ ${v.v}, %$from ], [ null, %$fromB ]"), target, v.owned)
         }
+        error("unreachable")
+    }
+
+    /** Checked cast of reference [v] to [type] (resolved [target]): ClassCastException on mismatch, unboxing from Any. */
+    private fun genAsChecked(v: Val, type: TypeRef, target: Ty): Val {
+        val unboxing = isAny(v.t) && boxName(target) != null
+        val ok = isCheck(v, type)
+        val lok = label("as.ok"); val lbad = label("as.bad")
         condBr(ok, lok, lbad)
         startBlock(lbad)
+        // A null reaching a non-null cast (an unchecked `T` holding null) is a NullPointerException, as in Kotlin.
+        if (excMode && !type.nullable) {
+            val lnull = label("as.npe"); val lcce = label("as.cce")
+            condBr(emitT("icmp eq ptr ${v.v}, null"), lnull, lcce)
+            startBlock(lnull); throwNew("NullPointerException", Val("null", Ty.Str))
+            startBlock(lcce)
+        }
         releaseIfOwned(v)
-        val msg = "class ${v.t} cannot be cast to class ${e.type.name}"
+        val msg = "class ${v.t} cannot be cast to class ${type.name}"
         if (excMode) throwNew("ClassCastException", Val(cstr(msg), Ty.Str))
         else { emit("call void @rt_panic(ptr ${cstr("ClassCastException: $msg")})"); emit("unreachable"); term = true }
         startBlock(lok)
