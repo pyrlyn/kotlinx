@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2708,
-  "UNSUPPORTED": 2783
+  "PASS": 2712,
+  "UNSUPPORTED": 2779
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -134,8 +134,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/differentOrder.kt"
   },
   "box/box/annotations/instances/enumAndKClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "unknown AClass (stdlib API / unsupported decl)",
+   "detail": "unknown function 'AClass'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/enumAndKClass.kt"
   },
@@ -219,8 +219,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/repeatableInstantiation.kt"
   },
   "box/box/annotations/instances/typeAliasesAndGenericsInterop.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "unknown AnnAlias (stdlib API / unsupported decl)",
+   "detail": "unknown function 'AnnAlias'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/typeAliasesAndGenericsInterop.kt"
   },
@@ -445,8 +445,8 @@
    "upstream": "compiler/testData/codegen/box/arithmetic/basic_uintTests.kt"
   },
   "box/box/arithmetic/division.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "stdlib: kotlin.test asserts",
+   "detail": "unknown function 'assertFailsWith'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arithmetic/division.kt"
   },
@@ -3332,9 +3332,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/genericBoundPropertyAsCrossinline.kt"
   },
   "box/box/callableReference/bound/genericValOnLHS.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/genericValOnLHS.kt"
   },
   "box/box/callableReference/bound/inlineFunctionRefToAnonymousObject.kt": {
@@ -3855,8 +3854,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionWithTypeParam.kt"
   },
   "box/box/callableReference/function/genericCallableReferenceArgumentsNonJVM.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "other: overloads are not supported: check",
+   "detail": "overloads are not supported: check",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/genericCallableReferenceArgumentsNonJVM.kt"
   },
@@ -4862,26 +4861,26 @@
    "upstream": "compiler/testData/codegen/box/casts/mutableCollections/weirdMutableCasts.kt"
   },
   "box/box/casts/nativeCCEMessage/castAnonymousClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "strings / templates",
+   "detail": "unknown method String.removeSuffix()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/nativeCCEMessage/castAnonymousClass.kt"
   },
   "box/box/casts/nativeCCEMessage/castGlobalClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "strings / templates",
+   "detail": "unknown method String.removeSuffix()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/nativeCCEMessage/castGlobalClass.kt"
   },
   "box/box/casts/nativeCCEMessage/castLocalClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "strings / templates",
+   "detail": "unknown method String.removeSuffix()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/nativeCCEMessage/castLocalClass.kt"
   },
   "box/box/casts/nativeCCEMessage/castToLocalClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "strings / templates",
+   "detail": "unknown method String.removeSuffix()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/nativeCCEMessage/castToLocalClass.kt"
   },
@@ -5013,8 +5012,8 @@
    "upstream": "compiler/testData/codegen/box/classDelegation/withBridge.kt"
   },
   "box/box/classLiteral/bareArray.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "other: class literal of a ArrayList<Any> value is not supported (ru",
+   "detail": "class literal of a ArrayList<Any> value is not supported (runtime class unknown)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classLiteral/bareArray.kt"
   },
@@ -5024,20 +5023,18 @@
    "upstream": "compiler/testData/codegen/box/classLiteral/bound/primitives.kt"
   },
   "box/box/classLiteral/bound/sideEffect.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classLiteral/bound/sideEffect.kt"
   },
   "box/box/classLiteral/bound/simple.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classLiteral/bound/simple.kt"
   },
   "box/box/classLiteral/bound/smartCast.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "other: class literal of a Any value is not supported (runtime class",
+   "detail": "class literal of a Any value is not supported (runtime class unknown)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classLiteral/bound/smartCast.kt"
   },
@@ -9648,8 +9645,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/deserializedSuspendFunctionProperty.kt"
   },
   "box/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "unknown sequence (stdlib API / unsupported decl)",
+   "detail": "unknown function 'sequence'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt"
   },
@@ -18068,8 +18065,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/callableReferenceAndCoercionToUnit.kt"
   },
   "box/box/inference/pcla/callableReferencesProperCompletion.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "generics",
+   "detail": "expected ':' (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/callableReferencesProperCompletion.kt"
   },
@@ -19445,8 +19442,8 @@
    "upstream": "compiler/testData/codegen/box/inline/genericFunctionReference.kt"
   },
   "box/box/inline/getClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "unknown Int (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Int'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/getClass.kt"
   },
@@ -24816,8 +24813,8 @@
    "upstream": "compiler/testData/codegen/box/innerClass/inCallableReferenceLHS.kt"
   },
   "box/box/innerClass/inCallableReferenceLHSclassReference.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerClass/inCallableReferenceLHSclassReference.kt"
   },
@@ -26311,8 +26308,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/localExtendsInnerAndReferencesOuterMember.kt"
   },
   "box/box/localClasses/localGenericWithTypeParameters.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied method 'qz' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/localClasses/localGenericWithTypeParameters.kt"
   },
@@ -34811,14 +34808,14 @@
    "upstream": "compiler/testData/codegen/box/reflection/classes/qualifiedName.kt"
   },
   "box/box/reflection/classes/qualifiedNameOfStandardClasses.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "other: class literal of IntArray is not supported",
+   "detail": "class literal of IntArray is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reflection/classes/qualifiedNameOfStandardClasses.kt"
   },
   "box/box/reflection/classes/qualifiedNameOfStandardClassesOther.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "types: Array",
+   "detail": "class literal of unknown type Array is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reflection/classes/qualifiedNameOfStandardClassesOther.kt"
   },
@@ -34848,8 +34845,8 @@
    "upstream": "compiler/testData/codegen/box/reflection/functions/typeParameterInReturnType.kt"
   },
   "box/box/reflection/kClassCompanion.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "type inference (expression bodies)",
+   "detail": "method 'getSimpleName' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reflection/kClassCompanion.kt"
   },
@@ -34879,9 +34876,8 @@
    "upstream": "compiler/testData/codegen/box/reflection/noReflectAtRuntime/propertyInstanceof.kt"
   },
   "box/box/reflection/noReflectAtRuntime/simpleClassLiterals.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/reflection/noReflectAtRuntime/simpleClassLiterals.kt"
   },
   "box/box/reflection/properties/genericOverriddenProperty.kt": {
@@ -35645,8 +35641,8 @@
    "upstream": "compiler/testData/codegen/box/reified/kt36237.kt"
   },
   "box/box/reified/kt39256_privateInlineWithAnonymousObject.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "other: class literal of unknown type T is not supported",
+   "detail": "class literal of unknown type T is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/reified/kt39256_privateInlineWithAnonymousObject.kt"
   },
@@ -35971,8 +35967,8 @@
    "upstream": "compiler/testData/codegen/box/sam/constructors/nonLiteralComparator.kt"
   },
   "box/box/sam/constructors/sameWrapperClass2.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "other: class literal of a Any value is not supported (runtime class",
+   "detail": "class literal of a Any value is not supported (runtime class unknown)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/constructors/sameWrapperClass2.kt"
   },
@@ -39110,8 +39106,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/genericReturnCombinations.kt"
   },
   "box/box/versionOverloads/generics.kt": {
-   "category": "class bodies / constructors",
-   "detail": "class literals are not supported (at 'class')",
+   "category": "objects / companion objects",
+   "detail": "unexpected top-level token (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/versionOverloads/generics.kt"
   },
