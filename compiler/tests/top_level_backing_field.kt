@@ -21,6 +21,15 @@ var clamped: Long = 5L
 
 fun rename(s: String) { name = s }
 
+class Box(val p: Int) {
+    var next = this
+    operator fun inc(): Box = Box(p + 1)
+}
+
+var reads = 0
+var current: Box = Box(-1)
+    get() { reads++; return field }
+
 fun main() {
     counter = 3
     counter += 1
@@ -33,4 +42,8 @@ fun main() {
     println(clamped)
     clamped = 7L
     println(clamped)
+    current = Box(1)
+    ++(current.next)
+    println(reads)
+    println("${current.p} ${current.next.p}")
 }

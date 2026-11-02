@@ -1138,9 +1138,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** Runs [f] with [target], its receiver evaluated once into a temporary when that has side effects. */
     private fun onceRecv(target: E, f: (E) -> Val): Val =
-        if (target is MemberE && target.recv !is NameE && !target.safe)
+        if (target is MemberE && (target.recv !is NameE || isTopGetter(target.recv as NameE)) && !target.safe)
             withTemps(listOf(genExpr(target.recv))) { (x) -> f(MemberE(x, target.n, false).also { it.line = target.line }) }
         else f(target)
+
+    /** A name read through a top-level property getter (may have side effects, so it is evaluated once). */
+    private fun isTopGetter(n: NameE) = lookup(n.n) == null && "\$get\$${n.n}" in funDecls &&
+        !(owner != null && (owner!!.index(n.n) >= 0 || "\$prop\$${n.n}" in owner!!.methods))
 
     private fun assign(target: E, value: E) {
         when (target) {
