@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2632,
-  "UNSUPPORTED": 2859
+  "PASS": 2646,
+  "UNSUPPORTED": 2845
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2002,21 +2002,18 @@
    "upstream": "compiler/testData/codegen/box/bridges/diamond.kt"
   },
   "box/box/bridges/diamond/diamondAbstractDeclarations.kt": {
-   "category": "strings / templates",
-   "detail": "override E.foo returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/diamond/diamondAbstractDeclarations.kt"
   },
   "box/box/bridges/diamond/diamondAbstractFakeOverridesInTheMiddle.kt": {
-   "category": "strings / templates",
-   "detail": "override E.foo returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/diamond/diamondAbstractFakeOverridesInTheMiddle.kt"
   },
   "box/box/bridges/diamond/diamondMixedDeclarations.kt": {
-   "category": "strings / templates",
-   "detail": "override B.foo returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/diamond/diamondMixedDeclarations.kt"
   },
   "box/box/bridges/doubleOverride/concreteDeclarationOverridesAbstractDeclarationOverridingConcrete.kt": {
@@ -2026,15 +2023,13 @@
    "upstream": "compiler/testData/codegen/box/bridges/doubleOverride/concreteDeclarationOverridesAbstractDeclarationOverridingConcrete.kt"
   },
   "box/box/bridges/doubleOverride/concreteDeclarationOverridesTwoInheritingDeclarations.kt": {
-   "category": "strings / templates",
-   "detail": "override B.foo returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/doubleOverride/concreteDeclarationOverridesTwoInheritingDeclarations.kt"
   },
   "box/box/bridges/fakeCovariantOverride.kt": {
-   "category": "strings / templates",
-   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeCovariantOverride.kt"
   },
   "box/box/bridges/fakeGenericCovariantOverride.kt": {
@@ -2048,21 +2043,20 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeGenericCovariantOverrideWithDelegation.kt"
   },
   "box/box/bridges/fakeOverride/abstractFakeOverride.kt": {
-   "category": "strings / templates",
-   "detail": "override D.foo returns String where Any is expected (bridges are not supported)",
+   "category": "interfaces",
+   "detail": "override D.foo implements interface methods with different signatures (bridges per interface are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/abstractFakeOverride.kt"
   },
   "box/box/bridges/fakeOverride/diamondFakeOverrideAbstractAndConcrete.kt": {
-   "category": "strings / templates",
-   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
+   "category": "interfaces",
+   "detail": "override D.foo implements interface methods with different signatures (bridges per interface are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/diamondFakeOverrideAbstractAndConcrete.kt"
   },
   "box/box/bridges/fakeOverride/diamondFakeOverrideAbstractFakeAndConcrete.kt": {
-   "category": "strings / templates",
-   "detail": "override B.foo returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/diamondFakeOverrideAbstractFakeAndConcrete.kt"
   },
   "box/box/bridges/fakeOverride/diamondFakeOverrideAbstractOverridesConcrete.kt": {
@@ -2072,9 +2066,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/diamondFakeOverrideAbstractOverridesConcrete.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideAbstractAndConcreteDeclarations.kt": {
-   "category": "strings / templates",
-   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideAbstractAndConcreteDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideDiamondWithExtraAbstract.kt": {
@@ -2084,14 +2077,13 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideDiamondWithExtraAbstract.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritingDeclarations.kt": {
-   "category": "strings / templates",
-   "detail": "override B.foo returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritingDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritingDeclarationsAndAbstract.kt": {
-   "category": "strings / templates",
-   "detail": "override E.foo returns String where Any is expected (bridges are not supported)",
+   "category": "interfaces",
+   "detail": "override E.foo implements interface methods with different signatures (bridges per interface are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritingDeclarationsAndAbstract.kt"
   },
@@ -2102,14 +2094,13 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritsBridgeFromDeclaration.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritsBridgeFromFakeOverride.kt": {
-   "category": "strings / templates",
-   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritsBridgeFromFakeOverride.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideInheritsBridgesAndAbstract.kt": {
-   "category": "strings / templates",
-   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
+   "category": "interfaces",
+   "detail": "override E.foo implements interface methods with different signatures (bridges per interface are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideInheritsBridgesAndAbstract.kt"
   },
@@ -2120,8 +2111,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideManyDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideMisleadingImplementation.kt": {
-   "category": "strings / templates",
-   "detail": "override F.foo returns String where Any is expected (bridges are not supported)",
+   "category": "interfaces",
+   "detail": "override F.foo implements interface methods with different signatures (bridges per interface are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideMisleadingImplementation.kt"
   },
@@ -2131,9 +2122,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideSameSuperDeclarations.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractDeclaration.kt": {
-   "category": "strings / templates",
-   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractDeclaration.kt"
   },
   "box/box/bridges/fakeOverride/fakeOverrideShouldNotInheritBridgeFromAbstractFakeOverride.kt": {
@@ -2147,8 +2137,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/fakeOverrideTwoDeclarationsThroughFakeOverrides.kt"
   },
   "box/box/bridges/fakeOverride/longTreeOfFakeOverrideBridgeInheritance.kt": {
-   "category": "strings / templates",
-   "detail": "override D.foo returns String where Any is expected (bridges are not supported)",
+   "category": "interfaces",
+   "detail": "override J.foo implements interface methods with different signatures (bridges per interface are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverride/longTreeOfFakeOverrideBridgeInheritance.kt"
   },
@@ -2188,9 +2178,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideWithSeveralSuperDeclarations.kt"
   },
   "box/box/bridges/fakeOverrideWithSynthesizedImplementation.kt": {
-   "category": "strings / templates",
-   "detail": "override C.component1 returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideWithSynthesizedImplementation.kt"
   },
   "box/box/bridges/genericProperty.kt": {
@@ -2378,26 +2367,24 @@
    "upstream": "compiler/testData/codegen/box/bridges/overrideWithValueClassReturn.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesAbstractAndConcreteDeclarations.kt": {
-   "category": "strings / templates",
-   "detail": "override D.foo returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesAbstractAndConcreteDeclarations.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesTwoAbstractDeclarations.kt": {
-   "category": "strings / templates",
-   "detail": "override D.foo returns String where Any is expected (bridges are not supported)",
+   "category": "interfaces",
+   "detail": "override D.foo implements interface methods with different signatures (bridges per interface are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/abstractDeclarationOverridesTwoAbstractDeclarations.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesAbstractAndConcreteDeclarations.kt": {
-   "category": "strings / templates",
-   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesAbstractAndConcreteDeclarations.kt"
   },
   "box/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesTwoAbstractDeclarations.kt": {
-   "category": "strings / templates",
-   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
+   "category": "interfaces",
+   "detail": "override C.foo implements interface methods with different signatures (bridges per interface are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/overridesTwoDeclarations/concreteDeclarationOverridesTwoAbstractDeclarations.kt"
   },
@@ -2559,9 +2546,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test0.kt"
   },
   "box/box/bridges/test1.kt": {
-   "category": "other: override A.foo returns Int where Any is expected (bridges ar",
-   "detail": "override A.foo returns Int where Any is expected (bridges are not supported)",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/test1.kt"
   },
   "box/box/bridges/test10.kt": {
@@ -2663,8 +2649,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test3.kt"
   },
   "box/box/bridges/test4.kt": {
-   "category": "other: override B.foo returns Int where Any is expected (bridges ar",
-   "detail": "override B.foo returns Int where Any is expected (bridges are not supported)",
+   "category": "interfaces",
+   "detail": "override B.foo implements interface methods with different signatures (bridges per interface are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test4.kt"
   },
@@ -2698,8 +2684,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test9.kt"
   },
   "box/box/bridges/traitImplInheritsTraitImpl.kt": {
-   "category": "strings / templates",
-   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
+   "category": "interfaces",
+   "detail": "override C.foo implements interface methods with different signatures (bridges per interface are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/traitImplInheritsTraitImpl.kt"
   },
@@ -4696,8 +4682,8 @@
    "upstream": "compiler/testData/codegen/box/casts/genericReturnCast.kt"
   },
   "box/box/casts/intersectionTypeMultipleBounds.kt": {
-   "category": "strings / templates",
-   "detail": "override C.foo returns String where Any is expected (bridges are not supported)",
+   "category": "interfaces",
+   "detail": "override C.foo implements interface methods with different signatures (bridges per interface are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeMultipleBounds.kt"
   },
@@ -4707,8 +4693,8 @@
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeMultipleBoundsImplicitReceiver.kt"
   },
   "box/box/casts/intersectionTypeSmartcast.kt": {
-   "category": "strings / templates",
-   "detail": "override $anon0.foo returns String where Any is expected (bridges are not supported)",
+   "category": "interfaces",
+   "detail": "override $anon0.foo implements interface methods with different signatures (bridges per interface are not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/intersectionTypeSmartcast.kt"
   },
@@ -37965,7 +37951,7 @@
   },
   "box/box/traits/sameNameMethodFromInterface.kt": {
    "category": "strings / templates",
-   "detail": "override B.foo returns Unit where String is expected (bridges are not supported)",
+   "detail": "override B.foo returns Unit where String is expected (this bridge is not supported)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/sameNameMethodFromInterface.kt"
   },

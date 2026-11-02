@@ -28,6 +28,8 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   member extension properties in class/object/interface bodies (member extensions `mext$$prop$x` / `mext$$set$x`).
 - `where` clauses on generic functions, classes and interfaces: the first bound of each type parameter acts like an
   inline bound (generic code is monomorphized, further intersection bounds only constrain callers).
+- Bridges: an override whose return representation differs from the interface method (`Int`/`String` for `Any`)
+  gets a boxing bridge `@br.C.m` in the interface slot; class-typed virtual calls use the `m#narrow` slot.
 - Not yet: user generics, function types and general lambdas, inheritance from classes (open/abstract/sealed), objects and
   companions, enums, inline/value classes, extension and operator functions, default/named arguments, exceptions,
   labeled jumps. `compiler/tests/upstream/report.md` ranks the missing features by upstream test count.

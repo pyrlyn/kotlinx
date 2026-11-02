@@ -32,6 +32,8 @@ private val POSIX = mapOf(
 private val CONSTS = mapOf("SEEK_SET" to 0L, "SEEK_CUR" to 1L, "SEEK_END" to 2L)
 private val NANOS = setOf("kotlin.system.getTimeNanos", "getTimeNanos", "System.nanoTime", "kotlin.system.System.nanoTime")
 
+/** Suffix of the vtable slot holding a bridged override's own implementation (see computeBridges). */
+private const val NARROW = "#narrow"
 /** vtable entries before the interface-method slots (see genClass). */
 private const val VT_HEADER = 5
 /** Standard exception types `throw` accepts, with the qualified name printed for an uncaught exception. */
@@ -363,7 +365,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         inferReturnTypes()
         probeGlobals()
         computeCyclic()
+        computeBridges()
         for (c in classes.values) genClass(c)
+        for ((k, sup) in bridged) genBridge(k.substringBefore('.'), k.substringAfter('.'), sup)
         val main = sigs["main"] ?: throw CompileError("no main function")
         genGlobals()
         for (f in prog.funs) if (f.typeParams.isEmpty()) genFun(f, null)
@@ -432,21 +436,68 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         for (c in classes.values) if (c.ancestors.any { it in cyclic }) cyclic.add(c.name)
     }
 
+    /**
+     * Overrides whose value representation differs from an interface method they implement (`override fun f(): Int` for
+     * `fun f(): Any`, `String` for `Any`): "C.m" -> the interface signature. Such a class gets a bridge `@br.C.m` (calls the
+     * implementation and boxes the result) in the interface slot `m`, and every class keeps its own implementation in the
+     * slot `m#narrow`, which all class-typed virtual calls of `m` use once any class bridges `m`.
+     */
+    private val bridged = LinkedHashMap<String, FunSig>()
+
+    private fun reprDiffers(sup: Ty, t: Ty) = sup.llvm != t.llvm || sup != t && (isAny(sup) || isAny(t)) && t !is Ty.Cls && t !is Ty.Iface
+
+    private fun computeBridges() {
+        for (c in classes.values) for ((m, impl) in c.impl) {
+            val ms = methodSigs["$impl.$m"] ?: continue
+            for (a in c.ancestors) methodSigs["$a.$m"]?.let { sup -> if (reprDiffers(sup.ret, ms.ret))
+                fail("override ${c.name}.$m returns ${ms.ret} where ${sup.ret} is expected (bridges between classes are not supported)") }
+            val isups = c.supers.mapNotNull { ifaces[it]?.methods?.get(m) }
+            if (isups.none { reprDiffers(it.ret, ms.ret) }) continue
+            // All interfaces share one slot per method name: a bridge only works when they agree on the signature.
+            if (isups.any { it.ret != isups[0].ret || it.params != isups[0].params })
+                fail("override ${c.name}.$m implements interface methods with different signatures (bridges per interface are not supported)")
+            for (sup in isups) {
+                if (!reprDiffers(sup.ret, ms.ret)) continue
+                val ok = ms.ret != Ty.Unit && sup.ret != Ty.Unit && sup.params.map { it.llvm } == ms.params.map { it.llvm } && (isAny(sup.ret) || sup.ret is Ty.NBox)
+                if (!ok) fail("override ${c.name}.$m returns ${ms.ret} where ${sup.ret} is expected (this bridge is not supported)")
+                val prev = bridged["${c.name}.$m"]
+                if (prev != null && prev.ret != sup.ret) fail("override ${c.name}.$m needs bridges to both ${prev.ret} and ${sup.ret} (not supported)")
+                bridged["${c.name}.$m"] = sup
+            }
+        }
+        for (k in bridged.keys) { val m = k.substringAfter('.') + NARROW; if (m !in slots) slots.add(m) }
+    }
+
+    /** Bridge `@br.C.m`: calls C's implementation of [m] and converts the result to the interface signature's type. */
+    private fun genBridge(cn: String, m: String, sup: FunSig) {
+        val c = classes.getValue(cn)
+        val impl = c.impl.getValue(m)
+        val ms = methodSigs.getValue("$impl.$m")
+        allocas = StringBuilder(); body = StringBuilder(); tmpN = 0; lblN = 0; cur = "entry"; term = false
+        scopes.clear(); retTy = sup.ret
+        scopes.add(Scope())
+        val ps = sup.params.mapIndexed { i, t -> "${t.llvm} %a$i" }
+        val r = Val(emitT("call ${ms.ret.llvm} @m.$impl.$m(ptr %this${ps.joinToString("") { ", $it" }})"), ms.ret, ms.ret.isRef)
+        emitReturn(r)
+        funcs.append("define internal ${sup.ret.llvm} @br.$cn.$m(${(listOf("ptr %this") + ps).joinToString(", ")}) nounwind {\nentry:\n")
+        funcs.append(allocas).append(body).append("}\n\n")
+    }
+
     private fun isTraced(t: Ty) = t is Ty.Cls || t is Ty.Iface
 
     private fun genClass(c: ClassInfo) {
-        // Overrides must share the value representation of the overridden signature (no boxing bridges).
-        for ((m, impl) in c.impl) {
-            val ms = methodSigs["$impl.$m"] ?: continue
-            val supers = c.supers.mapNotNull { ifaces[it]?.methods?.get(m) } + c.ancestors.mapNotNull { methodSigs["$it.$m"] }
-            for (sup in supers) if (sup.ret.llvm != ms.ret.llvm || sup.ret != ms.ret && (isAny(sup.ret) || isAny(ms.ret)) && ms.ret !is Ty.Cls && ms.ret !is Ty.Iface)
-                fail("override ${c.name}.$m returns ${ms.ret} where ${sup.ret} is expected (bridges are not supported)")
-        }
         globals.append("${c.llType} = type { i64, ptr${c.fields.joinToString("") { ", " + it.second.llvm }} }\n")
         // vtable: [release, trace children, release untraced fields, free memory, is-cyclic, interface methods...]
         val vt = listOf("ptr @rel.${c.name}", "ptr @trav.${c.name}", "ptr @relo.${c.name}", "ptr @free.${c.name}",
             "ptr ${if (c.name in cyclic) "inttoptr (i64 1 to ptr)" else "null"}") +
-            slots.map { m -> c.impl[m]?.let { "ptr @m.$it.$m" } ?: "ptr null" }
+            slots.map { m ->
+                val base = m.removeSuffix(NARROW)
+                when {
+                    m.endsWith(NARROW) -> c.impl[base]?.takeIf { "$it.$base" in methodSigs }?.let { "ptr @m.$it.$base" } ?: "ptr null"
+                    "${c.name}.$m" in bridged -> "ptr @br.${c.name}.$m"
+                    else -> c.impl[m]?.let { "ptr @m.$it.$m" } ?: "ptr null"
+                }
+            }
         globals.append("@vt.${c.name} = internal constant [${vt.size} x ptr] [${vt.joinToString(", ")}]\n")
         val f = StringBuilder()
         val cyc = c.name in cyclic
@@ -3286,7 +3337,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val args = methodArgs(sig, e)
         if (ci.name in poly) {
             val vt = emitT("load ptr, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 8")}")
-            val fp = emitT("load ptr, ptr ${emitT("getelementptr ptr, ptr $vt, i64 ${slots.indexOf(n) + VT_HEADER}")}")
+            val slot = if (n + NARROW in slots) n + NARROW else n
+            val fp = emitT("load ptr, ptr ${emitT("getelementptr ptr, ptr $vt, i64 ${slots.indexOf(slot) + VT_HEADER}")}")
             return finishCall("call ${sig.ret.llvm} $fp(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args)
         }
         val impl = ci.impl[n] ?: fail("abstract method ${ci.name}.$n() cannot be called")
