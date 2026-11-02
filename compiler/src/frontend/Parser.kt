@@ -276,6 +276,17 @@ class Parser(toks: List<Tok>) {
         for (c in classes) { sigs[c.name] = c.ctorParams.map { it.type }; counts[c.name] = (counts[c.name] ?: 0) + 1
             for (f in c.methods) { sigs[f.name] = f.params.map { it.type }; counts[f.name] = (counts[f.name] ?: 0) + 1 } }
         for (d in ifaces) for (f in d.methods) { sigs[f.name] = f.params.map { it.type }; counts[f.name] = (counts[f.name] ?: 0) + 1 }
+        val topByName = funs.filter { it.recv == null && counts[it.name] == 1 }.associateBy { it.name }
+        val samOverloads = HashMap<String, String>()
+        fun mentions(t: TypeRef, tps: List<String>): Boolean = t.name in tps || t.args.any { mentions(it, tps) }
+        /** `I<A, B>` -> the function type of its abstract method with the interface's type arguments substituted. */
+        fun samFnType(t: TypeRef): TypeRef {
+            val d = funIfaces.getValue(t.name)
+            val defs = ifaceDefaults[t.name].orEmpty().map { it.name }.toSet()
+            val m = d.methods.first { it.name !in defs }
+            val sub = Subst(d.typeParams.zip(t.args).toMap())
+            return TypeRef("\$Fn", m.params.map { sub.ty(it.type) } + sub.ty(m.ret ?: TypeRef("Unit", emptyList(), false)), t.nullable)
+        }
         // A generic fun interface needs its type arguments from the context (`I<String> { }` or the parameter type).
         fun sam(t: TypeRef?) = t != null && t.name in funIfaces && t.args.size == funIfaces[t.name]!!.typeParams.size
         var sb: Subst? = null
@@ -294,6 +305,24 @@ class Parser(toks: List<Tok>) {
             val ps = sigs[cn] ?: return@rw null
             if (counts[cn] != 1 || args.any { it is NamedE }) return@rw null
             if (ps.indices.none { sam(ps[it]) }) return@rw null
+            // A generic function whose fun-interface parameter uses its own type parameters (`f: I<T, R>`): calls
+            // passing lambdas there go through an overload taking function types, so the existing inference applies.
+            val gf = if (callee is NameE && x.typeArgs.isEmpty()) topByName[cn]?.takeIf { it.typeParams.isNotEmpty() } else null
+            if (gf != null) {
+                val tpSam = ps.indices.filter { sam(ps[it]) && ps[it].args.any { a -> mentions(a, gf.typeParams) } }
+                val all = args + listOfNotNull(lam?.let { LambdaE(it).also { l -> l.line = x.line } })
+                if (tpSam.isNotEmpty() && all.size == ps.size && tpSam.all { all[it] is LambdaE } && gf.params.none { it.default != null || it.vararg }) {
+                    val on = samOverloads.getOrPut(cn) {
+                        val name = "$cn\$sam"
+                        val fps = gf.params.mapIndexed { i, q -> if (i in tpSam) Param(q.name, samFnType(q.type), null) else q }
+                        val cargs = gf.params.mapIndexed { i, q -> if (i in tpSam) wrap(q.type.name, NameE(q.name).also { it.line = gf.line }, gf.line, q.type.args) else NameE(q.name).also { it.line = gf.line } }
+                        val call = CallE(NameE(cn).also { it.line = gf.line }, gf.typeParams.map { TypeRef(it, emptyList(), false) }, cargs, null).also { it.line = gf.line }
+                        funs.add(FunD(name, fps, gf.ret, null, call, gf.line, gf.typeParams))
+                        name
+                    }
+                    return@rw CallE(NameE(on).also { it.line = callee.line }, emptyList(), args, lam).also { it.line = x.line }
+                }
+            }
             val na = args.mapIndexed { i, a -> if (a is LambdaE && sam(ps.getOrNull(i))) wrap(ps[i].name, a, x.line, ps[i].args) else a }
             val (na2, lam2) = if (lam != null && sam(ps.getOrNull(na.size))) (na + wrap(ps[na.size].name, LambdaE(lam).also { it.line = x.line }, x.line, ps[na.size].args)) to null else na to lam
             CallE(if (callee is MemberE) MemberE(s.e(callee.recv), callee.n, callee.safe).also { it.line = callee.line } else callee, x.typeArgs, na2, lam2).also { it.line = x.line; it.infix = x.infix }
@@ -1248,6 +1277,7 @@ class Parser(toks: List<Tok>) {
                 val asLambda = HashSet<FunD>()
                 val capCls = HashMap<String, List<Pair<String, TypeRef>>>()
                 val genTps = HashMap<String, List<String>>()
+                val genFunTps = HashMap<String, List<String>>()
                 val ownerNames = owner?.let { o -> o.methods.map { it.name } + newMethods.map { it.name } }?.toSet() ?: emptySet()
                 for (d in decls) when (d) {
                     is FunD -> {
@@ -1256,8 +1286,12 @@ class Parser(toks: List<Tok>) {
                         if (d.recv != null && d.name in OPERATOR_NAMES)
                             throw CompileError("line ${d.line}: local operator extension functions are not supported")
                         val caps = usedNames(d) - localsOf(d) - d.name
-                        if (caps.none { it in outer }) rename[d.name] = fresh(d.name, ownerNames)
-                        else {
+                        if (caps.none { it in outer }) {
+                            rename[d.name] = fresh(d.name, ownerNames)
+                            // A non-generic local function of a generic function that mentions its type parameters
+                            // is lifted generic over them; calls pass them as type arguments.
+                            if (f.typeParams.isNotEmpty() && d.typeParams.isEmpty() && mentionsTypeParams(d, f.typeParams)) genFunTps[d.name] = f.typeParams
+                        } else {
                             if (d.name in usedNames(d)) throw CompileError("line ${d.line}: recursive local functions that capture local variables are not supported")
                             if (d.typeParams.isNotEmpty() || d.recv != null || d.params.any { it.default != null || it.vararg })
                                 throw CompileError("line ${d.line}: local functions that capture local variables cannot be generic, extensions or have default/vararg parameters")
@@ -1308,6 +1342,11 @@ class Parser(toks: List<Tok>) {
                 lateinit var sub: Subst
                 sub = Subst(types, rw = { x ->
                     when {
+                        x is CallE && x.callee is NameE && x.callee.n in genFunTps && x.typeArgs.isEmpty() ->
+                            CallE(NameE(rename[x.callee.n] ?: x.callee.n).also { it.line = x.callee.line }, genFunTps.getValue(x.callee.n).map { TypeRef(it, emptyList(), false) },
+                                x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line }
+                        x is UnE && x.op.startsWith("::") && x.e is NullL && x.op.drop(2) in genFunTps ->
+                            throw CompileError("line ${x.line}: references to local functions using the enclosing function's type parameters are not supported")
                         x is CallE && x.callee is NameE && x.callee.n in genTps && x.typeArgs.isEmpty() ->
                             sub.e(CallE(x.callee, genTps.getValue(x.callee.n).map { TypeRef(it, emptyList(), false) }, x.args, x.lambda).also { it.line = x.line })
                         x is CallE && x.callee is NameE && x.callee.n in genTps && x.callee.n !in capCls ->
@@ -1337,7 +1376,8 @@ class Parser(toks: List<Tok>) {
                 f = copyFun(sub.fn(f), f)
                 for (d in decls) when (d) {
                     is FunD -> if (d !in asLambda) {
-                        val g = copyFun(sub.fn(d), d, rename.getValue(d.name))
+                        val g = copyFun(sub.fn(d), d, rename.getValue(d.name)).let { g0 ->
+                            genFunTps[d.name]?.let { tps -> FunD(g0.name, g0.params, g0.ret, g0.body, g0.exprBody, g0.line, tps, g0.recv) } ?: g0 }
                         if (owner != null) newMethods.add(lift(g, owner, newMethods)) else funs.add(lift(g, null, newMethods))
                     }
                     is ClassD -> classes.add(copyClass(sub, d, rename[d.name] ?: d.name).let { c0 ->
@@ -1364,6 +1404,18 @@ class Parser(toks: List<Tok>) {
                 classes[i] = ClassD(c.name, c.fields, c.supers, ms + added, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
             i++
         }
+    }
+
+    /** Whether [d] (signature or body) mentions any of [tps] as a type. */
+    private fun mentionsTypeParams(d: FunD, tps: List<String>): Boolean {
+        var hit = false
+        val probe = object : AbstractMap<String, TypeRef>() {
+            override val entries: Set<Map.Entry<String, TypeRef>> get() = emptySet()
+            override fun get(key: String): TypeRef? { if (key in tps) hit = true; return null }
+        }
+        Subst(probe).fn(d)
+        d.recv?.let { Subst(probe).ty(it) }
+        return hit
     }
 
     private fun keepRecv(n: FunD, o: FunD) = FunD(n.name, n.params, n.ret, n.body, n.exprBody, n.line, n.typeParams, o.recv)
