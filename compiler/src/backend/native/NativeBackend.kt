@@ -1161,6 +1161,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                         releaseIfOwned(withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), emptyList(), listOf(x, value), null).also { it.line = line }) }); return
                     }
                 }
+                // Interface `var` property: the abstract setter `$set$x(v)`, dispatched through the interface.
+                if (r.t is Ty.Iface && ifaceDecls[(r.t as Ty.Iface).name]?.methods?.any { it.name == esm } == true) {
+                    releaseIfOwned(method(r, esm, CallE(NameE(esm), emptyList(), listOf(value), null).also { it.line = line })); return
+                }
                 val ct = r.t as? Ty.Cls ?: fail("cannot assign to ${r.t}.${target.n}")
                 val ci = classes.getValue(ct.name)
                 val sm = "\$set\$${target.n}"

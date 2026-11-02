@@ -739,12 +739,16 @@ class Parser(toks: List<Tok>) {
                     continue
                 }
                 if (props == null && (isId("val") || isId("var"))) {
-                    // Interface property: an abstract getter `$prop$name` (or a default getter).
+                    // Interface property: an abstract getter `$prop$name` (or a default getter); `var` adds an abstract setter `$set$name(v)`.
+                    val isVar = isId("var")
                     val line = next().line
                     val n = ident()
                     if (!isOp(":")) fail("interface properties need a type")
                     next(); val ty = type()
-                    ms.add(getter("\$prop\$$n", ty, emptyList(), null) ?: FunD("\$prop\$$n", emptyList(), ty, null, null, line))
+                    val g = getter("\$prop\$$n", ty, emptyList(), null)
+                    if (isVar && g != null) fail("interface var properties with accessors are not supported")
+                    ms.add(g ?: FunD("\$prop\$$n", emptyList(), ty, null, null, line))
+                    if (isVar) ms.add(FunD("\$set\$$n", listOf(Param("v", ty)), TypeRef("Unit", emptyList(), false), null, null, line))
                     continue
                 }
                 if (inits != null && isId("init")) { next(); skipNLOnly(); inits.add(block()); continue }
@@ -897,14 +901,26 @@ class Parser(toks: List<Tok>) {
         for (i in classes.indices) {
             val c = classes[i]
             val ch = chain(c)
-            val props = ch.flatMap { it.supers }.mapNotNull { s -> ifaces.firstOrNull { it.name == s } }
-                .flatMap { it.methods }.filter { it.name.startsWith("\$prop\$") && it.params.isEmpty() }
+            // Generic interfaces: the getter's type is the property type with the class's type arguments substituted.
+            val props = ch.flatMap { x -> x.supers.map { x to it } }.mapNotNull { (x, s) -> ifaces.firstOrNull { it.name == s }?.let { x to it } }
+                .flatMap { (x, d) ->
+                    val targs = x.superTypeArgs[d.name].orEmpty()
+                    val sub = if (d.typeParams.isNotEmpty() && targs.size == d.typeParams.size) Subst(d.typeParams.zip(targs).toMap()) else null
+                    d.methods.filter { (it.name.startsWith("\$prop\$") && it.params.isEmpty() || it.name.startsWith("\$set\$") && it.params.size == 1) && it.body == null && it.exprBody == null }
+                        .map { m -> sub?.let { FunD(m.name, m.params.map { q -> Param(q.name, it.ty(q.type)) }, m.ret?.let { r -> it.ty(r) }, null, null, m.line) } ?: m }
+                }
             val add = ArrayList<FunD>()
             for (m in props) {
-                val n = m.name.removePrefix("\$prop\$")
+                val isSet = m.name.startsWith("\$set\$")
+                val n = m.name.removePrefix(if (isSet) "\$set\$" else "\$prop\$")
                 if (ch.any { x -> x.methods.any { it.name == m.name } } || add.any { it.name == m.name }) continue
-                if (ch.none { x -> x.fields.any { it.name == n } }) continue
-                add.add(FunD(m.name, emptyList(), m.ret, null, NameE(n).also { it.line = c.line }, c.line))
+                val fd = ch.firstNotNullOfOrNull { x -> x.fields.firstOrNull { it.name == n } } ?: continue
+                if (isSet) {
+                    if (!fd.isVar) fail("val ${c.name}.$n cannot implement an interface var")
+                    // Setter through the interface: stores into the field (`this.x = v`).
+                    val st = AssignS(MemberE(NameE("this"), n, false).also { it.line = c.line }, "=", NameE("v").also { it.line = c.line }).also { it.line = c.line }
+                    add.add(FunD(m.name, listOf(Param("v", m.params[0].type)), m.ret, Block(listOf(st)), null, c.line))
+                } else add.add(FunD(m.name, emptyList(), m.ret, null, NameE(n).also { it.line = c.line }, c.line))
             }
             // `abstract val x: T` of a superclass overridden by a stored property: the getter returns the field.
             for (m in ch.drop(1).flatMap { it.methods }) {
