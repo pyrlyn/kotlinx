@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2815,
-  "UNSUPPORTED": 2676
+  "PASS": 2825,
+  "UNSUPPORTED": 2666
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1279,9 +1279,8 @@
    "upstream": "compiler/testData/codegen/box/bce/bceCases.kt"
   },
   "box/box/bce/customGetter.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/customGetter.kt"
   },
   "box/box/bce/delegatedProperty.kt": {
@@ -8227,9 +8226,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInDoubleArrayWithUpcast.kt"
   },
   "box/box/controlStructures/forInArray/forInFieldUpdatedInLoopBody.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInFieldUpdatedInLoopBody.kt"
   },
   "box/box/controlStructures/forInArray/forInInlineClassArrayWithUpcast.kt": {
@@ -25207,9 +25205,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/nullPlusString.kt"
   },
   "box/box/intrinsics/prefixIncDec.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/intrinsics/prefixIncDec.kt"
   },
   "box/box/intrinsics/rangeFromCollection.kt": {
@@ -25882,9 +25879,8 @@
    "upstream": "compiler/testData/codegen/box/lazyCodegen/ifElse.kt"
   },
   "box/box/lazyCodegen/increment.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lazyCodegen/increment.kt"
   },
   "box/box/lazyCodegen/optimizations/negateConstantCompare.kt": {
@@ -28041,9 +28037,8 @@
    "upstream": "compiler/testData/codegen/box/object/fields1.kt"
   },
   "box/box/object/fields2.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/object/fields2.kt"
   },
   "box/box/object/globalInitializer.kt": {
@@ -28860,9 +28855,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt20387.kt"
   },
   "box/box/operatorConventions/kt4152.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt4152.kt"
   },
   "box/box/operatorConventions/kt44647.kt": {
@@ -29959,9 +29953,8 @@
    "upstream": "compiler/testData/codegen/box/properties/eagerInitializationLambdaInvocation.kt"
   },
   "box/box/properties/field.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/field.kt"
   },
   "box/box/properties/fieldInClass.kt": {
@@ -29970,27 +29963,24 @@
    "upstream": "compiler/testData/codegen/box/properties/fieldInClass.kt"
   },
   "box/box/properties/fieldInsideField.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/fieldInsideField.kt"
   },
   "box/box/properties/fieldInsideLambda.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/fieldInsideLambda.kt"
   },
   "box/box/properties/fieldInsideNested.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'get')",
+   "category": "unknown field (stdlib API / unsupported decl)",
+   "detail": "unknown name 'field'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/fieldInsideNested.kt"
   },
   "box/box/properties/fieldSimple.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unexpected top-level token (at 'get')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/fieldSimple.kt"
   },
   "box/box/properties/generalAccess.kt": {
