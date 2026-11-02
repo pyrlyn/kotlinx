@@ -9,7 +9,7 @@ private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sum
 /** Names after which `{` does not start a trailing lambda. */
 private val NO_TRAILING = setOf("try", "do", "else", "finally", "init", "object", "catch", "return", "this")
 
-private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix", "sealed", "lateinit")
+private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix", "sealed", "lateinit", "tailrec")
 
 /**
  * Upper bounds of type parameters, by "<declaration line>:<name>" (declarations are copied and renamed by later
@@ -737,7 +737,11 @@ class Parser(toks: List<Tok>) {
                 var isPrivate = false; var isAbstract = false
                 if (isContextDecl()) { contextDecl(); continue }
                 if (pendingCtx != null && !isId("fun") && !isId("val") && !isId("var") && !(peek().k == K.ID && peek().s in MEMBER_MODS)) noCtx()
-                while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) { if (peek().s == "const") isConst = true; if (peek().s == "lateinit") isLate = true; if (peek().s == "private") isPrivate = true; if (peek().s == "abstract") isAbstract = true; p++ }
+                // `inline` on a member function (not `inline class`) only affects inlining, which we don't model.
+                while (true) {
+                    if (isId("inline") && t[p + 1].k == K.ID && (t[p + 1].s == "fun" || t[p + 1].s in MEMBER_MODS)) { p++; continue }
+                    if (!(peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID)) break
+                    if (peek().s == "const") isConst = true; if (peek().s == "lateinit") isLate = true; if (peek().s == "private") isPrivate = true; if (peek().s == "abstract") isAbstract = true; p++ }
                 if (pendingCtx != null && (isId("val") || isId("var"))) { ctxMemberProp(ms, props == null || isAbstract); continue }
                 if (isPrivate && curClass != null && (isId("val") || isId("var") || isId("fun")) && t[p + 1].k == K.ID) privateMembers.add(curClass!! to t[p + 1].s)
                 if (isPrivate && curIface != null && isId("fun") && t[p + 1].k == K.ID) privateIfaceFuns.getOrPut(curIface!!) { HashSet() }.add(t[p + 1].s)
