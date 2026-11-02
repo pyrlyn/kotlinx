@@ -424,7 +424,7 @@ fun withPrelude(src: String, p: Program): Program {
 val ANY_BOXED = listOf("Int", "Long", "Double", "Float", "Boolean", "Char", "String", "UInt", "ULong", "Byte")
 // Nullable primitives (`Int?`) and safe calls (`a?.x` may yield one) are boxed like `Any`.
 // A nullable type parameter (`T?`, short names) may be instantiated with a primitive, which is boxed too.
-private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UInt|ULong|Byte|Short|UByte|UShort)\?|\?\.|\b[A-Z]\?|\bResult\b|\brunCatching\b""")
+private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UInt|ULong|Byte|Short|UByte|UShort)\?|\?\.|\b[A-Z]\?|\bResult\b|\brunCatching\b|\bNumber\b""")
 
 /**
  * `Any`: a built-in interface with no methods that every class implements. Primitives and strings are boxed into
@@ -466,6 +466,12 @@ fun withAny(src: String, p: Program): Program {
     for (b in ANY_BOXED) if (b != "UInt" && b != "ULong" && b != "Byte") sb.append("    if (x is AnyBox$b) return x.v.hashCode()\n")
     for (c in concrete) if (has(c, "hashCode") || c.methods.any { it.name == "\$equals" }) sb.append("    if (x is `${c.name}`) return x.hashCode()\n")
     sb.append("    return 0\n}\n")
+    // `Number` is `Any`; its conversions dispatch over the boxed numeric types.
+    if (Regex("""\bNumber\b""").containsMatchIn(src)) for ((f, t) in listOf("Int" to "Int", "Long" to "Long", "Double" to "Double", "Float" to "Float", "Byte" to "Byte", "Short" to "Short")) {
+        sb.append("fun numTo${f}__(x: Any): $t {\n")
+        for (b in listOf("Int", "Long", "Double", "Float", "Byte")) sb.append("    if (x is AnyBox$b) return x.v.to$f()\n")
+        sb.append("    throw ClassCastException(\"not a Number\")\n}\n")
+    }
     val lib = Parser(Lexer("interface Any\n" + sb).lex()).program()
     fun withAnySuper(c: ClassD) = if ("Any" in c.supers) c else
         ClassD(c.name, c.fields, c.supers + "Any", c.methods, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
