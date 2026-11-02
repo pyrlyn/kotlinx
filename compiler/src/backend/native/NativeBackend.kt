@@ -147,6 +147,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "Double" -> Ty.F64
         "Float" -> Ty.F32
         "Unit" -> Ty.Unit
+        "Nothing" -> if (t.nullable) fail("unknown type Nothing?") else Ty.Nothing
         "String" -> Ty.Str
         "Char" -> Ty.Char
         "ByteArray" -> Ty.Arr(Ty.I8)
@@ -1880,6 +1881,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** `v!!`: NullPointerException on null; a nullable primitive is unboxed. */
     private fun genNonNull(v: Val): Val {
         if (v.t.llvm != "ptr") return v
+        // `null!!` (an untyped null literal) always throws: its type is Nothing.
+        if (v.v == "null" && v.t == Ty.RawPtr) {
+            if (excMode) throwNew("NullPointerException", Val("null", Ty.Str))
+            else { emit("call void @rt_panic(ptr ${cstr("NullPointerException")})"); emit("unreachable"); term = true }
+            return Val("undef", Ty.Nothing)
+        }
         val ok = label("nn.ok"); val bad = label("nn.null")
         condBr(emitT("icmp ne ptr ${v.v}, null"), ok, bad)
         startBlock(bad)
@@ -2397,10 +2404,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val vals = all.mapIndexed { i, a -> coerce(argFor(a, sig.params[i]), sig.params[i]) }
         val args = vals.filter { it.t != Ty.Args }.joinToString(", ") { "${it.t.llvm} ${it.v}" }
         val call = "call ${sig.ret.llvm} @k.$n($args)"
-        val res = if (sig.ret == Ty.Unit) { emit(call); Val("", Ty.Unit) } else Val(emitT(call), sig.ret, sig.ret.isRef)
+        val res = if (sig.ret == Ty.Unit || sig.ret == Ty.Nothing) { emit(call); Val("", Ty.Unit) } else Val(emitT(call), sig.ret, sig.ret.isRef)
         vals.forEach { releaseIfOwned(it) }
         afterCall()
-        return res
+        return if (sig.ret == Ty.Nothing) neverReturns() else res
     }
 
     /**
@@ -3340,10 +3347,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     private fun finishCall(call: String, ret: Ty, args: List<Val>): Val {
-        val res = if (ret == Ty.Unit) { emit(call); Val("", Ty.Unit) } else Val(emitT(call), ret, ret.isRef)
+        val res = if (ret == Ty.Unit || ret == Ty.Nothing) { emit(call); Val("", Ty.Unit) } else Val(emitT(call), ret, ret.isRef)
         args.forEach { releaseIfOwned(it) }
         afterCall()
-        return res
+        return if (ret == Ty.Nothing) neverReturns() else res
+    }
+
+    /** After a call to a function returning `Nothing`: the rest of the block is unreachable. */
+    private fun neverReturns(): Val {
+        if (!term) { emit("unreachable"); term = true }
+        return Val("undef", Ty.Nothing)
     }
 
     /** Statically bound call of a class's own method. */
