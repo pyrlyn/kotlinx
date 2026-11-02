@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2670,
-  "UNSUPPORTED": 2821
+  "PASS": 2679,
+  "UNSUPPORTED": 2812
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1133,14 +1133,13 @@
    "upstream": "compiler/testData/codegen/box/basics/local_variable.kt"
   },
   "box/box/basics/null_check.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/null_check.kt"
   },
   "box/box/basics/safe_cast.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "strings / templates",
+   "detail": "unknown method Boolean.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/safe_cast.kt"
   },
@@ -1186,8 +1185,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unchecked_cast1.kt"
   },
   "box/box/basics/unchecked_cast10.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: Unit cannot be used as Any",
+   "detail": "Unit cannot be used as Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/unchecked_cast10.kt"
   },
@@ -1271,8 +1270,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unit3.kt"
   },
   "box/box/basics/unit4.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: parameters of type Unit / Unit? are not supported",
+   "detail": "parameters of type Unit / Unit? are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/basics/unit4.kt"
   },
@@ -1487,8 +1486,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/kt44402.kt"
   },
   "box/box/binaryOp/kt6747_identityEquals.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: identity comparison of Test and Any is not supported",
+   "detail": "identity comparison of Test and Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/kt6747_identityEquals.kt"
   },
@@ -1520,7 +1519,7 @@
   },
   "box/box/boxing/box_cache0.kt": {
    "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxing/box_cache0.kt"
   },
@@ -1640,8 +1639,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/missingValueClassUnboxing.kt"
   },
   "box/box/boxingOptimization/boxedBooleanIdentity.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: identity comparison of Any and Any is not supported",
+   "detail": "identity comparison of Any and Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/boxedBooleanIdentity.kt"
   },
@@ -1847,8 +1846,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/taintedValuesBox.kt"
   },
   "box/box/boxingOptimization/unsafeRemoving.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: identity comparison of Int? and Int? is not supported",
+   "detail": "identity comparison of Int? and Int? is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/unsafeRemoving.kt"
   },
@@ -3590,9 +3589,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/equality/kpropertyWithCapturingInequality.kt"
   },
   "box/box/callableReference/equality/lambdaNonEquality.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/lambdaNonEquality.kt"
   },
   "box/box/callableReference/equality/noCoercionToUnitIfFunctionAlreadyReturnsUnit.kt": {
@@ -5209,8 +5207,8 @@
    "upstream": "compiler/testData/codegen/box/classes/inheritance.kt"
   },
   "box/box/classes/inheritedInnerClass.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "inheritance (open/abstract/sealed)",
+   "detail": "property 'outer$' of InnerDerived hides an inherited property",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/inheritedInnerClass.kt"
   },
@@ -5594,8 +5592,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt8011a.kt"
   },
   "box/box/classes/kt940.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "interfaces",
+   "detail": "unknown interface Comparator$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt940.kt"
   },
@@ -5617,9 +5615,8 @@
    "upstream": "compiler/testData/codegen/box/classes/nestedInitBlocksWithLambda.kt"
   },
   "box/box/classes/outerThis.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/outerThis.kt"
   },
   "box/box/classes/overloadBinaryOperator.kt": {
@@ -7237,8 +7234,8 @@
    "upstream": "compiler/testData/codegen/box/constants/foldingBinaryOpsUnsignedConst.kt"
   },
   "box/box/constants/kt9532.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "strings / templates",
+   "detail": "identity comparison of String and String is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/constants/kt9532.kt"
   },
@@ -8710,9 +8707,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt12908.kt"
   },
   "box/box/controlStructures/kt1441.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt1441.kt"
   },
   "box/box/controlStructures/kt14839.kt": {
@@ -14236,8 +14232,8 @@
    "upstream": "compiler/testData/codegen/box/enum/asReturnExpression.kt"
   },
   "box/box/enum/companionAccessingEnumValue.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "objects / companion objects",
+   "detail": "init blocks in companions of enum classes are not supported (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/companionAccessingEnumValue.kt"
   },
@@ -16831,8 +16827,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaultsWithVarArg2.kt"
   },
   "box/box/function/eqeq.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: unknown type Nothing",
+   "detail": "unknown type Nothing",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/function/eqeq.kt"
   },
@@ -18578,8 +18574,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/lambdaParameterHasTVType.kt"
   },
   "box/box/inference/pcla/memberScope.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/memberScope.kt"
   },
@@ -22029,14 +22025,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksPrimitiveUnboxed.kt"
   },
   "box/box/inlineClasses/equalityForBoxesOfNullableValuesOfInlineClass.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: unknown type Number",
+   "detail": "unknown type Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityForBoxesOfNullableValuesOfInlineClass.kt"
   },
   "box/box/inlineClasses/equalityForBoxesOfNullableValuesOfInlineClassGeneric.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: unknown type Number",
+   "detail": "unknown type Number",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityForBoxesOfNullableValuesOfInlineClassGeneric.kt"
   },
@@ -26087,14 +26083,14 @@
    "upstream": "compiler/testData/codegen/box/lazyCodegen/when.kt"
   },
   "box/box/literals/listof1.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/literals/listof1.kt"
   },
   "box/box/literals/strdedup1.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "strings / templates",
+   "detail": "identity comparison of String and String is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/literals/strdedup1.kt"
   },
@@ -28373,8 +28369,8 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/nativeCompanionInitOrderLegacy.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/byteCompanionObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "types: Byte",
+   "detail": "unknown type Byte.Companion",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/byteCompanionObject.kt"
   },
@@ -28385,32 +28381,32 @@
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/charCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/doubleCompanionObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "types: Double",
+   "detail": "unknown type Double.Companion",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/doubleCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/floatCompanionObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "types: Float",
+   "detail": "unknown type Float.Companion",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/floatCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/intCompanionObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "objects / companion objects",
+   "detail": "unknown type Int.Companion",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/intCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/longCompanionObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "types: Long",
+   "detail": "unknown type Long.Companion",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/longCompanionObject.kt"
   },
   "box/box/objects/companionObjectAccess/primitiveCompanion/shortCompanionObject.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "types: Short",
+   "detail": "unknown type Short.Companion",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/companionObjectAccess/primitiveCompanion/shortCompanionObject.kt"
   },
@@ -28890,8 +28886,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/assignToDotQualifiedWithSideEffect.kt"
   },
   "box/box/operatorConventions/assignmentOperations.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: val 'a' cannot be reassigned",
+   "detail": "val 'a' cannot be reassigned",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/assignmentOperations.kt"
   },
@@ -29432,14 +29428,14 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt1054.kt"
   },
   "box/box/primitiveTypes/kt1055.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "strings / templates",
+   "detail": "identity comparison of String and String is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt1055.kt"
   },
   "box/box/primitiveTypes/kt1093.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "unknown it (stdlib API / unsupported decl)",
+   "detail": "unknown name 'it'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt1093.kt"
   },
@@ -29540,8 +29536,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt3613.kt"
   },
   "box/box/primitiveTypes/kt36952_identityEqualsWithBooleanInLocalFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "other: identity comparison of Any and Boolean is not supported",
+   "detail": "identity comparison of Any and Boolean is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt36952_identityEqualsWithBooleanInLocalFunction.kt"
   },
@@ -29578,15 +29574,13 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt446.kt"
   },
   "box/box/primitiveTypes/kt46864_double.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt46864_double.kt"
   },
   "box/box/primitiveTypes/kt46864_long.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt46864_long.kt"
   },
   "box/box/primitiveTypes/kt518.kt": {
@@ -29595,15 +29589,13 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt518.kt"
   },
   "box/box/primitiveTypes/kt52230.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt52230.kt"
   },
   "box/box/primitiveTypes/kt6590_identityEquals.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt6590_identityEquals.kt"
   },
   "box/box/primitiveTypes/kt665.kt": {
@@ -36916,8 +36908,8 @@
    "upstream": "compiler/testData/codegen/box/strictEquals/typealiasInBound.kt"
   },
   "box/box/stringTrim/stringTrim.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "strings / templates",
+   "detail": "identity comparison of String and String is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/stringTrim/stringTrim.kt"
   },
@@ -38942,9 +38934,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/whenByUnsigned.kt"
   },
   "box/box/vararg/boxingArgumentsForVararg.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/vararg/boxingArgumentsForVararg.kt"
   },
   "box/box/vararg/doNotCopyImmediatelyCreatedArrays.kt": {
@@ -44559,8 +44550,8 @@
    "upstream": "native/native.tests/testData/codegen/objectDeclaration/isFrozen.kt"
   },
   "native/native.tests/codegen/reflection/collectReferenceFieldValues/bigClassWithMixedValues.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '=')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found Int",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/reflection/collectReferenceFieldValues/bigClassWithMixedValues.kt"
   },

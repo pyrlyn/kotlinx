@@ -3485,6 +3485,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 return if (e.op == "in") v else Val(emitT("xor i1 ${v.v}, true"), Ty.I1)
             }
         }
+        if (e.op == "===" || e.op == "!==") return identity(e)
         val a = genExpr(e.l)
         if ((e.op == "==" || e.op == "!=") && a.t is Ty.NBox && isSafeCall(e.l) && e.r !is NullL) {
             // `a?.x == f()`: when `a` is null the right side is not evaluated (as Kotlin/Native does).
@@ -3708,6 +3709,22 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private val NUMERIC = setOf(Ty.I8, Ty.I32, Ty.I64, Ty.U32, Ty.U64, Ty.F32, Ty.F64, Ty.Char)
     private val CONST_RE = Regex("-?[0-9][0-9.eE+-]*|0x[0-9a-fA-F]+|true|false")
+    /**
+     * `a === b` / `a !== b`: reference identity for class, interface and array values (and against `null`); for primitives
+     * it is value equality. Strings and boxed values (Any) are refused: interning and box caching differ from Kotlin/Native.
+     */
+    private fun identity(e: BinE): Val {
+        val eq = if (e.op == "===") "==" else "!="
+        if (e.l is NullL || e.r is NullL) return genExpr(BinE(eq, e.l, e.r).also { it.line = e.line })
+        val a = genExpr(e.l); val b = genExpr(e.r)
+        fun refOk(t: Ty) = (t is Ty.Cls && !t.name.startsWith("AnyBox")) || (t is Ty.Iface && !isAny(t)) || t is Ty.Arr || t is Ty.ListTy || t is Ty.MapTy
+        if (a.t.llvm != "ptr" && b.t.llvm != "ptr") return compare(eq, a, b)
+        if (!refOk(a.t) || !refOk(b.t)) fail("identity comparison of ${a.t} and ${b.t} is not supported")
+        val r = Val(emitT("icmp ${if (eq == "==") "eq" else "ne"} ptr ${a.v}, ${b.v}"), Ty.I1)
+        releaseIfOwned(a); releaseIfOwned(b)
+        return r
+    }
+
     private fun compare(op: String, a: Val, b: Val): Val {
         // Values of different primitive types are never equal (`equals` of boxed values). Kotlin rejects this for
         // non-literal operands outside generic code, so it only shows up through type parameters (`fun <A, B: Any> f(a: A, b: B) = a == b`).

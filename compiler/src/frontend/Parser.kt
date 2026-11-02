@@ -1341,7 +1341,7 @@ class Parser(toks: List<Tok>) {
             is CharL -> simple("Char")
             is IsE -> simple("Boolean")
             is BinE -> when (e.op) {
-                "==", "!=", "<", ">", "<=", ">=", "&&", "||" -> simple("Boolean")
+                "==", "!=", "===", "!==", "<", ">", "<=", ">=", "&&", "||" -> simple("Boolean")
                 "+" -> guess(e.l)?.takeIf { it.name == "String" } ?: guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double", "Float") } }
                 "-", "*", "/", "%" -> guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double", "Float") } }
                 else -> null
@@ -1947,7 +1947,7 @@ class Parser(toks: List<Tok>) {
 
     // Precedence levels, lowest first.
     private val levels: List<Set<String>> = listOf(
-        setOf("||"), setOf("&&"), setOf("==", "!="), setOf("<", ">", "<=", ">="), IN_OPS,
+        setOf("||"), setOf("&&"), setOf("==", "!=", "===", "!=="), setOf("<", ">", "<=", ">="), IN_OPS,
         setOf("?:"), INFIX_FUNS, setOf(".."), setOf("+", "-"), setOf("*", "/", "%"),
     )
 
