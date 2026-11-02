@@ -1658,6 +1658,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return Val(emitT("phi ptr [ null, %$from ], [ ${bx.v}, %$bEnd ]"), Ty.NBox(t), true)
         }
         if (exhaustive && typed.any { it.first.t != t }) commonIface(typed.map { it.first.t })?.let { t = it }
+        if (exhaustive && res.size > 1 && res.none { it.first.v == "null" } && res.any { it.first.t != t } && "Any" in ifaces &&
+            res.all { (v, _) -> v.t is Ty.Cls || v.t is Ty.Iface || (v.t !is Ty.NBox && boxName(v.t) != null) } &&
+            !res.all { (v, _) -> (t is Ty.Iface || t is Ty.Cls) && (v.t == t || v.t is Ty.Cls) }) return mergeAsAny(res)
         if (!exhaustive || t == Ty.Unit || res.any { it.first.t != t && !(it.first.v == "null" && t.llvm == "ptr") && !((t is Ty.Iface || t is Ty.Cls) && it.first.t is Ty.Cls) }) {
             for ((v, _) in res) if (v.t.isRef && v.owned) fail("if/when branches yield references of different types; assign the result or make the types match")
             return Val("", Ty.Unit)
@@ -1665,6 +1668,32 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (res.size == 1) return res[0].first
         val phi = emitT("phi ${t.llvm} " + res.joinToString(", ") { "[ ${it.first.v}, %${it.second} ]" })
         return Val(phi, t, t.isRef)
+    }
+
+    /**
+     * Branches of different types (e.g. `String` and `Long`) joined as `Any`: one phi per branch type (undef from the
+     * other branches) and a phi of the branch index; the index selects the block that views its value as `Any`.
+     */
+    private fun mergeAsAny(res: List<Pair<Val, String>>): Val {
+        val any = Ty.Iface("Any")
+        val types = res.map { it.first.t }.distinct()
+        val idx = emitT("phi i32 " + res.joinToString(", ") { "[ ${types.indexOf(it.first.t)}, %${it.second} ]" })
+        val raws = types.map { ty -> emitT("phi ${ty.llvm} " + res.joinToString(", ") { "[ ${if (it.first.t == ty) it.first.v else "undef"}, %${it.second} ]" }) }
+        val join = label("mix.join")
+        val ins = ArrayList<Pair<String, String>>()
+        for ((k, ty) in types.withIndex()) {
+            val next = if (k < types.size - 1) label("mix.next") else null
+            val lb = label("mix.ty")
+            if (next != null) condBr(emitT("icmp eq i32 $idx, $k"), lb, next) else br(lb)
+            startBlock(lb)
+            // Branch results are owned (as for a same-typed join); the `Any` view keeps or boxes them.
+            val a = consume(toAny(Val(raws[k], ty, ty.isRef), any))
+            ins.add(a.v to cur)
+            br(join)
+            if (next != null) startBlock(next)
+        }
+        startBlock(join)
+        return Val(emitT("phi ptr " + ins.joinToString(", ") { "[ ${it.first}, %${it.second} ]" }), any, true)
     }
 
     /** The single interface all branch types (classes or that interface) implement, if any; Cls -> Iface is free. */
