@@ -221,6 +221,7 @@ class Parser(toks: List<Tok>) {
             pendingGlobal = VarS(df.name, false, null, df.init!!).also { it.line = acc[0].line }
             funs.addAll(acc); return true
         }
+        if (isOp("=") && pendingCtx == null) return topBackedProperty(funs, n, ty, isVar, save)
         val ctx = pendingCtx ?: emptyList()
         var get: FunD? = null; var set: FunD? = null
         while (true) {
@@ -241,6 +242,44 @@ class Parser(toks: List<Tok>) {
         pendingCtx = null
         funs.add(FunD(get.name, ctx + get.params, get.ret, get.body, get.exprBody, get.line))
         set?.let { funs.add(it) }
+        return true
+    }
+
+    /**
+     * Top-level property with an initializer and accessors (`var x: T = v` + `get() = field` / `set(v) { field = v }` /
+     * `private set`): a hidden global `$tbf$x` holds the backing field, the accessors become `$get$x` / `$tset$x`.
+     * Without accessors the declaration is left to the plain global path.
+     */
+    private fun topBackedProperty(funs: MutableList<FunD>, n: String, ty: TypeRef, isVar: Boolean, save: Int): Boolean {
+        val line = next().line; skipNLOnly()
+        val init = expr()
+        var get: FunD? = null; var set: FunD? = null; var bare = false
+        while (true) {
+            val at = p
+            while (t[p].k == K.NL) p++
+            while (peek().k == K.ID && peek().s in setOf("private", "protected", "internal", "public") && t[p + 1].k == K.ID && t[p + 1].s in setOf("get", "set")) p++
+            if (get == null && isId("get") && t[p + 1].k == K.OP && t[p + 1].s == "(") { get = getter("\$get\$$n", ty, emptyList(), null); continue }
+            if (set == null && isVar && isId("set") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
+                val sl = next().line; next()
+                val pn = ident(); if (isOp(":")) { next(); type() }
+                expectOp(")")
+                val body = if (isOp("=")) { next(); skipNLOnly(); Block(listOf(ExprS(expr()).also { it.line = sl })) } else block()
+                set = FunD("\$tset\$$n", listOf(Param(pn, ty)), TypeRef("Unit", emptyList(), false), body, null, sl)
+                continue
+            }
+            // A bare `private set` (visibility only) keeps the default setter.
+            if (set == null && isVar && isId("set") && !(t[p + 1].k == K.OP && t[p + 1].s == "(")) { next(); bare = true; continue }
+            p = at; break
+        }
+        if (get == null && set == null && !bare) { p = save; return false }
+        val bfn = "\$tbf\$$n"
+        val sub = Subst(emptyMap(), rw = { x: E -> if (x is NameE && x.n == "field") NameE(bfn).also { it.line = x.line } else null },
+            srw = { st: S -> if (st is AssignS && st.target is NameE && (st.target as NameE).n == "field") AssignS(NameE(bfn), st.op, sub0!!.e(st.value)).also { it.line = st.line } else null })
+        sub0 = sub
+        funs.add(get?.let { sub.fn(it) } ?: FunD("\$get\$$n", emptyList(), ty, null, NameE(bfn).also { it.line = line }, line))
+        if (isVar) funs.add(set?.let { sub.fn(it) } ?: FunD("\$tset\$$n", listOf(Param("v\$", ty)), TypeRef("Unit", emptyList(), false),
+            Block(listOf(AssignS(NameE(bfn).also { it.line = line }, "=", NameE("v\$").also { it.line = line }).also { it.line = line })), null, line))
+        pendingGlobal = VarS(bfn, true, ty, init).also { it.line = line }
         return true
     }
 
