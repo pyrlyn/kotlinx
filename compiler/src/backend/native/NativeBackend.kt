@@ -127,10 +127,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     // ---------------------------------------------------------------- types
 
+    /** [resolve] outside generic-instance bindings (types of non-generic declarations). */
+    private fun resolveGlobal(t: TypeRef): Ty {
+        val st = tenv; val sl = instLine; tenv = emptyMap(); instLine = -1
+        try { return resolve(t) } finally { tenv = st; instLine = sl }
+    }
+
     private fun resolve(t: TypeRef): Ty {
         if (t.name.endsWith("?")) return resolve(TypeRef(t.name.dropLast(1), t.args, true))
         val r = resolve0(t)
         // Inside generic instances `T?` stays `T` (substituted nullability is not tracked); AnyBox must exist.
+        // A nullable type parameter bound to a primitive (`T?`, T = Int) is a boxed nullable primitive.
+        if (t.nullable && t.args.isEmpty() && t.name in tenv && r !is Ty.NBox && r != Ty.Str && boxName(r) != null && "AnyBox${boxName(r)}" in classDecls) return Ty.NBox(r)
         if (!t.nullable || t.name in tenv || tenv.isNotEmpty() || instLine >= 0 || boxName(r)?.let { "AnyBox$it" in classDecls } != true) return r
         return if (r != Ty.Str && boxName(r) != null && t.name !in setOf("Short", "UByte", "UShort")) Ty.NBox(r) else r
     }
@@ -2238,7 +2246,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (a is StrL) for (p in a.parts) {
                     if (p is String) { if (p.isNotEmpty()) emit("call void @rt_print_str(ptr ${cstr(p)})") }
                     else appendVal("rt_print_", "", genExpr(p as E))
-                } else if (a != null) appendVal("rt_print_", "", genExpr(a))
+                } else if (a != null) {
+                    val v = genExpr(a)
+                    appendVal("rt_print_", "", v)
+                    // An owned nullable primitive (a call result) is a temporary box: printed, then released.
+                    if (v.t is Ty.NBox && v.owned) releaseIfOwned(v)
+                }
                 if (n == "println") emit("call void @rt_newline()")
                 return Val("", Ty.Unit)
             }
@@ -2352,7 +2365,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (cd.hasCtorBody) {
                 val all = excArgs(n, allArgs(e))
                 if (all.size != cd.ctorParams.size) fail("constructor $n expects ${cd.ctorParams.size} arguments")
-                val vals = all.mapIndexed { i, a -> resolve(cd.ctorParams[i].type).let { pt -> coerce(argFor(a, pt), pt) } }
+                // The class's own (concrete) parameter types, as its constructor was defined: outside any instance bindings.
+                val vals = all.mapIndexed { i, a -> resolveGlobal(cd.ctorParams[i].type).let { pt -> coerce(argFor(a, pt), pt) } }
                 val res = Val(emitT("call ptr @ctor.$n(${vals.joinToString(", ") { "${it.t.llvm} ${it.v}" }})"), Ty.Cls(n), true)
                 vals.forEach { releaseIfOwned(it) }
                 afterCall()
@@ -2795,11 +2809,26 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // `x as T` with an unbounded type parameter (implicit bound `Any?`) is unchecked: a null passes through.
         val e = if (instLine >= 0 && e0.type.name in tenv && !e0.type.nullable && !e0.safe && "$instLine:${e0.type.name}" in TypeParamBounds.unbounded)
             AsE(e0.e, TypeRef(e0.type.name, e0.type.args, true), false).also { it.line = e0.line } else e0
+        // `x as T` with a class-bounded type parameter (`T : C`) is unchecked beyond the bound, as with erasure:
+        // check against the bound, then view the value as the instance's type.
+        if (instLine >= 0 && e0.type.name in tenv && !e0.type.nullable && !e0.safe && e0.type.args.isEmpty()) {
+            val b = TypeParamBounds.bounds["$instLine:${e0.type.name}"]
+            val tt = tenv.getValue(e0.type.name)
+            if (b != null && b.args.isEmpty() && !b.nullable && b.name in classes && tt is Ty.Cls && tt.name != b.name) {
+                val r = genAs(AsE(e0.e, b, false).also { it.line = e0.line })
+                return Val(r.v, tt, r.owned)
+            }
+        }
         val v = genExpr(e.e)
         if (e.type.name == "Any" && "Any" in ifaces && (boxName(v.t) != null || v.t is Ty.Iface || v.t is Ty.Cls && v.t.name.substringBefore('$') !in genericClasses)) return coerce(v, Ty.Iface("Any"))
         val star = e.type.args.any { it.name == "*" }
         val target = if (e.type.name == "Any") v.t else if (star) (v.t.takeIf { v.t is Ty.Cls || v.t is Ty.Iface } ?: fail("unsupported cast to ${e.type.name}<*>")) else resolve(TypeRef(e.type.name, e.type.args, false))
         if (v.v == "null" && target.llvm != "ptr") fail("unchecked cast of null to non-nullable $target is not supported")
+        // `x as Int` with `x: Int?` (also `v as T` in an instance with T = Int): null check, then unbox.
+        if (v.t is Ty.NBox && target.llvm != "ptr" && !e0.type.nullable && !e0.safe) {
+            if (v.t.inner == target) return genNonNull(v)
+            fail("unsupported cast from ${v.t} to $target")
+        }
         if (v.t.llvm != "ptr") {
             if (v.t == target) return v
             fail("unsupported cast from ${v.t} to $target")
@@ -3325,6 +3354,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // class with them substituted (the class is generated outside the instance's type bindings).
         val usedTps = if (tenv.isEmpty()) emptyList() else typeNamesIn(lamBody).filter { it in tenv }.distinct().sorted()
         val body1 = if (usedTps.isEmpty()) lamBody else Subst(usedTps.associateWith { tyRef(tenv.getValue(it)) }).block(lamBody)
+        // Function types do not track nullable primitives (`(B?) -> Int?` is `(B) -> Int`): a null result (from a
+        // safe call or a null literal in the body) would be unboxed and fail at run time.
+        if (rt is Ty.NBox && mayYieldNull(lamBody)) fail("lambdas returning a nullable ${rt.inner} are not supported")
         val name = mangle("\$Lam${LamIds.id(b0)}", (caps.map { it.second } + ptys + rt + usedTps.map { tenv.getValue(it) }).map { tyRef(it) })
         if (name !in classes) {
             val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i])) }, tyRef(rt), null,
@@ -3333,6 +3365,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "this" else n).also { it.line = line } }, null))
         return Val(v.v, fnT, v.owned)
+    }
+
+    /** Whether [b] contains a safe call or a null literal. */
+    private fun mayYieldNull(b: Block): Boolean {
+        var hit = false
+        Subst(emptyMap(), rw = { x -> if (x is NullL || (x is MemberE && x.safe)) hit = true; null }).block(b)
+        return hit
     }
 
     /** Names used as types anywhere in [b] (declarations, casts, type arguments). */

@@ -2226,7 +2226,16 @@ class Parser(toks: List<Tok>) {
             if (tk.k != K.OP) break
             val line = tk.line
             e = when (tk.s) {
-                ".", "?." -> { p++; skipNLOnly(); MemberE(e, ident(), tk.s == "?.") }
+                ".", "?." -> {
+                    p++; skipNLOnly()
+                    val m = MemberE(e, ident(), tk.s == "?.").also { it.line = line }
+                    // `recv.f<Int>(args)`: explicit type arguments of a member call.
+                    explicitTypeArgs()?.let { ta ->
+                        val a = if (isOp("(")) args() else emptyList()
+                        val lam = if (!noBraceCall && t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
+                        CallE(m, ta, a, lam)
+                    } ?: m
+                }
                 "(" -> {
                     val a = args()
                     val lam = if (!noBraceCall && t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
