@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2712,
-  "UNSUPPORTED": 2779
+  "PASS": 2731,
+  "UNSUPPORTED": 2760
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1117,9 +1117,8 @@
    "upstream": "compiler/testData/codegen/box/basics/k42000_crossmodule.kt"
   },
   "box/box/basics/kt75483.kt": {
-   "category": "other: unknown type OptionType",
-   "detail": "unknown type OptionType",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/kt75483.kt"
   },
   "box/box/basics/kt7972.kt": {
@@ -1988,9 +1987,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/delegationComplexWithList.kt"
   },
   "box/box/bridges/delegationProperty.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/delegationProperty.kt"
   },
   "box/box/bridges/diamond.kt": {
@@ -2248,9 +2246,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/kt2833.kt"
   },
   "box/box/bridges/kt2920.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/kt2920.kt"
   },
   "box/box/bridges/kt318.kt": {
@@ -2260,9 +2257,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/kt318.kt"
   },
   "box/box/bridges/kt42137.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/kt42137.kt"
   },
   "box/box/bridges/kt46389.kt": {
@@ -2393,9 +2389,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/propertyAccessorsWithoutBody.kt"
   },
   "box/box/bridges/propertyDiamond.kt": {
-   "category": "other: unknown type K",
-   "detail": "unknown type K",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/propertyDiamond.kt"
   },
   "box/box/bridges/propertyDiamondFakeOverride.kt": {
@@ -2405,15 +2400,13 @@
    "upstream": "compiler/testData/codegen/box/bridges/propertyDiamondFakeOverride.kt"
   },
   "box/box/bridges/propertyInConstructor.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/propertyInConstructor.kt"
   },
   "box/box/bridges/propertySetter.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/propertySetter.kt"
   },
   "box/box/bridges/returnTypeSignature.kt": {
@@ -2641,9 +2634,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test25.kt"
   },
   "box/box/bridges/test3.kt": {
-   "category": "type inference / mismatch",
-   "detail": "cannot assign to C.size",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/test3.kt"
   },
   "box/box/bridges/test4.kt": {
@@ -2653,9 +2645,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test4.kt"
   },
   "box/box/bridges/test5.kt": {
-   "category": "type inference / mismatch",
-   "detail": "cannot assign to C.size",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/test5.kt"
   },
   "box/box/bridges/test6.kt": {
@@ -2665,15 +2656,13 @@
    "upstream": "compiler/testData/codegen/box/bridges/test6.kt"
   },
   "box/box/bridges/test7.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/test7.kt"
   },
   "box/box/bridges/test8.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/test8.kt"
   },
   "box/box/bridges/test9.kt": {
@@ -5537,9 +5526,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt5347.kt"
   },
   "box/box/classes/kt6136.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt6136.kt"
   },
   "box/box/classes/kt633.kt": {
@@ -5692,9 +5680,8 @@
    "upstream": "compiler/testData/codegen/box/classes/superConstructorCallWithComplexArg.kt"
   },
   "box/box/classes/typedDelegation.kt": {
-   "category": "other: no field zzzValue in X",
-   "detail": "no field zzzValue in X",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/typedDelegation.kt"
   },
   "box/box/closures/anonymousObjectAsLastExpressionInLambda.kt": {
@@ -5703,8 +5690,8 @@
    "upstream": "compiler/testData/codegen/box/closures/anonymousObjectAsLastExpressionInLambda.kt"
   },
   "box/box/closures/captureExtensionReceiver.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "unknown length (stdlib API / unsupported decl)",
+   "detail": "unknown name 'length'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureExtensionReceiver.kt"
   },
@@ -13438,9 +13425,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegatedAnonymousObject_someParametersOnDelegate.kt"
   },
   "box/box/delegation/delegationByArg.kt": {
-   "category": "other: no field prop in Derived",
-   "detail": "no field prop in Derived",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationByArg.kt"
   },
   "box/box/delegation/delegationByExprWithArgs.kt": {
@@ -13459,9 +13445,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationByIfExpr.kt"
   },
   "box/box/delegation/delegationByInh.kt": {
-   "category": "other: no field prop in Derived",
-   "detail": "no field prop in Derived",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationByInh.kt"
   },
   "box/box/delegation/delegationByNewInstance.kt": {
@@ -13470,9 +13455,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationByNewInstance.kt"
   },
   "box/box/delegation/delegationChain.kt": {
-   "category": "other: no field prop in Derived",
-   "detail": "no field prop in Derived",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationChain.kt"
   },
   "box/box/delegation/delegationComplex.kt": {
@@ -14682,9 +14666,8 @@
    "upstream": "compiler/testData/codegen/box/enum/refToThis.kt"
   },
   "box/box/enum/reorderedArguments.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/reorderedArguments.kt"
   },
   "box/box/enum/simple.kt": {
@@ -16559,7 +16542,7 @@
   },
   "box/box/funInterface/irrelevantPrivateDeclarations.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "detail": "interface var properties with accessors are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/irrelevantPrivateDeclarations.kt"
   },
@@ -30252,9 +30235,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt4340.kt"
   },
   "box/box/properties/kt4373.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt4373.kt"
   },
   "box/box/properties/kt4383.kt": {
@@ -30469,9 +30451,8 @@
    "upstream": "compiler/testData/codegen/box/properties/lazyInitializationSplitPerModule.kt"
   },
   "box/box/properties/primitiveOverrideDefaultAccessor.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/primitiveOverrideDefaultAccessor.kt"
   },
   "box/box/properties/primitiveOverrideDelegateAccessor.kt": {
@@ -36533,8 +36514,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/multipleSmartCast.kt"
   },
   "box/box/smartCasts/negativesmartCastAugmentedAssignment.kt": {
-   "category": "annotations",
-   "detail": "cannot assign to IrDeclaration.annotations",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types ArrayList<String>, ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/negativesmartCastAugmentedAssignment.kt"
   },
@@ -37301,7 +37282,7 @@
   },
   "box/box/super/traitproperty.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "detail": "interface var properties with accessors are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/traitproperty.kt"
   },
@@ -37759,7 +37740,7 @@
   },
   "box/box/traits/diamondPropertyAccessors.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "detail": "interface var properties with accessors are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/diamondPropertyAccessors.kt"
   },
@@ -37791,7 +37772,7 @@
   },
   "box/box/traits/inheritedVar.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "detail": "interface var properties with accessors are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/inheritedVar.kt"
   },
@@ -37868,7 +37849,7 @@
   },
   "box/box/traits/kt5393_property.kt": {
    "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'set')",
+   "detail": "interface var properties with accessors are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/kt5393_property.kt"
   },
