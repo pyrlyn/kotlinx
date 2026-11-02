@@ -1231,6 +1231,7 @@ class Parser(toks: List<Tok>) {
                 val types = HashMap<String, TypeRef>()
                 val asLambda = HashSet<FunD>()
                 val capCls = HashMap<String, List<Pair<String, TypeRef>>>()
+                val genTps = HashMap<String, List<String>>()
                 val ownerNames = owner?.let { o -> o.methods.map { it.name } + newMethods.map { it.name } }?.toSet() ?: emptySet()
                 for (d in decls) when (d) {
                     is FunD -> {
@@ -1270,7 +1271,20 @@ class Parser(toks: List<Tok>) {
                         }
                         val n = if (d is ClassD) d.name else (d as InterfaceD).name
                         val nn = fresh(n)
-                        if (nn != n) { rename[n] = nn; types[n] = TypeRef(nn, emptyList(), false) }
+                        // A local class of a generic function that mentions its type parameters becomes generic over
+                        // them; constructions pass them as type arguments (substituted when the function is monomorphized).
+                        if (d is ClassD && f.typeParams.isNotEmpty() && d.typeParams.isEmpty() && d.enumEntries == null) {
+                            var hit = false
+                            val probe = object : AbstractMap<String, TypeRef>() {
+                                override val entries: Set<Map.Entry<String, TypeRef>> get() = emptySet()
+                                override fun get(key: String): TypeRef? { if (key in f.typeParams) hit = true; return null }
+                            }
+                            copyClass(Subst(probe), d, d.name)
+                            d.superTypeArgs.values.flatten().forEach { Subst(probe).ty(it) }
+                            if (hit) genTps[n] = f.typeParams
+                        }
+                        val gargs = genTps[n]?.map { TypeRef(it, emptyList(), false) } ?: emptyList()
+                        if (nn != n || gargs.isNotEmpty()) { rename[n] = nn; types[n] = TypeRef(nn, gargs, false) }
                     }
                 }
                 val inLambdaFns = ArrayList<Any>()
@@ -1278,6 +1292,11 @@ class Parser(toks: List<Tok>) {
                 lateinit var sub: Subst
                 sub = Subst(types, rw = { x ->
                     when {
+                        x is CallE && x.callee is NameE && x.callee.n in genTps && x.typeArgs.isEmpty() ->
+                            sub.e(CallE(x.callee, genTps.getValue(x.callee.n).map { TypeRef(it, emptyList(), false) }, x.args, x.lambda).also { it.line = x.line })
+                        x is CallE && x.callee is NameE && x.callee.n in genTps && x.callee.n !in capCls ->
+                            CallE(NameE(rename[x.callee.n] ?: x.callee.n).also { it.line = x.callee.line }, x.typeArgs.map { sub.ty(it) }, x.args.map { sub.e(it) },
+                                x.lambda?.let { sub.block(it) }).also { it.line = x.line }
                         x is CallE && x.callee is NameE && x.callee.n in capCls ->
                             CallE(NameE(rename[x.callee.n] ?: x.callee.n).also { it.line = x.callee.line }, x.typeArgs.map { sub.ty(it) },
                                 capCls.getValue(x.callee.n).map { (c, _) -> NameE(c).also { it.line = x.line } } + x.args.map { sub.e(it) },
@@ -1305,7 +1324,8 @@ class Parser(toks: List<Tok>) {
                         val g = copyFun(sub.fn(d), d, rename.getValue(d.name))
                         if (owner != null) newMethods.add(lift(g, owner, newMethods)) else funs.add(lift(g, null, newMethods))
                     }
-                    is ClassD -> classes.add(copyClass(sub, d, rename[d.name] ?: d.name).let { c ->
+                    is ClassD -> classes.add(copyClass(sub, d, rename[d.name] ?: d.name).let { c0 ->
+                        val c = genTps[d.name]?.let { tps -> ClassD(c0.name, c0.fields, c0.supers, c0.methods, c0.line, c0.ctorParams, c0.inits, c0.superArgs, tps, c0.enumEntries, c0.isValue, c0.superTypeArgs) } ?: c0
                         val cs = capCls[d.name] ?: return@let c
                         // Inside the class the captured values are its hidden `$cap$x` properties.
                         val names = cs.map { it.first }.toSet()

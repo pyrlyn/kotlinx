@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2701,
-  "UNSUPPORTED": 2790
+  "PASS": 2708,
+  "UNSUPPORTED": 2783
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -10882,9 +10882,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/kt30858.kt"
   },
   "box/box/coroutines/kt31784.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/coroutines/kt31784.kt"
   },
   "box/box/coroutines/kt41394.kt": {
@@ -17158,8 +17157,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt1038.kt"
   },
   "box/box/functions/kt1199.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "other: cannot iterate over Int",
+   "detail": "cannot iterate over Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt1199.kt"
   },
@@ -18029,8 +18028,8 @@
    "upstream": "compiler/testData/codegen/box/inference/lastExpressionOfLambdaWithNothingConstraint.kt"
   },
   "box/box/inference/mapCollectChainWithNullResult.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "unknown it (stdlib API / unsupported decl)",
+   "detail": "unknown name 'it'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/mapCollectChainWithNullResult.kt"
   },
@@ -18209,8 +18208,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt50827b.kt"
   },
   "box/box/inference/pcla/issues/kt51988.kt": {
-   "category": "other: unknown type AB1",
-   "detail": "unknown type AB1",
+   "category": "lambdas / function types / references",
+   "detail": "lambda with receiver needs a known receiver type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt51988.kt"
   },
@@ -20790,20 +20789,20 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeForFunctionReturningInlineClassGeneric.kt"
   },
   "box/box/inlineClasses/bridgeGenerationWithInlineClassOverAny.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "class bodies / constructors",
+   "detail": "constructor ResultReceiver$Int expects 0 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeGenerationWithInlineClassOverAny.kt"
   },
   "box/box/inlineClasses/bridgeGenerationWithInlineClassOverAnyGeneric.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "class bodies / constructors",
+   "detail": "constructor ResultReceiver$Int expects 0 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeGenerationWithInlineClassOverAnyGeneric.kt"
   },
   "box/box/inlineClasses/bridgeGenerationWithInlineClassOverAnyGeneric2.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "class bodies / constructors",
+   "detail": "constructor ResultReceiver$Int expects 0 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/bridgeGenerationWithInlineClassOverAnyGeneric2.kt"
   },
@@ -24153,105 +24152,100 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/any.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/any.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/anyGeneric.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/anyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/anyN.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/anyN.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/anyNGeneric.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/anyNGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/anyNGeneric2.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/anyNGeneric2.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/iface.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "strings / templates",
+   "detail": "cannot convert Foo to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/iface.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceChild.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceChild.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceChildGeneric.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceChildGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceGeneric.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/nullableResult.kt": {
-   "category": "other: unknown type Result<T>?",
-   "detail": "unknown type Result<T>?",
+   "category": "unknown Result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/nullableResult.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/primitive.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/primitive.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/primitiveGeneric.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/primitiveGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/result.kt": {
-   "category": "other: unknown type Result<T>",
-   "detail": "unknown type Result<T>",
+   "category": "unknown Result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/result.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAny.kt": {
-   "category": "other: unknown type Result<T>",
-   "detail": "unknown type Result<T>",
+   "category": "unknown Result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAny.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAnyGeneric.kt": {
-   "category": "other: unknown type Result<T>",
-   "detail": "unknown type Result<T>",
+   "category": "unknown Result (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Result'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAnyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/string.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/string.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/stringGeneric.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxNullableValueOfInlineClassWithNonNullUnderlyingType.kt": {
@@ -28616,9 +28610,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt45170.kt"
   },
   "box/box/objects/kt46136.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected A$String, found $anon0",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/kt46136.kt"
   },
   "box/box/objects/kt52540.kt": {
@@ -35116,8 +35109,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/commonSupertypeContravariant2.kt"
   },
   "box/box/regressions/dataClassInInlineFunctionWithTypeParameters.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "other: unknown type S",
+   "detail": "unknown type S",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/dataClassInInlineFunctionWithTypeParameters.kt"
   },
@@ -36583,8 +36576,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/smartcastFromGenericToString.kt"
   },
   "box/box/smartCasts/smartcastToStarType.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "strings / templates",
+   "detail": "unknown method Base$String.bar()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/smartcastToStarType.kt"
   },
