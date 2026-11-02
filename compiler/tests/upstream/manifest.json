@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2779,
-  "UNSUPPORTED": 2712
+  "PASS": 2813,
+  "UNSUPPORTED": 2678
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1542,9 +1542,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing11.kt"
   },
   "box/box/boxing/boxing12.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxing/boxing12.kt"
   },
   "box/box/boxing/boxing13.kt": {
@@ -1701,8 +1700,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt19767.kt"
   },
   "box/box/boxingOptimization/kt19767_2.kt": {
-   "category": "unknown mapOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'mapOf'",
+   "category": "strings / templates",
+   "detail": "HashMap keys must be Int/Long/Char, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/kt19767_2.kt"
   },
@@ -1927,8 +1926,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/abstractOverrideBridge.kt"
   },
   "box/box/bridges/complexMultiInheritance.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "other: override of 'foo' in C changes its signature",
+   "detail": "override of 'foo' in C changes its signature",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/complexMultiInheritance.kt"
   },
@@ -2166,9 +2165,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideOfTraitImpl.kt"
   },
   "box/box/bridges/fakeOverrideWithSeveralSuperDeclarations.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/fakeOverrideWithSeveralSuperDeclarations.kt"
   },
   "box/box/bridges/fakeOverrideWithSynthesizedImplementation.kt": {
@@ -2473,8 +2471,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/abstractFun.kt"
   },
   "box/box/bridges/substitutionInSuperClass/boundedTypeArguments.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected A$Int$Any, found Z",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/boundedTypeArguments.kt"
   },
@@ -2702,9 +2700,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/varargBridge1.kt"
   },
   "box/box/bridges/varargBridge2.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bridges/varargBridge2.kt"
   },
   "box/box/builtinStubMethods/customReadOnlyIterator.kt": {
@@ -2732,8 +2729,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedSecondArgTypeVariable.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedUlongArrayOf.kt": {
-   "category": "other: unsupported callable reference ::ulongArrayOf",
-   "detail": "unsupported callable reference ::ulongArrayOf",
+   "category": "types: ULongArray",
+   "detail": "unknown type ULongArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedUlongArrayOf.kt"
   },
@@ -2812,8 +2809,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/defaultAfterVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/defaultWithGenericExpectedType.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter U of call; pass it explicitly",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected $Fn$String$String, found $Fn$String$Char$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/defaultWithGenericExpectedType.kt"
   },
@@ -2841,8 +2838,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionFunctionWithNestedReceiver.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionFunctionWithPassedSupertype.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "unknown Number (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Number'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionFunctionWithPassedSupertype.kt"
   },
@@ -3190,8 +3187,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargViewedAsArray.kt"
   },
   "box/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected ArrayList<Int>, found IntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt"
   },
@@ -3501,8 +3498,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/callableReferencetoInnerAndLocal.kt"
   },
   "box/box/callableReference/charArrayOf.kt": {
-   "category": "other: unsupported callable reference ::charArrayOf",
-   "detail": "unsupported callable reference ::charArrayOf",
+   "category": "types: CharArray",
+   "detail": "unknown type CharArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/charArrayOf.kt"
   },
@@ -4731,9 +4728,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt58707.kt"
   },
   "box/box/casts/kt59022.kt": {
-   "category": "nullable types",
-   "detail": "nullable cast from Any to String is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/kt59022.kt"
   },
   "box/box/casts/kt65197.kt": {
@@ -5467,8 +5463,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt3546.kt"
   },
   "box/box/classes/kt40332.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
+   "category": "unknown s (stdlib API / unsupported decl)",
+   "detail": "unknown function 's'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt40332.kt"
   },
@@ -5510,8 +5506,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt504.kt"
   },
   "box/box/classes/kt508.kt": {
-   "category": "other: HashMap needs explicit key/value types and no arguments, e.g",
-   "detail": "HashMap needs explicit key/value types and no arguments, e.g. HashMap<Int, Long>()",
+   "category": "strings / templates",
+   "detail": "HashMap keys must be Int/Long/Char, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt508.kt"
   },
@@ -6687,9 +6683,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/interfaceCompanionBlockBackingField.kt"
   },
   "box/box/companionBlocksAndExtensions/interfaceInlineWithDefaultArgument.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/interfaceInlineWithDefaultArgument.kt"
   },
   "box/box/companionBlocksAndExtensions/interfacePrivatePropertiesAccessFromInline.kt": {
@@ -9622,8 +9617,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/deserializedSuspendFunctionProperty.kt"
   },
   "box/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt": {
-   "category": "unknown sequence (stdlib API / unsupported decl)",
-   "detail": "unknown function 'sequence'",
+   "category": "strings / templates",
+   "detail": "unknown type Sequence<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt"
   },
@@ -12444,8 +12439,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853_fibonacci.kt"
   },
   "box/box/defaultArguments/kt36853_nestedObject.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'tailrec')",
+   "category": "lambdas / function types / references",
+   "detail": "trailing lambdas in default arguments are not supported (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853_nestedObject.kt"
   },
@@ -13124,14 +13119,14 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/observable.kt"
   },
   "box/box/delegatedProperty/optimizedDelegatedProperties/definedInSources.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
+   "category": "property accessors / delegation",
+   "detail": "delegated var properties need an explicit type (at 'Mut')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/optimizedDelegatedProperties/definedInSources.kt"
   },
   "box/box/delegatedProperty/optimizedDelegatedProperties/definedInSourcesWithNonNullParameter.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
+   "category": "property accessors / delegation",
+   "detail": "delegated var properties need an explicit type (at 'Mut')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/optimizedDelegatedProperties/definedInSourcesWithNonNullParameter.kt"
   },
@@ -13773,9 +13768,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgs2.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgsOverridden.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'tailrec')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/defaultArgsOverridden.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/defaultArgsWithSideEffects.kt": {
@@ -13831,9 +13825,8 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/kt47084_lambdaInDefaultArgument.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/labeledThisReferences.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'tailrec')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/labeledThisReferences.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/loops.kt": {
@@ -13966,21 +13959,18 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailRecursionInFinally.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailrecWithExplicitCompanionObjectDispatcher.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'tailrec')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailrecWithExplicitCompanionObjectDispatcher.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/tailrecWithExplicitObjectDispatcher.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'tailrec')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/tailrecWithExplicitObjectDispatcher.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/thisReferences.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'tailrec')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/tailRecursion/thisReferences.kt"
   },
   "box/box/diagnostics/functions/tailRecursion/unitBlocks.kt": {
@@ -14108,9 +14098,8 @@
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/unboundMemberRef.kt"
   },
   "box/box/elvis/elvisToCommonType.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/elvis/elvisToCommonType.kt"
   },
   "box/box/elvis/genericElvisWithMoreSpecificLHS.kt": {
@@ -16661,9 +16650,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/samConstructorExplicitInvocation.kt"
   },
   "box/box/funInterface/samConversionToGenericInterfaceInGenericFun.kt": {
-   "category": "nullable types",
-   "detail": "nullable cast from Any to String is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/samConversionToGenericInterfaceInGenericFun.kt"
   },
   "box/box/funInterface/subtypeOfFunctionalTypeToFunInterfaceConversion.kt": {
@@ -17047,14 +17035,14 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/extensionInvokeOnExpr.kt"
   },
   "box/box/functions/invoke/implicitInvokeInCompanionObjectWithFunctionalArgument.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied method 'invoke' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeInCompanionObjectWithFunctionalArgument.kt"
   },
   "box/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
+   "category": "type inference (expression bodies)",
+   "detail": "expression-bodied method 'invoke' needs an explicit return type",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt"
   },
@@ -17670,8 +17658,8 @@
    "upstream": "compiler/testData/codegen/box/increment/argumentWithSideEffects.kt"
   },
   "box/box/increment/arrayElement.kt": {
-   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'shortArrayOf'",
+   "category": "types: Short",
+   "detail": "unknown type ShortArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/arrayElement.kt"
   },
@@ -19042,8 +19030,8 @@
    "upstream": "compiler/testData/codegen/box/inference/referenceToCatchParameterFromLambdaExpression.kt"
   },
   "box/box/inference/safeCastWithElvis.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "nullable types",
+   "detail": "nullable cast from Any to Int is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/safeCastWithElvis.kt"
   },
@@ -19083,20 +19071,19 @@
    "upstream": "compiler/testData/codegen/box/inference/varargInConstructor.kt"
   },
   "box/box/inference/whenAtAssignment.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of materialize; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/whenAtAssignment.kt"
   },
   "box/box/inference/whenAtAssignmentWithSmartCast.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of materialize; pass it explicitly",
+   "category": "other: unknown method I.func()",
+   "detail": "unknown method I.func()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/whenAtAssignmentWithSmartCast.kt"
   },
   "box/box/inference/whenAtAssignmentWithSmartCastInsideCapturedLambda.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of materialize; pass it explicitly",
+   "category": "other: unknown method I.func()",
+   "detail": "unknown method I.func()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/whenAtAssignmentWithSmartCastInsideCapturedLambda.kt"
   },
@@ -19645,9 +19632,8 @@
    "upstream": "compiler/testData/codegen/box/inline/inlineLambdaWithCapture.kt"
   },
   "box/box/inline/inlineMethod.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inline/inlineMethod.kt"
   },
   "box/box/inline/inlineNoReturn.kt": {
@@ -19681,8 +19667,8 @@
    "upstream": "compiler/testData/codegen/box/inline/innerOuterThis.kt"
   },
   "box/box/inline/invokeOnField.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
+   "category": "other: unknown method Foo.bar()",
+   "detail": "unknown method Foo.bar()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/invokeOnField.kt"
   },
@@ -19869,8 +19855,8 @@
    "upstream": "compiler/testData/codegen/box/inline/noInlineLambda.kt"
   },
   "box/box/inline/operators.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/operators.kt"
   },
@@ -20035,8 +20021,8 @@
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/kt49370.kt"
   },
   "box/box/inlineArgsInPlace/kt49407.kt": {
-   "category": "other: unknown method Long.mod()",
-   "detail": "unknown method Long.mod()",
+   "category": "other: unknown type *",
+   "detail": "unknown type *",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineArgsInPlace/kt49407.kt"
   },
@@ -21158,14 +21144,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferencesWithInlineClassesGeneric.kt"
   },
   "box/box/inlineClasses/castInsideWhenExpression.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "generics",
+   "detail": "unchecked cast between instances of generic class Foo is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/castInsideWhenExpression.kt"
   },
   "box/box/inlineClasses/castInsideWhenExpressionGeneric.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "generics",
+   "detail": "unchecked cast between instances of generic class Foo is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/castInsideWhenExpressionGeneric.kt"
   },
@@ -21966,14 +21952,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityChecksPrimitiveUnboxed.kt"
   },
   "box/box/inlineClasses/equalityForBoxesOfNullableValuesOfInlineClass.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "other: identity comparison of Any and Any is not supported",
+   "detail": "identity comparison of Any and Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityForBoxesOfNullableValuesOfInlineClass.kt"
   },
   "box/box/inlineClasses/equalityForBoxesOfNullableValuesOfInlineClassGeneric.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "generics",
+   "detail": "generic class X used as Any is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/equalityForBoxesOfNullableValuesOfInlineClassGeneric.kt"
   },
@@ -23896,9 +23882,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/typeChecksForInlineClassesGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/any.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/any.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/anyGeneric.kt": {
@@ -23907,9 +23892,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/anyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/anyN.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/anyN.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/anyNGeneric.kt": {
@@ -23929,20 +23913,19 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/iface.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/ifaceChild.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/ifaceChild.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/ifaceChildGeneric.kt": {
    "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
+   "detail": "cannot infer type parameter T of dispatchValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/ifaceChildGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/ifaceGeneric.kt": {
    "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
+   "detail": "cannot infer type parameter T of dispatchValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/ifaceGeneric.kt"
   },
@@ -23953,9 +23936,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/nullableResult.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/primitive.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T7 of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/primitive.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/primitiveGeneric.kt": {
@@ -23981,9 +23963,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/resultAnyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/string.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/string.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/funInterface/stringGeneric.kt": {
@@ -23998,9 +23979,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/any.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/any.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/anyGeneric.kt": {
@@ -24009,9 +23989,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/anyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/anyN.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/anyN.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/anyNGeneric.kt": {
@@ -24031,20 +24010,19 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/iface.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/ifaceChild.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/ifaceChild.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/ifaceChildGeneric.kt": {
    "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
+   "detail": "cannot infer type parameter T of dispatchValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/ifaceChildGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/ifaceGeneric.kt": {
    "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
+   "detail": "cannot infer type parameter T of dispatchValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/ifaceGeneric.kt"
   },
@@ -24055,9 +24033,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/nullableResult.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/primitive.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/primitive.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/primitiveGeneric.kt": {
@@ -24083,9 +24060,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/resultAnyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/string.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/string.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/lambda/stringGeneric.kt": {
@@ -24094,9 +24070,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/lambda/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/any.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/any.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/anyGeneric.kt": {
@@ -24105,9 +24080,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/anyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/anyN.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/anyN.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/anyNGeneric.kt": {
@@ -24127,20 +24101,19 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/iface.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceChild.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceChild.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceChildGeneric.kt": {
    "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
+   "detail": "cannot infer type parameter T of dispatchValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceChildGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceGeneric.kt": {
    "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
+   "detail": "cannot infer type parameter T of dispatchValue; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/ifaceGeneric.kt"
   },
@@ -24150,9 +24123,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/nullableResult.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/primitive.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/primitive.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/primitiveGeneric.kt": {
@@ -24178,9 +24150,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/resultAnyGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/string.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of normalValue; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/objectLiteral/string.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/objectLiteral/stringGeneric.kt": {
@@ -28130,9 +28101,8 @@
    "upstream": "compiler/testData/codegen/box/objectIntrinsics/objects.kt"
   },
   "box/box/objects/anonymousObjectAndContrvariantProjection.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/anonymousObjectAndContrvariantProjection.kt"
   },
   "box/box/objects/anonymousObjectPropertyInitialization.kt": {
@@ -29353,15 +29323,13 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt13023.kt"
   },
   "box/box/primitiveTypes/kt14868.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt14868.kt"
   },
   "box/box/primitiveTypes/kt1508.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt1508.kt"
   },
   "box/box/primitiveTypes/kt1634.kt": {
@@ -29370,8 +29338,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt1634.kt"
   },
   "box/box/primitiveTypes/kt16732.kt": {
-   "category": "other: unknown method Any.toInt()",
-   "detail": "unknown method Any.toInt()",
+   "category": "strings / templates",
+   "detail": "unknown method String.single()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt16732.kt"
   },
@@ -29391,8 +29359,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2269NotOptimizable.kt"
   },
   "box/box/primitiveTypes/kt2275.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "other: unsupported cast from Long to Any",
+   "detail": "unsupported cast from Long to Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt2275.kt"
   },
@@ -29586,9 +29554,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/nullableCharBoolean.kt"
   },
   "box/box/primitiveTypes/numberEqualsHashCodeToString.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/numberEqualsHashCodeToString.kt"
   },
   "box/box/primitiveTypes/numberToChar/abstractMethodInSuperinterface.kt": {
@@ -30452,9 +30419,8 @@
    "upstream": "compiler/testData/codegen/box/properties/unreachableUninitializedProperty.kt"
   },
   "box/box/propertyAccess/privateClassesWithPrivateMembers.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at 'inline')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/propertyAccess/privateClassesWithPrivateMembers.kt"
   },
   "box/box/propertyCallableReference/dynamicReceiver.kt": {
@@ -36996,8 +36962,8 @@
    "upstream": "compiler/testData/codegen/box/strings/stringBuilderAppend.kt"
   },
   "box/box/strings/stringPlusOnlyWorksOnString.kt": {
-   "category": "other: ArrayList needs an explicit element type, e.g. ArrayList<Lon",
-   "detail": "ArrayList needs an explicit element type, e.g. ArrayList<Long>()",
+   "category": "other: unknown type MutableCollection<Int>",
+   "detail": "unknown type MutableCollection<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/strings/stringPlusOnlyWorksOnString.kt"
   },
@@ -37839,8 +37805,8 @@
    "upstream": "compiler/testData/codegen/box/traits/syntheticAccessor.kt"
   },
   "box/box/traits/traitImplDelegationWithCovariantOverride.kt": {
-   "category": "other: unknown type Number",
-   "detail": "unknown type Number",
+   "category": "interfaces",
+   "detail": "super calls to interface members are not supported (no superclass in C)",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/traits/traitImplDelegationWithCovariantOverride.kt"
   },
@@ -38862,8 +38828,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/inlineClassArraysAsNamedArgumentInVararg.kt"
   },
   "box/box/vararg/kt10926.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of AllCollection; pass it explicitly",
+   "category": "other: overloads are not supported: AllCollection$Any.addAll1",
+   "detail": "overloads are not supported: AllCollection$Any.addAll1",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt10926.kt"
   },
