@@ -8,39 +8,38 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 | status | tests |
 |---|---|
 | N/A | 2984 |
-| UNSUPPORTED | 2862 |
-| PASS | 2629 |
+| UNSUPPORTED | 2859 |
+| PASS | 2632 |
 
-Kept in tree (re-runnable with `run.py`): 2629
+Kept in tree (re-runnable with `run.py`): 2632
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 255 |
-| generics | 211 |
-| interfaces | 195 |
-| operator/infix functions | 159 |
-| lambdas / function types / references | 147 |
+| strings / templates | 256 |
+| generics | 218 |
+| interfaces | 194 |
+| operator/infix functions | 160 |
+| lambdas / function types / references | 148 |
 | class bodies / constructors | 83 |
+| type inference / mismatch | 83 |
 | property accessors / delegation | 83 |
-| type inference / mismatch | 79 |
 | objects / companion objects | 65 |
 | type inference (expression bodies) | 45 |
 | other: expected '=' (at ' | 44 |
 | inline/value classes | 43 |
-| other: unknown type T | 39 |
+| other: unknown type T | 40 |
 | inheritance (open/abstract/sealed) | 39 |
 | nullable types | 38 |
 | destructuring declarations | 29 |
 | other syntax (at ':') | 28 |
 | annotations | 27 |
 | other syntax (at ',') | 23 |
-| other syntax (at 'where') | 20 |
 | other: unknown type Number | 17 |
 | unknown x (stdlib API / unsupported decl) | 17 |
+| other: unknown type * | 16 |
 | when expressions | 15 |
-| other: unknown type * | 15 |
 | other syntax (at '.') | 15 |
 | other: local classes that capture local variables are not supported | 15 |
 | other syntax (at 'suspend') | 14 |
@@ -57,6 +56,7 @@ Kept in tree (re-runnable with `run.py`): 2629
 | unknown A (stdlib API / unsupported decl) | 10 |
 | types: UIntArray | 10 |
 | unknown Int (stdlib API / unsupported decl) | 10 |
+| other syntax (at 'inner') | 10 |
 
 ## N/A reasons
 

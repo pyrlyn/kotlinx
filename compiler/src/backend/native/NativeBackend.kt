@@ -2735,6 +2735,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (statically(v.t, target) && (e.type.nullable || e.safe) && v.v != "null") return Val(v.v, target, v.owned)
         val unboxing = isAny(v.t) && boxName(target) != null
         if (unboxing && (e.safe || e.type.nullable)) fail("nullable cast from Any to $target is not supported")
+        // A safe cast of a reference to a primitive type would need a nullable primitive result (was invalid IR).
+        if (e.safe && target.llvm != "ptr") fail("safe cast from ${v.t} to $target is not supported")
         val ok = isCheck(v, e.type)
         val lok = label("as.ok"); val lbad = label("as.bad")
         if (e.safe) {
