@@ -1714,7 +1714,14 @@ class Parser(toks: List<Tok>) {
         if (typeParams.isNotEmpty()) fail("secondary constructors of generic classes are not supported")
         var superArgs = superArgs0
         val rest = ArrayList(secs)
-        if (!hasPrimary) {
+        // Several constructors without delegation and without a primary: an implicit empty primary runs the
+        // initializers, the others delegate to it like `this()` and then run their bodies.
+        val plain = secs.filter { it.kind == null }
+        if (!hasPrimary && plain.size > 1 && secs.none { it.kind == "super" }) {
+            // The implicit primary would clash with a parameterless constructor (and skip its body for the others).
+            if (plain.any { it.params.isEmpty() }) fail("a parameterless constructor next to other non-delegating constructors is not supported")
+            for ((i, sc) in rest.withIndex()) if (sc.kind == null) rest[i] = SecCtor(sc.params, "this", emptyList(), sc.body, sc.line)
+        } else if (!hasPrimary) {
             val prim = secs.firstOrNull { it.kind != "this" } ?: fail("a class without a primary constructor needs a non-delegating constructor")
             rest.remove(prim)
             ctorParams.addAll(prim.params)
