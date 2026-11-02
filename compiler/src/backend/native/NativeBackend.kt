@@ -1044,7 +1044,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         line = s.line
         when (s) {
             is VarS -> {
-                val v0 = if (s.init is LambdaE && s.type != null) argFor(s.init, resolve(s.type)) else genArg(s.init)
+                val v0 = if (s.type != null) argFor(s.init, resolve(s.type), true) else genArg(s.init)
                 if (v0.t == Ty.Nothing) return
                 val t = s.type?.let { resolve(it) } ?: v0.t
                 if (t == Ty.Unit) fail("cannot store Unit in '${s.name}'")
@@ -2431,6 +2431,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * the call binds to the monomorphized instance `@"k.f<Int>"`, queued for generation on first use.
      * Monomorphization keeps primitives unboxed and every instance's RC code exact for its concrete types.
      */
+    /** `fun <T> f(): T` with an expected result type: T is the expected type. */
+    private fun bindExpectedRet(f: FunD, e: CallE, env: MutableMap<String, Ty>) {
+        val r = f.ret ?: return
+        val ex = expected.lastOrNull { it.first === e }?.second ?: return
+        if (r.name in f.typeParams && r.name !in env && r.args.isEmpty() && !r.nullable && ex !is Ty.NBox) env[r.name] = ex
+    }
+
     private fun genGenericCall(f: FunD, e: CallE, cls: ClassInfo? = null, recv: Val? = null): Val {
         if (f.params.size != allArgs(e).size) fail("${f.name} expects ${f.params.size} arguments")
         val env = LinkedHashMap<String, Ty>()
@@ -2442,6 +2449,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val all = allArgs(e)
         val rawN = arrayOfNulls<Val>(all.size)
         all.forEachIndexed { i, a -> if (a !is LambdaE) { rawN[i] = genExpr(a); if (e.typeArgs.isEmpty()) unify(f.params[i].type, rawN[i]!!.t, f.typeParams, env) } }
+        bindExpectedRet(f, e, env)
         all.forEachIndexed { i, a ->
             if (a !is LambdaE) return@forEachIndexed
             val pt = f.params[i].type
@@ -2457,6 +2465,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             unify(pt, rawN[i]!!.t, f.typeParams, env)
         }
         val raw = rawN.map { it!! }
+        bindExpectedRet(f, e, env)
         for (tp in f.typeParams) if (tp !in env) fail("cannot infer type parameter $tp of ${f.name}; pass it explicitly")
         val bound = f.typeParams.associateWith { env.getValue(it) }
         val sym = "\"${if (cls != null) "m.${cls.name}." else "k."}${f.name}<${f.typeParams.joinToString(",") { bound.getValue(it).toString() }}>\""
@@ -3239,7 +3248,26 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** An argument with a known parameter type: lambdas get their parameter/return types from a function type. */
     private fun argFor(a: E, t: Ty, own: Boolean = false): Val =
-        if (a is LambdaE) fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t)) } else if (own) genArg(a) else genExpr(a)
+        if (a is LambdaE) fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t)) } else withExpected(a, t) { if (own) genArg(a) else genExpr(a) }
+
+    /** Expected types of generic calls in result position, used to infer a type parameter that only appears in the return type. */
+    private val expected = ArrayList<Pair<CallE, Ty>>()
+
+    private fun <R> withExpected(a: E, t: Ty, f: () -> R): R {
+        val tails = ArrayList<CallE>()
+        fun collect(x: E?) {
+            when (x) {
+                is CallE -> tails.add(x)
+                is IfE -> { collect((x.th.stmts.lastOrNull() as? ExprS)?.e); collect((x.el?.stmts?.lastOrNull() as? ExprS)?.e) }
+                is WhenE -> x.branches.forEach { collect((it.second.stmts.lastOrNull() as? ExprS)?.e) }
+                else -> {}
+            }
+        }
+        if (t != Ty.Unit && t != Ty.Nothing) collect(a)
+        val n = expected.size
+        for (c in tails) expected.add(c to t)
+        try { return f() } finally { while (expected.size > n) expected.removeAt(expected.size - 1) }
+    }
 
     private fun isRecvFn(t: Ty) = t is Ty.Iface && t.name.startsWith("\$FnR")
 
