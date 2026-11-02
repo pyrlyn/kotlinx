@@ -62,6 +62,7 @@ class NeedIface(val d: InterfaceD) : Exception()
  */
 var deferredRc = false
 
+/** Generates LLVM IR for a whole program. */
 class NativeBackend(private val prog: Program, private val genericClasses: Map<String, ClassD> = emptyMap(),
                     /** Instance class name -> (generic class, type arguments), for inference against `Box<T>` parameters. */
                     private val instOrigin: Map<String, Pair<String, List<TypeRef>>> = emptyMap(),

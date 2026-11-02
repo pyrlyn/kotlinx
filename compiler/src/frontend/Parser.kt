@@ -142,6 +142,7 @@ private fun keepIdx(q: Int, ts: List<Tok>, keep: Set<String>): Boolean {
     return j + 1 < ts.size && ts[j + 1].s in keep
 }
 
+/** Recursive-descent parser from tokens to a `Program`. */
 class Parser(toks: List<Tok>) {
     /** Tokens padded with extra EOF tokens, so lookahead (`t[p + 1]`) at the end of an unclosed file is an error, not a crash. */
     private val t: List<Tok> = companionExtensions(if (toks.isNotEmpty() && toks.last().k == K.EOF) toks + List(8) { toks.last() } else toks)

@@ -126,8 +126,10 @@ private fun findMimalloc(): String? {
         .firstOrNull { hasLib(it) }
 }
 
+/** Source text to LLVM IR: lex, parse, merge the prelude and `Any` support, then generate code. */
 fun compileToIr(src: String): String = compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program())))
 
+/** The `newkotlinc` command; see docs/usage.md for the options. */
 fun main(args: Array<String>) {
     var input: String? = null; var output: String? = null
     var runtime = getenv("NEWKOTLIN_RUNTIME")?.toKString() ?: "compiler/runtime/runtime.c"
