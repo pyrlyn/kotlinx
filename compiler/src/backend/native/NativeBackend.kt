@@ -1397,7 +1397,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val op = e.op.removePrefix("pre").removeSuffix("s16")
                 val mname = if (op == "++") "inc" else "dec"
                 onceRecv(e.target) { tg ->
-                    val old = genExpr(tg)
+                    // A reference read is borrowed from the variable/property; `assign` below releases that slot's
+                    // value, which freed the old object while `x++` still returned it (use-after-free: `val old = c++`
+                    // printed a reused object, and --leak-check aborted with "freed into the wrong region").
+                    // Own it for the temp so the postfix result outlives the reassignment.
+                    val old = genExpr(tg).let { v -> if (v.t.isRef && !v.owned) { retain(v.v, v.t); Val(v.v, v.t, true) } else v }
                     // `operator fun inc()/dec()` (member, or an extension on the operand type).
                     val custom = (old.t as? Ty.Cls)?.let { mname in classes.getValue(it.name).methods } == true ||
                         extFuns[mname]?.any { extMatches(old.t, it.params[0].type, it.typeParams) } == true
