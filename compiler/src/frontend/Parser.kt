@@ -1480,8 +1480,8 @@ class Parser(toks: List<Tok>) {
                             if (f.typeParams.isNotEmpty() && d.typeParams.isEmpty() && mentionsTypeParams(d, f.typeParams)) genFunTps[d.name] = f.typeParams
                         } else {
                             if (d.name in usedNames(d)) throw CompileError("line ${d.line}: recursive local functions that capture local variables are not supported")
-                            if (d.typeParams.isNotEmpty() || d.recv != null || d.params.any { it.default != null || it.vararg })
-                                throw CompileError("line ${d.line}: local functions that capture local variables cannot be generic, extensions or have default/vararg parameters")
+                            if (d.typeParams.isNotEmpty() || d.params.any { it.vararg } || (d.recv != null && d.name in OPERATOR_NAMES))
+                                throw CompileError("line ${d.line}: local functions that capture local variables cannot be generic, operator extensions or have vararg parameters")
                             asLambda.add(d)
                         }
                     }
@@ -1526,9 +1526,24 @@ class Parser(toks: List<Tok>) {
                 }
                 val inLambdaFns = ArrayList<Any>()
                 for (d in asLambda) Subst(emptyMap(), srw = { x -> if (x is LocalDeclS) inLambdaFns.add(x.d); null }).fn(d)
+                // Closures of capturing local functions: extension receivers become the first parameter (`r.f(a)` ->
+                // `f(r, a)`), omitted trailing default arguments are filled in at each positional call.
+                val lamFns = asLambda.associateBy { it.name }
+                fun lamArgs(g: FunD, args: List<E>, line: Int): List<E>? {
+                    if (args.any { it is NamedE } || args.size > g.params.size) return null
+                    val miss = g.params.drop(args.size)
+                    if (miss.any { it.default == null }) return null
+                    return args + miss.map { it.default!! }
+                }
                 lateinit var sub: Subst
                 sub = Subst(types, rw = { x ->
                     when {
+                        x is CallE && x.lambda == null && x.callee is MemberE && !x.callee.safe && lamFns[x.callee.n]?.recv != null && x.callee.n !in ownerNames ->
+                            lamArgs(lamFns.getValue(x.callee.n), x.args, x.line)?.let { a ->
+                                CallE(NameE(x.callee.n).also { it.line = x.line }, emptyList(), (listOf(x.callee.recv) + a).map { sub.e(it) }, null).also { it.line = x.line } }
+                        x is CallE && x.lambda == null && x.callee is NameE && lamFns[x.callee.n]?.let { it.recv == null && x.args.size < it.params.size } == true ->
+                            lamArgs(lamFns.getValue(x.callee.n), x.args, x.line)?.let { a ->
+                                CallE(x.callee, emptyList(), a.map { sub.e(it) }, null).also { it.line = x.line } }
                         x is CallE && x.callee is NameE && x.callee.n in genFunTps && x.typeArgs.isEmpty() ->
                             CallE(NameE(rename[x.callee.n] ?: x.callee.n).also { it.line = x.callee.line }, genFunTps.getValue(x.callee.n).map { TypeRef(it, emptyList(), false) },
                                 x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line }
@@ -1555,9 +1570,10 @@ class Parser(toks: List<Tok>) {
                     else if (x.d is FunD && x.d in asLambda) {
                         val g = x.d
                         val ret = g.ret ?: if (g.body != null) TypeRef("Unit", emptyList(), false) else null
-                        val ty = ret?.let { TypeRef("\$Fn", g.params.map { it.type } + it, false) }
+                        val gps = listOfNotNull(g.recv?.let { Param("this", it) }) + g.params
+                        val ty = ret?.let { TypeRef("\$Fn", gps.map { it.type } + it, false) }
                         val body = g.body ?: Block(listOf(ExprS(g.exprBody!!).also { it.line = g.line }))
-                        VarS(g.name, false, ty, LambdaE(sub.block(Block(body.stmts, g.params.map { it.name }, g.params.map { it.type }))).also { it.line = g.line }).also { it.line = g.line }
+                        VarS(g.name, false, ty, LambdaE(sub.block(Block(body.stmts, gps.map { it.name }, gps.map { it.type }))).also { it.line = g.line }).also { it.line = g.line }
                     } else ExprS(BoolL(true)).also { it.line = x.line }
                 })
                 f = copyFun(sub.fn(f), f)
