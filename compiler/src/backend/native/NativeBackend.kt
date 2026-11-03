@@ -2129,7 +2129,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val named = e.args.filterIsInstance<NamedE>()
         val pos = e.args.filter { it !is NamedE }
         fun pack(items: List<E>): E {
-            if (items.size == 1 && items[0] is UnE && (items[0] as UnE).op == "*") return (items[0] as UnE).e
+            if (items.size == 1 && items[0] is UnE && (items[0] as UnE).op == "*") {
+                // `*intArrayOf(...)` into a vararg (a list here): copied into a list, as Kotlin copies spread arrays.
+                val x = (items[0] as UnE).e
+                return if (probeType(x) is Ty.Arr) CallE(MemberE(x, "toList", false).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line } else x
+            }
             if (items.any { it is UnE && it.op == "*" }) fail("spread mixed with other vararg arguments is not supported")
             // A generic element type (`vararg xs: T`) is inferred from the items.
             val known = try { resolve(elemT); true } catch (x: CompileError) { false }
