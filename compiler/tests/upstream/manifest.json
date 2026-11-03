@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3006,
-  "UNSUPPORTED": 2485
+  "PASS": 3015,
+  "UNSUPPORTED": 2476
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -201,8 +201,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/nestedAnnotationInstances.kt"
   },
   "box/box/annotations/instances/nestedDefaults.kt": {
-   "category": "types: BooleanArray",
-   "detail": "unknown type BooleanArray",
+   "category": "other: type check of Any against BooleanArray is not supported",
+   "detail": "type check of Any against BooleanArray is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/nestedDefaults.kt"
   },
@@ -493,9 +493,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/arrayPlusAssign.kt"
   },
   "box/box/arrays/arrayRangeCheckAccessors.kt": {
-   "category": "unknown BooleanArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'BooleanArray'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/arrayRangeCheckAccessors.kt"
   },
   "box/box/arrays/arraysOfInlineClass/accessArrayOfInlineClass.kt": {
@@ -532,9 +531,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/constantArrayOfAny.kt"
   },
   "box/box/arrays/forEachBooleanArray.kt": {
-   "category": "unknown BooleanArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'BooleanArray'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forEachBooleanArray.kt"
   },
   "box/box/arrays/forEachByteArray.kt": {
@@ -543,9 +541,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/forEachByteArray.kt"
   },
   "box/box/arrays/forEachCharArray.kt": {
-   "category": "unknown CharArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'CharArray'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forEachCharArray.kt"
   },
   "box/box/arrays/forEachDoubleArray.kt": {
@@ -599,50 +596,49 @@
    "upstream": "compiler/testData/codegen/box/arrays/forInReversed/reversedReversedOriginalUpdatedInLoopBody.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArray.kt": {
-   "category": "types: UIntArray",
-   "detail": "unknown type UIntArray",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArray.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayIndices.kt": {
-   "category": "types: UIntArray",
-   "detail": "unknown type UIntArray",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayIndices.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayIndicesReversed.kt": {
-   "category": "types: UIntArray",
-   "detail": "unknown type UIntArray",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayIndicesReversed.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayReversed.kt": {
-   "category": "types: UIntArray",
-   "detail": "unknown type UIntArray",
+   "category": "other: unknown method UIntArray.reversed()",
+   "detail": "unknown method UIntArray.reversed()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayReversed.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndex.kt": {
-   "category": "types: UIntArray",
-   "detail": "unknown type UIntArray",
+   "category": "other: unknown method UIntArray.withIndex()",
+   "detail": "unknown method UIntArray.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndex.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoElementVar.kt": {
-   "category": "types: UIntArray",
-   "detail": "unknown type UIntArray",
+   "category": "other: unknown method UIntArray.withIndex()",
+   "detail": "unknown method UIntArray.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoElementVar.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoIndexVar.kt": {
-   "category": "types: UIntArray",
-   "detail": "unknown type UIntArray",
+   "category": "other: unknown method UIntArray.withIndex()",
+   "detail": "unknown method UIntArray.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoIndexVar.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexReversed.kt": {
-   "category": "types: UIntArray",
-   "detail": "unknown type UIntArray",
+   "category": "other: unknown method UIntArray.withIndex()",
+   "detail": "unknown method UIntArray.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexReversed.kt"
   },
@@ -682,8 +678,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/indices.kt"
   },
   "box/box/arrays/indicesChar.kt": {
-   "category": "unknown CharArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'CharArray'",
+   "category": "other: unknown property indices",
+   "detail": "unknown property indices",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/indicesChar.kt"
   },
@@ -699,8 +695,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/iterator.kt"
   },
   "box/box/arrays/iteratorBooleanArray.kt": {
-   "category": "unknown BooleanArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'BooleanArray'",
+   "category": "other: unknown method BooleanArray.iterator()",
+   "detail": "unknown method BooleanArray.iterator()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorBooleanArray.kt"
   },
@@ -717,8 +713,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/iteratorByteArrayNextByte.kt"
   },
   "box/box/arrays/iteratorCharArray.kt": {
-   "category": "unknown CharArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'CharArray'",
+   "category": "other: unknown method CharArray.iterator()",
+   "detail": "unknown method CharArray.iterator()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorCharArray.kt"
   },
@@ -932,9 +928,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/kt15568.kt"
   },
   "box/box/arrays/multiDecl/kt15575.kt": {
-   "category": "types: BooleanArray",
-   "detail": "unknown type BooleanArray",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/multiDecl/kt15575.kt"
   },
   "box/box/arrays/multiDecl/long/MultiDeclForComponentExtensions.kt": {
@@ -969,8 +964,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/nonNullArray.kt"
   },
   "box/box/arrays/primitiveArrays.kt": {
-   "category": "types: BooleanArray",
-   "detail": "unknown type BooleanArray",
+   "category": "types: Short",
+   "detail": "unknown type ShortArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/primitiveArrays.kt"
   },
@@ -1301,9 +1296,8 @@
    "upstream": "compiler/testData/codegen/box/bce/forDownToSize.kt"
   },
   "box/box/bce/forDownToWithStep.kt": {
-   "category": "unknown UIntArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'UIntArray'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/forDownToWithStep.kt"
   },
   "box/box/bce/forEachIndexedTest.kt": {
@@ -1343,9 +1337,8 @@
    "upstream": "compiler/testData/codegen/box/bce/forUntilSize.kt"
   },
   "box/box/bce/forUntilWithStep.kt": {
-   "category": "unknown CharArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'CharArray'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/forUntilWithStep.kt"
   },
   "box/box/bce/forWithIndex.kt": {
@@ -2719,8 +2712,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedSecondArgTypeVariable.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedUlongArrayOf.kt": {
-   "category": "types: ULongArray",
-   "detail": "unknown type ULongArray",
+   "category": "other: unsupported callable reference ::ulongArrayOf",
+   "detail": "unsupported callable reference ::ulongArrayOf",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedUlongArrayOf.kt"
   },
@@ -3188,8 +3181,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/arrayConstructor.kt"
   },
   "box/box/callableReference/arrayConstructorArgument.kt": {
-   "category": "unknown CharArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'CharArray'",
+   "category": "other: CharArray(2 arguments) is not supported",
+   "detail": "CharArray(2 arguments) is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/arrayConstructorArgument.kt"
   },
@@ -3216,8 +3209,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/array.kt"
   },
   "box/box/callableReference/bound/arrayConstructorArgument.kt": {
-   "category": "unknown CharArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'CharArray'",
+   "category": "other: CharArray(2 arguments) is not supported",
+   "detail": "CharArray(2 arguments) is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/arrayConstructorArgument.kt"
   },
@@ -3472,8 +3465,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/callableReferencetoInnerAndLocal.kt"
   },
   "box/box/callableReference/charArrayOf.kt": {
-   "category": "types: CharArray",
-   "detail": "unknown type CharArray",
+   "category": "other: unsupported callable reference ::charArrayOf",
+   "detail": "unsupported callable reference ::charArrayOf",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/charArrayOf.kt"
   },
@@ -11961,8 +11954,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/mixedParams.kt"
   },
   "box/box/dataClasses/toString/primitiveArrays.kt": {
-   "category": "types: BooleanArray",
-   "detail": "unknown type BooleanArray",
+   "category": "types: Short",
+   "detail": "unknown type ShortArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/primitiveArrays.kt"
   },
@@ -22957,8 +22950,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_referenceGeneric.kt"
   },
   "box/box/inlineClasses/kt27113.kt": {
-   "category": "types: CharArray",
-   "detail": "unknown type CharArray",
+   "category": "strings / templates",
+   "detail": "unknown method String.toCharArray()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27113.kt"
   },
@@ -23015,8 +23008,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27706Generic.kt"
   },
   "box/box/inlineClasses/kt28405.kt": {
-   "category": "types: UIntArray",
-   "detail": "unknown type UIntArray",
+   "category": "strings / templates",
+   "detail": "cannot convert UIntArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt28405.kt"
   },
@@ -23222,8 +23215,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/mangledSuperCallsGeneric.kt"
   },
   "box/box/inlineClasses/multifileClass.kt": {
-   "category": "unknown uintArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'uintArrayOf'",
+   "category": "other: unknown method UIntArray.copyInto()",
+   "detail": "unknown method UIntArray.copyInto()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/multifileClass.kt"
   },
@@ -23823,8 +23816,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt": {
-   "category": "types: UIntArray",
-   "detail": "unknown type UIntArray",
+   "category": "other: unknown method ArrayList<Int>.toList()",
+   "detail": "unknown method ArrayList<Int>.toList()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt"
   },
@@ -25000,8 +24993,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt10131.kt"
   },
   "box/box/intrinsics/kt10131a.kt": {
-   "category": "unknown charArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'charArrayOf'",
+   "category": "other: unknown method CharArray.fold()",
+   "detail": "unknown method CharArray.fold()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/kt10131a.kt"
   },
@@ -26179,8 +26172,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/vars.kt"
   },
   "box/box/lower/forLoopsLowering/withIndex.kt": {
-   "category": "unknown uintArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'uintArrayOf'",
+   "category": "other: unknown method UIntArray.withIndex()",
+   "detail": "unknown method UIntArray.withIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/withIndex.kt"
   },
@@ -38470,9 +38463,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/inUnsignedUntil.kt"
   },
   "box/box/unsignedTypes/iterateOverArrayOfUnsignedValues.kt": {
-   "category": "unknown uintArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'uintArrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/iterateOverArrayOfUnsignedValues.kt"
   },
   "box/box/unsignedTypes/iterateOverListOfBoxedUnsignedValues.kt": {
@@ -38518,9 +38510,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/signedToUnsignedConversions.kt"
   },
   "box/box/unsignedTypes/unsignedArraySize.kt": {
-   "category": "unknown uintArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'uintArrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/unsignedArraySize.kt"
   },
   "box/box/unsignedTypes/unsignedInStringInterpolation.kt": {
@@ -38615,8 +38606,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/boxingArgumentsForVararg.kt"
   },
   "box/box/vararg/doNotCopyImmediatelyCreatedArrays.kt": {
-   "category": "unknown booleanArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'booleanArrayOf'",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected ArrayList<Boolean>, found BooleanArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/doNotCopyImmediatelyCreatedArrays.kt"
   },
@@ -38667,8 +38658,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/kt581.kt"
   },
   "box/box/vararg/kt6192.kt": {
-   "category": "unknown CharArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'CharArray'",
+   "category": "unknown ShortArray (stdlib API / unsupported decl)",
+   "detail": "unknown function 'ShortArray'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt6192.kt"
   },
