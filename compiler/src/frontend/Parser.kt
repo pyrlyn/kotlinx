@@ -813,7 +813,7 @@ class Parser(toks: List<Tok>) {
                     cd.inits, cd.superArgs, cd.typeParams, cd.enumEntries, cd.isValue, cd.superTypeArgs)
                 continue
             }
-            funs.add(FunD("ext$" + recv.name.replace('.', '_') + "$" + f.name, listOf(Param("this", recv)) + f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams))
+            funs.add(FunD("ext$" + recv.name.replace('.', '_').replace("$", "") + "$" + f.name, listOf(Param("this", recv)) + f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams))
         }
     }
 
@@ -1992,9 +1992,11 @@ class Parser(toks: List<Tok>) {
         val typeParams = typeParams()
         // Extension receiver: `fun Recv.name`, `fun Box<T>.name`, `fun String?.name`.
         val save = p
-        ident()
         var recv: TypeRef? = null
-        val name = if (isOp(".") || isOp("<") || isOp("?") || isOp("?.")) {
+        // Receiver in parentheses: `fun (suspend () -> T).startCoroutine(...)`.
+        val parenRecv = if (isOp("(")) { val rt = type(); expectOp("."); recv = rt; ident() } else null
+        if (parenRecv == null) ident()
+        val name = if (parenRecv != null) parenRecv else if (isOp(".") || isOp("<") || isOp("?") || isOp("?.")) {
             p = save
             val rt = type()
             if (isOp("?.")) { next(); recv = TypeRef(rt.name, rt.args, true); ident() }

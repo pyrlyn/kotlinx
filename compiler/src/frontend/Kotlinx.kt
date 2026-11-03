@@ -201,7 +201,7 @@ fun kxArr(e: JsonElement?, what: String): JsonArray {
 }
 """
 
-val COROUTINES_USE = Regex("""\brunBlocking\b|\bcoroutineScope\b|\bChannel<|\bflow(Of)?\s*[<{(]|\bsuspend\b""")
+val COROUTINES_USE = Regex("""\brunBlocking\b|\bcoroutineScope\b|\bChannel<|\bflow(Of)?\s*[<{(]|\bsuspend\b|\bkotlin\.coroutines\b|\bContinuation\b""")
 val SERIALIZATION_USE = Regex("""@Serializable|\bJson\.|\bKSerializer\b|\bJson(Element|Object|Array|Primitive|Null)\b""")
 private val SERIALIZABLE_CLASS = Regex("""@Serializable\s+(?:data\s+)?class\s+(\w+)""")
 
@@ -570,4 +570,77 @@ fun <T> flow(block: suspend FlowCollector<T>.() -> Unit): Flow<T> = Flow<T> { c 
 fun <T> flowOf(xs: List<T>): Flow<T> = Flow<T> { c -> for (x in xs) c.emit(x) }
 fun <T, R> Flow<T>.map(f: (T) -> R): Flow<R> { val src = this; return Flow<R> { out -> src.collect { out.emit(f(it)) } } }
 fun <T> Flow<T>.filter(p: (T) -> Boolean): Flow<T> { val src = this; return Flow<T> { out -> src.collect { if (p(it)) out.emit(it) } } }
+// ---- kotlin.coroutines (low level): Continuation, startCoroutine, createCoroutine, suspendCoroutine ----
+interface CoroutineContext
+object EmptyCoroutineContext : CoroutineContext
+interface Continuation<T> {
+    val context: CoroutineContext
+    fun resumeWith(result: Result<T>)
+}
+class KcLambdaContinuation<T>(override val context: CoroutineContext, val f: (Result<T>) -> Unit) : Continuation<T> {
+    override fun resumeWith(result: Result<T>) { f(result) }
+}
+fun <T> Continuation(context: CoroutineContext, resumeWith: (Result<T>) -> Unit): Continuation<T> = KcLambdaContinuation<T>(context, resumeWith)
+fun <T> Continuation<T>.resume(value: T) { resumeWith(Result.success(value)) }
+fun <T> Continuation<T>.resumeWithException(exception: Throwable) { resumeWith(Result.failure<T>(exception)) }
+// Drives one started coroutine (the root of a chain of awaiting LLVM coroutines); resuming any continuation of the
+// chain resumes the root, whose awaits resume down to the suspended leaf.
+class KcDriver(val body: suspend () -> Unit) {
+    var handle = 0L
+    var running = false
+    var again = false
+    var done = false
+    fun pump() {
+        if (done) return
+        if (running) { again = true; return }
+        if (handle == 0L) handle = kxCoStart(body)
+        val prev = KcCur.driver
+        KcCur.driver = this
+        running = true
+        var fin = kxCoResume(handle)
+        while (!fin && again) { again = false; fin = kxCoResume(handle) }
+        again = false
+        running = false
+        KcCur.driver = prev
+        if (fin) { kxCoDestroy(handle); handle = 0L; done = true; body = {} }
+    }
+}
+object KcCur { var driver: KcDriver? = null }
+class KcSafeContinuation<T>(override val context: CoroutineContext, val driver: KcDriver) : Continuation<T> {
+    var result: Result<T>? = null
+    override fun resumeWith(result: Result<T>) {
+        if (this.result != null) throw IllegalStateException("Already resumed")
+        this.result = result
+        driver.pump()
+    }
+}
+suspend fun <T> suspendCoroutine(block: (Continuation<T>) -> Unit): T {
+    val d = KcCur.driver
+    if (d == null) throw IllegalStateException("suspendCoroutine outside startCoroutine")
+    val c = KcSafeContinuation<T>(EmptyCoroutineContext, d)
+    block(c)
+    while (c.result == null) kxCoSuspend()
+    return c.result!!.getOrThrow()
+}
+class KcStarter<T>(val f: suspend () -> T, val completion: Continuation<T>) : Continuation<Unit> {
+    override val context: CoroutineContext get() = completion.context
+    var started = false
+    val driver: KcDriver = KcDriver {
+        var res: Result<T>? = null
+        try { res = Result.success(f()) } catch (e: Throwable) { res = Result.failure<T>(e) }
+        completion.resumeWith(res!!)
+    }
+    override fun resumeWith(result: Result<Unit>) {
+        if (started) throw IllegalStateException("Already resumed")
+        started = true
+        driver.pump()
+    }
+}
+fun <T> (suspend () -> T).createCoroutine(completion: Continuation<T>): Continuation<Unit> = KcStarter<T>(this, completion)
+fun <T> (suspend () -> T).startCoroutine(completion: Continuation<T>) { createCoroutine(completion).resume(Unit) }
+fun <R, T> (suspend R.() -> T).startCoroutine(receiver: R, completion: Continuation<T>) {
+    val f = this
+    val g: suspend () -> T = { f(receiver) }
+    g.startCoroutine(completion)
+}
 """

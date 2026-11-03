@@ -592,7 +592,7 @@ private val STRING_NULLABLE_USE = Regex("""\.to(Int|Long)OrNull\(""")
 private val STRING_EXT_USE = Regex("""\.(substring|toInt|toLong|toIntOrNull|toLongOrNull)\(""")
 
 fun withPrelude(src: String, p: Program): Program {
-    val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val result = RESULT_USE.containsMatchIn(src); val strx = STRING_EXT_USE.containsMatchIn(src); val exc = result || COROUTINES_USE.containsMatchIn(src) || SERIALIZATION_USE.containsMatchIn(src) || EXC_USE.containsMatchIn(src); val zip = ZIP_USE.containsMatchIn(src); val sets = SETS_USE.containsMatchIn(src); val pairs = zip || PAIR_USE.containsMatchIn(src)
+    val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val result = RESULT_USE.containsMatchIn(src) || COROUTINES_USE.containsMatchIn(src); val strx = STRING_EXT_USE.containsMatchIn(src); val exc = result || COROUTINES_USE.containsMatchIn(src) || SERIALIZATION_USE.containsMatchIn(src) || EXC_USE.containsMatchIn(src); val zip = ZIP_USE.containsMatchIn(src); val sets = SETS_USE.containsMatchIn(src); val pairs = zip || PAIR_USE.containsMatchIn(src)
     val cmp = COMPARABLE_USE.containsMatchIn(src); val arrx = sets || ARRAY_EXT_USE.containsMatchIn(src); val lists = arrx || LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = COROUTINES_USE.containsMatchIn(src) || SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src); val lz = LAZY_USE.containsMatchIn(src); val anyObj = ANY_OBJ_USE.containsMatchIn(src); val mm = MIN_MAX_USE.containsMatchIn(src); val el = EMPTY_LIST_USE.containsMatchIn(src); val mmod = MEMORY_MODEL_USE.containsMatchIn(src); val kcls = KCLASS_USE.containsMatchIn(src)
     val coro = COROUTINES_USE.containsMatchIn(src); val ser = SERIALIZATION_USE.containsMatchIn(src)
     if (!strx && !coro && !ser && !sets && !arrx && !kcls && !ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon && !lz && !anyObj && !mm && !el && !mmod) return p
@@ -609,7 +609,7 @@ val ANY_BOXED = listOf("Int", "Long", "Double", "Float", "Boolean", "Char", "Str
 val ANY_BOXED_ARRAYS = listOf("IntArray", "LongArray", "DoubleArray", "FloatArray", "BooleanArray", "CharArray", "UIntArray", "ULongArray", "ByteArray")
 // Nullable primitives (`Int?`) and safe calls (`a?.x` may yield one) are boxed like `Any`.
 // A nullable type parameter (`T?`, short names) may be instantiated with a primitive, which is boxed too.
-private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UInt|ULong|Byte|Short|UByte|UShort)\?|\?\.|\b[A-Z]\?|\bResult\b|\brunCatching\b|\bNumber\b|\.to(Int|Long)OrNull\(""")
+private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UInt|ULong|Byte|Short|UByte|UShort)\?|\?\.|\b[A-Z]\?|\bResult\b|\brunCatching\b|\bNumber\b|\.to(Int|Long)OrNull\(|\bkotlin\.coroutines\b|\bContinuation\b""")
 
 /**
  * `Any`: a built-in interface with no methods that every class implements. Primitives and strings are boxed into
