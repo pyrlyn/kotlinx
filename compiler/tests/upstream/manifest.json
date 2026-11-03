@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2971,
-  "UNSUPPORTED": 2520
+  "PASS": 2972,
+  "UNSUPPORTED": 2519
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -3617,9 +3617,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/funInterfaceConstructor/funInterfaceConstructorIsKFunction.kt"
   },
   "box/box/callableReference/funInterfaceConstructor/funInterfaceConstructorOfImplicitKFunctionType.kt": {
-   "category": "other: unsupported callable reference ::KRunnable",
-   "detail": "unsupported callable reference ::KRunnable",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/funInterfaceConstructor/funInterfaceConstructorOfImplicitKFunctionType.kt"
   },
   "box/box/callableReference/function/abstractClassMember.kt": {

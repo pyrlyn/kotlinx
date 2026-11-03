@@ -453,6 +453,12 @@ class Parser(toks: List<Tok>) {
         var sb: Subst? = null
         fun wrap(i: String, x: E, line: Int, tas: List<TypeRef> = emptyList()) = CallE(NameE("$i\$Sam").also { it.line = line }, tas, listOf(x), null).also { it.line = line }
         sb = Subst(emptyMap(), rw = rw@{ x ->
+            // `::I` for a non-generic fun interface: `(fnType) -> I`, a lambda wrapping its argument.
+            if (x is UnE && x.op.startsWith("::") && x.e is NullL && funIfaces[x.op.drop(2)]?.typeParams?.isEmpty() == true) {
+                val i = x.op.drop(2)
+                return@rw LambdaE(Block(listOf(ExprS(wrap(i, NameE("f\$sam").also { it.line = x.line }, x.line)).also { it.line = x.line }),
+                    listOf("f\$sam"), listOf(samFnType(TypeRef(i, emptyList(), false))))).also { it.line = x.line }
+            }
             if (x !is CallE) return@rw null
             val s = sb!!
             val callee = x.callee
