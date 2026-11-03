@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3023,
-  "UNSUPPORTED": 2468
+  "PASS": 3024,
+  "UNSUPPORTED": 2467
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -11688,8 +11688,8 @@
    "upstream": "compiler/testData/codegen/box/cycles/cycle_for.kt"
   },
   "box/box/dataClasses/arrayParams.kt": {
-   "category": "data classes",
-   "detail": "data classes with Array properties are not supported (at '",
+   "category": "strings / templates",
+   "detail": "cannot convert IntArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/arrayParams.kt"
   },
@@ -11773,9 +11773,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/alreadyDeclared.kt"
   },
   "box/box/dataClasses/equals/genericarray.kt": {
-   "category": "data classes",
-   "detail": "data classes with Array properties are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/genericarray.kt"
   },
   "box/box/dataClasses/equals/intarray.kt": {
@@ -11925,8 +11924,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/alreadyDeclared.kt"
   },
   "box/box/dataClasses/toString/arrayParams.kt": {
-   "category": "data classes",
-   "detail": "data classes with Array properties are not supported (at '",
+   "category": "strings / templates",
+   "detail": "cannot convert IntArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/arrayParams.kt"
   },
