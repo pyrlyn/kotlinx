@@ -1436,6 +1436,12 @@ class Parser(toks: List<Tok>) {
                         refVars[c] = t
                     }
                 }
+                for (d in decls) if (d is FunD && needsCapLift(d, outer)) {
+                    for (c in usedNames(d) - localsOf(d) - d.name) if (c in outer && c !in f.params.map { it.name } && c in assigned) {
+                        val t = localType(f, c) ?: continue
+                        refVars[c] = t
+                    }
+                }
                 if (refVars.isNotEmpty()) {
                     // Shadowing (lambda parameters, a local declaration's own names) would be rewritten too: not supported.
                     val lamParams = HashSet<String>()
@@ -1465,6 +1471,7 @@ class Parser(toks: List<Tok>) {
                 val capCls = HashMap<String, List<Pair<String, TypeRef>>>()
                 val genTps = HashMap<String, List<String>>()
                 val genFunTps = HashMap<String, List<String>>()
+                val capFun = HashMap<String, List<Pair<String, TypeRef>>>()
                 val ownerNames = owner?.let { o -> o.methods.map { it.name } + newMethods.map { it.name } }?.toSet() ?: emptySet()
                 for (d in decls) when (d) {
                     is FunD -> {
@@ -1478,6 +1485,14 @@ class Parser(toks: List<Tok>) {
                             // A non-generic local function of a generic function that mentions its type parameters
                             // is lifted generic over them; calls pass them as type arguments.
                             if (f.typeParams.isNotEmpty() && d.typeParams.isEmpty() && mentionsTypeParams(d, f.typeParams)) genFunTps[d.name] = f.typeParams
+                        } else if (needsCapLift(d, outer)) {
+                            // Recursive, generic or vararg capturing local function: lifted with the captured values as
+                            // leading parameters (captured `var`s were boxed into `$Ref` cells above); calls pass them.
+                            val capd = caps.filter { it in outer }.sorted()
+                            if (capd.any { it in assigned }) throw CompileError("line ${d.line}: local functions that capture local variables cannot be generic, recursive or have vararg parameters here (captured var '${capd.first { it in assigned }}')")
+                            if (f.typeParams.isNotEmpty() && mentionsTypeParams(d, f.typeParams)) throw CompileError("line ${d.line}: capturing local functions using the enclosing function's type parameters are not supported")
+                            capFun[d.name] = capd.map { c -> c to (localType(f, c) ?: throw CompileError("line ${d.line}: cannot infer the type of captured '$c'")) }
+                            rename[d.name] = fresh(d.name, ownerNames)
                         } else {
                             if (d.name in usedNames(d)) throw CompileError("line ${d.line}: recursive local functions that capture local variables are not supported")
                             if (d.typeParams.isNotEmpty() || d.params.any { it.vararg } || (d.recv != null && d.name in OPERATOR_NAMES))
@@ -1538,6 +1553,12 @@ class Parser(toks: List<Tok>) {
                 lateinit var sub: Subst
                 sub = Subst(types, rw = { x ->
                     when {
+                        x is CallE && x.callee is NameE && x.callee.n in capFun ->
+                            CallE(NameE(rename.getValue(x.callee.n)).also { it.line = x.callee.line }, x.typeArgs.map { sub.ty(it) },
+                                capFun.getValue(x.callee.n).map { (c, _) -> NameE(c).also { it.line = x.line } } + x.args.map { sub.e(it) },
+                                x.lambda?.let { sub.block(it) }).also { it.line = x.line }
+                        x is UnE && x.op.startsWith("::") && x.e is NullL && x.op.drop(2) in capFun ->
+                            throw CompileError("line ${x.line}: references to recursive, generic or vararg capturing local functions are not supported")
                         x is CallE && x.lambda == null && x.callee is MemberE && !x.callee.safe && lamFns[x.callee.n]?.recv != null && x.callee.n !in ownerNames ->
                             lamArgs(lamFns.getValue(x.callee.n), x.args, x.line)?.let { a ->
                                 CallE(NameE(x.callee.n).also { it.line = x.line }, emptyList(), (listOf(x.callee.recv) + a).map { sub.e(it) }, null).also { it.line = x.line } }
@@ -1580,7 +1601,8 @@ class Parser(toks: List<Tok>) {
                 for (d in decls) when (d) {
                     is FunD -> if (d !in asLambda) {
                         val g = copyFun(sub.fn(d), d, rename.getValue(d.name)).let { g0 ->
-                            genFunTps[d.name]?.let { tps -> FunD(g0.name, g0.params, g0.ret, g0.body, g0.exprBody, g0.line, tps, g0.recv) } ?: g0 }
+                            genFunTps[d.name]?.let { tps -> FunD(g0.name, g0.params, g0.ret, g0.body, g0.exprBody, g0.line, tps, g0.recv) } ?: g0 }.let { g1 ->
+                            capFun[d.name]?.let { cs -> FunD(g1.name, cs.map { (c, t) -> Param(c, t) } + g1.params, g1.ret, g1.body, g1.exprBody, g1.line, g1.typeParams, g1.recv) } ?: g1 }
                         if (owner != null) newMethods.add(lift(g, owner, newMethods)) else funs.add(lift(g, null, newMethods))
                     }
                     is ClassD -> classes.add(copyClass(sub, d, rename[d.name] ?: d.name).let { c0 ->
@@ -1607,6 +1629,14 @@ class Parser(toks: List<Tok>) {
                 classes[i] = ClassD(c.name, c.fields, c.supers, ms + added, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
             i++
         }
+    }
+
+    /** A capturing local function the closure lowering cannot express: recursive, generic or with a vararg parameter. */
+    private fun needsCapLift(d: FunD, outer: Set<String>): Boolean {
+        if (d.recv != null) return false
+        val caps = usedNames(d) - localsOf(d) - d.name
+        if (caps.none { it in outer }) return false
+        return d.name in usedNames(d) || d.typeParams.isNotEmpty() || d.params.any { it.vararg }
     }
 
     /** Whether [d] (signature or body) mentions any of [tps] as a type. */
