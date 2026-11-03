@@ -292,6 +292,8 @@ class ClosedReceiveChannelException(message: String) : IllegalStateException(mes
 object KxSched {
     val ready = ArrayList<Job>()
     val timers = ArrayList<Job>()
+    // Started, unfinished jobs: cancelled and drained when runBlocking cannot make progress.
+    val live = ArrayList<Job>()
     var current: Job? = null
     var now = 0L
     fun wake(j: Job) { ready.add(j) }
@@ -308,16 +310,35 @@ object KxSched {
         var i = 0
         while (i < timers.size) { if (timers[i] === j) { val t = timers.removeAt(i) } else i++ }
     }
+    fun dropLive(j: Job) {
+        var i = 0
+        while (i < live.size) { if (live[i] === j) { val t = live.removeAt(i) } else i++ }
+    }
     fun isReady(j: Job): Boolean { for (r in ready) if (r === j) return true; return false }
+    // Resumes a suspended job so its suspension point can observe a cancellation.
+    fun poke(j: Job) {
+        if (current === j || j.isCompleted) return
+        dropTimer(j)
+        if (!isReady(j)) wake(j)
+    }
     // A nested runBlocking runs this loop inside a running job; that job is parked until the inner loop returns.
+    // On a deadlock every live job is cancelled (so suspended coroutines unwind and free their frames), then it throws.
     fun runUntil(root: Job) {
         val parked = ArrayList<Job>()
+        var deadlock = false
         while (!root.isCompleted) {
             if (ready.size > 0) { val j = ready.removeAt(0); if (j.running) parked.add(j) else j.step() }
             else if (timers.size > 0) { val j = timers.removeAt(0); if (j.wakeAt > now) now = j.wakeAt; if (j.running) parked.add(j) else j.step() }
-            else throw IllegalStateException("runBlocking: deadlock, no coroutine can make progress")
+            else if (!deadlock) {
+                deadlock = true
+                var i = 0
+                while (i < live.size) { val j = live[i]; if (!j.running) j.cancel(); i++ }
+                root.cancel()
+            }
+            else throw IllegalStateException("runBlocking: coroutines cannot be cancelled")
         }
         for (p in parked) ready.add(p)
+        if (deadlock) throw IllegalStateException("runBlocking: deadlock, no coroutine can make progress")
     }
     fun me(): Job {
         val c = current
@@ -325,11 +346,11 @@ object KxSched {
         return c
     }
 }
-// Every suspension goes through here: a cancelled coroutine resumes with CancellationException.
+// Every suspension goes through here: a cancelled job (or one inside a failed scope) resumes with CancellationException.
 suspend fun kxSuspend() {
     kxCoSuspend()
     val j = KxSched.me()
-    if (j.isCancelled) throw CancellationException("Job was cancelled")
+    if (j.cancelling()) throw CancellationException("Job was cancelled")
 }
 open class Job(body0: suspend () -> Unit) {
     var body: suspend () -> Unit = body0
@@ -340,11 +361,18 @@ open class Job(body0: suspend () -> Unit) {
     var isCancelled = false
     var wakeAt = 0L
     var scope: CoroutineScope? = null
+    // Scopes this job is executing (its own, then nested coroutineScope blocks).
+    val scopes = ArrayList<CoroutineScope>()
     val waiters = ArrayList<Job>()
     val isActive: Boolean get() = !isCompleted && !isCancelled
+    fun cancelling(): Boolean {
+        if (isCancelled) return true
+        for (s in scopes) if (s.failure != null) return true
+        return false
+    }
     fun step() {
         if (isCompleted || running) return
-        if (handle == 0L) { started = true; handle = kxCoStart(body) }
+        if (handle == 0L) { started = true; handle = kxCoStart(body); KxSched.live.add(this) }
         val prev = KxSched.current
         KxSched.current = this
         running = true
@@ -356,6 +384,9 @@ open class Job(body0: suspend () -> Unit) {
     fun finish() {
         isCompleted = true
         body = {}
+        scope = null
+        while (scopes.size > 0) scopes.removeAt(scopes.size - 1)
+        KxSched.dropLive(this)
         KxSched.wakeAll(waiters)
     }
     fun cancel() {
@@ -364,11 +395,7 @@ open class Job(body0: suspend () -> Unit) {
         val sc = scope
         if (sc != null) for (c in sc.children) c.cancel()
         if (!started) { finish(); return }
-        // A suspended coroutine is resumed so its suspension point throws CancellationException.
-        if (KxSched.current !== this) {
-            KxSched.dropTimer(this)
-            if (!KxSched.isReady(this)) KxSched.wake(this)
-        }
+        KxSched.poke(this)
     }
     suspend fun join() {
         while (!isCompleted) {
@@ -376,14 +403,24 @@ open class Job(body0: suspend () -> Unit) {
             kxSuspend()
         }
     }
+    // Waits without observing cancellation (a cancelled parent still waits for its children to unwind).
+    suspend fun joinQuiet() {
+        while (!isCompleted) {
+            waiters.add(KxSched.me())
+            kxCoSuspend()
+        }
+    }
 }
 class Deferred<T>(val compute: suspend () -> T) {
     var result: T? = null
     var hasResult = false
-    val job: Job = Job { try { result = compute(); hasResult = true } catch (e: CancellationException) { } }
+    var failure: Throwable? = null
+    val job: Job = Job { try { result = compute(); hasResult = true } catch (e: CancellationException) { } catch (e: Throwable) { failure = e } }
     val isCompleted: Boolean get() = job.isCompleted
     suspend fun await(): T {
         job.join()
+        val f = failure
+        if (f != null) throw f
         if (!hasResult) throw CancellationException("Deferred was cancelled")
         return result!!
     }
@@ -391,20 +428,40 @@ class Deferred<T>(val compute: suspend () -> T) {
 }
 class CoroutineScope {
     val children = ArrayList<Job>()
+    var failure: Throwable? = null
+    var owner: Job? = null
     suspend fun yield() { kxYield() }
-    val isActive: Boolean get() { val c = KxSched.current; return c == null || !c.isCancelled }
-    fun ensureActive() { val c = KxSched.current; if (c != null && c.isCancelled) throw CancellationException("Job was cancelled") }
+    val isActive: Boolean get() { val c = KxSched.current; return c == null || !c.cancelling() }
+    fun ensureActive() { val c = KxSched.current; if (c != null && c.cancelling()) throw CancellationException("Job was cancelled") }
+    // A child failed (or the body threw): the first failure wins; siblings and the scope's body are cancelled.
+    fun fail(e: Throwable) {
+        if (failure == null) failure = e
+        for (c in children) c.cancel()
+        val o = owner
+        if (o != null) KxSched.poke(o)
+    }
     fun launch(block: suspend CoroutineScope.() -> Unit): Job {
         val child = CoroutineScope()
-        val j = Job { try { block(child); child.joinChildren() } catch (e: CancellationException) { } }
-        j.scope = child
+        val parent = this
+        val j = Job { kxRunScoped(child) { block(child) }; val f = child.failure; if (f != null) parent.fail(f) }
+        j.scope = child; child.owner = j; j.scopes.add(child)
         children.add(j); KxSched.wake(j)
         return j
     }
     fun <T> async(block: suspend CoroutineScope.() -> T): Deferred<T> {
         val child = CoroutineScope()
-        val d = Deferred<T> { val r = block(child); child.joinChildren(); r }
-        d.job.scope = child
+        val parent = this
+        val d = Deferred<T> {
+            try { val r = block(child); child.joinChildren(); r }
+            catch (e: CancellationException) {
+                child.joinChildrenQuiet()
+                val f = child.failure
+                if (f != null) { parent.fail(f); throw f }
+                throw e
+            }
+            catch (e: Throwable) { child.fail(e); child.joinChildrenQuiet(); parent.fail(e); throw e }
+        }
+        d.job.scope = child; child.owner = d.job; d.job.scopes.add(child)
         children.add(d.job); KxSched.wake(d.job)
         return d
     }
@@ -413,17 +470,42 @@ class CoroutineScope {
         while (i < children.size) { children[i].join(); i++ }
         while (children.size > 0) children.removeAt(children.size - 1)
     }
+    suspend fun joinChildrenQuiet() {
+        var i = 0
+        while (i < children.size) { children[i].joinQuiet(); i++ }
+        while (children.size > 0) children.removeAt(children.size - 1)
+    }
+}
+// Runs a scope's body and waits for its children; a failure is recorded in the scope (not rethrown here).
+suspend fun kxRunScoped(s: CoroutineScope, body: suspend () -> Unit) {
+    try { body(); s.joinChildren() }
+    catch (e: CancellationException) { }
+    catch (e: Throwable) { s.fail(e) }
+    s.joinChildrenQuiet()
 }
 fun runBlocking(block: suspend CoroutineScope.() -> Unit) {
     val s = CoroutineScope()
-    val root = Job { block(s); s.joinChildren() }
+    val root = Job { kxRunScoped(s) { block(s) } }
+    s.owner = root; root.scope = s; root.scopes.add(s)
     KxSched.wake(root)
     KxSched.runUntil(root)
+    val f = s.failure
+    if (f != null) throw f
 }
 suspend fun coroutineScope(block: suspend CoroutineScope.() -> Unit) {
+    val j = KxSched.me()
     val s = CoroutineScope()
-    block(s)
-    s.joinChildren()
+    s.owner = j
+    j.scopes.add(s)
+    var cancelled = false
+    try { block(s); s.joinChildren() }
+    catch (e: CancellationException) { cancelled = true }
+    catch (e: Throwable) { s.fail(e) }
+    s.joinChildrenQuiet()
+    j.scopes.removeAt(j.scopes.size - 1)
+    val f = s.failure
+    if (f != null) throw f
+    if (cancelled) throw CancellationException("Job was cancelled")
 }
 suspend fun kxYield() { KxSched.wake(KxSched.me()); kxSuspend() }
 suspend fun yield() { kxYield() }

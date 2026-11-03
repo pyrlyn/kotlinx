@@ -54,7 +54,10 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   cold `Flow`): CPS. `suspend fun` and suspend function types (`suspend () -> T`, `suspend R.() -> T`) compile to LLVM
   switched-resume coroutines (state machines whose live locals are spilled into a heap frame by CoroSplit); a suspend
   call from a coroutine creates the callee's coroutine and awaits it. A single-threaded scheduler drives the jobs, so
-  `join`/`await`/`receive`/`send`/`yield`/`delay` really suspend; `delay` is virtual time. Suspend calls are only
+  `join`/`await`/`receive`/`send`/`yield`/`delay` really suspend; `delay` is virtual time. Structured concurrency: a failing child cancels its siblings and the
+  parent's body, and the failure is rethrown by `runBlocking`/`coroutineScope`/`await`; on a deadlock every suspended
+  coroutine is cancelled and unwound (its frame and objects are freed) before runBlocking throws. `suspend fun main()`
+  runs in a generated `runBlocking`. Suspend calls are only
   allowed in suspend functions/lambdas (and in lambdas the compiler inlines, e.g. `forEach`). Serialization: `@Serializable`
   classes (Int/Long/Double/Boolean/String, nested @Serializable, `List<T>`, nullable) with `X.serializer()`,
   `Json.encodeToString/decodeFromString(serializer, ...)`, `parseToJsonElement` and the `JsonElement` tree.
