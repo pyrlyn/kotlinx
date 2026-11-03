@@ -1,9 +1,11 @@
 package newkotlin
 
+/** A type as written in source: a name, type arguments and nullability. */
 class TypeRef(val name: String, val args: List<TypeRef>, val nullable: Boolean) {
     override fun toString() = name + (if (args.isEmpty()) "" else args.joinToString(",", "<", ">")) + (if (nullable) "?" else "")
 }
 
+/** An expression node; [line] is its source line, for errors. */
 sealed class E { var line = 0 }
 class IntL(val v: Long, val long: Boolean, val unsigned: Boolean = false) : E()
 /** `x++` / `x--` used as an expression: yields the old value. */
@@ -38,6 +40,7 @@ class TryE(val body: Block, val catches: List<Catch>, val fin: Block?) : E()
 /** `conds == null` is the else branch. */
 class WhenE(val subj: E?, val branches: List<Pair<List<E>?, Block>>) : E()
 
+/** A statement node; [line] is its source line, for errors. */
 sealed class S { var line = 0 }
 class VarS(val name: String, val isVar: Boolean, val type: TypeRef?, val init: E) : S()
 class AssignS(val target: E, val op: String, val value: E) : S()
@@ -67,6 +70,7 @@ class Block(val stmts: List<S>, val params: List<String> = emptyList(), val para
 /** `Owner.name` of every `const val` member (declared in a class or object body), for `isPermanent()`. */
 object ConstFields { val names = HashSet<String>() }
 
+/** Numbers lambda blocks once, so each gets a stable id. */
 object LamIds {
     private var next = 0
     fun id(b: Block): Int { if (b.lamId < 0) b.lamId = next++; return b.lamId }

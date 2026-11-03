@@ -1,0 +1,16 @@
+12:28  up 3 days, 13 mins, 2 users, load averages: 4.57 5.78 7.11
+main alloc_throughput 87.9 2.2 2.2 0.000 0.000 0.000 0
+main big_live_churn 750.2 185.2 188.7 508.843 8.336 2.017 533
+main cyclic_garbage 154.5 22.6 22.7 144.933 1.567 1.353 223
+main huge_live_churn 1250.6 724.6 728.2 1038.338 27.943 3.320 1074
+main live_heap_churn 469.3 39.7 40.2 387.614 2.464 1.545 420
+main short_lived 78.4 2.2 2.2 0.000 0.000 0.000 0
+main wide_graph_churn 3596.6 845.0 848.9 2448.016 164.170 5.663 843
+new alloc_throughput 79.9 2.2 2.2 0.000 0.000 0.000 0
+new big_live_churn 711.3 170.3 178.9 609.544 9.675 0.171 8907
+new cyclic_garbage 155.1 4.1 4.4 134.491 0.126 0.091 3657
+new huge_live_churn 1369.3 755.0 818.3 1062.221 57.042 0.197 18483
+new live_heap_churn 501.5 33.4 37.9 428.636 1.399 0.102 8409
+new short_lived 77.3 2.2 2.2 0.000 0.000 0.000 0
+new wide_graph_churn 4266.0 842.4 842.6 3806.412 183.889 0.752 4864
+12:30  up 3 days, 15 mins, 2 users, load averages: 11.37 7.38 7.49

@@ -142,6 +142,9 @@ private fun keepIdx(q: Int, ts: List<Tok>, keep: Set<String>): Boolean {
     return j + 1 < ts.size && ts[j + 1].s in keep
 }
 
+const val COLL_LIT = "\$collLit"
+
+/** Recursive-descent parser from tokens to a `Program`. */
 class Parser(toks: List<Tok>) {
     /** Tokens padded with extra EOF tokens, so lookahead (`t[p + 1]`) at the end of an unclosed file is an error, not a crash. */
     private val t: List<Tok> = companionExtensions(if (toks.isNotEmpty() && toks.last().k == K.EOF) toks + List(8) { toks.last() } else toks)
@@ -411,6 +414,65 @@ class Parser(toks: List<Tok>) {
             Block(listOf(AssignS(NameE(bfn).also { it.line = line }, "=", NameE("v\$").also { it.line = line }).also { it.line = line })), null, line))
         pendingGlobal = VarS(bfn, true, ty, init).also { it.line = line }
         return true
+    }
+
+    /**
+     * Collection literals `[a, b]` (parsed as `COLL_LIT(a, b)`) where the expected type is written in the source: a
+     * typed `val`/`var`/property, a function's return type, or a parameter of a uniquely named top-level function.
+     * Arrays -> `intArrayOf(...)` / `arrayOf<T>(...)`, lists -> `listOf` / `mutableListOf`, a class -> its companion
+     * `operator fun of(...)`. Others stay and are reported by the backend.
+     */
+    private var seenCollLit = false
+    private fun collLiterals(funs: MutableList<FunD>, classes: MutableList<ClassD>, globals: MutableList<VarS>) {
+        if (!seenCollLit) return
+        fun isLit(x: E?) = x is CallE && (x.callee as? NameE)?.n == COLL_LIT
+        val prim = mapOf("IntArray" to "intArrayOf", "LongArray" to "longArrayOf", "DoubleArray" to "doubleArrayOf", "FloatArray" to "floatArrayOf",
+            "ByteArray" to "byteArrayOf", "BooleanArray" to "booleanArrayOf", "CharArray" to "charArrayOf", "ShortArray" to "shortArrayOf",
+            "UIntArray" to "uintArrayOf", "ULongArray" to "ulongArrayOf", "UByteArray" to "ubyteArrayOf", "UShortArray" to "ushortArrayOf")
+        val classNames = classes.map { it.name }.toSet()
+        lateinit var sub: Subst
+        fun lit(t: TypeRef?, x: E): E {
+            if (!isLit(x) || t == null) return sub.e(x)
+            val c = x as CallE
+            val el = t.args.singleOrNull()
+            val items = c.args.map { lit(el, it) }
+            fun call(n: String, ta: List<TypeRef>) = CallE(NameE(n).also { it.line = c.line }, ta, items, null).also { it.line = c.line }
+            return when {
+                t.name in prim -> call(prim.getValue(t.name), emptyList())
+                t.name == "Array" && el != null -> call("arrayOf", listOf(el))
+                t.name in setOf("List", "Collection", "Iterable") && el != null -> call("listOf", listOf(el))
+                t.name in setOf("MutableList", "ArrayList", "MutableCollection") && el != null -> call("mutableListOf", listOf(el))
+                t.name in classNames && t.args.isEmpty() -> CallE(MemberE(NameE(t.name).also { it.line = c.line }, "of", false).also { it.line = c.line }, emptyList(), items, null).also { it.line = c.line }
+                else -> CallE(c.callee, emptyList(), items, null).also { it.line = c.line }
+            }
+        }
+        val top = funs.filter { it.recv == null }.groupBy { it.name }.filterValues { it.size == 1 }.mapValues { it.value[0] }
+        var ret: TypeRef? = null
+        sub = Subst(emptyMap(), rw = { x ->
+            if (x is CallE && x.callee is NameE && (x.callee as NameE).n in top && x.args.any { isLit(it) || (it is NamedE && isLit(it.e)) }) {
+                val f = top.getValue((x.callee as NameE).n)
+                CallE(x.callee, x.typeArgs, x.args.mapIndexed { i, a ->
+                    if (a is NamedE) NamedE(a.name, lit(f.params.firstOrNull { it.name == a.name && !it.vararg }?.type, a.e)).also { it.line = a.line }
+                    else lit(f.params.getOrNull(i)?.takeIf { !it.vararg }?.type, a)
+                }, x.lambda?.let { sub.block(it) }).also { it.line = x.line }
+            } else null
+        }, srw = { st ->
+            when {
+                st is VarS && st.type != null && isLit(st.init) -> VarS(st.name, st.isVar, st.type, lit(st.type, st.init)).also { it.line = st.line }
+                st is RetS && isLit(st.e) -> RetS(lit(ret, st.e!!)).also { it.line = st.line }
+                else -> null
+            }
+        })
+        fun fn(f: FunD): FunD { val sr = ret; ret = f.ret; try {
+            val g = sub.fn(f)
+            return FunD(g.name, g.params, g.ret, g.body, f.exprBody?.let { lit(f.ret, it) }, g.line, g.typeParams, f.recv)
+        } finally { ret = sr } }
+        for (i in funs.indices) funs[i] = fn(funs[i])
+        for (i in classes.indices) { val c = classes[i]
+            val fm = c.fields.associateWith { fd -> if (isLit(fd.init) && fd.type != null) FieldD(fd.name, fd.type, fd.isVar, lit(fd.type, fd.init!!), fd.lateinit) else fd }
+            classes[i] = ClassD(c.name, c.fields.map { fm.getValue(it) }, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams,
+                c.inits.map { if (it is FieldD) fm[it] ?: it else it }, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs) }
+        for (i in globals.indices) { val g = globals[i]; if (g.type != null && isLit(g.init)) globals[i] = VarS(g.name, g.isVar, g.type, lit(g.type, g.init)).also { it.line = g.line } }
     }
 
     /** Type parameters of the interface whose body is being parsed. */
@@ -796,6 +858,7 @@ class Parser(toks: List<Tok>) {
         classes.addAll(companions); funs.addAll(ctorFactories)
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
         classes.addAll(topAnon); topAnon.clear()
+        collLiterals(funs, classes, globals)
         samLower(funs, classes, ifaces, globals)
         rejectUnmodeled(funs, classes, ifaces)
         rewriteCtxProps(funs, classes, ifaces, globals)
@@ -2642,7 +2705,13 @@ class Parser(toks: List<Tok>) {
                     ?: NameE(tk.s)
                 }
             }
-            K.OP -> if (tk.s == "{") { p--; LambdaE(block(lambda = true)) } else if (tk.s == "(") { val x = nested(1) { expr() }; expectOp(")"); x } else fail("unexpected operator", tk)
+            K.OP -> if (tk.s == "{") { p--; LambdaE(block(lambda = true)) } else if (tk.s == "(") { val x = nested(1) { expr() }; expectOp(")"); x }
+                else if (tk.s == "[") {
+                    // Collection literal `[a, b]`: typed from its expected type by [collLiterals].
+                    val items = nested(1) { val l = ArrayList<E>(); skipNL0(); while (!isOp("]")) { l.add(expr()); if (isOp(",")) { next(); skipNL0() } else break }; l }
+                    expectOp("]"); seenCollLit = true
+                    CallE(NameE(COLL_LIT).also { it.line = tk.line }, emptyList(), items, null)
+                } else fail("unexpected operator", tk)
             else -> fail("unexpected token", tk)
         }
         if (e.line == 0) e.line = tk.line
