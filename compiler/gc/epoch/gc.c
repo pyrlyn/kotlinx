@@ -540,12 +540,14 @@ __attribute__((noinline)) static void boundary(void) {
 /* First log entry: read the tunables, take the first log. Out of line, so the append below needs no stack
  * frame: log_op and the three entry points are inlined into generated code by LTO (always_inline). As calls
  * (prologue + epilogue per entry, ~35 per lru get) they cost lru 337 -> 260 ms, see bench/gc/ops/README.md. */
+static int64_t defer_flush = 4;   /* KX_GC_DEFER_FLUSH: flush once the batch is 1/N of the old generation */
 static int defer_live = 1;   /* KX_GC_DEFER_LIVE, see dec_apply */
 static __attribute__((noinline)) void log_first(void) {
     /* first log: before the collector thread exists, so no race on the tunables */
     const char *e = getenv("KX_GC_LOG_FLOOR"); if (e && atoll(e) > 0) log_floor = (size_t)atoll(e);
     e = getenv("KX_GC_PURE_NOBOOST"); if (e && *e) pure_noboost = atoi(e) != 0;
     e = getenv("KX_GC_DEFER_LIVE"); defer_live = !(e && *e == '0');
+    e = getenv("KX_GC_DEFER_FLUSH"); if (e && atoll(e) > 0) defer_flush = atoll(e);
     e = getenv("KX_GC_PURE_RATIO"); if (e && atoll(e) > 0) pure_ratio = atoll(e);
     e = getenv("KX_GC_MIN_THRESHOLD"); if (e && atoll(e) > 0) c_threshold = c_min_threshold = (size_t)atoll(e);
     e = getenv("KX_GC_LOG_CAP");
@@ -618,6 +620,8 @@ static inline void promote(void *p) { if (!has(p, STABLE_BIT)) { set_bit(p, STAB
 static void dec_apply(void *p);
 static int64_t dbg_deferred_live, dbg_swept;
 static PtrStack c_deferred;   /* see detect */
+static PtrStack c_live_def;   /* deferred live roots (dec_apply), flushed to minor roots in batches */
+static int64_t dbg_flushes;
 static void release_dead_child(void *t) { if (t && is_traced(t)) dec_apply(t); }
 /* Count reached zero (no candidate set or root buffer holds it): decrement traced children, return memory.
  * Iterative (c_dying), so freeing a long dead list cannot overflow the collector thread's stack. */
@@ -663,19 +667,32 @@ static void possible_root(void *p) {
  * memory would wait too: once most of the deferred list is zombies, return their memory now. */
 static void sweep_deferred(void) {
     size_t k = 0;
-    for (size_t i = 0; i < c_deferred.len; i++) {
-        void *s = c_deferred.items[i];
+    for (size_t i = 0; i < c_live_def.len; i++) {
+        void *s = c_live_def.items[i];
         if (has(s, ZOMBIE_BIT)) { clr_bit(s, ZOMBIE_BIT); clr_bit(s, KX_BUF_BIT); ret_push(s); dbg_swept++; }
-        else c_deferred.items[k++] = s;
+        else c_live_def.items[k++] = s;
     }
-    c_deferred.len = k; c_zombies = 0;
+    c_live_def.len = k; c_zombies = 0;
+}
+/* The batch of deferred live roots is large against the old generation: demote them and hand them to the next
+ * minor detection (the behaviour without deferral, once per batch instead of once per decrement), so garbage
+ * cycles reached through old objects do not wait for a major (cycles: +37% peak RSS when they did). */
+static void flush_live_def(void) {
+    dbg_flushes++;
+    for (size_t i = 0; i < c_live_def.len; i++) {
+        void *s = c_live_def.items[i];
+        if (has(s, ZOMBIE_BIT)) { clr_bit(s, ZOMBIE_BIT); clr_bit(s, KX_BUF_BIT); ret_push(s); continue; }
+        if (has(s, STABLE_BIT)) { clr_bit(s, STABLE_BIT); c_stable_n--; }
+        stack_push(&c_roots, s);
+    }
+    c_live_def.len = 0; c_zombies = 0;
 }
 static void dec_apply(void *p) {
     uint64_t h = *header(p);
     if ((h & KX_CNT_MASK) == 0) rt_panic("epoch GC: reference count underflow");
     if ((h & STABLE_BIT) && (h & KX_CNT_MASK) > 1 && defer_live) {
         *header(p) = (h - 1) | DIRTY_BIT;
-        if (!(h & (KX_BUF_BIT | CAND_BIT))) { set_color(p, PURPLE); set_bit(p, KX_BUF_BIT); stack_push(&c_deferred, p); c_deferred_new++; dbg_deferred_live++; }
+        if (!(h & (KX_BUF_BIT | CAND_BIT))) { set_color(p, PURPLE); set_bit(p, KX_BUF_BIT); stack_push(&c_live_def, p); dbg_deferred_live++; }
         return;
     }
     *header(p) = h - 1; touch(p);
@@ -969,6 +986,7 @@ static void detect(int major) {
 static size_t detect_prepare(int major, PtrStack *rootsp) {
     ep_detections++;
     c_major = major;
+    if (major) stack_move(&c_deferred, &c_live_def);
     if (major) {
         dbg_majors++; c_deferred_new = 0;
         /* lean stacks: hand the deferred buffer over instead of copying it, and drop its storage (stack_move
@@ -1384,7 +1402,8 @@ static void *collector_main(void *arg) {
             pthread_cond_broadcast(&cv_done);
             pthread_mutex_unlock(&mu);
             int64_t ta = rt_nanos(); apply_log(l); dbg_logs++;
-            if (c_zombies >= 4096 && c_zombies * 2 >= c_deferred.len) sweep_deferred();
+            if ((int64_t)c_live_def.len >= 4096 && (int64_t)c_live_def.len * defer_flush >= c_stable_n) flush_live_def();
+            else if (c_zombies >= 4096 && c_zombies * 2 >= c_live_def.len) sweep_deferred();
             int64_t tb = rt_nanos(); size_t freed = validate_ready(l->seq, 0); freed += try_early(l->seq);
             int64_t tc = rt_nanos(); dbg_t_apply += tb - ta; dbg_t_valid += tc - tb;
             int64_t major_at = major_ratio * (c_stable_n > (int64_t)c_threshold ? c_stable_n : (int64_t)c_threshold);
@@ -1469,8 +1488,8 @@ static void *collector_main(void *arg) {
 static void epoch_debug(void) {
     const char *e = getenv("KX_GC_DEBUG");
     if (e && *e) fprintf(stderr, "epoch: peaks boost=%zu threshold=%zu roots=%zu cand-members=%zu queue-seen=%zu minors roots=%lld found=%lld work=%lld\n", (size_t)atomic_load(&log_boost), dbg_thr_max, dbg_roots_max, dbg_cand_max, dbg_qseen_max, (long long)dbg_mn_roots, (long long)dbg_mn_found, (long long)dbg_mn_work);
-    if (e && *e) fprintf(stderr, "epoch: deferred-live=%lld swept=%lld epochs=%lld logs=%lld detections=%lld sets=%lld pass=%lld fail-delta=%lld fail-sigma=%lld dead=%lld majors=%lld stable=%lld deferred=%zu\n",
-        (long long)dbg_deferred_live, (long long)dbg_swept, (long long)ep_epochs, (long long)dbg_logs, (long long)ep_detections, (long long)dbg_sets, (long long)dbg_pass, (long long)dbg_fail_delta, (long long)dbg_fail_sigma, (long long)dbg_dead, (long long)dbg_majors, (long long)c_stable_n, c_deferred.len);
+    if (e && *e) fprintf(stderr, "epoch: deferred-live=%lld flushes=%lld swept=%lld epochs=%lld logs=%lld detections=%lld sets=%lld pass=%lld fail-delta=%lld fail-sigma=%lld dead=%lld majors=%lld stable=%lld deferred=%zu\n",
+        (long long)dbg_deferred_live, (long long)dbg_flushes, (long long)dbg_swept, (long long)ep_epochs, (long long)dbg_logs, (long long)ep_detections, (long long)dbg_sets, (long long)dbg_pass, (long long)dbg_fail_delta, (long long)dbg_fail_sigma, (long long)dbg_dead, (long long)dbg_majors, (long long)c_stable_n, c_deferred.len);
     if (e && *e) fprintf(stderr, "epoch: collector apply=%.1fms validate=%.1fms detect=%.1fms (mark %.1f scan %.1f) threads=%d parallel=%lld (ns/visit ser %.1f par %.1f wake %.0f)\n", dbg_t_apply/1e6, dbg_t_valid/1e6, dbg_t_detect/1e6, dbg_t_mark/1e6, dbg_t_scan/1e6, n_threads, (long long)dbg_par_det, ns_ser, ns_par, par_wake_ns);
     if (e && *e) fprintf(stderr, "epoch: roots=%lld minor-visits=%lld major-visits=%lld members=%lld\n", (long long)dbg_roots_k, (long long)dbg_minor_visits, (long long)dbg_major_visits, (long long)dbg_members);
     if (e && *e) fprintf(stderr, "epoch: prom=%lld dem-touch=%lld held=%lld held-max=%lld major-steps=%lld side-minors=%lld side-visits=%lld early ok=%lld hit=%lld skip=%lld qmax=%zu q=%zu\n", (long long)dbg_prom, (long long)dbg_dem_touch, (long long)dbg_held, (long long)dbg_held_max, (long long)im_steps, (long long)dbg_side_minors, (long long)dbg_side_visits, (long long)dbg_early_ok, (long long)dbg_early_hit, (long long)dbg_early_skip, dbg_q_max, max_queued);
