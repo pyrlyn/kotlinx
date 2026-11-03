@@ -2802,9 +2802,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** A member extension `mext$m` applicable to [t] exists on the enclosing class or the implicit receiver `this`. */
     private fun hasMext(m: String, t: Ty): Boolean {
         val k = "mext\$$m"
-        if (owner?.methods?.get(k)?.let { extMatches(t, it.params[0].type, emptyList()) } == true) return true
+        if (owner?.methods?.get(k)?.let { extMatches(t, it.params[0].type, it.typeParams) } == true) return true
         val rt = lookup("this")?.t ?: return false
-        if (rt is Ty.Cls && rt.name != owner?.name) return classes[rt.name]?.methods?.get(k)?.let { extMatches(t, it.params[0].type, emptyList()) } == true
+        if (rt is Ty.Cls && rt.name != owner?.name) return classes[rt.name]?.methods?.get(k)?.let { extMatches(t, it.params[0].type, it.typeParams) } == true
         if (rt is Ty.Iface) return ifaces[rt.name]?.methods?.get(k)?.params?.firstOrNull() == t
         return false
     }
@@ -3165,13 +3165,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         if (n == "collectReferenceFieldValues" && e0.args.isEmpty() && e0.lambda == null) return collectRefFields(r)
         // Member extension of the enclosing class (dispatch receiver `this`).
-        owner?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, emptyList()) && !hasMember(t, n) }?.let {
+        owner?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, it.typeParams) && !hasMember(t, n) }?.let {
             if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
             return withTemps(listOf(r)) { (x) -> callMethod(Val("%this", Ty.Cls(o.name)), o, "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
         } }
         // Member extension of an implicit receiver (`with(obj) { x.ext() }`, a lambda with receiver).
         lookup("this")?.let { l -> val rt = l.t
-            if (rt is Ty.Cls && rt.name != owner?.name) classes[rt.name]?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, emptyList()) && !hasMember(t, n) }?.let {
+            if (rt is Ty.Cls && rt.name != owner?.name) classes[rt.name]?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, it.typeParams) && !hasMember(t, n) }?.let {
                 if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
                 return withTemps(listOf(r)) { (x) -> method(genExpr(NameE("this").also { it.line = line }), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
             } }
