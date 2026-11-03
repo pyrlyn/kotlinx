@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 /**
  * The golden feature suite of compiler/test.sh (compiler/tests/<name>.kt -> <name>.out), run on the JVM build:
  * compileToIr in-process, then clang (no opt, -O1, system malloc, --gc=default) and the program's output must
- * equal <name>.out. When the IR is byte-identical to the IR of the unmutated compiler (build/ir-baseline.txt,
+ * equal <name>.out (built with -DRT_LEAKCHECK: a normal exit must be 0, i.e. no live objects). When the IR is byte-identical to the IR of the unmutated compiler (build/ir-baseline.txt,
  * written by `-Dkx.writeBaseline=true test` after every test passed through clang), the program is the same
  * one that already passed, so clang is skipped. That keeps a mutation run in minutes, not hours.
  */
@@ -47,12 +47,13 @@ class GoldenTest {
     private fun compileToIr(src: String): String =
         compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program())))
 
-    private fun runNative(name: String, ir: String): String {
+    /** Output (leak-check report lines removed) and exit code. */
+    private fun runNative(name: String, ir: String): Pair<String, Int> {
         val dir = File(work, "${ProcessHandle.current().pid()}-${Thread.currentThread().id}").also { it.mkdirs() }
         val ll = File(dir, "$name.ll").also { it.writeText(ir) }
         val exe = File(dir, name)
         val cc = System.getenv("NK_CC") ?: "/usr/bin/clang"
-        val build = ProcessBuilder(cc, "-O1", "-DRT_PLAIN_MALLOC", "-Wno-override-module", "-w", "-I", "$root/compiler/gc",
+        val build = ProcessBuilder(cc, "-O1", "-DRT_PLAIN_MALLOC", "-DRT_LEAKCHECK", "-Wno-override-module", "-w", "-I", "$root/compiler/gc",
             ll.path, "$root/compiler/runtime/runtime.c", "$root/compiler/gc/default/gc.c", "-o", exe.path)
             .redirectErrorStream(true).start()
         val bout = build.inputStream.bufferedReader().readText()
@@ -62,7 +63,8 @@ class GoldenTest {
         val reader = Thread { out.append(p.inputStream.bufferedReader().readText()) }.also { it.start() }
         if (!p.waitFor(10, TimeUnit.SECONDS)) { p.destroyForcibly(); fail<Unit>("$name: program timed out") }
         reader.join(5000)
-        return out.toString().trimEnd('\n')
+        val text = out.lines().filter { !it.startsWith("leak-check: ") && !it.startsWith("region: ") }.joinToString("\n")
+        return text.trimEnd('\n') to p.exitValue()
     }
 
     @ParameterizedTest(name = "{0}")
@@ -74,8 +76,10 @@ class GoldenTest {
         val ir = compileToIr(src)
         val h = sha(ir)
         if (!writing && baseline[name] == h) return
-        val got = runNative(name, ir)
+        val (got, rc) = runNative(name, ir)
         assertEquals(expected, got, "golden output of compiler/tests/$name.kt")
+        // Like compiler/test.sh: a program that ends normally must leave no live objects (exit 3 = leak).
+        if (!expected.lines().any { it.startsWith("Exception in thread") }) assertEquals(0, rc, "$name: leak-check exit code")
         if (writing) record(name, h)
     }
 }
