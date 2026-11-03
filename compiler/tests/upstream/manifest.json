@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2837,
-  "UNSUPPORTED": 2654
+  "PASS": 2841,
+  "UNSUPPORTED": 2650
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -4085,7 +4085,7 @@
   },
   "box/box/callableReference/function/referenceToStaticOrStaticLike.kt": {
    "category": "objects / companion objects",
-   "detail": "multiple companion declarations are not supported (at 'companion')",
+   "detail": "unknown type A.Companion",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/referenceToStaticOrStaticLike.kt"
   },
@@ -6463,14 +6463,14 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionBlockAccessCrossModuleInline.kt"
   },
   "box/box/companionBlocksAndExtensions/companionBlockImplicitInvoke.kt": {
-   "category": "objects / companion objects",
-   "detail": "multiple companion declarations are not supported (at 'companion')",
+   "category": "class bodies / constructors",
+   "detail": "constructor C expects 0 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionBlockImplicitInvoke.kt"
   },
   "box/box/companionBlocksAndExtensions/companionExtensionImplicitInvoke.kt": {
-   "category": "objects / companion objects",
-   "detail": "multiple companion declarations are not supported (at 'companion')",
+   "category": "class bodies / constructors",
+   "detail": "constructor C expects 0 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/companionExtensionImplicitInvoke.kt"
   },
@@ -6531,15 +6531,13 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersBlocksAndEnumTriggeredByBlock.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersBlocksAndObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "multiple companion declarations are not supported (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersBlocksAndObject.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersCompanionObjectInitMigration.kt": {
-   "category": "objects / companion objects",
-   "detail": "multiple companion declarations are not supported (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersCompanionObjectInitMigration.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersEnumImplementingInterface.kt": {
@@ -6585,7 +6583,7 @@
   },
   "box/box/companionBlocksAndExtensions/initializersInheritanceMixedWithObject.kt": {
    "category": "objects / companion objects",
-   "detail": "multiple companion declarations are not supported (at 'companion')",
+   "detail": "companion blocks in classes with supertypes are not supported (at 'companion')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersInheritanceMixedWithObject.kt"
   },
@@ -6636,8 +6634,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersTransitiveSuperInterface.kt"
   },
   "box/box/companionBlocksAndExtensions/initializersTriggeredByObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "multiple companion declarations are not supported (at 'companion')",
+   "category": "other: unknown variable 'functionInitLog'",
+   "detail": "unknown variable 'functionInitLog'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/initializersTriggeredByObject.kt"
   },
@@ -6660,9 +6658,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/innerClasses.kt"
   },
   "box/box/companionBlocksAndExtensions/interfaceCompanionBlockAndObject.kt": {
-   "category": "objects / companion objects",
-   "detail": "multiple companion declarations are not supported (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/interfaceCompanionBlockAndObject.kt"
   },
   "box/box/companionBlocksAndExtensions/interfaceCompanionBlockBackingField.kt": {
@@ -6768,9 +6765,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/multiModule.kt"
   },
   "box/box/companionBlocksAndExtensions/multipleBlocks.kt": {
-   "category": "objects / companion objects",
-   "detail": "multiple companion declarations are not supported (at 'companion')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/multipleBlocks.kt"
   },
   "box/box/companionBlocksAndExtensions/nestedClasses.kt": {
@@ -6797,7 +6793,7 @@
   },
   "box/box/companionBlocksAndExtensions/resolutionPriority.kt": {
    "category": "objects / companion objects",
-   "detail": "multiple companion declarations are not supported (at 'companion')",
+   "detail": "companion members declared in two companion declarations are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/resolutionPriority.kt"
   },
@@ -6818,8 +6814,8 @@
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/throwingInitializersCompanionExtensions.kt"
   },
   "box/box/companionBlocksAndExtensions/throwingInitializersMixedCompanions.kt": {
-   "category": "objects / companion objects",
-   "detail": "multiple companion declarations are not supported (at 'companion')",
+   "category": "unknown BACKEND_UNDER_TEST (stdlib API / unsupported decl)",
+   "detail": "unknown name 'BACKEND_UNDER_TEST'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/companionBlocksAndExtensions/throwingInitializersMixedCompanions.kt"
   },
