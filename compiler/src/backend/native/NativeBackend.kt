@@ -178,6 +178,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "\$Fn" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()))
         "\$FnR" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()), receiver = true)
         "Array" -> if (t.args.singleOrNull()?.name == "String" && mainParams) Ty.Args else Ty.ListTy(resolve(t.args.single()))
+        // `Set<T>` / `MutableSet<T>` / `LinkedHashSet<T>`: the prelude's `HashSet<T>`.
+        "Set", "MutableSet", "LinkedHashSet" -> if ("HashSet" in genericClasses && t.args.size == 1) instanceTy("HashSet", t.args) else fail("unknown type $t")
         else -> if (t.name in genericClasses || t.name in genericIfaces) instanceTy(t.name, t.args) else if (t.name in classes) Ty.Cls(t.name) else if (t.name in ifaces) Ty.Iface(t.name) else if (t.name.startsWith("CPointer")) Ty.RawPtr else fail("unknown type $t")
     }
 
