@@ -1955,6 +1955,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val sv = callMethod(Val(v.v, v.t), classes.getValue(v.t.name), "toString", CallE(NameE("toString"), emptyList(), emptyList(), null))
                 appendVal(prefix, lead, coerce(sv, Ty.Str))
             }
+            // An interface that declares `toString()` (e.g. `JsonElement`) dispatches to the implementation.
+            v.t is Ty.Iface && ifaces[v.t.name]?.methods?.get("toString")?.params?.isEmpty() == true -> {
+                val sv = callIface(Val(v.v, v.t), ifaces.getValue(v.t.name), "toString", CallE(NameE("toString"), emptyList(), emptyList(), null))
+                appendVal(prefix, lead, coerce(sv, Ty.Str))
+            }
             v.t is Ty.ListTy -> {
                 // "[a, b, c]"
                 emit("call void @${prefix}str($lead ptr ${cstr("[")})")
@@ -2726,7 +2731,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val sig = inst.third
         val vals = raw.mapIndexed { i, v -> coerce(v, sig.params[i]) }
         val args = (listOfNotNull(recv?.let { "ptr ${it.v}" }) + vals.map { "${it.t.llvm} ${it.v}" }).joinToString(", ")
-        return finishCall("call ${sig.ret.llvm} @$sym($args)", sig.ret, vals)
+        // An owned receiver (e.g. `Obj.genericMethod(...)`) is released when the call throws, like in callMethod0.
+        return finishCall("call ${sig.ret.llvm} @$sym($args)", sig.ret, vals, recv)
     }
 
     /** Builder-style receivers of standard collections: method name -> parameter types over the receiver's type parameters. */

@@ -8,8 +8,12 @@ given instead of line numbers (they drift). GC internals are documented separate
 
 ```
 src/driver/Main.kt        compileToIr(src) = compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program())))
+                          (src = withSerializable(src) first: generated @Serializable serializers)
   frontend/Lexer.kt       tokens (K.ID / K.OP / K.NL / literals / EOF), each with a line
   frontend/Parser.kt      recursive descent -> AST (frontend/Ast.kt) AND most desugaring
+  frontend/Kotlinx.kt     kotlinx library subsets written in Kotlin, merged like the prelude: coroutines (runBlocking,
+                          launch/async, Job, Channel, Flow on a single-threaded scheduler) and serialization (Json,
+                          JsonElement, KSerializer; withSerializable generates serializers for @Serializable classes)
   frontend/Prelude.kt     library code written in Kotlin (ranges/progressions, exceptions, Pair, Comparable, list
                           helpers, `Any` boxing); merged only when the source uses it (regex triggers)
   backend/native/Generics.kt  rewriteStatics, boxCapturedVars, monomorphization of generic classes/interfaces

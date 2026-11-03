@@ -9,7 +9,7 @@ private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sum
 /** Names after which `{` does not start a trailing lambda. */
 private val NO_TRAILING = setOf("try", "do", "else", "finally", "init", "object", "catch", "return", "this")
 
-private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix", "sealed", "lateinit", "tailrec")
+private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix", "sealed", "lateinit", "tailrec", "suspend")
 
 /**
  * Upper bounds of type parameters, by "<declaration line>:<name>" (declarations are copied and renamed by later
@@ -838,7 +838,7 @@ class Parser(toks: List<Tok>) {
                     classes.add(ClassD(c.name, c.fields, c.supers, ms, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true, c.superTypeArgs))
                 }
                 tk.k == K.ID && tk.s == "data" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(dataClass(classDecl())) }
-                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "operator", "infix", "tailrec", "const", "open", "final", "abstract", "sealed") -> p++
+                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "operator", "infix", "tailrec", "const", "open", "final", "abstract", "sealed", "suspend") -> p++
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && topProperty(funs) -> { pendingGlobal?.let { globals.add(it) }; pendingGlobal = null }
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && (t[p + 1].k == K.OP && t[p + 1].s == "<" ||
                     t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> funs.addAll(extProperty())
@@ -2223,6 +2223,8 @@ class Parser(toks: List<Tok>) {
     }
 
     private fun type(): TypeRef {
+        // `suspend` function types are plain function types: coroutines run on a single-threaded scheduler (Coroutines.kt).
+        if (peek().k == K.ID && peek().s == "suspend" && t[p + 1].k == K.OP && t[p + 1].s == "(") next()
         if (isOp("(")) {
             // Function type `(A, B) -> R` (TypeRef "$Fn" with args = params + return), or a parenthesized type.
             next()
@@ -2347,7 +2349,7 @@ class Parser(toks: List<Tok>) {
         VarS(n, isVar, null, CallE(MemberE(NameE(d).also { it.line = line }, "component${i + 1}", false).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line }).also { it.line = line }
 
     /** Modifiers that may precede a local declaration; they have no effect here. */
-    private val LOCAL_MODIFIERS = setOf("inline", "tailrec", "operator", "infix", "private", "data", "open", "abstract", "sealed", "enum", "value")
+    private val LOCAL_MODIFIERS = setOf("inline", "tailrec", "operator", "infix", "private", "data", "open", "abstract", "sealed", "enum", "value", "suspend")
 
     /** A local `fun` / `class` / `object` / `interface` starts at the current token (after optional modifiers). */
     private fun localDeclAhead(): Boolean {
