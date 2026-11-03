@@ -201,8 +201,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/nestedAnnotationInstances.kt"
   },
   "box/box/annotations/instances/nestedDefaults.kt": {
-   "category": "other: type check of Any against BooleanArray is not supported",
-   "detail": "type check of Any against BooleanArray is not supported",
+   "category": "other: unknown method BooleanArray.contentHashCode()",
+   "detail": "unknown method BooleanArray.contentHashCode()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/nestedDefaults.kt"
   },
@@ -482,8 +482,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/arrayGetMultiIndex.kt"
   },
   "box/box/arrays/arrayInstanceOf.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
+   "category": "other: unknown method Any.iterator()",
+   "detail": "unknown method Any.iterator()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/arrayInstanceOf.kt"
   },
@@ -759,8 +759,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt238.kt"
   },
   "box/box/arrays/kt2997.kt": {
-   "category": "other: type check of Any against IntArray is not supported",
-   "detail": "type check of Any against IntArray is not supported",
+   "category": "other: unknown method IntArray.get()",
+   "detail": "unknown method IntArray.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt2997.kt"
   },
@@ -833,8 +833,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt7009.kt"
   },
   "box/box/arrays/kt7288.kt": {
-   "category": "when expressions",
-   "detail": "if/when branches yield references of different types; assign the result or make the types match",
+   "category": "other: unknown method Any.iterator()",
+   "detail": "unknown method Any.iterator()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt7288.kt"
   },
@@ -8217,9 +8217,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndexWithSmartCast.kt": {
-   "category": "other: type check of Any against ByteArray is not supported",
-   "detail": "type check of Any against ByteArray is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndexWithSmartCast.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInEmptyArrayWithIndex.kt": {
@@ -8249,9 +8248,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndexWithSmartCast.kt": {
-   "category": "other: type check of Any against IntArray is not supported",
-   "detail": "type check of Any against IntArray is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInIntArrayWithIndexWithSmartCast.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInObjectArrayWithIndex.kt": {
@@ -29073,9 +29071,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/intEqualsNullableIntWithSmartCasts.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/kt42281.kt": {
-   "category": "other: cannot compare Int and IntArray",
-   "detail": "cannot compare Int and IntArray",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/equalityWithObject/kt42281.kt"
   },
   "box/box/primitiveTypes/equalityWithObject/objectWithAsymmetricEqualsEqPrimitive.kt": {
@@ -31218,9 +31215,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt12983_forInSpecificCollectionIndices.kt"
   },
   "box/box/ranges/forInIndices/kt13241_Array.kt": {
-   "category": "other: type check of Any against IntArray is not supported",
-   "detail": "type check of Any against IntArray is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInIndices/kt13241_Array.kt"
   },
   "box/box/ranges/forInIndices/kt13241_CharSequence.kt": {

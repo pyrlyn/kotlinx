@@ -456,6 +456,8 @@ fun withPrelude(src: String, p: Program): Program {
 
 /** Primitive types that are boxed (into `AnyBox<T>` classes) when used as `Any`. */
 val ANY_BOXED = listOf("Int", "Long", "Double", "Float", "Boolean", "Char", "String", "UInt", "ULong", "Byte")
+/** Primitive arrays as `Any` (boxed; equality is identity, as in Kotlin). */
+val ANY_BOXED_ARRAYS = listOf("IntArray", "LongArray", "DoubleArray", "FloatArray", "BooleanArray", "CharArray", "UIntArray", "ULongArray", "ByteArray")
 // Nullable primitives (`Int?`) and safe calls (`a?.x` may yield one) are boxed like `Any`.
 // A nullable type parameter (`T?`, short names) may be instantiated with a primitive, which is boxed too.
 private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UInt|ULong|Byte|Short|UByte|UShort)\?|\?\.|\b[A-Z]\?|\bResult\b|\brunCatching\b|\bNumber\b""")
@@ -466,7 +468,7 @@ private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UIn
  */
 fun withAny(src: String, p: Program): Program {
     if (!ANY_USE.containsMatchIn(src)) return p
-    val boxes = ANY_BOXED.joinToString("\n") { "class AnyBox$it(val v: $it)" }
+    val boxes = (ANY_BOXED + ANY_BOXED_ARRAYS).joinToString("\n") { "class AnyBox$it(val v: $it)" }
     val lib0 = Parser(Lexer(boxes).lex()).program()
     val all = p.classes + lib0.classes
     val byName = all.associateBy { it.name }
@@ -495,6 +497,7 @@ fun withAny(src: String, p: Program): Program {
         has(c, "equals") -> sb.append("    if (a is `${c.name}`) return a.equals(b)\n")
         c.isValue || c.methods.any { it.name == "\$equals" } -> sb.append("    if (a is `${c.name}`) return b is `${c.name}` && a == b\n")
     }
+    for (b in ANY_BOXED_ARRAYS) sb.append("    if (a is AnyBox$b) return b is AnyBox$b && a.v === b.v\n")
     sb.append("    return false\n}\n")
     sb.append("fun anyHashCode__(x: Any?): Int {\n    if (x == null) return 0\n")
     for (b in ANY_BOXED) if (b != "UInt" && b != "ULong" && b != "Byte") sb.append("    if (x is AnyBox$b) return x.v.hashCode()\n")
