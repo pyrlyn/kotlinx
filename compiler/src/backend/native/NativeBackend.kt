@@ -340,7 +340,6 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             for (m in c.methods) {
                 line = m.line
                 if (m.typeParams.isNotEmpty()) {
-                    if (m.ret == null && m.body == null) fail("expression-bodied method '${m.name}' needs an explicit return type")
                     if (c.name in poly || c.superClass != null) fail("generic method '${m.name}' in an open class hierarchy is not supported")
                     continue
                 }
@@ -2671,13 +2670,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * generated once with the instance's type bindings (already in `tenv`) in a fresh scope and the IR is rolled back.
      */
     private fun probeGenericRet(f: FunD, sym: String, ps: List<Ty>, cls: ClassInfo?): Ty {
-        if (cls != null) fail("expression-bodied generic method '${f.name}' needs an explicit return type")
         if (!probingGeneric.add(sym)) fail("recursive generic function '${f.name}' needs an explicit return type")
         val sb = body.length; val sa = allocas.length; val sc = cur; val st = term; val sm = HashSet(moveNodes)
         val sf = funcs.length; val so = owner; val sr = retTy; val sl = line
         val savedScopes = ArrayList(scopes); val sts = ArrayList(tryStack); val sfs = ArrayList(finStack)
         try {
-            owner = null; retTy = Ty.Unit; line = f.line
+            owner = cls; retTy = Ty.Unit; line = f.line
             scopes.clear(); scopes.add(Scope())
             f.params.forEachIndexed { i, p -> declare(p.name, ps[i], false, false) }
             val t = genExpr(f.exprBody!!).t

@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2844,
-  "UNSUPPORTED": 2647
+  "PASS": 2847,
+  "UNSUPPORTED": 2644
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2415,8 +2415,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/simpleEnum.kt"
   },
   "box/box/bridges/simpleGenericMethod.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied method 'foo' needs an explicit return type",
+   "category": "generics",
+   "detail": "generic method 'foo' in an open class hierarchy is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/simpleGenericMethod.kt"
   },
@@ -2493,8 +2493,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/enum.kt"
   },
   "box/box/bridges/substitutionInSuperClass/genericMethod.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied method 'foo' needs an explicit return type",
+   "category": "generics",
+   "detail": "generic method 'foo' in an open class hierarchy is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/substitutionInSuperClass/genericMethod.kt"
   },
@@ -5065,9 +5065,8 @@
    "upstream": "compiler/testData/codegen/box/classes/classObjectNotOfEnum.kt"
   },
   "box/box/classes/classObjectWithPrivateGenericMember.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied method 'create' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/classObjectWithPrivateGenericMember.kt"
   },
   "box/box/classes/classObjectsWithParentClasses.kt": {
@@ -17018,14 +17017,14 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/extensionInvokeOnExpr.kt"
   },
   "box/box/functions/invoke/implicitInvokeInCompanionObjectWithFunctionalArgument.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied method 'invoke' needs an explicit return type",
+   "category": "class bodies / constructors",
+   "detail": "constructor TestClass expects 0 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeInCompanionObjectWithFunctionalArgument.kt"
   },
   "box/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied method 'invoke' needs an explicit return type",
+   "category": "other: unsupported call",
+   "detail": "unsupported call",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt"
   },
@@ -25243,9 +25242,8 @@
    "upstream": "compiler/testData/codegen/box/ir/anonymousObjectInForLoopIteratorAndBody.kt"
   },
   "box/box/ir/anonymousObjectInGenericFun.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied method 'foo' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ir/anonymousObjectInGenericFun.kt"
   },
   "box/box/ir/anonymousObjectInsideElvis.kt": {
@@ -26199,9 +26197,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/localExtendsInnerAndReferencesOuterMember.kt"
   },
   "box/box/localClasses/localGenericWithTypeParameters.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression-bodied method 'qz' needs an explicit return type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localClasses/localGenericWithTypeParameters.kt"
   },
   "box/box/localClasses/nameWithWhitespace.kt": {
