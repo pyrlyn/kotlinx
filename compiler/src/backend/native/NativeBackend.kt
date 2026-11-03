@@ -3554,6 +3554,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 }
             }
             t is Ty.ListTy && e.lambda != null && n in setOf("map", "filter", "forEach", "sumOf", "count") -> listLambda(r, t, n, e.lambda)
+            // `sum()` of a numeric list: `sumOf { it }` (Int/Long/Double/... element types).
+            t is Ty.ListTy && n == "sum" && e.args.isEmpty() && e.lambda == null && t.elem.isNum ->
+                listLambda(r, t, "sumOf", Block(listOf(ExprS(NameE("it").also { it.line = line }))))
             t == Ty.Arr(Ty.I8) && n == "usePinned" -> {
                 val lam = e.lambda ?: fail("usePinned needs a lambda")
                 scopes.add(Scope())
