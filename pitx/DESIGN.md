@@ -6,7 +6,7 @@ It answers two questions:
 - Which compiled behaviour is not pinned down by the golden tests (survivors = coverage gaps)?
 - Do the tests observe the code the compiler actually generates?
 
-Constraints: stdlib Python plus the LLVM tools the repo already pins via mise (`llvm-as`, `lli`, `opt`, `clang`).
+Constraints: Zig 0.17 std only (pinned in `pitx/mise.toml`) plus the LLVM tools the repo already pins via mise (`llvm-as`, `lli`, `opt`, `clang`).
 pitx works on temporary copies only; sources and input `.ll` files are never modified.
 
 ## Pipeline
@@ -52,17 +52,18 @@ mutate post-`opt` IR to model what really ships.
 | `remove-call` | planned | delete a `void` call (skipping `rt_*`/GC intrinsics) |
 | `br-swap`, `select-swap` | planned | swap the targets/arms |
 
-Operators are functions `line -> [(start, end, original, replacement)]` registered in `pitx.OPERATORS`.
+Operators are `pitx.Operator{ name, find: fn(code) ?Site }` values (`icmp_flip`, `arith_swap`; `all_operators`); a caller can pass its own.
 Each mutant is one textual edit identified by (operator, line, original). The `.ll` text format is
 stable enough that a textual edit plus `llvm-as` verification is enough. Operators that need SSA
-rewrites (negate, remove-with-uses) will use a small `opt` pass plugin or an `llvmlite`-free IR model later.
+rewrites (negate, remove-with-uses) will use a small `opt` pass plugin or a minimal IR model later.
 
 ## Filtering
 
 - Default: only functions reachable from `@main` are mutated. Edges are every textual `@ref` from a
   reachable body or from a global (vtables) that one references. Without this, the stdlib prelude that
   every module carries produces about 90 meaningless survivors on a 10-line test.
-- `--skip-functions REGEX`: e.g. `^(rt_|rel|relz|relf|free|trav)` to leave refcount/GC glue alone.
+- `--skip-functions PATTERNS`: comma-separated, `^x` prefix, `x$` suffix, `^x$` exact, else substring
+  (std has no regex), e.g. `^rt_,^rel,^free.,^trav.` to leave refcount/GC glue alone.
   Those mutants mostly cause leaks or crashes, which are a different signal.
 - `--all-functions` turns reachability off.
 
@@ -81,14 +82,15 @@ newkotlinc does not emit debug info yet; adding it is a next step. Until then, t
 ## Timeouts and parallelism
 
 - Per-run timeout (`--timeout`, default 10 s). Pick a few times the baseline runtime.
-- `--jobs N` runs mutants in a thread pool; each mutant has its own temp dir. Default 1, because GC
+- `--jobs N` runs mutants on N threads (one arena per thread); each mutant has its own temp dir under `$TMPDIR`. Default 1, because GC
   benchmarks share the machine and parallel runs distort their timings.
 
 ## Layout
 
-- `pitx.py`: library + CLI (operators, enumeration, reachability, verify, harnesses, analyze, report).
+- `src/pitx.zig`: library (operators, enumeration, reachability, verify, harnesses, analyze, reports).
+- `src/main.zig`: CLI; `build.zig`: `zig build` (-> `zig-out/bin/pitx`), `zig build test`.
 - `run_kt.sh`: one golden test end to end (`compiler/tests/X.kt` → `.ll` → pitx with the link harness).
-- `tests/test_pitx.py`, `tests/fixtures/*.ll`: operator unit tests, enumeration tests, and runner
+- `tests/pitx_test.zig`, `tests/fixtures/*.ll`: operator unit tests, enumeration tests, and runner
   classification on hand-written IR (valid and invalid).
 
 ## Next steps
