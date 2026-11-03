@@ -365,9 +365,18 @@ pub fn verify(a: Allocator, ctx: Ctx, path: []const u8) !?[]const u8 {
     return if (e.len > 0) e else "verifier failed";
 }
 
+/// Cap on captured stdout/stderr per run.
+pub const output_limit = 64 << 20;
+
 fn runTimed(a: Allocator, io: Io, argv: []const []const u8, timeout_ms: i64) !RunOutcome {
-    const r = std.process.run(a, io, .{ .argv = argv, .timeout = .{ .duration = .{ .raw = .fromMilliseconds(timeout_ms), .clock = .awake } } }) catch |e| switch (e) {
-        error.Timeout => return .timeout,
+    const r = std.process.run(a, io, .{
+        .argv = argv,
+        .timeout = .{ .duration = .{ .raw = .fromMilliseconds(timeout_ms), .clock = .awake } },
+        .stdout_limit = .limited(output_limit),
+        .stderr_limit = .limited(output_limit),
+    }) catch |e| switch (e) {
+        // A runaway mutant that floods output is treated like one that hangs (it would hit the timeout).
+        error.Timeout, error.StreamTooLong => return .timeout,
         else => return e,
     };
     return .{ .ok = .{ .stdout = r.stdout, .exit = exitCode(r.term) } };
@@ -473,7 +482,14 @@ pub fn analyze(a: Allocator, ctx: Ctx, ll: []const u8, h: Harness, opts: Analyze
     const mutants = try enumerateSites(a, ir, opts.enum_opts);
     const results = try a.alloc(Result, mutants.len);
     if (opts.jobs <= 1 or mutants.len <= 1) {
-        for (mutants, 0..) |m, i| results[i] = try runMutant(a, ctx, ir, m, h, expected);
+        // One scratch arena per mutant: a mutant's output can be large; only the detail string is kept.
+        var scratch = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer scratch.deinit();
+        for (mutants, 0..) |m, i| {
+            _ = scratch.reset(.retain_capacity);
+            const r = try runMutant(scratch.allocator(), ctx, ir, m, h, expected);
+            results[i] = .{ .mutant = r.mutant, .status = r.status, .detail = try a.dupe(u8, r.detail) };
+        }
     } else {
         var next = std.atomic.Value(usize).init(0);
         var failed = std.atomic.Value(bool).init(false);
