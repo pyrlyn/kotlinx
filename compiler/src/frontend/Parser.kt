@@ -844,6 +844,12 @@ class Parser(toks: List<Tok>) {
                     t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> funs.addAll(extProperty())
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> { noCtx(); globals.add(stmt() as VarS); if (pendingStmts.isNotEmpty()) fail("top-level destructuring declarations are not supported", tk) }
                 tk.k == K.ID && tk.s == "fun" && t[p + 1].k == K.ID && t[p + 1].s == "interface" -> { p++; ifaces.add(interfaceDecl().also { funIfaces[it.name] = it }) }
+                // `external fun f(x: Int): Int` (no body): a C function of the same name (FFI, see Externs).
+                tk.k == K.ID && tk.s == "external" && t[p + 1].k == K.ID && t[p + 1].s == "fun" -> {
+                    p++; val f = function()
+                    if (f.body != null || f.exprBody != null || f.ret == null || f.typeParams.isNotEmpty() || f.recv != null) fail("an external fun needs an explicit return type and no body, type parameters or receiver", tk)
+                    Externs.names.add(f.name); funs.add(f)
+                }
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
                 isContextDecl() -> contextDecl()
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var" || tk.s == "class" || tk.s == "object" || tk.s == "interface") && pendingCtx != null -> noCtx()

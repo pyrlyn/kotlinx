@@ -602,6 +602,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     private fun genFun(f: FunD, cls: ClassInfo?, instSig: FunSig? = null, instSym: String? = null) {
+        if (cls == null && instSig == null && f.name in Externs.names) { genExtern(f); return }
         if (cls != null && f.body == null && f.exprBody == null) fail("abstract method ${f.name} in class ${cls.name}")
         val sig = instSig ?: if (cls != null) methodSigs.getValue("${cls.name}.${f.name}") else sigs.getValue(f.name)
         owner = cls; tryStack.clear(); finStack.clear()
@@ -632,6 +633,27 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val attrs = if (f.name == "main") "" else " nounwind"
         funcs.append("define internal ${sig.ret.llvm} @$name(${params.joinToString(", ")})$attrs {\nentry:\n")
         funcs.append(allocas).append(body).append("}\n\n")
+    }
+
+    /**
+     * `external fun`: `declare` the C symbol and a `@k.<name>` thunk that call sites use like any Kotlin function.
+     * The thunk is alwaysinline, so after opt the call is a direct C call. Only C-ABI scalars cross the boundary:
+     * Byte/Int/Long/UInt/ULong/Boolean/Float/Double/Unit and CPointer (opaque pointer, never managed by the GC).
+     */
+    private fun genExtern(f: FunD) {
+        val sig = sigs.getValue(f.name); line = f.line
+        val ok = setOf<Ty>(Ty.I8, Ty.I32, Ty.I64, Ty.U32, Ty.U64, Ty.I1, Ty.F32, Ty.F64, Ty.RawPtr)
+        sig.params.forEach { if (it !in ok) fail("external fun ${f.name}: parameter type $it is not supported (C scalars and CPointer only)") }
+        if (sig.ret !in ok && sig.ret != Ty.Unit) fail("external fun ${f.name}: return type ${sig.ret} is not supported (C scalars, CPointer, Unit)")
+        // C `bool` is passed zero-extended; Byte is a signed char.
+        fun cty(t: Ty) = when (t) { Ty.I1 -> "i1 zeroext"; Ty.I8 -> "i8 signext"; else -> t.llvm }
+        val ps = sig.params.mapIndexed { i, t -> "${t.llvm} %a$i" }
+        val cps = sig.params.mapIndexed { i, t -> "${cty(t)} %a$i" }
+        val cret = if (sig.ret == Ty.I1) "zeroext i1" else if (sig.ret == Ty.I8) "signext i8" else sig.ret.llvm
+        funcs.append("declare $cret @${f.name}(${sig.params.joinToString(", ") { cty(it) }})\n\n")
+        funcs.append("define internal ${sig.ret.llvm} @k.${f.name}(${ps.joinToString(", ")}) alwaysinline nounwind {\nentry:\n")
+        if (sig.ret == Ty.Unit) funcs.append("  call void @${f.name}(${cps.joinToString(", ")})\n  ret void\n}\n\n")
+        else funcs.append("  %r = call $cret @${f.name}(${cps.joinToString(", ")})\n  ret ${sig.ret.llvm} %r\n}\n\n")
     }
 
     private fun declare(name: String, t: Ty, isVar: Boolean, ownsRef: Boolean): Local {
@@ -1506,7 +1528,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val op = e.op.removePrefix("pre").removeSuffix("s16")
                 val mname = if (op == "++") "inc" else "dec"
                 onceRecv(e.target) { tg ->
-                    val old = genExpr(tg)
+                    // A reference read is borrowed from the variable/property; `assign` below releases that slot's
+                    // value, which freed the old object while `x++` still returned it (use-after-free: `val old = c++`
+                    // printed a reused object, and --leak-check aborted with "freed into the wrong region").
+                    // Own it for the temp so the postfix result outlives the reassignment.
+                    val old = genExpr(tg).let { v -> if (v.t.isRef && !v.owned) { retain(v.v, v.t); Val(v.v, v.t, true) } else v }
                     // `operator fun inc()/dec()` (member, or an extension on the operand type).
                     val custom = (old.t as? Ty.Cls)?.let { mname in classes.getValue(it.name).methods } == true ||
                         extFuns[mname]?.any { extMatches(old.t, it.params[0].type, it.typeParams) } == true
