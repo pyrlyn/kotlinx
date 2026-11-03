@@ -1,7 +1,7 @@
 # Plan: a type-constraint solver for generic calls and builder inference
 
 Status: in progress. Order agreed: step 2, then 3, then 1, then 4-6 (step 1 alone unblocks nothing: the nullable
-PCLA tests first fail on "lambda with receiver needs a known receiver type", which is step 3). Step 2: done. Tracking: #15 (function types with receiver / builder inference) and the
+PCLA tests first fail on "lambda with receiver needs a known receiver type", which is step 3). Step 2: done. Step 3a: done. Tracking: #15 (function types with receiver / builder inference) and the
 `inference/pcla/*` upstream tests (about 55 still UNSUPPORTED with "lambda with receiver needs a known receiver type").
 
 ## Today
@@ -46,6 +46,13 @@ simplified):
    eager `unify` becomes the fallback when the solver has nothing. Must keep PASS identical (pure refactor).
 3. Probe-mode lambda generation with stub receiver/parameter types: sinks and sources inside the body add
    constraints instead of failing. Replaces `builderInfer` / `usageInfer` / producing-position rules.
+   Split (agreed):
+   - **3a (done)** one probe facility (`Snapshot` / `probe { }` in `NativeBackend.kt`) that also rolls back
+     the generic function instances requested during a probe; existing probes use it. Pure refactor.
+   - **3b** stub types for unbound receiver/parameter type variables; probe the lambda body and record the
+     constraints of each use (`yield(x)`, `val y: T = materialize()`, assignments, arguments to non-generic
+     calls); the existing heuristics stay as a fallback.
+   - **3c** remove `builderInfer` / `usageInfer` / producing-position rules once 3b covers them.
 4. Nested generic calls inside postponed lambdas (`yield(id(arg))`): the inner call's variables join the outer
    system instead of being solved early.
 5. Multiple postponed lambdas / two stub variables constraining each other
