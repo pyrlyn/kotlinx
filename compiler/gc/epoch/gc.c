@@ -375,6 +375,9 @@ static size_t c_threshold = LOG_MIN / LOG_PER_ROOT, c_min_threshold = LOG_MIN / 
 static size_t log_floor = LOG_FLOOR_DEFAULT;
 static int c_pure = 0;   /* the last minor detection traced (almost) only garbage: work <= KX_GC_PURE_RATIO (default 1) x found; keeps live-heap churn (LRU) on normal logs */
 static int64_t pure_ratio = 1;
+/* KX_GC_PURE_NOBOOST (default 1): no back-pressure log boost while detections find only garbage. Longer logs
+ * only hold more garbage in flight there (cyclic_garbage peaked with 16x logs, 32K entries each, under load). */
+static int pure_noboost = 1;
 #define PURE_STABLE_MAX 65536   /* and the old generation is small (no live heap to keep pace with, unlike LRU churn) */
 static void log_cap_follow(void) {
     if (log_cap_fixed) return;
@@ -461,7 +464,7 @@ static void handoff(void) {
          * window halves it again before the queue depth shrinks. Pure cyclic garbage never waits that long,
          * so it keeps short logs and little garbage in flight. */
         if (d > q_target_ns && !q_cool) {
-            if (max_queued >= Q_ADAPT_MAX && !log_cap_fixed && LOG_MIN * atomic_load_explicit(&log_boost, memory_order_relaxed) < LOG_CAP) { atomic_fetch_add(&log_boost, atomic_load(&log_boost)); log_cap_follow(); }
+            if (max_queued >= Q_ADAPT_MAX && !log_cap_fixed && !(c_pure && pure_noboost) && LOG_MIN * atomic_load_explicit(&log_boost, memory_order_relaxed) < LOG_CAP) { atomic_fetch_add(&log_boost, atomic_load(&log_boost)); log_cap_follow(); }
             if (max_queued < Q_ADAPT_MAX) max_queued *= 2; if (max_queued > Q_ADAPT_MAX) max_queued = Q_ADAPT_MAX; q_win = 0; q_win_bad = 0; q_cool = Q_ADAPT_COOL; }
         else if (d > q_target_ns) q_win_bad = 1;
         else {
@@ -519,6 +522,7 @@ static inline void log_op(uintptr_t e) {
     if (__builtin_expect(cur == NULL, 0)) {
         /* first log: before the collector thread exists, so no race on the tunables */
         const char *e = getenv("KX_GC_LOG_FLOOR"); if (e && atoll(e) > 0) log_floor = (size_t)atoll(e);
+        e = getenv("KX_GC_PURE_NOBOOST"); if (e && *e) pure_noboost = atoi(e) != 0;
         e = getenv("KX_GC_PURE_RATIO"); if (e && atoll(e) > 0) pure_ratio = atoll(e);
         e = getenv("KX_GC_MIN_THRESHOLD"); if (e && atoll(e) > 0) c_threshold = c_min_threshold = (size_t)atoll(e);
         e = getenv("KX_GC_LOG_CAP");
