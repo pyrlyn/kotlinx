@@ -534,21 +534,26 @@ __attribute__((noinline)) static void boundary(void) {
     note_pause(t0);
     in_boundary = 0;
 }
-static inline void log_op(uintptr_t e) {
-    if (__builtin_expect(cur == NULL, 0)) {
-        /* first log: before the collector thread exists, so no race on the tunables */
-        const char *e = getenv("KX_GC_LOG_FLOOR"); if (e && atoll(e) > 0) log_floor = (size_t)atoll(e);
-        e = getenv("KX_GC_PURE_RATIO"); if (e && atoll(e) > 0) pure_ratio = atoll(e);
-        e = getenv("KX_GC_MIN_THRESHOLD"); if (e && atoll(e) > 0) c_threshold = c_min_threshold = (size_t)atoll(e);
-        e = getenv("KX_GC_LOG_CAP");
-        if (e && atoll(e) > 0) { size_t c = (size_t)atoll(e); log_cap = c > LOG_CAP ? LOG_CAP : c; log_cap_fixed = 1; } else log_cap_follow();
-        pthread_mutex_lock(&mu); cur = log_new(); pthread_mutex_unlock(&mu); }
+/* First log entry: read the tunables, take the first log. Out of line, so the append below needs no stack
+ * frame: log_op and the three entry points are inlined into generated code by LTO (always_inline). As calls
+ * (prologue + epilogue per entry, ~35 per lru get) they cost lru 337 -> 260 ms, see bench/gc/ops/README.md. */
+static __attribute__((noinline)) void log_first(void) {
+    /* first log: before the collector thread exists, so no race on the tunables */
+    const char *e = getenv("KX_GC_LOG_FLOOR"); if (e && atoll(e) > 0) log_floor = (size_t)atoll(e);
+    e = getenv("KX_GC_PURE_RATIO"); if (e && atoll(e) > 0) pure_ratio = atoll(e);
+    e = getenv("KX_GC_MIN_THRESHOLD"); if (e && atoll(e) > 0) c_threshold = c_min_threshold = (size_t)atoll(e);
+    e = getenv("KX_GC_LOG_CAP");
+    if (e && atoll(e) > 0) { size_t c = (size_t)atoll(e); log_cap = c > LOG_CAP ? LOG_CAP : c; log_cap_fixed = 1; } else log_cap_follow();
+    pthread_mutex_lock(&mu); cur = log_new(); pthread_mutex_unlock(&mu);
+}
+static inline __attribute__((always_inline)) void log_op(uintptr_t e) {
+    if (__builtin_expect(cur == NULL, 0)) log_first();
     cur->a[cur->n++] = e;
     if (__builtin_expect(cur->n >= atomic_load_explicit(&log_cap, memory_order_relaxed), 0)) boundary();
 }
-void rt_gc_log_inc(void *p) { if (p) log_op((uintptr_t)p | OP_INC); }
-void rt_gc_log_dec(void *p) { if (p) log_op((uintptr_t)p | OP_DEC); }
-void rt_gc_write_barrier(void *obj) { log_op((uintptr_t)obj | OP_MOD); }
+__attribute__((always_inline)) void rt_gc_log_inc(void *p) { if (p) log_op((uintptr_t)p | OP_INC); }
+__attribute__((always_inline)) void rt_gc_log_dec(void *p) { if (p) log_op((uintptr_t)p | OP_DEC); }
+__attribute__((always_inline)) void rt_gc_write_barrier(void *obj) { log_op((uintptr_t)obj | OP_MOD); }
 
 // ---- collector (background thread): header bits are collector-owned for traced objects ----
 // Header word of a traced object under epoch (bits 0-34 as in object.inc; the rest is collector-owned):
