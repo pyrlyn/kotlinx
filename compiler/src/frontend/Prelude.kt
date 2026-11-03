@@ -308,6 +308,10 @@ fun <T> ArrayList<T>.first(): T { if (size == 0) throw NoSuchElementException("L
 fun <T> ArrayList<T>.last(): T { if (size == 0) throw NoSuchElementException("List is empty."); return get(size - 1) }
 fun <T> ArrayList<T>.firstOrNull(): T? = if (size == 0) null else get(0)
 fun <T> ArrayList<T>.lastOrNull(): T? = if (size == 0) null else get(size - 1)
+fun <T> ArrayList<T>.forEachIndexed(action: (Int, T) -> Unit) { var i = 0; for (x in this) { action(i, x); i++ } }
+fun <T> ArrayList<T>.indexOfFirst(predicate: (T) -> Boolean): Int { var i = 0; for (x in this) { if (predicate(x)) return i; i++ }; return -1 }
+fun <T> ArrayList<T>.indexOfLast(predicate: (T) -> Boolean): Int { var i = size - 1; while (i >= 0) { if (predicate(get(i))) return i; i-- }; return -1 }
+fun <T> ArrayList<T>.addAll(xs: ArrayList<T>): Boolean { for (x in xs) add(x); return xs.size != 0 }
 data class IndexedValue<T>(val index: Int, val value: T)
 fun <T> ArrayList<T>.withIndex(): ArrayList<IndexedValue<T>> { val r = ArrayList<IndexedValue<T>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 fun String.withIndex(): ArrayList<IndexedValue<Char>> { val r = ArrayList<IndexedValue<Char>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
@@ -347,7 +351,7 @@ private val ARRAY_EXT_USE = Regex("""\.(reversedArray|copyOf)\(""")
 const val RANGE_LIST_EXT = """
 fun IntProgression.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
-private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex)\(|-=|\bin\b""")
+private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex|forEachIndexed|indexOfFirst|indexOfLast|addAll)\(|-=|\bin\b""")
 
 /** `indices` / `lastIndex` of lists, arrays and strings as extension properties. */
 const val INDICES = """
