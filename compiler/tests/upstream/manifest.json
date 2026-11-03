@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2954,
-  "UNSUPPORTED": 2537
+  "PASS": 2957,
+  "UNSUPPORTED": 2534
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1471,7 +1471,7 @@
   },
   "box/box/binaryOp/kt23030_properIeee754comparisons.kt": {
    "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "detail": "operator < on Int and Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/binaryOp/kt23030_properIeee754comparisons.kt"
   },
@@ -6073,14 +6073,14 @@
    "upstream": "compiler/testData/codegen/box/closures/kt11634_4.kt"
   },
   "box/box/closures/kt19389.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Long, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt19389.kt"
   },
   "box/box/closures/kt19389_set.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected Long, found String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt19389_set.kt"
   },
@@ -8549,20 +8549,20 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSmartCastToArray.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionAll.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "other: cannot iterate over C",
+   "detail": "cannot iterate over C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionAll.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionHasNext.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "other: cannot iterate over C",
+   "detail": "cannot iterate over C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionHasNext.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionNext.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "other: cannot iterate over C",
+   "detail": "cannot iterate over C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionNext.kt"
   },
@@ -11907,9 +11907,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/kt49715.kt"
   },
   "box/box/dataClasses/kt49715_behaviorChange.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/kt49715_behaviorChange.kt"
   },
   "box/box/dataClasses/mixedParams.kt": {
@@ -13126,8 +13125,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/protectedVarWithPrivateSet.kt"
   },
   "box/box/delegatedProperty/provideDelegate/commonCaseForInference.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "generics",
+   "detail": "generic member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/commonCaseForInference.kt"
   },
@@ -13183,8 +13182,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/inClass.kt"
   },
   "box/box/delegatedProperty/provideDelegate/inferenceFromReceiver2.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "generics",
+   "detail": "generic member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/inferenceFromReceiver2.kt"
   },
@@ -13231,8 +13230,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/localDifferentReceivers.kt"
   },
   "box/box/delegatedProperty/provideDelegate/memberExtension.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "property accessors / delegation",
+   "detail": "extension properties need a getter (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/memberExtension.kt"
   },
@@ -15334,9 +15333,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1953.kt"
   },
   "box/box/extensionFunctions/kt1953_class.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1953_class.kt"
   },
   "box/box/extensionFunctions/kt23675.kt": {
@@ -15352,8 +15350,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3285.kt"
   },
   "box/box/extensionFunctions/kt3298.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "other: unsupported call",
+   "detail": "unsupported call",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3298.kt"
   },
@@ -15392,14 +15390,14 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt606.kt"
   },
   "box/box/extensionFunctions/kt865.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "unknown this@unaryPlus (stdlib API / unsupported decl)",
+   "detail": "unknown name 'this@unaryPlus'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt865.kt"
   },
   "box/box/extensionFunctions/memberExtensionEqualsHashCodeToStringInInterface.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "strings / templates",
+   "detail": "unknown method CPointer.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/memberExtensionEqualsHashCodeToStringInInterface.kt"
   },
@@ -15447,9 +15445,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/thisMethodInObjectLiteral.kt"
   },
   "box/box/extensionFunctions/virtual.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/virtual.kt"
   },
   "box/box/extensionProperties/accessorForPrivateSetter.kt": {
@@ -16951,8 +16948,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/castFunctionToExtension.kt"
   },
   "box/box/functions/invoke/extensionInvokeOnExpr.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "lambdas / function types / references",
+   "detail": "unexpected operator (at '->')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/extensionInvokeOnExpr.kt"
   },
@@ -17634,8 +17631,8 @@
    "upstream": "compiler/testData/codegen/box/increment/kt36956.kt"
   },
   "box/box/increment/memberExtOnLong.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "other: cannot index Long",
+   "detail": "cannot index Long",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/memberExtOnLong.kt"
   },
@@ -19767,8 +19764,8 @@
    "upstream": "compiler/testData/codegen/box/inline/noInlineLambda.kt"
   },
   "box/box/inline/operators.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "other: unsupported call",
+   "detail": "unsupported call",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/operators.kt"
   },
@@ -28725,8 +28722,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt14201.kt"
   },
   "box/box/operatorConventions/kt14201_2.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "unknown x (stdlib API / unsupported decl)",
+   "detail": "unknown function 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt14201_2.kt"
   },
@@ -31128,8 +31125,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInCustomCharSequence.kt"
   },
   "box/box/ranges/forInCustomIterable.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "interfaces",
+   "detail": "unknown interface Iterable$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ranges/forInCustomIterable.kt"
   },
@@ -38343,8 +38340,8 @@
    "upstream": "compiler/testData/codegen/box/unit/kt4265.kt"
   },
   "box/box/unit/kt51036.kt": {
-   "category": "operator/infix functions",
-   "detail": "operator member extension functions are not supported (at '",
+   "category": "unknown kotlin (stdlib API / unsupported decl)",
+   "detail": "unknown name 'kotlin'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/kt51036.kt"
   },
