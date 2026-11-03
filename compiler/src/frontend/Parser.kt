@@ -978,9 +978,7 @@ class Parser(toks: List<Tok>) {
                 if (!isId("fun")) fail("only member functions are supported in class/interface bodies")
                 val f = function()
                 if (f.recv != null) {
-                    if (f.name in setOf("unaryPlus", "unaryMinus", "not", "inc", "dec", "plus", "minus", "times", "div", "rem", "get", "set", "invoke",
-                            "contains", "compareTo", "rangeTo", "rangeUntil", "iterator", "next", "hasNext", "equals", "getValue", "setValue", "provideDelegate")
-                        || f.name.endsWith("Assign")) fail("operator member extension functions are not supported")
+                    // Operator member extensions are lowered like other member extensions; operator syntax resolves them in the backend.
                     // `componentN` member extensions are called by destructuring as `d.componentN()` (an ordinary call).
                     ms.add(memberExt(f, memberTps))
                     continue
