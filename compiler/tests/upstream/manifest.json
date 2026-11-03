@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2957,
-  "UNSUPPORTED": 2534
+  "PASS": 2958,
+  "UNSUPPORTED": 2533
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2943,7 +2943,7 @@
   },
   "box/box/callableReference/adaptedReferences/localFunctionWithDefault.kt": {
    "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
+   "detail": "local functions that capture local variables cannot be generic, operator extensions or have vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/localFunctionWithDefault.kt"
   },
@@ -3332,14 +3332,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/kt44636_localExtension.kt"
   },
   "box/box/callableReference/bound/multiCase.kt": {
-   "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
+   "category": "other: unknown method $PRef$$Fn$Int.set()",
+   "detail": "unknown method $PRef$$Fn$Int.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiCase.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassAdaptedBoundReferences.kt": {
-   "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected $Fn$Int, found $Fn$Int$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassAdaptedBoundReferences.kt"
   },
@@ -3936,8 +3936,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/extensionToPrimitive.kt"
   },
   "box/box/callableReference/function/local/extensionWithClosure.kt": {
-   "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
+   "category": "other: unknown member A::ext",
+   "detail": "unknown member A::ext",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/extensionWithClosure.kt"
   },
@@ -4178,8 +4178,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt46902.kt"
   },
   "box/box/callableReference/kt47988.kt": {
-   "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
+   "category": "other: unknown member A::localX",
+   "detail": "unknown member A::localX",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt47988.kt"
   },
@@ -6133,9 +6133,8 @@
    "upstream": "compiler/testData/codegen/box/closures/kt47894_inlineFunWithObjectWithNothing.kt"
   },
   "box/box/closures/kt5589.kt": {
-   "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/kt5589.kt"
   },
   "box/box/closures/localClassFunClosure.kt": {
@@ -17148,8 +17147,8 @@
    "upstream": "compiler/testData/codegen/box/functions/kt873.kt"
   },
   "box/box/functions/localFunction.kt": {
-   "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
+   "category": "unknown deep (stdlib API / unsupported decl)",
+   "detail": "unknown function 'deep'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunction.kt"
   },
@@ -17165,7 +17164,7 @@
   },
   "box/box/functions/localFunctions/callBetweenLocalFunctions.kt": {
    "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
+   "detail": "local functions that capture local variables cannot be generic, operator extensions or have vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/callBetweenLocalFunctions.kt"
   },
@@ -24758,8 +24757,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/kt3132.kt"
   },
   "box/box/innerNested/kt3927.kt": {
-   "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
+   "category": "other syntax (at '<eof>')",
+   "detail": "inner class Inner needs an outer instance (at '<eof>')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/kt3927.kt"
   },
@@ -25162,7 +25161,7 @@
   },
   "box/box/ir/closureConversion/closureConversion2.kt": {
    "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, extensions or have default/vararg parameters",
+   "detail": "local functions that capture local variables cannot be generic, operator extensions or have vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/closureConversion2.kt"
   },
