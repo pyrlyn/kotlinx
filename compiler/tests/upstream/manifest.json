@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3070,
-  "UNSUPPORTED": 2421
+  "PASS": 3073,
+  "UNSUPPORTED": 2418
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -6169,9 +6169,8 @@
    "upstream": "compiler/testData/codegen/box/closures/underscoreParameters.kt"
   },
   "box/box/collectionLiterals/array.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.contentEquals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/array.kt"
   },
   "box/box/collectionLiterals/arrayOperatorOf.kt": {
@@ -6209,9 +6208,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/nonGenericCollection.kt"
   },
   "box/box/collectionLiterals/primitiveArrays.kt": {
-   "category": "other: unknown method IntArray.contentEquals()",
-   "detail": "unknown method IntArray.contentEquals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/primitiveArrays.kt"
   },
   "box/box/collectionLiterals/primitiveArraysOperatorOf.kt": {
@@ -6243,9 +6241,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/stdlibSequence.kt"
   },
   "box/box/collectionLiterals/unsignedArrays.kt": {
-   "category": "other: unknown method UIntArray.contentEquals()",
-   "detail": "unknown method UIntArray.contentEquals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/unsignedArrays.kt"
   },
   "box/box/collectionLiterals/unsignedArraysOperatorOf.kt": {
