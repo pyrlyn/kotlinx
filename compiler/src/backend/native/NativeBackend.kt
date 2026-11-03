@@ -1074,8 +1074,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if ((s.op == "+=" || s.op == "-=") && s.target is NameE) {
                     val l = lookup(s.target.n)
                     if (l != null && l.t is Ty.ListTy) {
-                        val savedFuncs = funcs.length; val savedBody = body.length; val savedAllocas = allocas.length; val savedCur = cur; val savedTerm = term
-                        val vt = try { genExpr(s.value).t } catch (e: CompileError) { null } finally { funcs.setLength(savedFuncs); body.setLength(savedBody); allocas.setLength(savedAllocas); cur = savedCur; term = savedTerm }
+                        val vt = probeType(s.value)
                         val am = if (s.op == "+=") "add" else "remove"
                         if (vt is Ty.ListTy) {
                             val x = "\$pa${tmpN++}"
@@ -2204,14 +2203,33 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         else -> false
     }
 
-    /** Type of [e] without emitting code (generation is rolled back), or null if it does not compile. */
-    private fun probeType(e: E): Ty? {
-        val sf = funcs.length; val sb = body.length; val sa = allocas.length; val sc = cur; val st = term; val sm = HashSet(moveNodes); val sr = HashSet(refVals)
-        return try { genExpr(e).t } catch (x: CompileError) { null } finally {
+    /**
+     * Code-generation state saved before a probe (code generated only to learn a type) and restored after it: the IR
+     * builders, the current block, move/reference bookkeeping, and the generic function instances requested meanwhile
+     * (so a probe never leaves instances behind; real generation requests them again). Step 3a of
+     * docs/constraint-solver-plan.md: lambda bodies with stub types (3b) are probed through this.
+     */
+    private inner class Snapshot {
+        private val sf = funcs.length; private val sb = body.length; private val sa = allocas.length
+        private val sc = cur; private val st = term
+        private val sm = HashSet(moveNodes); private val sr = HashSet(refVals)
+        private val si = HashSet(instances.keys); private val sp = pending.size; private val sic = HashSet(instCls.keys)
+        fun restore() {
             funcs.setLength(sf); body.setLength(sb); allocas.setLength(sa); cur = sc; term = st
             moveNodes.clear(); moveNodes.addAll(sm); refVals.clear(); refVals.addAll(sr)
+            instances.keys.retainAll(si); instCls.keys.retainAll(sic)
+            if (pending.size > sp) pending.subList(sp, pending.size).removeAll { it !in si }
         }
     }
+
+    /** Runs [block] as a probe: everything it generates is rolled back ([Snapshot]); a compile error yields null. */
+    private inline fun <T> probe(block: () -> T): T? {
+        val snap = Snapshot()
+        return try { block() } catch (x: CompileError) { null } finally { snap.restore() }
+    }
+
+    /** Type of [e] without emitting code (generation is rolled back), or null if it does not compile. */
+    private fun probeType(e: E): Ty? = probe { genExpr(e).t }
 
     private val secondaryCache = HashMap<CallE, String>()
 
@@ -2759,8 +2777,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      */
     private fun probeGenericRet(f: FunD, sym: String, ps: List<Ty>, cls: ClassInfo?): Ty {
         if (!probingGeneric.add(sym)) fail("recursive generic function '${f.name}' needs an explicit return type")
-        val sb = body.length; val sa = allocas.length; val sc = cur; val st = term; val sm = HashSet(moveNodes)
-        val sf = funcs.length; val so = owner; val sr = retTy; val sl = line
+        val snap = Snapshot(); val so = owner; val sr = retTy; val sl = line
         val savedScopes = ArrayList(scopes); val sts = ArrayList(tryStack); val sfs = ArrayList(finStack)
         try {
             owner = cls; retTy = Ty.Unit; line = f.line
@@ -2772,8 +2789,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         } finally {
             probingGeneric.remove(sym)
             scopes.clear(); scopes.addAll(savedScopes); tryStack.clear(); tryStack.addAll(sts); finStack.clear(); finStack.addAll(sfs)
-            body.setLength(sb); allocas.setLength(sa); cur = sc; term = st; moveNodes.clear(); moveNodes.addAll(sm)
-            funcs.setLength(sf); owner = so; retTy = sr; line = sl
+            snap.restore(); owner = so; retTy = sr; line = sl
         }
     }
 
