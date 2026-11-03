@@ -70,6 +70,8 @@ class Block(val stmts: List<S>, val params: List<String> = emptyList(), val para
 /** `Owner.name` of every `const val` member (declared in a class or object body), for `isPermanent()`. */
 object ConstFields { val names = HashSet<String>() }
 
+/** Names of top-level `external fun` declarations: implemented in C, linked via `--link`, called through the C ABI. */
+object Externs { val names = HashSet<String>() }
 /** Numbers lambda blocks once, so each gets a stable id. */
 object LamIds {
     private var next = 0

@@ -13,6 +13,19 @@ for t in compiler/tests/*.kt; do
   if ! "$NKC" "$t" -o "$out/$n" 2>"$out/$n.err"; then echo "FAIL $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
   check "$n" "$("$out/$n" 2>&1)" "$(cat compiler/tests/$n.out)"
 done
+# FFI: `external fun` + --link (tests/ffi/: C sources are linked, so they are not in the tests/*.kt loop).
+for t in compiler/tests/ffi/ffi*.kt; do
+  n=ffi_$(basename "$t" .kt)
+  if ! "$NKC" "$t" --link "${t%.kt}.c" -o "$out/$n" 2>"$out/$n.err"; then echo "FAIL $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
+  check "$n" "$("$out/$n" 2>&1)" "$(cat "${t%.kt}.out")"
+done
+# kxbindgen: bindings generated from a C header, prepended to the program (one input file per compile).
+if python3 compiler/tools/kxbindgen.py compiler/tests/ffi/gen_demo.h -o "$out/gen_demo.bind.kt" >/dev/null; then
+  cat "$out/gen_demo.bind.kt" compiler/tests/ffi/gen_demo.main.kt > "$out/gen_demo.kt"
+  if "$NKC" "$out/gen_demo.kt" --link compiler/tests/ffi/gen_demo.c -o "$out/gen_demo" 2>"$out/gen_demo.err"; then
+    check kxbindgen "$("$out/gen_demo" 2>&1)" "$(cat compiler/tests/ffi/gen_demo.out)"
+  else echo "FAIL kxbindgen: compile: $(cat "$out/gen_demo.err")"; fail=1; fi
+else echo "FAIL kxbindgen: generator failed"; fail=1; fi
 while read -r case src key expected; do
   "$NKC" "$src" -o "$out/bench_$case" || { echo "FAIL bench $case: compile"; fail=1; continue; }
   got=$(BENCH_DATA=bench/data/words.txt "$out/bench_$case" | grep -oE "$key=[-0-9]+" | cut -d= -f2)
