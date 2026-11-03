@@ -171,7 +171,8 @@ static Slab **slab_dir[SLAB_DIR_TOP];
 static Slab *slab_cur[CLASSES + 1], *slab_partial[CLASSES + 1], *slab_pool;
 static PtrStack slab_pending;
 static int slab_release = -1;
-#define SLAB_RESIDENT_KEEP 16   /* empty slabs kept resident in the pool (no madvise / refault churn) */
+#define SLAB_RESIDENT_KEEP 16   /* empty slabs kept resident in the pool (no madvise / refault churn); KX_GC_SLAB_KEEP */
+static int64_t slab_keep = -1;
 static int64_t slab_pool_resident, dbg_slab_released, dbg_slab_reused, dbg_slab_madv_calls;
 static inline Slab *slab_of(void *p) {
     uintptr_t pg = (uintptr_t)p >> PAGE_SHIFT;
@@ -239,12 +240,13 @@ static int slab_cmp(const void *a, const void *b) { uintptr_t x = (uintptr_t)(*(
 /* Epoch boundary: empty slabs into the pool; beyond SLAB_RESIDENT_KEEP resident ones, back to the OS. */
 static void slab_flush(void) {
     if (!slab_pending.len) return;
+    if (slab_keep < 0) { const char *e = getenv("KX_GC_SLAB_KEEP"); slab_keep = e && *e ? atoll(e) : SLAB_RESIDENT_KEEP; if (slab_keep < 0) slab_keep = 0; }
     size_t n = 0;
     for (size_t i = 0; i < slab_pending.len; i++) {
         Slab *s = slab_pending.items[i];
         if (s->live || s == slab_cur[s->cls]) continue;   /* reused (became current, or a cell was taken) since */
         s->next = slab_pool; slab_pool = s;
-        if (slab_pool_resident < SLAB_RESIDENT_KEEP) { slab_pool_resident++; continue; }
+        if (slab_pool_resident < slab_keep) { slab_pool_resident++; continue; }
         s->resident = 0; slab_pending.items[n++] = s;
     }
     if (n > 1) qsort(slab_pending.items, n, sizeof(void *), slab_cmp);
@@ -359,16 +361,27 @@ static size_t max_queued;
  * when detections mostly retrace live data and the per-log overhead would dominate. KX_GC_LOG_CAP fixes it. */
 #define LOG_MIN 2048
 #define LOG_PER_ROOT 4
-static _Atomic size_t log_cap = LOG_MIN;   /* written by the collector, read (relaxed) by the mutator */
+static _Atomic size_t log_cap = 512;   /* LOG_FLOOR_DEFAULT; written by the collector, read (relaxed) by the mutator */
 static int log_cap_fixed;
 static _Atomic size_t log_boost = 1;   /* hand-off back-pressure multiplier on the log size, see handoff() */
 /* Minor detection threshold (buffered roots), adaptive between c_min_threshold (KX_GC_MIN_THRESHOLD)
  * and C_MAX_THRESHOLD; was a fixed 10000 minimum, i.e. at least ~1 large log of cyclic garbage per detection. */
 static size_t c_threshold = LOG_MIN / LOG_PER_ROOT, c_min_threshold = LOG_MIN / LOG_PER_ROOT;
+/* While detections run at the minimum threshold (pure garbage, every detection pays off) and the hand-off sees
+ * no back-pressure, logs are cut at log_floor entries: less garbage waits in flight (cyclic_garbage peak RSS
+ * 5.2 -> 3.7 MiB under load). As soon as the threshold grows or back-pressure boosts the log size, the
+ * normal LOG_MIN.. sizing applies, so live-heap workloads keep long logs. KX_GC_LOG_FLOOR overrides it. */
+#define LOG_FLOOR_DEFAULT 512
+static size_t log_floor = LOG_FLOOR_DEFAULT;
+static int c_pure = 0;   /* the last minor detection traced (almost) only garbage: work <= KX_GC_PURE_RATIO (default 1) x found; keeps live-heap churn (LRU) on normal logs */
+static int64_t pure_ratio = 1;
+#define PURE_STABLE_MAX 65536   /* and the old generation is small (no live heap to keep pace with, unlike LRU churn) */
 static void log_cap_follow(void) {
     if (log_cap_fixed) return;
-    size_t c = c_threshold * LOG_PER_ROOT, b = LOG_MIN * atomic_load_explicit(&log_boost, memory_order_relaxed);
+    size_t boost = atomic_load_explicit(&log_boost, memory_order_relaxed);
+    size_t c = c_threshold * LOG_PER_ROOT, b = LOG_MIN * boost;
     if (c < b) c = b; if (c > LOG_CAP) c = LOG_CAP;
+    if (c_pure && c_threshold <= c_min_threshold && boost == 1 && log_floor < c) c = log_floor;
     atomic_store_explicit(&log_cap, c, memory_order_relaxed);
 }
 #define Q_ADAPT_START 4
@@ -505,7 +518,9 @@ __attribute__((noinline)) static void boundary(void) {
 static inline void log_op(uintptr_t e) {
     if (__builtin_expect(cur == NULL, 0)) {
         /* first log: before the collector thread exists, so no race on the tunables */
-        const char *e = getenv("KX_GC_MIN_THRESHOLD"); if (e && atoll(e) > 0) c_threshold = c_min_threshold = (size_t)atoll(e);
+        const char *e = getenv("KX_GC_LOG_FLOOR"); if (e && atoll(e) > 0) log_floor = (size_t)atoll(e);
+        e = getenv("KX_GC_PURE_RATIO"); if (e && atoll(e) > 0) pure_ratio = atoll(e);
+        e = getenv("KX_GC_MIN_THRESHOLD"); if (e && atoll(e) > 0) c_threshold = c_min_threshold = (size_t)atoll(e);
         e = getenv("KX_GC_LOG_CAP");
         if (e && atoll(e) > 0) { size_t c = (size_t)atoll(e); log_cap = c > LOG_CAP ? LOG_CAP : c; log_cap_fixed = 1; } else log_cap_follow();
         pthread_mutex_lock(&mu); cur = log_new(); pthread_mutex_unlock(&mu); }
@@ -1358,6 +1373,7 @@ static void *collector_main(void *arg) {
                     else major_ratio = MAJOR_RATIO;
                 } else if (dbg_mn_roots += (int64_t)nroots, dbg_mn_found += found, dbg_mn_work += work, work > 4 * found + 2 * (int64_t)nroots) { if (c_threshold < C_MAX_THRESHOLD) c_threshold *= 2; }
                 else if (c_threshold > c_min_threshold) { c_threshold /= 2; if (c_threshold < c_min_threshold) c_threshold = c_min_threshold; }
+                if (!major) c_pure = found > 0 && work <= pure_ratio * found && c_stable_n < PURE_STABLE_MAX;
                 log_cap_follow();
             }
             gc_st.reclaimed += (int64_t)freed;
