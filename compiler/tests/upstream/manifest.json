@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2946,
-  "UNSUPPORTED": 2545
+  "PASS": 2950,
+  "UNSUPPORTED": 2541
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -3303,8 +3303,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/genericValOnLHS.kt"
   },
   "box/box/callableReference/bound/inlineFunctionRefToAnonymousObject.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression body with an anonymous object needs an explicit return type (at '",
+   "category": "unknown inlineFun (stdlib API / unsupported decl)",
+   "detail": "unknown function 'inlineFun'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/inlineFunctionRefToAnonymousObject.kt"
   },
@@ -4668,9 +4668,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt54802.kt"
   },
   "box/box/casts/kt58707.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression body with an anonymous object needs an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/casts/kt58707.kt"
   },
   "box/box/casts/kt59022.kt": {
@@ -5766,8 +5765,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInNestedLambda.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInNestedObject.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression body with an anonymous object needs an explicit return type (at '",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown name 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInNestedObject.kt"
   },
@@ -21368,14 +21367,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInLambdaGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInObject.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression body with an anonymous object needs an explicit return type (at '",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown function 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInObject.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInObjectGeneric.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression body with an anonymous object needs an explicit return type (at '",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown function 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/captureInlineClassInstanceInObjectGeneric.kt"
   },
@@ -21434,15 +21433,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/lambdaInInlineClassFunGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/objectInInlineClassFun.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression body with an anonymous object needs an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/objectInInlineClassFun.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/objectInInlineClassFunGeneric.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression body with an anonymous object needs an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/contextsAndAccessors/objectInInlineClassFunGeneric.kt"
   },
   "box/box/inlineClasses/contextsAndAccessors/toPrivateCompanionFun.kt": {
@@ -23624,9 +23621,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/classResultOverride.kt"
   },
   "box/box/inlineClasses/returnResult/interface.kt": {
-   "category": "type inference (expression bodies)",
-   "detail": "expression body with an anonymous object needs an explicit return type (at '",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/returnResult/interface.kt"
   },
   "box/box/inlineClasses/returnResult/topLevel.kt": {
