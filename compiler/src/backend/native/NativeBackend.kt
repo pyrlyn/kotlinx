@@ -3339,6 +3339,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun genRef0(node: UnE, recv: E?, n: String): Val {
         // The synthesized lambda is cached per reference node so repeated (dry-run) generation reuses one closure class.
+        var builtinGet = false
         fun lam(params: List<TypeRef>, body: (List<E>) -> E): Val {
             if (params.size > 22) fail("references with more than 22 parameters are not supported")
             val le = RefLambdas.map.getOrPut(node) {
@@ -3349,9 +3350,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return genExpr(le)
         }
         fun callOn(r: E, name: String, args: List<E>, isProp: Boolean): E =
-            if (isProp) MemberE(r, name, false).also { it.line = line }
+            if (name == "get" && args.size == 1 && builtinGet) IndexE(r, args[0]).also { it.line = line }
+            else if (isProp) MemberE(r, name, false).also { it.line = line }
             else CallE(MemberE(r, name, false).also { it.line = line }, emptyList(), args, null).also { it.line = line }
-        fun memberParams(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? = when (t) {
+        fun memberParams0(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? = when (t) {
             is Ty.Cls -> classes.getValue(t.name).let { ci ->
                 ci.methods[name]?.let { m -> if (m.typeParams.isNotEmpty()) fail("reference to generic method $name is not supported"); m.params.map { it.type } to false }
                     ?: if (ci.index(name) >= 0 || "\$prop\$$name" in ci.methods) emptyList<TypeRef>() to true else null
@@ -3360,6 +3362,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 ?: ifaceDecls[t.name]?.methods?.firstOrNull { it.name == "\$prop\$$name" }?.let { emptyList<TypeRef>() to true }
             else -> null
         }
+        fun memberParams(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? = memberParams0(t, name)
+            ?: extFuns[name]?.filter { it.params.isNotEmpty() && extMatches(t, it.params[0].type, it.typeParams) }?.takeIf { it.isNotEmpty() }?.let { fs ->
+                val f = fs.singleOrNull()?.takeIf { it.typeParams.isEmpty() } ?: fail("reference to overloaded or generic extension $name is not supported")
+                f.params.drop(1).map { it.type } to false }
+            ?: extFuns["\$prop\$$name"]?.firstOrNull { it.typeParams.isEmpty() && it.params.size == 1 && extMatches(t, it.params[0].type, emptyList()) }?.let { emptyList<TypeRef>() to true }
+            ?: builtinMember(t, name)?.also { if (name == "get") builtinGet = true }
         if (recv == null) {
             funDecls[n]?.let { f ->
                 if (f.typeParams.isNotEmpty()) fail("reference to generic function $n is not supported")
@@ -3376,7 +3384,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             fail("unsupported callable reference ::$n")
         }
         // Unbound reference through a type name.
-        val typeName = (recv as? NameE)?.n?.takeIf { lookup(it) == null && "\$get\$$it" !in sigs && (it in classes || it in ifaces) && !(it == "this") }
+        val typeName = (recv as? NameE)?.n?.takeIf { lookup(it) == null && "\$get\$$it" !in sigs && (it in classes || it in ifaces || it in BUILTIN_REF_TYPES) && !(it == "this") }
         if (typeName != null) {
             val t = resolve(TypeRef(typeName, emptyList(), false))
             val (ps, isProp) = memberParams(t, n) ?: fail("unknown member $typeName::$n")
@@ -3391,6 +3399,32 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val res = consume(lam(ps) { xs -> callOn(NameE("\$refRecv").also { it.line = line }, n, xs, isProp) })
         releaseScope(scopes.last()); scopes.removeAt(scopes.size - 1)
         return res
+    }
+
+    private val BUILTIN_REF_TYPES = setOf("String", "Int", "Long", "Double", "Boolean", "Char", "StringBuilder")
+
+    /** Members of built-in types usable in callable references (`String::length`, `"s"::get`, `Int::toString`): parameters and whether it is a property. */
+    private fun builtinMember(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? {
+        val self = { tyRef(t) }
+        val int = { tyRef(Ty.I32) }
+        val str = { tyRef(Ty.Str) }
+        return when (t) {
+            Ty.Str -> when (name) {
+                "length" -> emptyList<TypeRef>() to true
+                "get" -> listOf(int()) to false
+                "toString" -> emptyList<TypeRef>() to false
+                "plus", "compareTo" -> listOf(str()) to false
+                else -> null
+            }
+            Ty.SB -> when (name) { "length" -> emptyList<TypeRef>() to true; "toString" -> emptyList<TypeRef>() to false; "get" -> listOf(int()) to false; else -> null }
+            Ty.I32, Ty.I64, Ty.F64, Ty.Char, Ty.I1 -> when (name) {
+                "toString", "inc", "dec" -> emptyList<TypeRef>() to false
+                "plus", "minus", "times", "div", "rem", "compareTo", "and", "or" -> listOf(self()) to false
+                else -> null
+            }
+            is Ty.ListTy, is Ty.Arr -> when (name) { "size" -> emptyList<TypeRef>() to true; "get" -> listOf(int()) to false; else -> null }
+            else -> null
+        }
     }
 
     private fun genLambda(e: LambdaE, ps: List<Ty>?, ret: Ty?, receiver: Boolean = false, asRecvFn: Boolean = false): Val {
