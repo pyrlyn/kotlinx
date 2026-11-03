@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2958,
-  "UNSUPPORTED": 2533
+  "PASS": 2959,
+  "UNSUPPORTED": 2532
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2943,7 +2943,7 @@
   },
   "box/box/callableReference/adaptedReferences/localFunctionWithDefault.kt": {
    "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, operator extensions or have vararg parameters",
+   "detail": "references to recursive, generic or vararg capturing local functions are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/localFunctionWithDefault.kt"
   },
@@ -3964,8 +3964,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/localLocal.kt"
   },
   "box/box/callableReference/function/local/recursiveClosure.kt": {
-   "category": "local / extension functions",
-   "detail": "recursive local functions that capture local variables are not supported",
+   "category": "generics",
+   "detail": "references to recursive, generic or vararg capturing local functions are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/recursiveClosure.kt"
   },
@@ -6122,8 +6122,8 @@
    "upstream": "compiler/testData/codegen/box/closures/kt4137.kt"
   },
   "box/box/closures/kt47840.kt": {
-   "category": "local / extension functions",
-   "detail": "recursive local functions that capture local variables are not supported",
+   "category": "other: foo expects 2 arguments",
+   "detail": "foo expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt47840.kt"
   },
@@ -6189,9 +6189,8 @@
    "upstream": "compiler/testData/codegen/box/closures/localReturnWithAutolabel.kt"
   },
   "box/box/closures/recursiveClosure.kt": {
-   "category": "local / extension functions",
-   "detail": "recursive local functions that capture local variables are not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/recursiveClosure.kt"
   },
   "box/box/closures/simplestClosure.kt": {
@@ -17163,8 +17162,8 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/boundTypeParameterInVararg.kt"
   },
   "box/box/functions/localFunctions/callBetweenLocalFunctions.kt": {
-   "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, operator extensions or have vararg parameters",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('a')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/callBetweenLocalFunctions.kt"
   },
@@ -25160,8 +25159,8 @@
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/closureConversion1.kt"
   },
   "box/box/ir/closureConversion/closureConversion2.kt": {
-   "category": "generics",
-   "detail": "local functions that capture local variables cannot be generic, operator extensions or have vararg parameters",
+   "category": "other: unknown type X",
+   "detail": "unknown type X",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/ir/closureConversion/closureConversion2.kt"
   },
