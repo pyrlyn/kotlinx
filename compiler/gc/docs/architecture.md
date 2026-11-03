@@ -195,8 +195,14 @@ Parallel phases are used for major detections of at least 2048 roots; small and 
 the collector thread alone (measured: more threads only add synchronization there).
 
 Generations: an object that Scan finds externally referenced (black) is promoted to the old generation
-(header bit 39, `stable`). A decrement demotes it; an increment or write barrier only marks it dirty, since
-neither can make it garbage. A minor detection treats
+(header bit 39, `stable`). An increment or write barrier only marks it dirty, since neither can make it
+garbage. A decrement that leaves it alive also keeps it in the old generation (`KX_GC_DEFER_LIVE`, default
+on): it is marked dirty and goes straight to the deferred list below instead of becoming a minor root. A
+detection already proved it externally referenced, and on live-data churn (lru: every pointer swap
+decrements live neighbours) re-tracing it in minors found nothing and cost most of the collector time.
+Deferred live roots that die before the next major are zombies; once at least 4096 zombies exist and they
+make up half of the deferred list, the collector sweeps the list and returns their memory without waiting
+for the major. With `KX_GC_DEFER_LIVE=0` a decrement demotes the object, as before. A minor detection treats
 stable objects as opaque live objects, so it never re-traces the live graph: its cost is proportional to
 the objects touched since the last scan. Garbage cycles that run through stable objects are still found:
 a root whose minor detection stopped at a stable object and did not turn white stays buffered in a
