@@ -197,8 +197,6 @@ class Parser(toks: List<Tok>) {
 
     private fun dataClass(c: ClassD): ClassD {
         val props = c.ctorParams.filter { p -> c.fields.any { it.name == p.name } }
-        // `Array<T>` is a list here: its `==` would compare contents, not identity as in Kotlin.
-        if (props.any { it.type.name == "Array" }) fail("data classes with Array properties are not supported")
         val have = c.methods.map { it.name }.toSet()
         val ms = ArrayList(c.methods)
         val l = c.line
@@ -224,7 +222,8 @@ class Parser(toks: List<Tok>) {
         props.forEachIndexed { i, p ->
             // Double properties compare like Double.equals (bits: NaN == NaN, 0.0 != -0.0).
             fun bits(e: E): E = if (p.type.name == "Double" || p.type.name == "Float") CallE(MemberE(e, "\$bits", false).also { it.line = l }, emptyList(), emptyList(), null).also { it.line = l } else e
-            val one = BinE("==", bits(nm(p.name)), bits(MemberE(nm("other"), p.name, false).also { it.line = l })).also { it.line = l }
+            // `Array<T>` is a list here: its `==` would compare contents, so data-class equality uses identity as in Kotlin.
+            val one = BinE(if (p.type.name == "Array") "===" else "==", bits(nm(p.name)), bits(MemberE(nm("other"), p.name, false).also { it.line = l })).also { it.line = l }
             eq = if (i == 0) one else BinE("&&", eq, one).also { it.line = l }
         }
         ms.add(FunD("\$equals", listOf(Param("other", self)), TypeRef("Boolean", emptyList(), false), null, eq, l))
