@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2921,
-  "UNSUPPORTED": 2570
+  "PASS": 2932,
+  "UNSUPPORTED": 2559
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2920,8 +2920,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/inlineVarargInts.kt"
   },
   "box/box/callableReference/adaptedReferences/innerConstructorToExtensionFun.kt": {
-   "category": "other: unknown member Foo::Bar",
-   "detail": "unknown member Foo::Bar",
+   "category": "lambdas / function types / references",
+   "detail": "lambda expects 0 parameters, has 1",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorToExtensionFun.kt"
   },
@@ -3688,8 +3688,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/coercionToUnit.kt"
   },
   "box/box/callableReference/function/constructorFromInnerClass.kt": {
-   "category": "other: unknown member Foo::Bar",
-   "detail": "unknown member Foo::Bar",
+   "category": "lambdas / function types / references",
+   "detail": "lambda expects 0 parameters, has 1",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromInnerClass.kt"
   },
@@ -3847,33 +3847,28 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/genericWithDependentType.kt"
   },
   "box/box/callableReference/function/innerClassConstructorWithTwoReceivers.kt": {
-   "category": "other: unsupported callable reference B::InnerInA",
-   "detail": "unsupported callable reference B::InnerInA",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/innerClassConstructorWithTwoReceivers.kt"
   },
   "box/box/callableReference/function/innerConstructorFromClass.kt": {
-   "category": "other: unknown member A::Inner",
-   "detail": "unknown member A::Inner",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/innerConstructorFromClass.kt"
   },
   "box/box/callableReference/function/innerConstructorFromExtension.kt": {
-   "category": "other: unknown member A::Inner",
-   "detail": "unknown member A::Inner",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/innerConstructorFromExtension.kt"
   },
   "box/box/callableReference/function/innerConstructorFromTopLevelNoArgs.kt": {
-   "category": "other: unknown member A::Inner",
-   "detail": "unknown member A::Inner",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/innerConstructorFromTopLevelNoArgs.kt"
   },
   "box/box/callableReference/function/innerConstructorFromTopLevelOneStringArg.kt": {
-   "category": "other: unknown member A::Inner",
-   "detail": "unknown member A::Inner",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/innerConstructorFromTopLevelOneStringArg.kt"
   },
   "box/box/callableReference/function/kt21787.kt": {
@@ -4006,21 +4001,18 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/withValueArguments.kt"
   },
   "box/box/callableReference/function/nestedConstructorFromClass.kt": {
-   "category": "other: unknown member A::Nested",
-   "detail": "unknown member A::Nested",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedConstructorFromClass.kt"
   },
   "box/box/callableReference/function/nestedConstructorFromTopLevelNoArgs.kt": {
-   "category": "other: unknown member A::Nested",
-   "detail": "unknown member A::Nested",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedConstructorFromTopLevelNoArgs.kt"
   },
   "box/box/callableReference/function/nestedConstructorFromTopLevelOneStringArg.kt": {
-   "category": "other: unknown member A::Nested",
-   "detail": "unknown member A::Nested",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedConstructorFromTopLevelOneStringArg.kt"
   },
   "box/box/callableReference/function/nestedExtensionInSAMInterface.kt": {
@@ -14031,9 +14023,8 @@
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/simpleLambda.kt"
   },
   "box/box/directInvokeOptimization/unboundInnerContructorRef.kt": {
-   "category": "other: unknown member Outer::Inner",
-   "detail": "unknown member Outer::Inner",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/unboundInnerContructorRef.kt"
   },
   "box/box/directInvokeOptimization/unboundMemberRef.kt": {
@@ -20784,15 +20775,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassPrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/constructorWithInlineClassParameters.kt": {
-   "category": "other: unknown member Outer::Inner",
-   "detail": "unknown member Outer::Inner",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/constructorWithInlineClassParameters.kt"
   },
   "box/box/inlineClasses/callableReferences/constructorWithInlineClassParametersGeneric.kt": {
-   "category": "other: unknown member Outer::Inner",
-   "detail": "unknown member Outer::Inner",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/constructorWithInlineClassParametersGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/equalsHashCodeToString.kt": {

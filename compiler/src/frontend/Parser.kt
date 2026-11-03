@@ -1260,6 +1260,19 @@ class Parser(toks: List<Tok>) {
             sub = Subst(qualified, rw = { x ->
                 when {
                     x is MemberE && x.recv is NameE && (x.recv.n in byName || x.recv.n in nestedIn) && nestedIn[x.n] == x.recv.n -> NameE(x.n).also { it.line = x.line }
+                    // `A::Inner` / `a::Inner`: constructor reference of an inner class, as a lambda (the outer instance first when unbound).
+                    x is UnE && x.op.startsWith("::") && x.e is NameE && x.op.drop(2) in innerOf && byName[x.op.drop(2)] != null -> {
+                        val n = x.op.drop(2)
+                        val ps = byName.getValue(n).ctorParams.filter { it.name != "outer\$" }
+                        val unbound = innerOf[n] == x.e.n
+                        val names = (if (unbound) listOf("rp\$o") else emptyList()) + ps.indices.map { "rp\$$it" }
+                        val types = (if (unbound) listOf(TypeRef(x.e.n, emptyList(), false)) else emptyList()) + ps.map { it.type }
+                        val recv: E = if (unbound) NameE("rp\$o") else x.e
+                        val call = CallE(MemberE(recv.also { it.line = x.line }, n, false).also { it.line = x.line }, emptyList(), ps.indices.map { NameE("rp\$$it").also { e -> e.line = x.line } }, null).also { it.line = x.line }
+                        sub.e(LambdaE(Block(listOf(ExprS(call).also { it.line = x.line }), names, types)).also { it.line = x.line })
+                    }
+                    // `A::Nested`: constructor reference of a nested (not inner) class.
+                    x is UnE && x.op.startsWith("::") && x.e is NameE && x.op.drop(2).let { n -> nestedIn[n] == x.e.n && n !in innerOf } -> UnE(x.op, NullL()).also { it.line = x.line }
                     x is NameE && x.n.startsWith("this@") -> {
                         val l = x.n.removePrefix("this@")
                         NameE(if (l == ctx) "this" else if (l == outerName) "outer\$" else fail("unknown label this@$l")).also { it.line = x.line }
