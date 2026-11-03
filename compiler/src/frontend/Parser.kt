@@ -256,6 +256,18 @@ class Parser(toks: List<Tok>) {
      * top-level functions `ext$Recv$name(this: Recv, ...)`, which the backend calls for `recv.name(...)`.
      */
     /** `get() = e` / `get() { ... }` after a property declaration (possibly on the next line): the getter as a function. */
+    /** `set(v) { ... }` / `set(v) = expr` after a computed property's getter: the setter `$set$n(v)`. */
+    private fun setterNoField(n: String, ty: TypeRef): FunD? {
+        val save = p
+        while (t[p].k == K.NL) p++
+        if (!(isId("set") && t[p + 1].k == K.OP && t[p + 1].s == "(")) { p = save; return null }
+        val line = next().line
+        expectOp("("); val pn = ident(); if (isOp(":")) { next(); type() }; expectOp(")")
+        val unit = TypeRef("Unit", emptyList(), false)
+        return if (isOp("=")) { next(); skipNLOnly(); FunD("\$set\$$n", listOf(Param(pn, ty)), unit, Block(listOf(ExprS(expr()))), null, line) }
+        else FunD("\$set\$$n", listOf(Param(pn, ty)), unit, block(), null, line)
+    }
+
     private fun getter(fname: String, ty: TypeRef?, typeParams: List<String>, recv: TypeRef?): FunD? {
         val save = p
         while (t[p].k == K.NL) p++
@@ -1016,7 +1028,12 @@ class Parser(toks: List<Tok>) {
                     val n = ident()
                     val ty = if (isOp(":")) { next(); type() } else null
                     if (isId("by")) { val (df, acc) = delegated(n, ty, isVar, NameE("this"), "\$prop\$$n", "\$set\$$n"); props.add(df); inits.add(df); ms.addAll(acc); continue }
-                    getter("\$prop\$$n", ty, emptyList(), null)?.let { ms.add(it); continue }
+                    // A computed property (no backing field): a getter, and for `var` an optional setter on the next line.
+                    getter("\$prop\$$n", ty, emptyList(), null)?.let { g ->
+                        ms.add(g)
+                        if (isVar) setterNoField(n, ty ?: g.ret ?: fail("a var property with accessors needs a type"))?.let { ms.add(it) }
+                        continue
+                    }
                     // `abstract val x: T` in a class: an abstract getter, like an interface property.
                     if (isAbstract && !isVar && ty != null && !isOp("=")) { ms.add(FunD("\$prop\$$n", emptyList(), ty, null, null, peek().line)); continue }
                     // Without an initializer (`lateinit var x: T`, or assigned in an `init` block) the property starts at
