@@ -1,4 +1,4 @@
-//! pitx CLI: python-free port of the original prototype; same flags.
+//! pitx CLI: parses flags and runs pitx.analyze on one .ll file.
 const std = @import("std");
 const pitx = @import("pitx");
 const mem = std.mem;
