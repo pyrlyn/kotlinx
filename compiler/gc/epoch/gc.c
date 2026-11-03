@@ -540,14 +540,16 @@ __attribute__((noinline)) static void boundary(void) {
 /* First log entry: read the tunables, take the first log. Out of line, so the append below needs no stack
  * frame: log_op and the three entry points are inlined into generated code by LTO (always_inline). As calls
  * (prologue + epilogue per entry, ~35 per lru get) they cost lru 337 -> 260 ms, see bench/gc/ops/README.md. */
-static int64_t defer_flush = 4;   /* KX_GC_DEFER_FLUSH: flush once the batch is 1/N of the old generation */
+static int64_t defer_flush = 8, defer_flush_base = 8;   /* KX_GC_DEFER_FLUSH: flush once the batch is 1/N of the old generation (adaptive, see flush_live_def) */
+static int c_after_flush;
+#define DEFER_FLUSH_MAX 65536   /* batch cap: a 1/8 batch of a 7M old generation (wide_graph_churn) grew the root and deferred stacks by ~100 MiB */
 static int defer_live = 1;   /* KX_GC_DEFER_LIVE, see dec_apply */
 static __attribute__((noinline)) void log_first(void) {
     /* first log: before the collector thread exists, so no race on the tunables */
     const char *e = getenv("KX_GC_LOG_FLOOR"); if (e && atoll(e) > 0) log_floor = (size_t)atoll(e);
     e = getenv("KX_GC_PURE_NOBOOST"); if (e && *e) pure_noboost = atoi(e) != 0;
     e = getenv("KX_GC_DEFER_LIVE"); defer_live = !(e && *e == '0');
-    e = getenv("KX_GC_DEFER_FLUSH"); if (e && atoll(e) > 0) defer_flush = atoll(e);
+    e = getenv("KX_GC_DEFER_FLUSH"); if (e && atoll(e) > 0) defer_flush = defer_flush_base = atoll(e);
     e = getenv("KX_GC_PURE_RATIO"); if (e && atoll(e) > 0) pure_ratio = atoll(e);
     e = getenv("KX_GC_MIN_THRESHOLD"); if (e && atoll(e) > 0) c_threshold = c_min_threshold = (size_t)atoll(e);
     e = getenv("KX_GC_LOG_CAP");
@@ -665,20 +667,22 @@ static void possible_root(void *p) {
  * became the last way into is still found, only later (the exit drain runs a major too). */
 /* Deferred live roots wait for a major, and those that die meanwhile (lru: evicted entries) are zombies whose
  * memory would wait too: once most of the deferred list is zombies, return their memory now. */
-static void sweep_deferred(void) {
+static void sweep_list(PtrStack *st) {
     size_t k = 0;
-    for (size_t i = 0; i < c_live_def.len; i++) {
-        void *s = c_live_def.items[i];
+    for (size_t i = 0; i < st->len; i++) {
+        void *s = st->items[i];
         if (has(s, ZOMBIE_BIT)) { clr_bit(s, ZOMBIE_BIT); clr_bit(s, KX_BUF_BIT); ret_push(s); dbg_swept++; }
-        else c_live_def.items[k++] = s;
+        else st->items[k++] = s;
     }
-    c_live_def.len = k; c_zombies = 0;
+    st->len = k;
 }
+/* both lists that wait for a major: flushed live roots that a minor deferred again end up in c_deferred */
+static void sweep_deferred(void) { sweep_list(&c_live_def); sweep_list(&c_deferred); c_zombies = 0; }
 /* The batch of deferred live roots is large against the old generation: demote them and hand them to the next
  * minor detection (the behaviour without deferral, once per batch instead of once per decrement), so garbage
  * cycles reached through old objects do not wait for a major (cycles: +37% peak RSS when they did). */
 static void flush_live_def(void) {
-    dbg_flushes++;
+    dbg_flushes++; c_after_flush = 1;
     for (size_t i = 0; i < c_live_def.len; i++) {
         void *s = c_live_def.items[i];
         if (has(s, ZOMBIE_BIT)) { clr_bit(s, ZOMBIE_BIT); clr_bit(s, KX_BUF_BIT); ret_push(s); continue; }
@@ -1370,9 +1374,9 @@ static void full_cycle(void) {
     while (im_state && !im_step(INT64_MAX)) {}
     for (;;) {
         size_t freed = validate_ready(0, 1);
-        if (c_roots.len || c_deferred.len) { detect(1); freed += validate_ready(0, 1); }
+        if (c_roots.len || c_deferred.len || c_live_def.len) { detect(1); freed += validate_ready(0, 1); }
         gc_st.reclaimed += (int64_t)freed;
-        if (!freed && !c_roots.len && !c_deferred.len && !cands) break;
+        if (!freed && !c_roots.len && !c_deferred.len && !c_live_def.len && !cands) break;
     }
 }
 /* Geometric major backoff for the incremental major (same rule as in collector_main). */
@@ -1402,8 +1406,8 @@ static void *collector_main(void *arg) {
             pthread_cond_broadcast(&cv_done);
             pthread_mutex_unlock(&mu);
             int64_t ta = rt_nanos(); apply_log(l); dbg_logs++;
-            if ((int64_t)c_live_def.len >= 4096 && (int64_t)c_live_def.len * defer_flush >= c_stable_n) flush_live_def();
-            else if (c_zombies >= 4096 && c_zombies * 2 >= c_live_def.len) sweep_deferred();
+            if ((int64_t)c_live_def.len >= 4096 && ((int64_t)c_live_def.len * defer_flush >= c_stable_n || c_live_def.len >= DEFER_FLUSH_MAX)) flush_live_def();
+            else if (c_zombies >= 4096 && c_zombies * 2 >= c_live_def.len + c_deferred.len) sweep_deferred();
             int64_t tb = rt_nanos(); size_t freed = validate_ready(l->seq, 0); freed += try_early(l->seq);
             int64_t tc = rt_nanos(); dbg_t_apply += tb - ta; dbg_t_valid += tc - tb;
             int64_t major_at = major_ratio * (c_stable_n > (int64_t)c_threshold ? c_stable_n : (int64_t)c_threshold);
@@ -1449,6 +1453,9 @@ static void *collector_main(void *arg) {
                     else major_ratio = major_ratio_base;
                 } else if (dbg_mn_roots += (int64_t)nroots, dbg_mn_found += found, dbg_mn_work += work, work > 4 * found + 2 * (int64_t)nroots) { if (c_threshold < C_MAX_THRESHOLD) c_threshold *= 2; }
                 else if (c_threshold > c_min_threshold) { c_threshold /= 2; if (c_threshold < c_min_threshold) c_threshold = c_min_threshold; }
+                /* a flush whose minor found (almost) only live data makes the next flush rarer (geometric
+                 * backoff, lru); one that found garbage resets the ratio (cycles) */
+                if (!major && c_after_flush) { c_after_flush = 0; if (work > 64 * found) { if (defer_flush < 4096) defer_flush *= 2; } else defer_flush = defer_flush_base; }
                 if (!major) c_pure = found > 0 && work <= pure_ratio * found && c_stable_n < PURE_STABLE_MAX;
                 log_cap_follow();
             }
