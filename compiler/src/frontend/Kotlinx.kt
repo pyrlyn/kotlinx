@@ -44,6 +44,11 @@ object KxSched {
             else throw IllegalStateException("runBlocking: deadlock, no coroutine can make progress")
         }
     }
+    fun dropTimer(j: Job) {
+        var i = 0
+        while (i < timers.size) { if (timers[i] === j) { val t = timers.removeAt(i) } else i++ }
+    }
+    fun isReady(j: Job): Boolean { for (r in ready) if (r === j) return true; return false }
     fun me(): Job {
         val c = current
         if (c == null) throw IllegalStateException("suspend function called outside a coroutine")
@@ -52,7 +57,13 @@ object KxSched {
 }
 fun kxCoEntry(id: Long) {
     val j = KxSched.me()
-    j.body()
+    try { j.body() } catch (e: CancellationException) { }
+}
+// Called after every suspension point: a cancelled coroutine resumes with CancellationException.
+fun kxSuspend() {
+    rt_co_suspend()
+    val j = KxSched.me()
+    if (j.isCancelled) throw CancellationException("Job was cancelled")
 }
 open class Job(body0: () -> Unit) {
     var body: () -> Unit = body0
@@ -61,6 +72,7 @@ open class Job(body0: () -> Unit) {
     var isCompleted = false
     var isCancelled = false
     var wakeAt = 0L
+    var scope: CoroutineScope? = null
     val waiters = ArrayList<Job>()
     val isActive: Boolean get() = !isCompleted && !isCancelled
     fun step() {
@@ -77,34 +89,54 @@ open class Job(body0: () -> Unit) {
         body = {}
         KxSched.wakeAll(waiters)
     }
-    fun cancel() { if (!started && !isCompleted) { isCancelled = true; finish() } }
+    fun cancel() {
+        if (isCompleted || isCancelled) return
+        isCancelled = true
+        val sc = scope
+        if (sc != null) for (c in sc.children) c.cancel()
+        if (!started) { finish(); return }
+        // A suspended coroutine is resumed so its suspension point throws CancellationException.
+        if (KxSched.current !== this) {
+            KxSched.dropTimer(this)
+            if (!KxSched.isReady(this)) KxSched.wake(this)
+        }
+    }
     fun join() {
         while (!isCompleted) {
             waiters.add(KxSched.me())
-            rt_co_suspend()
+            kxSuspend()
         }
     }
 }
 class Deferred<T>(val compute: () -> T) {
     var result: T? = null
-    val job: Job = Job { result = compute() }
+    var hasResult = false
+    val job: Job = Job { result = compute(); hasResult = true }
     val isCompleted: Boolean get() = job.isCompleted
-    fun await(): T { job.join(); return result!! }
+    fun await(): T {
+        job.join()
+        if (!hasResult) throw CancellationException("Deferred was cancelled")
+        return result!!
+    }
     fun cancel() { job.cancel() }
 }
 class CoroutineScope {
     val children = ArrayList<Job>()
     // Members too, so calls inside nested lambdas of a scope builder resolve.
     fun yield() { kxYield() }
+    val isActive: Boolean get() { val c = KxSched.current; return c == null || !c.isCancelled }
+    fun ensureActive() { val c = KxSched.current; if (c != null && c.isCancelled) throw CancellationException("Job was cancelled") }
     fun launch(block: CoroutineScope.() -> Unit): Job {
         val child = CoroutineScope()
         val j = Job { with(child, block); child.joinChildren() }
+        j.scope = child
         children.add(j); KxSched.wake(j)
         return j
     }
     fun <T> async(block: CoroutineScope.() -> T): Deferred<T> {
         val child = CoroutineScope()
         val d = Deferred<T> { val r = with(child, block); child.joinChildren(); r }
+        d.job.scope = child
         children.add(d.job); KxSched.wake(d.job)
         return d
     }
@@ -115,7 +147,8 @@ class CoroutineScope {
     }
 }
 fun runBlocking(block: CoroutineScope.() -> Unit) {
-    if (KxSched.current != null) throw IllegalStateException("nested runBlocking is not supported")
+    // Nested inside a coroutine: shares the event loop and waits for the block like coroutineScope.
+    if (KxSched.current != null) { coroutineScope(block); return }
     val s = CoroutineScope()
     val root = Job { with(s, block); s.joinChildren() }
     KxSched.wake(root)
@@ -126,13 +159,13 @@ fun coroutineScope(block: CoroutineScope.() -> Unit) {
     with(s, block)
     s.joinChildren()
 }
-fun kxYield() { KxSched.wake(KxSched.me()); rt_co_suspend() }
+fun kxYield() { KxSched.wake(KxSched.me()); kxSuspend() }
 fun yield() { kxYield() }
 fun delay(ms: Long) {
     val j = KxSched.me()
     j.wakeAt = KxSched.now + ms
     KxSched.addTimer(j)
-    rt_co_suspend()
+    kxSuspend()
 }
 fun currentTimeVirtual(): Long = KxSched.now
 fun joinAll(jobs: List<Job>) { for (j in jobs) j.join() }
@@ -148,13 +181,13 @@ class Channel<T>(val capacity: Int) {
     val isClosedForReceive: Boolean get() = isClosedForSend && buf.size == 0
     fun send(x: T) {
         if (isClosedForSend) throw IllegalStateException("Channel was closed")
-        while (capacity > 0 && buf.size >= capacity) { senders.add(KxSched.me()); rt_co_suspend() }
+        while (capacity > 0 && buf.size >= capacity) { senders.add(KxSched.me()); kxSuspend() }
         buf.add(x)
         val ticket = sent
         sent++
         KxSched.wakeAll(receivers)
         // Rendezvous (capacity 0): the sender resumes once a receiver took its element.
-        while (capacity == 0 && received <= ticket) { senders.add(KxSched.me()); rt_co_suspend() }
+        while (capacity == 0 && received <= ticket) { senders.add(KxSched.me()); kxSuspend() }
     }
     fun trySend(x: T): Boolean {
         if (isClosedForSend || (capacity >= 0 && buf.size >= capacity)) return false
@@ -163,7 +196,7 @@ class Channel<T>(val capacity: Int) {
     fun receive(): T {
         while (buf.size == 0) {
             if (isClosedForSend) throw ClosedReceiveChannelException("Channel was closed")
-            receivers.add(KxSched.me()); rt_co_suspend()
+            receivers.add(KxSched.me()); kxSuspend()
         }
         received++
         KxSched.wakeAll(senders)
@@ -172,7 +205,7 @@ class Channel<T>(val capacity: Int) {
     fun close() { isClosedForSend = true; KxSched.wakeAll(receivers) }
     fun consumeEach(f: (T) -> Unit) {
         while (true) {
-            while (buf.size == 0 && !isClosedForSend) { receivers.add(KxSched.me()); rt_co_suspend() }
+            while (buf.size == 0 && !isClosedForSend) { receivers.add(KxSched.me()); kxSuspend() }
             if (buf.size == 0) return
             received++
             KxSched.wakeAll(senders)
