@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3024,
-  "UNSUPPORTED": 2467
+  "PASS": 3028,
+  "UNSUPPORTED": 2463
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -5508,9 +5508,8 @@
    "upstream": "compiler/testData/codegen/box/classes/outerThis.kt"
   },
   "box/box/classes/overloadBinaryOperator.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.addAll()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/overloadBinaryOperator.kt"
   },
   "box/box/classes/overloadPlusAssign.kt": {
@@ -5520,20 +5519,18 @@
    "upstream": "compiler/testData/codegen/box/classes/overloadPlusAssign.kt"
   },
   "box/box/classes/overloadPlusAssignReturn.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.addAll()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/overloadPlusAssignReturn.kt"
   },
   "box/box/classes/overloadPlusToPlusAssign.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.addAll()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/overloadPlusToPlusAssign.kt"
   },
   "box/box/classes/overloadUnaryOperator.kt": {
    "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.addAll()",
+   "detail": "unknown method ArrayList<String>.reverse()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/overloadUnaryOperator.kt"
   },
@@ -14000,8 +13997,8 @@
    "upstream": "compiler/testData/codegen/box/elvis/genericElvisWithMoreSpecificLHS.kt"
   },
   "box/box/elvis/genericElvisWithNullLHS.kt": {
-   "category": "other: unknown method ArrayList<Int>.addAll()",
-   "detail": "unknown method ArrayList<Int>.addAll()",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of emptyList; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/elvis/genericElvisWithNullLHS.kt"
   },
@@ -19558,9 +19555,8 @@
    "upstream": "compiler/testData/codegen/box/inline/kt26466.kt"
   },
   "box/box/inline/kt26787.kt": {
-   "category": "other: unknown method ArrayList<Location>.indexOfFirst()",
-   "detail": "unknown method ArrayList<Location>.indexOfFirst()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inline/kt26787.kt"
   },
   "box/box/inline/kt66017.kt": {
