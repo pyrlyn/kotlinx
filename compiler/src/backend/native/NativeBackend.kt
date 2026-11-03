@@ -1679,12 +1679,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     /** After a call that may throw: unwinds if an exception is pending. */
-    private fun afterCall() {
+    /** [inFlight]: owned temporaries the caller releases after the call (e.g. a receiver); released here when unwinding. */
+    private fun afterCall(inFlight: List<Val> = emptyList()) {
         if (!excMode || term) return
         val e = emitT("load ptr, ptr @rt_exc")
         val lu = label("exc.unwind"); val lc = label("exc.cont")
         emit("br i1 ${emitT("icmp ne ptr $e, null")}, label %$lu, label %$lc, !prof !1"); term = true
         startBlock(lu)
+        inFlight.forEach { releaseIfOwned(it) }
         unwind()
         startBlock(lc)
     }
@@ -1938,7 +1940,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             startBlock(le)
             return
         }
-        if (v.t is Ty.NBox) return appendVal(prefix, lead, unbox(Val(v.v, v.t, false), v.t.inner))
+        // An owned box (e.g. a call result in a template) is released once its value is appended.
+        if (v.t is Ty.NBox) { appendVal(prefix, lead, unbox(Val(v.v, v.t, false), v.t.inner)); releaseIfOwned(v); return }
         when {
             v.t == Ty.Str || v.t == Ty.RawPtr -> emit("call void @${prefix}str($lead ptr ${v.v})")
             v.t == Ty.Char -> emit("call void @${prefix}char($lead i32 ${v.v})")
@@ -2044,6 +2047,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     val ok = label("li.ok"); val bad = label("li.unset")
                     condBr(emitT("icmp ne ptr ${fv.v}, null"), ok, bad)
                     startBlock(bad)
+                    // An owned receiver (e.g. `A().x`) is released by the caller on the normal path only.
+                    if (excMode) releaseIfOwned(r)
                     val msg = "lateinit property $n has not been initialized"
                     if (excMode) throwNew("UninitializedPropertyAccessException", sbMsg(msg))
                     else { emit("call void @rt_panic(ptr ${cstr("UninitializedPropertyAccessException: $msg")})"); emit("unreachable"); term = true }
@@ -2485,9 +2490,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     else appendVal("rt_print_", "", genExpr(p as E))
                 } else if (a != null) {
                     val v = genExpr(a)
-                    appendVal("rt_print_", "", v)
-                    // An owned nullable primitive (a call result) is a temporary box: printed, then released.
-                    if (v.t is Ty.NBox && v.owned) releaseIfOwned(v)
+                    appendVal("rt_print_", "", v)  // releases an owned nullable-primitive box
                 }
                 if (n == "println") emit("call void @rt_newline()")
                 return Val("", Ty.Unit)
@@ -3896,10 +3899,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return out
     }
 
-    private fun finishCall(call: String, ret: Ty, args: List<Val>): Val {
+    private fun finishCall(call: String, ret: Ty, args: List<Val>, recv: Val? = null): Val {
         val res = if (ret == Ty.Unit || ret == Ty.Nothing) { emit(call); Val("", Ty.Unit) } else Val(emitT(call), ret, ret.isRef)
         args.forEach { releaseIfOwned(it) }
-        afterCall()
+        afterCall(listOfNotNull(recv))
         return if (ret == Ty.Nothing) neverReturns() else res
     }
 
@@ -3935,10 +3938,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val vt = emitT("load ptr, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 8")}")
             val slot = if (n + NARROW in slots) n + NARROW else n
             val fp = emitT("load ptr, ptr ${emitT("getelementptr ptr, ptr $vt, i64 ${slots.indexOf(slot) + VT_HEADER}")}")
-            return finishCall("call ${sig.ret.llvm} $fp(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args)
+            return finishCall("call ${sig.ret.llvm} $fp(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args, r)
         }
         val impl = ci.impl[n] ?: fail("abstract method ${ci.name}.$n() cannot be called")
-        return finishCall("call ${sig.ret.llvm} @m.$impl.$n(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args)
+        return finishCall("call ${sig.ret.llvm} @m.$impl.$n(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args, r)
     }
 
     /** Interface call through the object's vtable (slot = global interface-method index + VT_HEADER). */
@@ -3952,7 +3955,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val args = methodArgs(sig, e)
         val vt = emitT("load ptr, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 8")}")
         val fp = emitT("load ptr, ptr ${emitT("getelementptr ptr, ptr $vt, i64 ${slots.indexOf(n) + VT_HEADER}")}")
-        return finishCall("call ${sig.ret.llvm} $fp(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args)
+        return finishCall("call ${sig.ret.llvm} $fp(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args, r)
     }
 
     /** Inline expansion of map/filter/forEach/sumOf/count (Kotlin's are inline functions too). */
