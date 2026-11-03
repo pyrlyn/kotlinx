@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2874,
-  "UNSUPPORTED": 2617
+  "PASS": 2889,
+  "UNSUPPORTED": 2602
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2843,8 +2843,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionInSamWithPassedSupertype.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionParameterToValueParameter.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected $FnR$Int$String$Unit, found $Fn$Int$String$Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionParameterToValueParameter.kt"
   },
@@ -3231,21 +3231,18 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/arrayConstructorArgument.kt"
   },
   "box/box/callableReference/bound/arrayGetIntrinsic.kt": {
-   "category": "other: unsupported callable reference ArrayList<Int>::get",
-   "detail": "unsupported callable reference ArrayList<Int>::get",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/arrayGetIntrinsic.kt"
   },
   "box/box/callableReference/bound/boundPrimitiveAndReferenceReceiverSharedClassSplit.kt": {
-   "category": "other: unsupported callable reference Int::append",
-   "detail": "unsupported callable reference Int::append",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/boundPrimitiveAndReferenceReceiverSharedClassSplit.kt"
   },
   "box/box/callableReference/bound/boundReferenceToOverloadedFunction.kt": {
-   "category": "other: unsupported callable reference JsonCodingParser::parseValue",
-   "detail": "unsupported callable reference JsonCodingParser::parseValue",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/boundReferenceToOverloadedFunction.kt"
   },
   "box/box/callableReference/bound/captureVarInInitBlock.kt": {
@@ -3274,9 +3271,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/companionObjectReceiverInheritsFromOuter.kt"
   },
   "box/box/callableReference/bound/dontShareReceiver.kt": {
-   "category": "strings / templates",
-   "detail": "unsupported callable reference Int::toString",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/dontShareReceiver.kt"
   },
   "box/box/callableReference/bound/emptyLHS.kt": {
@@ -3320,13 +3316,13 @@
   },
   "box/box/callableReference/bound/kCallableNameIntrinsic.kt": {
    "category": "strings / templates",
-   "detail": "unsupported callable reference Int::toString",
+   "detail": "unknown property $Fn$String.name",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/kCallableNameIntrinsic.kt"
   },
   "box/box/callableReference/bound/kt12738.kt": {
    "category": "strings / templates",
-   "detail": "unsupported callable reference String::toString",
+   "detail": "unsupported callable reference CPointer::toString",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/kt12738.kt"
   },
@@ -3354,9 +3350,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassAdaptedBoundReferences.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassAndReferenceBoundReceivers.kt": {
-   "category": "strings / templates",
-   "detail": "unsupported callable reference String::render",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassAndReferenceBoundReceivers.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassBoundMemberReferences.kt": {
@@ -3412,8 +3407,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/objectReceiver.kt"
   },
   "box/box/callableReference/bound/primitiveReceiver.kt": {
-   "category": "other: unsupported callable reference Boolean::foo",
-   "detail": "unsupported callable reference Boolean::foo",
+   "category": "generics",
+   "detail": "reference to overloaded or generic extension foo is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/primitiveReceiver.kt"
   },
@@ -3423,15 +3418,13 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/receiverEvaluatedOnce.kt"
   },
   "box/box/callableReference/bound/simpleFunction.kt": {
-   "category": "strings / templates",
-   "detail": "unsupported callable reference String::get",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/simpleFunction.kt"
   },
   "box/box/callableReference/bound/simpleProperty.kt": {
-   "category": "strings / templates",
-   "detail": "unsupported callable reference String::length",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/simpleProperty.kt"
   },
   "box/box/callableReference/bound/smartCastForExtensionReceiver.kt": {
@@ -3447,9 +3440,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/typeAliasObjectBoundReference.kt"
   },
   "box/box/callableReference/bound/valueClassAndReferenceReceiverSharedClassSplit.kt": {
-   "category": "strings / templates",
-   "detail": "unsupported callable reference String::render",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/valueClassAndReferenceReceiverSharedClassSplit.kt"
   },
   "box/box/callableReference/callableReferenceOfCompanionConst.kt": {
@@ -3589,8 +3581,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/equality/suspendFunctionEquality.kt"
   },
   "box/box/callableReference/equality/unboundVsNullBoundReceiver.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "other: unknown member Int::foo",
+   "detail": "unknown member Int::foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/equality/unboundVsNullBoundReceiver.kt"
   },
@@ -3642,20 +3634,20 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/abstractClassMember.kt"
   },
   "box/box/callableReference/function/argumentTypes.kt": {
-   "category": "strings / templates",
-   "detail": "unsupported callable reference String::extId",
+   "category": "generics",
+   "detail": "reference to overloaded or generic extension extId is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/argumentTypes.kt"
   },
   "box/box/callableReference/function/argumentTypesNoinline.kt": {
-   "category": "strings / templates",
-   "detail": "unsupported callable reference String::extId",
+   "category": "generics",
+   "detail": "reference to overloaded or generic extension extId is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/argumentTypesNoinline.kt"
   },
   "box/box/callableReference/function/booleanNotIntrinsic.kt": {
-   "category": "unknown Boolean (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Boolean'",
+   "category": "other: unknown member Boolean::not",
+   "detail": "unknown member Boolean::not",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/booleanNotIntrinsic.kt"
   },
@@ -3787,15 +3779,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionInSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionFunctionLocal.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "other: unknown member Int::bar",
+   "detail": "unknown member Int::bar",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionLocal.kt"
   },
   "box/box/callableReference/function/extensionFunctionPassToSAMInterface.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionPassToSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionFunctionWithExtensionInSAMInterface.kt": {
@@ -3812,7 +3803,7 @@
   },
   "box/box/callableReference/function/extensionPassedToDelegatedSam.kt": {
    "category": "strings / templates",
-   "detail": "unknown name 'String'",
+   "detail": "type mismatch: expected String, found Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionPassedToDelegatedSam.kt"
   },
@@ -3956,9 +3947,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/extensionToLocalClass.kt"
   },
   "box/box/callableReference/function/local/extensionToPrimitive.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/extensionToPrimitive.kt"
   },
   "box/box/callableReference/function/local/extensionWithClosure.kt": {
@@ -4282,8 +4272,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/enumNameOrdinal.kt"
   },
   "box/box/callableReference/property/extensionProperty.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "strings / templates",
+   "detail": "unknown member String::bar",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionProperty.kt"
   },
@@ -4301,7 +4291,7 @@
   },
   "box/box/callableReference/property/extensionPropertyPassedToDelegatedSam.kt": {
    "category": "strings / templates",
-   "detail": "unknown name 'String'",
+   "detail": "type mismatch: expected String, found Unit",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyPassedToDelegatedSam.kt"
   },
@@ -4324,8 +4314,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyWithExtensionReceiver.kt"
   },
   "box/box/callableReference/property/extensionPropertyWithExtensionType.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "other: unknown member Int::foo",
+   "detail": "unknown member Int::foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyWithExtensionType.kt"
   },
@@ -4396,9 +4386,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt74104.kt"
   },
   "box/box/callableReference/property/listOfStringsMapLength.kt": {
-   "category": "strings / templates",
-   "detail": "unknown name 'String'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/listOfStringsMapLength.kt"
   },
   "box/box/callableReference/property/localClassVar.kt": {
@@ -4441,7 +4430,7 @@
   },
   "box/box/callableReference/property/simpleExtension.kt": {
    "category": "strings / templates",
-   "detail": "unknown name 'String'",
+   "detail": "unknown property $Fn$String$String.name",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleExtension.kt"
   },
@@ -4452,8 +4441,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMember.kt"
   },
   "box/box/callableReference/property/simpleMutableExtension.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "other: unknown method $Fn$Int$Int.set()",
+   "detail": "unknown method $Fn$Int$Int.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMutableExtension.kt"
   },
@@ -4742,8 +4731,8 @@
    "upstream": "compiler/testData/codegen/box/casts/kt81617.kt"
   },
   "box/box/casts/kt82732.kt": {
-   "category": "strings / templates",
-   "detail": "unsupported callable reference ArrayList<String>::foo",
+   "category": "generics",
+   "detail": "reference to overloaded or generic extension foo is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/casts/kt82732.kt"
   },
@@ -5907,9 +5896,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedLocalGenericFun.kt"
   },
   "box/box/closures/capturedVarsOptimization/callableReferenceWithSwap.kt": {
-   "category": "strings / templates",
-   "detail": "unsupported callable reference String::get",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/callableReferenceWithSwap.kt"
   },
   "box/box/closures/capturedVarsOptimization/capturedInCrossinline.kt": {
@@ -14065,9 +14053,8 @@
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/unboundInnerContructorRef.kt"
   },
   "box/box/directInvokeOptimization/unboundMemberRef.kt": {
-   "category": "strings / templates",
-   "detail": "unknown name 'String'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/unboundMemberRef.kt"
   },
   "box/box/elvis/elvisToCommonType.kt": {
@@ -15280,8 +15267,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInSAMInterface.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInValueClass.kt": {
-   "category": "unknown Int (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Int'",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected $FnR$Int$String, found $Fn$Int$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInValueClass.kt"
   },
@@ -19684,7 +19671,7 @@
   },
   "box/box/inline/kt67866.kt": {
    "category": "strings / templates",
-   "detail": "unknown name 'String'",
+   "detail": "unknown member String::id",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inline/kt67866.kt"
   },
@@ -20770,9 +20757,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionFun.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionFunGeneric.kt": {
-   "category": "other: unsupported callable reference Z$Int::test",
-   "detail": "unsupported callable reference Z$Int::test",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionVal.kt": {
@@ -20781,9 +20767,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionVal.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionValGeneric.kt": {
-   "category": "other: unsupported callable reference Z$Int::xx",
-   "detail": "unsupported callable reference Z$Int::xx",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassMemberFun.kt": {
