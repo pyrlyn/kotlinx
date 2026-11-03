@@ -65,8 +65,12 @@ If none is found, compilation fails with an error.
 ## Garbage collector
 
 The memory manager lives in [`compiler/gc`](compiler/gc/README.md) behind a stable interface and is
-selected per build: `--gc=default` (RC + cycle collector, the default), `--gc=rc` (no cycle collector),
-`--gc=boehm` ([bdwgc](https://github.com/bdwgc/bdwgc), installed by `mise install`). GC benchmarks: [`bench/gc`](bench/gc/README.md).
+selected per build: `--gc=default` (RC + cycle collector, the default), `--gc=incremental` (budgeted cycle
+collector steps), `--gc=epoch` (deferred RC + background cycle collection), `--gc=rc` (no cycle collector),
+`--gc=boehm` ([bdwgc](https://github.com/bdwgc/bdwgc), installed by `mise install`). All collectors are written in C.
+GC benchmarks: [`bench/gc`](bench/gc/README.md). The GC is planned to move into a separate project
+(not done yet): [`compiler/gc/docs/extraction-plan.md`](compiler/gc/docs/extraction-plan.md).
+Current state of GC, testing and FFI work: [`STATUS.md`](STATUS.md#status-2026-11-03).
 
 ## Benchmark tooling (`bench/`)
 

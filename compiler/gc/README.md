@@ -78,4 +78,17 @@ interface (`tests/unit/gc_unit.c`, -O1 and -O3) and the GC-agnostic Kotlin tests
 Tests marked `// gc-needs: cycles` are skipped for implementations that do not reclaim cycles.
 `GCS="default boehm" compiler/gc/tests/run.sh` limits the set.
 
-Benchmarks comparing implementations: [`bench/gc`](../../bench/gc/README.md).
+All new GC tests are written in Zig. Porting the existing C unit tests and Kotlin GC tests to a Zig suite
+(C collectors linked via `@cImport`, outputs compared byte for byte with the originals, small tolerances only
+for timing and floating-point values) is in progress on branch `test/gc-zig-port` (not merged yet).
+Mutation testing of the GC C code (source-level mutants in temporary copies, run against the Zig suite) and
+`llvm-cov` coverage for that suite are in progress as well.
+
+Benchmarks comparing implementations: [`bench/gc`](../../bench/gc/README.md). Zig regression benchmarks with
+thresholds and checked-in baselines: `bench/gc/zig` (PR [#155](https://github.com/pyrlyn/kotlinx/pull/155), open).
+
+## Planned: separate project
+
+The GC code (collectors, `kxgc.h`, `common/`, tests, benchmarks, mutation tooling) is planned to move out of
+this repository into its own project. Nothing has moved yet. What goes there, the API boundary and how to
+build, link, select, test and pin it afterwards: [`docs/extraction-plan.md`](docs/extraction-plan.md).
