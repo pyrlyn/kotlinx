@@ -6,7 +6,7 @@ class Val(val v: String, val t: Ty, val owned: Boolean = false)
 private class Local(val slot: String, val t: Ty, val isVar: Boolean)
 private class Scope { val vars = HashMap<String, Local>(); val refs = ArrayList<Local>() }
 /** Lambdas synthesized for callable references, per reference node; survives code-generation restarts. */
-private object RefLambdas { val map = HashMap<UnE, LambdaE>() }
+private object RefLambdas { val map = HashMap<UnE, LambdaE>(); val setters = HashMap<UnE, LambdaE>() }
 private class FunSig(val name: String, val params: List<Ty>, val ret: Ty)
 /** Object layout: { i64 refcount, ptr vtable, fields... }; vtable[0] = release function. */
 /**
@@ -3342,6 +3342,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun genRef0(node: UnE, recv: E?, n: String): Val {
         // The synthesized lambda is cached per reference node so repeated (dry-run) generation reuses one closure class.
         var builtinGet = false
+        fun setLam(params: List<TypeRef>, target: (List<E>) -> E): Val {
+            val le = RefLambdas.setters.getOrPut(node) {
+                val names = params.indices.map { "rp\$$it" }
+                val xs = names.map { NameE(it).also { x -> x.line = line } }
+                LambdaE(Block(listOf(AssignS(target(xs.dropLast(1)), "=", xs.last()).also { it.line = line }), names, params)).also { it.line = line }
+            }
+            return genExpr(le)
+        }
         fun lam(params: List<TypeRef>, body: (List<E>) -> E): Val {
             if (params.size > 22) fail("references with more than 22 parameters are not supported")
             val le = RefLambdas.map.getOrPut(node) {
@@ -3382,7 +3390,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // Top-level property `::x`: a getter function value.
             // A local function that captures locals is a local holding a lambda: `::f` is that value.
             lookup(n)?.let { l -> if (fnSig(l.t) != null) return genExpr(NameE(n).also { it.line = line }) }
-            if (n in globalVars || prog.globals.any { it.name == n } || "\$get\$$n" in sigs) return lam(emptyList()) { NameE(n).also { it.line = line } }
+            if (n in globalVars || prog.globals.any { it.name == n } || "\$get\$$n" in sigs) {
+                val g = lam(emptyList()) { NameE(n).also { it.line = line } }
+                val isVar = prog.globals.firstOrNull { it.name == n }?.isVar == true || "\$set\$$n" in sigs
+                val st = if (isVar) setLam(listOf(tyRef(fnSig(g.t)!!.ret))) { NameE(n).also { it.line = line } } else null
+                return propRef(g, st, n)
+            }
             fail("unsupported callable reference ::$n")
         }
         // Unbound reference through a type name.
@@ -3390,7 +3403,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (typeName != null) {
             val t = resolve(TypeRef(typeName, emptyList(), false))
             val (ps, isProp) = memberParams(t, n) ?: fail("unknown member $typeName::$n")
-            return lam(listOf(TypeRef(typeName, emptyList(), false)) + ps) { xs -> callOn(xs[0], n, xs.drop(1), isProp) }
+            val g = lam(listOf(TypeRef(typeName, emptyList(), false)) + ps) { xs -> callOn(xs[0], n, xs.drop(1), isProp) }
+            if (!isProp) return g
+            val st = if (fieldIsVar(t, n)) setLam(listOf(TypeRef(typeName, emptyList(), false), tyRef(fnSig(g.t)!!.ret))) { xs -> MemberE(xs[0], n, false).also { it.line = line } } else null
+            return propRef(g, st, n)
         }
         // Bound reference: the receiver is evaluated once and captured.
         val r = genExpr(recv)
@@ -3398,9 +3414,46 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         scopes.add(Scope())
         val l = declare("\$refRecv", r.t, false, r.owned && r.t.isRef)
         emit("store ${r.t.llvm} ${r.v}, ptr ${l.slot}")
-        val res = consume(lam(ps) { xs -> callOn(NameE("\$refRecv").also { it.line = line }, n, xs, isProp) })
+        val g0 = lam(ps) { xs -> callOn(NameE("\$refRecv").also { it.line = line }, n, xs, isProp) }
+        val res = consume(if (!isProp) g0 else propRef(g0,
+            if (fieldIsVar(r.t, n)) setLam(listOf(tyRef(fnSig(g0.t)!!.ret))) { MemberE(NameE("\$refRecv").also { it.line = line }, n, false).also { it.line = line } } else null, n))
         releaseScope(scopes.last()); scopes.removeAt(scopes.size - 1)
         return res
+    }
+
+    /** Whether property [n] of class type [t] is a `var` (its reference gets a `set`). */
+    private fun fieldIsVar(t: Ty, n: String): Boolean = t is Ty.Cls && (classDecls[t.name]?.fields?.any { it.name == n && it.isVar } == true)
+
+    /**
+     * Property reference value: a `$PRef` object wrapping the getter (and for `var`s the setter) function values. It
+     * implements the getter's function type, so it is passed and called like a function; `name`, `get` and `set` are members.
+     */
+    private fun propRef(getter: Val, setter: Val?, pname: String): Val {
+        val ft = getter.t as Ty.Iface
+        val gs = fnSig(ft)!!
+        val cname = mangle("\$PRef", listOf(tyRef(ft)) + listOfNotNull(setter?.let { tyRef(it.t) }))
+        if (cname !in classes) {
+            fun fwd(m: String, field: String, ps: List<Ty>, ret: Ty): FunD {
+                val names = ps.indices.map { "p$it" }
+                val call = CallE(MemberE(MemberE(NameE("this").also { it.line = line }, field, false).also { it.line = line }, "invoke", false).also { it.line = line },
+                    emptyList(), names.map { NameE(it).also { x -> x.line = line } }, null).also { it.line = line }
+                return FunD(m, names.mapIndexed { i, x -> Param(x, tyRef(ps[i])) }, tyRef(ret), null, call, line)
+            }
+            val methods = listOfNotNull(fwd("invoke", "\$g", gs.params, gs.ret), fwd("get", "\$g", gs.params, gs.ret),
+                setter?.let { fwd("set", "\$s", fnSig(it.t)!!.params, Ty.Unit) })
+            val fields = listOfNotNull(FieldD("\$g", tyRef(ft), false), setter?.let { FieldD("\$s", tyRef(it.t), false) }, FieldD("name", tyRef(Ty.Str), false))
+            throw NeedClass(ClassD(cname, fields, listOf(ft.name), methods, line))
+        }
+        scopes.add(Scope())
+        val gl = declare("\$prg", ft, false, getter.owned)
+        emit("store ptr ${getter.v}, ptr ${gl.slot}")
+        val args = arrayListOf<E>(NameE("\$prg"))
+        if (setter != null) { val sl = declare("\$prs", setter.t, false, setter.owned); emit("store ptr ${setter.v}, ptr ${sl.slot}"); args.add(NameE("\$prs")) }
+        args.add(StrL(listOf(pname)))
+        args.forEach { it.line = line }
+        val v = consume(genNamedCall(cname, CallE(NameE(cname), emptyList(), args, null).also { it.line = line }))
+        releaseScope(scopes.last()); scopes.removeAt(scopes.size - 1)
+        return v
     }
 
     private val BUILTIN_REF_TYPES = setOf("String", "Int", "Long", "Double", "Boolean", "Char", "StringBuilder")
