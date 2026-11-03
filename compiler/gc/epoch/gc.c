@@ -8,7 +8,7 @@
 //     Retain/release append (pointer | op) to the current epoch log (rt_gc_log_inc / rt_gc_log_dec); a
 //     reference store into a traced object's field is a release store followed by rt_gc_write_barrier,
 //     which logs the object as modified.
-//   * Epoch boundary (log full, LOG_CAP entries): the log is handed to the collector (one mutex
+//   * Epoch boundary (log full: log_cap entries, adaptive LOG_MIN..LOG_CAP): the log is handed to the collector (one mutex
 //     round-trip) and the mutator frees objects the collector found dead, under a time budget
 //     (KX_GC_FREE_BUDGET_US, default half of KX_GC_TARGET_PAUSE_US) only beyond a backlog of KX_GC_BOUNDARY_KEEP
 //     objects; the rest is freed by traced allocations (paced by the backlog). The boundary is the only pause; it blocks only if the
@@ -350,6 +350,27 @@ void rt_cc_dead(void *p) { (void)p; rt_panic("epoch GC: rt_cc_dead"); }
 #define LOG_CAP 32768
 #define MAX_QUEUED_DEFAULT 16   /* logs (256 KiB each) the collector may fall behind; KX_GC_MAX_QUEUED */
 static size_t max_queued;
+/* Effective log capacity (entries before a hand-off). Everything the collector has not yet confirmed dead
+ * waits for a few logs (the one being filled, the queue, the one being applied, the one a candidate set's
+ * Delta test waits for), so peak garbage in flight is a small multiple of the log size: with 32K-entry logs
+ * that was ~350K unfreed cyclic objects (23 MiB peak RSS on cyclic_garbage vs 3.4 for Boehm). The log
+ * capacity therefore follows the detection threshold: LOG_MIN while detections keep finding garbage (the
+ * threshold stays at its minimum), growing with it (LOG_PER_ROOT entries per threshold root, up to LOG_CAP)
+ * when detections mostly retrace live data and the per-log overhead would dominate. KX_GC_LOG_CAP fixes it. */
+#define LOG_MIN 2048
+#define LOG_PER_ROOT 4
+static _Atomic size_t log_cap = LOG_MIN;   /* written by the collector, read (relaxed) by the mutator */
+static int log_cap_fixed;
+static _Atomic size_t log_boost = 1;   /* hand-off back-pressure multiplier on the log size, see handoff() */
+/* Minor detection threshold (buffered roots), adaptive between c_min_threshold (KX_GC_MIN_THRESHOLD)
+ * and C_MAX_THRESHOLD; was a fixed 10000 minimum, i.e. at least ~1 large log of cyclic garbage per detection. */
+static size_t c_threshold = LOG_MIN / LOG_PER_ROOT, c_min_threshold = LOG_MIN / LOG_PER_ROOT;
+static void log_cap_follow(void) {
+    if (log_cap_fixed) return;
+    size_t c = c_threshold * LOG_PER_ROOT, b = LOG_MIN * atomic_load_explicit(&log_boost, memory_order_relaxed);
+    if (c < b) c = b; if (c > LOG_CAP) c = LOG_CAP;
+    atomic_store_explicit(&log_cap, c, memory_order_relaxed);
+}
 #define Q_ADAPT_START 4
 #define Q_ADAPT_MIN 2
 #define Q_ADAPT_MAX 16   /* was 64: a starved collector (busy machine) doubled it to 64 within a few hand-offs; 64 queued
@@ -422,11 +443,18 @@ static void handoff(void) {
      * spikes (lower pauses). */
     if (!q_fixed) {
         if (q_cool) q_cool--;
-        if (d > q_target_ns && !q_cool) { if (max_queued < Q_ADAPT_MAX) max_queued *= 2; if (max_queued > Q_ADAPT_MAX) max_queued = Q_ADAPT_MAX; q_win = 0; q_win_bad = 0; q_cool = Q_ADAPT_COOL; }
+        /* once the queue is at its maximum depth, collector spikes are absorbed by longer logs instead (the
+         * queue limit counts logs, and short logs hold little): log_boost doubles the log size, and a calm
+         * window halves it again before the queue depth shrinks. Pure cyclic garbage never waits that long,
+         * so it keeps short logs and little garbage in flight. */
+        if (d > q_target_ns && !q_cool) {
+            if (max_queued >= Q_ADAPT_MAX && !log_cap_fixed && LOG_MIN * atomic_load_explicit(&log_boost, memory_order_relaxed) < LOG_CAP) { atomic_fetch_add(&log_boost, atomic_load(&log_boost)); log_cap_follow(); }
+            if (max_queued < Q_ADAPT_MAX) max_queued *= 2; if (max_queued > Q_ADAPT_MAX) max_queued = Q_ADAPT_MAX; q_win = 0; q_win_bad = 0; q_cool = Q_ADAPT_COOL; }
         else if (d > q_target_ns) q_win_bad = 1;
         else {
             if (d > q_target_ns / 4 || q_len * 2 > max_queued) q_win_bad = 1;
-            if (++q_win >= Q_ADAPT_WINDOW) { if (!q_win_bad && max_queued > Q_ADAPT_MIN) max_queued = max_queued / 2 > Q_ADAPT_MIN ? max_queued / 2 : Q_ADAPT_MIN; q_win = 0; q_win_bad = 0; }
+            if (++q_win >= Q_ADAPT_WINDOW && !q_win_bad && atomic_load(&log_boost) > 1) { atomic_store(&log_boost, atomic_load(&log_boost) / 2); log_cap_follow(); q_win = 0; }
+            else if (q_win >= Q_ADAPT_WINDOW) { if (!q_win_bad && max_queued > Q_ADAPT_MIN) max_queued = max_queued / 2 > Q_ADAPT_MIN ? max_queued / 2 : Q_ADAPT_MIN; q_win = 0; q_win_bad = 0; }
         }
         if (max_queued > dbg_q_max) dbg_q_max = max_queued;
     }
@@ -475,9 +503,14 @@ __attribute__((noinline)) static void boundary(void) {
     in_boundary = 0;
 }
 static inline void log_op(uintptr_t e) {
-    if (__builtin_expect(cur == NULL, 0)) { pthread_mutex_lock(&mu); cur = log_new(); pthread_mutex_unlock(&mu); }
+    if (__builtin_expect(cur == NULL, 0)) {
+        /* first log: before the collector thread exists, so no race on the tunables */
+        const char *e = getenv("KX_GC_MIN_THRESHOLD"); if (e && atoll(e) > 0) c_threshold = c_min_threshold = (size_t)atoll(e);
+        e = getenv("KX_GC_LOG_CAP");
+        if (e && atoll(e) > 0) { size_t c = (size_t)atoll(e); log_cap = c > LOG_CAP ? LOG_CAP : c; log_cap_fixed = 1; } else log_cap_follow();
+        pthread_mutex_lock(&mu); cur = log_new(); pthread_mutex_unlock(&mu); }
     cur->a[cur->n++] = e;
-    if (__builtin_expect(cur->n == LOG_CAP, 0)) boundary();
+    if (__builtin_expect(cur->n >= atomic_load_explicit(&log_cap, memory_order_relaxed), 0)) boundary();
 }
 void rt_gc_log_inc(void *p) { if (p) log_op((uintptr_t)p | OP_INC); }
 void rt_gc_log_dec(void *p) { if (p) log_op((uintptr_t)p | OP_DEC); }
@@ -515,7 +548,6 @@ static inline uint64_t crc(void *p) { return (*header(p) >> CRC_SHIFT) & CRC_MAX
 static inline void set_crc(void *p, uint64_t c) { *header(p) = (*header(p) & ~CRC_MASK) | ((c & CRC_MAX) << CRC_SHIFT); }
 
 static PtrStack c_roots, c_work, c_ret;                 /* collector-local */
-static size_t c_threshold = 10000;
 #define C_MAX_THRESHOLD (1u << 18)
 #define MAJOR_RATIO 4   /* major detection once 4x as many roots were deferred as there are stable objects */
 #define MAJOR_RATIO_MAX 256
@@ -810,6 +842,9 @@ static void batch_free(Batch *b) {
 }
 #define SLICE_ROOTS 32768   /* KX_GC_SLICE_ROOTS; 0 = unbounded */
 static size_t slice_roots = SLICE_ROOTS;
+static int trace_q = -1;   /* 1: KX_GC_DEBUG peaks, 2: also KX_GC_TRACE (backlog every 8 logs) */
+static int64_t dbg_mn_roots, dbg_mn_found, dbg_mn_work;
+static size_t dbg_thr_max, dbg_roots_max, dbg_cand_max, dbg_qseen_max;
 static size_t q_seen;          /* queue length when the collector took the current log */
 static int64_t carry_q = -1;   /* KX_GC_CARRY_QUEUE: skip detection at this queue length (default 0 = never) */
 static uint64_t c_valid_after;                      /* hand-off count when the current detection ended */
@@ -1294,7 +1329,11 @@ static void *collector_main(void *arg) {
             }
             if (im_state) {
                 int64_t td = rt_nanos();
-                if (im_step_ns > 0) { while (!im_step(512) && rt_nanos() - td < im_step_ns) {} }
+                /* the per-log major time slice scales with the log size, so the major's share of collector
+                 * time does not grow when logs are short (16x more logs would mean 16x more major work per
+                 * mutator op, starving apply/validate: +40% wall time on huge_live_churn) */
+                int64_t slice = l->n < LOG_CAP ? im_step_ns * (int64_t)l->n / LOG_CAP : im_step_ns;
+                if (im_step_ns > 0) { while (!im_step(512) && rt_nanos() - td < slice) {} }
                 else im_step(im_step_budget);
                 if (im_state && side_minors && c_roots.len >= c_threshold) side_minor();
                 dbg_t_detect += rt_nanos() - td;
@@ -1317,10 +1356,23 @@ static void *collector_main(void *arg) {
                      * next one rarer (geometric backoff); one that found garbage resets the ratio */
                     if (work > 64 * found) { if (major_ratio < MAJOR_RATIO_MAX) major_ratio *= 2; }
                     else major_ratio = MAJOR_RATIO;
-                } else if (work > 4 * found + 2 * (int64_t)nroots) { if (c_threshold < C_MAX_THRESHOLD) c_threshold *= 2; }
-                else if (c_threshold > 10000) c_threshold /= 2;
+                } else if (dbg_mn_roots += (int64_t)nroots, dbg_mn_found += found, dbg_mn_work += work, work > 4 * found + 2 * (int64_t)nroots) { if (c_threshold < C_MAX_THRESHOLD) c_threshold *= 2; }
+                else if (c_threshold > c_min_threshold) { c_threshold /= 2; if (c_threshold < c_min_threshold) c_threshold = c_min_threshold; }
+                log_cap_follow();
             }
             gc_st.reclaimed += (int64_t)freed;
+            /* KX_GC_DEBUG peaks / KX_GC_TRACE: in-flight backlog (buffered roots, candidate members waiting for
+             * their Delta test, dead objects not yet handed back, queued logs) */
+            if (trace_q < 0) { const char *te = getenv("KX_GC_TRACE"), *de = getenv("KX_GC_DEBUG"); trace_q = (te && *te) ? 2 : (de && *de) ? 1 : 0; }
+            if (trace_q) {
+                size_t cm = 0; for (Batch *b = cands; b; b = b->next) cm += b->nsets ? b->ends[b->nsets - 1] : 0;
+                if (c_threshold > dbg_thr_max) dbg_thr_max = c_threshold;
+                if (c_roots.len > dbg_roots_max) dbg_roots_max = c_roots.len;
+                if (cm > dbg_cand_max) dbg_cand_max = cm;
+                if (q_seen > dbg_qseen_max) dbg_qseen_max = q_seen;
+                if (trace_q == 2 && dbg_logs % 8 == 0)
+                    fprintf(stderr, "epoch-trace: log=%lld log-cap=%zu live-traced=%lld roots=%zu cand-members=%zu ret=%zu ret-shared=%zu queued=%zu threshold=%zu\n", (long long)dbg_logs, (size_t)atomic_load(&log_cap), (long long)(atomic_load(&t_allocs) - atomic_load(&t_frees)), c_roots.len, cm, c_ret.len, ret_shared.len, q_seen, c_threshold);
+            }
             publish_returns();
             pthread_mutex_lock(&mu);
             applied = l->seq;
@@ -1343,6 +1395,7 @@ static void *collector_main(void *arg) {
 
 static void epoch_debug(void) {
     const char *e = getenv("KX_GC_DEBUG");
+    if (e && *e) fprintf(stderr, "epoch: peaks boost=%zu threshold=%zu roots=%zu cand-members=%zu queue-seen=%zu minors roots=%lld found=%lld work=%lld\n", (size_t)atomic_load(&log_boost), dbg_thr_max, dbg_roots_max, dbg_cand_max, dbg_qseen_max, (long long)dbg_mn_roots, (long long)dbg_mn_found, (long long)dbg_mn_work);
     if (e && *e) fprintf(stderr, "epoch: epochs=%lld logs=%lld detections=%lld sets=%lld pass=%lld fail-delta=%lld fail-sigma=%lld dead=%lld majors=%lld stable=%lld deferred=%zu\n",
         (long long)ep_epochs, (long long)dbg_logs, (long long)ep_detections, (long long)dbg_sets, (long long)dbg_pass, (long long)dbg_fail_delta, (long long)dbg_fail_sigma, (long long)dbg_dead, (long long)dbg_majors, (long long)c_stable_n, c_deferred.len);
     if (e && *e) fprintf(stderr, "epoch: collector apply=%.1fms validate=%.1fms detect=%.1fms (mark %.1f scan %.1f) threads=%d parallel=%lld (ns/visit ser %.1f par %.1f wake %.0f)\n", dbg_t_apply/1e6, dbg_t_valid/1e6, dbg_t_detect/1e6, dbg_t_mark/1e6, dbg_t_scan/1e6, n_threads, (long long)dbg_par_det, ns_ser, ns_par, par_wake_ns);
