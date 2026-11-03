@@ -826,7 +826,7 @@ class Parser(toks: List<Tok>) {
         val saved = curClass; curClass = null
         val savedObj = curObject; curObject = name
         val ms = try { braceOnNextLine(); if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved; curObject = savedObj }
-        objects.add(name)
+        if (name !in objects) objects.add(name)
         // During its own initialization the object's global is not assigned yet: `Obj.x` in initializers means `this.x`.
         val self = Subst(emptyMap(), rw = { x: E -> if (x is NameE && x.n == name) NameE("this").also { it.line = x.line } else null })
         val remap = fields.associateWith { f -> FieldD(f.name, f.type, f.isVar, f.init?.let { self.e(it) }, f.lateinit) }
@@ -944,7 +944,7 @@ class Parser(toks: List<Tok>) {
                 if (inits != null && isId("init")) { next(); skipNLOnly(); inits.add(block()); continue }
                 if (isId("companion") && (t[p + 1].k == K.ID && t[p + 1].s == "object" || t[p + 1].k == K.OP && t[p + 1].s == "{")) {
                     val cls = curClass ?: curIface ?: fail("companion objects are only supported in classes and interfaces")
-                    if (companionOf.containsKey(cls)) fail("multiple companion declarations are not supported")
+                    val prevComp = companionOf[cls]
                     // Enum companion blocks would need the entries initialized first.
                     if ((t[p + 1].k == K.OP && t[p + 1].s == "{") && cls in enumClasses) fail("companion blocks in enum classes are not supported")
                     // Companion blocks initialize supertypes' companion blocks first; not modeled.
@@ -952,7 +952,20 @@ class Parser(toks: List<Tok>) {
                         fail("companion blocks in classes with supertypes are not supported")
                     next(); if (isId("object")) next()
                     val cn = if (peek().k == K.ID) ident() else "Companion"
-                    val od = objectDecl("$cls$$cn")
+                    val od0 = objectDecl("$cls$$cn")
+                    // Several companion blocks / a block and the companion object: one object whose members and
+                    // initializers follow program order. Shadowing between them and two supertype lists are refused.
+                    val od = if (prevComp == null) od0 else {
+                        val prev = companions.single { it.name == prevComp.first }
+                        if (prev.name != od0.name) fail("a named companion object next to companion blocks is not supported")
+                        val names = (od0.fields.map { it.name } + od0.methods.map { it.name }).toSet()
+                        if ((prev.fields.map { it.name } + prev.methods.map { it.name }).any { it in names }) fail("companion members declared in two companion declarations are not supported")
+                        if (prev.supers.isNotEmpty() && od0.supers.isNotEmpty()) fail("two companion declarations with supertypes are not supported")
+                        companions.remove(prev)
+                        val withSupers = if (od0.supers.isNotEmpty()) od0 else prev
+                        ClassD(prev.name, prev.fields + od0.fields, withSupers.supers, prev.methods + od0.methods, prev.line, emptyList(), prev.inits + od0.inits,
+                            withSupers.superArgs, superTypeArgs = withSupers.superTypeArgs)
+                    }
                     companions.add(od)
                     companionOf[cls] = od.name to (od.fields.map { it.name } + od.methods.map { it.name }).toSet() + cn
                     continue
