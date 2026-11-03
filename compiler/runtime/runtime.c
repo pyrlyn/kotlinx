@@ -418,14 +418,15 @@ void rt_map_release(Map *m) {
 #pragma clang diagnostic ignored "-Wdeprecated-declarations" /* ucontext is deprecated on macOS but works */
 typedef struct Co { ucontext_t ctx, ret; void *stack; size_t size; int done; } Co;
 static Co *co_cur;
-extern void kx_co_entry(int64_t) __attribute__((weak));
-static void co_tramp(void) { kx_co_entry(0); co_cur->done = 1; }
+/* Set by the generated main when the program has coroutines (its kx_co_entry). */
+void (*rt_co_entry_fn)(int64_t);
+static void co_tramp(void) { rt_co_entry_fn(0); co_cur->done = 1; }
 int64_t rt_co_new(int64_t unused) {
     (void)unused;
     Co *c = calloc(1, sizeof *c);
     c->size = 1 << 20;
     c->stack = mmap(NULL, c->size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-    if (c->stack == MAP_FAILED || !kx_co_entry) { fprintf(stderr, "coroutine: cannot create\n"); exit(1); }
+    if (c->stack == MAP_FAILED || !rt_co_entry_fn) { fprintf(stderr, "coroutine: cannot create\n"); exit(1); }
     getcontext(&c->ctx);
     c->ctx.uc_stack.ss_sp = c->stack; c->ctx.uc_stack.ss_size = c->size; c->ctx.uc_link = &c->ret;
     makecontext(&c->ctx, co_tramp, 0);
