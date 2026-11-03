@@ -519,7 +519,10 @@ private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UIn
  */
 fun withAny(src: String, p: Program): Program {
     if (!ANY_USE.containsMatchIn(src)) return p
-    val boxes = (ANY_BOXED + ANY_BOXED_ARRAYS).joinToString("\n") { "class AnyBox$it(val v: $it)" }
+    // Lists (and `Array<T>`, also a list here) as `Any`: a box per primitive/String element type, and one for lists of
+// objects with the element type erased (as on the JVM).
+    val boxes = (ANY_BOXED + ANY_BOXED_ARRAYS).joinToString("\n") { "class AnyBox$it(val v: $it)" } + "\nclass AnyBoxList(val v: ArrayList<Any>)\n" +
+        ANY_BOXED.joinToString("\n") { "class AnyBoxList$it(val v: ArrayList<$it>)" }
     val lib0 = Parser(Lexer(boxes).lex()).program()
     val all = p.classes + lib0.classes
     val byName = all.associateBy { it.name }
@@ -549,6 +552,7 @@ fun withAny(src: String, p: Program): Program {
         c.isValue || c.methods.any { it.name == "\$equals" } -> sb.append("    if (a is `${c.name}`) return b is `${c.name}` && a == b\n")
     }
     for (b in ANY_BOXED_ARRAYS) sb.append("    if (a is AnyBox$b) return b is AnyBox$b && a.v === b.v\n")
+    for (b in listOf("") + ANY_BOXED) sb.append("    if (a is AnyBoxList$b) return b is AnyBoxList$b && a.v === b.v\n")
     sb.append("    return false\n}\n")
     sb.append("fun anyHashCode__(x: Any?): Int {\n    if (x == null) return 0\n")
     for (b in ANY_BOXED) if (b != "UInt" && b != "ULong" && b != "Byte") sb.append("    if (x is AnyBox$b) return x.v.hashCode()\n")

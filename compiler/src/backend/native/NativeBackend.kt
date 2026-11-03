@@ -216,8 +216,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun boxName(t: Ty): String? = when (t) {
         Ty.I32 -> "Int"; Ty.I64 -> "Long"; Ty.F64 -> "Double"; Ty.F32 -> "Float"; Ty.I1 -> "Boolean"; Ty.Char -> "Char"; Ty.Str -> "String"
         Ty.U32 -> "UInt"; Ty.U64 -> "ULong"; Ty.I8 -> "Byte"
-        is Ty.Arr -> t.toString()
         else -> null
+    }
+
+    /** Name of the `AnyBox*` class holding [t] as `Any`: primitives and strings ([boxName]), arrays and lists. */
+    private fun anyBoxName(t: Ty): String? = when (t) {
+        is Ty.Arr -> t.toString()
+        is Ty.ListTy -> when (val el = t.elem) { is Ty.Cls, is Ty.Iface -> "List"; Ty.Str -> "ListString"; else -> boxName(el)?.takeIf { el !is Ty.Arr && el !is Ty.ListTy }?.let { "List$it" } }
+        else -> boxName(t)
     }
 
     /** A value viewed as `Any`: objects as is, primitives and strings boxed into `AnyBox<T>` (owned). */
@@ -226,14 +232,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Kotlin compares callable references structurally; ours are distinct closures, so refuse them as Any.
         if (v.v in refVals) fail("callable references as Any are not supported")
         if (v.v == "null" || v.t is Ty.Cls || v.t is Ty.Iface || v.t is Ty.NBox) return Val(v.v, t, v.owned)
-        val n = boxName(v.t) ?: fail("${v.t} cannot be used as Any")
+        val n = anyBoxName(v.t) ?: fail("${v.t} cannot be used as Any")
+        // The list box holds `ArrayList<Any>`: the element type is erased (the list's own release function stays with it).
+        val v = if (n == "List") Val(v.v, Ty.ListTy(Ty.Iface("Any")), v.owned) else v
         val b = withTemps(listOf(v)) { (x) -> genNamedCall("AnyBox$n", CallE(NameE("AnyBox$n").also { it.line = line }, emptyList(), listOf(x), null).also { it.line = line }) }
         return Val(b.v, t, true)
     }
 
     /** The primitive or string inside an `AnyBox` (borrowed unless [v] is owned, then the box is released). */
     private fun unbox(v: Val, target: Ty): Val {
-        val ci = classes.getValue("AnyBox${boxName(target)}")
+        val ci = classes.getValue("AnyBox${anyBoxName(target)}")
         val x = Val(emitT("load ${target.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${v.v}, i32 0, i32 2")}"), target)
         if (!v.owned) return x
         if (target.isRef) retain(x.v, target)
@@ -2907,9 +2915,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (target != null && statically(v.t, target)) return nonNull
         if (!(v.t is Ty.Cls || v.t is Ty.Iface)) return if (target == v.t) nonNull else "false"
         if (isAny(v.t) && target is Ty.Iface && target.name.substringBefore('$') == "Comparable") fail("Any as Comparable is not supported")
-        if (isAny(v.t) && target != null && target !is Ty.Cls && target !is Ty.Iface && boxName(target) == null) fail("type check of Any against $target is not supported")
-        val boxed = if (isAny(v.t)) target?.let { boxName(it) } else null
-        val special = if (target == null && !star) when (t.name) {
+        if (isAny(v.t) && target != null && target !is Ty.Cls && target !is Ty.Iface && anyBoxName(target) == null) fail("type check of Any against $target is not supported")
+        val boxed = if (isAny(v.t)) target?.let { anyBoxName(it) } else null
+        val special = if (isAny(v.t) && t.name in LISTY && (star || target is Ty.ListTy)) (if (target is Ty.ListTy) listOfNotNull(anyBoxName(target)?.let { "AnyBox$it" }) else (listOf("") + ANY_BOXED).map { "AnyBoxList$it" })
+        else if (target == null && !star) when (t.name) {
             "Number" -> if (isAny(v.t)) listOf("Int", "Long", "Double", "Float", "Byte", "UInt", "ULong").map { "AnyBox$it" } else emptyList()
             "CharSequence" -> if (isAny(v.t)) listOf("AnyBoxString") else emptyList()
             else -> fail("unknown type ${t.name}")
@@ -2977,7 +2986,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
         }
         val v = genExpr(e.e)
-        if (e.type.name == "Any" && "Any" in ifaces && (boxName(v.t) != null || v.t is Ty.Iface || v.t is Ty.Cls && v.t.name.substringBefore('$') !in genericClasses))
+        if (e.type.name == "Any" && "Any" in ifaces && (anyBoxName(v.t) != null || v.t is Ty.Iface || v.t is Ty.Cls && v.t.name.substringBefore('$') !in genericClasses))
             // `x as Any` of a reference that may be null at run time (an unchecked `T` result): NullPointerException.
             return coerce(if (!e.type.nullable && !e.safe && v.t.llvm == "ptr" && v.v != "null") genNonNull(v) else v, Ty.Iface("Any"))
         if (e.type.name == "Number" && !isAny(v.t) && !v.t.isNum) fail("cast to Number is not supported")
@@ -3000,7 +3009,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (e.type.nullable || e.safe) return Val("null", target)
         }
         if (statically(v.t, target) && (e.type.nullable || e.safe) && v.v != "null") return Val(v.v, target, v.owned)
-        val unboxing = isAny(v.t) && boxName(target) != null
+        val unboxing = isAny(v.t) && anyBoxName(target) != null
         // `a as T` (T unbounded, so nullable) unboxing from Any in an instance where T is a primitive or String:
         // a null passes through for String; otherwise checked like a non-null cast.
         if (unboxing && !e.safe && e.type.nullable && e !== e0) {
@@ -3036,7 +3045,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** Checked cast of reference [v] to [type] (resolved [target]): ClassCastException on mismatch, unboxing from Any. */
     private fun genAsChecked(v: Val, type: TypeRef, target: Ty): Val {
-        val unboxing = isAny(v.t) && boxName(target) != null
+        val unboxing = isAny(v.t) && anyBoxName(target) != null
         val ok = isCheck(v, type)
         val lok = label("as.ok"); val lbad = label("as.bad")
         condBr(ok, lok, lbad)
@@ -3094,7 +3103,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val t = resolveOrNull(tr) ?: continue
             // `x is Int?`: still possibly null, so the alias is a nullable primitive (same box pointer).
             if (isAny(l.t) && tr.nullable && canBox(t)) { scopes.last().vars[n] = Local(l.slot, Ty.NBox(t), false); continue }
-            if (isAny(l.t) && boxName(t) != null) {
+            if (isAny(l.t) && anyBoxName(t) != null) {
                 // Smart cast of an Any to a primitive or String: a borrowed unboxed alias.
                 val x = unbox(Val(emitT("load ptr, ptr ${l.slot}"), l.t), t)
                 val nl = declare(n, t, false, false)
