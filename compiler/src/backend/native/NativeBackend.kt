@@ -2387,8 +2387,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 return Val(a, Ty.Arr(et), true)
             }
             "ArrayList", "mutableListOf", "arrayListOf", "listOf", "arrayOf" -> {
-                if (n == "ArrayList" && e.args.isNotEmpty()) fail("ArrayList(capacity) is not supported")
-                val vals = e.args.map { genArg(it) }
+                // `ArrayList<T>(capacity)`: the capacity is only a hint (evaluated for its effects, then dropped).
+                val capOnly = n == "ArrayList" && e.args.size == 1 && e.args[0] !is NamedE && e.typeArgs.isNotEmpty() && probeType(e.args[0])?.isInt == true
+                if (capOnly) releaseIfOwned(genExpr(e.args[0]))
+                else if (n == "ArrayList" && e.args.isNotEmpty()) fail("ArrayList(collection) is not supported")
+                val vals = if (capOnly) emptyList() else e.args.map { genArg(it) }
                 val et = e.typeArgs.singleOrNull()?.let { resolve(it) } ?: vals.firstOrNull()?.t ?: fail("$n needs an explicit element type, e.g. $n<Long>()")
                 val rel = releaseFn(et) ?: "null"
                 val l = emitT("call ptr @rt_list_new(ptr $rel)")

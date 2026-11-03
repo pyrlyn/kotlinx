@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3015,
-  "UNSUPPORTED": 2476
+  "PASS": 3023,
+  "UNSUPPORTED": 2468
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -513,15 +513,13 @@
    "upstream": "compiler/testData/codegen/box/arrays/arraysOfInlineClass/arrayOfInlineClassOfArrayOfInlineClass.kt"
   },
   "box/box/arrays/collectionAssignGetMultiIndex.kt": {
-   "category": "other: ArrayList(capacity) is not supported",
-   "detail": "ArrayList(capacity) is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/collectionAssignGetMultiIndex.kt"
   },
   "box/box/arrays/collectionGetMultiIndex.kt": {
-   "category": "other: ArrayList(capacity) is not supported",
-   "detail": "ArrayList(capacity) is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/collectionGetMultiIndex.kt"
   },
   "box/box/arrays/constantArrayOfAny.kt": {
@@ -572,15 +570,13 @@
    "upstream": "compiler/testData/codegen/box/arrays/forEachShortArray.kt"
   },
   "box/box/arrays/forInReversed/reversedArrayOriginalUpdatedInLoopBody.kt": {
-   "category": "other: unknown method IntArray.reversedArray()",
-   "detail": "unknown method IntArray.reversedArray()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forInReversed/reversedArrayOriginalUpdatedInLoopBody.kt"
   },
   "box/box/arrays/forInReversed/reversedArrayReversedArrayOriginalUpdatedInLoopBody.kt": {
-   "category": "other: unknown method IntArray.reversedArray()",
-   "detail": "unknown method IntArray.reversedArray()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forInReversed/reversedArrayReversedArrayOriginalUpdatedInLoopBody.kt"
   },
   "box/box/arrays/forInReversed/reversedOriginalUpdatedInLoopBody.kt": {
@@ -619,26 +615,23 @@
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayReversed.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndex.kt": {
-   "category": "other: unknown method UIntArray.withIndex()",
-   "detail": "unknown method UIntArray.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndex.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoElementVar.kt": {
-   "category": "other: unknown method UIntArray.withIndex()",
-   "detail": "unknown method UIntArray.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoElementVar.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoIndexVar.kt": {
-   "category": "other: unknown method UIntArray.withIndex()",
-   "detail": "unknown method UIntArray.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoIndexVar.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexReversed.kt": {
-   "category": "other: unknown method UIntArray.withIndex()",
-   "detail": "unknown method UIntArray.withIndex()",
+   "category": "other: unknown method ArrayList<IndexedValue$UInt>.reversed()",
+   "detail": "unknown method ArrayList<IndexedValue$UInt>.reversed()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexReversed.kt"
   },
@@ -8222,9 +8215,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndex.kt": {
-   "category": "other: unknown method ByteArray.withIndex()",
-   "detail": "unknown method ByteArray.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInByteArrayWithIndexWithSmartCast.kt": {
@@ -23183,8 +23175,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt57973.kt"
   },
   "box/box/inlineClasses/kt70461.kt": {
-   "category": "other: ArrayList(capacity) is not supported",
-   "detail": "ArrayList(capacity) is not supported",
+   "category": "other: ArrayList(collection) is not supported",
+   "detail": "ArrayList(collection) is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt70461.kt"
   },
@@ -26148,8 +26140,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/progressions.kt"
   },
   "box/box/lower/forLoopsLowering/reversed.kt": {
-   "category": "other: unknown method IntArray.reversedArray()",
-   "detail": "unknown method IntArray.reversedArray()",
+   "category": "other: unknown method IntArray.sumOf()",
+   "detail": "unknown method IntArray.sumOf()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/reversed.kt"
   },
@@ -26172,8 +26164,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/vars.kt"
   },
   "box/box/lower/forLoopsLowering/withIndex.kt": {
-   "category": "other: unknown method UIntArray.withIndex()",
-   "detail": "unknown method UIntArray.withIndex()",
+   "category": "other: unknown method IntRange.asSequence()",
+   "detail": "unknown method IntRange.asSequence()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/withIndex.kt"
   },
@@ -35554,8 +35546,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt1572.kt"
   },
   "box/box/safeCall/kt245.kt": {
-   "category": "other: ArrayList(capacity) is not supported",
-   "detail": "ArrayList(capacity) is not supported",
+   "category": "other: unknown method ArrayList<Int>.iterator()",
+   "detail": "unknown method ArrayList<Int>.iterator()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/safeCall/kt245.kt"
   },
