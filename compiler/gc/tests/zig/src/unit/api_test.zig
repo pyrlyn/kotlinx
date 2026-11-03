@@ -216,6 +216,24 @@ fn deferredRc() void {
     c.rt_gc_log_dec(live);
     c.rt_gc_collect();
     check(freed == 3, @src(), "the last logged release frees the live object");
+    // An old-generation (stable) object whose decrement leaves it alive is deferred to a major detection
+    // instead of becoming a minor root (KX_GC_DEFER_LIVE): when that decrement makes it the last way into a
+    // garbage cycle, the cycle is still found.
+    freed = 0;
+    const p = newObj(30);
+    const q = newObj(40);
+    p.next = q; // q's creation reference
+    c.rt_gc_write_barrier(p);
+    q.next = p;
+    c.rt_gc_log_inc(p);
+    c.rt_gc_write_barrier(q);
+    c.rt_gc_log_inc(p);
+    c.rt_gc_log_dec(p); // p is a root while its local reference keeps it alive: promoted to the old generation
+    c.rt_gc_collect();
+    check(freed == 0 and p.val == 30 and q.val == 40, @src(), "a referenced cycle survives a detection");
+    c.rt_gc_log_dec(p); // drop p's local reference: p stays alive (count 1, from q), only the cycle is left
+    for (0..3) |_| c.rt_gc_collect();
+    check(freed == 2, @src(), "a cycle whose last way in was a stable object is reclaimed");
 }
 
 var caps: kx.Caps = .{};
