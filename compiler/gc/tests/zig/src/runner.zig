@@ -57,6 +57,12 @@ fn noteBinary(path: []const u8) void {
 fn compileC(args: []const []const u8, err: []const u8) bool {
     return p.run(.{ .argv = cat(&.{ &.{cc}, covFlags(), args }), .stderr = .{ .file = err } }) == 0;
 }
+/// Per-command timeout (seconds) for every test binary and build step: KX_GC_TEST_TIMEOUT, default 300, 0 disables. A hung test
+/// (e.g. a mutant that deadlocks) is killed, reported as TIMEOUT and counts as a failure.
+fn testTimeout() u32 {
+    const v = p.env("KX_GC_TEST_TIMEOUT") orelse return 300;
+    return std.fmt.parseInt(u32, v, 10) catch 300;
+}
 fn runTo(exe: []const u8, args: []const []const u8, env: []const []const u8, log: p.Sink, err: p.Sink) u8 {
     noteBinary(exe);
     return p.run(.{ .argv = cat(&.{ &.{exe}, args }), .env = covEnv(env), .stdout = log, .stderr = err });
@@ -120,6 +126,7 @@ pub fn main(init: std.process.Init.Minimal) void {
     _ = chdir(p.z(root));
     nkc = p.env("NKC") orelse "compiler/build/newkotlinc.kexe";
     if (!p.executable(nkc)) _ = p.run(.{ .argv = &.{"compiler/build.sh"}, .stderr = .inherit });
+    p.default_timeout_s = testTimeout(); // after the compiler build, which may legitimately take long
     cc = p.env("NK_CC") orelse (if (p.executable("/usr/bin/clang")) "/usr/bin/clang" else "clang");
     // A separate scratch dir, so this can run next to run.sh (which owns compiler/build/gc-tmp).
     out = "compiler/build/gc-zig-tmp";
@@ -230,7 +237,7 @@ fn finish() noreturn {
 /// claim; they are reported as SKIP. Plain -O1/-O3 builds check the results; the TSan build (-O1,
 /// halt_on_error) additionally fails on any data race or mutex misuse inside the collector.
 fn mtTests(gcs: []const []const u8) void {
-    const env = [_][]const u8{ "KX_GC_EXIT_DRAIN=1", "KX_GC_THREADS=4", "KX_GC_LOG_CAP=256", "KX_GC_MIN_THRESHOLD=16" };
+    const env = [_][]const u8{ "KX_GC_EXIT_DRAIN=1", "KX_GC_THREADS=4", "KX_GC_LOG_CAP=256", "KX_GC_MIN_THRESHOLD=16", "KX_GC_MAJOR_RATIO=1" };
     for (gcs) |g| {
         const caps = p.readFile(p.fmt("compiler/gc/{s}/caps", .{g}));
         if (!has(caps, "deferred")) {
@@ -238,10 +245,16 @@ fn mtTests(gcs: []const []const u8) void {
             continue;
         }
         const gc_c = p.fmt("compiler/gc/{s}/gc.c", .{g});
+        const tsan_env = "TSAN_OPTIONS=halt_on_error=1:exitcode=66:second_deadlock_stack=1";
+        // tiny fixed major steps: an incremental major spans many logs and the idle gaps between turns
+        const slow_major = [_][]const u8{ "KX_GC_MAJOR_STEP_US=0", "KX_GC_MAJOR_STEP=64" };
         const variants = [_]struct { name: []const u8, flags: []const []const u8, env: []const []const u8 }{
-            .{ .name = "-O1", .flags = &.{"-O1"}, .env = &.{} },
+            .{ .name = "-O1", .flags = &.{ "-O1", "-DKX_GC_LOCK_CHECK" }, .env = &slow_major },
             .{ .name = "-O3", .flags = &.{"-O3"}, .env = &.{} },
-            .{ .name = "tsan", .flags = &.{ "-O1", "-fsanitize=thread", "-fno-omit-frame-pointer", "-DRT_PLAIN_MALLOC" }, .env = &.{"TSAN_OPTIONS=halt_on_error=1:exitcode=66:second_deadlock_stack=1"} },
+            .{ .name = "tsan", .flags = &.{ "-O1", "-fsanitize=thread", "-fno-omit-frame-pointer", "-DRT_PLAIN_MALLOC", "-DKX_GC_LOCK_CHECK" }, .env = &(.{tsan_env} ++ slow_major) },
+            // stop-the-world background majors (collector_main's non-incremental path)
+            .{ .name = "-O1-stw-major", .flags = &.{ "-O1", "-DKX_GC_LOCK_CHECK" }, .env = &.{"KX_GC_INC_MAJOR=0"} },
+            .{ .name = "tsan-stw-major", .flags = &.{ "-O1", "-fsanitize=thread", "-fno-omit-frame-pointer", "-DRT_PLAIN_MALLOC", "-DKX_GC_LOCK_CHECK" }, .env = &.{ tsan_env, "KX_GC_INC_MAJOR=0" } },
         };
         for (variants) |v| {
             const exe = p.fmt("{s}/mt-{s}{s}", .{ out, g, v.name });
