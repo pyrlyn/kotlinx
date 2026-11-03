@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2938,
-  "UNSUPPORTED": 2553
+  "PASS": 2944,
+  "UNSUPPORTED": 2547
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -18135,8 +18135,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53478.kt"
   },
   "box/box/inference/pcla/issues/kt53553.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Buildee$TargetType, found Buildee$TargetTypeBase",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53553.kt"
   },
@@ -18303,9 +18303,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt64069.kt"
   },
   "box/box/inference/pcla/issues/kt65300a.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300a.kt"
   },
   "box/box/inference/pcla/issues/kt65300b.kt": {
@@ -18426,9 +18425,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/lackOfNullCheckOnNullableInsideBuild.kt"
   },
   "box/box/inference/pcla/lambdaParameterHasTVType.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/lambdaParameterHasTVType.kt"
   },
   "box/box/inference/pcla/memberScope.kt": {
@@ -18777,15 +18775,13 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/MutablePropertiesYieldCase.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ParametersOfBuilderArguments.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter FT of build; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ParametersOfBuilderArguments.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ReceiversOfBuilderArguments.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSinks/ReceiversOfBuilderArguments.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/ExtensionFunctions.kt": {
@@ -18825,27 +18821,25 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/typeInfoSources/UnitReturnTypeOfBuilderParametersExplicitReturnCase.kt"
   },
   "box/box/inference/pcla/pcaRootIsDelegatedConstructorCall.kt": {
-   "category": "unknown it (stdlib API / unsupported decl)",
-   "detail": "unknown name 'it'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/pcaRootIsDelegatedConstructorCall.kt"
   },
   "box/box/inference/pcla/pclaRootIsElvisSynthetic.kt": {
    "category": "generics",
-   "detail": "cannot infer type parameter T of buildConsumer; pass it explicitly",
+   "detail": "cannot infer type parameter T of materialize; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/pclaRootIsElvisSynthetic.kt"
   },
   "box/box/inference/pcla/pclaRootIsIfWhenSyntheticCall.kt": {
    "category": "generics",
-   "detail": "cannot infer type parameter T of buildConsumer; pass it explicitly",
+   "detail": "cannot infer type parameter T of materialize; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/pclaRootIsIfWhenSyntheticCall.kt"
   },
   "box/box/inference/pcla/pclaRootIsTrySyntheticCall.kt": {
-   "category": "generics",
-   "detail": "cannot infer type parameter T of buildConsumer; pass it explicitly",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/pclaRootIsTrySyntheticCall.kt"
   },
   "box/box/inference/pcla/pclaRootIsTrySyntheticCallWithDelegate.kt": {
