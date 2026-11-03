@@ -1072,7 +1072,9 @@ class Parser(toks: List<Tok>) {
                             withSupers.superArgs, superTypeArgs = withSupers.superTypeArgs)
                     }
                     companions.add(od)
-                    companionOf[cls] = od.name to (od.fields.map { it.name } + od.methods.map { it.name }).toSet() + cn
+                    // Properties with accessors are methods `$prop$x` / `$set$x`; `C.x` resolves through the property name.
+                    companionOf[cls] = od.name to (od.fields.map { it.name } + od.methods.map { it.name } +
+                        od.methods.map { it.name.removePrefix("\$prop\$").removePrefix("\$set\$") }).toSet() + cn
                     continue
                 }
                 if (nestedDecl()) continue
@@ -2624,6 +2626,11 @@ class Parser(toks: List<Tok>) {
     private fun postfix(): E {
         var e = primary()
         while (true) {
+            // A line starting with `.` / `?.` continues the expression (no statement can start with them).
+            if (t[p].k == K.NL) {
+                var j = p; while (t[j].k == K.NL) j++
+                if (t[j].k == K.OP && (t[j].s == "." || t[j].s == "?.")) p = j
+            }
             val tk = peek()
             if (tk.k != K.OP) break
             val line = tk.line

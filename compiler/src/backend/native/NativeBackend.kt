@@ -1671,11 +1671,26 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** Leaves the current code position with the pending exception: to the innermost catch dispatch or the caller. */
     private fun unwind() {
+        // Owned arguments already evaluated for a call whose later argument throws (pushed outside the target try).
+        // Only temps of the function being emitted (lambdas and instances may be generated while arguments are evaluated).
+        for (k in argTemps.size - 1 downTo 0) argTemps[k].let { (v, d, b) -> if (b === body && d >= tryStack.size) releaseIfOwned(v) }
         val t = tryStack.lastOrNull()
         if (t != null) {
             for (k in scopes.size - 1 downTo t.second) releaseScope(scopes[k])
             br(t.first)
         } else { releaseAll(); emitDefaultRet() }
+    }
+
+    /** Evaluated call arguments not yet passed, with the try depth at evaluation; see [unwind]. */
+    private val argTemps = ArrayList<Triple<Val, Int, StringBuilder>>()
+
+    /** Evaluates [n] call arguments left to right; a throwing argument releases the owned ones before it. */
+    private fun evalArgs(n: Int, f: (Int) -> Val): List<Val> {
+        val base = argTemps.size; val out = ArrayList<Val>()
+        try {
+            for (i in 0 until n) { val v = f(i); out.add(v); argTemps.add(Triple(v, tryStack.size, body)) }
+        } finally { while (argTemps.size > base) argTemps.removeAt(argTemps.size - 1) }
+        return out
     }
 
     /** After a call that may throw: unwinds if an exception is pending. */
@@ -2614,7 +2629,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val all = excArgs(n, allArgs(e))
                 if (all.size != cd.ctorParams.size) fail("constructor $n expects ${cd.ctorParams.size} arguments")
                 // The class's own (concrete) parameter types, as its constructor was defined: outside any instance bindings.
-                val vals = all.mapIndexed { i, a -> resolveGlobal(cd.ctorParams[i].type).let { pt -> coerce(argFor(a, pt), pt) } }
+                val vals = evalArgs(all.size) { i -> resolveGlobal(cd.ctorParams[i].type).let { pt -> coerce(argFor(all[i], pt), pt) } }
                 val res = Val(emitT("call ptr @ctor.$n(${vals.joinToString(", ") { "${it.t.llvm} ${it.v}" }})"), Ty.Cls(n), true)
                 vals.forEach { releaseIfOwned(it) }
                 afterCall()
@@ -2622,7 +2637,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             val all = excArgs(n, allArgs(e))
             if (all.size != ci.fields.size) fail("constructor $n expects ${ci.fields.size} arguments")
-            val vals = all.mapIndexed { i, a -> consume(coerce(argFor(a, ci.fields[i].second, true), ci.fields[i].second)) }
+            val vals = evalArgs(all.size) { i -> consume(coerce(argFor(all[i], ci.fields[i].second, true), ci.fields[i].second)) }
             val szp = emitT("getelementptr ${ci.llType}, ptr null, i32 1")
             val size = emitT("ptrtoint ptr $szp to i64")
             val tok = reuseFor.remove(e)?.takeIf { l -> scopes.any { it.vars.containsValue(l) && it.refs.remove(l) } }
@@ -2663,7 +2678,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val sig = sigs[n] ?: fail("unknown function '$n'")
         val all = allArgs(e)
         if (sig.params.size != all.size) fail("$n expects ${sig.params.size} arguments")
-        val vals = all.mapIndexed { i, a -> coerce(argFor(a, sig.params[i]), sig.params[i]) }
+        val vals = evalArgs(all.size) { i -> coerce(argFor(all[i], sig.params[i]), sig.params[i]) }
         val args = vals.filter { it.t != Ty.Args }.joinToString(", ") { "${it.t.llvm} ${it.v}" }
         val call = "call ${sig.ret.llvm} @k.$n($args)"
         val res = if (sig.ret == Ty.Unit || sig.ret == Ty.Nothing) { emit(call); Val("", Ty.Unit) } else Val(emitT(call), sig.ret, sig.ret.isRef)
@@ -3572,7 +3587,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun methodArgs(sig: FunSig, e: CallE): List<Val> {
         val all = allArgs(e)
         if (sig.params.size != all.size) fail("${sig.name} expects ${sig.params.size} arguments")
-        return all.mapIndexed { i, a -> coerce(argFor(a, sig.params[i]), sig.params[i]) }
+        return evalArgs(all.size) { i -> coerce(argFor(all[i], sig.params[i]), sig.params[i]) }
     }
 
     /** Call arguments including a trailing lambda (`f(x) { ... }`). */
