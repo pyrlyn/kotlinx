@@ -678,12 +678,11 @@ class Parser(toks: List<Tok>) {
     private fun memberExt(f: FunD, memberTps: Collection<String>): FunD {
         val recv = f.recv!!
         if (curClass == null && curObject == null && curIface == null) fail("member extension functions are only supported in classes, objects and interfaces")
-        if (f.typeParams.isNotEmpty()) fail("generic member extension functions are not supported")
         // Unqualified calls would bind to the dispatch receiver before the extension receiver.
         if (recv.name in memberTps) fail("member extensions on a type parameter are not supported")
         val sub = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n == "this") NameE("\$this_ext").also { it.line = x.line } else null })
         return FunD("mext\$${f.name}", listOf(Param("\$this_ext", recv)) + f.params, f.ret, f.body?.let { sub.block(it) },
-            f.exprBody?.let { sub.e(it) }, f.line, emptyList(), recv)
+            f.exprBody?.let { sub.e(it) }, f.line, f.typeParams, recv)
     }
 
     private fun resolveExtensions(funs: MutableList<FunD>, classes: MutableList<ClassD>) {

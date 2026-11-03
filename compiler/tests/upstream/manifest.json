@@ -2682,8 +2682,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/twoParentsWithTheSameMethodOneBridge.kt"
   },
   "box/box/bridges/typeParameterInExtensionReceiver.kt": {
-   "category": "generics",
-   "detail": "generic member extension functions are not supported (at '",
+   "category": "other: unknown type T2",
+   "detail": "unknown type T2",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/typeParameterInExtensionReceiver.kt"
   },
@@ -8734,8 +8734,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt47245.kt"
   },
   "box/box/controlStructures/kt513.kt": {
-   "category": "generics",
-   "detail": "generic member extension functions are not supported (at '",
+   "category": "unknown add (stdlib API / unsupported decl)",
+   "detail": "unknown function 'add'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt513.kt"
   },
@@ -13125,8 +13125,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/protectedVarWithPrivateSet.kt"
   },
   "box/box/delegatedProperty/provideDelegate/commonCaseForInference.kt": {
-   "category": "generics",
-   "detail": "generic member extension functions are not supported (at '",
+   "category": "property accessors / delegation",
+   "detail": "extension properties need a getter (at 'by')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/commonCaseForInference.kt"
   },
@@ -13183,7 +13183,7 @@
   },
   "box/box/delegatedProperty/provideDelegate/inferenceFromReceiver2.kt": {
    "category": "generics",
-   "detail": "generic member extension functions are not supported (at '",
+   "detail": "cannot infer type parameter T of delegate; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/inferenceFromReceiver2.kt"
   },
@@ -15345,7 +15345,7 @@
   },
   "box/box/extensionFunctions/kt3285.kt": {
    "category": "generics",
-   "detail": "generic member extension functions are not supported (at '",
+   "detail": "generic method 'mext$playWith' in an open class hierarchy is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3285.kt"
   },
@@ -15439,8 +15439,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/suspendConversionForExtensionFunAsASuperType.kt"
   },
   "box/box/extensionFunctions/thisMethodInObjectLiteral.kt": {
-   "category": "generics",
-   "detail": "generic member extension functions are not supported (at '",
+   "category": "unknown this@self (stdlib API / unsupported decl)",
+   "detail": "unknown name 'this@self'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/thisMethodInObjectLiteral.kt"
   },
@@ -28609,13 +28609,13 @@
   },
   "box/box/objects/useImportedMember.kt": {
    "category": "generics",
-   "detail": "generic member extension functions are not supported (at '",
+   "detail": "expected identifier (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useImportedMember.kt"
   },
   "box/box/objects/useImportedMemberFromCompanion.kt": {
    "category": "generics",
-   "detail": "generic member extension functions are not supported (at '",
+   "detail": "expected identifier (at '<')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/useImportedMemberFromCompanion.kt"
   },
@@ -35137,8 +35137,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt5953.kt"
   },
   "box/box/regressions/kt6153.kt": {
-   "category": "generics",
-   "detail": "generic member extension functions are not supported (at '",
+   "category": "unknown header (stdlib API / unsupported decl)",
+   "detail": "unknown function 'header'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt6153.kt"
   },
