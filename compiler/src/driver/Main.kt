@@ -134,6 +134,7 @@ fun main(args: Array<String>) {
     var input: String? = null; var output: String? = null
     var runtime = getenv("NEWKOTLIN_RUNTIME")?.toKString() ?: "compiler/runtime/runtime.c"
     var target = Target.NATIVE
+    if (getenv("NEWKOTLIN_NO_BORROW_FIELD_LOCALS")?.toKString()?.let { it.isNotEmpty() && it != "0" } == true) borrowFieldLocals = false
     var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() } ?: "default"
     var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false; var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
     var i = 0
