@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3069,
-  "UNSUPPORTED": 2422
+  "PASS": 3070,
+  "UNSUPPORTED": 2421
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -189,8 +189,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/naNAndZero.kt"
   },
   "box/box/annotations/instances/nested.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "unknown Inner (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Inner'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/nested.kt"
   },
@@ -207,8 +207,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/nestedDefaults.kt"
   },
   "box/box/annotations/instances/rearrangedArgumentsInAnnotationCall.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "unknown C (stdlib API / unsupported decl)",
+   "detail": "unknown function 'C'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/rearrangedArgumentsInAnnotationCall.kt"
   },
@@ -295,8 +295,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/spreadOperatorInAnnotationArguments.kt"
   },
   "box/box/annotations/spreadOperatorInArrayOf.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "other syntax (at 'val')",
+   "detail": "expected ':' (at 'val')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/spreadOperatorInArrayOf.kt"
   },
@@ -6169,8 +6169,8 @@
    "upstream": "compiler/testData/codegen/box/closures/underscoreParameters.kt"
   },
   "box/box/collectionLiterals/array.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<String>.contentEquals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/array.kt"
   },
@@ -6186,32 +6186,31 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/arraysOperatorOfSpread.kt"
   },
   "box/box/collectionLiterals/companionBlockOf.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "objects / companion objects",
+   "detail": "overloads are not supported: MyStringStorage$Companion.of",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/companionBlockOf.kt"
   },
   "box/box/collectionLiterals/genericCollection.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "other: collection literals need an explicitly typed target (val x: ",
+   "detail": "collection literals need an explicitly typed target (val x: List<Int> = [...])",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/genericCollection.kt"
   },
   "box/box/collectionLiterals/multipleOfOverloads.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "objects / companion objects",
+   "detail": "overloads are not supported: MyList$Companion.of",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/multipleOfOverloads.kt"
   },
   "box/box/collectionLiterals/nonGenericCollection.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/nonGenericCollection.kt"
   },
   "box/box/collectionLiterals/primitiveArrays.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "other: unknown method IntArray.contentEquals()",
+   "detail": "unknown method IntArray.contentEquals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/primitiveArrays.kt"
   },
@@ -6221,8 +6220,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/primitiveArraysOperatorOf.kt"
   },
   "box/box/collectionLiterals/resolvesToOperator.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "objects / companion objects",
+   "detail": "unknown type MyList.Companion",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/resolvesToOperator.kt"
   },
@@ -6233,19 +6232,19 @@
   },
   "box/box/collectionLiterals/stdlibCollections.kt": {
    "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "detail": "unexpected operator (at '&&')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/stdlibCollections.kt"
   },
   "box/box/collectionLiterals/stdlibSequence.kt": {
    "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "detail": "unexpected operator (at '&&')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/stdlibSequence.kt"
   },
   "box/box/collectionLiterals/unsignedArrays.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "other: unknown method UIntArray.contentEquals()",
+   "detail": "unknown method UIntArray.contentEquals()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/unsignedArrays.kt"
   },
