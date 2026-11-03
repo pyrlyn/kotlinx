@@ -1981,6 +1981,13 @@ class Parser(toks: List<Tok>) {
 
     private fun function(): FunD {
         val ctxPs = takeCtx()
+        // `suspend` is one of the modifiers right before `fun` (the callers skip modifiers).
+        var mp = p - 1; var isSusp = false
+        while (mp >= 0 && (t[mp].k == K.ID || t[mp].k == K.NL) && !(t[mp].k == K.ID && t[mp].s in setOf("fun", "val", "var", "class", "object", "interface"))) {
+            if (t[mp].k == K.ID && t[mp].s == "suspend") isSusp = true
+            if (t[mp].k == K.ID && t[mp].s !in MEMBER_MODS && t[mp].s !in LOCAL_MODIFIERS && t[mp].s != "inline") break
+            mp--
+        }
         val line = next().line
         val typeParams = typeParams()
         // Extension receiver: `fun Recv.name`, `fun Box<T>.name`, `fun String?.name`.
@@ -1995,6 +2002,7 @@ class Parser(toks: List<Tok>) {
             else if (rt.args.isEmpty() && rt.name.contains('.')) { recv = TypeRef(rt.name.substringBeforeLast('.'), emptyList(), false); rt.name.substringAfterLast('.') }
             else fail("expected '('")
         } else { p = save; ident() }
+        if (isSusp) SuspendFuns.add(line, name)
         expectOp("(")
         val params = nested(1) {
             val ps = ArrayList<Param>(ctxPs)
@@ -2243,7 +2251,17 @@ class Parser(toks: List<Tok>) {
 
     private fun type(): TypeRef {
         // `suspend` function types are plain function types: coroutines run on a single-threaded scheduler (Coroutines.kt).
-        if (peek().k == K.ID && peek().s == "suspend" && t[p + 1].k == K.OP && t[p + 1].s == "(") next()
+        // `suspend` function types are `$FnS` / `$FnRS` (their invoke is a coroutine, see NativeBackend.genCoroutine).
+        if (peek().k == K.ID && peek().s == "suspend" && (t[p + 1].k == K.ID || t[p + 1].k == K.OP && t[p + 1].s == "(")) {
+            next()
+            val f = type()
+            if (!SuspendFuns.enabled) return f
+            return when (f.name) {
+                "\$Fn" -> TypeRef("\$FnS", f.args, f.nullable)
+                "\$FnR" -> TypeRef("\$FnRS", f.args, f.nullable)
+                else -> fail("expected a function type after 'suspend'")
+            }
+        }
         if (isOp("(")) {
             // Function type `(A, B) -> R` (TypeRef "$Fn" with args = params + return), or a parenthesized type.
             next()

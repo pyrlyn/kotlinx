@@ -7,7 +7,11 @@ private class Local(val slot: String, val t: Ty, val isVar: Boolean)
 private class Scope { val vars = HashMap<String, Local>(); val refs = ArrayList<Local>() }
 /** Lambdas synthesized for callable references, per reference node; survives code-generation restarts. */
 private object RefLambdas { val map = HashMap<UnE, LambdaE>(); val setters = HashMap<UnE, LambdaE>() }
-private class FunSig(val name: String, val params: List<Ty>, val ret: Ty)
+/** [suspend]: compiled as an LLVM coroutine (see genCoroutine); calls from coroutines await it. */
+private class FunSig(val name: String, val params: List<Ty>, val ret: Ty, val suspend: Boolean = false)
+private fun isSuspFnName(n: String) = n.startsWith("\$FnS$") || n.startsWith("\$FnRS$")
+/** `$FnS` / `$FnRS` (suspend function types) act like `$Fn` / `$FnR` for inference. */
+private fun baseFn(n: String) = when (n) { "\$FnS" -> "\$Fn"; "\$FnRS" -> "\$FnR"; else -> n }
 /** Object layout: { i64 refcount, ptr vtable, fields... }; vtable[0] = release function. */
 /**
  * `fields`: inherited fields first (prefix layout), then own. `supers`: all superclasses and interfaces (transitive).
@@ -98,6 +102,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private var term = false
     private val scopes = ArrayList<Scope>()
     private var retTy: Ty = Ty.Unit
+    /** The function being generated is a coroutine (suspend fun or suspend lambda): it may suspend and await. */
+    private var inCoroutine = false
     private var line = 0
 
     private fun fail(msg: String): Nothing = throw CompileError("line $line: $msg")
@@ -181,6 +187,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "ArrayList", "MutableList", "List", "Sequence" -> Ty.ListTy(resolve(t.args.single()).also { if (it == Ty.Unit) fail("lists of Unit are not supported") })
         "\$Fn" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()))
         "\$FnR" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()), receiver = true)
+        "\$FnS" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()), susp = true)
+        "\$FnRS" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()), receiver = true, susp = true)
         "Array" -> if (t.args.singleOrNull()?.name == "String" && mainParams) Ty.Args else Ty.ListTy(resolve(t.args.single()))
         // `Set<T>` / `MutableSet<T>` / `LinkedHashSet<T>`: the prelude's `HashSet<T>`.
         "Set", "MutableSet", "LinkedHashSet" -> if ("HashSet" in genericClasses && t.args.size == 1) instanceTy("HashSet", t.args) else fail("unknown type $t")
@@ -338,7 +346,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         for (i in prog.ifaces) ifaces[i.name] = IfaceInfo(i.name, emptyMap())
         for (i in prog.ifaces) {
             line = i.line
-            ifaces[i.name] = IfaceInfo(i.name, i.methods.associate { m -> m.name to FunSig(m.name, m.params.map { resolve(it.type) }, m.ret?.let { resolve(it) } ?: Ty.Unit) })
+            ifaces[i.name] = IfaceInfo(i.name, i.methods.associate { m -> m.name to FunSig(m.name, m.params.map { resolve(it.type) }, m.ret?.let { resolve(it) } ?: Ty.Unit, (m.name == "invoke" && isSuspFnName(i.name)) || SuspendFuns.isSuspend(m)) })
             for (m in i.methods) if (m.name !in slots) slots.add(m.name)
         }
         for (c in classOrder) {
@@ -370,7 +378,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 }
                 if (m.ret == null && m.exprBody != null) { inferPending.add(m to c); continue }
                 val ret = m.ret?.let { resolve(it) } ?: Ty.Unit
-                val sig = FunSig(m.name, m.params.map { resolve(it.type) }, ret)
+                val sig = FunSig(m.name, m.params.map { resolve(it.type) }, ret, SuspendFuns.isSuspend(m) || (m.name == "invoke" && c.name.startsWith("\$LamS")))
                 c.superClass?.let { s -> methodSigs["$s.${m.name}"]?.let { if (it.params != sig.params || it.ret != sig.ret) fail("override of '${m.name}' in ${c.name} changes its signature") } }
                 methodSigs["${c.name}.${m.name}"] = sig
             }
@@ -389,7 +397,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (f.ret == null && f.body == null) { inferPending.add(f to null); continue }
             val ret = f.ret?.let { resolve(it) } ?: Ty.Unit
             mainParams = f.name == "main"
-            sigs[f.name] = FunSig(f.name, f.params.map { resolve(it.type) }, ret)
+            sigs[f.name] = FunSig(f.name, f.params.map { resolve(it.type) }, ret, SuspendFuns.isSuspend(f))
             mainParams = false
         }
         // Explicitly typed top-level properties (incl. enum entries) are visible to class property inference.
@@ -611,7 +619,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val sig = instSig ?: if (cls != null) methodSigs.getValue("${cls.name}.${f.name}") else sigs.getValue(f.name)
         owner = cls; tryStack.clear(); finStack.clear()
         allocas = StringBuilder(); body = StringBuilder(); tmpN = 0; lblN = 0; cur = "entry"; term = false
-        scopes.clear(); retTy = sig.ret; line = f.line
+        scopes.clear(); retTy = sig.ret; line = f.line; inCoroutine = sig.suspend
         scopes.add(Scope())
         val params = ArrayList<String>()
         if (cls != null) params.add("ptr %this")
@@ -635,8 +643,77 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         val name = if (instSym != null) instSym else if (cls != null) "m.${cls.name}.${f.name}" else if (f.name == "main") "k.main" else "k.${f.name}"
         val attrs = if (f.name == "main") "" else " nounwind"
+        if (sig.suspend) { genCoroutine(name, params, f.name == "main"); inCoroutine = false; return }
         funcs.append("define internal ${sig.ret.llvm} @$name(${params.joinToString(", ")})$attrs {\nentry:\n")
         funcs.append(allocas).append(body).append("}\n\n")
+    }
+
+    /**
+     * A suspend function as an LLVM switched-resume coroutine (CPS state machine): `ptr @f(params..., ptr %co.ret)`
+     * returns its handle after an initial suspension; LLVM's CoroSplit turns it into resume/destroy functions and
+     * spills locals and values live across suspension points into the heap frame. A `ret` of the body stores the
+     * result into `%co.ret` (caller's slot, null for Unit) and reaches the final suspension.
+     */
+    private fun genCoroutine(name: String, params: List<String>, isMain: Boolean) {
+        if (isMain) fail("suspend fun main is not supported; use fun main() = runBlocking { ... }")
+        val out = StringBuilder()
+        for (ln in body.lines()) {
+            if (ln == "  ret void") { out.append("  br label %co.final\n"); continue }
+            if (ln.startsWith("  ret ")) {
+                val rest = ln.removePrefix("  ret ")
+                val sp = rest.indexOf(' ')
+                out.append("  store ${rest.substring(0, sp)} ${rest.substring(sp + 1)}, ptr %co.ret\n  br label %co.final\n"); continue
+            }
+            out.append(ln).append('\n')
+        }
+        funcs.append("define internal ptr @$name(${(params + "ptr %co.ret").joinToString(", ")}) presplitcoroutine nounwind {\nco.pro:\n")
+        // Allocas first; their initializing stores run after coro.begin (the frame may hold them).
+        val al = allocas.lines().filter { it.isNotBlank() }
+        for (ln in al) if (" = alloca " in ln) funcs.append(ln).append('\n')
+        funcs.append("  %co.id = call token @llvm.coro.id(i32 0, ptr null, ptr null, ptr null)\n")
+        funcs.append("  %co.sz = call i64 @llvm.coro.size.i64()\n  %co.mem = call ptr @malloc(i64 %co.sz)\n")
+        funcs.append("  %co.hdl = call ptr @llvm.coro.begin(token %co.id, ptr %co.mem)\n")
+        for (ln in al) if (" = alloca " !in ln) funcs.append(ln).append('\n')
+        funcs.append("  %co.s0 = call i8 @llvm.coro.suspend(token none, i1 false)\n")
+        funcs.append("  switch i8 %co.s0, label %co.susp [ i8 0, label %entry  i8 1, label %co.clean ]\nentry:\n")
+        funcs.append(out)
+        funcs.append("co.final:\n  %co.sf = call i8 @llvm.coro.suspend(token none, i1 true)\n")
+        funcs.append("  switch i8 %co.sf, label %co.susp [ i8 0, label %co.clean  i8 1, label %co.clean ]\n")
+        funcs.append("co.clean:\n  %co.fm = call ptr @llvm.coro.free(token %co.id, ptr %co.hdl)\n  call void @free(ptr %co.fm)\n  br label %co.susp\n")
+        funcs.append("co.susp:\n  %co.e = call i1 @llvm.coro.end(ptr %co.hdl, i1 false, token none)\n  ret ptr %co.hdl\n}\n\n")
+    }
+
+    /** A suspension point of the current coroutine: control returns to whoever resumed it. */
+    private fun coSuspend() {
+        if (!inCoroutine) fail("suspension point outside a coroutine")
+        val cont = label("co.cont")
+        val s0 = emitT("call i8 @llvm.coro.suspend(token none, i1 false)")
+        emit("switch i8 $s0, label %co.susp [ i8 0, label %$cont  i8 1, label %co.clean ]"); term = true
+        startBlock(cont)
+    }
+
+    /**
+     * Call of a suspend function from a coroutine: create the callee's coroutine, then resume it until it is done,
+     * suspending this coroutine each time the callee suspends (a resume of this one resumes the callee first).
+     */
+    private fun awaitCall(call: String, ret: Ty): Val {
+        if (!inCoroutine) fail("suspend function called outside a coroutine (call it from a suspend function or a suspend lambda)")
+        val unit = ret == Ty.Unit || ret == Ty.Nothing
+        val slot = if (unit) "null" else "%co.slot${tmpN++}".also { allocas.append("  $it = alloca ${ret.llvm}\n") }
+        val head = "call ${ret.llvm} "
+        if (!call.startsWith(head) || !call.endsWith(")")) fail("internal: unexpected suspend call shape")
+        val inner = call.removePrefix(head).dropLast(1)
+        val h = emitT("call ptr $inner${if (inner.endsWith("(")) "" else ", "}ptr $slot)")
+        val loop = label("co.aw"); val done = label("co.awd"); val wait = label("co.aws")
+        br(loop); startBlock(loop)
+        emit("call void @llvm.coro.resume(ptr $h)")
+        condBr(emitT("call i1 @llvm.coro.done(ptr $h)"), done, wait)
+        startBlock(wait)
+        val s0 = emitT("call i8 @llvm.coro.suspend(token none, i1 false)")
+        emit("switch i8 $s0, label %co.susp [ i8 0, label %$loop  i8 1, label %co.clean ]"); term = true
+        startBlock(done)
+        emit("call void @llvm.coro.destroy(ptr $h)")
+        return if (unit) Val("", Ty.Unit) else Val(emitT("load ${ret.llvm}, ptr $slot"), ret, ret.isRef)
     }
 
     /**
@@ -795,7 +872,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (t == null) continue
                 line = f.line
                 if (t == Ty.RawPtr || t == Ty.Args) fail("expression-bodied function '${f.name}' needs an explicit return type")
-                val sig = FunSig(f.name, params, t)
+                val sig = FunSig(f.name, params, t, SuspendFuns.isSuspend(f) || (c != null && f.name == "invoke" && c.name.startsWith("\$LamS")))
                 if (c == null) sigs[f.name] = sig
                 else {
                     c.superClass?.let { s -> methodSigs["$s.${f.name}"]?.let { if (it.params != sig.params || it.ret != sig.ret) fail("override of '${f.name}' in ${c.name} changes its signature") } }
@@ -1845,7 +1922,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             res.all { (v, _) -> v.t is Ty.Cls || v.t is Ty.Iface || (v.t !is Ty.NBox && boxName(v.t) != null) } &&
             !res.all { (v, _) -> (t is Ty.Iface || t is Ty.Cls) && (v.t == t || v.t is Ty.Cls) }) return mergeAsAny(res)
         if (!exhaustive || t == Ty.Unit || res.any { it.first.t != t && !(it.first.v == "null" && t.llvm == "ptr") && !((t is Ty.Iface || t is Ty.Cls) && it.first.t is Ty.Cls) }) {
-            for ((v, _) in res) if (v.t.isRef && v.owned) fail("if/when branches yield references of different types; assign the result or make the types match")
+            val owned = res.filter { (v, _) -> v.t.isRef && v.owned }
+            if (owned.isNotEmpty()) {
+                if (!exhaustive) fail("if/when branches yield references of different types; assign the result or make the types match")
+                // The value is discarded: each owned branch result is released in the join block (null from the other branches).
+                val phis = owned.map { (v, l) -> Val(emitT("phi ptr " + res.joinToString(", ") { (_, l2) -> "[ ${if (l2 == l) v.v else "null"}, %$l2 ]" }), v.t) }
+                for (pv in phis) {
+                    val rel = label("mrel"); val skip = label("mskip")
+                    condBr(emitT("icmp ne ptr ${pv.v}, null"), rel, skip)
+                    startBlock(rel); release(pv); br(skip)
+                    startBlock(skip)
+                }
+            }
             return Val("", Ty.Unit)
         }
         if (res.size == 1) return res[0].first
@@ -2240,7 +2328,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val ps = methodParams(sci, n)
         val e2 = if (ps != null && (e.args.any { it is NamedE } || allArgs(e).size < ps.size || ps.any { it.vararg })) normalize(ps, e, NameE("this").also { it.line = line }, sci) else e
         val args = methodArgs(sig, e2)
-        return finishCall("call ${sig.ret.llvm} @m.$impl.$n(ptr %this${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args)
+        return finishCall("call ${sig.ret.llvm} @m.$impl.$n(ptr %this${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args, susp = sig.suspend)
     }
 
     private fun genCall(e: CallE): Val {
@@ -2513,6 +2601,29 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 return Val(emitT("call ptr @rt_arr_new(i64 ${size.v}, i64 ${et.size})"), Ty.Arr(et), true)
             }
             COLL_LIT -> fail("collection literals need an explicitly typed target (val x: List<Int> = [...])")
+            // Coroutine primitives used by the kotlinx.coroutines library (Kotlinx.kt).
+            "kxCoSuspend" -> { coSuspend(); return Val("", Ty.Unit) }
+            "kxCoStart" -> {
+                // Creates the coroutine of a `suspend () -> Unit` value without running it; the handle as a Long.
+                val f = genExpr(e.args.single())
+                val ii = (f.t as? Ty.Iface)?.takeIf { isSuspFnName(it.name) }?.let { ifaces.getValue(it.name) } ?: fail("kxCoStart needs a suspend function value")
+                if (f.owned) fail("kxCoStart needs a stored function value")
+                if (ii.methods.getValue("invoke").params.isNotEmpty()) fail("kxCoStart needs a suspend () -> Unit")
+                val vt = emitT("load ptr, ptr ${emitT("getelementptr i8, ptr ${f.v}, i64 8")}")
+                val fp = emitT("load ptr, ptr ${emitT("getelementptr ptr, ptr $vt, i64 ${slots.indexOf("invoke") + VT_HEADER}")}")
+                val h = emitT("call ptr $fp(ptr ${f.v}, ptr null)")
+                return Val(emitT("ptrtoint ptr $h to i64"), Ty.I64)
+            }
+            "kxCoResume" -> {
+                // Resumes a coroutine handle; true when it has finished.
+                val h = emitT("inttoptr i64 ${coerce(genExpr(e.args.single()), Ty.I64).v} to ptr")
+                emit("call void @llvm.coro.resume(ptr $h)")
+                return Val(emitT("call i1 @llvm.coro.done(ptr $h)"), Ty.I1)
+            }
+            "kxCoDestroy" -> {
+                emit("call void @llvm.coro.destroy(ptr ${emitT("inttoptr i64 ${coerce(genExpr(e.args.single()), Ty.I64).v} to ptr")})")
+                return Val("", Ty.Unit)
+            }
             "println", "print" -> {
                 val a = e.args.singleOrNull()
                 if (a is StrL) for (p in a.parts) {
@@ -2691,7 +2802,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val vals = evalArgs(all.size) { i -> coerce(argFor(all[i], sig.params[i]), sig.params[i]) }
         val args = vals.filter { it.t != Ty.Args }.joinToString(", ") { "${it.t.llvm} ${it.v}" }
         val call = "call ${sig.ret.llvm} @k.$n($args)"
-        val res = if (sig.ret == Ty.Unit || sig.ret == Ty.Nothing) { emit(call); Val("", Ty.Unit) } else Val(emitT(call), sig.ret, sig.ret.isRef)
+        val res = if (sig.suspend) awaitCall(call, sig.ret)
+            else if (sig.ret == Ty.Unit || sig.ret == Ty.Nothing) { emit(call); Val("", Ty.Unit) } else Val(emitT(call), sig.ret, sig.ret.isRef)
         vals.forEach { releaseIfOwned(it) }
         afterCall()
         return if (sig.ret == Ty.Nothing) neverReturns() else res
@@ -2729,14 +2841,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val pt = f.params[i].type
             fun isBound(r: TypeRef): Boolean = (r.name !in f.typeParams || r.name in env) && r.args.all { isBound(it) }
             fun res(r: TypeRef): Ty? = if (!isBound(r)) null else { val sv = tenv; tenv = sv + env; try { resolve(r) } finally { tenv = sv } }
-            val isFn = pt.name == "\$Fn" || pt.name == "\$FnR"
+            val ptn = baseFn(pt.name)
+            val isFn = ptn == "\$Fn" || ptn == "\$FnR"
             if (f.name == "with" && hasReturn(a.body.stmts) && all.size == 2 && i == 1 && a.body.params.isEmpty() && rawN[0] != null) return inlineWith(rawN[0]!!, a.body)
             if (f.name in SCOPE_FUN_NAMES && hasReturn(a.body.stmts)) fail("non-local return from a '${f.name}' lambda is not supported")
-            if (pt.name == "\$FnR" && pt.args.size >= 2 && !isBound(pt.args[0])) builderInfer(a.body, pt.args[0], f.typeParams, env)
+            if (ptn == "\$FnR" && pt.args.size >= 2 && !isBound(pt.args[0])) builderInfer(a.body, pt.args[0], f.typeParams, env)
             if (isFn && pt.args.dropLast(1).any { !isBound(it) }) usageInfer(a.body, pt, f.typeParams, env)
             val lps = if (isFn) pt.args.dropLast(1).map { res(it) }.takeIf { l -> l.all { it != null } }?.map { it!! } else null
             val lrt = if (isFn) res(pt.args.last()) else null
-            rawN[i] = genLambda(a, lps, lrt, pt.name == "\$FnR")
+            rawN[i] = genLambda(a, lps, lrt, ptn == "\$FnR", susp = ptn != pt.name)
             unify(pt, rawN[i]!!.t, f.typeParams, env)
         }
         val raw = rawN.map { it!! }
@@ -2748,7 +2861,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val saved = tenv; tenv = bound
             val sig = try {
                 val ps = f.params.map { resolve(it.type) }
-                FunSig(f.name, ps, f.ret?.let { resolve(it) } ?: if (f.exprBody != null) probeGenericRet(f, sym, ps, cls) else Ty.Unit)
+                FunSig(f.name, ps, f.ret?.let { resolve(it) } ?: if (f.exprBody != null) probeGenericRet(f, sym, ps, cls) else Ty.Unit, SuspendFuns.isSuspend(f))
             } finally { tenv = saved }
             if (cls != null) instCls[sym] = cls
             Triple(f, bound, sig).also { instances[sym] = it; pending.add(sym) }
@@ -2757,7 +2870,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val vals = raw.mapIndexed { i, v -> coerce(v, sig.params[i]) }
         val args = (listOfNotNull(recv?.let { "ptr ${it.v}" }) + vals.map { "${it.t.llvm} ${it.v}" }).joinToString(", ")
         // An owned receiver (e.g. `Obj.genericMethod(...)`) is released when the call throws, like in callMethod0.
-        return finishCall("call ${sig.ret.llvm} @$sym($args)", sig.ret, vals, recv)
+        return finishCall("call ${sig.ret.llvm} @$sym($args)", sig.ret, vals, recv, susp = sig.suspend)
     }
 
     /** Builder-style receivers of standard collections: method name -> parameter types over the receiver's type parameters. */
@@ -2778,7 +2891,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * `val x: Buildee<Target> = this` and `consume(it)` with a non-generic top-level `consume(p: String)`.
      */
     private fun usageInfer(b: Block, pt: TypeRef, tps: List<String>, env: MutableMap<String, Ty>) {
-        val recv = pt.name == "\$FnR"
+        val recv = baseFn(pt.name) == "\$FnR"
         val ps = pt.args.dropLast(1)
         val rest = if (recv) ps.drop(1) else ps
         val names = if (b.params.isNotEmpty()) b.params else if (rest.size == 1) listOf("it") else emptyList()
@@ -3029,7 +3142,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         when {
             t is Ty.ListTy && ref.args.size == 1 -> unify(ref.args[0], t.elem, tps, env)
             t is Ty.MapTy && ref.args.size == 2 -> { unify(ref.args[0], t.k, tps, env); unify(ref.args[1], t.v, tps, env) }
-            t is Ty.Iface && (ref.name == "\$Fn" || ref.name == "\$FnR") -> fnSig(t)?.let { s -> if (s.params.size + 1 == ref.args.size) { s.params.forEachIndexed { i, p -> unify(ref.args[i], p, tps, env) }; unify(ref.args.last(), s.ret, tps, env) } }
+            t is Ty.Iface && (baseFn(ref.name) == "\$Fn" || baseFn(ref.name) == "\$FnR") -> fnSig(t)?.let { s -> if (s.params.size + 1 == ref.args.size) { s.params.forEachIndexed { i, p -> unify(ref.args[i], p, tps, env) }; unify(ref.args.last(), s.ret, tps, env) } }
             t is Ty.Cls || t is Ty.Iface -> {
                 val n = if (t is Ty.Cls) t.name else (t as Ty.Iface).name
                 val o = instOrigin[n]
@@ -3629,7 +3742,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** An argument with a known parameter type: lambdas get their parameter/return types from a function type. */
     private fun argFor(a: E, t: Ty, own: Boolean = false): Val =
-        adaptedRef(a, t) ?: if (a is LambdaE) fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t)) } else withExpected(a, t) { if (own) genArg(a) else genExpr(a) }
+        adaptedRef(a, t) ?: if (a is LambdaE) fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t), susp = t is Ty.Iface && isSuspFnName(t.name)) } else withExpected(a, t) { if (own) genArg(a) else genExpr(a) }
 
     /**
      * Adapted reference `::f` passed where a function type is expected whose shape differs from `f`'s: defaults and
@@ -3678,8 +3791,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** Function type `(ps) -> r`: the interface `$Fn$...` with one `invoke` method (requested if not in the program yet). */
     /** Function type; [receiver]: `R.(A) -> X` (a distinct `$FnR...` interface whose first parameter is `this`). */
-    private fun fnTy(ps: List<Ty>, r: Ty, receiver: Boolean = false): Ty.Iface {
-        val name = mangle(if (receiver) "\$FnR" else "\$Fn", (ps + r).map { tyRef(it) })
+    private fun fnTy(ps: List<Ty>, r: Ty, receiver: Boolean = false, susp: Boolean = false): Ty.Iface {
+        val name = mangle((if (receiver) "\$FnR" else "\$Fn") + (if (susp) "S" else ""), (ps + r).map { tyRef(it) })
         if (name in ifaces) return Ty.Iface(name)
         throw NeedIface(InterfaceD(name, listOf(FunD("invoke", ps.mapIndexed { i, t -> Param("p$i", tyRef(t)) }, tyRef(r), null, null, 0)), 0))
     }
@@ -3688,9 +3801,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * `R.(A) -> T` and `(R, A) -> T` are the same type at run time: every closure implements both interfaces (same
      * `invoke` signature), so a value of one converts to the other without a wrapper.
      */
-    private fun twinFn(ps: List<Ty>, r: Ty, receiver: Boolean): Ty.Iface? = if (ps.isEmpty()) null else fnTy(ps, r, !receiver)
+    private fun twinFn(ps: List<Ty>, r: Ty, receiver: Boolean, susp: Boolean = false): Ty.Iface? = if (ps.isEmpty()) null else fnTy(ps, r, !receiver, susp)
     private fun isFnTwin(a: Ty, b: Ty): Boolean = a is Ty.Iface && b is Ty.Iface &&
-        ((a.name.startsWith("\$FnR$") && b.name == "\$Fn$" + a.name.removePrefix("\$FnR$")) || (b.name.startsWith("\$FnR$") && a.name == "\$Fn$" + b.name.removePrefix("\$FnR$")))
+        ((a.name.startsWith("\$FnR$") && b.name == "\$Fn$" + a.name.removePrefix("\$FnR$")) || (b.name.startsWith("\$FnR$") && a.name == "\$Fn$" + b.name.removePrefix("\$FnR$")) ||
+         (a.name.startsWith("\$FnRS$") && b.name == "\$FnS$" + a.name.removePrefix("\$FnRS$")) || (b.name.startsWith("\$FnRS$") && a.name == "\$FnS$" + b.name.removePrefix("\$FnRS$")))
 
     private fun invokeFn(f: Val, e: CallE): Val {
         val ii = ifaces.getValue((f.t as Ty.Iface).name)
@@ -3857,7 +3971,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
     }
 
-    private fun genLambda(e: LambdaE, ps: List<Ty>?, ret: Ty?, receiver: Boolean = false, asRecvFn: Boolean = false): Val {
+    private fun genLambda(e: LambdaE, ps: List<Ty>?, ret: Ty?, receiver: Boolean = false, asRecvFn: Boolean = false, susp: Boolean = false): Val {
         val b0 = e.body
         val declared = b0.params
         if (receiver) {
@@ -3869,7 +3983,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // Declared parameter types (`{ x: Int -> }`) must agree with the function type.
             b0.paramTypes.forEachIndexed { i, pt -> if (pt != null && resolve(pt) != rest[i]) fail("lambda parameter '${names[i]}' is declared ${resolve(pt)}, expected ${rest[i]}") }
             val b1 = RecvLambdas.map.getOrPut(b0) { Block(b0.stmts, listOf("this") + names.mapIndexed { i, n -> if (n == "_") "\$_$i" else n }, emptyList()) }
-            return genLambda(LambdaE(b1).also { it.line = e.line }, ps, ret, false, asRecvFn = true)
+            return genLambda(LambdaE(b1).also { it.line = e.line }, ps, ret, false, asRecvFn = true, susp = susp)
         }
         val ptys: List<Ty> = if (declared.isEmpty()) {
             if (ps == null || ps.size <= 1) ps ?: emptyList() else fail("lambda needs ${ps.size} parameters")
@@ -3881,8 +3995,19 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val caps = ArrayList<Pair<String, Ty>>()
         var outer = false
         val o = owner
+        // Inside a receiver lambda, unqualified members of its receiver (`this` parameter) are captured through `$recv`.
+        val recvL = scopes.reversed().firstNotNullOfOrNull { it.vars["this"] }
+        val rc = (recvL?.t as? Ty.Cls)?.let { classes[it.name] }
+        val recvNames = HashSet<String>()
+        // A receiver lambda's own receiver wins over the enclosing one.
+        val ownRc = if ("this" in pnames) (ptys.getOrNull(pnames.indexOf("this")) as? Ty.Cls)?.let { classes[it.name] } else null
+        if (rc != null && rc !== o) for (n in free) {
+            if (n in pnames || n == "this" || scopes.any { n in it.vars }) continue
+            if ("this" in pnames && (ownRc == null || ownRc.index(n) >= 0 || n in ownRc.methods || "\$prop\$$n" in ownRc.methods)) continue
+            if (rc.index(n) >= 0 || n in rc.methods || "\$prop\$$n" in rc.methods) recvNames.add(n)
+        }
         for (n in free) {
-            if (n in pnames) continue
+            if (n in pnames || n in recvNames) continue
             val l = scopes.reversed().firstNotNullOfOrNull { it.vars[n] }
             if (l != null) {
                 if (l.t == Ty.Args || l.t == Ty.Pinned) fail("cannot capture '$n' in a lambda")
@@ -3891,7 +4016,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (o != null && (n == "this" || o.index(n) >= 0 || n in o.methods || "\$prop\$$n" in o.methods)) outer = true
         }
         val capNames = caps.map { it.first }.toSet()
-        val lamBody = if (!outer) b0 else b0.rewritten ?: run {
+        val lamBody0 = if (!outer) b0 else b0.rewritten ?: run {
             val oc = o!!
             Subst(emptyMap(), { x ->
                 when {
@@ -3903,22 +4028,27 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }).block(b0)
         }.also { b0.rewritten = it }
         if (outer) caps.add("\$outer" to Ty.Cls(o!!.name))
+        val lamBody = if (recvNames.isEmpty()) lamBody0 else RecvCaps.map.getOrPut(lamBody0) {
+            Subst(emptyMap(), { x -> if (x is NameE && x.n in recvNames) MemberE(NameE("\$recv"), x.n, false).also { it.line = x.line } else null }).block(lamBody0)
+        }
+        if (recvNames.isNotEmpty()) caps.add("\$recv" to recvL!!.t)
         val rt = when {
             ret == Ty.Unit -> Ty.Unit
             ret != null -> ret
             else -> {
                 // Probe the body's type in the current context; the probe's IR is rolled back.
                 val sb = body.length; val sa = allocas.length; val sc = cur; val st = term; val sm = HashSet(moveNodes)
+                val sco = inCoroutine; inCoroutine = susp
                 scopes.add(Scope())
                 pnames.forEachIndexed { i, n -> declare(n, ptys[i], false, false) }
                 val t = try { genBlockBody(b0, true).t } finally {
-                    scopes.removeAt(scopes.size - 1)
+                    scopes.removeAt(scopes.size - 1); inCoroutine = sco
                     body.setLength(sb); allocas.setLength(sa); cur = sc; term = st; moveNodes.clear(); moveNodes.addAll(sm)
                 }
                 if (t == Ty.Nothing) Ty.Unit else t
             }
         }
-        val fnT = fnTy(ptys, rt, asRecvFn)
+        val fnT = fnTy(ptys, rt, asRecvFn, susp)
         // Inside a generic function instance, a body naming its type parameters (`it as T`) is compiled as its own
         // class with them substituted (the class is generated outside the instance's type bindings).
         val usedTps = if (tenv.isEmpty()) emptyList() else typeNamesIn(lamBody).filter { it in tenv }.distinct().sorted()
@@ -3926,13 +4056,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Function types do not track nullable primitives (`(B?) -> Int?` is `(B) -> Int`): a null result (from a
         // safe call or a null literal in the body) would be unboxed and fail at run time.
         if (rt is Ty.NBox && mayYieldNull(lamBody)) fail("lambdas returning a nullable ${rt.inner} are not supported")
-        val name = mangle("\$Lam${LamIds.id(b0)}", (caps.map { it.second } + ptys + rt + usedTps.map { tenv.getValue(it) }).map { tyRef(it) })
+        val name = mangle((if (susp) "\$LamS" else "\$Lam") + LamIds.id(b0), (caps.map { it.second } + ptys + rt + usedTps.map { tenv.getValue(it) }).map { tyRef(it) })
         if (name !in classes) {
             val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i])) }, tyRef(rt), null,
                 WhenE(null, listOf(null to body1)).also { it.line = line }, line)
-            throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn)?.name), listOf(m), line))
+            throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line))
         }
-        val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "\$self" else n).also { it.line = line } }, null))
+        val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "\$self" else if (n == "\$recv") "this" else n).also { it.line = line } }, null))
         return Val(v.v, fnT, v.owned)
     }
 
@@ -3954,8 +4084,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return out
     }
 
-    private fun finishCall(call: String, ret: Ty, args: List<Val>, recv: Val? = null): Val {
-        val res = if (ret == Ty.Unit || ret == Ty.Nothing) { emit(call); Val("", Ty.Unit) } else Val(emitT(call), ret, ret.isRef)
+    private fun finishCall(call: String, ret: Ty, args: List<Val>, recv: Val? = null, susp: Boolean = false): Val {
+        val res = if (susp) awaitCall(call, ret)
+            else if (ret == Ty.Unit || ret == Ty.Nothing) { emit(call); Val("", Ty.Unit) } else Val(emitT(call), ret, ret.isRef)
         args.forEach { releaseIfOwned(it) }
         afterCall(listOfNotNull(recv))
         return if (ret == Ty.Nothing) neverReturns() else res
@@ -3993,10 +4124,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val vt = emitT("load ptr, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 8")}")
             val slot = if (n + NARROW in slots) n + NARROW else n
             val fp = emitT("load ptr, ptr ${emitT("getelementptr ptr, ptr $vt, i64 ${slots.indexOf(slot) + VT_HEADER}")}")
-            return finishCall("call ${sig.ret.llvm} $fp(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args, r)
+            return finishCall("call ${sig.ret.llvm} $fp(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args, r, susp = sig.suspend)
         }
         val impl = ci.impl[n] ?: fail("abstract method ${ci.name}.$n() cannot be called")
-        return finishCall("call ${sig.ret.llvm} @m.$impl.$n(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args, r)
+        return finishCall("call ${sig.ret.llvm} @m.$impl.$n(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args, r, susp = sig.suspend)
     }
 
     /** Interface call through the object's vtable (slot = global interface-method index + VT_HEADER). */
@@ -4010,7 +4141,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val args = methodArgs(sig, e)
         val vt = emitT("load ptr, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 8")}")
         val fp = emitT("load ptr, ptr ${emitT("getelementptr ptr, ptr $vt, i64 ${slots.indexOf(n) + VT_HEADER}")}")
-        return finishCall("call ${sig.ret.llvm} $fp(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args, r)
+        return finishCall("call ${sig.ret.llvm} $fp(ptr ${r.v}${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args, r, susp = sig.suspend)
     }
 
     /** Inline expansion of map/filter/forEach/sumOf/count (Kotlin's are inline functions too). */
@@ -4567,6 +4698,15 @@ target triple = "arm64-apple-macosx14.0.0"
 @rt_argc = global i32 0
 @rt_exc = internal global ptr null
 declare ptr @malloc(i64)
+declare token @llvm.coro.id(i32, ptr, ptr, ptr)
+declare i64 @llvm.coro.size.i64()
+declare ptr @llvm.coro.begin(token, ptr)
+declare i8 @llvm.coro.suspend(token, i1)
+declare ptr @llvm.coro.free(token, ptr)
+declare i1 @llvm.coro.end(ptr, i1, token)
+declare i1 @llvm.coro.done(ptr)
+declare void @llvm.coro.resume(ptr)
+declare void @llvm.coro.destroy(ptr)
 declare void @free(ptr)
 declare i64 @strlen(ptr)
 declare i32 @strcmp(ptr, ptr)
@@ -4709,4 +4849,5 @@ done:
 """
 
 /** Lambda-with-receiver bodies with `this` added as first parameter; kept across code-generation restarts (stable ids). */
-private object RecvLambdas { val map = HashMap<Block, Block>() }
+private object RecvCaps { val map = HashMap<Block, Block>() }
+object RecvLambdas { val map = HashMap<Block, Block>() }

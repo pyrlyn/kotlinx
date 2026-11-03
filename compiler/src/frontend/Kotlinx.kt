@@ -487,3 +487,212 @@ fun withSerializable(src: String): String {
     }
     return out + "\n" + gen
 }
+
+/**
+ * kotlinx.coroutines on CPS: every suspend function and suspend lambda is an LLVM coroutine (state machine with a
+ * heap frame, NativeBackend.genCoroutine); `kxCoSuspend()` is the primitive suspension point, `kxCoStart` /
+ * `kxCoResume` / `kxCoDestroy` drive a job's root coroutine from the single-threaded scheduler.
+ */
+val KOTLINX_COROUTINES_CPS = """
+class CancellationException(message: String) : IllegalStateException(message)
+class ClosedReceiveChannelException(message: String) : IllegalStateException(message)
+object KxSched {
+    val ready = ArrayList<Job>()
+    val timers = ArrayList<Job>()
+    var current: Job? = null
+    var now = 0L
+    fun wake(j: Job) { ready.add(j) }
+    fun wakeAll(ws: ArrayList<Job>) {
+        for (w in ws) ready.add(w)
+        while (ws.size > 0) ws.removeAt(ws.size - 1)
+    }
+    fun addTimer(j: Job) {
+        timers.add(j)
+        var i = timers.size - 1
+        while (i > 0 && timers[i - 1].wakeAt > j.wakeAt) { val t = timers[i - 1]; timers[i - 1] = timers[i]; timers[i] = t; i-- }
+    }
+    fun dropTimer(j: Job) {
+        var i = 0
+        while (i < timers.size) { if (timers[i] === j) { val t = timers.removeAt(i) } else i++ }
+    }
+    fun isReady(j: Job): Boolean { for (r in ready) if (r === j) return true; return false }
+    // A nested runBlocking runs this loop inside a running job; that job is parked until the inner loop returns.
+    fun runUntil(root: Job) {
+        val parked = ArrayList<Job>()
+        while (!root.isCompleted) {
+            if (ready.size > 0) { val j = ready.removeAt(0); if (j.running) parked.add(j) else j.step() }
+            else if (timers.size > 0) { val j = timers.removeAt(0); if (j.wakeAt > now) now = j.wakeAt; if (j.running) parked.add(j) else j.step() }
+            else throw IllegalStateException("runBlocking: deadlock, no coroutine can make progress")
+        }
+        for (p in parked) ready.add(p)
+    }
+    fun me(): Job {
+        val c = current
+        if (c == null) throw IllegalStateException("suspend function called outside a coroutine")
+        return c
+    }
+}
+// Every suspension goes through here: a cancelled coroutine resumes with CancellationException.
+suspend fun kxSuspend() {
+    kxCoSuspend()
+    val j = KxSched.me()
+    if (j.isCancelled) throw CancellationException("Job was cancelled")
+}
+open class Job(body0: suspend () -> Unit) {
+    var body: suspend () -> Unit = body0
+    var handle = 0L
+    var started = false
+    var running = false
+    var isCompleted = false
+    var isCancelled = false
+    var wakeAt = 0L
+    var scope: CoroutineScope? = null
+    val waiters = ArrayList<Job>()
+    val isActive: Boolean get() = !isCompleted && !isCancelled
+    fun step() {
+        if (isCompleted || running) return
+        if (handle == 0L) { started = true; handle = kxCoStart(body) }
+        val prev = KxSched.current
+        KxSched.current = this
+        running = true
+        val done = kxCoResume(handle)
+        running = false
+        KxSched.current = prev
+        if (done) { kxCoDestroy(handle); handle = 0L; finish() }
+    }
+    fun finish() {
+        isCompleted = true
+        body = {}
+        KxSched.wakeAll(waiters)
+    }
+    fun cancel() {
+        if (isCompleted || isCancelled) return
+        isCancelled = true
+        val sc = scope
+        if (sc != null) for (c in sc.children) c.cancel()
+        if (!started) { finish(); return }
+        // A suspended coroutine is resumed so its suspension point throws CancellationException.
+        if (KxSched.current !== this) {
+            KxSched.dropTimer(this)
+            if (!KxSched.isReady(this)) KxSched.wake(this)
+        }
+    }
+    suspend fun join() {
+        while (!isCompleted) {
+            waiters.add(KxSched.me())
+            kxSuspend()
+        }
+    }
+}
+class Deferred<T>(val compute: suspend () -> T) {
+    var result: T? = null
+    var hasResult = false
+    val job: Job = Job { try { result = compute(); hasResult = true } catch (e: CancellationException) { } }
+    val isCompleted: Boolean get() = job.isCompleted
+    suspend fun await(): T {
+        job.join()
+        if (!hasResult) throw CancellationException("Deferred was cancelled")
+        return result!!
+    }
+    fun cancel() { job.cancel() }
+}
+class CoroutineScope {
+    val children = ArrayList<Job>()
+    suspend fun yield() { kxYield() }
+    val isActive: Boolean get() { val c = KxSched.current; return c == null || !c.isCancelled }
+    fun ensureActive() { val c = KxSched.current; if (c != null && c.isCancelled) throw CancellationException("Job was cancelled") }
+    fun launch(block: suspend CoroutineScope.() -> Unit): Job {
+        val child = CoroutineScope()
+        val j = Job { try { block(child); child.joinChildren() } catch (e: CancellationException) { } }
+        j.scope = child
+        children.add(j); KxSched.wake(j)
+        return j
+    }
+    fun <T> async(block: suspend CoroutineScope.() -> T): Deferred<T> {
+        val child = CoroutineScope()
+        val d = Deferred<T> { val r = block(child); child.joinChildren(); r }
+        d.job.scope = child
+        children.add(d.job); KxSched.wake(d.job)
+        return d
+    }
+    suspend fun joinChildren() {
+        var i = 0
+        while (i < children.size) { children[i].join(); i++ }
+        while (children.size > 0) children.removeAt(children.size - 1)
+    }
+}
+fun runBlocking(block: suspend CoroutineScope.() -> Unit) {
+    val s = CoroutineScope()
+    val root = Job { block(s); s.joinChildren() }
+    KxSched.wake(root)
+    KxSched.runUntil(root)
+}
+suspend fun coroutineScope(block: suspend CoroutineScope.() -> Unit) {
+    val s = CoroutineScope()
+    block(s)
+    s.joinChildren()
+}
+suspend fun kxYield() { KxSched.wake(KxSched.me()); kxSuspend() }
+suspend fun yield() { kxYield() }
+suspend fun delay(ms: Long) {
+    val j = KxSched.me()
+    j.wakeAt = KxSched.now + ms
+    KxSched.addTimer(j)
+    kxSuspend()
+}
+fun currentTimeVirtual(): Long = KxSched.now
+suspend fun joinAll(jobs: List<Job>) { for (j in jobs) j.join() }
+suspend fun <T> awaitAll(ds: List<Deferred<T>>): List<T> { val r = ArrayList<T>(); for (d in ds) r.add(d.await()); return r }
+class Channel<T>(val capacity: Int) {
+    val buf = ArrayList<T>()
+    val receivers = ArrayList<Job>()
+    val senders = ArrayList<Job>()
+    var sent = 0L
+    var received = 0L
+    var isClosedForSend = false
+    val isEmpty: Boolean get() = buf.size == 0
+    val isClosedForReceive: Boolean get() = isClosedForSend && buf.size == 0
+    suspend fun send(x: T) {
+        if (isClosedForSend) throw IllegalStateException("Channel was closed")
+        while (capacity > 0 && buf.size >= capacity) { senders.add(KxSched.me()); kxSuspend() }
+        buf.add(x)
+        val ticket = sent
+        sent++
+        KxSched.wakeAll(receivers)
+        // Rendezvous (capacity 0): the sender resumes once a receiver took its element.
+        while (capacity == 0 && received <= ticket) { senders.add(KxSched.me()); kxSuspend() }
+    }
+    fun trySend(x: T): Boolean {
+        if (isClosedForSend || (capacity >= 0 && buf.size >= capacity)) return false
+        buf.add(x); sent++; KxSched.wakeAll(receivers); return true
+    }
+    suspend fun receive(): T {
+        while (buf.size == 0) {
+            if (isClosedForSend) throw ClosedReceiveChannelException("Channel was closed")
+            receivers.add(KxSched.me()); kxSuspend()
+        }
+        received++
+        KxSched.wakeAll(senders)
+        return buf.removeAt(0)
+    }
+    fun close() { isClosedForSend = true; KxSched.wakeAll(receivers) }
+    suspend fun consumeEach(f: suspend (T) -> Unit) {
+        while (true) {
+            while (buf.size == 0 && !isClosedForSend) { receivers.add(KxSched.me()); kxSuspend() }
+            if (buf.size == 0) return
+            received++
+            KxSched.wakeAll(senders)
+            f(buf.removeAt(0))
+        }
+    }
+}
+class FlowCollector<T>(val sink: suspend (T) -> Unit) { suspend fun emit(x: T) { sink(x) } }
+class Flow<T>(val run: suspend (FlowCollector<T>) -> Unit) {
+    suspend fun collect(f: suspend (T) -> Unit) { run(FlowCollector<T>(f)) }
+    suspend fun toList(): List<T> { val r = ArrayList<T>(); collect { r.add(it) }; return r }
+}
+fun <T> flow(block: suspend FlowCollector<T>.() -> Unit): Flow<T> = Flow<T> { c -> block(c) }
+fun <T> flowOf(xs: List<T>): Flow<T> = Flow<T> { c -> for (x in xs) c.emit(x) }
+fun <T, R> Flow<T>.map(f: (T) -> R): Flow<R> { val src = this; return Flow<R> { out -> src.collect { out.emit(f(it)) } } }
+fun <T> Flow<T>.filter(p: (T) -> Boolean): Flow<T> { val src = this; return Flow<T> { out -> src.collect { if (p(it)) out.emit(it) } } }
+"""
