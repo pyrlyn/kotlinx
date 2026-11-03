@@ -2550,14 +2550,32 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         fun bound(r: TypeRef): Boolean = (r.name !in tps || r.name in env) && r.args.all { bound(it) }
         fun use(n: String, declared: TypeRef) {
             val r = byName[n] ?: return
-            if (bound(r)) return
+            if (bound(r) || declared.nullable) return
             val t = try { resolve(declared) } catch (x: CompileError) { return }
             try { unify(r, t, tps, env) } catch (x: CompileError) {}
+        }
+        // Producing position: `consume(materialize())` / `consume(value)` with a no-argument method or a property of the
+        // (generic) receiver class whose type mentions the class's type parameters.
+        val rcd = if (recv) genericClasses[ps[0].name]?.takeIf { it.typeParams.size == ps[0].args.size } else null
+        val rsub = rcd?.typeParams?.zip(ps[0].args)?.toMap() ?: emptyMap()
+        fun subst(r: TypeRef): TypeRef = rsub[r.name]?.let { if (r.nullable) TypeRef(it.name, it.args, true) else it } ?: TypeRef(r.name, r.args.map { subst(it) }, r.nullable)
+        fun produced(a: E): TypeRef? {
+            if (rcd == null) return null
+            val n = when { a is NameE && a.n !in byName -> a.n; a is CallE && a.args.isEmpty() && a.lambda == null && (a.callee as? NameE) != null -> (a.callee as NameE).n; else -> return null }
+            val t = if (a is CallE) rcd.methods.firstOrNull { it.name == n && it.params.isEmpty() && it.typeParams.isEmpty() }?.ret
+                else rcd.fields.firstOrNull { it.name == n }?.type
+            return t?.let { subst(it) }
         }
         fun ex(e: E?) {
             if (e is CallE) {
                 val f = (e.callee as? NameE)?.n?.let { funDecls[it] }?.takeIf { it.typeParams.isEmpty() && it.recv == null }
-                e.args.forEachIndexed { i, a -> if (a is NameE && f != null && i < f.params.size) use(a.n, f.params[i].type) else ex(a) }
+                e.args.forEachIndexed { i, a ->
+                    val pr = if (f != null && i < f.params.size) produced(a) else null
+                    // A nullable sink would bind a non-null type (class types do not track nullability here): skipped.
+                    if (pr != null && !bound(pr) && f!!.params[i].type.nullable) {}
+                    else if (pr != null && !bound(pr)) { try { unify(pr, resolve(f!!.params[i].type), tps, env) } catch (x: CompileError) {} }
+                    else if (a is NameE && f != null && i < f.params.size) use(a.n, f.params[i].type) else ex(a)
+                }
             }
         }
         for (st in b.stmts) when (st) {
