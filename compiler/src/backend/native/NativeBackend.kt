@@ -2342,6 +2342,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val size = checkArrSize(coerce(genExpr(e.args.single()), Ty.I64))
                 return Val(emitT("call ptr @rt_arr_new(i64 ${size.v}, i64 ${et.size})"), Ty.Arr(et), true)
             }
+            COLL_LIT -> fail("collection literals need an explicitly typed target (val x: List<Int> = [...])")
             "println", "print" -> {
                 val a = e.args.singleOrNull()
                 if (a is StrL) for (p in a.parts) {
