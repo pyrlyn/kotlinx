@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3065,
-  "UNSUPPORTED": 2426
+  "PASS": 3067,
+  "UNSUPPORTED": 2424
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -16606,9 +16606,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaultsWithVarArg1.kt"
   },
   "box/box/function/defaultsWithVarArg2.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected ArrayList<Int>, found IntArray",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/defaultsWithVarArg2.kt"
   },
   "box/box/function/eqeq.kt": {
@@ -38636,9 +38635,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/useSuspendFunResultAsVararg.kt"
   },
   "box/box/vararg/varargInFunParam.kt": {
-   "category": "generics",
-   "detail": "empty generic vararg is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/vararg/varargInFunParam.kt"
   },
   "box/box/vararg/varargInTailrec.kt": {

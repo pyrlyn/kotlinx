@@ -2140,7 +2140,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (items.any { it is UnE && it.op == "*" }) fail("spread mixed with other vararg arguments is not supported")
             // A generic element type (`vararg xs: T`) is inferred from the items.
             val known = try { resolve(elemT); true } catch (x: CompileError) { false }
-            if (!known && items.isEmpty()) fail("empty generic vararg is not supported")
+            // `f<String>()` with `vararg xs: T`: the element type is the explicit type argument.
+            if (!known && items.isEmpty()) {
+                val tps = (e.callee as? NameE)?.let { funDecls[it.n] }?.typeParams.orEmpty()
+                val ti = tps.indexOf(elemT.name)
+                if (elemT.args.isEmpty() && ti >= 0 && e.typeArgs.size == tps.size)
+                    return CallE(NameE("arrayListOf").also { it.line = line }, listOf(e.typeArgs[ti]), emptyList(), null).also { it.line = line }
+                fail("empty generic vararg is not supported")
+            }
             return CallE(NameE("arrayListOf").also { it.line = line }, if (known) listOf(elemT) else emptyList(), items, null).also { it.line = line }
         }
         val nv = named.firstOrNull { it.name == params[vi].name }
@@ -2187,7 +2194,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     else -> null
                 }
             })
-            slots[i] = sub.e(d)
+            val dv = sub.e(d)
+            // A vararg default `= intArrayOf(1, 2)` is an array: copied into the list the vararg is lowered to.
+            slots[i] = if (params[i].vararg && probeType(dv) is Ty.Arr) CallE(MemberE(dv, "toList", false).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line } else dv
         }
         return CallE(e.callee, e.typeArgs, slots.map { it!! }, null).also { it.line = e.line }
     }
