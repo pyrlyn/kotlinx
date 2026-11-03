@@ -1257,6 +1257,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun genFor(s: ForS) {
         val it = s.iter
+        // `for (x in c)` over a class with `operator fun iterator()` (hasNext/next): a while loop over the iterator.
+        if (!(it is BinE && it.op in setOf("..", "until", "downTo", "step"))) {
+            val pt = probeType(it)
+            val cn = (pt as? Ty.Cls)?.name
+            if (cn != null && classes[cn]?.methods?.containsKey("iterator") == true) {
+                val l = s.line
+                fun <X : E> mk(x: X): X = x.also { e -> e.line = l }
+                fun call(r: E, n: String) = mk(CallE(mk(MemberE(r, n, false)), emptyList(), emptyList(), null))
+                val tmp = "\$iter${tmpN++}"
+                val next = VarS(s.name, false, null, call(mk(NameE(tmp)), "next")).also { x -> x.line = l }
+                val loop = WhileS(call(mk(NameE(tmp)), "hasNext"), Block(listOf(next) + s.body.stmts, s.body.params, s.body.paramTypes), false).also { w -> w.line = l; w.label = s.label }
+                genBlockBody(Block(listOf(VarS(tmp, false, null, call(it, "iterator")).also { x -> x.line = l }, loop)), false)
+                return
+            }
+        }
         val lc = label("for.cond"); val lb = label("for.body"); val ls = label("for.step"); val le = label("for.end")
         scopes.add(Scope())
         val rng = (if (it is BinE && it.op == "step") it.l else it) as? BinE

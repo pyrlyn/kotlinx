@@ -221,6 +221,118 @@
     "pause_p99_ms": 668.633,
     "collections": 92
    }
+  },
+  {
+   "run": "micro-default",
+   "date": "2026-11-03T11:37:54+02:00",
+   "commit": "1b076255b82c569264d2d366d6f7c22d13b3bf1e",
+   "dirty": false,
+   "ref": null,
+   "gc": "default",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 5.86 5.96 5.75 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.4.1.1)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 18405.469,
+    "raw_ns": "16718183375,18042746542,18069612584,19160380292,19104047250",
+    "peak_rss_mib": 650.0,
+    "pause_total_ms": 20429.637,
+    "pause_max_ms": 658.766,
+    "pause_p50_ms": 189.181,
+    "pause_p99_ms": 658.766,
+    "collections": 92
+   }
+  },
+  {
+   "run": "micro-incremental",
+   "date": "2026-11-03T11:38:37+02:00",
+   "commit": "1b076255b82c569264d2d366d6f7c22d13b3bf1e",
+   "dirty": false,
+   "ref": null,
+   "gc": "incremental",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 5.09 5.77 5.69 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.4.1.1)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 18682.821,
+    "raw_ns": "17830865125,18177189042,18603728875,19789065291,19267543709",
+    "peak_rss_mib": 649.7,
+    "pause_total_ms": 21166.222,
+    "pause_max_ms": 716.735,
+    "pause_p50_ms": 218.74,
+    "pause_p99_ms": 716.735,
+    "collections": 92
+   }
+  },
+  {
+   "run": "micro-epoch",
+   "date": "2026-11-03T11:38:40+02:00",
+   "commit": "1b076255b82c569264d2d366d6f7c22d13b3bf1e",
+   "dirty": false,
+   "ref": null,
+   "gc": "epoch",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 4.93 5.72 5.68 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.4.1.1)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 1433.152,
+    "raw_ns": "1591829209,1135598375,1387642000,1445697625,1466117791",
+    "peak_rss_mib": 690.7,
+    "pause_total_ms": 1099.587,
+    "pause_max_ms": 29.02,
+    "pause_p50_ms": 0.014,
+    "pause_p99_ms": 2.189,
+    "collections": 1056
+   }
+  },
+  {
+   "run": "micro-boehm",
+   "date": "2026-11-03T11:38:47+02:00",
+   "commit": "1b076255b82c569264d2d366d6f7c22d13b3bf1e",
+   "dirty": false,
+   "ref": null,
+   "gc": "boehm",
+   "machine": {
+    "model": "Mac15,9",
+    "cpu": "Apple M3 Max",
+    "os": "Darwin 27.0.1",
+    "load": "{ 4.70 5.65 5.65 }"
+   },
+   "toolchain": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.4.1.1)",
+    "opt": "LLVM version 21.1.8"
+   },
+   "metrics": {
+    "ms": 2752.611,
+    "raw_ns": "2661073125,2635671000,2785841583,2810919708,2821154459",
+    "peak_rss_mib": 1867.6,
+    "pause_total_ms": 2702.457,
+    "pause_max_ms": 1008.943,
+    "pause_p50_ms": 8.337,
+    "pause_p99_ms": 1008.943,
+    "collections": 27
+   }
   }
  ]
 }
