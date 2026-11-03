@@ -168,6 +168,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "CharArray" -> Ty.Arr(Ty.Char)
         "UIntArray" -> Ty.Arr(Ty.U32)
         "ULongArray" -> Ty.Arr(Ty.U64)
+        // Short / UByte / UShort live in Int / UInt (see below), so their arrays are IntArray / UIntArray.
+        "ShortArray" -> Ty.Arr(Ty.I32)
+        "UByteArray", "UShortArray" -> Ty.Arr(Ty.U32)
         "StringBuilder" -> Ty.SB
         "HashMap", "MutableMap", "Map" -> mapTy(resolve(t.args[0]), resolve(t.args[1]))
         "ArrayList", "MutableList", "List" -> Ty.ListTy(resolve(t.args.single()).also { if (it == Ty.Unit) fail("lists of Unit are not supported") })
@@ -2321,8 +2324,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val t = mapTy(resolve(e.typeArgs[0]), resolve(e.typeArgs[1]))
                 return Val(emitT("call ptr @rt_map_new()"), t, true)
             }
-            "IntArray", "LongArray", "DoubleArray", "FloatArray", "ByteArray", "BooleanArray", "CharArray", "UIntArray", "ULongArray" -> {
-                val et = when (n) { "ByteArray" -> Ty.I8; "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; "FloatArray" -> Ty.F32; "BooleanArray" -> Ty.I1; "CharArray" -> Ty.Char; "UIntArray" -> Ty.U32; "ULongArray" -> Ty.U64; else -> Ty.F64 }
+            "IntArray", "LongArray", "DoubleArray", "FloatArray", "ByteArray", "BooleanArray", "CharArray", "UIntArray", "ULongArray", "ShortArray", "UByteArray", "UShortArray" -> {
+                val et = when (n) { "ShortArray" -> Ty.I32; "UByteArray", "UShortArray" -> Ty.U32; "ByteArray" -> Ty.I8; "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; "FloatArray" -> Ty.F32; "BooleanArray" -> Ty.I1; "CharArray" -> Ty.Char; "UIntArray" -> Ty.U32; "ULongArray" -> Ty.U64; else -> Ty.F64 }
                 if (e.args.size != 1) fail("$n(${e.args.size} arguments) is not supported")
                 if (e.lambda != null) return initLoop(e.args.single(), e.lambda, et, { sz, t -> Val(emitT("call ptr @rt_arr_new(i64 ${checkArrSize(coerce(sz, Ty.I64)).v}, i64 ${t.size})"), Ty.Arr(t), true) }) { c, i, v ->
                     emit("store ${et.llvm} ${coerce(v, et).v}, ptr ${emitT("getelementptr ${et.llvm}, ptr ${emitT("getelementptr i8, ptr ${c.v}, i64 8")}, i32 $i")}")
@@ -2411,8 +2414,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     emit("call void @rt_list_add(ptr ${c.v}, i64 ${toSlot(consume(v))})")
                 }
             }
-            "intArrayOf", "longArrayOf", "doubleArrayOf", "floatArrayOf", "byteArrayOf", "booleanArrayOf", "charArrayOf", "uintArrayOf", "ulongArrayOf" -> {
-                val et = when (n) { "intArrayOf" -> Ty.I32; "longArrayOf" -> Ty.I64; "doubleArrayOf" -> Ty.F64; "floatArrayOf" -> Ty.F32; "booleanArrayOf" -> Ty.I1; "charArrayOf" -> Ty.Char; "uintArrayOf" -> Ty.U32; "ulongArrayOf" -> Ty.U64; else -> Ty.I8 }
+            "intArrayOf", "longArrayOf", "doubleArrayOf", "floatArrayOf", "byteArrayOf", "booleanArrayOf", "charArrayOf", "uintArrayOf", "ulongArrayOf", "shortArrayOf", "ubyteArrayOf", "ushortArrayOf" -> {
+                val et = when (n) { "shortArrayOf" -> Ty.I32; "ubyteArrayOf", "ushortArrayOf" -> Ty.U32; "intArrayOf" -> Ty.I32; "longArrayOf" -> Ty.I64; "doubleArrayOf" -> Ty.F64; "floatArrayOf" -> Ty.F32; "booleanArrayOf" -> Ty.I1; "charArrayOf" -> Ty.Char; "uintArrayOf" -> Ty.U32; "ulongArrayOf" -> Ty.U64; else -> Ty.I8 }
                 val a = emitT("call ptr @rt_arr_new(i64 ${e.args.size}, i64 ${et.size})")
                 val data = emitT("getelementptr i8, ptr $a, i64 8")
                 e.args.forEachIndexed { i, x -> emit("store ${et.llvm} ${coerce(genExpr(x), et).v}, ptr ${emitT("getelementptr ${et.llvm}, ptr $data, i64 $i")}") }

@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3060,
-  "UNSUPPORTED": 2431
+  "PASS": 3065,
+  "UNSUPPORTED": 2426
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -563,9 +563,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/forEachLongArray.kt"
   },
   "box/box/arrays/forEachShortArray.kt": {
-   "category": "unknown ShortArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'ShortArray'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forEachShortArray.kt"
   },
   "box/box/arrays/forInReversed/reversedArrayOriginalUpdatedInLoopBody.kt": {
@@ -729,9 +728,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/iteratorLongArrayNextLong.kt"
   },
   "box/box/arrays/iteratorShortArray.kt": {
-   "category": "unknown ShortArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'ShortArray'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorShortArray.kt"
   },
   "box/box/arrays/kt1291.kt": {
@@ -944,8 +942,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/nonNullArray.kt"
   },
   "box/box/arrays/primitiveArrays.kt": {
-   "category": "types: Short",
-   "detail": "unknown type ShortArray",
+   "category": "other: ext$BooleanArray$copyOf expects 1 arguments",
+   "detail": "ext$BooleanArray$copyOf expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/primitiveArrays.kt"
   },
@@ -1809,8 +1807,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/unsafeRemoving.kt"
   },
   "box/box/boxingOptimization/unsignedArrayForEach.kt": {
-   "category": "unknown ubyteArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'ubyteArrayOf'",
+   "category": "other: unknown method UIntArray.forEach()",
+   "detail": "unknown method UIntArray.forEach()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/unsignedArrayForEach.kt"
   },
@@ -2585,8 +2583,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test24.kt"
   },
   "box/box/bridges/test25.kt": {
-   "category": "types: UByteArray",
-   "detail": "unknown type UByteArray",
+   "category": "other: ext$UIntArray$copyOf expects 1 arguments",
+   "detail": "ext$UIntArray$copyOf expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test25.kt"
   },
@@ -8089,8 +8087,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forArrayListMultiDecl.kt"
   },
   "box/box/controlStructures/forInArray/forInArraySpecializedToUntil.kt": {
-   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'shortArrayOf'",
+   "category": "other: unknown method Int.coerceAtMost()",
+   "detail": "unknown method Int.coerceAtMost()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInArraySpecializedToUntil.kt"
   },
@@ -8241,15 +8239,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInObjectArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndex.kt": {
-   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'shortArrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndexWithSmartCast.kt": {
-   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'shortArrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndexWithSmartCast.kt"
   },
   "box/box/controlStructures/forInCharSequence.kt": {
@@ -11916,8 +11912,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/mixedParams.kt"
   },
   "box/box/dataClasses/toString/primitiveArrays.kt": {
-   "category": "types: Short",
-   "detail": "unknown type ShortArray",
+   "category": "strings / templates",
+   "detail": "cannot convert BooleanArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/primitiveArrays.kt"
   },
@@ -17504,9 +17500,8 @@
    "upstream": "compiler/testData/codegen/box/increment/argumentWithSideEffects.kt"
   },
   "box/box/increment/arrayElement.kt": {
-   "category": "types: Short",
-   "detail": "unknown type ShortArray",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/arrayElement.kt"
   },
   "box/box/increment/assignPlusOnSmartCast.kt": {
@@ -38450,8 +38445,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/literalEqualsNullableUnsigned.kt"
   },
   "box/box/unsignedTypes/nullableSmartcastUnsignedArray.kt": {
-   "category": "unknown ubyteArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'ubyteArrayOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert UIntArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/nullableSmartcastUnsignedArray.kt"
   },
@@ -38562,8 +38557,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/boxingArgumentsForVararg.kt"
   },
   "box/box/vararg/doNotCopyImmediatelyCreatedArrays.kt": {
-   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'shortArrayOf'",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected ArrayList<Any>, found ArrayList<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/doNotCopyImmediatelyCreatedArrays.kt"
   },
@@ -38614,8 +38609,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/kt581.kt"
   },
   "box/box/vararg/kt6192.kt": {
-   "category": "unknown ShortArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'ShortArray'",
+   "category": "varargs",
+   "detail": "spread mixed with other vararg arguments is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt6192.kt"
   },
