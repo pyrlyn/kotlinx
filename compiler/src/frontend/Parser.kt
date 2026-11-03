@@ -156,6 +156,20 @@ class Parser(toks: List<Tok>) {
     private var destructN = 0
     /** Extra statements produced by a destructuring declaration, emitted after the one [stmt] returned. */
     private val pendingStmts = ArrayList<S>()
+    /** `get` calls produced by multi-argument indexing `a[i, j]` (assignable). */
+    private val multiIdx = HashSet<E>()
+
+    /** `a[i, j] op= v` -> `a.set(i, j, v)` / `a.set(i, j, a.get(i, j) op v)`, receiver and indices evaluated once. */
+    private fun multiIndexAssign(g: CallE, op: String, v: E): S {
+        val m = g.callee as MemberE; val line = g.line
+        fun mk(e: E): E = e.also { it.line = line }
+        if (op == "=") return ExprS(mk(CallE(mk(MemberE(m.recv, "set", false)), emptyList(), g.args + v, null))).also { it.line = line }
+        if (bodyLevel == 0) fail("compound assignment to a multi-index outside a body is not supported")
+        val tmp = { e: E -> val n = "\$mi${destructN++}"; pendingDecls.add(VarS(n, false, null, e).also { it.line = line }); mk(NameE(n)) }
+        val r = tmp(m.recv); val a = g.args.map(tmp)
+        val cur = mk(CallE(mk(MemberE(r, "get", false)), emptyList(), a, null))
+        return ExprS(mk(CallE(mk(MemberE(r, "set", false)), emptyList(), a + mk(BinE(op.dropLast(1), cur, v)), null))).also { it.line = line }
+    }
     /** Classes of anonymous objects (`object : T { }` expressions) declared before the current statement. */
     private var pendingDecls = ArrayList<S>()
     /** Anonymous-object classes outside function bodies (property initializers): top-level classes. */
@@ -2379,8 +2393,8 @@ class Parser(toks: List<Tok>) {
                 val e = expr()
                 val tk = t[p]
                 when {
-                    tk.k == K.OP && tk.s in ASSIGN_OPS -> { p++; skipNLOnly(); AssignS(e, tk.s, expr()) }
-                    tk.k == K.OP && (tk.s == "++" || tk.s == "--") -> { p++; IncS(e, tk.s) }
+                    tk.k == K.OP && tk.s in ASSIGN_OPS -> { p++; skipNLOnly(); val v = expr(); if (e is CallE && e in multiIdx) multiIndexAssign(e, tk.s, v) else AssignS(e, tk.s, v) }
+                    tk.k == K.OP && (tk.s == "++" || tk.s == "--") -> { p++; if (e is CallE && e in multiIdx) multiIndexAssign(e, tk.s[0] + "=", IntL(1, false).also { it.line = tk.line }) else IncS(e, tk.s) }
                     else -> ExprS(e)
                 }
             }
@@ -2548,7 +2562,11 @@ class Parser(toks: List<Tok>) {
                     val lam = if (!noBraceCall && t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
                     foldStr(e, a, lam) ?: inSourceOrder(e, a, lam)
                 }
-                "[" -> { p++; val i = nested(1) { expr() }; expectOp("]"); IndexE(e, i) }
+                "[" -> { p++
+                    val ix = nested(1) { val l = arrayListOf(expr()); while (isOp(",")) { next(); skipNL0(); l.add(expr()) }; l }
+                    expectOp("]")
+                    // `a[i, j]`: multi-argument indexing is a direct `get(i, j)` call (assignments: see [multiIndexAssign]).
+                    if (ix.size == 1) IndexE(e, ix[0]) else CallE(MemberE(e, "get", false).also { it.line = tk.line }, emptyList(), ix, null).also { it.line = tk.line; multiIdx.add(it) } }
                 "!!" -> { p++; UnE("!!", e).also { it.line = tk.line } }
                 // Callable reference `recv::name`: UnE("::name", recv).
                 // Class literal `T::class` / `e::class`: UnE("#class", e) (resolved by the backend to a KClass).
