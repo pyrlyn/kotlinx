@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3056,
-  "UNSUPPORTED": 2435
+  "PASS": 3060,
+  "UNSUPPORTED": 2431
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -482,8 +482,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/arrayGetMultiIndex.kt"
   },
   "box/box/arrays/arrayInstanceOf.kt": {
-   "category": "other: unknown method Any.iterator()",
-   "detail": "unknown method Any.iterator()",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/arrayInstanceOf.kt"
   },
@@ -523,9 +523,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/collectionGetMultiIndex.kt"
   },
   "box/box/arrays/constantArrayOfAny.kt": {
-   "category": "strings / templates",
-   "detail": "ArrayList<String> cannot be used as Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/constantArrayOfAny.kt"
   },
   "box/box/arrays/forEachBooleanArray.kt": {
@@ -821,8 +820,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt7009.kt"
   },
   "box/box/arrays/kt7288.kt": {
-   "category": "other: unknown method Any.iterator()",
-   "detail": "unknown method Any.iterator()",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt7288.kt"
   },
@@ -1027,9 +1026,8 @@
    "upstream": "compiler/testData/codegen/box/associatedObjects/kt88571.kt"
   },
   "box/box/basics/array_to_any.kt": {
-   "category": "other: ArrayList<Any> cannot be used as Any",
-   "detail": "ArrayList<Any> cannot be used as Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/array_to_any.kt"
   },
   "box/box/basics/canonical_name.kt": {
@@ -2680,14 +2678,13 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedArrayOf.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedSecondArgArray.kt": {
-   "category": "strings / templates",
-   "detail": "type check of Any against ArrayList<String> is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedSecondArgArray.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedSecondArgTypeVariable.kt": {
-   "category": "other: ArrayList<Any> cannot be used as Any",
-   "detail": "ArrayList<Any> cannot be used as Any",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of foo; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedSecondArgTypeVariable.kt"
   },
@@ -2834,8 +2831,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousExtensionFun.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariable.kt": {
-   "category": "other: ArrayList<Any> cannot be used as Any",
-   "detail": "ArrayList<Any> cannot be used as Any",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected $Fn$ArrayList$String$$$Int, found $Fn$ArrayList$Any$$$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariable.kt"
   },
@@ -39287,9 +39284,8 @@
    "upstream": "compiler/testData/codegen/box/when/integralWhenWithNoInlinedConstants2.kt"
   },
   "box/box/when/is.kt": {
-   "category": "other: ArrayList<Int> cannot be used as Any",
-   "detail": "ArrayList<Int> cannot be used as Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/is.kt"
   },
   "box/box/when/kt2457.kt": {
