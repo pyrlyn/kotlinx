@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3040,
-  "UNSUPPORTED": 2451
+  "PASS": 3049,
+  "UNSUPPORTED": 2442
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -678,62 +678,54 @@
    "upstream": "compiler/testData/codegen/box/arrays/inlineInitializer.kt"
   },
   "box/box/arrays/iterator.kt": {
-   "category": "other: unknown method ArrayList<Int>.iterator()",
-   "detail": "unknown method ArrayList<Int>.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iterator.kt"
   },
   "box/box/arrays/iteratorBooleanArray.kt": {
-   "category": "other: unknown method BooleanArray.iterator()",
-   "detail": "unknown method BooleanArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorBooleanArray.kt"
   },
   "box/box/arrays/iteratorByteArray.kt": {
-   "category": "other: unknown method ByteArray.iterator()",
-   "detail": "unknown method ByteArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorByteArray.kt"
   },
   "box/box/arrays/iteratorByteArrayNextByte.kt": {
-   "category": "other: unknown method ByteArray.iterator()",
-   "detail": "unknown method ByteArray.iterator()",
+   "category": "other: unknown method ByteArrayIterator.nextByte()",
+   "detail": "unknown method ByteArrayIterator.nextByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorByteArrayNextByte.kt"
   },
   "box/box/arrays/iteratorCharArray.kt": {
-   "category": "other: unknown method CharArray.iterator()",
-   "detail": "unknown method CharArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorCharArray.kt"
   },
   "box/box/arrays/iteratorDoubleArray.kt": {
-   "category": "other: unknown method DoubleArray.iterator()",
-   "detail": "unknown method DoubleArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorDoubleArray.kt"
   },
   "box/box/arrays/iteratorFloatArray.kt": {
-   "category": "other: unknown method FloatArray.iterator()",
-   "detail": "unknown method FloatArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorFloatArray.kt"
   },
   "box/box/arrays/iteratorIntArray.kt": {
-   "category": "other: unknown method IntArray.iterator()",
-   "detail": "unknown method IntArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorIntArray.kt"
   },
   "box/box/arrays/iteratorLongArray.kt": {
-   "category": "other: unknown method LongArray.iterator()",
-   "detail": "unknown method LongArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorLongArray.kt"
   },
   "box/box/arrays/iteratorLongArrayNextLong.kt": {
-   "category": "other: unknown method LongArray.iterator()",
-   "detail": "unknown method LongArray.iterator()",
+   "category": "other: unknown method LongArrayIterator.nextLong()",
+   "detail": "unknown method LongArrayIterator.nextLong()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorLongArrayNextLong.kt"
   },
@@ -35529,9 +35521,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt1572.kt"
   },
   "box/box/safeCall/kt245.kt": {
-   "category": "other: unknown method ArrayList<Int>.iterator()",
-   "detail": "unknown method ArrayList<Int>.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/safeCall/kt245.kt"
   },
   "box/box/safeCall/kt247.kt": {

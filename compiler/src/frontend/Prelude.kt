@@ -325,7 +325,7 @@ fun BooleanArray.withIndex(): ArrayList<IndexedValue<Boolean>> { val r = ArrayLi
 fun UIntArray.withIndex(): ArrayList<IndexedValue<UInt>> { val r = ArrayList<IndexedValue<UInt>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 fun ULongArray.withIndex(): ArrayList<IndexedValue<ULong>> { val r = ArrayList<IndexedValue<ULong>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
-/** Copies of primitive arrays: `reversedArray()`, `copyOf()`, `contentToString()`, `toList()`, `reversed()` (also for lists). */
+/** Copies of primitive arrays: `reversedArray()`, `copyOf()`, `contentToString()`, `toList()`, `reversed()` (also for lists), `iterator()` (arrays and lists). */
 const val ARRAY_EXT = """
 fun IntArray.reversedArray(): IntArray { val n = size; val r = IntArray(n); var i = 0; while (i < n) { r[i] = this[n - 1 - i]; i++ }; return r }
 fun IntArray.copyOf(): IntArray { val n = size; val r = IntArray(n); var i = 0; while (i < n) { r[i] = this[i]; i++ }; return r }
@@ -374,8 +374,28 @@ fun UIntArray.reversed(): ArrayList<UInt> { val r = ArrayList<UInt>(); var i = s
 fun ULongArray.reversed(): ArrayList<ULong> { val r = ArrayList<ULong>(); var i = size - 1; while (i >= 0) { r.add(this[i]); i-- }; return r }
 fun <T> ArrayList<T>.reversed(): ArrayList<T> { val r = ArrayList<T>(); var i = size - 1; while (i >= 0) { r.add(get(i)); i-- }; return r }
 fun <T> ArrayList<T>.toList(): ArrayList<T> { val r = ArrayList<T>(); for (x in this) r.add(x); return r }
+class IntArrayIterator(val a: IntArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Int { val x = a[i]; i++; return x } }
+fun IntArray.iterator(): IntArrayIterator = IntArrayIterator(this)
+class LongArrayIterator(val a: LongArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Long { val x = a[i]; i++; return x } }
+fun LongArray.iterator(): LongArrayIterator = LongArrayIterator(this)
+class ByteArrayIterator(val a: ByteArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Byte { val x = a[i]; i++; return x } }
+fun ByteArray.iterator(): ByteArrayIterator = ByteArrayIterator(this)
+class DoubleArrayIterator(val a: DoubleArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Double { val x = a[i]; i++; return x } }
+fun DoubleArray.iterator(): DoubleArrayIterator = DoubleArrayIterator(this)
+class FloatArrayIterator(val a: FloatArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Float { val x = a[i]; i++; return x } }
+fun FloatArray.iterator(): FloatArrayIterator = FloatArrayIterator(this)
+class CharArrayIterator(val a: CharArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Char { val x = a[i]; i++; return x } }
+fun CharArray.iterator(): CharArrayIterator = CharArrayIterator(this)
+class BooleanArrayIterator(val a: BooleanArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Boolean { val x = a[i]; i++; return x } }
+fun BooleanArray.iterator(): BooleanArrayIterator = BooleanArrayIterator(this)
+class UIntArrayIterator(val a: UIntArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): UInt { val x = a[i]; i++; return x } }
+fun UIntArray.iterator(): UIntArrayIterator = UIntArrayIterator(this)
+class ULongArrayIterator(val a: ULongArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): ULong { val x = a[i]; i++; return x } }
+fun ULongArray.iterator(): ULongArrayIterator = ULongArrayIterator(this)
+class ListIterator__<T>(val a: ArrayList<T>) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): T { val x = a.get(i); i++; return x } }
+fun <T> ArrayList<T>.iterator(): ListIterator__<T> = ListIterator__(this)
 """
-private val ARRAY_EXT_USE = Regex("""\.(reversedArray|copyOf|contentToString|toList|reversed)\(""")
+private val ARRAY_EXT_USE = Regex("""\.(reversedArray|copyOf|contentToString|toList|reversed|iterator)\(""")
 /** `withIndex()` of progressions (needs both the range and the list prelude). */
 const val RANGE_LIST_EXT = """
 fun IntProgression.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
