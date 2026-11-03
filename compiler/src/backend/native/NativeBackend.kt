@@ -3566,7 +3566,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 when (n) {
                     "containsKey" -> Val(emitT("icmp ne i32 ${emitT("call i32 @rt_map_contains(ptr ${r.v}, i64 $k)")}, 0"), Ty.I1)
                     "get" -> Val(fromSlot(emitT("call i64 @rt_map_get(ptr ${r.v}, i64 $k)"), t.v), t.v)
-                    "getOrDefault" -> if (t.v.isRef) fail("getOrDefault on a HashMap with reference values is not supported") else Val(fromSlot(emitT("call i64 @rt_map_get_or(ptr ${r.v}, i64 $k, i64 ${toSlot(coerce(genExpr(e.args[1]), t.v))})"), t.v), t.v)
+                    "getOrDefault" -> if (t.v.isRef) {
+                        // Result is owned: the default is consumed; a found value is retained and the default released.
+                        val d = consume(coerce(genArg(e.args[1]), t.v))
+                        val ds = toSlot(d)
+                        val vs = emitT("call i64 @rt_map_get_or(ptr ${r.v}, i64 $k, i64 $ds)")
+                        val v = fromSlot(vs, t.v)
+                        val hit = label("godhit"); val done = label("goddone")
+                        condBr(emitT("icmp ne i64 $vs, $ds"), hit, done)
+                        startBlock(hit); retain(v, t.v); release(d); br(done)
+                        startBlock(done)
+                        Val(v, t.v, true)
+                    } else Val(fromSlot(emitT("call i64 @rt_map_get_or(ptr ${r.v}, i64 $k, i64 ${toSlot(coerce(genExpr(e.args[1]), t.v))})"), t.v), t.v)
                     else -> {
                         val v = if (t.v.isRef) consume(coerce(genArg(e.args[1]), t.v)) else coerce(genExpr(e.args[1]), t.v)
                         emit("call void @rt_map_put(ptr ${r.v}, i64 $k, i64 ${toSlot(v)})"); Val("", Ty.Unit)
