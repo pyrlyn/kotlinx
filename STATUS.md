@@ -45,6 +45,9 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   a generic super-interface are still unsupported.
 - Local classes and anonymous objects in generic functions may use the function's type parameters: the lifted class
   becomes generic over them and is instantiated per monomorphized function. Classes with abstract methods always dispatch virtually.
+- Stdlib additions: `String.toInt/toLong/toIntOrNull/toLongOrNull`, `substring` (prelude), `List.sum()` of numeric
+  lists, `HashMap`/`hashMapOf` with String keys (content-hashed, keys retained by the map; values stay primitive), computed
+  `var` properties with `get()` and `set(v)` accessors.
 - kotlinx subsets (`compiler/src/frontend/Kotlinx.kt`, tests `kotlinx_coroutines`, `kotlinx_serialization`):
   coroutines (`suspend` accepted; `runBlocking`, `coroutineScope`, `launch`, `async`/`await`, `Job`, `Channel`, cold
   `Flow`) on a single-threaded FIFO scheduler without a CPS transform: a coroutine runs to completion when its parent
