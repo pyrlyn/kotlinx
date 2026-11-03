@@ -1,4 +1,8 @@
 // Minimal runtime for KotlinX compiler (newkotlinc). Linked into every program by clang.
+#if defined(__APPLE__) && !defined(_XOPEN_SOURCE)
+#define _XOPEN_SOURCE 700 /* ucontext (stackful coroutines below) */
+#define _DARWIN_C_SOURCE
+#endif
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -7,6 +11,8 @@
 #include <sys/resource.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/mman.h>
+#include <ucontext.h>
 
 #include "kxgc.h" /* memory manager interface; implementation in compiler/gc/<name>/gc.c (newkotlinc --gc) */
 #include "common/object.inc"
@@ -401,3 +407,43 @@ void rt_map_release(Map *m) {
     free(m->keys); rt_gc_mem_free(m->vals); free(m->used); free(m); }
 
 // Object allocation, reference counting slow paths and the cycle collector live in compiler/gc/ (kxgc.h).
+
+
+// ---- Stackful coroutines (kotlinx.coroutines subset, Kotlinx.kt) ------------------------------------------------
+// Each coroutine runs on its own mmap'ed stack. rt_co_resume switches into it until it suspends (rt_co_suspend) or its
+// body returns; the body is the program's `kx_co_entry` (generated when the program contains `kxCoEntry`), which
+// starts the job the scheduler marked current. Single-threaded.
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations" /* ucontext is deprecated on macOS but works */
+typedef struct Co { ucontext_t ctx, ret; void *stack; size_t size; int done; } Co;
+static Co *co_cur;
+extern void kx_co_entry(int64_t) __attribute__((weak));
+static void co_tramp(void) { kx_co_entry(0); co_cur->done = 1; }
+int64_t rt_co_new(int64_t unused) {
+    (void)unused;
+    Co *c = calloc(1, sizeof *c);
+    c->size = 1 << 20;
+    c->stack = mmap(NULL, c->size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    if (c->stack == MAP_FAILED || !kx_co_entry) { fprintf(stderr, "coroutine: cannot create\n"); exit(1); }
+    getcontext(&c->ctx);
+    c->ctx.uc_stack.ss_sp = c->stack; c->ctx.uc_stack.ss_size = c->size; c->ctx.uc_link = &c->ret;
+    makecontext(&c->ctx, co_tramp, 0);
+    return (int64_t)(intptr_t)c;
+}
+/* Runs coroutine [h] until it suspends (0) or finishes (1; its stack is freed). */
+int32_t rt_co_resume(int64_t h) {
+    Co *c = (Co *)(intptr_t)h, *prev = co_cur;
+    co_cur = c;
+    swapcontext(&c->ret, &c->ctx);
+    co_cur = prev;
+    if (!c->done) return 0;
+    munmap(c->stack, c->size); free(c);
+    return 1;
+}
+void rt_co_suspend(void) {
+    Co *c = co_cur;
+    if (!c) { fflush(stdout); fprintf(stderr, "Exception in thread \"main\" java.lang.IllegalStateException: suspension outside a coroutine\n"); exit(1); }
+    swapcontext(&c->ctx, &c->ret);
+}
+#pragma clang diagnostic pop

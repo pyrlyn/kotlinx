@@ -50,8 +50,8 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   `var` properties with `get()` and `set(v)` accessors.
 - kotlinx subsets (`compiler/src/frontend/Kotlinx.kt`, tests `kotlinx_coroutines`, `kotlinx_serialization`):
   coroutines (`suspend` accepted; `runBlocking`, `coroutineScope`, `launch`, `async`/`await`, `Job`, `Channel`, cold
-  `Flow`) on a single-threaded FIFO scheduler without a CPS transform: a coroutine runs to completion when its parent
-  reaches a suspension point, it cannot suspend in the middle; `delay` is virtual time. Serialization: `@Serializable`
+  `Flow`): stackful coroutines (one mmap'ed stack each, ucontext) on a single-threaded scheduler, so `join`/`await`/
+  `receive`/`send`/`yield`/`delay` really suspend; `delay` is virtual time. Serialization: `@Serializable`
   classes (Int/Long/Double/Boolean/String, nested @Serializable, `List<T>`, nullable) with `X.serializer()`,
   `Json.encodeToString/decodeFromString(serializer, ...)`, `parseToJsonElement` and the `JsonElement` tree.
 - Not yet: user generics, function types and general lambdas, inheritance from classes (open/abstract/sealed), objects and

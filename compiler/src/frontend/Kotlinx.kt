@@ -6,9 +6,9 @@ package newkotlin
  * - kotlinx.coroutines subset: `runBlocking`, `coroutineScope`, `launch`, `async`/`await`, `Job` (join, cancel,
  *   isActive/isCompleted), `joinAll`, `awaitAll`, `yield`, `delay`, `Channel` (send/receive/trySend/close/consumeEach)
  *   and cold `Flow` (`flow { emit(x) }`, `flowOf`, `map`, `filter`, `collect`, `toList`). `suspend` is accepted on
- *   functions and function types. There is no CPS transform yet, so coroutines run on a single-threaded FIFO
- *   scheduler: a launched coroutine runs to completion when the parent reaches a suspension point (`join`, `await`,
- *   `receive`, `yield`, `delay`, end of scope); it cannot itself suspend in the middle. `delay` advances a virtual clock.
+ *   functions and function types. Coroutines are stackful (runtime.c `rt_co_*`, one mmap'ed stack per coroutine)
+ *   on a single-threaded scheduler: `join`, `await`, `receive`, `send` (full or rendezvous channel), `yield` and
+ *   `delay` really suspend the calling coroutine. `delay` uses virtual time (timers ordered by wake-up time).
  *   `runBlocking`/`coroutineScope` return Unit (generic `T = Unit` parameters are not supported yet).
  * - kotlinx.serialization subset: `@Serializable` classes get a generated `KSerializer` (`X.serializer()`), `Json`
  *   with `encodeToString`/`decodeFromString(serializer, ...)`, `parseToJsonElement`, and the `JsonElement` tree
@@ -17,39 +17,71 @@ package newkotlin
  */
 
 val KOTLINX_COROUTINES = """
+external fun rt_co_new(unused: Long): Long
+external fun rt_co_resume(h: Long): Int
+external fun rt_co_suspend(): Unit
 class CancellationException(message: String) : IllegalStateException(message)
+class ClosedReceiveChannelException(message: String) : IllegalStateException(message)
 object KxSched {
-    val queue = ArrayList<Job>()
-    var nextId = 0
-    fun runOne(): Boolean {
-        if (queue.size == 0) return false
-        val j = queue.removeAt(0)
-        j.run()
-        return true
+    val ready = ArrayList<Job>()
+    val timers = ArrayList<Job>()
+    var current: Job? = null
+    var now = 0L
+    fun wake(j: Job) { ready.add(j) }
+    fun wakeAll(ws: ArrayList<Job>) {
+        for (w in ws) ready.add(w)
+        while (ws.size > 0) ws.removeAt(ws.size - 1)
     }
-    fun drain() { while (runOne()) { } }
-    fun unqueue(j: Job) {
-        for (i in 0 until queue.size) if (queue[i] === j) { queue.removeAt(i); return }
+    fun addTimer(j: Job) {
+        timers.add(j)
+        var i = timers.size - 1
+        while (i > 0 && timers[i - 1].wakeAt > j.wakeAt) { val t = timers[i - 1]; timers[i - 1] = timers[i]; timers[i] = t; i-- }
     }
+    fun runUntil(root: Job) {
+        while (!root.isCompleted) {
+            if (ready.size > 0) { val j = ready.removeAt(0); j.step() }
+            else if (timers.size > 0) { val j = timers.removeAt(0); if (j.wakeAt > now) now = j.wakeAt; j.step() }
+            else throw IllegalStateException("runBlocking: deadlock, no coroutine can make progress")
+        }
+    }
+    fun me(): Job {
+        val c = current
+        if (c == null) throw IllegalStateException("suspend function called outside a coroutine")
+        return c
+    }
+}
+fun kxCoEntry(id: Long) {
+    val j = KxSched.me()
+    j.body()
 }
 open class Job(body0: () -> Unit) {
     var body: () -> Unit = body0
-    val id: Int = KxSched.nextId++
+    var handle = 0L
     var started = false
     var isCompleted = false
     var isCancelled = false
+    var wakeAt = 0L
+    val waiters = ArrayList<Job>()
     val isActive: Boolean get() = !isCompleted && !isCancelled
-    fun run() {
-        if (started || isCancelled) return
-        started = true
-        body()
-        body = {}
-        isCompleted = true
+    fun step() {
+        if (isCompleted) return
+        if (handle == 0L) { started = true; handle = rt_co_new(0L) }
+        val prev = KxSched.current
+        KxSched.current = this
+        val done = rt_co_resume(handle)
+        KxSched.current = prev
+        if (done != 0) { handle = 0L; finish() }
     }
-    fun cancel() { if (!started) { isCancelled = true; isCompleted = true; body = {} } }
+    fun finish() {
+        isCompleted = true
+        body = {}
+        KxSched.wakeAll(waiters)
+    }
+    fun cancel() { if (!started && !isCompleted) { isCancelled = true; finish() } }
     fun join() {
         while (!isCompleted) {
-            if (!started && !isCancelled) { KxSched.unqueue(this); run() } else if (!KxSched.runOne()) return
+            waiters.add(KxSched.me())
+            rt_co_suspend()
         }
     }
 }
@@ -62,16 +94,18 @@ class Deferred<T>(val compute: () -> T) {
 }
 class CoroutineScope {
     val children = ArrayList<Job>()
+    // Members too, so calls inside nested lambdas of a scope builder resolve.
+    fun yield() { kxYield() }
     fun launch(block: CoroutineScope.() -> Unit): Job {
         val child = CoroutineScope()
         val j = Job { with(child, block); child.joinChildren() }
-        children.add(j); KxSched.queue.add(j)
+        children.add(j); KxSched.wake(j)
         return j
     }
     fun <T> async(block: CoroutineScope.() -> T): Deferred<T> {
         val child = CoroutineScope()
         val d = Deferred<T> { val r = with(child, block); child.joinChildren(); r }
-        children.add(d.job); KxSched.queue.add(d.job)
+        children.add(d.job); KxSched.wake(d.job)
         return d
     }
     fun joinChildren() {
@@ -81,41 +115,67 @@ class CoroutineScope {
     }
 }
 fun runBlocking(block: CoroutineScope.() -> Unit) {
+    if (KxSched.current != null) throw IllegalStateException("nested runBlocking is not supported")
+    val s = CoroutineScope()
+    val root = Job { with(s, block); s.joinChildren() }
+    KxSched.wake(root)
+    KxSched.runUntil(root)
+}
+fun coroutineScope(block: CoroutineScope.() -> Unit) {
     val s = CoroutineScope()
     with(s, block)
     s.joinChildren()
 }
-fun coroutineScope(block: CoroutineScope.() -> Unit) { runBlocking(block) }
-fun yield() { KxSched.runOne() }
-var kxVirtualTime = 0L
-fun delay(ms: Long) { kxVirtualTime += ms; KxSched.drain() }
-fun currentTimeVirtual(): Long = kxVirtualTime
+fun kxYield() { KxSched.wake(KxSched.me()); rt_co_suspend() }
+fun yield() { kxYield() }
+fun delay(ms: Long) {
+    val j = KxSched.me()
+    j.wakeAt = KxSched.now + ms
+    KxSched.addTimer(j)
+    rt_co_suspend()
+}
+fun currentTimeVirtual(): Long = KxSched.now
 fun joinAll(jobs: List<Job>) { for (j in jobs) j.join() }
 fun <T> awaitAll(ds: List<Deferred<T>>): List<T> { val r = ArrayList<T>(); for (d in ds) r.add(d.await()); return r }
-class ClosedReceiveChannelException(message: String) : IllegalStateException(message)
 class Channel<T>(val capacity: Int) {
     val buf = ArrayList<T>()
+    val receivers = ArrayList<Job>()
+    val senders = ArrayList<Job>()
+    var sent = 0L
+    var received = 0L
     var isClosedForSend = false
     val isEmpty: Boolean get() = buf.size == 0
     val isClosedForReceive: Boolean get() = isClosedForSend && buf.size == 0
     fun send(x: T) {
         if (isClosedForSend) throw IllegalStateException("Channel was closed")
+        while (capacity > 0 && buf.size >= capacity) { senders.add(KxSched.me()); rt_co_suspend() }
         buf.add(x)
-        while (capacity >= 0 && buf.size > capacity && KxSched.runOne()) { }
+        val ticket = sent
+        sent++
+        KxSched.wakeAll(receivers)
+        // Rendezvous (capacity 0): the sender resumes once a receiver took its element.
+        while (capacity == 0 && received <= ticket) { senders.add(KxSched.me()); rt_co_suspend() }
     }
-    fun trySend(x: T): Boolean { if (isClosedForSend) return false; buf.add(x); return true }
+    fun trySend(x: T): Boolean {
+        if (isClosedForSend || (capacity >= 0 && buf.size >= capacity)) return false
+        buf.add(x); sent++; KxSched.wakeAll(receivers); return true
+    }
     fun receive(): T {
         while (buf.size == 0) {
             if (isClosedForSend) throw ClosedReceiveChannelException("Channel was closed")
-            if (!KxSched.runOne()) throw IllegalStateException("receive: deadlock, no runnable coroutine")
+            receivers.add(KxSched.me()); rt_co_suspend()
         }
+        received++
+        KxSched.wakeAll(senders)
         return buf.removeAt(0)
     }
-    fun close() { isClosedForSend = true }
+    fun close() { isClosedForSend = true; KxSched.wakeAll(receivers) }
     fun consumeEach(f: (T) -> Unit) {
         while (true) {
-            while (buf.size == 0 && !isClosedForSend && KxSched.runOne()) { }
+            while (buf.size == 0 && !isClosedForSend) { receivers.add(KxSched.me()); rt_co_suspend() }
             if (buf.size == 0) return
+            received++
+            KxSched.wakeAll(senders)
             f(buf.removeAt(0))
         }
     }
