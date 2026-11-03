@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2968,
-  "UNSUPPORTED": 2523
+  "PASS": 2971,
+  "UNSUPPORTED": 2520
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -16384,9 +16384,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceCallInLambda.kt"
   },
   "box/box/funInterface/funInterfaceInheritance.kt": {
-   "category": "interfaces",
-   "detail": "fun interfaces with super-interfaces are not supported (at 'I')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceInheritance.kt"
   },
   "box/box/funInterface/funInterfaceTypealias.kt": {
@@ -16469,9 +16468,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/kt49384_getSame.kt"
   },
   "box/box/funInterface/kt64587.kt": {
-   "category": "interfaces",
-   "detail": "fun interfaces with super-interfaces are not supported (at 'Child')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/kt64587.kt"
   },
   "box/box/funInterface/kt77685-sam.kt": {
@@ -16517,9 +16515,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/noConversionForSubtypeGeneric.kt"
   },
   "box/box/funInterface/nonAbstractMethod.kt": {
-   "category": "interfaces",
-   "detail": "fun interfaces with super-interfaces are not supported (at 'F')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/nonAbstractMethod.kt"
   },
   "box/box/funInterface/nonTrivialProjectionInSuperType.kt": {
@@ -16541,7 +16538,7 @@
   },
   "box/box/funInterface/primitiveConversions.kt": {
    "category": "generics",
-   "detail": "fun interfaces with super-interfaces are not supported (at 'GenericCharToAny')",
+   "detail": "fun interfaces with generic super-interfaces are not supported (at 'GenericCharToAny')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/primitiveConversions.kt"
   },
@@ -16552,8 +16549,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/receiverEvaluatedOnce.kt"
   },
   "box/box/funInterface/samConstructorExplicitInvocation.kt": {
-   "category": "interfaces",
-   "detail": "fun interfaces with super-interfaces are not supported (at 'C')",
+   "category": "generics",
+   "detail": "fun interfaces with generic super-interfaces are not supported (at 'C')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/samConstructorExplicitInvocation.kt"
   },

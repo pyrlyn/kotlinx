@@ -413,9 +413,13 @@ class Parser(toks: List<Tok>) {
     private fun samLower(funs: MutableList<FunD>, classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>, globals: MutableList<VarS>) {
         if (funIfaces.isEmpty()) return
         for ((n, d) in funIfaces) {
-            if (ifaceSupers[n].orEmpty().isNotEmpty()) fail("fun interfaces with super-interfaces are not supported", Tok(K.ID, n, d.line))
-            val defs = ifaceDefaults[n].orEmpty().map { it.name }.toSet()
-            val abs = d.methods.filter { it.name !in defs }
+            // The single abstract method may be inherited from (non-generic) super-interfaces; a default in the
+            // interface or any super-interface implements a method.
+            val supers = ifaceSupers[n].orEmpty()
+            val superDs = supers.map { sn -> ifaces.firstOrNull { it.name == sn } ?: funIfaces[sn] ?: fail("fun interfaces with super-interfaces are not supported", Tok(K.ID, n, d.line)) }
+            if (superDs.any { it.typeParams.isNotEmpty() }) fail("fun interfaces with generic super-interfaces are not supported", Tok(K.ID, n, d.line))
+            val defs = (listOf(n) + supers).flatMap { ifaceDefaults[it].orEmpty().map { m -> m.name } }.toSet()
+            val abs = (d.methods + superDs.flatMap { it.methods }).filter { it.name !in defs }.distinctBy { it.name }
             val m = abs.singleOrNull() ?: fail("a fun interface needs exactly one abstract method", Tok(K.ID, n, d.line))
             if (m.typeParams.isNotEmpty() || m.name.startsWith("\$")) fail("this fun interface method is not supported", Tok(K.ID, n, d.line))
             val ret = m.ret ?: TypeRef("Unit", emptyList(), false)
