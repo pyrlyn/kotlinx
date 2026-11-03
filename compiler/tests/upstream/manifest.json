@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3092,
-  "UNSUPPORTED": 2399
+  "PASS": 3093,
+  "UNSUPPORTED": 2398
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -9480,8 +9480,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/deserializedSuspendFunctionProperty.kt"
   },
   "box/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt": {
-   "category": "strings / templates",
-   "detail": "unknown type Sequence<String>",
+   "category": "unknown sequence (stdlib API / unsupported decl)",
+   "detail": "unknown function 'sequence'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt"
   },
@@ -17875,8 +17875,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt41164.kt"
   },
   "box/box/inference/pcla/issues/kt42139.kt": {
-   "category": "other: unknown type Sequence<List<Int>>",
-   "detail": "unknown type Sequence<List<Int>>",
+   "category": "unknown sequence (stdlib API / unsupported decl)",
+   "detail": "unknown function 'sequence'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt42139.kt"
   },
@@ -26113,9 +26113,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/vars.kt"
   },
   "box/box/lower/forLoopsLowering/withIndex.kt": {
-   "category": "other: unknown method IntRange.asSequence()",
-   "detail": "unknown method IntRange.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/withIndex.kt"
   },
   "box/box/lower/forLoopsLowering/withIndexUInt.kt": {
@@ -29660,7 +29659,7 @@
   },
   "box/box/properties/complexPropertyInitializer.kt": {
    "category": "strings / templates",
-   "detail": "unknown type Sequence<String>",
+   "detail": "unknown method ArrayList<String>.single()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/complexPropertyInitializer.kt"
   },
