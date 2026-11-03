@@ -27,10 +27,12 @@ cat data/words.txt > /dev/null
 gc=$(echo " ${NKFLAGS:-} " | grep -oE -- '--gc[= ][a-z0-9_-]+' | tail -1 | sed -E 's/--gc[= ]//'); gc=${gc:-${NEWKOTLIN_GC:-default}}
 out=results/nk/$name.txt; : > "$out"
 echo "# $name ${ref:-working tree} $(date '+%Y-%m-%d %H:%M %Z') load: $(sysctl -n vm.loadavg)" >> "$out"
+# NKBENCH_BUILD_ONLY=1: only build (through the nkbuild.sh cache) and exit, nothing is run or recorded.
 for c in sum $(ls cases); do
   src=cases/$c/kotlin/Main.kt; [ $c = sum ] && src=kotlin/Main.kt
   b=../compiler/build/nk/$name.$c
-  "$NKC" --runtime "$RT" ${NKFLAGS:-} "$src" -o "$b"
+  ./nkbuild.sh "$b" "$NKC" "$src" --runtime "$RT" ${NKFLAGS:-}
+  [ -n "${NKBENCH_BUILD_ONLY:-}" ] && continue
   "$b" >/dev/null
   ts=""; for r in 1 2 3 4 5; do ts="$ts $("$b" | grep -oE 'nanos=[0-9]+' | cut -d= -f2)"; done
   ms=$(python3 -c "v=sorted(map(int,'$ts'.split()))[1:4]; print(round(sum(v)/3/1e6, 3))")
@@ -38,4 +40,5 @@ for c in sum $(ls cases); do
   python3 record.py "${NKBENCH_SUITE:-nk}" "$c" --run "$name" --gc "$gc" ${ref:+--ref "$ref" --commit "$sha"} \
     ms="$ms" raw_ns="$(echo $ts | tr ' ' ',')" flags="${NKFLAGS:-}"
 done
+[ -n "${NKBENCH_BUILD_ONLY:-}" ] && { rm -f "$out"; exit 0; }
 cat "$out"

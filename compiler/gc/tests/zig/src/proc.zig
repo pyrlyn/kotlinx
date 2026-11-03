@@ -13,6 +13,16 @@ extern "c" fn setenv(name: [*:0]const u8, value: [*:0]const u8, overwrite: c_int
 extern "c" fn unsetenv(name: [*:0]const u8) c_int;
 extern "c" fn getenv(name: [*:0]const u8) ?[*:0]const u8;
 extern "c" fn _exit(code: c_int) noreturn;
+extern "c" fn kill(pid: c_int, sig: c_int) c_int;
+extern "c" fn setpgid(pid: c_int, pgid: c_int) c_int;
+extern "c" fn usleep(us: c_uint) c_int;
+extern "c" fn time(t: ?*i64) i64;
+const WNOHANG: c_int = 1;
+const SIGKILL: c_int = 9;
+/// Status run() returns when the command hit Cmd.timeout_s (as timeout(1) reports it).
+pub const TIMEOUT: u8 = 124;
+/// Timeout for commands that do not set their own (the runner sets it from KX_GC_TEST_TIMEOUT); 0 = none.
+pub var default_timeout_s: u32 = 0;
 extern "c" fn read(fd: c_int, buf: [*]u8, n: usize) isize;
 extern "c" fn write(fd: c_int, buf: [*]const u8, n: usize) isize;
 extern "c" fn access(path: [*:0]const u8, mode: c_int) c_int;
@@ -61,6 +71,9 @@ pub const Cmd = struct {
     env: []const []const u8 = &.{},
     stdout: Sink = .null,
     stderr: Sink = .null,
+    /// Seconds before the command (and its process group) is killed and run() returns TIMEOUT;
+    /// 0 = default_timeout_s.
+    timeout_s: u32 = 0,
 };
 
 fn redirect(s: Sink, fd: c_int) void {
@@ -86,9 +99,11 @@ pub fn run(cmd: Cmd) u8 {
     const argv = gpa.alloc(?[*:0]const u8, cmd.argv.len + 1) catch @panic("oom");
     for (cmd.argv, 0..) |a, i| argv[i] = z(a);
     argv[cmd.argv.len] = null;
+    const limit = if (cmd.timeout_s > 0) cmd.timeout_s else default_timeout_s;
     const pid = fork();
     if (pid < 0) return 127;
     if (pid == 0) {
+        if (limit > 0) _ = setpgid(0, 0); // own group: a hung test's children die with it
         for (cmd.env) |e| {
             const eq = std.mem.indexOfScalar(u8, e, '=').?;
             _ = setenv(z(e[0..eq]), z(e[eq + 1 ..]), 1);
@@ -99,7 +114,19 @@ pub fn run(cmd: Cmd) u8 {
         _exit(127);
     }
     var st: c_int = 0;
-    _ = waitpid(pid, &st, 0);
+    if (limit > 0) {
+        const deadline = time(null) + limit;
+        while (waitpid(pid, &st, WNOHANG) == 0) {
+            if (time(null) >= deadline) {
+                _ = kill(-pid, SIGKILL);
+                _ = kill(pid, SIGKILL);
+                _ = waitpid(pid, &st, 0);
+                out("TIMEOUT {s} after {d}s\n", .{ cmd.argv[0], limit });
+                return TIMEOUT;
+            }
+            _ = usleep(10_000);
+        }
+    } else _ = waitpid(pid, &st, 0);
     const s: u32 = @bitCast(st);
     if (s & 0x7f == 0) return @truncate((s >> 8) & 0xff);
     return @truncate(128 + (s & 0x7f));
