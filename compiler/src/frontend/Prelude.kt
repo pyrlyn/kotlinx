@@ -308,6 +308,8 @@ fun <T> ArrayList<T>.first(): T { if (size == 0) throw NoSuchElementException("L
 fun <T> ArrayList<T>.last(): T { if (size == 0) throw NoSuchElementException("List is empty."); return get(size - 1) }
 fun <T> ArrayList<T>.firstOrNull(): T? = if (size == 0) null else get(0)
 fun <T> ArrayList<T>.lastOrNull(): T? = if (size == 0) null else get(size - 1)
+// A sequence over a list is the list itself here (eager operations; iteration order and values are the same).
+fun <T> ArrayList<T>.asSequence(): ArrayList<T> = this
 fun <T> ArrayList<T>.forEachIndexed(action: (Int, T) -> Unit) { var i = 0; for (x in this) { action(i, x); i++ } }
 fun <T> ArrayList<T>.indexOfFirst(predicate: (T) -> Boolean): Int { var i = 0; for (x in this) { if (predicate(x)) return i; i++ }; return -1 }
 fun <T> ArrayList<T>.indexOfLast(predicate: (T) -> Boolean): Int { var i = size - 1; while (i >= 0) { if (predicate(get(i))) return i; i-- }; return -1 }
@@ -400,7 +402,7 @@ private val ARRAY_EXT_USE = Regex("""\.(reversedArray|copyOf|contentToString|toL
 const val RANGE_LIST_EXT = """
 fun IntProgression.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
-private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex|forEachIndexed|indexOfFirst|indexOfLast|addAll)\(|-=|\bin\b""")
+private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex|asSequence|forEachIndexed|indexOfFirst|indexOfLast|addAll)\(|-=|\bin\b""")
 
 /** `indices` / `lastIndex` of lists, arrays and strings as extension properties. */
 const val INDICES = """

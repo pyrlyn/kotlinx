@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3049,
-  "UNSUPPORTED": 2442
+  "PASS": 3056,
+  "UNSUPPORTED": 2435
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -8429,27 +8429,23 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInEmptySequenceWithIndex.kt": {
-   "category": "other: unknown method ArrayList<Any>.asSequence()",
-   "detail": "unknown method ArrayList<Any>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInEmptySequenceWithIndex.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceTypeParameterWithIndex.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceTypeParameterWithIndex.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndex.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndex.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexBreakAndContinue.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexBreakAndContinue.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexCheckSideEffects.kt": {
@@ -8465,9 +8461,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNameBasedDestructuringShortForm.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoElementVar.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoElementVar.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoElementVarCheckSideEffects.kt": {
@@ -8477,9 +8472,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoElementVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVar.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVar.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVarCheckSideEffects.kt": {
@@ -8489,9 +8483,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexWithExplicitlyTypedIndexVariable.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInSmartCastToArray.kt": {
