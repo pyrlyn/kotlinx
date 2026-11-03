@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2959,
-  "UNSUPPORTED": 2532
+  "PASS": 2968,
+  "UNSUPPORTED": 2523
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2836,8 +2836,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionFunctionWithPassedSupertype.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionInSamWithPassedSupertype.kt": {
-   "category": "interfaces",
-   "detail": "this fun interface method is not supported (at 'SamInterface')",
+   "category": "unknown Number (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Number'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionInSamWithPassedSupertype.kt"
   },
@@ -3763,9 +3763,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionAsASuperTypePassToSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionFunctionInSAMInterface.kt": {
-   "category": "interfaces",
-   "detail": "this fun interface method is not supported (at 'SamInterface')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionInSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionFunctionLocal.kt": {
@@ -3786,9 +3785,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionWithExtensionInSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionInDelegatedSam.kt": {
-   "category": "interfaces",
-   "detail": "this fun interface method is not supported (at 'Base')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionInDelegatedSam.kt"
   },
   "box/box/callableReference/function/extensionPassedToDelegatedSam.kt": {
@@ -4011,9 +4009,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedConstructorFromTopLevelOneStringArg.kt"
   },
   "box/box/callableReference/function/nestedExtensionInSAMInterface.kt": {
-   "category": "interfaces",
-   "detail": "this fun interface method is not supported (at 'SamInterface')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/nestedExtensionInSAMInterface.kt"
   },
   "box/box/callableReference/function/newArray.kt": {
@@ -4259,15 +4256,13 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionProperty.kt"
   },
   "box/box/callableReference/property/extensionPropertyInDelegatedSam.kt": {
-   "category": "interfaces",
-   "detail": "this fun interface method is not supported (at 'Base')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyInDelegatedSam.kt"
   },
   "box/box/callableReference/property/extensionPropertyInSamInterface.kt": {
-   "category": "interfaces",
-   "detail": "this fun interface method is not supported (at 'SamInterface')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyInSamInterface.kt"
   },
   "box/box/callableReference/property/extensionPropertyPassedToDelegatedSam.kt": {
@@ -15209,9 +15204,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionFakeOverride.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInDelegatedSam.kt": {
-   "category": "interfaces",
-   "detail": "this fun interface method is not supported (at 'Base')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInDelegatedSam.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInInnerClass.kt": {
@@ -15226,9 +15220,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInNestedClass.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInSAMInterface.kt": {
-   "category": "interfaces",
-   "detail": "this fun interface method is not supported (at 'SamInterface')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInSAMInterface.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInValueClass.kt": {
@@ -15486,9 +15479,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyInNestedClass.kt"
   },
   "box/box/extensionProperties/extensionPropertyInSAMInterface.kt": {
-   "category": "interfaces",
-   "detail": "this fun interface method is not supported (at 'SamInterface')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyInSAMInterface.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithAnonymoesExtensionWithALabel.kt": {
@@ -16404,9 +16396,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceTypealias.kt"
   },
   "box/box/funInterface/funInterfaceWithReceiver.kt": {
-   "category": "interfaces",
-   "detail": "this fun interface method is not supported (at 'FunWithReceiver')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceWithReceiver.kt"
   },
   "box/box/funInterface/funInterfaceWithSuspendMethod.kt": {
