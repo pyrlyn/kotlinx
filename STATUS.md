@@ -73,5 +73,44 @@ Then copy the NewKotlin rows into `bench/table.md`.
 - KotlinX compiler: frontend (`compiler/src/frontend`) + compile-time backends (`compiler/src/backend/{native,js,wasm,jvm}`); `--target=native` default and only implemented; js/wasm/jvm exit non-zero with "target <x> is not supported yet".
 - Allocation: mimalloc default (`--alloc mimalloc`, found via `$NEWKOTLIN_MIMALLOC_DIR`, pkg-config or Homebrew; `brew install mimalloc`; clear error if missing), `--alloc malloc` (system) and `--alloc pool` optional. Leak tests: leak-count on the default build; ASan and macOS `leaks` on `--alloc malloc` builds. Benchmarks: see README.md.
 - Memory manager: `compiler/gc` behind `kxgc.h`, selected with `newkotlinc --gc=default|rc|boehm`
-  (default = RC + cycle collector; boehm = RC + bdwgc). Tests: `compiler/gc/tests/run.sh`; benchmarks: `bench/gc`.
+  (default = RC + cycle collector; boehm = RC + bdwgc). Tests: `compiler/gc/tests/zig` (`zig build ported`/`zig build gc`; legacy shell suite in `compiler/gc/tests/archive`); benchmarks: `bench/gc`.
 - Resume: `cd bench && ./build.sh && ./round.sh && RESULTS=results/round ./summarize.sh`; `compiler/test.sh` for compiler tests; `compiler/tests/upstream/run.py` for upstream tests.
+
+## Status 2026-11-03
+
+In-progress items are marked as such; numbers are only those already committed or in open PRs.
+
+- **GC (C):** all collectors are C (`compiler/gc/{default,incremental,epoch,rc,boehm}/gc.c`, shared
+  `common/*.inc`, API `kxgc.h`). The GC is planned to become a separate project; see
+  [`compiler/gc/docs/extraction-plan.md`](compiler/gc/docs/extraction-plan.md) (planned, nothing moved).
+- **Epoch collector:** #147 (short adaptive logs) is merged: `cyclic_garbage` peak RSS 22.6 -> 4.1 MiB.
+  Making `epoch` the default collector (Polar Quest) is in progress; `default` is still the default on `main`.
+  GC benchmark re-run: #148 (open). Faster GC benchmark runs (build cache, parallel builds, opt-in skip of slow
+  pairs): #154 (open).
+- **GC targets vs Boehm** (equal priority): `cyclic_garbage` epoch peak RSS at or below Boehm (3.4 MiB; 4.1 MiB
+  after #147); beat Boehm on big live heaps (`huge_live_churn` / `big_live_churn`) and on `lru`. No regression
+  beyond the post-#147 baseline in other categories, except up to ~5% where epoch already strongly beats Boehm.
+  Variant exploration is in progress; no results yet.
+- **Zig GC regression benchmarks:** `bench/gc/zig`, PR #155 (open). Median of N runs (time from `nanos=`, peak
+  RSS, max pause from `KX_GC_STATS=1`); thresholds: +5% allowed where boehm/epoch >= 1.5, no regression elsewhere,
+  plus a 3% noise margin; `cyclic_garbage` peak RSS must be <= 3.4 MiB and <= Boehm in the same run (expected to
+  fail until the cyclic-garbage work lands). Baselines in `baselines.zon`; refresh with `zig build update-baselines`
+  after every known-good improvement, so baselines follow the latest known-good numbers.
+- **GC tests in Zig:** all new GC tests are written in Zig. Porting the existing C unit tests and Kotlin GC tests
+  (byte-for-byte identical output, small tolerances only for timing/floating point), new regular API tests,
+  mutation tests of the GC C code and `llvm-cov` coverage: in progress (branch `test/gc-zig-port`, not pushed).
+- **pitx** (in progress, branch `feat/pitx`, not pushed): PIT-style mutation testing on the LLVM IR emitted by
+  `newkotlinc`. Works only on IR copies. First operators: `icmp` predicate flip and integer `add`/`sub` swap;
+  a runner reports caught / survived / invalid mutants. Tests use standalone IR fixtures (conditions, arithmetic,
+  memory, branches/loops with timeouts, neutral mutations, invalid IR) rather than compiled programs.
+- **PIT for compiler code** (in progress, branch `mutation-tests`, not pushed): the compiler is Kotlin/Native,
+  so PIT runs on a JVM build of the compiler sources against the golden tests (`mutation/jvm`); a source-level
+  mutation script (`mutation/mutate.py`) covers native-only code. No scores published yet.
+- **FFI prototype** (in progress, branch `feat/ffi-prototype`, not pushed): `external fun` declarations in
+  Kotlin become LLVM `declare`s; C implementations are linked with `--link <file.c|.o|.a|-l<lib>|-L<dir>>`
+  (repeatable). Round-trip test `compiler/tests/ffi` (Int, Long, Double, Boolean, Unit). Planned: benchmark
+  against Kotlin/Native cinterop (same C code, same iteration count, warm-up), binary size, peak memory, startup
+  time, many functions and large structs.
+- **FFI autogenerator** (planned): C header -> `clang -Xclang -ast-dump=json` -> Kotlin file with `external fun`
+  declarations and the matching `--link` setup. Prototype scope: one header in, one Kotlin file out; then
+  typedefs, structs, enums, constant macros and callbacks.

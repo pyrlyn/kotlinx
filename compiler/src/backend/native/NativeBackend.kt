@@ -62,6 +62,10 @@ class NeedIface(val d: InterfaceD) : Exception()
  */
 var deferredRc = false
 
+/** Borrowed field-read locals (see `borrowableFieldLocal`); NEWKOTLIN_NO_BORROW_FIELD_LOCALS=1 turns them off (A/B, tests). */
+var borrowFieldLocals = true
+
+/** Generates LLVM IR for a whole program. */
 class NativeBackend(private val prog: Program, private val genericClasses: Map<String, ClassD> = emptyMap(),
                     /** Instance class name -> (generic class, type arguments), for inference against `Box<T>` parameters. */
                     private val instOrigin: Map<String, Pair<String, List<TypeRef>>> = emptyMap(),
@@ -173,10 +177,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "UByteArray", "UShortArray" -> Ty.Arr(Ty.U32)
         "StringBuilder" -> Ty.SB
         "HashMap", "MutableMap", "Map" -> mapTy(resolve(t.args[0]), resolve(t.args[1]))
-        "ArrayList", "MutableList", "List" -> Ty.ListTy(resolve(t.args.single()).also { if (it == Ty.Unit) fail("lists of Unit are not supported") })
+        // `Sequence<T>` is an (eager) list here: finite sequences iterate the same values in the same order.
+        "ArrayList", "MutableList", "List", "Sequence" -> Ty.ListTy(resolve(t.args.single()).also { if (it == Ty.Unit) fail("lists of Unit are not supported") })
         "\$Fn" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()))
         "\$FnR" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()), receiver = true)
         "Array" -> if (t.args.singleOrNull()?.name == "String" && mainParams) Ty.Args else Ty.ListTy(resolve(t.args.single()))
+        // `Set<T>` / `MutableSet<T>` / `LinkedHashSet<T>`: the prelude's `HashSet<T>`.
+        "Set", "MutableSet", "LinkedHashSet" -> if ("HashSet" in genericClasses && t.args.size == 1) instanceTy("HashSet", t.args) else fail("unknown type $t")
         else -> if (t.name in genericClasses || t.name in genericIfaces) instanceTy(t.name, t.args) else if (t.name in classes) Ty.Cls(t.name) else if (t.name in ifaces) Ty.Iface(t.name) else if (t.name.startsWith("CPointer")) Ty.RawPtr else fail("unknown type $t")
     }
 
@@ -1035,7 +1042,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 line = s.line
                 res = genExpr(s.e)
                 if (res.t.isRef) res = consume(res)
-            } else if (onStack) { line = s.line; genStackObj(s as VarS) } else {
+            } else if (onStack) { line = s.line; genStackObj(s as VarS) }
+            else if (s is VarS && borrowableFieldLocal(s, b.stmts, i, last)) { line = s.line; genBorrowedFieldLocal(s) } else {
                 val ife = ((s as? ExprS)?.e as? IfE)?.takeIf { it.el != null }
                 if (ife != null) {
                     inheritFor = ife
@@ -1057,6 +1065,92 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (!term) releaseScope(scopes.last())
         scopes.removeAt(scopes.size - 1)
         return res
+    }
+
+    /**
+     * A field-read local (`val p = e.f`, or `val h = f` for a field of `this`) is borrowed (no retain and no
+     * release) when it provably stays referenced by that field for its whole live range:
+     *  - the base `e` is `this` or a parameter: borrowed from the caller, alive for the whole call, never
+     *    reassigned, so its count is not ours to drop;
+     *  - the field is a plain backing field (no custom getter or setter) of a class;
+     *  - from the declaration to the statement holding the local's last use (same block), the code has no
+     *    calls, allocations, lambdas, loops, returns or nested declarations: only names, literals, null and
+     *    identity comparisons, `!`, `&&`, `||`, `if`, plain field reads and plain field stores (`x.g = v`);
+     *  - no store in that range writes a field named `f` (any class, so aliasing of `e` does not matter),
+     *    unless the stored value is the local itself: then a store into `e.f` leaves `e.f` unchanged.
+     * So `e.f` holds a counted reference to the local's object from the read to the last use, and the object
+     * cannot be freed: not by plain RC (its count stays >= 1) and not by the cycle collector (it is reachable
+     * from `e`, which the caller holds). Under deferred RC (epoch) an object is only freed after a logged
+     * decrement brings it to zero; the only decrements of it in the range would come from overwriting `e.f`,
+     * which the rule excludes. See compiler/docs/borrowed-field-locals.md.
+     */
+    private fun borrowableFieldLocal(s: VarS, stmts: List<S>, i: Int, last: Map<String, Int>): Boolean {
+        if (s.isVar || s.type != null || !borrowFieldLocals) return false
+        val (base, f) = when (val ie = s.init) {
+            is MemberE -> { if (ie.safe) return false; val r = ie.recv as? NameE ?: return false; r.n to ie.n }
+            is NameE -> { if (lookup(ie.n) != null) return false; "this" to ie.n }
+            else -> return false
+        }
+        val c = clsOf(callBaseTy(base)) ?: return false
+        if (!plainField(c, f)) return false
+        val ft = c.fields[c.index(f)].second
+        if (!ft.isRef) return false
+        val end = last[s.name] ?: return false
+        if (end <= i) return false
+        val ctx = BorrowCtx(s.name, ft, f)
+        for (k in i + 1..end) if (!ctx.safeS(stmts[k])) return false
+        return true
+    }
+    /** Type of [n] if it is `this` of the method (`%this`) or a parameter: borrowed for the whole call, never reassigned. */
+    private fun callBaseTy(n: String): Ty? {
+        val l = lookup(n) ?: return if (n == "this") owner?.let { Ty.Cls(it.name) } else null
+        if (l.isVar || l.t !is Ty.Cls) return null
+        return l.t.takeIf { scopes.firstOrNull()?.vars?.get(n) === l && scopes.none { l in it.refs } }
+    }
+    private fun plainField(c: ClassInfo, f: String) = c.index(f) >= 0 && "\$get\$$f" !in c.methods && "\$prop\$$f" !in c.methods && "\$set\$$f" !in c.methods
+    private fun clsOf(t: Ty?) = (t as? Ty.Cls)?.let { classes[it.name] }
+    private inner class BorrowCtx(val local: String, val localTy: Ty, val f: String) {
+        val nested = HashMap<String, Ty>()
+        fun exprTy(e: E): Ty? = when (e) {
+            is NameE -> tyOf(e.n) ?: clsOf(callBaseTy("this"))?.takeIf { thisField(e.n) }?.let { c -> c.fields[c.index(e.n)].second }
+            is MemberE -> (e.recv as? NameE)?.let { clsOf(tyOf(it.n)) }?.takeIf { plainField(it, e.n) }?.let { c -> c.fields[c.index(e.n)].second }
+            else -> null
+        }
+        fun tyOf(n: String): Ty? = if (n == local) localTy else nested[n] ?: lookup(n)?.t ?: if (n == "this") callBaseTy(n) else null
+        /** `this.g` written as a bare name: a plain field of `this` (not a local, not a getter). */
+        fun thisField(n: String) = lookup(n) == null && n != local && n !in nested && clsOf(callBaseTy("this"))?.let { plainField(it, n) } == true
+        fun fieldOf(r: E, n: String): Boolean { val rn = (r as? NameE)?.n ?: return false; return (rn == local || rn in nested || lookup(rn) != null || rn == "this") && clsOf(tyOf(rn))?.let { plainField(it, n) } == true }
+        fun keepsF(n: String, v: E) = n != f || (v as? NameE)?.n == local
+        fun safeS(st: S): Boolean = when (st) {
+            is ExprS -> safeE(st.e)
+            // a nested local read from names and fields: its retain/release cannot drop our object, see above
+            is VarS -> st.name != local && st.type == null && lookup(st.name) == null && safeE(st.init) &&
+                (st.init !is NameE && st.init !is MemberE || exprTy(st.init)?.also { nested[st.name] = it } != null)
+            is AssignS -> st.op == "=" && safeE(st.value) && when (val t = st.target) {
+                is MemberE -> !t.safe && fieldOf(t.recv, t.n) && keepsF(t.n, st.value)
+                is NameE -> thisField(t.n) && keepsF(t.n, st.value)
+                else -> false
+            }
+            else -> false
+        }
+        fun safeB(b: Block?) = b == null || (b.params.isEmpty() && b.stmts.all { safeS(it) })
+        fun safeE(e: E): Boolean = when (e) {
+            is IntL, is BoolL, is NullL, is CharL -> true
+            is NameE -> e.n == local || e.n in nested || lookup(e.n) != null || e.n == "this" || thisField(e.n)
+            is MemberE -> !e.safe && fieldOf(e.recv, e.n)
+            is BinE -> (e.op == "&&" || e.op == "||" || e.op == "===" || e.op == "!==" ||
+                ((e.op == "==" || e.op == "!=") && (e.l is NullL || e.r is NullL))) && safeE(e.l) && safeE(e.r)
+            is UnE -> (e.op == "!" && safeE(e.e)) || (e.op == "-" && (e.e is IntL || e.e is DblL))
+            is DblL -> true
+            is IfE -> safeE(e.cond) && safeB(e.th) && safeB(e.el)
+            else -> false
+        }
+    }
+    private fun genBorrowedFieldLocal(s: VarS) {
+        val v = genExpr(s.init)
+        if (v.owned) fail("internal: borrowed field local '${s.name}' read an owned value")
+        val l = declare(s.name, v.t, false, false)
+        emit("store ${v.t.llvm} ${v.v}, ptr ${l.slot}")
     }
 
     private fun genStmt(s: S) {
@@ -1412,7 +1506,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val op = e.op.removePrefix("pre").removeSuffix("s16")
                 val mname = if (op == "++") "inc" else "dec"
                 onceRecv(e.target) { tg ->
-                    val old = genExpr(tg)
+                    // A reference read is borrowed from the variable/property; `assign` below releases that slot's
+                    // value, which freed the old object while `x++` still returned it (use-after-free: `val old = c++`
+                    // printed a reused object, and --leak-check aborted with "freed into the wrong region").
+                    // Own it for the temp so the postfix result outlives the reassignment.
+                    val old = genExpr(tg).let { v -> if (v.t.isRef && !v.owned) { retain(v.v, v.t); Val(v.v, v.t, true) } else v }
                     // `operator fun inc()/dec()` (member, or an extension on the operand type).
                     val custom = (old.t as? Ty.Cls)?.let { mname in classes.getValue(it.name).methods } == true ||
                         extFuns[mname]?.any { extMatches(old.t, it.params[0].type, it.typeParams) } == true
@@ -2446,7 +2544,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 e.args.forEachIndexed { i, x -> emit("store ${et.llvm} ${coerce(genExpr(x), et).v}, ptr ${emitT("getelementptr ${et.llvm}, ptr $data, i64 $i")}") }
                 return Val(a, Ty.Arr(et), true)
             }
-            "ArrayList", "mutableListOf", "arrayListOf", "listOf", "arrayOf" -> {
+            "ArrayList", "mutableListOf", "arrayListOf", "listOf", "arrayOf", "sequenceOf" -> {
                 // `ArrayList<T>(capacity)`: the capacity is only a hint (evaluated for its effects, then dropped).
                 val capOnly = n == "ArrayList" && e.args.size == 1 && e.args[0] !is NamedE && e.typeArgs.isNotEmpty() && probeType(e.args[0])?.isInt == true
                 if (capOnly) releaseIfOwned(genExpr(e.args[0]))
@@ -2890,7 +2988,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** Top-level extension functions (`ext$Recv$name`) by name. */
     private val extFuns: Map<String, List<FunD>> by lazy { prog.funs.filter { it.name.startsWith("ext$") }.groupBy { it.name.removePrefix("ext$").substringAfter("$") } }
-    private val LISTY = setOf("List", "MutableList", "ArrayList", "Array", "Collection", "MutableCollection", "Iterable")
+    private val LISTY = setOf("List", "MutableList", "ArrayList", "Array", "Collection", "MutableCollection", "Iterable", "Sequence")
 
     /** Does extension receiver type [recv] (with the extension's type parameters [tps]) accept a value of type [t]? */
     private fun extMatches(t: Ty, recv: TypeRef, tps: List<String>): Boolean {
