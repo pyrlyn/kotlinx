@@ -240,6 +240,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun coerce(v: Val, t: Ty): Val {
         if (v.t == t) return v
+        if (isFnTwin(v.t, t)) return Val(v.v, t, v.owned)
         // Unreachable value (after `throw`): keep the slot well-typed.
         if (v.t == Ty.Nothing) return if (t.llvm == "void") v else Val("undef", t)
         if (isAny(t)) return toAny(v, t)
@@ -3338,6 +3339,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         throw NeedIface(InterfaceD(name, listOf(FunD("invoke", ps.mapIndexed { i, t -> Param("p$i", tyRef(t)) }, tyRef(r), null, null, 0)), 0))
     }
 
+    /**
+     * `R.(A) -> T` and `(R, A) -> T` are the same type at run time: every closure implements both interfaces (same
+     * `invoke` signature), so a value of one converts to the other without a wrapper.
+     */
+    private fun twinFn(ps: List<Ty>, r: Ty, receiver: Boolean): Ty.Iface? = if (ps.isEmpty()) null else fnTy(ps, r, !receiver)
+    private fun isFnTwin(a: Ty, b: Ty): Boolean = a is Ty.Iface && b is Ty.Iface &&
+        ((a.name.startsWith("\$FnR$") && b.name == "\$Fn$" + a.name.removePrefix("\$FnR$")) || (b.name.startsWith("\$FnR$") && a.name == "\$Fn$" + b.name.removePrefix("\$FnR$")))
+
     private fun invokeFn(f: Val, e: CallE): Val {
         val ii = ifaces.getValue((f.t as Ty.Iface).name)
         val v = callIface(f, ii, "invoke", e)
@@ -3463,7 +3472,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val methods = listOfNotNull(fwd("invoke", "\$g", gs.params, gs.ret), fwd("get", "\$g", gs.params, gs.ret),
                 setter?.let { fwd("set", "\$s", fnSig(it.t)!!.params, Ty.Unit) })
             val fields = listOfNotNull(FieldD("\$g", tyRef(ft), false), setter?.let { FieldD("\$s", tyRef(it.t), false) }, FieldD("name", tyRef(Ty.Str), false))
-            throw NeedClass(ClassD(cname, fields, listOf(ft.name), methods, line))
+            throw NeedClass(ClassD(cname, fields, listOf(ft.name) + listOfNotNull(twinFn(gs.params, gs.ret, ft.name.startsWith("\$FnR"))?.name), methods, line))
         }
         scopes.add(Scope())
         val gl = declare("\$prg", ft, false, getter.owned)
@@ -3576,7 +3585,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (name !in classes) {
             val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i])) }, tyRef(rt), null,
                 WhenE(null, listOf(null to body1)).also { it.line = line }, line)
-            throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name), listOf(m), line))
+            throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn)?.name), listOf(m), line))
         }
         val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "this" else n).also { it.line = line } }, null))
         return Val(v.v, fnT, v.owned)

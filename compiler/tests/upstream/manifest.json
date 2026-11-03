@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2932,
-  "UNSUPPORTED": 2559
+  "PASS": 2938,
+  "UNSUPPORTED": 2553
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2842,9 +2842,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionInSamWithPassedSupertype.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionParameterToValueParameter.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $FnR$Int$String$Unit, found $Fn$Int$String$Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionParameterToValueParameter.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionPropertyToFun.kt": {
@@ -3738,15 +3737,13 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromExtension.kt"
   },
   "box/box/callableReference/function/extensionFromTopLevelStringNoArgs.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $FnR$A$String, found $Fn$A$String",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelStringNoArgs.kt"
   },
   "box/box/callableReference/function/extensionFromTopLevelStringOneStringArg.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $FnR$A$String$String, found $Fn$A$String$String",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelStringOneStringArg.kt"
   },
   "box/box/callableReference/function/extensionFromTopLevelUnitNoArgs.kt": {
@@ -3755,9 +3752,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelUnitNoArgs.kt"
   },
   "box/box/callableReference/function/extensionFromTopLevelUnitOneStringArg.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $FnR$A$String$Unit, found $Fn$A$String$Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelUnitOneStringArg.kt"
   },
   "box/box/callableReference/function/extensionFunctionAsASuperTypePassToSAMInterface.kt": {
@@ -3802,9 +3798,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionPassedToDelegatedSam.kt"
   },
   "box/box/callableReference/function/extensionWithNestedFunction.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $FnR$A$$FnR$A$String$String, found $Fn$A$$FnR$A$String$String",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionWithNestedFunction.kt"
   },
   "box/box/callableReference/function/extensionWithTypeParam.kt": {
@@ -15242,9 +15237,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInSAMInterface.kt"
   },
   "box/box/extensionFunctions/extensionFunctionInValueClass.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $FnR$Int$String, found $PRef$$Fn$Int$String",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionInValueClass.kt"
   },
   "box/box/extensionFunctions/extensionFunctionLocal.kt": {
@@ -15325,8 +15319,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt1290.kt"
   },
   "box/box/extensionFunctions/kt13312.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected $Fn$Int$Int, found $FnR$Int$Int",
+   "category": "other: unknown method Int.foo()",
+   "detail": "unknown method Int.foo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt13312.kt"
   },
