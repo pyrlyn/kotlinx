@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3073,
-  "UNSUPPORTED": 2418
+  "PASS": 3085,
+  "UNSUPPORTED": 2406
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -8489,15 +8489,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionAll.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionHasNext.kt": {
-   "category": "other: cannot iterate over C",
-   "detail": "cannot iterate over C",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionHasNext.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionNext.kt": {
-   "category": "other: cannot iterate over C",
-   "detail": "cannot iterate over C",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionNext.kt"
   },
   "box/box/controlStructures/forNullableCharInString.kt": {
@@ -26351,33 +26349,28 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/UnderscoreNamesDontCallComponent.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclFor.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt": {
@@ -26421,33 +26414,28 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclFor.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt": {
