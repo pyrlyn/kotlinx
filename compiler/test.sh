@@ -8,10 +8,17 @@ NKC=${NKC:-compiler/build/newkotlinc.kexe}
 [ -f bench/data/words.txt ] || python3 bench/gen_data.py >/dev/null
 out=compiler/build/test-tmp; rm -rf "$out"; mkdir -p "$out"; fail=0
 check() { if [ "$2" = "$3" ]; then echo "PASS $1"; else echo "FAIL $1: expected '$3', got '$2'"; fail=1; fi; }
+# Golden tests run with --leak-check: the report lines are filtered from the output, and a program that ends normally
+# must exit 0 (exit 3 = live objects at exit). Programs that end with an uncaught exception are exempt from the leak
+# gate (unwinding to the top leaves the exception and its frames' objects live by design).
 for t in compiler/tests/*.kt; do
   n=$(basename "$t" .kt)
-  if ! "$NKC" "$t" -o "$out/$n" 2>"$out/$n.err"; then echo "FAIL $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
-  check "$n" "$("$out/$n" 2>&1)" "$(cat compiler/tests/$n.out)"
+  if ! "$NKC" --leak-check "$t" -o "$out/$n" 2>"$out/$n.err"; then echo "FAIL $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
+  raw=$("$out/$n" 2>&1); rc=$?
+  check "$n" "$(printf '%s\n' "$raw" | grep -v -e '^leak-check: ' -e '^region: ')" "$(cat compiler/tests/$n.out)"
+  if [ $rc -ne 0 ] && ! grep -q '^Exception in thread' compiler/tests/$n.out; then
+    echo "FAIL $n: leak-check exit $rc: $(printf '%s\n' "$raw" | grep -E '^leak-check: .* live=[1-9]' | tr '\n' ' ')"; fail=1
+  fi
 done
 while read -r case src key expected; do
   "$NKC" "$src" -o "$out/bench_$case" || { echo "FAIL bench $case: compile"; fail=1; continue; }
@@ -35,6 +42,22 @@ refpass bench/cases/refpass/kotlin/Main.kt checksum -538200000
 cycles bench/cases/cycles/kotlin/Main.kt checksum 120488000000
 lru bench/cases/lru/kotlin/Main.kt checksum 322182091481
 G
+# IR checks (compiler/tests/ir/*.kt): `// IR <fn>: <ERE>` must match a line of function @k.<fn> in the unoptimized IR,
+# `// IR-NOT <fn>: <ERE>` must match none (escape decisions, allocation kinds).
+for t in compiler/tests/ir/*.kt; do
+  n=ir_$(basename "$t" .kt)
+  if ! "$NKC" -S "$t" -o "$out/$n.ll" 2>"$out/$n.err"; then echo "FAIL $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
+  bad=0
+  while IFS= read -r line; do
+    kind=${line%% *}; rest=${line#* }; fn=${rest%%:*}; re=${rest#*: }
+    body=$(awk -v f="@k.$fn(" 'index($0, "define ") == 1 && index($0, f) { on = 1; next } on && /^}/ { exit } on' "$out/$n.ll")
+    [ -n "$body" ] || { echo "FAIL $n: no function @k.$fn"; bad=1; continue; }
+    if printf '%s\n' "$body" | grep -qE -- "$re"; then hit=1; else hit=0; fi
+    if [ "$kind" = IR ] && [ $hit = 0 ]; then echo "FAIL $n: $fn: no match for /$re/"; bad=1; fi
+    if [ "$kind" = IR-NOT ] && [ $hit = 1 ]; then echo "FAIL $n: $fn: unexpected /$re/"; bad=1; fi
+  done < <(sed -n 's|^// \(IR\(-NOT\)\{0,1\} [A-Za-z0-9_]*: .*\)$|\1|p' "$t")
+  [ $bad = 0 ] && echo "PASS $n" || fail=1
+done
 # Error reporting: an unknown name must fail with a line number.
 printf 'fun main() {\n  println(nope)\n}\n' > "$out/bad.kt"
 msg=$("$NKC" "$out/bad.kt" -o "$out/bad" 2>&1)
