@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3070,
-  "UNSUPPORTED": 2421
+  "PASS": 3093,
+  "UNSUPPORTED": 2398
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -301,8 +301,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/spreadOperatorInArrayOf.kt"
   },
   "box/box/annotations/typeAnnotations/checkingNotincorporatedInputTypes.kt": {
-   "category": "other: unknown type Set<Int>",
-   "detail": "unknown type Set<Int>",
+   "category": "strings / templates",
+   "detail": "unknown method String.let()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/typeAnnotations/checkingNotincorporatedInputTypes.kt"
   },
@@ -2413,8 +2413,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/special.kt"
   },
   "box/box/bridges/specialGeneric.kt": {
-   "category": "other: unknown type Set<Any>",
-   "detail": "unknown type Set<Any>",
+   "category": "interfaces",
+   "detail": "unknown interface Set$Element",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/specialGeneric.kt"
   },
@@ -5262,9 +5262,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2391.kt"
   },
   "box/box/classes/kt2417.kt": {
-   "category": "unknown HashSet (stdlib API / unsupported decl)",
-   "detail": "unknown function 'HashSet'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt2417.kt"
   },
   "box/box/classes/kt2477.kt": {
@@ -6169,9 +6168,8 @@
    "upstream": "compiler/testData/codegen/box/closures/underscoreParameters.kt"
   },
   "box/box/collectionLiterals/array.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.contentEquals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/array.kt"
   },
   "box/box/collectionLiterals/arrayOperatorOf.kt": {
@@ -6209,9 +6207,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/nonGenericCollection.kt"
   },
   "box/box/collectionLiterals/primitiveArrays.kt": {
-   "category": "other: unknown method IntArray.contentEquals()",
-   "detail": "unknown method IntArray.contentEquals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/primitiveArrays.kt"
   },
   "box/box/collectionLiterals/primitiveArraysOperatorOf.kt": {
@@ -6243,9 +6240,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/stdlibSequence.kt"
   },
   "box/box/collectionLiterals/unsignedArrays.kt": {
-   "category": "other: unknown method UIntArray.contentEquals()",
-   "detail": "unknown method UIntArray.contentEquals()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/unsignedArrays.kt"
   },
   "box/box/collectionLiterals/unsignedArraysOperatorOf.kt": {
@@ -6270,8 +6266,8 @@
    "upstream": "compiler/testData/codegen/box/collections/clashWithInternalMapMethod.kt"
   },
   "box/box/collections/inSetWithSmartCast.kt": {
-   "category": "other: unknown type Set<Any>",
-   "detail": "unknown type Set<Any>",
+   "category": "generics",
+   "detail": "unchecked cast between instances of generic class Set is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collections/inSetWithSmartCast.kt"
   },
@@ -8492,15 +8488,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionAll.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionHasNext.kt": {
-   "category": "other: cannot iterate over C",
-   "detail": "cannot iterate over C",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionHasNext.kt"
   },
   "box/box/controlStructures/forLoopMemberExtensionNext.kt": {
-   "category": "other: cannot iterate over C",
-   "detail": "cannot iterate over C",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forLoopMemberExtensionNext.kt"
   },
   "box/box/controlStructures/forNullableCharInString.kt": {
@@ -8734,9 +8728,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/kt9022Throw.kt"
   },
   "box/box/controlStructures/kt910.kt": {
-   "category": "other: unknown type Set<Int>",
-   "detail": "unknown type Set<Int>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/kt910.kt"
   },
   "box/box/controlStructures/kt958.kt": {
@@ -9487,8 +9480,8 @@
    "upstream": "compiler/testData/codegen/box/coroutines/deserializedSuspendFunctionProperty.kt"
   },
   "box/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt": {
-   "category": "strings / templates",
-   "detail": "unknown type Sequence<String>",
+   "category": "unknown sequence (stdlib API / unsupported decl)",
+   "detail": "unknown function 'sequence'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/doubleColonExpressionsGenerationInBuilderInference.kt"
   },
@@ -11723,9 +11716,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/dnnInPropertyType.kt"
   },
   "box/box/dataClasses/doubleParam.kt": {
-   "category": "unknown HashSet (stdlib API / unsupported decl)",
-   "detail": "unknown function 'HashSet'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/doubleParam.kt"
   },
   "box/box/dataClasses/equalityChecksPrimitiveUnboxed.kt": {
@@ -11766,9 +11758,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/sameinstance.kt"
   },
   "box/box/dataClasses/floatParam.kt": {
-   "category": "unknown HashSet (stdlib API / unsupported decl)",
-   "detail": "unknown function 'HashSet'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/floatParam.kt"
   },
   "box/box/dataClasses/fromOtherModule.kt": {
@@ -14356,8 +14347,8 @@
    "upstream": "compiler/testData/codegen/box/enum/kt2350.kt"
   },
   "box/box/enum/kt38540.kt": {
-   "category": "other: unknown type Set<Node>",
-   "detail": "unknown type Set<Node>",
+   "category": "unknown emptySet (stdlib API / unsupported decl)",
+   "detail": "unknown function 'emptySet'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/kt38540.kt"
   },
@@ -16221,9 +16212,8 @@
    "upstream": "compiler/testData/codegen/box/fullValueClasses/singleFieldCustomEquals.kt"
   },
   "box/box/fullValueClasses/singleFieldWrappingCustomEquals.kt": {
-   "category": "unknown setOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'setOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/fullValueClasses/singleFieldWrappingCustomEquals.kt"
   },
   "box/box/fullValueClasses/smartCastOnPropertyFromOtherModule.kt": {
@@ -17885,8 +17875,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt41164.kt"
   },
   "box/box/inference/pcla/issues/kt42139.kt": {
-   "category": "other: unknown type Sequence<List<Int>>",
-   "detail": "unknown type Sequence<List<Int>>",
+   "category": "unknown sequence (stdlib API / unsupported decl)",
+   "detail": "unknown function 'sequence'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt42139.kt"
   },
@@ -22967,9 +22957,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt28405.kt"
   },
   "box/box/inlineClasses/kt28585.kt": {
-   "category": "unknown mutableSetOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'mutableSetOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt28585.kt"
   },
   "box/box/inlineClasses/kt31994.kt": {
@@ -26124,9 +26113,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/vars.kt"
   },
   "box/box/lower/forLoopsLowering/withIndex.kt": {
-   "category": "other: unknown method IntRange.asSequence()",
-   "detail": "unknown method IntRange.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/withIndex.kt"
   },
   "box/box/lower/forLoopsLowering/withIndexUInt.kt": {
@@ -26354,33 +26342,28 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/UnderscoreNamesDontCallComponent.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclFor.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeTo/int/MultiDeclForComponentExtensions.kt": {
@@ -26424,33 +26407,28 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeTo/long/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclFor.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt": {
-   "category": "other: cannot iterate over Range",
-   "detail": "cannot iterate over Range",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/explicitRangeToWithDot/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/explicitRangeToWithDot/int/MultiDeclForComponentExtensions.kt": {
@@ -28677,8 +28655,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/overloadedSet.kt"
   },
   "box/box/operatorConventions/plusAssignWithComplexRHS.kt": {
-   "category": "other: unknown type Set<Any>",
-   "detail": "unknown type Set<Any>",
+   "category": "other: HashMap keys must be Int/Long/Char, found Any",
+   "detail": "HashMap keys must be Int/Long/Char, found Any",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/plusAssignWithComplexRHS.kt"
   },
@@ -29681,7 +29659,7 @@
   },
   "box/box/properties/complexPropertyInitializer.kt": {
    "category": "strings / templates",
-   "detail": "unknown type Sequence<String>",
+   "detail": "unknown method ArrayList<String>.single()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/complexPropertyInitializer.kt"
   },
@@ -30611,9 +30589,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/contains/intInShortRangeWithPossibleOverflow.kt"
   },
   "box/box/ranges/contains/kt20106.kt": {
-   "category": "unknown setOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'setOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/contains/kt20106.kt"
   },
   "box/box/ranges/contains/longInLongRangeWithPossibleOverflow.kt": {
@@ -38599,8 +38576,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/kt37779.kt"
   },
   "box/box/vararg/kt581.kt": {
-   "category": "unknown HashSet (stdlib API / unsupported decl)",
-   "detail": "unknown function 'HashSet'",
+   "category": "other: unknown method ArrayList<Int>.lastIndex()",
+   "detail": "unknown method ArrayList<Int>.lastIndex()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt581.kt"
   },

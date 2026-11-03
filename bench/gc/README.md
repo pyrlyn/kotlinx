@@ -32,13 +32,13 @@ Close other heavy processes; results within ±3-5% are noise on a loaded machine
 
 ## Shared-edge traversal regression
 
-`compiler/gc/tests/unit/traversal.c` checks live reference-count restoration, exact cycle reclamation,
+`compiler/gc/tests/archive/unit/traversal.c` checks live reference-count restoration, exact cycle reclamation,
 and bounded traversal scratch space for a ring with 64 references per node to its successor. It also
-checks a queued sibling restored by ScanBlack. `compiler/gc/tests/run.sh` runs it for `default` and
+checks a queued sibling restored by ScanBlack. The Zig suite (`compiler/gc/tests/zig`, port `src/unit/traversal.zig`) runs it for `default` and
 `incremental` at `-O1`, `-O3`, and under ASan. From the repository root, benchmark a larger ring with:
 
 ```sh
-clang -O3 -Icompiler/gc compiler/gc/tests/unit/traversal.c compiler/runtime/runtime.c -o /tmp/gc-traversal
+clang -O3 -Icompiler/gc compiler/gc/tests/archive/unit/traversal.c compiler/runtime/runtime.c -o /tmp/gc-traversal
 /usr/bin/time -l /tmp/gc-traversal 32768
 # Add -DTEST_INCREMENTAL to select the incremental collector.
 ```

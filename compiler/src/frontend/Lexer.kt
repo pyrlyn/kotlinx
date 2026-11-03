@@ -1,12 +1,15 @@
 package newkotlin
 
+/** A compile error; the driver prints it as `<input>: error: <message>` and exits 1. */
 class CompileError(msg: String) : Exception(msg)
 
+/** Token kinds. */
 enum class K { ID, INT, CHAR, DBL, STR, OP, NL, EOF }
 
 /** A `${...}` or `$name` piece inside a string literal; parsed later as an expression. */
 class TemplateCode(val code: String, val line: Int)
 
+/** One token with its kind, text, line and, for literals, the parsed value. */
 class Tok(
     val k: K, val s: String, val line: Int,
     val num: Long = 0, val isLong: Boolean = false, val unsigned: Boolean = false,
@@ -20,6 +23,7 @@ private val OPS = listOf(
 
 private val DIAG = Regex("""<![A-Z_]+(\([^)]*\))?(, *[A-Z_]+(\([^)]*\))?)*!>""")
 
+/** Turns source text into tokens; [lex] returns them all. */
 class Lexer(private val src: String, private var line: Int = 1) {
     private var i = 0
     private val out = ArrayList<Tok>()
