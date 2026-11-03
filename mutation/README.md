@@ -62,6 +62,17 @@ gradle pitest -Dkx.skip=name1,name2           # leave out golden tests that fail
 Needs JDK 21 and `/usr/bin/clang` (or `NK_CC`). Dependencies: Kotlin JVM plugin, JUnit 5,
 `info.solidsoft.pitest` (dev/test only, nothing ships).
 
+### PIT results 2026-11-03 (`jvm/pit-batches.sh`, ≤40 mutants per class)
+
+515 mutants: killed 240, timeout/memory 2, survived 166, no coverage 107. Score 47% (59% of covered).
+lexer 36/51, parser 47/115, types 95/150, escape+prelude 35/121, NativeBackend 29/78.
+- Escape analysis (`Escape.methodKeepsThis`, `Escape.Walker`, `Uses`): ~70 survivors. It only enables
+  optimizations, so outputs stay equal; needs IR-level or leak-check assertions.
+- RC codegen: `NativeBackend.release:210`, `getDeferredRc`, `Snapshot.restore` survive: golden tests
+  don't run `--leak-check`, so leaked/extra refs go unseen.
+- `boxCapturedVars`, `rewriteStatics` (Generics): many removed conditions survive.
+- `Parser.companionExtensions`: boundaries/math survive; 48 parser mutants have no coverage.
+
 ## Kotlin/Native
 
 PIT and Arcmutate mutate JVM bytecode only. The one tool that mutates Kotlin/Native code is

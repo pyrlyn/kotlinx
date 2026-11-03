@@ -1,3 +1,4 @@
+import java.math.BigDecimal
 // JVM build of the KotlinX compiler sources for mutation testing with PIT.
 // The compiler ships as Kotlin/Native, but everything except compiler/src/driver/Main.kt (posix I/O, clang driver)
 // is plain common Kotlin, so it is compiled here for the JVM straight from ../../compiler/src (nothing copied or changed).
@@ -44,8 +45,9 @@ pitest {
     threads.set((System.getProperty("kx.pit.threads") ?: "4").toInt())
     timestampedReports.set(false)
     outputFormats.set(listOf("HTML", "XML", "CSV"))
-    timeoutConstInMillis.set(20000)
-    jvmArgs.set(listOf("-Dkx.skip=" + (System.getProperty("kx.skip") ?: ""), "-Dkx.root=$repoRoot", "-Dkx.baseline=" + layout.buildDirectory.file("ir-baseline.txt").get().asFile.path, "-Xss8m"))
+    timeoutConstInMillis.set((System.getProperty("kx.pit.timeoutConst") ?: "20000").toInt())
+    jvmArgs.set(listOf("-Dkx.skip=" + (System.getProperty("kx.skip") ?: ""), "-Dkx.root=$repoRoot", "-Dkx.baseline=" + layout.buildDirectory.file("ir-baseline.txt").get().asFile.path, "-Xss8m", "-Xmx" + (System.getProperty("kx.pit.xmx") ?: "4g")))
+    timeoutFactor.set(BigDecimal(System.getProperty("kx.pit.timeoutFactor") ?: "3"))
     (System.getProperty("kx.pit.classes"))?.let { targetClasses.set(it.split(",")) }
     (System.getProperty("kx.pit.maxPerClass"))?.let { features.set(listOf("+CLASSLIMIT(limit[$it])")) }
 }
