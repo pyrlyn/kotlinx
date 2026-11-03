@@ -1,7 +1,7 @@
 # Zig GC test suite
 
 **All new GC tests are written in Zig, here.** This directory is a 1:1 port of
-[`../run.sh`](../run.sh) (C unit tests + Kotlin-program tests) plus new unit tests of the C interface,
+[`../archive/run.sh`](../archive/run.sh) (archived; this suite replaces it) (C unit tests + Kotlin-program tests) plus new unit tests of the C interface,
 coverage and mutation testing. The original suite stays in place until the port is accepted; `compare.sh`
 checks that both produce the same results.
 
@@ -27,9 +27,9 @@ mutation/run.sh compiler/gc/epoch/gc.c 20 && mutation/report.py ~/Grok/kotlinx-g
 | `src/runner.zig` | port of `run.sh`: same cases, same order, same inputs, same checks, same `PASS`/`FAIL`/`SKIP` lines |
 | `src/proc.zig` | process / file helpers (libc only), the shell redirections `run.sh` used |
 | `src/unit/kx.zig` | `@cImport` of `kxgc.h`, `CHECK` / `assert` equivalents, capability arguments |
-| `src/unit/gc_unit.zig` | port of `unit/gc_unit.c` |
-| `src/unit/traversal.zig` + `traversal_shim.c` | port of `unit/traversal.c`; the shim includes the collector and exports the internals the test reads (no test logic) |
-| `src/unit/one_pass.zig` | port of `incremental/one_pass.c` |
+| `src/unit/gc_unit.zig` | port of `archive/unit/gc_unit.c` |
+| `src/unit/traversal.zig` + `traversal_shim.c` | port of `archive/unit/traversal.c`; the shim includes the collector and exports the internals the test reads (no test logic) |
+| `src/unit/one_pass.zig` | port of `archive/incremental/one_pass.c` |
 | `src/unit/api_test.zig` | **new** tests: acyclic allocation, storage hooks, RC inc/dec, chains, sharing, trial deletion (garbage / referenced rings, exact counts), stats, epoch's deferred-RC log protocol (`rt_gc_log_inc/dec`, write barrier, cycle reclaimed) |
 | `compare.sh` | original vs port verification |
 | `coverage.sh` | `zig build coverage` backend |
@@ -47,8 +47,8 @@ exactly as `run.sh` does. Scratch files go to `compiler/build/gc-zig-tmp` (`run.
 
 | Original (`run.sh` line prefix) | Port | Cases on macOS arm64 |
 |---|---|---|
-| `gc-unit <gc> -O1/-O3` (`unit/gc_unit.c`) | `src/unit/gc_unit.zig` | 8 + 2 SKIP (epoch, deferred RC) |
-| `gc-traversal <gc> -O1/-O3`, `gc-traversal-asan` (`unit/traversal.c`) | `src/unit/traversal.zig` | 4 + 2 |
+| `gc-unit <gc> -O1/-O3` (`archive/unit/gc_unit.c`) | `src/unit/gc_unit.zig` | 8 + 2 SKIP (epoch, deferred RC) |
+| `gc-traversal <gc> -O1/-O3`, `gc-traversal-asan` (`archive/unit/traversal.c`) | `src/unit/traversal.zig` | 4 + 2 |
 | `gc <gc> <kt>` (`kt/*.kt` = `.out`) | `ktTests` in `src/runner.zig` | 44 + 6 SKIP (rc, no cycles) |
 | `gc-leaks <gc> <kt>` (`--leak-check`) | `ktTests` | 34 |
 | `gc-asan <gc> <kt>` (ASan build) | `ktTests` | 34 |
@@ -56,7 +56,7 @@ exactly as `run.sh` does. Scratch files go to `compiler/build/gc-zig-tmp` (`run.
 | `gc-epoch paced_free` (+ `leaks keep=16384/0`) | `epochTests` | 3 |
 | `gc-epoch madvise_big madvise=1/0` (+ leaks) | `epochTests` | 4 |
 | `gc-incremental slice_black` | `incrementalTests` | 1 |
-| `gc-incremental one_pass` (`incremental/one_pass.c`) | `src/unit/one_pass.zig` | 1 |
+| `gc-incremental one_pass` (`archive/incremental/one_pass.c`) | `src/unit/one_pass.zig` | 1 |
 | `gc-unknown` | runner | 1 |
 | — (new) | `gc-api <gc> -O1/-O3` (`src/unit/api_test.zig`) | 10 |
 

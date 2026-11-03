@@ -1,5 +1,5 @@
 #!/bin/bash
-# Verifies that the Zig GC suite is a faithful port of compiler/gc/tests/run.sh:
+# Verifies that the Zig GC suite is a faithful port of compiler/gc/tests/archive/run.sh:
 #   1. runs run.sh and `zig build ported` (sequentially) and diffs their full output and exit codes
 #      byte for byte, after masking only the timing-dependent counters listed in MASK below;
 #   2. builds every C unit test and its Zig port with the same compiler/flags for each collector and
@@ -19,7 +19,7 @@ MASK='s/(paced|boundary|qmax|logs|madvised|pause_max_us|pause_total_ns|pause_max
 fail=0
 
 echo "== suite: run.sh vs zig build ported"
-bash compiler/gc/tests/run.sh >"$OUT/run.sh.out" 2>&1; echo "exit=$?" >>"$OUT/run.sh.out"
+bash compiler/gc/tests/archive/run.sh >"$OUT/run.sh.out" 2>&1; echo "exit=$?" >>"$OUT/run.sh.out"
 (cd "$here" && zig build ported) >"$OUT/zig.out" 2>&1; echo "exit=$?" >>"$OUT/zig.out"
 sed -E "$MASK" "$OUT/run.sh.out" >"$OUT/run.sh.masked"; sed -E "$MASK" "$OUT/zig.out" >"$OUT/zig.masked"
 if cmp -s "$OUT/run.sh.masked" "$OUT/zig.masked"; then echo "IDENTICAL ($(grep -c '' "$OUT/zig.out") lines; raw diff below is masked values only)"
@@ -52,19 +52,19 @@ for g in $gcs; do
   def=""; zargs=""; has cycles && { def=-DKX_CAP_CYCLES; zargs=cycles; }; has precise && { def="$def -DKX_CAP_PRECISE"; zargs="$zargs precise"; }
   for o in -O1 -O3; do
     if ! has deferred; then
-      eval "$CC" $o -g -Icompiler/gc $def $extra compiler/gc/tests/unit/gc_unit.c compiler/runtime/runtime.c "compiler/gc/$g/gc.c" -o "$OUT/unit-$g$o.c" 2>/dev/null
+      eval "$CC" $o -g -Icompiler/gc $def $extra compiler/gc/tests/archive/unit/gc_unit.c compiler/runtime/runtime.c "compiler/gc/$g/gc.c" -o "$OUT/unit-$g$o.c" 2>/dev/null
       eval "$CC" $o -g -Icompiler/gc $def $extra "$obj/gc_unit.o" compiler/runtime/runtime.c "compiler/gc/$g/gc.c" -o "$OUT/unit-$g$o.zig" 2>/dev/null
       cmpbin "gc_unit-$g$o" "$OUT/unit-$g$o.c" "$OUT/unit-$g$o.zig" "" "" "$zargs"
     fi
     if [ "$g" = default ] || [ "$g" = incremental ]; then
       td=""; [ "$g" = incremental ] && td=-DTEST_INCREMENTAL
-      "$CC" $o -g -Icompiler/gc $td compiler/gc/tests/unit/traversal.c compiler/runtime/runtime.c -o "$OUT/trav-$g$o.c" 2>/dev/null
+      "$CC" $o -g -Icompiler/gc $td compiler/gc/tests/archive/unit/traversal.c compiler/runtime/runtime.c -o "$OUT/trav-$g$o.c" 2>/dev/null
       "$CC" $o -g -Icompiler/gc $td "$obj/traversal.o" compiler/gc/tests/zig/src/unit/traversal_shim.c compiler/runtime/runtime.c -o "$OUT/trav-$g$o.zig" 2>/dev/null
       cmpbin "traversal-$g$o" "$OUT/trav-$g$o.c" "$OUT/trav-$g$o.zig" "" "" ""
     fi
   done
   if [ "$g" = incremental ]; then
-    "$CC" -O1 -g -Icompiler/gc compiler/gc/tests/incremental/one_pass.c compiler/runtime/runtime.c compiler/gc/incremental/gc.c -o "$OUT/one_pass.c" 2>/dev/null
+    "$CC" -O1 -g -Icompiler/gc compiler/gc/tests/archive/incremental/one_pass.c compiler/runtime/runtime.c compiler/gc/incremental/gc.c -o "$OUT/one_pass.c" 2>/dev/null
     "$CC" -O1 -g -Icompiler/gc "$obj/one_pass.o" compiler/runtime/runtime.c compiler/gc/incremental/gc.c -o "$OUT/one_pass.zig" 2>/dev/null
     cmpbin one_pass "$OUT/one_pass.c" "$OUT/one_pass.zig" KX_GC_BUDGET_US=0 "" ""
   fi
