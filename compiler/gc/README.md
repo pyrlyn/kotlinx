@@ -78,4 +78,8 @@ interface (`tests/unit/gc_unit.c`, -O1 and -O3) and the GC-agnostic Kotlin tests
 Tests marked `// gc-needs: cycles` are skipped for implementations that do not reclaim cycles.
 `GCS="default boehm" compiler/gc/tests/run.sh` limits the set.
 
+**All new GC tests are written in Zig** in [`tests/zig`](tests/zig/README.md): a 1:1 port of `run.sh`
+(`zig build ported`, verified against it by `compare.sh`), new unit tests of the C interface
+(`zig build gc`), coverage (`zig build coverage`) and source-level mutation testing (`tests/zig/mutation`).
+
 Benchmarks comparing implementations: [`bench/gc`](../../bench/gc/README.md).

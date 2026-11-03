@@ -62,6 +62,7 @@ class NeedIface(val d: InterfaceD) : Exception()
  */
 var deferredRc = false
 
+/** Generates LLVM IR for a whole program. */
 class NativeBackend(private val prog: Program, private val genericClasses: Map<String, ClassD> = emptyMap(),
                     /** Instance class name -> (generic class, type arguments), for inference against `Box<T>` parameters. */
                     private val instOrigin: Map<String, Pair<String, List<TypeRef>>> = emptyMap(),
@@ -173,10 +174,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "UByteArray", "UShortArray" -> Ty.Arr(Ty.U32)
         "StringBuilder" -> Ty.SB
         "HashMap", "MutableMap", "Map" -> mapTy(resolve(t.args[0]), resolve(t.args[1]))
-        "ArrayList", "MutableList", "List" -> Ty.ListTy(resolve(t.args.single()).also { if (it == Ty.Unit) fail("lists of Unit are not supported") })
+        // `Sequence<T>` is an (eager) list here: finite sequences iterate the same values in the same order.
+        "ArrayList", "MutableList", "List", "Sequence" -> Ty.ListTy(resolve(t.args.single()).also { if (it == Ty.Unit) fail("lists of Unit are not supported") })
         "\$Fn" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()))
         "\$FnR" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()), receiver = true)
         "Array" -> if (t.args.singleOrNull()?.name == "String" && mainParams) Ty.Args else Ty.ListTy(resolve(t.args.single()))
+        // `Set<T>` / `MutableSet<T>` / `LinkedHashSet<T>`: the prelude's `HashSet<T>`.
+        "Set", "MutableSet", "LinkedHashSet" -> if ("HashSet" in genericClasses && t.args.size == 1) instanceTy("HashSet", t.args) else fail("unknown type $t")
         else -> if (t.name in genericClasses || t.name in genericIfaces) instanceTy(t.name, t.args) else if (t.name in classes) Ty.Cls(t.name) else if (t.name in ifaces) Ty.Iface(t.name) else if (t.name.startsWith("CPointer")) Ty.RawPtr else fail("unknown type $t")
     }
 
@@ -1257,6 +1261,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun genFor(s: ForS) {
         val it = s.iter
+        // `for (x in c)` over a class with `operator fun iterator()` (hasNext/next): a while loop over the iterator.
+        if (!(it is BinE && it.op in setOf("..", "until", "downTo", "step"))) {
+            val pt = probeType(it)
+            val cn = (pt as? Ty.Cls)?.name
+            if (cn != null && classes[cn]?.methods?.containsKey("iterator") == true) {
+                val l = s.line
+                fun <X : E> mk(x: X): X = x.also { e -> e.line = l }
+                fun call(r: E, n: String) = mk(CallE(mk(MemberE(r, n, false)), emptyList(), emptyList(), null))
+                val tmp = "\$iter${tmpN++}"
+                val next = VarS(s.name, false, null, call(mk(NameE(tmp)), "next")).also { x -> x.line = l }
+                val loop = WhileS(call(mk(NameE(tmp)), "hasNext"), Block(listOf(next) + s.body.stmts, s.body.params, s.body.paramTypes), false).also { w -> w.line = l; w.label = s.label }
+                genBlockBody(Block(listOf(VarS(tmp, false, null, call(it, "iterator")).also { x -> x.line = l }, loop)), false)
+                return
+            }
+        }
         val lc = label("for.cond"); val lb = label("for.body"); val ls = label("for.step"); val le = label("for.end")
         scopes.add(Scope())
         val rng = (if (it is BinE && it.op == "step") it.l else it) as? BinE
@@ -2435,7 +2454,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 e.args.forEachIndexed { i, x -> emit("store ${et.llvm} ${coerce(genExpr(x), et).v}, ptr ${emitT("getelementptr ${et.llvm}, ptr $data, i64 $i")}") }
                 return Val(a, Ty.Arr(et), true)
             }
-            "ArrayList", "mutableListOf", "arrayListOf", "listOf", "arrayOf" -> {
+            "ArrayList", "mutableListOf", "arrayListOf", "listOf", "arrayOf", "sequenceOf" -> {
                 // `ArrayList<T>(capacity)`: the capacity is only a hint (evaluated for its effects, then dropped).
                 val capOnly = n == "ArrayList" && e.args.size == 1 && e.args[0] !is NamedE && e.typeArgs.isNotEmpty() && probeType(e.args[0])?.isInt == true
                 if (capOnly) releaseIfOwned(genExpr(e.args[0]))
@@ -2879,7 +2898,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** Top-level extension functions (`ext$Recv$name`) by name. */
     private val extFuns: Map<String, List<FunD>> by lazy { prog.funs.filter { it.name.startsWith("ext$") }.groupBy { it.name.removePrefix("ext$").substringAfter("$") } }
-    private val LISTY = setOf("List", "MutableList", "ArrayList", "Array", "Collection", "MutableCollection", "Iterable")
+    private val LISTY = setOf("List", "MutableList", "ArrayList", "Array", "Collection", "MutableCollection", "Iterable", "Sequence")
 
     /** Does extension receiver type [recv] (with the extension's type parameters [tps]) accept a value of type [t]? */
     private fun extMatches(t: Ty, recv: TypeRef, tps: List<String>): Boolean {
