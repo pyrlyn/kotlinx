@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2867,
-  "UNSUPPORTED": 2624
+  "PASS": 2874,
+  "UNSUPPORTED": 2617
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -3365,9 +3365,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassBoundMemberReferences.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassBoundValuesOrder.kt": {
-   "category": "other: unsupported callable reference ::render",
-   "detail": "unsupported callable reference ::render",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/multiFieldValueClassBoundValuesOrder.kt"
   },
   "box/box/callableReference/bound/multiFieldValueClassGenericUpperBoundReceiver.kt": {
@@ -3921,9 +3920,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/classMember.kt"
   },
   "box/box/callableReference/function/local/closureWithSideEffect.kt": {
-   "category": "other: unsupported callable reference ::changeToOK",
-   "detail": "unsupported callable reference ::changeToOK",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/closureWithSideEffect.kt"
   },
   "box/box/callableReference/function/local/constructor.kt": {
@@ -4003,9 +4001,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/simple.kt"
   },
   "box/box/callableReference/function/local/simpleClosure.kt": {
-   "category": "other: unsupported callable reference ::foo",
-   "detail": "unsupported callable reference ::foo",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/simpleClosure.kt"
   },
   "box/box/callableReference/function/local/simpleWithArg.kt": {
@@ -4344,20 +4341,18 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/inEnum.kt"
   },
   "box/box/callableReference/property/inReceiverOfAnother.kt": {
-   "category": "other: unsupported callable reference ::x",
-   "detail": "unsupported callable reference ::x",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/inReceiverOfAnother.kt"
   },
   "box/box/callableReference/property/invokePropertyReference.kt": {
-   "category": "other: unsupported callable reference ::topLevel",
-   "detail": "unsupported callable reference ::topLevel",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/invokePropertyReference.kt"
   },
   "box/box/callableReference/property/javaBeanConvention.kt": {
-   "category": "other: unsupported callable reference ::aBcde",
-   "detail": "unsupported callable reference ::aBcde",
+   "category": "other: unknown method $Fn$Int.set()",
+   "detail": "unknown method $Fn$Int.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/javaBeanConvention.kt"
   },
@@ -4469,14 +4464,14 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMutableMember.kt"
   },
   "box/box/callableReference/property/simpleMutableTopLevel.kt": {
-   "category": "other: unsupported callable reference ::pr",
-   "detail": "unsupported callable reference ::pr",
+   "category": "other: unknown property $Fn$Box.name",
+   "detail": "unknown property $Fn$Box.name",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMutableTopLevel.kt"
   },
   "box/box/callableReference/property/simpleTopLevel.kt": {
-   "category": "other: unsupported callable reference ::foo",
-   "detail": "unsupported callable reference ::foo",
+   "category": "other: unknown property $Fn$Box.name",
+   "detail": "unknown property $Fn$Box.name",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleTopLevel.kt"
   },
@@ -4498,9 +4493,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/staticFunctionReferenceMultiUse.kt"
   },
   "box/box/callableReference/twoRefsOneScope.kt": {
-   "category": "other: unsupported callable reference ::x",
-   "detail": "unsupported callable reference ::x",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/twoRefsOneScope.kt"
   },
   "box/box/callableReference/varargOfUnsignedTypes.kt": {
@@ -7253,8 +7247,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/localProperty.kt"
   },
   "box/box/contextParameters/callableReferences/contextual/delegation/multipleBoundValues.kt": {
-   "category": "other: unsupported callable reference ::contextualizedProp",
-   "detail": "unsupported callable reference ::contextualizedProp",
+   "category": "other: no context argument of type Int in scope",
+   "detail": "no context argument of type Int in scope",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/callableReferences/contextual/delegation/multipleBoundValues.kt"
   },
@@ -12610,8 +12604,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateForExtPropertyInClass.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/custom.kt": {
-   "category": "other: unsupported callable reference ::x",
-   "detail": "unsupported callable reference ::x",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/custom.kt"
   },
@@ -12664,8 +12658,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/openProperty.kt"
   },
   "box/box/delegatedProperty/delegateToAnother/simple.kt": {
-   "category": "unknown $dg$y (stdlib API / unsupported decl)",
-   "detail": "unknown name '$dg$y'",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToAnother/simple.kt"
   },
@@ -12706,8 +12700,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConst/delegateToNull.kt"
   },
   "box/box/delegatedProperty/delegateToConstVal.kt": {
-   "category": "other: unsupported callable reference ::TOP_LEVEL_PROPERTY_VALUE",
-   "detail": "unsupported callable reference ::TOP_LEVEL_PROPERTY_VALUE",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$String.getValue()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToConstVal.kt"
   },
@@ -20967,14 +20961,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeMemberVarGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeTopLevelVar.kt": {
-   "category": "other: unsupported callable reference ::topLevel",
-   "detail": "unsupported callable reference ::topLevel",
+   "category": "other: unknown method $Fn$Z.set()",
+   "detail": "unknown method $Fn$Z.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeTopLevelVar.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeTopLevelVarGeneric.kt": {
-   "category": "other: unsupported callable reference ::topLevel",
-   "detail": "unsupported callable reference ::topLevel",
+   "category": "other: unknown method $Fn$Z$Int.set()",
+   "detail": "unknown method $Fn$Z$Int.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeTopLevelVarGeneric.kt"
   },
@@ -22252,14 +22246,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/reflectionForFunctionWithMangledNameGeneric.kt"
   },
   "box/box/inlineClasses/functionNameMangling/reflectionForPropertyOfInlineClassType.kt": {
-   "category": "other: unsupported callable reference ::prop",
-   "detail": "unsupported callable reference ::prop",
+   "category": "other: unknown method $Fn$S.set()",
+   "detail": "unknown method $Fn$S.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/reflectionForPropertyOfInlineClassType.kt"
   },
   "box/box/inlineClasses/functionNameMangling/reflectionForPropertyOfInlineClassTypeGeneric.kt": {
-   "category": "other: unsupported callable reference ::prop",
-   "detail": "unsupported callable reference ::prop",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$S$String.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/functionNameMangling/reflectionForPropertyOfInlineClassTypeGeneric.kt"
   },
@@ -22579,14 +22573,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassInStringTemplateGeneric.kt"
   },
   "box/box/inlineClasses/inlineClassPropertyReferenceGetAndSet.kt": {
-   "category": "other: unsupported callable reference ::f",
-   "detail": "unsupported callable reference ::f",
+   "category": "other: unknown method $Fn$Foo.set()",
+   "detail": "unknown method $Fn$Foo.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassPropertyReferenceGetAndSet.kt"
   },
   "box/box/inlineClasses/inlineClassPropertyReferenceGetAndSetGeneric.kt": {
-   "category": "other: unsupported callable reference ::f",
-   "detail": "unsupported callable reference ::f",
+   "category": "strings / templates",
+   "detail": "unknown method $Fn$Foo$String.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/inlineClassPropertyReferenceGetAndSetGeneric.kt"
   },
@@ -30396,9 +30390,8 @@
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/valExtension.kt"
   },
   "box/box/propertyCallableReference/valModule.kt": {
-   "category": "other: unsupported callable reference ::x",
-   "detail": "unsupported callable reference ::x",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/valModule.kt"
   },
   "box/box/propertyCallableReference/varClass.kt": {
@@ -30414,8 +30407,8 @@
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/varExtension.kt"
   },
   "box/box/propertyCallableReference/varModule.kt": {
-   "category": "other: unsupported callable reference ::x",
-   "detail": "unsupported callable reference ::x",
+   "category": "other: unknown method $Fn$Int.set()",
+   "detail": "unknown method $Fn$Int.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/varModule.kt"
   },
