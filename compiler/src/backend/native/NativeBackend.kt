@@ -1203,6 +1203,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 releaseIfOwned(r)
             }
             is IndexE -> {
+                // `x[i] = v` on a type without built-in indexing: an `operator fun T.set` extension call.
+                if (!builtinIndexable(target.recv, true)) {
+                    releaseIfOwned(genExpr(CallE(MemberE(target.recv, "set", false).also { it.line = target.line }, emptyList(), listOf(target.idx, value), null).also { it.line = target.line }))
+                    return
+                }
                 val r = genExpr(target.recv)
                 if (r.t is Ty.Cls || r.t is Ty.Iface) {
                     releaseIfOwned(method(r, "set", CallE(MemberE(target.recv, "set", false), emptyList(), listOf(target.idx, value), null)))
@@ -1420,6 +1425,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is AsE -> genAs(e)
             is CallE -> genCall(e)
             is IndexE -> {
+                if (!builtinIndexable(e.recv, false)) return genExpr(CallE(MemberE(e.recv, "get", false).also { it.line = e.line }, emptyList(), listOf(e.idx), null).also { it.line = e.line })
                 val r = genExpr(e.recv)
                 if (r.t is Ty.Cls || r.t is Ty.Iface) return method(r, "get", opCall("get", e.idx))
                 val i0 = genExpr(e.idx)
@@ -2175,6 +2181,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             ifaceDecls[s]?.methods?.firstOrNull { it.name == n }?.params?.takeIf { ps -> ps.any { it.default != null } }?.let { return it }
         }
         return own
+    }
+
+    /** Whether `recv[i]` is handled by the built-in indexing paths (or a class `get`/`set`); otherwise it is an extension operator call. */
+    private fun builtinIndexable(recv: E, set: Boolean): Boolean = when (val t = probeType(recv)) {
+        null, is Ty.Cls, is Ty.Iface, is Ty.Arr, is Ty.MapTy, is Ty.ListTy -> true
+        Ty.Str -> !set
+        else -> false
     }
 
     /** Type of [e] without emitting code (generation is rolled back), or null if it does not compile. */
