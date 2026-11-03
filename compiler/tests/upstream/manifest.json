@@ -4155,8 +4155,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt49526.kt"
   },
   "box/box/callableReference/kt49526_sam.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected C1, found C2",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt49526_sam.kt"
   },
