@@ -731,6 +731,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         while (inferPending.isNotEmpty()) {
             var progress = false
             var lastErr: CompileError? = null
+            val errs = LinkedHashMap<FunD, CompileError>()
             for (it in ArrayList(inferPending)) {
                 val (f, c) = it
                 val ci = c?.let { classes.getValue(it.name) }
@@ -740,7 +741,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     beginBody(ci, Ty.Unit); line = f.line
                     f.params.forEachIndexed { i, p -> val l = declare(p.name, params[i], false, false); if (p.ctx) scopes.last().vars["\$ctx\$p${tmpN++}"] = l }
                     genExpr(f.exprBody!!).t
-                } catch (e: CompileError) { lastErr = e; null } finally { funcs.setLength(savedFuncs); line = savedLine }
+                } catch (e: CompileError) { lastErr = e; errs[f] = e; null } finally { funcs.setLength(savedFuncs); line = savedLine }
                 if (t == null) continue
                 line = f.line
                 if (t == Ty.RawPtr || t == Ty.Args) fail("expression-bodied function '${f.name}' needs an explicit return type")
@@ -756,6 +757,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (!progress) {
                 val (f, c) = inferPending.first(); line = f.line
                 if (lastErr != null && inferPending.size == 1) throw lastErr!!
+                errs.values.firstOrNull { e -> inferPending.none { p -> "'${p.first.name}'" in (e.message ?: "") || p.first.name in (e.message ?: "") } }?.let { throw it }
                 fail(if (c == null) "expression-bodied function '${f.name}' needs an explicit return type" else "method '${f.name}' needs an explicit return type")
             }
         }
