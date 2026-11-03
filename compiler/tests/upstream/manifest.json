@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3040,
-  "UNSUPPORTED": 2451
+  "PASS": 3069,
+  "UNSUPPORTED": 2422
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -482,8 +482,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/arrayGetMultiIndex.kt"
   },
   "box/box/arrays/arrayInstanceOf.kt": {
-   "category": "other: unknown method Any.iterator()",
-   "detail": "unknown method Any.iterator()",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/arrayInstanceOf.kt"
   },
@@ -523,9 +523,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/collectionGetMultiIndex.kt"
   },
   "box/box/arrays/constantArrayOfAny.kt": {
-   "category": "strings / templates",
-   "detail": "ArrayList<String> cannot be used as Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/constantArrayOfAny.kt"
   },
   "box/box/arrays/forEachBooleanArray.kt": {
@@ -564,9 +563,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/forEachLongArray.kt"
   },
   "box/box/arrays/forEachShortArray.kt": {
-   "category": "unknown ShortArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'ShortArray'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forEachShortArray.kt"
   },
   "box/box/arrays/forInReversed/reversedArrayOriginalUpdatedInLoopBody.kt": {
@@ -678,69 +676,60 @@
    "upstream": "compiler/testData/codegen/box/arrays/inlineInitializer.kt"
   },
   "box/box/arrays/iterator.kt": {
-   "category": "other: unknown method ArrayList<Int>.iterator()",
-   "detail": "unknown method ArrayList<Int>.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iterator.kt"
   },
   "box/box/arrays/iteratorBooleanArray.kt": {
-   "category": "other: unknown method BooleanArray.iterator()",
-   "detail": "unknown method BooleanArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorBooleanArray.kt"
   },
   "box/box/arrays/iteratorByteArray.kt": {
-   "category": "other: unknown method ByteArray.iterator()",
-   "detail": "unknown method ByteArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorByteArray.kt"
   },
   "box/box/arrays/iteratorByteArrayNextByte.kt": {
-   "category": "other: unknown method ByteArray.iterator()",
-   "detail": "unknown method ByteArray.iterator()",
+   "category": "other: unknown method ByteArrayIterator.nextByte()",
+   "detail": "unknown method ByteArrayIterator.nextByte()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorByteArrayNextByte.kt"
   },
   "box/box/arrays/iteratorCharArray.kt": {
-   "category": "other: unknown method CharArray.iterator()",
-   "detail": "unknown method CharArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorCharArray.kt"
   },
   "box/box/arrays/iteratorDoubleArray.kt": {
-   "category": "other: unknown method DoubleArray.iterator()",
-   "detail": "unknown method DoubleArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorDoubleArray.kt"
   },
   "box/box/arrays/iteratorFloatArray.kt": {
-   "category": "other: unknown method FloatArray.iterator()",
-   "detail": "unknown method FloatArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorFloatArray.kt"
   },
   "box/box/arrays/iteratorIntArray.kt": {
-   "category": "other: unknown method IntArray.iterator()",
-   "detail": "unknown method IntArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorIntArray.kt"
   },
   "box/box/arrays/iteratorLongArray.kt": {
-   "category": "other: unknown method LongArray.iterator()",
-   "detail": "unknown method LongArray.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorLongArray.kt"
   },
   "box/box/arrays/iteratorLongArrayNextLong.kt": {
-   "category": "other: unknown method LongArray.iterator()",
-   "detail": "unknown method LongArray.iterator()",
+   "category": "other: unknown method LongArrayIterator.nextLong()",
+   "detail": "unknown method LongArrayIterator.nextLong()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorLongArrayNextLong.kt"
   },
   "box/box/arrays/iteratorShortArray.kt": {
-   "category": "unknown ShortArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'ShortArray'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/iteratorShortArray.kt"
   },
   "box/box/arrays/kt1291.kt": {
@@ -829,8 +818,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt7009.kt"
   },
   "box/box/arrays/kt7288.kt": {
-   "category": "other: unknown method Any.iterator()",
-   "detail": "unknown method Any.iterator()",
+   "category": "when expressions",
+   "detail": "if/when branches yield references of different types; assign the result or make the types match",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/kt7288.kt"
   },
@@ -953,8 +942,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/nonNullArray.kt"
   },
   "box/box/arrays/primitiveArrays.kt": {
-   "category": "types: Short",
-   "detail": "unknown type ShortArray",
+   "category": "other: ext$BooleanArray$copyOf expects 1 arguments",
+   "detail": "ext$BooleanArray$copyOf expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/primitiveArrays.kt"
   },
@@ -1035,9 +1024,8 @@
    "upstream": "compiler/testData/codegen/box/associatedObjects/kt88571.kt"
   },
   "box/box/basics/array_to_any.kt": {
-   "category": "other: ArrayList<Any> cannot be used as Any",
-   "detail": "ArrayList<Any> cannot be used as Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/array_to_any.kt"
   },
   "box/box/basics/canonical_name.kt": {
@@ -1819,8 +1807,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/unsafeRemoving.kt"
   },
   "box/box/boxingOptimization/unsignedArrayForEach.kt": {
-   "category": "unknown ubyteArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'ubyteArrayOf'",
+   "category": "other: unknown method UIntArray.forEach()",
+   "detail": "unknown method UIntArray.forEach()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/unsignedArrayForEach.kt"
   },
@@ -2595,8 +2583,8 @@
    "upstream": "compiler/testData/codegen/box/bridges/test24.kt"
   },
   "box/box/bridges/test25.kt": {
-   "category": "types: UByteArray",
-   "detail": "unknown type UByteArray",
+   "category": "other: ext$UIntArray$copyOf expects 1 arguments",
+   "detail": "ext$UIntArray$copyOf expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/bridges/test25.kt"
   },
@@ -2688,14 +2676,13 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedArrayOf.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedSecondArgArray.kt": {
-   "category": "strings / templates",
-   "detail": "type check of Any against ArrayList<String> is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedSecondArgArray.kt"
   },
   "box/box/callableReference/adaptedReferences/adaptedSecondArgTypeVariable.kt": {
-   "category": "other: ArrayList<Any> cannot be used as Any",
-   "detail": "ArrayList<Any> cannot be used as Any",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of foo; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedSecondArgTypeVariable.kt"
   },
@@ -2842,8 +2829,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousExtensionFun.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariable.kt": {
-   "category": "other: ArrayList<Any> cannot be used as Any",
-   "detail": "ArrayList<Any> cannot be used as Any",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected $Fn$ArrayList$String$$$Int, found $Fn$ArrayList$Any$$$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariable.kt"
   },
@@ -3154,7 +3141,7 @@
   },
   "box/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt": {
    "category": "type inference / mismatch",
-   "detail": "type mismatch: expected ArrayList<Int>, found IntArray",
+   "detail": "type mismatch: expected Int, found IntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt"
   },
@@ -4163,8 +4150,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt49526.kt"
   },
   "box/box/callableReference/kt49526_sam.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected C1, found C2",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt49526_sam.kt"
   },
@@ -8100,8 +8087,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forArrayListMultiDecl.kt"
   },
   "box/box/controlStructures/forInArray/forInArraySpecializedToUntil.kt": {
-   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'shortArrayOf'",
+   "category": "other: unknown method Int.coerceAtMost()",
+   "detail": "unknown method Int.coerceAtMost()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forInArraySpecializedToUntil.kt"
   },
@@ -8252,15 +8239,13 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInObjectArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndex.kt": {
-   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'shortArrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndexWithSmartCast.kt": {
-   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'shortArrayOf'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInShortArrayWithIndexWithSmartCast.kt"
   },
   "box/box/controlStructures/forInCharSequence.kt": {
@@ -8277,7 +8262,7 @@
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSeqWithIndexStops.kt": {
    "category": "strings / templates",
-   "detail": "unknown method StringBuilder.withIndex()",
+   "detail": "unknown method StringBuilder.setLength()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSeqWithIndexStops.kt"
   },
@@ -8437,27 +8422,23 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInIterableWithIndex/forInListWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInEmptySequenceWithIndex.kt": {
-   "category": "other: unknown method ArrayList<Any>.asSequence()",
-   "detail": "unknown method ArrayList<Any>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInEmptySequenceWithIndex.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceTypeParameterWithIndex.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceTypeParameterWithIndex.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndex.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndex.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexBreakAndContinue.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexBreakAndContinue.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexCheckSideEffects.kt": {
@@ -8473,9 +8454,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNameBasedDestructuringShortForm.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoElementVar.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoElementVar.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoElementVarCheckSideEffects.kt": {
@@ -8485,9 +8465,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoElementVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVar.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVar.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVarCheckSideEffects.kt": {
@@ -8497,9 +8476,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexNoIndexVarCheckSideEffects.kt"
   },
   "box/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexWithExplicitlyTypedIndexVariable.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.asSequence()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInSequenceWithIndex/forInSequenceWithIndexWithExplicitlyTypedIndexVariable.kt"
   },
   "box/box/controlStructures/forInSmartCastToArray.kt": {
@@ -11934,8 +11912,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/mixedParams.kt"
   },
   "box/box/dataClasses/toString/primitiveArrays.kt": {
-   "category": "types: Short",
-   "detail": "unknown type ShortArray",
+   "category": "strings / templates",
+   "detail": "cannot convert BooleanArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/primitiveArrays.kt"
   },
@@ -15369,9 +15347,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/shared.kt"
   },
   "box/box/extensionFunctions/simple.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/simple.kt"
   },
   "box/box/extensionFunctions/suspendConversionForExtensionFunAsAFunType.kt": {
@@ -16628,9 +16605,8 @@
    "upstream": "compiler/testData/codegen/box/function/defaultsWithVarArg1.kt"
   },
   "box/box/function/defaultsWithVarArg2.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected ArrayList<Int>, found IntArray",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/function/defaultsWithVarArg2.kt"
   },
   "box/box/function/eqeq.kt": {
@@ -17522,9 +17498,8 @@
    "upstream": "compiler/testData/codegen/box/increment/argumentWithSideEffects.kt"
   },
   "box/box/increment/arrayElement.kt": {
-   "category": "types: Short",
-   "detail": "unknown type ShortArray",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/arrayElement.kt"
   },
   "box/box/increment/assignPlusOnSmartCast.kt": {
@@ -28669,7 +28644,7 @@
   },
   "box/box/operatorConventions/kt44647.kt": {
    "category": "strings / templates",
-   "detail": "unknown method StringBuilder.get()",
+   "detail": "unknown method StringBuilder.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt44647.kt"
   },
@@ -35529,9 +35504,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt1572.kt"
   },
   "box/box/safeCall/kt245.kt": {
-   "category": "other: unknown method ArrayList<Int>.iterator()",
-   "detail": "unknown method ArrayList<Int>.iterator()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/safeCall/kt245.kt"
   },
   "box/box/safeCall/kt247.kt": {
@@ -36671,9 +36645,8 @@
    "upstream": "compiler/testData/codegen/box/strings/kt50140.kt"
   },
   "box/box/strings/kt5389_stringBuilderGet.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/kt5389_stringBuilderGet.kt"
   },
   "box/box/strings/kt5956.kt": {
@@ -38469,8 +38442,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/literalEqualsNullableUnsigned.kt"
   },
   "box/box/unsignedTypes/nullableSmartcastUnsignedArray.kt": {
-   "category": "unknown ubyteArrayOf (stdlib API / unsupported decl)",
-   "detail": "unknown function 'ubyteArrayOf'",
+   "category": "strings / templates",
+   "detail": "cannot convert UIntArray to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/nullableSmartcastUnsignedArray.kt"
   },
@@ -38582,7 +38555,7 @@
   },
   "box/box/vararg/doNotCopyImmediatelyCreatedArrays.kt": {
    "category": "type inference / mismatch",
-   "detail": "type mismatch: expected ArrayList<Boolean>, found BooleanArray",
+   "detail": "type mismatch: expected ArrayList<Any>, found ArrayList<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/doNotCopyImmediatelyCreatedArrays.kt"
   },
@@ -38633,8 +38606,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/kt581.kt"
   },
   "box/box/vararg/kt6192.kt": {
-   "category": "unknown ShortArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'ShortArray'",
+   "category": "varargs",
+   "detail": "spread mixed with other vararg arguments is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/kt6192.kt"
   },
@@ -38660,9 +38633,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/useSuspendFunResultAsVararg.kt"
   },
   "box/box/vararg/varargInFunParam.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected ArrayList<Int>, found IntArray",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/vararg/varargInFunParam.kt"
   },
   "box/box/vararg/varargInTailrec.kt": {
@@ -39303,9 +39275,8 @@
    "upstream": "compiler/testData/codegen/box/when/integralWhenWithNoInlinedConstants2.kt"
   },
   "box/box/when/is.kt": {
-   "category": "other: ArrayList<Int> cannot be used as Any",
-   "detail": "ArrayList<Int> cannot be used as Any",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/when/is.kt"
   },
   "box/box/when/kt2457.kt": {

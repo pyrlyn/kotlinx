@@ -308,6 +308,8 @@ fun <T> ArrayList<T>.first(): T { if (size == 0) throw NoSuchElementException("L
 fun <T> ArrayList<T>.last(): T { if (size == 0) throw NoSuchElementException("List is empty."); return get(size - 1) }
 fun <T> ArrayList<T>.firstOrNull(): T? = if (size == 0) null else get(0)
 fun <T> ArrayList<T>.lastOrNull(): T? = if (size == 0) null else get(size - 1)
+// A sequence over a list is the list itself here (eager operations; iteration order and values are the same).
+fun <T> ArrayList<T>.asSequence(): ArrayList<T> = this
 fun <T> ArrayList<T>.forEachIndexed(action: (Int, T) -> Unit) { var i = 0; for (x in this) { action(i, x); i++ } }
 fun <T> ArrayList<T>.indexOfFirst(predicate: (T) -> Boolean): Int { var i = 0; for (x in this) { if (predicate(x)) return i; i++ }; return -1 }
 fun <T> ArrayList<T>.indexOfLast(predicate: (T) -> Boolean): Int { var i = size - 1; while (i >= 0) { if (predicate(get(i))) return i; i-- }; return -1 }
@@ -325,7 +327,7 @@ fun BooleanArray.withIndex(): ArrayList<IndexedValue<Boolean>> { val r = ArrayLi
 fun UIntArray.withIndex(): ArrayList<IndexedValue<UInt>> { val r = ArrayList<IndexedValue<UInt>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 fun ULongArray.withIndex(): ArrayList<IndexedValue<ULong>> { val r = ArrayList<IndexedValue<ULong>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
-/** Copies of primitive arrays: `reversedArray()`, `copyOf()`, `contentToString()`, `toList()`, `reversed()` (also for lists). */
+/** Copies of primitive arrays: `reversedArray()`, `copyOf()`, `contentToString()`, `toList()`, `reversed()` (also for lists), `iterator()` (arrays and lists). */
 const val ARRAY_EXT = """
 fun IntArray.reversedArray(): IntArray { val n = size; val r = IntArray(n); var i = 0; while (i < n) { r[i] = this[n - 1 - i]; i++ }; return r }
 fun IntArray.copyOf(): IntArray { val n = size; val r = IntArray(n); var i = 0; while (i < n) { r[i] = this[i]; i++ }; return r }
@@ -374,13 +376,35 @@ fun UIntArray.reversed(): ArrayList<UInt> { val r = ArrayList<UInt>(); var i = s
 fun ULongArray.reversed(): ArrayList<ULong> { val r = ArrayList<ULong>(); var i = size - 1; while (i >= 0) { r.add(this[i]); i-- }; return r }
 fun <T> ArrayList<T>.reversed(): ArrayList<T> { val r = ArrayList<T>(); var i = size - 1; while (i >= 0) { r.add(get(i)); i-- }; return r }
 fun <T> ArrayList<T>.toList(): ArrayList<T> { val r = ArrayList<T>(); for (x in this) r.add(x); return r }
+class IntArrayIterator(val a: IntArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Int { val x = a[i]; i++; return x } }
+fun IntArray.iterator(): IntArrayIterator = IntArrayIterator(this)
+class LongArrayIterator(val a: LongArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Long { val x = a[i]; i++; return x } }
+fun LongArray.iterator(): LongArrayIterator = LongArrayIterator(this)
+class ByteArrayIterator(val a: ByteArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Byte { val x = a[i]; i++; return x } }
+fun ByteArray.iterator(): ByteArrayIterator = ByteArrayIterator(this)
+class DoubleArrayIterator(val a: DoubleArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Double { val x = a[i]; i++; return x } }
+fun DoubleArray.iterator(): DoubleArrayIterator = DoubleArrayIterator(this)
+class FloatArrayIterator(val a: FloatArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Float { val x = a[i]; i++; return x } }
+fun FloatArray.iterator(): FloatArrayIterator = FloatArrayIterator(this)
+class CharArrayIterator(val a: CharArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Char { val x = a[i]; i++; return x } }
+fun CharArray.iterator(): CharArrayIterator = CharArrayIterator(this)
+class BooleanArrayIterator(val a: BooleanArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): Boolean { val x = a[i]; i++; return x } }
+fun BooleanArray.iterator(): BooleanArrayIterator = BooleanArrayIterator(this)
+class UIntArrayIterator(val a: UIntArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): UInt { val x = a[i]; i++; return x } }
+fun UIntArray.iterator(): UIntArrayIterator = UIntArrayIterator(this)
+class ULongArrayIterator(val a: ULongArray) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): ULong { val x = a[i]; i++; return x } }
+fun ULongArray.iterator(): ULongArrayIterator = ULongArrayIterator(this)
+class ListIterator__<T>(val a: ArrayList<T>) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): T { val x = a.get(i); i++; return x } }
+fun <T> ArrayList<T>.iterator(): ListIterator__<T> = ListIterator__(this)
+operator fun StringBuilder.get(i: Int): Char = toString()[i]
+fun StringBuilder.withIndex(): ArrayList<IndexedValue<Char>> { val r = ArrayList<IndexedValue<Char>>(); var i = 0; for (x in toString()) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
-private val ARRAY_EXT_USE = Regex("""\.(reversedArray|copyOf|contentToString|toList|reversed)\(""")
+private val ARRAY_EXT_USE = Regex("""\.(reversedArray|copyOf|contentToString|toList|reversed|iterator)\(|[(,=]\s*\*\s*\w|\bvararg\b[^)]*=|\bStringBuilder\b""")
 /** `withIndex()` of progressions (needs both the range and the list prelude). */
 const val RANGE_LIST_EXT = """
 fun IntProgression.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
-private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex|forEachIndexed|indexOfFirst|indexOfLast|addAll)\(|-=|\bin\b""")
+private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex|asSequence|forEachIndexed|indexOfFirst|indexOfLast|addAll)\(|-=|\bin\b""")
 
 /** `indices` / `lastIndex` of lists, arrays and strings as extension properties. */
 const val INDICES = """
@@ -474,7 +498,7 @@ private val KCLASS_USE = Regex("""::\s*class\b""")
 
 fun withPrelude(src: String, p: Program): Program {
     val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val result = RESULT_USE.containsMatchIn(src); val exc = result || EXC_USE.containsMatchIn(src); val pairs = PAIR_USE.containsMatchIn(src)
-    val cmp = COMPARABLE_USE.containsMatchIn(src); val lists = LIST_USE.containsMatchIn(src); val arrx = ARRAY_EXT_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src); val lz = LAZY_USE.containsMatchIn(src); val anyObj = ANY_OBJ_USE.containsMatchIn(src); val mm = MIN_MAX_USE.containsMatchIn(src); val el = EMPTY_LIST_USE.containsMatchIn(src); val mmod = MEMORY_MODEL_USE.containsMatchIn(src); val kcls = KCLASS_USE.containsMatchIn(src)
+    val cmp = COMPARABLE_USE.containsMatchIn(src); val arrx = ARRAY_EXT_USE.containsMatchIn(src); val lists = arrx || LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src); val lz = LAZY_USE.containsMatchIn(src); val anyObj = ANY_OBJ_USE.containsMatchIn(src); val mm = MIN_MAX_USE.containsMatchIn(src); val el = EMPTY_LIST_USE.containsMatchIn(src); val mmod = MEMORY_MODEL_USE.containsMatchIn(src); val kcls = KCLASS_USE.containsMatchIn(src)
     if (!arrx && !kcls && !ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon && !lz && !anyObj && !mm && !el && !mmod) return p
     val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (result) RESULT else "") + (if (pairs) PAIRS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (arrx) ARRAY_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "") + (if (lz) LAZY else "") + (if (anyObj) ANY_OBJ else "") + (if (mm) MIN_MAX else "") + (if (el) EMPTY_LIST else "") + (if (mmod) MEMORY_MODEL else "") + (if (kcls) KCLASS else "")
     val lib = Parser(Lexer(text).lex()).program()
@@ -497,7 +521,10 @@ private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UIn
  */
 fun withAny(src: String, p: Program): Program {
     if (!ANY_USE.containsMatchIn(src)) return p
-    val boxes = (ANY_BOXED + ANY_BOXED_ARRAYS).joinToString("\n") { "class AnyBox$it(val v: $it)" }
+    // Lists (and `Array<T>`, also a list here) as `Any`: a box per primitive/String element type, and one for lists of
+// objects with the element type erased (as on the JVM).
+    val boxes = (ANY_BOXED + ANY_BOXED_ARRAYS).joinToString("\n") { "class AnyBox$it(val v: $it)" } + "\nclass AnyBoxList(val v: ArrayList<Any>)\n" +
+        ANY_BOXED.joinToString("\n") { "class AnyBoxList$it(val v: ArrayList<$it>)" }
     val lib0 = Parser(Lexer(boxes).lex()).program()
     val all = p.classes + lib0.classes
     val byName = all.associateBy { it.name }
@@ -527,6 +554,7 @@ fun withAny(src: String, p: Program): Program {
         c.isValue || c.methods.any { it.name == "\$equals" } -> sb.append("    if (a is `${c.name}`) return b is `${c.name}` && a == b\n")
     }
     for (b in ANY_BOXED_ARRAYS) sb.append("    if (a is AnyBox$b) return b is AnyBox$b && a.v === b.v\n")
+    for (b in listOf("") + ANY_BOXED) sb.append("    if (a is AnyBoxList$b) return b is AnyBoxList$b && a.v === b.v\n")
     sb.append("    return false\n}\n")
     sb.append("fun anyHashCode__(x: Any?): Int {\n    if (x == null) return 0\n")
     for (b in ANY_BOXED) if (b != "UInt" && b != "ULong" && b != "Byte") sb.append("    if (x is AnyBox$b) return x.v.hashCode()\n")
