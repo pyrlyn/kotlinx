@@ -200,9 +200,12 @@ garbage. A decrement that leaves it alive also keeps it in the old generation (`
 on): it is marked dirty and goes straight to the deferred list below instead of becoming a minor root. A
 detection already proved it externally referenced, and on live-data churn (lru: every pointer swap
 decrements live neighbours) re-tracing it in minors found nothing and cost most of the collector time.
-Deferred live roots that die before the next major are zombies; once at least 4096 zombies exist and they
-make up half of the deferred list, the collector sweeps the list and returns their memory without waiting
-for the major. With `KX_GC_DEFER_LIVE=0` a decrement demotes the object, as before. A minor detection treats
+Deferred live roots wait in a batch: once it holds at least 4096 objects and 1/8 of the old generation
+(or 65536 objects), they are demoted and handed to the next minor detection, so garbage cycles reached
+through old objects do not wait for a major (`cycles` peak RSS 25 -> 16.6 MiB). A flush whose minor found
+almost only live data doubles the ratio (up to 1/4096; lru), one that found garbage resets it
+(`KX_GC_DEFER_FLUSH`, default 8). Deferred objects that die meanwhile are zombies; once at least 4096 exist
+and they make up half of the waiting lists, the collector sweeps the lists and returns their memory. With `KX_GC_DEFER_LIVE=0` a decrement demotes the object, as before. A minor detection treats
 stable objects as opaque live objects, so it never re-traces the live graph: its cost is proportional to
 the objects touched since the last scan. Garbage cycles that run through stable objects are still found:
 a root whose minor detection stopped at a stable object and did not turn white stays buffered in a
