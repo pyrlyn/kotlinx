@@ -410,6 +410,32 @@ fun ULongArray.contentEquals(o: ULongArray): Boolean { if (size != o.size) retur
 fun <T> ArrayList<T>.contentEquals(o: ArrayList<T>): Boolean { if (size != o.size) return false; var i = 0; while (i < size) { if (get(i) != o.get(i)) return false; i++ }; return true }
 """
 private val ARRAY_EXT_USE = Regex("""\.(reversedArray|copyOf|contentToString|toList|reversed|iterator|contentEquals)\(|[(,=]\s*\*\s*\w|\bvararg\b[^)]*=|\bStringBuilder\b""")
+/** Sets: an insertion-ordered `HashSet<T>` class over a list (Kotlin's default sets keep insertion order too). */
+const val SETS = """
+class HashSet<T>() {
+    val items = ArrayList<T>()
+    val size: Int get() = items.size
+    fun add(x: T): Boolean { if (items.contains(x)) return false; items.add(x); return true }
+    fun addAll(xs: ArrayList<T>): Boolean { var ch = false; for (x in xs) if (add(x)) ch = true; return ch }
+    fun remove(x: T): Boolean = items.remove(x)
+    fun contains(x: T): Boolean = items.contains(x)
+    fun isEmpty(): Boolean = items.size == 0
+    fun isNotEmpty(): Boolean = items.size != 0
+    fun clear() { items.clear() }
+    fun toList(): ArrayList<T> { val r = ArrayList<T>(); for (x in items) r.add(x); return r }
+    fun first(): T = items.first()
+    fun equals(o: HashSet<T>): Boolean { if (o.size != size) return false; for (x in items) if (!o.contains(x)) return false; return true }
+    operator fun iterator() = items.iterator()
+    override fun toString(): String = "${'$'}items"
+}
+fun <T> setOf(vararg xs: T): HashSet<T> { val s = HashSet<T>(); for (x in xs) s.add(x); return s }
+fun <T> mutableSetOf(vararg xs: T): HashSet<T> { val s = HashSet<T>(); for (x in xs) s.add(x); return s }
+fun <T> hashSetOf(vararg xs: T): HashSet<T> { val s = HashSet<T>(); for (x in xs) s.add(x); return s }
+fun <T> linkedSetOf(vararg xs: T): HashSet<T> { val s = HashSet<T>(); for (x in xs) s.add(x); return s }
+fun <T> ArrayList<T>.toSet(): HashSet<T> { val s = HashSet<T>(); for (x in this) s.add(x); return s }
+fun <T> ArrayList<T>.toMutableSet(): HashSet<T> { val s = HashSet<T>(); for (x in this) s.add(x); return s }
+"""
+private val SETS_USE = Regex("""\b(Set|MutableSet|HashSet|LinkedHashSet|setOf|mutableSetOf|hashSetOf|linkedSetOf|toSet|toMutableSet)\b""")
 /** `zip` of two lists into pairs (needs the pair prelude). */
 const val ZIP_EXT = """
 fun <T, R> ArrayList<T>.zip(o: ArrayList<R>): ArrayList<Pair<T, R>> { val r = ArrayList<Pair<T, R>>(); val n = if (size < o.size) size else o.size; var i = 0; while (i < n) { r.add(Pair(get(i), o.get(i))); i++ }; return r }
@@ -417,6 +443,7 @@ fun <T, R> ArrayList<T>.zip(o: ArrayList<R>): ArrayList<Pair<T, R>> { val r = Ar
 private val ZIP_USE = Regex("""\.zip\(""")
 /** `withIndex()` of progressions (needs both the range and the list prelude). */
 const val RANGE_LIST_EXT = """
+fun IntProgression.asSequence(): List<Int> = toList()
 fun IntProgression.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
 private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex|asSequence|forEachIndexed|indexOfFirst|indexOfLast|addAll)\(|-=|\bin\b""")
@@ -512,10 +539,10 @@ data class KClass(val simpleName: String?, val qualifiedName: String?) {
 private val KCLASS_USE = Regex("""::\s*class\b""")
 
 fun withPrelude(src: String, p: Program): Program {
-    val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val result = RESULT_USE.containsMatchIn(src); val exc = result || EXC_USE.containsMatchIn(src); val zip = ZIP_USE.containsMatchIn(src); val pairs = zip || PAIR_USE.containsMatchIn(src)
-    val cmp = COMPARABLE_USE.containsMatchIn(src); val arrx = ARRAY_EXT_USE.containsMatchIn(src); val lists = arrx || LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src); val lz = LAZY_USE.containsMatchIn(src); val anyObj = ANY_OBJ_USE.containsMatchIn(src); val mm = MIN_MAX_USE.containsMatchIn(src); val el = EMPTY_LIST_USE.containsMatchIn(src); val mmod = MEMORY_MODEL_USE.containsMatchIn(src); val kcls = KCLASS_USE.containsMatchIn(src)
-    if (!arrx && !kcls && !ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon && !lz && !anyObj && !mm && !el && !mmod) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (result) RESULT else "") + (if (pairs) PAIRS else "") + (if (zip) ZIP_EXT else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (arrx) ARRAY_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "") + (if (lz) LAZY else "") + (if (anyObj) ANY_OBJ else "") + (if (mm) MIN_MAX else "") + (if (el) EMPTY_LIST else "") + (if (mmod) MEMORY_MODEL else "") + (if (kcls) KCLASS else "")
+    val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val result = RESULT_USE.containsMatchIn(src); val exc = result || EXC_USE.containsMatchIn(src); val zip = ZIP_USE.containsMatchIn(src); val sets = SETS_USE.containsMatchIn(src); val pairs = zip || PAIR_USE.containsMatchIn(src)
+    val cmp = COMPARABLE_USE.containsMatchIn(src); val arrx = sets || ARRAY_EXT_USE.containsMatchIn(src); val lists = arrx || LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src); val lz = LAZY_USE.containsMatchIn(src); val anyObj = ANY_OBJ_USE.containsMatchIn(src); val mm = MIN_MAX_USE.containsMatchIn(src); val el = EMPTY_LIST_USE.containsMatchIn(src); val mmod = MEMORY_MODEL_USE.containsMatchIn(src); val kcls = KCLASS_USE.containsMatchIn(src)
+    if (!sets && !arrx && !kcls && !ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon && !lz && !anyObj && !mm && !el && !mmod) return p
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (result) RESULT else "") + (if (pairs) PAIRS else "") + (if (zip) ZIP_EXT else "") + (if (sets) SETS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (arrx) ARRAY_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "") + (if (lz) LAZY else "") + (if (anyObj) ANY_OBJ else "") + (if (mm) MIN_MAX else "") + (if (el) EMPTY_LIST else "") + (if (mmod) MEMORY_MODEL else "") + (if (kcls) KCLASS else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },
