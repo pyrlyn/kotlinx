@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2972,
-  "UNSUPPORTED": 2519
+  "PASS": 2997,
+  "UNSUPPORTED": 2494
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -4326,8 +4326,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/kClassInstanceIsInitializedFirst.kt"
   },
   "box/box/callableReference/property/kt12044.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Pair expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt12044.kt"
   },
@@ -6271,8 +6271,8 @@
    "upstream": "compiler/testData/codegen/box/collectionLiterals/sequenceOperatorOf.kt"
   },
   "box/box/collectionLiterals/stdlibCollections.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ')' (at ',')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '[')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/collectionLiterals/stdlibCollections.kt"
   },
@@ -7733,8 +7733,8 @@
    "upstream": "compiler/testData/codegen/box/contracts/contractOnContextParameter.kt"
   },
   "box/box/contracts/destructuredVariable.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "unknown contract (stdlib API / unsupported decl)",
+   "detail": "unknown function 'contract'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/destructuredVariable.kt"
   },
@@ -7801,8 +7801,8 @@
    "upstream": "compiler/testData/codegen/box/contracts/kt47300.kt"
   },
   "box/box/contracts/lambdaParameter.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "unknown contract (stdlib API / unsupported decl)",
+   "detail": "unknown function 'contract'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contracts/lambdaParameter.kt"
   },
@@ -8223,9 +8223,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNoIndexVar.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNotDestructured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexNotDestructured.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexWithExplicitlyTypedIndexVariable.kt": {
@@ -8389,9 +8388,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNoIndexVar.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNotDestructured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexNotDestructured.kt"
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInStringWithIndexWithExplicitlyTypedIndexVariable.kt": {
@@ -11715,9 +11713,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/arrayParams.kt"
   },
   "box/box/dataClasses/changingVarParam.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/changingVarParam.kt"
   },
   "box/box/dataClasses/components/kt49812.kt": {
@@ -12357,8 +12354,8 @@
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853.kt"
   },
   "box/box/defaultArguments/kt36853_fibonacci.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "generics",
+   "detail": "member extensions on a type parameter are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/defaultArguments/kt36853_fibonacci.kt"
   },
@@ -13530,15 +13527,14 @@
    "upstream": "compiler/testData/codegen/box/delegation/withDefaultsMultipleFilesOrder.kt"
   },
   "box/box/destructuringDeclInLambdaParam/extensionComponents.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ')' (at ',')",
+   "category": "generics",
+   "detail": "local functions that capture local variables cannot be generic, operator extensions or have vararg parameters",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/extensionComponents.kt"
   },
   "box/box/destructuringDeclInLambdaParam/generic.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ')' (at ',')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/generic.kt"
   },
   "box/box/destructuringDeclInLambdaParam/inline.kt": {
@@ -13548,37 +13544,33 @@
   },
   "box/box/destructuringDeclInLambdaParam/lambdaInLambda.kt": {
    "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "detail": "unexpected operator (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/lambdaInLambda.kt"
   },
   "box/box/destructuringDeclInLambdaParam/otherParameters.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected end of statement (at ',')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/otherParameters.kt"
   },
   "box/box/destructuringDeclInLambdaParam/simple.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ')' (at ',')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/simple.kt"
   },
   "box/box/destructuringDeclInLambdaParam/stdlibUsages.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/stdlibUsages.kt"
   },
   "box/box/destructuringDeclInLambdaParam/underscoreNames.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/underscoreNames.kt"
   },
   "box/box/destructuringDeclInLambdaParam/withIndexed.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected end of statement (at ',')",
+   "category": "other: unknown method ArrayList<Station>.forEachIndexed()",
+   "detail": "unknown method ArrayList<Station>.forEachIndexed()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/destructuringDeclInLambdaParam/withIndexed.kt"
   },
@@ -15977,8 +15969,8 @@
    "upstream": "compiler/testData/codegen/box/fir/toLong.kt"
   },
   "box/box/fir/unnamedLocalVariable.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: cannot store Unit in '_'",
+   "detail": "cannot store Unit in '_'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fir/unnamedLocalVariable.kt"
   },
@@ -16091,8 +16083,8 @@
    "upstream": "compiler/testData/codegen/box/fp/remainderMixedFpSubnormalDivisor.kt"
   },
   "box/box/fp/remainderMixedIntFp.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ')' (at ',')",
+   "category": "other: overloads are not supported: signOf",
+   "detail": "overloads are not supported: signOf",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/fp/remainderMixedIntFp.kt"
   },
@@ -18342,8 +18334,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt65300j.kt"
   },
   "box/box/inference/pcla/issues/kt66229.kt": {
-   "category": "other syntax (at ':')",
-   "detail": "expected ')' (at ':')",
+   "category": "unknown buildMap (stdlib API / unsupported decl)",
+   "detail": "unknown function 'buildMap'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt66229.kt"
   },
@@ -19760,9 +19752,8 @@
    "upstream": "compiler/testData/codegen/box/inline/params.kt"
   },
   "box/box/inline/positionBasedDestructuring.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inline/positionBasedDestructuring.kt"
   },
   "box/box/inline/privateProperty.kt": {
@@ -26194,8 +26185,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/vars.kt"
   },
   "box/box/lower/forLoopsLowering/withIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "unknown uintArrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'uintArrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/withIndex.kt"
   },
@@ -26274,74 +26265,66 @@
    "upstream": "compiler/testData/codegen/box/mixedNamedPosition/varargsEvaluationOrder.kt"
   },
   "box/box/multiDecl/ComplexInitializer.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/ComplexInitializer.kt"
   },
   "box/box/multiDecl/SimpleVals.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/SimpleVals.kt"
   },
   "box/box/multiDecl/SimpleValsExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/SimpleValsExtensions.kt"
   },
   "box/box/multiDecl/SimpleVarsExtensions.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/SimpleVarsExtensions.kt"
   },
   "box/box/multiDecl/UnderscoreNames.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "unknown _ (stdlib API / unsupported decl)",
+   "detail": "unknown name '_'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/UnderscoreNames.kt"
   },
   "box/box/multiDecl/ValCapturedInFunctionLiteral.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/ValCapturedInFunctionLiteral.kt"
   },
   "box/box/multiDecl/ValCapturedInLocalFunction.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/ValCapturedInLocalFunction.kt"
   },
   "box/box/multiDecl/ValCapturedInObjectLiteral.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('a')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/ValCapturedInObjectLiteral.kt"
   },
   "box/box/multiDecl/VarCapturedInFunctionLiteral.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/VarCapturedInFunctionLiteral.kt"
   },
   "box/box/multiDecl/VarCapturedInLocalFunction.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/VarCapturedInLocalFunction.kt"
   },
   "box/box/multiDecl/VarCapturedInObjectLiteral.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: local classes that capture local variables are not supported",
+   "detail": "local classes that capture local variables are not supported ('a')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/VarCapturedInObjectLiteral.kt"
   },
   "box/box/multiDecl/component.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "strings / templates",
+   "detail": "unknown method String.substring()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/multiDecl/component.kt"
   },
@@ -26642,15 +26625,13 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/positionalDestructuringFullForm.kt"
   },
   "box/box/multiDecl/positionalDestructuringShortForm.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/positionalDestructuringShortForm.kt"
   },
   "box/box/multiDecl/returnInElvis.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/returnInElvis.kt"
   },
   "box/box/multiplatform/k2/actualInnerClassesFirMemberMapping.kt": {
@@ -27774,8 +27755,8 @@
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/fullFormGenericBounds.kt"
   },
   "box/box/nameBasedDestructuring/fullFormLoopsAndLambdas.kt": {
-   "category": "other syntax (at 'key')",
-   "detail": "expected ')' (at 'key')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/fullFormLoopsAndLambdas.kt"
   },
@@ -27803,8 +27784,8 @@
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/shortFormGenericBounds.kt"
   },
   "box/box/nameBasedDestructuring/shortFormLoopsAndLambdas.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ')' (at ',')",
+   "category": "default arguments",
+   "detail": "expected identifier (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/nameBasedDestructuring/shortFormLoopsAndLambdas.kt"
   },
@@ -29456,8 +29437,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/rangeTo.kt"
   },
   "box/box/primitiveTypes/reassignDestructured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/reassignDestructured.kt"
   },
@@ -29564,8 +29545,8 @@
    "upstream": "compiler/testData/codegen/box/privateConstructors/withVarargs.kt"
   },
   "box/box/properties/PrivatePropertyOfComplexGenericFunctionType.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "class bodies / constructors",
+   "detail": "constructor State expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/properties/PrivatePropertyOfComplexGenericFunctionType.kt"
   },
@@ -31352,9 +31333,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexNoIndexOrElementVar.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexNotDestructured.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexNotDestructured.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexReversed.kt": {
@@ -31364,15 +31344,13 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexReversed.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexWithDestructuringInLoop.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexWithDestructuringInLoop.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexWithIndex.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexWithIndex.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/kt42909.kt": {
@@ -34867,14 +34845,13 @@
    "upstream": "compiler/testData/codegen/box/regressions/dataClassInRegularFunctionWithTypeParameters.kt"
   },
   "box/box/regressions/directInvokeDestructuring.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ')' (at ',')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/directInvokeDestructuring.kt"
   },
   "box/box/regressions/directInvokeNameBasedDestructuring.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
+   "category": "other syntax (at '=')",
+   "detail": "expected ')' (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/directInvokeNameBasedDestructuring.kt"
   },
@@ -35128,15 +35105,14 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt6153.kt"
   },
   "box/box/regressions/kt6434.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: HashMap keys must be Int/Long/Char, found E",
+   "detail": "HashMap keys must be Int/Long/Char, found E",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/kt6434.kt"
   },
   "box/box/regressions/kt6434_2.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/kt6434_2.kt"
   },
   "box/box/regressions/kt68727.kt": {
@@ -35184,9 +35160,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/lambdaPostponeConstruction.kt"
   },
   "box/box/regressions/lambdaWithTypeParameters.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ')' (at ',')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/lambdaWithTypeParameters.kt"
   },
   "box/box/regressions/lambdaWrongReturnType.kt": {
@@ -36274,8 +36249,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/lambdaArgumentWithoutType.kt"
   },
   "box/box/smartCasts/multipleSmartCast.kt": {
-   "category": "destructuring declarations",
-   "detail": "expected identifier (at '[')",
+   "category": "other: unknown method IC2.component1()",
+   "detail": "unknown method IC2.component1()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/smartCasts/multipleSmartCast.kt"
   },

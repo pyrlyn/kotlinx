@@ -2207,22 +2207,34 @@ class Parser(toks: List<Tok>) {
         expectOp("{")
         val params = ArrayList<String>(); val ptypes = ArrayList<TypeRef?>()
         val outerDecls = pendingDecls; pendingDecls = ArrayList(); bodyLevel++
+        val pre = ArrayList<S>()
         val stmts = try { nested(0) {
             if (lambda) {
                 // `x, y: T ->` parameter list (backtracks if it is not one).
                 val save = p
                 val ps = ArrayList<String>(); val ts = ArrayList<TypeRef?>()
+                // Destructured parameters `(a, b) ->` / `[a, b] ->`: a fresh parameter plus componentN locals.
+                val destr = ArrayList<Pair<String, List<String>>>()
                 try {
                     skipNL0()
-                    while (peek().k == K.ID) {
-                        ps.add(ident())
+                    while (peek().k == K.ID || isOp("(") || isOp("[")) {
+                        if (isOp("(") || isOp("[")) {
+                            val close = if (isOp("(")) ")" else "]"
+                            next()
+                            val names = ArrayList<String>()
+                            while (!isOp(close)) { if ((isId("val") || isId("var")) && t[p + 1].k == K.ID) next(); names.add(ident()); if (isOp(":")) { next(); type() }; if (isOp(",")) next() else if (!isOp(close)) fail("expected ','") }
+                            next()
+                            val d = "\$d${destructN++}"
+                            ps.add(d); destr.add(d to names)
+                        } else ps.add(ident())
                         ts.add(if (isOp(":")) { next(); type() } else null)
                         if (isOp(",")) next() else break
                     }
-                    if (ps.isNotEmpty() && isOp("->")) { next(); params.addAll(ps); ptypes.addAll(ts) } else p = save
-                } catch (_: CompileError) { p = save }
+                    if (ps.isNotEmpty() && isOp("->")) { next(); params.addAll(ps); ptypes.addAll(ts) } else { p = save; destr.clear() }
+                } catch (_: CompileError) { p = save; destr.clear() }
+                for ((d, names) in destr) names.forEachIndexed { i, n -> if (n != "_") pre.add(destructVar(d, n, i, false, t[p].line)) }
             }
-            val ss = ArrayList<S>()
+            val ss = ArrayList<S>(pre)
             while (true) {
                 skipNL()
                 if (isOp("}")) break
@@ -2296,14 +2308,16 @@ class Parser(toks: List<Tok>) {
             }
             isId("val") || isId("var") -> {
                 val isVar = next().s == "var"
-                if (isOp("(")) {
+                if (isOp("(") || isOp("[")) {
+                    // `val (a, b) = x` and position-based `val [a, b] = x` (also `[val a, var b]`): componentN calls.
+                    val close = if (isOp("(")) ")" else "]"
                     next()
-                    val names = ArrayList<String>()
-                    while (!isOp(")")) { names.add(ident()); if (isOp(":")) { next(); type() }; if (isOp(",")) next() }
+                    val names = ArrayList<String>(); val vars = HashSet<String>()
+                    while (!isOp(close)) { if ((isId("val") || isId("var")) && t[p + 1].k == K.ID) { if (next().s == "var") vars.add(t[p].s) }; names.add(ident()); if (isOp(":")) { next(); type() }; if (isOp(",")) next() }
                     next()
                     expectOp("="); skipNLOnly()
                     val d = "\$d${destructN++}"
-                    names.forEachIndexed { i, n -> if (n != "_") pendingStmts.add(destructVar(d, n, i, isVar, line)) }
+                    names.forEachIndexed { i, n -> if (n != "_") pendingStmts.add(destructVar(d, n, i, isVar || n in vars, line)) }
                     VarS(d, false, null, expr())
                 } else {
                 val name = ident()
@@ -2343,7 +2357,7 @@ class Parser(toks: List<Tok>) {
                 val (n, it) = nested(1) {
                     val n = if (isOp("(") || isOp("[")) {
                         val close = if (isOp("(")) ")" else "]"
-                        next(); while (!isOp(close)) { names.add(ident()); if (isOp(":")) { next(); type() }; if (isOp(",")) next() }; next()
+                        next(); while (!isOp(close)) { if ((isId("val") || isId("var")) && t[p + 1].k == K.ID) next(); names.add(ident()); if (isOp(":")) { next(); type() }; if (isOp(",")) next() }; next()
                         "\$d${destructN++}"
                     } else ident()
                     if (ident() != "in") fail("expected 'in'"); n to expr()
