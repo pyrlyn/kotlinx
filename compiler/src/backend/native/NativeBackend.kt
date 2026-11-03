@@ -191,7 +191,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private var mainParams = false
 
     private fun mapTy(k: Ty, v: Ty): Ty {
-        if (!(k.isInt || k == Ty.Char)) fail("HashMap keys must be Int/Long/Char, found $k")
+        if (!(k.isInt || k == Ty.Char || k == Ty.Str)) fail("HashMap keys must be Int/Long/Char/String, found $k")
         if (v.llvm == "ptr" || v == Ty.Unit) fail("HashMap values must be primitives, found $v")
         return Ty.MapTy(k, v)
     }
@@ -1356,6 +1356,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     is Ty.MapTy -> {
                         val v = coerce(genExpr(value), rt.v)
                         emit("call void @rt_map_put(ptr ${r.v}, i64 ${mapKey(i0, rt)}, i64 ${toSlot(v)})")
+                        releaseIfOwned(i0)
                     }
                     is Ty.ListTy -> {
                         val v = consume(coerce(genArg(value), rt.elem))
@@ -1583,7 +1584,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val i = if (r.t is Ty.MapTy) i0 else coerce(i0, Ty.I64)
                 val res = when (val rt = r.t) {
                     is Ty.Arr -> Val(emitT("load ${rt.elem.llvm}, ptr ${elemPtr(r, i)}${tbElem(rt.elem.llvm)}"), rt.elem)
-                    is Ty.MapTy -> Val(fromSlot(emitT("call i64 @rt_map_get(ptr ${r.v}, i64 ${mapKey(i0, rt)})"), rt.v), rt.v)
+                    is Ty.MapTy -> Val(fromSlot(emitT("call i64 @rt_map_get(ptr ${r.v}, i64 ${mapKey(i0, rt)})"), rt.v), rt.v).also { releaseIfOwned(i0) }
                     Ty.Str -> Val(emitT("zext i8 ${emitT("load i8, ptr ${emitT("getelementptr i8, ptr ${r.v}, i64 ${i.v}")}")} to i32"), Ty.Char)
                     is Ty.ListTy -> { listIdx(r, i); Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${r.v}, i64 ${i.v})"), rt.elem), rt.elem) }
                     else -> fail("cannot index ${r.t}")
@@ -2490,8 +2491,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             "HashMap", "hashMapOf", "mutableMapOf" -> {
                 if (e.typeArgs.size != 2 || e.args.isNotEmpty()) fail("$n needs explicit key/value types and no arguments, e.g. $n<Int, Long>()")
-                val t = mapTy(resolve(e.typeArgs[0]), resolve(e.typeArgs[1]))
-                return Val(emitT("call ptr @rt_map_new()"), t, true)
+                val t = mapTy(resolve(e.typeArgs[0]), resolve(e.typeArgs[1])) as Ty.MapTy
+                return Val(emitT("call ptr @${if (t.k == Ty.Str) "rt_smap_new" else "rt_map_new"}()"), t, true)
             }
             "IntArray", "LongArray", "DoubleArray", "FloatArray", "ByteArray", "BooleanArray", "CharArray", "UIntArray", "ULongArray", "ShortArray", "UByteArray", "UShortArray" -> {
                 val et = when (n) { "ShortArray" -> Ty.I32; "UByteArray", "UShortArray" -> Ty.U32; "ByteArray" -> Ty.I8; "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; "FloatArray" -> Ty.F32; "BooleanArray" -> Ty.I1; "CharArray" -> Ty.Char; "UIntArray" -> Ty.U32; "ULongArray" -> Ty.U64; else -> Ty.F64 }
@@ -3545,13 +3546,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             t == Ty.SB && n == "toString" -> Val(emitT("call ptr @rt_sb_tostring(ptr ${r.v})"), Ty.Str, true)
             t is Ty.MapTy && (n == "containsKey" || n == "get" || n == "put" || n == "getOrDefault") -> {
-                val k = mapKey(genExpr(e.args[0]), t)
+                val kv = genExpr(e.args[0])
+                val k = mapKey(kv, t)
+                // String keys are retained by the map; an owned temporary key is released after the call.
                 when (n) {
                     "containsKey" -> Val(emitT("icmp ne i32 ${emitT("call i32 @rt_map_contains(ptr ${r.v}, i64 $k)")}, 0"), Ty.I1)
                     "get" -> Val(fromSlot(emitT("call i64 @rt_map_get(ptr ${r.v}, i64 $k)"), t.v), t.v)
                     "getOrDefault" -> Val(fromSlot(emitT("call i64 @rt_map_get_or(ptr ${r.v}, i64 $k, i64 ${toSlot(coerce(genExpr(e.args[1]), t.v))})"), t.v), t.v)
                     else -> { emit("call void @rt_map_put(ptr ${r.v}, i64 $k, i64 ${toSlot(coerce(genExpr(e.args[1]), t.v))})"); Val("", Ty.Unit) }
-                }
+                }.also { releaseIfOwned(kv) }
             }
             t is Ty.ListTy && e.lambda != null && n in setOf("map", "filter", "forEach", "sumOf", "count") -> listLambda(r, t, n, e.lambda)
             // `sum()` of a numeric list: `sumOf { it }` (Int/Long/Double/... element types).
@@ -4585,6 +4588,7 @@ declare ptr @rt_sb_tostring(ptr)
 declare i64 @rt_sb_len(ptr)
 declare void @rt_sb_release(ptr)
 declare ptr @rt_map_new()
+declare ptr @rt_smap_new()
 declare void @rt_map_put(ptr, i64, i64)
 declare i64 @rt_map_get(ptr, i64)
 declare i64 @rt_map_get_or(ptr, i64, i64)

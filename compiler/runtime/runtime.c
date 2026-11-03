@@ -318,23 +318,37 @@ void rt_oob(int64_t i, int64_t len) {
     exit(1);
 }
 
-// ---- HashMap<primitive, primitive>: open addressing, linear probing --------
+// ---- HashMap<primitive|String, primitive>: open addressing, linear probing --------
+// String keys (`skeys`): the slot holds the string pointer (retained by the map), hashed and compared by content.
 
-typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; } Map;
+typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; } Map;
 
 static inline uint64_t map_hash(int64_t k) {
     uint64_t x = (uint64_t)k;
     x ^= x >> 33; x *= 0xff51afd7ed558ccdULL; x ^= x >> 33;
     return x;
 }
+static inline uint64_t map_hash_str(const char *s) {
+    uint64_t h = 1469598103934665603ULL;
+    for (; *s; s++) { h ^= (uint8_t)*s; h *= 1099511628211ULL; }
+    return h ^ (h >> 32);
+}
 Map *rt_map_new(void) {
     Map *m = malloc(sizeof *m);
-    m->rc = 1; m->size = 0; m->cap = 16;
+    m->skeys = 0; m->rc = 1; m->size = 0; m->cap = 16;
     m->keys = malloc(16 * 8); m->vals = rt_gc_mem_alloc(16 * 8); m->used = calloc(16, 1); LK(LK_MAP, 1);
     return m;
 }
+Map *rt_smap_new(void) { Map *m = rt_map_new(); m->skeys = 1; return m; }
 static inline int64_t map_find(Map *m, int64_t k) {
-    uint64_t mask = (uint64_t)m->cap - 1, i = map_hash(k) & mask;
+    uint64_t mask = (uint64_t)m->cap - 1;
+    if (m->skeys) {
+        const char *ks = (const char *)(intptr_t)k;
+        uint64_t i = map_hash_str(ks) & mask;
+        while (m->used[i] && strcmp((const char *)(intptr_t)m->keys[i], ks) != 0) i = (i + 1) & mask;
+        return (int64_t)i;
+    }
+    uint64_t i = map_hash(k) & mask;
     while (m->used[i] && m->keys[i] != k) i = (i + 1) & mask;
     return (int64_t)i;
 }
@@ -351,17 +365,26 @@ static void map_grow(Map *m) {
 void rt_map_put(Map *m, int64_t k, int64_t v) {
     if ((m->size + 1) * 4 > m->cap * 3) map_grow(m);
     int64_t i = map_find(m, k);
-    if (!m->used[i]) { m->used[i] = 1; m->keys[i] = k; m->size++; }
+    if (!m->used[i]) { m->used[i] = 1; m->keys[i] = k; m->size++; if (m->skeys) rt_hdr_retain((void *)(intptr_t)k); }
     m->vals[i] = v;
 }
 int32_t rt_map_contains(Map *m, int64_t k) { return m->used[map_find(m, k)]; }
 int64_t rt_map_get_or(Map *m, int64_t k, int64_t d) { int64_t i = map_find(m, k); return m->used[i] ? m->vals[i] : d; }
 int64_t rt_map_get(Map *m, int64_t k) {
     int64_t i = map_find(m, k);
-    if (!m->used[i]) { fflush(stdout); fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %" PRId64 " not in map\n", k); exit(1); }
+    if (!m->used[i]) {
+        fflush(stdout);
+        if (m->skeys) fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %s not in map\n", (const char *)(intptr_t)k);
+        else fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %" PRId64 " not in map\n", k);
+        exit(1);
+    }
     return m->vals[i];
 }
 int64_t rt_map_size(Map *m) { return m->size; }
-void rt_map_release(Map *m) { if (!m || --m->rc > 0) return; LK(LK_MAP, -1); free(m->keys); rt_gc_mem_free(m->vals); free(m->used); free(m); }
+void rt_map_release(Map *m) {
+    if (!m || --m->rc > 0) return;
+    LK(LK_MAP, -1);
+    if (m->skeys) for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) rt_str_release((char *)(intptr_t)m->keys[i]);
+    free(m->keys); rt_gc_mem_free(m->vals); free(m->used); free(m); }
 
 // Object allocation, reference counting slow paths and the cycle collector live in compiler/gc/ (kxgc.h).
