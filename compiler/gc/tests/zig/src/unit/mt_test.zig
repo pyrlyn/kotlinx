@@ -22,10 +22,13 @@ const kx = @import("kx.zig");
 const c = kx.c;
 const pt = @cImport(@cInclude("pthread.h"));
 
+extern fn usleep(us: c_uint) c_int;
+
 const MAGIC: u64 = 0x6b78_6763_6d74_0001;
 /// `aux` is a reference the collector does not trace (like ArrayList storage): released by relo through the
 /// log, so a log can fill up while the mutator frees returned objects (the nested boundary hand-off).
-const Obj = extern struct { hdr: u64, vt: *c.KxVTab, next: ?*Obj, magic: u64, val: i64, aux: ?*Obj };
+/// `side` is a second traced reference, set only in the quiet phase (a garbage ring pointing into the pool).
+const Obj = extern struct { hdr: u64, vt: *c.KxVTab, next: ?*Obj, magic: u64, val: i64, aux: ?*Obj, side: ?*Obj };
 
 var allocated: i64 = 0;
 var freed: i64 = 0;
@@ -41,6 +44,7 @@ fn objFree(p: ?*anyopaque) callconv(.c) void {
 fn objTrav(p: ?*anyopaque, f: c.kx_visit_fn) callconv(.c) void {
     const o: *Obj = @ptrCast(@alignCast(p));
     f.?(@ptrCast(mt_load(@ptrCast(&o.next))));
+    f.?(@ptrCast(mt_load(@ptrCast(&o.side))));
 }
 fn objRelo(p: ?*anyopaque) callconv(.c) void {
     const o: *Obj = @ptrCast(@alignCast(p));
@@ -84,7 +88,7 @@ fn alive(o: *Obj) bool {
 }
 
 const THREADS = 4;
-const TURNS = 60;
+const TURNS = 180;
 const OPS = 400;
 const SLOTS = 128;
 
@@ -111,7 +115,11 @@ fn put(slot: usize, o: *Obj) void {
     pool[slot] = o;
 }
 
-fn step(r: *Rng, tid: i64) void {
+/// `quiet` turns never call rt_gc_collect: the background collector alone has to start its majors (the
+/// incremental one, or the stop-the-world one under KX_GC_INC_MAJOR=0) from the deferred roots of a large
+/// live pool, and the idle gap after the turn lets it advance an incremental major with an empty queue.
+fn step(r: *Rng, tid: i64, quiet: bool) void {
+    if (quiet) return quietStep(r, tid);
     switch (r.below(100)) {
         // a ring of 1..9 built as generated code does: every new object starts with its local reference,
         // a field store retains its target, and the locals are released at the end of the scope (those
@@ -170,14 +178,38 @@ fn step(r: *Rng, tid: i64) void {
     }
 }
 
+/// Quiet phase: the pool is left alone (no rewires, so its objects stay in the old generation) and only
+/// referenced: garbage rings hanging off a pool object and retain/release churn on pool objects. Minor
+/// detections from those roots hit old objects and defer them, which is what triggers background majors.
+fn quietStep(r: *Rng, tid: i64) void {
+    const target = pool[r.below(SLOTS)] orelse return;
+    if (r.below(2) == 0) {
+        c.rt_gc_log_inc(target);
+        c.rt_gc_log_dec(target);
+        return;
+    }
+    var ring: [4]*Obj = undefined;
+    const n = 1 + r.below(4);
+    for (0..n) |i| ring[i] = newObj(tid);
+    for (0..n) |i| {
+        c.rt_gc_log_inc(ring[(i + 1) % n]);
+        store(ring[i], ring[(i + 1) % n]);
+    }
+    c.rt_gc_log_inc(target);
+    mt_store(@ptrCast(&ring[0].side), target); // a garbage cycle that reaches the old generation
+    c.rt_gc_write_barrier(ring[0]);
+    for (ring[0..n]) |o| c.rt_gc_log_dec(o);
+}
+
 fn worker(arg: ?*anyopaque) callconv(.c) ?*anyopaque {
     const tid: i64 = @intCast(@intFromPtr(arg));
     var r: Rng = .{ .s = 0x9e37_79b9_7f4a_7c15 ^ @as(u64, @intCast(tid + 1)) *% 0x2545_f491_4f6c_dd1d };
-    for (0..TURNS) |_| {
+    for (0..TURNS) |turn| {
         _ = pt.pthread_mutex_lock(&role);
-        for (0..OPS) |_| step(&r, tid);
+        const quiet = turn >= TURNS / 3;
+        for (0..OPS) |_| step(&r, tid, quiet);
         _ = pt.pthread_mutex_unlock(&role);
-        _ = pt.sched_yield();
+        if (quiet) _ = usleep(300) else _ = pt.sched_yield();
     }
     return null;
 }
