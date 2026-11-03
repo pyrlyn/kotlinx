@@ -1831,6 +1831,8 @@ class Parser(toks: List<Tok>) {
         expectOp(")")
         val ret = if (isOp(":")) { next(); type() } else null
         whereClause(typeParams)
+        // A block body may start on the next line (`fun f(): String\n{ ... }`).
+        if (peek().k == K.NL) { val save2 = p; skipNLOnly(); if (!isOp("{")) p = save2 }
         return if (isOp("=")) {
             next(); skipNLOnly()
             val outerDecls = pendingDecls; pendingDecls = ArrayList(); bodyLevel++
