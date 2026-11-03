@@ -17,7 +17,7 @@ sealed class Ty {
     object Char : Ty() { override fun toString() = "Char" }
     object SB : Ty() { override fun toString() = "StringBuilder" }
     /** ByteArray / IntArray / LongArray / DoubleArray: pointer to { i64 length; elements }, refcount at -8. */
-    data class Arr(val elem: Ty) : Ty() { override fun toString() = when (elem) { I8 -> "ByteArray"; I32 -> "IntArray"; I64 -> "LongArray"; F32 -> "FloatArray"; else -> "DoubleArray" } }
+    data class Arr(val elem: Ty) : Ty() { override fun toString() = when (elem) { I8 -> "ByteArray"; I32 -> "IntArray"; I64 -> "LongArray"; F32 -> "FloatArray"; I1 -> "BooleanArray"; Char -> "CharArray"; U32 -> "UIntArray"; U64 -> "ULongArray"; else -> "DoubleArray" } }
     data class MapTy(val k: Ty, val v: Ty) : Ty() { override fun toString() = "HashMap<$k, $v>" }
     data class Iface(val name: String) : Ty() { override fun toString() = name }
     object Pinned : Ty() { override fun toString() = "Pinned<ByteArray>" }
