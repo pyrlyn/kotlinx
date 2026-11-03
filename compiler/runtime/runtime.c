@@ -247,6 +247,13 @@ void rt_str_release(char *p) {
     if (--*h == 0) { LK(LK_STR, -1); free(h); }
 }
 int64_t rt_sb_len(SB *s) { return (int64_t)s->len; }
+/* StringBuilder.setLength: truncates, or pads with '\0' (Kotlin pads with \u0000). */
+void rt_sb_set_length(SB *s, int64_t n) {
+    if (n < 0) { fflush(stdout); fprintf(stderr, "Exception in thread \"main\" java.lang.IndexOutOfBoundsException: length %" PRId64 "\n", n); exit(1); }
+    if ((size_t)n <= s->len) { s->len = (size_t)n; if (s->buf) s->buf[s->len] = 0; return; }
+    char z = 0;
+    while (s->len < (size_t)n) sb_bytes(s, &z, 1);
+}
 void rt_sb_release(SB *s) { if (!s || --s->rc > 0) return; LK(LK_SB, -1); free(s->buf - 8); free(s); }
 void rt_sb_f64(SB *s, double d) { char b[64]; fmt_double(b, sizeof b, d); rt_sb_str(s, b); }
 void rt_sb_f32(SB *s, float d) { char b[64]; fmt_fp(b, sizeof b, d, 1); rt_sb_str(s, b); }
@@ -321,7 +328,8 @@ void rt_oob(int64_t i, int64_t len) {
 // ---- HashMap<primitive|String, primitive>: open addressing, linear probing --------
 // String keys (`skeys`): the slot holds the string pointer (retained by the map), hashed and compared by content.
 
-typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; } Map;
+typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; release_fn vrel; } Map;
+// Reference values (`vrel` set): the map owns one reference per value; overwrites and the map release drop it.
 
 static inline uint64_t map_hash(int64_t k) {
     uint64_t x = (uint64_t)k;
@@ -335,11 +343,12 @@ static inline uint64_t map_hash_str(const char *s) {
 }
 Map *rt_map_new(void) {
     Map *m = malloc(sizeof *m);
-    m->skeys = 0; m->rc = 1; m->size = 0; m->cap = 16;
+    m->skeys = 0; m->vrel = NULL; m->rc = 1; m->size = 0; m->cap = 16;
     m->keys = malloc(16 * 8); m->vals = rt_gc_mem_alloc(16 * 8); m->used = calloc(16, 1); LK(LK_MAP, 1);
     return m;
 }
 Map *rt_smap_new(void) { Map *m = rt_map_new(); m->skeys = 1; return m; }
+Map *rt_map_with_vrel(Map *m, release_fn rel) { m->vrel = rel; return m; }
 static inline int64_t map_find(Map *m, int64_t k) {
     uint64_t mask = (uint64_t)m->cap - 1;
     if (m->skeys) {
@@ -366,6 +375,7 @@ void rt_map_put(Map *m, int64_t k, int64_t v) {
     if ((m->size + 1) * 4 > m->cap * 3) map_grow(m);
     int64_t i = map_find(m, k);
     if (!m->used[i]) { m->used[i] = 1; m->keys[i] = k; m->size++; if (m->skeys) rt_hdr_retain((void *)(intptr_t)k); }
+    else if (m->vrel) m->vrel((void *)(intptr_t)m->vals[i]);
     m->vals[i] = v;
 }
 int32_t rt_map_contains(Map *m, int64_t k) { return m->used[map_find(m, k)]; }
@@ -384,7 +394,10 @@ int64_t rt_map_size(Map *m) { return m->size; }
 void rt_map_release(Map *m) {
     if (!m || --m->rc > 0) return;
     LK(LK_MAP, -1);
-    if (m->skeys) for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) rt_str_release((char *)(intptr_t)m->keys[i]);
+    for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) {
+        if (m->skeys) rt_str_release((char *)(intptr_t)m->keys[i]);
+        if (m->vrel) m->vrel((void *)(intptr_t)m->vals[i]);
+    }
     free(m->keys); rt_gc_mem_free(m->vals); free(m->used); free(m); }
 
 // Object allocation, reference counting slow paths and the cycle collector live in compiler/gc/ (kxgc.h).
