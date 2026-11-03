@@ -1,0 +1,7 @@
+alloc_throughput 0.090
+big_live_churn 206.891
+cyclic_garbage 0.063
+huge_live_churn 1008.943
+live_heap_churn 13.626
+short_lived 0.117
+wide_graph_churn 2456.592

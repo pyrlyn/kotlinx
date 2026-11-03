@@ -6,7 +6,7 @@ class Val(val v: String, val t: Ty, val owned: Boolean = false)
 private class Local(val slot: String, val t: Ty, val isVar: Boolean)
 private class Scope { val vars = HashMap<String, Local>(); val refs = ArrayList<Local>() }
 /** Lambdas synthesized for callable references, per reference node; survives code-generation restarts. */
-private object RefLambdas { val map = HashMap<UnE, LambdaE>() }
+private object RefLambdas { val map = HashMap<UnE, LambdaE>(); val setters = HashMap<UnE, LambdaE>() }
 private class FunSig(val name: String, val params: List<Ty>, val ret: Ty)
 /** Object layout: { i64 refcount, ptr vtable, fields... }; vtable[0] = release function. */
 /**
@@ -165,6 +165,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "LongArray" -> Ty.Arr(Ty.I64)
         "DoubleArray" -> Ty.Arr(Ty.F64)
         "FloatArray" -> Ty.Arr(Ty.F32)
+        "BooleanArray" -> Ty.Arr(Ty.I1)
+        "CharArray" -> Ty.Arr(Ty.Char)
+        "UIntArray" -> Ty.Arr(Ty.U32)
+        "ULongArray" -> Ty.Arr(Ty.U64)
+        // Short / UByte / UShort live in Int / UInt (see below), so their arrays are IntArray / UIntArray.
+        "ShortArray" -> Ty.Arr(Ty.I32)
+        "UByteArray", "UShortArray" -> Ty.Arr(Ty.U32)
         "StringBuilder" -> Ty.SB
         "HashMap", "MutableMap", "Map" -> mapTy(resolve(t.args[0]), resolve(t.args[1]))
         "ArrayList", "MutableList", "List" -> Ty.ListTy(resolve(t.args.single()).also { if (it == Ty.Unit) fail("lists of Unit are not supported") })
@@ -212,7 +219,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun isAny(t: Ty) = t is Ty.Iface && t.name == "Any"
     private fun boxName(t: Ty): String? = when (t) {
         Ty.I32 -> "Int"; Ty.I64 -> "Long"; Ty.F64 -> "Double"; Ty.F32 -> "Float"; Ty.I1 -> "Boolean"; Ty.Char -> "Char"; Ty.Str -> "String"
-        Ty.U32 -> "UInt"; Ty.U64 -> "ULong"; Ty.I8 -> "Byte"; else -> null
+        Ty.U32 -> "UInt"; Ty.U64 -> "ULong"; Ty.I8 -> "Byte"
+        else -> null
+    }
+
+    /** Name of the `AnyBox*` class holding [t] as `Any`: primitives and strings ([boxName]), arrays and lists. */
+    private fun anyBoxName(t: Ty): String? = when (t) {
+        is Ty.Arr -> t.toString()
+        is Ty.ListTy -> when (val el = t.elem) { is Ty.Cls, is Ty.Iface -> "List"; Ty.Str -> "ListString"; else -> boxName(el)?.takeIf { el !is Ty.Arr && el !is Ty.ListTy }?.let { "List$it" } }
+        else -> boxName(t)
     }
 
     /** A value viewed as `Any`: objects as is, primitives and strings boxed into `AnyBox<T>` (owned). */
@@ -221,14 +236,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Kotlin compares callable references structurally; ours are distinct closures, so refuse them as Any.
         if (v.v in refVals) fail("callable references as Any are not supported")
         if (v.v == "null" || v.t is Ty.Cls || v.t is Ty.Iface || v.t is Ty.NBox) return Val(v.v, t, v.owned)
-        val n = boxName(v.t) ?: fail("${v.t} cannot be used as Any")
+        val n = anyBoxName(v.t) ?: fail("${v.t} cannot be used as Any")
+        // The list box holds `ArrayList<Any>`: the element type is erased (the list's own release function stays with it).
+        val v = if (n == "List") Val(v.v, Ty.ListTy(Ty.Iface("Any")), v.owned) else v
         val b = withTemps(listOf(v)) { (x) -> genNamedCall("AnyBox$n", CallE(NameE("AnyBox$n").also { it.line = line }, emptyList(), listOf(x), null).also { it.line = line }) }
         return Val(b.v, t, true)
     }
 
     /** The primitive or string inside an `AnyBox` (borrowed unless [v] is owned, then the box is released). */
     private fun unbox(v: Val, target: Ty): Val {
-        val ci = classes.getValue("AnyBox${boxName(target)}")
+        val ci = classes.getValue("AnyBox${anyBoxName(target)}")
         val x = Val(emitT("load ${target.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${v.v}, i32 0, i32 2")}"), target)
         if (!v.owned) return x
         if (target.isRef) retain(x.v, target)
@@ -241,6 +258,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun coerce(v: Val, t: Ty): Val {
         if (v.t == t) return v
+        if (isFnTwin(v.t, t)) return Val(v.v, t, v.owned)
         // Unreachable value (after `throw`): keep the slot well-typed.
         if (v.t == Ty.Nothing) return if (t.llvm == "void") v else Val("undef", t)
         if (isAny(t)) return toAny(v, t)
@@ -341,7 +359,6 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             for (m in c.methods) {
                 line = m.line
                 if (m.typeParams.isNotEmpty()) {
-                    if (m.ret == null && m.body == null) fail("expression-bodied method '${m.name}' needs an explicit return type")
                     if (c.name in poly || c.superClass != null) fail("generic method '${m.name}' in an open class hierarchy is not supported")
                     continue
                 }
@@ -732,6 +749,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         while (inferPending.isNotEmpty()) {
             var progress = false
             var lastErr: CompileError? = null
+            val errs = LinkedHashMap<FunD, CompileError>()
             for (it in ArrayList(inferPending)) {
                 val (f, c) = it
                 val ci = c?.let { classes.getValue(it.name) }
@@ -741,7 +759,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     beginBody(ci, Ty.Unit); line = f.line
                     f.params.forEachIndexed { i, p -> val l = declare(p.name, params[i], false, false); if (p.ctx) scopes.last().vars["\$ctx\$p${tmpN++}"] = l }
                     genExpr(f.exprBody!!).t
-                } catch (e: CompileError) { lastErr = e; null } finally { funcs.setLength(savedFuncs); line = savedLine }
+                } catch (e: CompileError) { lastErr = e; errs[f] = e; null } finally { funcs.setLength(savedFuncs); line = savedLine }
                 if (t == null) continue
                 line = f.line
                 if (t == Ty.RawPtr || t == Ty.Args) fail("expression-bodied function '${f.name}' needs an explicit return type")
@@ -757,6 +775,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (!progress) {
                 val (f, c) = inferPending.first(); line = f.line
                 if (lastErr != null && inferPending.size == 1) throw lastErr!!
+                errs.values.firstOrNull { e -> inferPending.none { p -> "'${p.first.name}'" in (e.message ?: "") || p.first.name in (e.message ?: "") } }?.let { throw it }
                 fail(if (c == null) "expression-bodied function '${f.name}' needs an explicit return type" else "method '${f.name}' needs an explicit return type")
             }
         }
@@ -1059,8 +1078,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if ((s.op == "+=" || s.op == "-=") && s.target is NameE) {
                     val l = lookup(s.target.n)
                     if (l != null && l.t is Ty.ListTy) {
-                        val savedFuncs = funcs.length; val savedBody = body.length; val savedAllocas = allocas.length; val savedCur = cur; val savedTerm = term
-                        val vt = try { genExpr(s.value).t } catch (e: CompileError) { null } finally { funcs.setLength(savedFuncs); body.setLength(savedBody); allocas.setLength(savedAllocas); cur = savedCur; term = savedTerm }
+                        val vt = probeType(s.value)
                         val am = if (s.op == "+=") "add" else "remove"
                         if (vt is Ty.ListTy) {
                             val x = "\$pa${tmpN++}"
@@ -1202,6 +1220,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 releaseIfOwned(r)
             }
             is IndexE -> {
+                // `x[i] = v` on a type without built-in indexing: an `operator fun T.set` extension call.
+                if (!builtinIndexable(target.recv, true)) {
+                    releaseIfOwned(genExpr(CallE(MemberE(target.recv, "set", false).also { it.line = target.line }, emptyList(), listOf(target.idx, value), null).also { it.line = target.line }))
+                    return
+                }
                 val r = genExpr(target.recv)
                 if (r.t is Ty.Cls || r.t is Ty.Iface) {
                     releaseIfOwned(method(r, "set", CallE(MemberE(target.recv, "set", false), emptyList(), listOf(target.idx, value), null)))
@@ -1419,6 +1442,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is AsE -> genAs(e)
             is CallE -> genCall(e)
             is IndexE -> {
+                if (!builtinIndexable(e.recv, false)) return genExpr(CallE(MemberE(e.recv, "get", false).also { it.line = e.line }, emptyList(), listOf(e.idx), null).also { it.line = e.line })
                 val r = genExpr(e.recv)
                 if (r.t is Ty.Cls || r.t is Ty.Iface) return method(r, "get", opCall("get", e.idx))
                 val i0 = genExpr(e.idx)
@@ -2083,6 +2107,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         val f = genExpr(callee)
         if (fnSig(f.t) != null) return invokeFn(f, e)
+        // `x(args)` on a value whose class declares `operator fun invoke`.
+        if (f.t is Ty.Cls && classes[f.t.name]?.methods?.containsKey("invoke") == true) return method(f, "invoke", e)
         fail("unsupported call")
     }
 
@@ -2107,11 +2133,22 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val named = e.args.filterIsInstance<NamedE>()
         val pos = e.args.filter { it !is NamedE }
         fun pack(items: List<E>): E {
-            if (items.size == 1 && items[0] is UnE && (items[0] as UnE).op == "*") return (items[0] as UnE).e
+            if (items.size == 1 && items[0] is UnE && (items[0] as UnE).op == "*") {
+                // `*intArrayOf(...)` into a vararg (a list here): copied into a list, as Kotlin copies spread arrays.
+                val x = (items[0] as UnE).e
+                return if (probeType(x) is Ty.Arr) CallE(MemberE(x, "toList", false).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line } else x
+            }
             if (items.any { it is UnE && it.op == "*" }) fail("spread mixed with other vararg arguments is not supported")
             // A generic element type (`vararg xs: T`) is inferred from the items.
             val known = try { resolve(elemT); true } catch (x: CompileError) { false }
-            if (!known && items.isEmpty()) fail("empty generic vararg is not supported")
+            // `f<String>()` with `vararg xs: T`: the element type is the explicit type argument.
+            if (!known && items.isEmpty()) {
+                val tps = (e.callee as? NameE)?.let { funDecls[it.n] }?.typeParams.orEmpty()
+                val ti = tps.indexOf(elemT.name)
+                if (elemT.args.isEmpty() && ti >= 0 && e.typeArgs.size == tps.size)
+                    return CallE(NameE("arrayListOf").also { it.line = line }, listOf(e.typeArgs[ti]), emptyList(), null).also { it.line = line }
+                fail("empty generic vararg is not supported")
+            }
             return CallE(NameE("arrayListOf").also { it.line = line }, if (known) listOf(elemT) else emptyList(), items, null).also { it.line = line }
         }
         val nv = named.firstOrNull { it.name == params[vi].name }
@@ -2158,7 +2195,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     else -> null
                 }
             })
-            slots[i] = sub.e(d)
+            val dv = sub.e(d)
+            // A vararg default `= intArrayOf(1, 2)` is an array: copied into the list the vararg is lowered to.
+            slots[i] = if (params[i].vararg && probeType(dv) is Ty.Arr) CallE(MemberE(dv, "toList", false).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line } else dv
         }
         return CallE(e.callee, e.typeArgs, slots.map { it!! }, null).also { it.line = e.line }
     }
@@ -2174,14 +2213,40 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return own
     }
 
-    /** Type of [e] without emitting code (generation is rolled back), or null if it does not compile. */
-    private fun probeType(e: E): Ty? {
-        val sf = funcs.length; val sb = body.length; val sa = allocas.length; val sc = cur; val st = term; val sm = HashSet(moveNodes); val sr = HashSet(refVals)
-        return try { genExpr(e).t } catch (x: CompileError) { null } finally {
+    /** Whether `recv[i]` is handled by the built-in indexing paths (or a class `get`/`set`); otherwise it is an extension operator call. */
+    private fun builtinIndexable(recv: E, set: Boolean): Boolean = when (val t = probeType(recv)) {
+        null, is Ty.Cls, is Ty.Iface, is Ty.Arr, is Ty.MapTy, is Ty.ListTy -> true
+        Ty.Str -> !set
+        else -> false
+    }
+
+    /**
+     * Code-generation state saved before a probe (code generated only to learn a type) and restored after it: the IR
+     * builders, the current block, move/reference bookkeeping, and the generic function instances requested meanwhile
+     * (so a probe never leaves instances behind; real generation requests them again). Step 3a of
+     * docs/constraint-solver-plan.md: lambda bodies with stub types (3b) are probed through this.
+     */
+    private inner class Snapshot {
+        private val sf = funcs.length; private val sb = body.length; private val sa = allocas.length
+        private val sc = cur; private val st = term
+        private val sm = HashSet(moveNodes); private val sr = HashSet(refVals)
+        private val si = HashSet(instances.keys); private val sp = pending.size; private val sic = HashSet(instCls.keys)
+        fun restore() {
             funcs.setLength(sf); body.setLength(sb); allocas.setLength(sa); cur = sc; term = st
             moveNodes.clear(); moveNodes.addAll(sm); refVals.clear(); refVals.addAll(sr)
+            instances.keys.retainAll(si); instCls.keys.retainAll(sic)
+            if (pending.size > sp) pending.subList(sp, pending.size).removeAll { it !in si }
         }
     }
+
+    /** Runs [block] as a probe: everything it generates is rolled back ([Snapshot]); a compile error yields null. */
+    private inline fun <T> probe(block: () -> T): T? {
+        val snap = Snapshot()
+        return try { block() } catch (x: CompileError) { null } finally { snap.restore() }
+    }
+
+    /** Type of [e] without emitting code (generation is rolled back), or null if it does not compile. */
+    private fun probeType(e: E): Ty? = probe { genExpr(e).t }
 
     private val secondaryCache = HashMap<CallE, String>()
 
@@ -2269,14 +2334,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val t = mapTy(resolve(e.typeArgs[0]), resolve(e.typeArgs[1]))
                 return Val(emitT("call ptr @rt_map_new()"), t, true)
             }
-            "IntArray", "LongArray", "DoubleArray", "FloatArray", "ByteArray" -> {
-                val et = when (n) { "ByteArray" -> Ty.I8; "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; "FloatArray" -> Ty.F32; else -> Ty.F64 }
+            "IntArray", "LongArray", "DoubleArray", "FloatArray", "ByteArray", "BooleanArray", "CharArray", "UIntArray", "ULongArray", "ShortArray", "UByteArray", "UShortArray" -> {
+                val et = when (n) { "ShortArray" -> Ty.I32; "UByteArray", "UShortArray" -> Ty.U32; "ByteArray" -> Ty.I8; "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; "FloatArray" -> Ty.F32; "BooleanArray" -> Ty.I1; "CharArray" -> Ty.Char; "UIntArray" -> Ty.U32; "ULongArray" -> Ty.U64; else -> Ty.F64 }
+                if (e.args.size != 1) fail("$n(${e.args.size} arguments) is not supported")
                 if (e.lambda != null) return initLoop(e.args.single(), e.lambda, et, { sz, t -> Val(emitT("call ptr @rt_arr_new(i64 ${checkArrSize(coerce(sz, Ty.I64)).v}, i64 ${t.size})"), Ty.Arr(t), true) }) { c, i, v ->
                     emit("store ${et.llvm} ${coerce(v, et).v}, ptr ${emitT("getelementptr ${et.llvm}, ptr ${emitT("getelementptr i8, ptr ${c.v}, i64 8")}, i32 $i")}")
                 }
                 val size = checkArrSize(coerce(genExpr(e.args.single()), Ty.I64))
                 return Val(emitT("call ptr @rt_arr_new(i64 ${size.v}, i64 ${et.size})"), Ty.Arr(et), true)
             }
+            COLL_LIT -> fail("collection literals need an explicitly typed target (val x: List<Int> = [...])")
             "println", "print" -> {
                 val a = e.args.singleOrNull()
                 if (a is StrL) for (p in a.parts) {
@@ -2358,16 +2425,19 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     emit("call void @rt_list_add(ptr ${c.v}, i64 ${toSlot(consume(v))})")
                 }
             }
-            "intArrayOf", "longArrayOf", "doubleArrayOf", "floatArrayOf", "byteArrayOf" -> {
-                val et = when (n) { "intArrayOf" -> Ty.I32; "longArrayOf" -> Ty.I64; "doubleArrayOf" -> Ty.F64; "floatArrayOf" -> Ty.F32; else -> Ty.I8 }
+            "intArrayOf", "longArrayOf", "doubleArrayOf", "floatArrayOf", "byteArrayOf", "booleanArrayOf", "charArrayOf", "uintArrayOf", "ulongArrayOf", "shortArrayOf", "ubyteArrayOf", "ushortArrayOf" -> {
+                val et = when (n) { "shortArrayOf" -> Ty.I32; "ubyteArrayOf", "ushortArrayOf" -> Ty.U32; "intArrayOf" -> Ty.I32; "longArrayOf" -> Ty.I64; "doubleArrayOf" -> Ty.F64; "floatArrayOf" -> Ty.F32; "booleanArrayOf" -> Ty.I1; "charArrayOf" -> Ty.Char; "uintArrayOf" -> Ty.U32; "ulongArrayOf" -> Ty.U64; else -> Ty.I8 }
                 val a = emitT("call ptr @rt_arr_new(i64 ${e.args.size}, i64 ${et.size})")
                 val data = emitT("getelementptr i8, ptr $a, i64 8")
                 e.args.forEachIndexed { i, x -> emit("store ${et.llvm} ${coerce(genExpr(x), et).v}, ptr ${emitT("getelementptr ${et.llvm}, ptr $data, i64 $i")}") }
                 return Val(a, Ty.Arr(et), true)
             }
             "ArrayList", "mutableListOf", "arrayListOf", "listOf", "arrayOf" -> {
-                if (n == "ArrayList" && e.args.isNotEmpty()) fail("ArrayList(capacity) is not supported")
-                val vals = e.args.map { genArg(it) }
+                // `ArrayList<T>(capacity)`: the capacity is only a hint (evaluated for its effects, then dropped).
+                val capOnly = n == "ArrayList" && e.args.size == 1 && e.args[0] !is NamedE && e.typeArgs.isNotEmpty() && probeType(e.args[0])?.isInt == true
+                if (capOnly) releaseIfOwned(genExpr(e.args[0]))
+                else if (n == "ArrayList" && e.args.isNotEmpty()) fail("ArrayList(collection) is not supported")
+                val vals = if (capOnly) emptyList() else e.args.map { genArg(it) }
                 val et = e.typeArgs.singleOrNull()?.let { resolve(it) } ?: vals.firstOrNull()?.t ?: fail("$n needs an explicit element type, e.g. $n<Long>()")
                 val rel = releaseFn(et) ?: "null"
                 val l = emitT("call ptr @rt_list_new(ptr $rel)")
@@ -2482,7 +2552,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Non-lambda arguments first (they bind type parameters), then lambdas typed from the partially bound signature.
         val all = allArgs(e)
         val rawN = arrayOfNulls<Val>(all.size)
-        all.forEachIndexed { i, a -> if (a !is LambdaE) { rawN[i] = genExpr(a); if (e.typeArgs.isEmpty()) unify(f.params[i].type, rawN[i]!!.t, f.typeParams, env) } }
+        // Lower bounds of the type parameters from the non-lambda arguments, solved together (see [Constraints]).
+        val cs = Constraints()
+        all.forEachIndexed { i, a -> if (a !is LambdaE) { rawN[i] = genExpr(a); if (e.typeArgs.isEmpty()) cs.collect(f.params[i].type, rawN[i]!!.t, f.typeParams) } }
+        cs.solveInto(env)
         bindExpectedRet(f, e, env)
         all.forEachIndexed { i, a ->
             if (a !is LambdaE) return@forEachIndexed
@@ -2493,6 +2566,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (f.name == "with" && hasReturn(a.body.stmts) && all.size == 2 && i == 1 && a.body.params.isEmpty() && rawN[0] != null) return inlineWith(rawN[0]!!, a.body)
             if (f.name in SCOPE_FUN_NAMES && hasReturn(a.body.stmts)) fail("non-local return from a '${f.name}' lambda is not supported")
             if (pt.name == "\$FnR" && pt.args.size >= 2 && !isBound(pt.args[0])) builderInfer(a.body, pt.args[0], f.typeParams, env)
+            if (isFn && pt.args.dropLast(1).any { !isBound(it) }) usageInfer(a.body, pt, f.typeParams, env)
             val lps = if (isFn) pt.args.dropLast(1).map { res(it) }.takeIf { l -> l.all { it != null } }?.map { it!! } else null
             val lrt = if (isFn) res(pt.args.last()) else null
             rawN[i] = genLambda(a, lps, lrt, pt.name == "\$FnR")
@@ -2531,6 +2605,56 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * the called function. Calls on the implicit receiver inside the lambda (`yield(x)`, `put(k, v)`) whose parameters
      * are typed by the receiver's type parameters bind them from the (probed) argument types.
      */
+    /**
+     * Binds type parameters of a lambda's receiver/parameter types from how the lambda uses `this` / its parameters:
+     * `val x: Buildee<Target> = this` and `consume(it)` with a non-generic top-level `consume(p: String)`.
+     */
+    private fun usageInfer(b: Block, pt: TypeRef, tps: List<String>, env: MutableMap<String, Ty>) {
+        val recv = pt.name == "\$FnR"
+        val ps = pt.args.dropLast(1)
+        val rest = if (recv) ps.drop(1) else ps
+        val names = if (b.params.isNotEmpty()) b.params else if (rest.size == 1) listOf("it") else emptyList()
+        val byName = HashMap<String, TypeRef>()
+        if (recv) byName["this"] = ps[0]
+        names.forEachIndexed { i, n -> rest.getOrNull(i)?.let { byName[n] = it } }
+        fun bound(r: TypeRef): Boolean = (r.name !in tps || r.name in env) && r.args.all { bound(it) }
+        fun use(n: String, declared: TypeRef) {
+            val r = byName[n] ?: return
+            if (bound(r) || declared.nullable) return
+            val t = try { resolve(declared) } catch (x: CompileError) { return }
+            try { unify(r, t, tps, env) } catch (x: CompileError) {}
+        }
+        // Producing position: `consume(materialize())` / `consume(value)` with a no-argument method or a property of the
+        // (generic) receiver class whose type mentions the class's type parameters.
+        val rcd = if (recv) genericClasses[ps[0].name]?.takeIf { it.typeParams.size == ps[0].args.size } else null
+        val rsub = rcd?.typeParams?.zip(ps[0].args)?.toMap() ?: emptyMap()
+        fun subst(r: TypeRef): TypeRef = rsub[r.name]?.let { if (r.nullable) TypeRef(it.name, it.args, true) else it } ?: TypeRef(r.name, r.args.map { subst(it) }, r.nullable)
+        fun produced(a: E): TypeRef? {
+            if (rcd == null) return null
+            val n = when { a is NameE && a.n !in byName -> a.n; a is CallE && a.args.isEmpty() && a.lambda == null && (a.callee as? NameE) != null -> (a.callee as NameE).n; else -> return null }
+            val t = if (a is CallE) rcd.methods.firstOrNull { it.name == n && it.params.isEmpty() && it.typeParams.isEmpty() }?.ret
+                else rcd.fields.firstOrNull { it.name == n }?.type
+            return t?.let { subst(it) }
+        }
+        fun ex(e: E?) {
+            if (e is CallE) {
+                val f = (e.callee as? NameE)?.n?.let { funDecls[it] }?.takeIf { it.typeParams.isEmpty() && it.recv == null }
+                e.args.forEachIndexed { i, a ->
+                    val pr = if (f != null && i < f.params.size) produced(a) else null
+                    // A nullable sink would bind a non-null type (class types do not track nullability here): skipped.
+                    if (pr != null && !bound(pr) && f!!.params[i].type.nullable) {}
+                    else if (pr != null && !bound(pr)) { try { unify(pr, resolve(f!!.params[i].type), tps, env) } catch (x: CompileError) {} }
+                    else if (a is NameE && f != null && i < f.params.size) use(a.n, f.params[i].type) else ex(a)
+                }
+            }
+        }
+        for (st in b.stmts) when (st) {
+            is VarS -> { val i = st.init; if (st.type != null && i is NameE) use(i.n, st.type) else ex(i) }
+            is ExprS -> ex(st.e)
+            else -> {}
+        }
+    }
+
     private fun builderInfer(b: Block, recv: TypeRef, tps: List<String>, env: MutableMap<String, Ty>) {
         val (ctps, methods) = genericClasses[recv.name]?.let { cd -> cd.typeParams to cd.methods.groupBy { it.name }.mapValues { (_, fs) -> fs.first().params.map { it.type } } }
             ?: BUILDER_STD[recv.name] ?: return
@@ -2670,13 +2794,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * generated once with the instance's type bindings (already in `tenv`) in a fresh scope and the IR is rolled back.
      */
     private fun probeGenericRet(f: FunD, sym: String, ps: List<Ty>, cls: ClassInfo?): Ty {
-        if (cls != null) fail("expression-bodied generic method '${f.name}' needs an explicit return type")
         if (!probingGeneric.add(sym)) fail("recursive generic function '${f.name}' needs an explicit return type")
-        val sb = body.length; val sa = allocas.length; val sc = cur; val st = term; val sm = HashSet(moveNodes)
-        val sf = funcs.length; val so = owner; val sr = retTy; val sl = line
+        val snap = Snapshot(); val so = owner; val sr = retTy; val sl = line
         val savedScopes = ArrayList(scopes); val sts = ArrayList(tryStack); val sfs = ArrayList(finStack)
         try {
-            owner = null; retTy = Ty.Unit; line = f.line
+            owner = cls; retTy = Ty.Unit; line = f.line
             scopes.clear(); scopes.add(Scope())
             f.params.forEachIndexed { i, p -> declare(p.name, ps[i], false, false) }
             val t = genExpr(f.exprBody!!).t
@@ -2685,8 +2807,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         } finally {
             probingGeneric.remove(sym)
             scopes.clear(); scopes.addAll(savedScopes); tryStack.clear(); tryStack.addAll(sts); finStack.clear(); finStack.addAll(sfs)
-            body.setLength(sb); allocas.setLength(sa); cur = sc; term = st; moveNodes.clear(); moveNodes.addAll(sm)
-            funcs.setLength(sf); owner = so; retTy = sr; line = sl
+            snap.restore(); owner = so; retTy = sr; line = sl
         }
     }
 
@@ -2702,6 +2823,39 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     /** Binds type parameters in [ref] against the concrete argument type [t]; the first binding wins (later args coerce). */
+    /**
+     * Constraint system of one generic call (step 2 of docs/constraint-solver-plan.md): lower bounds per type
+     * parameter, in argument order. A variable is fixed to its bound when all bounds agree, to the least common
+     * class/interface of class-typed bounds otherwise, else (no common supertype) to the first bound as before.
+     */
+    private inner class Constraints {
+        val lower = LinkedHashMap<String, ArrayList<Ty>>()
+        fun collect(ref: TypeRef, t: Ty, tps: List<String>) {
+            val one = LinkedHashMap<String, Ty>()
+            unify(ref, t, tps, one)
+            for ((k, v) in one) lower.getOrPut(k) { ArrayList() }.add(v)
+        }
+        fun solveInto(env: MutableMap<String, Ty>) {
+            for ((k, bs) in lower) if (k !in env) env[k] = solve(bs)
+        }
+        fun solve(bs: List<Ty>): Ty = bs.distinct().singleOrNull() ?: bs.drop(1).fold(bs[0] as Ty?) { a, b -> a?.let { lub(it, b) } } ?: bs[0]
+    }
+
+    /** Supertypes of a class/interface type, nearest first (the type itself, superclasses, then interfaces). */
+    private fun supertypes(t: Ty): List<Ty>? = when (t) {
+        is Ty.Cls -> { val ci = classes[t.name] ?: return null
+            (listOf(t.name) + ci.ancestors).map { Ty.Cls(it) as Ty } + (listOf(t.name) + ci.ancestors).flatMap { classes[it]?.supers.orEmpty() }.filter { it in ifaces }.distinct().map { Ty.Iface(it) } }
+        is Ty.Iface -> listOf(t)
+        else -> null
+    }
+
+    /** Least common supertype of two class/interface types (first shared supertype of [a]), or null. */
+    private fun lub(a: Ty, b: Ty): Ty? {
+        if (a == b) return a
+        val sb = supertypes(b)?.toSet() ?: return null
+        return supertypes(a)?.firstOrNull { it in sb && !(it is Ty.Cls && it.name.substringBefore('$') in genericClasses) && !(it is Ty.Iface && instOrigin[it.name] != null) }
+    }
+
     private fun unify(ref: TypeRef, t: Ty, tps: List<String>, env: MutableMap<String, Ty>) {
         if (ref.name in tps) { if (ref.name !in env && t != Ty.Nothing) env[ref.name] = t; return }
         when {
@@ -2749,9 +2903,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** A member extension `mext$m` applicable to [t] exists on the enclosing class or the implicit receiver `this`. */
     private fun hasMext(m: String, t: Ty): Boolean {
         val k = "mext\$$m"
-        if (owner?.methods?.get(k)?.let { extMatches(t, it.params[0].type, emptyList()) } == true) return true
+        if (owner?.methods?.get(k)?.let { extMatches(t, it.params[0].type, it.typeParams) } == true) return true
         val rt = lookup("this")?.t ?: return false
-        if (rt is Ty.Cls && rt.name != owner?.name) return classes[rt.name]?.methods?.get(k)?.let { extMatches(t, it.params[0].type, emptyList()) } == true
+        if (rt is Ty.Cls && rt.name != owner?.name) return classes[rt.name]?.methods?.get(k)?.let { extMatches(t, it.params[0].type, it.typeParams) } == true
         if (rt is Ty.Iface) return ifaces[rt.name]?.methods?.get(k)?.params?.firstOrNull() == t
         return false
     }
@@ -2795,9 +2949,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (target != null && statically(v.t, target)) return nonNull
         if (!(v.t is Ty.Cls || v.t is Ty.Iface)) return if (target == v.t) nonNull else "false"
         if (isAny(v.t) && target is Ty.Iface && target.name.substringBefore('$') == "Comparable") fail("Any as Comparable is not supported")
-        if (isAny(v.t) && target != null && target !is Ty.Cls && target !is Ty.Iface && boxName(target) == null) fail("type check of Any against $target is not supported")
-        val boxed = if (isAny(v.t)) target?.let { boxName(it) } else null
-        val special = if (target == null && !star) when (t.name) {
+        if (isAny(v.t) && target != null && target !is Ty.Cls && target !is Ty.Iface && anyBoxName(target) == null) fail("type check of Any against $target is not supported")
+        val boxed = if (isAny(v.t)) target?.let { anyBoxName(it) } else null
+        val special = if (isAny(v.t) && t.name in LISTY && (star || target is Ty.ListTy)) (if (target is Ty.ListTy) listOfNotNull(anyBoxName(target)?.let { "AnyBox$it" }) else (listOf("") + ANY_BOXED).map { "AnyBoxList$it" })
+        else if (target == null && !star) when (t.name) {
             "Number" -> if (isAny(v.t)) listOf("Int", "Long", "Double", "Float", "Byte", "UInt", "ULong").map { "AnyBox$it" } else emptyList()
             "CharSequence" -> if (isAny(v.t)) listOf("AnyBoxString") else emptyList()
             else -> fail("unknown type ${t.name}")
@@ -2865,7 +3020,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
         }
         val v = genExpr(e.e)
-        if (e.type.name == "Any" && "Any" in ifaces && (boxName(v.t) != null || v.t is Ty.Iface || v.t is Ty.Cls && v.t.name.substringBefore('$') !in genericClasses))
+        if (e.type.name == "Any" && "Any" in ifaces && (anyBoxName(v.t) != null || v.t is Ty.Iface || v.t is Ty.Cls && v.t.name.substringBefore('$') !in genericClasses))
             // `x as Any` of a reference that may be null at run time (an unchecked `T` result): NullPointerException.
             return coerce(if (!e.type.nullable && !e.safe && v.t.llvm == "ptr" && v.v != "null") genNonNull(v) else v, Ty.Iface("Any"))
         if (e.type.name == "Number" && !isAny(v.t) && !v.t.isNum) fail("cast to Number is not supported")
@@ -2888,7 +3043,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (e.type.nullable || e.safe) return Val("null", target)
         }
         if (statically(v.t, target) && (e.type.nullable || e.safe) && v.v != "null") return Val(v.v, target, v.owned)
-        val unboxing = isAny(v.t) && boxName(target) != null
+        val unboxing = isAny(v.t) && anyBoxName(target) != null
         // `a as T` (T unbounded, so nullable) unboxing from Any in an instance where T is a primitive or String:
         // a null passes through for String; otherwise checked like a non-null cast.
         if (unboxing && !e.safe && e.type.nullable && e !== e0) {
@@ -2924,7 +3079,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** Checked cast of reference [v] to [type] (resolved [target]): ClassCastException on mismatch, unboxing from Any. */
     private fun genAsChecked(v: Val, type: TypeRef, target: Ty): Val {
-        val unboxing = isAny(v.t) && boxName(target) != null
+        val unboxing = isAny(v.t) && anyBoxName(target) != null
         val ok = isCheck(v, type)
         val lok = label("as.ok"); val lbad = label("as.bad")
         condBr(ok, lok, lbad)
@@ -2982,7 +3137,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val t = resolveOrNull(tr) ?: continue
             // `x is Int?`: still possibly null, so the alias is a nullable primitive (same box pointer).
             if (isAny(l.t) && tr.nullable && canBox(t)) { scopes.last().vars[n] = Local(l.slot, Ty.NBox(t), false); continue }
-            if (isAny(l.t) && boxName(t) != null) {
+            if (isAny(l.t) && anyBoxName(t) != null) {
                 // Smart cast of an Any to a primitive or String: a borrowed unboxed alias.
                 val x = unbox(Val(emitT("load ptr, ptr ${l.slot}"), l.t), t)
                 val nl = declare(n, t, false, false)
@@ -3112,13 +3267,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         if (n == "collectReferenceFieldValues" && e0.args.isEmpty() && e0.lambda == null) return collectRefFields(r)
         // Member extension of the enclosing class (dispatch receiver `this`).
-        owner?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, emptyList()) && !hasMember(t, n) }?.let {
+        owner?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, it.typeParams) && !hasMember(t, n) }?.let {
             if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
             return withTemps(listOf(r)) { (x) -> callMethod(Val("%this", Ty.Cls(o.name)), o, "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
         } }
         // Member extension of an implicit receiver (`with(obj) { x.ext() }`, a lambda with receiver).
         lookup("this")?.let { l -> val rt = l.t
-            if (rt is Ty.Cls && rt.name != owner?.name) classes[rt.name]?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, emptyList()) && !hasMember(t, n) }?.let {
+            if (rt is Ty.Cls && rt.name != owner?.name) classes[rt.name]?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, it.typeParams) && !hasMember(t, n) }?.let {
                 if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
                 return withTemps(listOf(r)) { (x) -> method(genExpr(NameE("this").also { it.line = line }), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
             } }
@@ -3282,7 +3437,28 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** An argument with a known parameter type: lambdas get their parameter/return types from a function type. */
     private fun argFor(a: E, t: Ty, own: Boolean = false): Val =
-        if (a is LambdaE) fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t)) } else withExpected(a, t) { if (own) genArg(a) else genExpr(a) }
+        adaptedRef(a, t) ?: if (a is LambdaE) fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t)) } else withExpected(a, t) { if (own) genArg(a) else genExpr(a) }
+
+    /**
+     * Adapted reference `::f` passed where a function type is expected whose shape differs from `f`'s: defaults and
+     * varargs are filled in, and a result is dropped when `Unit` is expected. Lowered to a lambda of the expected type.
+     */
+    private fun adaptedRef(a: E, t: Ty): Val? {
+        if (a !is UnE || !a.op.startsWith("::") || a.e !is NullL) return null
+        val s = fnSig(t) ?: return null
+        if (isRecvFn(t)) return null
+        val n = a.op.drop(2)
+        val f = funDecls[n]?.takeIf { it.typeParams.isEmpty() && it.recv == null } ?: return null
+        val exact = f.params.size == s.params.size && f.params.none { it.vararg } && (f.ret?.let { resolve(it) } ?: return null).let { it == s.ret || s.ret != Ty.Unit }
+        if (exact) return null
+        if (s.params.size > f.params.size && f.params.none { it.vararg }) return null
+        val le = RefLambdas.map.getOrPut(a) {
+            val names = s.params.indices.map { "rp\$$it" }
+            val call = CallE(NameE(n).also { it.line = line }, emptyList(), names.map { NameE(it).also { x -> x.line = line } }, null).also { it.line = line }
+            LambdaE(Block(listOf(ExprS(call).also { it.line = line }), names, s.params.map { tyRef(it) })).also { it.line = line }
+        }
+        return genLambda(le, s.params, s.ret)
+    }
 
     /** Expected types of generic calls in result position, used to infer a type parameter that only appears in the return type. */
     private val expected = ArrayList<Pair<CallE, Ty>>()
@@ -3316,6 +3492,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         throw NeedIface(InterfaceD(name, listOf(FunD("invoke", ps.mapIndexed { i, t -> Param("p$i", tyRef(t)) }, tyRef(r), null, null, 0)), 0))
     }
 
+    /**
+     * `R.(A) -> T` and `(R, A) -> T` are the same type at run time: every closure implements both interfaces (same
+     * `invoke` signature), so a value of one converts to the other without a wrapper.
+     */
+    private fun twinFn(ps: List<Ty>, r: Ty, receiver: Boolean): Ty.Iface? = if (ps.isEmpty()) null else fnTy(ps, r, !receiver)
+    private fun isFnTwin(a: Ty, b: Ty): Boolean = a is Ty.Iface && b is Ty.Iface &&
+        ((a.name.startsWith("\$FnR$") && b.name == "\$Fn$" + a.name.removePrefix("\$FnR$")) || (b.name.startsWith("\$FnR$") && a.name == "\$Fn$" + b.name.removePrefix("\$FnR$")))
+
     private fun invokeFn(f: Val, e: CallE): Val {
         val ii = ifaces.getValue((f.t as Ty.Iface).name)
         val v = callIface(f, ii, "invoke", e)
@@ -3340,6 +3524,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun genRef0(node: UnE, recv: E?, n: String): Val {
         // The synthesized lambda is cached per reference node so repeated (dry-run) generation reuses one closure class.
+        var builtinGet = false
+        fun setLam(params: List<TypeRef>, target: (List<E>) -> E): Val {
+            val le = RefLambdas.setters.getOrPut(node) {
+                val names = params.indices.map { "rp\$$it" }
+                val xs = names.map { NameE(it).also { x -> x.line = line } }
+                LambdaE(Block(listOf(AssignS(target(xs.dropLast(1)), "=", xs.last()).also { it.line = line }), names, params)).also { it.line = line }
+            }
+            return genExpr(le)
+        }
         fun lam(params: List<TypeRef>, body: (List<E>) -> E): Val {
             if (params.size > 22) fail("references with more than 22 parameters are not supported")
             val le = RefLambdas.map.getOrPut(node) {
@@ -3350,9 +3543,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return genExpr(le)
         }
         fun callOn(r: E, name: String, args: List<E>, isProp: Boolean): E =
-            if (isProp) MemberE(r, name, false).also { it.line = line }
+            if (name == "get" && args.size == 1 && builtinGet) IndexE(r, args[0]).also { it.line = line }
+            else if (isProp) MemberE(r, name, false).also { it.line = line }
             else CallE(MemberE(r, name, false).also { it.line = line }, emptyList(), args, null).also { it.line = line }
-        fun memberParams(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? = when (t) {
+        fun memberParams0(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? = when (t) {
             is Ty.Cls -> classes.getValue(t.name).let { ci ->
                 ci.methods[name]?.let { m -> if (m.typeParams.isNotEmpty()) fail("reference to generic method $name is not supported"); m.params.map { it.type } to false }
                     ?: if (ci.index(name) >= 0 || "\$prop\$$name" in ci.methods) emptyList<TypeRef>() to true else null
@@ -3361,6 +3555,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 ?: ifaceDecls[t.name]?.methods?.firstOrNull { it.name == "\$prop\$$name" }?.let { emptyList<TypeRef>() to true }
             else -> null
         }
+        fun memberParams(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? = memberParams0(t, name)
+            ?: extFuns[name]?.filter { it.params.isNotEmpty() && extMatches(t, it.params[0].type, it.typeParams) }?.takeIf { it.isNotEmpty() }?.let { fs ->
+                val f = fs.singleOrNull()?.takeIf { it.typeParams.isEmpty() } ?: fail("reference to overloaded or generic extension $name is not supported")
+                f.params.drop(1).map { it.type } to false }
+            ?: extFuns["\$prop\$$name"]?.firstOrNull { it.typeParams.isEmpty() && it.params.size == 1 && extMatches(t, it.params[0].type, emptyList()) }?.let { emptyList<TypeRef>() to true }
+            ?: builtinMember(t, name)?.also { if (name == "get") builtinGet = true }
         if (recv == null) {
             funDecls[n]?.let { f ->
                 if (f.typeParams.isNotEmpty()) fail("reference to generic function $n is not supported")
@@ -3370,14 +3570,26 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 return lam(c.ctorParams.map { it.type }) { xs -> CallE(NameE(n).also { it.line = line }, emptyList(), xs, null).also { it.line = line } }
             }
             owner?.let { o -> if (n in o.methods || o.index(n) >= 0) return genRef(node, NameE("this").also { it.line = line }, n) }
+            // Top-level property `::x`: a getter function value.
+            // A local function that captures locals is a local holding a lambda: `::f` is that value.
+            lookup(n)?.let { l -> if (fnSig(l.t) != null) return genExpr(NameE(n).also { it.line = line }) }
+            if (n in globalVars || prog.globals.any { it.name == n } || "\$get\$$n" in sigs) {
+                val g = lam(emptyList()) { NameE(n).also { it.line = line } }
+                val isVar = prog.globals.firstOrNull { it.name == n }?.isVar == true || "\$set\$$n" in sigs
+                val st = if (isVar) setLam(listOf(tyRef(fnSig(g.t)!!.ret))) { NameE(n).also { it.line = line } } else null
+                return propRef(g, st, n)
+            }
             fail("unsupported callable reference ::$n")
         }
         // Unbound reference through a type name.
-        val typeName = (recv as? NameE)?.n?.takeIf { lookup(it) == null && "\$get\$$it" !in sigs && (it in classes || it in ifaces) && !(it == "this") }
+        val typeName = (recv as? NameE)?.n?.takeIf { lookup(it) == null && "\$get\$$it" !in sigs && (it in classes || it in ifaces || it in BUILTIN_REF_TYPES) && !(it == "this") }
         if (typeName != null) {
             val t = resolve(TypeRef(typeName, emptyList(), false))
             val (ps, isProp) = memberParams(t, n) ?: fail("unknown member $typeName::$n")
-            return lam(listOf(TypeRef(typeName, emptyList(), false)) + ps) { xs -> callOn(xs[0], n, xs.drop(1), isProp) }
+            val g = lam(listOf(TypeRef(typeName, emptyList(), false)) + ps) { xs -> callOn(xs[0], n, xs.drop(1), isProp) }
+            if (!isProp) return g
+            val st = if (fieldIsVar(t, n)) setLam(listOf(TypeRef(typeName, emptyList(), false), tyRef(fnSig(g.t)!!.ret))) { xs -> MemberE(xs[0], n, false).also { it.line = line } } else null
+            return propRef(g, st, n)
         }
         // Bound reference: the receiver is evaluated once and captured.
         val r = genExpr(recv)
@@ -3385,9 +3597,72 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         scopes.add(Scope())
         val l = declare("\$refRecv", r.t, false, r.owned && r.t.isRef)
         emit("store ${r.t.llvm} ${r.v}, ptr ${l.slot}")
-        val res = consume(lam(ps) { xs -> callOn(NameE("\$refRecv").also { it.line = line }, n, xs, isProp) })
+        val g0 = lam(ps) { xs -> callOn(NameE("\$refRecv").also { it.line = line }, n, xs, isProp) }
+        val res = consume(if (!isProp) g0 else propRef(g0,
+            if (fieldIsVar(r.t, n)) setLam(listOf(tyRef(fnSig(g0.t)!!.ret))) { MemberE(NameE("\$refRecv").also { it.line = line }, n, false).also { it.line = line } } else null, n))
         releaseScope(scopes.last()); scopes.removeAt(scopes.size - 1)
         return res
+    }
+
+    /** Whether property [n] of class type [t] is a `var` (its reference gets a `set`). */
+    private fun fieldIsVar(t: Ty, n: String): Boolean = t is Ty.Cls && (classDecls[t.name]?.fields?.any { it.name == n && it.isVar } == true)
+
+    /**
+     * Property reference value: a `$PRef` object wrapping the getter (and for `var`s the setter) function values. It
+     * implements the getter's function type, so it is passed and called like a function; `name`, `get` and `set` are members.
+     */
+    private fun propRef(getter: Val, setter: Val?, pname: String): Val {
+        val ft = getter.t as Ty.Iface
+        val gs = fnSig(ft)!!
+        val cname = mangle("\$PRef", listOf(tyRef(ft)) + listOfNotNull(setter?.let { tyRef(it.t) }))
+        if (cname !in classes) {
+            fun fwd(m: String, field: String, ps: List<Ty>, ret: Ty): FunD {
+                val names = ps.indices.map { "p$it" }
+                val call = CallE(MemberE(MemberE(NameE("this").also { it.line = line }, field, false).also { it.line = line }, "invoke", false).also { it.line = line },
+                    emptyList(), names.map { NameE(it).also { x -> x.line = line } }, null).also { it.line = line }
+                return FunD(m, names.mapIndexed { i, x -> Param(x, tyRef(ps[i])) }, tyRef(ret), null, call, line)
+            }
+            val methods = listOfNotNull(fwd("invoke", "\$g", gs.params, gs.ret), fwd("get", "\$g", gs.params, gs.ret),
+                setter?.let { fwd("set", "\$s", fnSig(it.t)!!.params, Ty.Unit) })
+            val fields = listOfNotNull(FieldD("\$g", tyRef(ft), false), setter?.let { FieldD("\$s", tyRef(it.t), false) }, FieldD("name", tyRef(Ty.Str), false))
+            throw NeedClass(ClassD(cname, fields, listOf(ft.name) + listOfNotNull(twinFn(gs.params, gs.ret, ft.name.startsWith("\$FnR"))?.name), methods, line))
+        }
+        scopes.add(Scope())
+        val gl = declare("\$prg", ft, false, getter.owned)
+        emit("store ptr ${getter.v}, ptr ${gl.slot}")
+        val args = arrayListOf<E>(NameE("\$prg"))
+        if (setter != null) { val sl = declare("\$prs", setter.t, false, setter.owned); emit("store ptr ${setter.v}, ptr ${sl.slot}"); args.add(NameE("\$prs")) }
+        args.add(StrL(listOf(pname)))
+        args.forEach { it.line = line }
+        val v = consume(genNamedCall(cname, CallE(NameE(cname), emptyList(), args, null).also { it.line = line }))
+        releaseScope(scopes.last()); scopes.removeAt(scopes.size - 1)
+        return v
+    }
+
+    private val BUILTIN_REF_TYPES = setOf("String", "Int", "Long", "Double", "Boolean", "Char", "StringBuilder")
+
+    /** Members of built-in types usable in callable references (`String::length`, `"s"::get`, `Int::toString`): parameters and whether it is a property. */
+    private fun builtinMember(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? {
+        val self = { tyRef(t) }
+        val int = { tyRef(Ty.I32) }
+        val str = { tyRef(Ty.Str) }
+        return when (t) {
+            Ty.Str -> when (name) {
+                "length" -> emptyList<TypeRef>() to true
+                "get" -> listOf(int()) to false
+                "toString" -> emptyList<TypeRef>() to false
+                "plus", "compareTo" -> listOf(str()) to false
+                else -> null
+            }
+            Ty.SB -> when (name) { "length" -> emptyList<TypeRef>() to true; "toString" -> emptyList<TypeRef>() to false; "get" -> listOf(int()) to false; else -> null }
+            Ty.I32, Ty.I64, Ty.F64, Ty.Char, Ty.I1 -> when (name) {
+                "toString", "inc", "dec" -> emptyList<TypeRef>() to false
+                "plus", "minus", "times", "div", "rem", "compareTo", "and", "or" -> listOf(self()) to false
+                else -> null
+            }
+            is Ty.ListTy, is Ty.Arr -> when (name) { "size" -> emptyList<TypeRef>() to true; "get" -> listOf(int()) to false; else -> null }
+            else -> null
+        }
     }
 
     private fun genLambda(e: LambdaE, ps: List<Ty>?, ret: Ty?, receiver: Boolean = false, asRecvFn: Boolean = false): Val {
@@ -3463,7 +3738,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (name !in classes) {
             val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i])) }, tyRef(rt), null,
                 WhenE(null, listOf(null to body1)).also { it.line = line }, line)
-            throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name), listOf(m), line))
+            throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn)?.name), listOf(m), line))
         }
         val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "this" else n).also { it.line = line } }, null))
         return Val(v.v, fnT, v.owned)
@@ -3533,7 +3808,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     /** Interface call through the object's vtable (slot = global interface-method index + VT_HEADER). */
-    private fun callIface(r: Val, ii: IfaceInfo, n: String, e0: CallE): Val {
+    private fun callIface(r: Val, ii: IfaceInfo, n0: String, e0: CallE): Val {
+        // A property reference (`A::x`, `a::x`) is a function value; `get(...)` on it reads the property like `invoke`.
+        val n = if (n0 == "get" && ii.name.startsWith("\$Fn") && "get" !in ii.methods) "invoke" else n0
         val sig = ii.methods[n] ?: fail("unknown method ${ii.name}.$n()")
         val idecl = ifaceDecls[ii.name]?.methods?.firstOrNull { it.name == n }
         val e1 = withCtx(idecl?.params, e0) ?: e0
