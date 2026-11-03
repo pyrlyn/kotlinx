@@ -417,9 +417,10 @@ class Parser(toks: List<Tok>) {
             val defs = ifaceDefaults[n].orEmpty().map { it.name }.toSet()
             val abs = d.methods.filter { it.name !in defs }
             val m = abs.singleOrNull() ?: fail("a fun interface needs exactly one abstract method", Tok(K.ID, n, d.line))
-            if (m.recv != null || m.typeParams.isNotEmpty() || m.name.startsWith("\$")) fail("this fun interface method is not supported", Tok(K.ID, n, d.line))
+            if (m.typeParams.isNotEmpty() || m.name.startsWith("\$")) fail("this fun interface method is not supported", Tok(K.ID, n, d.line))
             val ret = m.ret ?: TypeRef("Unit", emptyList(), false)
-            val fnT = TypeRef("\$Fn", m.params.map { it.type } + ret, false)
+            // An extension method (`fun Int.accept(s: String)`, lowered with the receiver first) takes `Int.(String) -> R`.
+            val fnT = TypeRef(if (m.recv != null) "\$FnR" else "\$Fn", m.params.map { it.type } + ret, false)
             val body = CallE(NameE("f\$").also { it.line = d.line }, emptyList(), m.params.map { NameE(it.name).also { e -> e.line = d.line } }, null).also { it.line = d.line }
             val tas = d.typeParams.map { TypeRef(it, emptyList(), false) }
             classes.add(ClassD("$n\$Sam", listOf(FieldD("f\$", fnT, false)), listOf(n), listOf(FunD(m.name, m.params, ret, null, body, d.line)), d.line,
@@ -441,7 +442,7 @@ class Parser(toks: List<Tok>) {
             val defs = ifaceDefaults[t.name].orEmpty().map { it.name }.toSet()
             val m = d.methods.first { it.name !in defs }
             val sub = Subst(d.typeParams.zip(t.args).toMap())
-            return TypeRef("\$Fn", m.params.map { sub.ty(it.type) } + sub.ty(m.ret ?: TypeRef("Unit", emptyList(), false)), t.nullable)
+            return TypeRef(if (m.recv != null) "\$FnR" else "\$Fn", m.params.map { sub.ty(it.type) } + sub.ty(m.ret ?: TypeRef("Unit", emptyList(), false)), t.nullable)
         }
         // A generic fun interface needs its type arguments from the context (`I<String> { }` or the parameter type).
         fun sam(t: TypeRef?) = t != null && t.name in funIfaces && t.args.size == funIfaces[t.name]!!.typeParams.size
