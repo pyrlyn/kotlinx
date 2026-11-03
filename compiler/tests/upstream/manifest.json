@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3067,
-  "UNSUPPORTED": 2424
+  "PASS": 3069,
+  "UNSUPPORTED": 2422
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -8262,7 +8262,7 @@
   },
   "box/box/controlStructures/forInCharSequenceWithIndex/forInCharSeqWithIndexStops.kt": {
    "category": "strings / templates",
-   "detail": "unknown method StringBuilder.withIndex()",
+   "detail": "unknown method StringBuilder.setLength()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInCharSequenceWithIndex/forInCharSeqWithIndexStops.kt"
   },
@@ -15347,9 +15347,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/shared.kt"
   },
   "box/box/extensionFunctions/simple.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/simple.kt"
   },
   "box/box/extensionFunctions/suspendConversionForExtensionFunAsAFunType.kt": {
@@ -28645,7 +28644,7 @@
   },
   "box/box/operatorConventions/kt44647.kt": {
    "category": "strings / templates",
-   "detail": "unknown method StringBuilder.get()",
+   "detail": "unknown method StringBuilder.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt44647.kt"
   },
@@ -36646,9 +36645,8 @@
    "upstream": "compiler/testData/codegen/box/strings/kt50140.kt"
   },
   "box/box/strings/kt5389_stringBuilderGet.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method StringBuilder.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/strings/kt5389_stringBuilderGet.kt"
   },
   "box/box/strings/kt5956.kt": {
