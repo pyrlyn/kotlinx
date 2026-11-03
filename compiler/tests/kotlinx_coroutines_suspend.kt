@@ -6,10 +6,6 @@ suspend fun worker(name: String, n: Int, log: ArrayList<String>) {
     for (i in 1..n) { log.add(name + i); yield() }
 }
 
-suspend fun consume(ch: Channel<Int>, events: ArrayList<String>) {
-    ch.consumeEach { events.add("r" + it); yield() }
-}
-
 fun main() = runBlocking {
     val log = ArrayList<String>()
     val a = launch { worker("a", 3, log) }
@@ -35,7 +31,7 @@ fun main() = runBlocking {
     val ch = Channel<Int>(2)
     val events = ArrayList<String>()
     launch { for (i in 1..5) { ch.send(i); events.add("s" + i) }; ch.close() }
-    val consumer = launch { consume(ch, events) }
+    val consumer = launch { ch.consumeEach { events.add("r" + it); yield() } }
     consumer.join()
     println(events)
 

@@ -1562,6 +1562,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     l != null && l.t == Ty.Args -> Val("null", Ty.Args)
                     l != null -> Val(emitT("load ${l.t.llvm}, ptr ${l.slot}"), l.t)
                     e.n == "this" && owner != null -> Val("%this", Ty.Cls(owner!!.name))
+                    // The enclosing class instance even where a receiver lambda's `this` parameter shadows it.
+                    e.n == "\$self" && owner != null -> Val("%this", Ty.Cls(owner!!.name))
                     // In a member extension the extension receiver's members win over the dispatch receiver's.
                     extRecvHas(e.n, false) -> property(genExpr(NameE("\$this_ext").also { it.line = e.line }), e.n)
                     owner != null && (owner!!.index(e.n) >= 0 || "\$prop\$${e.n}" in owner!!.methods) -> property(Val("%this", Ty.Cls(owner!!.name)), e.n)
@@ -3919,7 +3921,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 WhenE(null, listOf(null to body1)).also { it.line = line }, line)
             throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn)?.name), listOf(m), line))
         }
-        val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "this" else n).also { it.line = line } }, null))
+        val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "\$self" else n).also { it.line = line } }, null))
         return Val(v.v, fnT, v.owned)
     }
 
