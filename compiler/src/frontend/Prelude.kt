@@ -443,6 +443,7 @@ fun <T, R> ArrayList<T>.zip(o: ArrayList<R>): ArrayList<Pair<T, R>> { val r = Ar
 private val ZIP_USE = Regex("""\.zip\(""")
 /** `withIndex()` of progressions (needs both the range and the list prelude). */
 const val RANGE_LIST_EXT = """
+fun IntProgression.asSequence(): List<Int> = toList()
 fun IntProgression.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
 private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex|asSequence|forEachIndexed|indexOfFirst|indexOfLast|addAll)\(|-=|\bin\b""")

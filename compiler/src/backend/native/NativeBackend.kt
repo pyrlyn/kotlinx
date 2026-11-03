@@ -174,7 +174,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "UByteArray", "UShortArray" -> Ty.Arr(Ty.U32)
         "StringBuilder" -> Ty.SB
         "HashMap", "MutableMap", "Map" -> mapTy(resolve(t.args[0]), resolve(t.args[1]))
-        "ArrayList", "MutableList", "List" -> Ty.ListTy(resolve(t.args.single()).also { if (it == Ty.Unit) fail("lists of Unit are not supported") })
+        // `Sequence<T>` is an (eager) list here: finite sequences iterate the same values in the same order.
+        "ArrayList", "MutableList", "List", "Sequence" -> Ty.ListTy(resolve(t.args.single()).also { if (it == Ty.Unit) fail("lists of Unit are not supported") })
         "\$Fn" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()))
         "\$FnR" -> fnTy(t.args.dropLast(1).map { resolve(it) }, resolve(t.args.last()), receiver = true)
         "Array" -> if (t.args.singleOrNull()?.name == "String" && mainParams) Ty.Args else Ty.ListTy(resolve(t.args.single()))
@@ -2449,7 +2450,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 e.args.forEachIndexed { i, x -> emit("store ${et.llvm} ${coerce(genExpr(x), et).v}, ptr ${emitT("getelementptr ${et.llvm}, ptr $data, i64 $i")}") }
                 return Val(a, Ty.Arr(et), true)
             }
-            "ArrayList", "mutableListOf", "arrayListOf", "listOf", "arrayOf" -> {
+            "ArrayList", "mutableListOf", "arrayListOf", "listOf", "arrayOf", "sequenceOf" -> {
                 // `ArrayList<T>(capacity)`: the capacity is only a hint (evaluated for its effects, then dropped).
                 val capOnly = n == "ArrayList" && e.args.size == 1 && e.args[0] !is NamedE && e.typeArgs.isNotEmpty() && probeType(e.args[0])?.isInt == true
                 if (capOnly) releaseIfOwned(genExpr(e.args[0]))
@@ -2893,7 +2894,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** Top-level extension functions (`ext$Recv$name`) by name. */
     private val extFuns: Map<String, List<FunD>> by lazy { prog.funs.filter { it.name.startsWith("ext$") }.groupBy { it.name.removePrefix("ext$").substringAfter("$") } }
-    private val LISTY = setOf("List", "MutableList", "ArrayList", "Array", "Collection", "MutableCollection", "Iterable")
+    private val LISTY = setOf("List", "MutableList", "ArrayList", "Array", "Collection", "MutableCollection", "Iterable", "Sequence")
 
     /** Does extension receiver type [recv] (with the extension's type parameters [tps]) accept a value of type [t]? */
     private fun extMatches(t: Ty, recv: TypeRef, tps: List<String>): Boolean {
