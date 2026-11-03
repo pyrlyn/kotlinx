@@ -16497,8 +16497,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/partialSam.kt"
   },
   "box/box/funInterface/primitiveConversions.kt": {
-   "category": "generics",
-   "detail": "fun interfaces with generic super-interfaces are not supported (at 'GenericCharToAny')",
+   "category": "other: unknown type T",
+   "detail": "unknown type T",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/primitiveConversions.kt"
   },
@@ -16509,8 +16509,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/receiverEvaluatedOnce.kt"
   },
   "box/box/funInterface/samConstructorExplicitInvocation.kt": {
-   "category": "generics",
-   "detail": "fun interfaces with generic super-interfaces are not supported (at 'C')",
+   "category": "unknown G (stdlib API / unsupported decl)",
+   "detail": "unknown function 'G'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/samConstructorExplicitInvocation.kt"
   },

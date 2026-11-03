@@ -417,6 +417,8 @@ class Parser(toks: List<Tok>) {
     private var memberTps: List<String> = emptyList()
     /** Top-level `fun interface` declarations by name. */
     private val funIfaces = LinkedHashMap<String, InterfaceD>()
+    /** The single abstract method of each fun interface (possibly inherited, with super type arguments substituted). */
+    private val samMethods = HashMap<String, FunD>()
 
     /**
      * `fun interface I { fun m(a: A): R }`: a class `I$Sam(f$: (A) -> R) : I` whose `m` calls `f$`.
@@ -430,10 +432,19 @@ class Parser(toks: List<Tok>) {
             // interface or any super-interface implements a method.
             val supers = ifaceSupers[n].orEmpty()
             val superDs = supers.map { sn -> ifaces.firstOrNull { it.name == sn } ?: funIfaces[sn] ?: fail("fun interfaces with super-interfaces are not supported", Tok(K.ID, n, d.line)) }
-            if (superDs.any { it.typeParams.isNotEmpty() }) fail("fun interfaces with generic super-interfaces are not supported", Tok(K.ID, n, d.line))
+            // A generic super-interface (`fun interface C : G<Char>`) contributes its methods with the type arguments substituted.
+            val superMs = superDs.flatMap { sd ->
+                if (sd.typeParams.isEmpty()) sd.methods else {
+                    val args = ifaceSuperRefs[n]?.get(sd.name)
+                    if (args == null || args.size != sd.typeParams.size || sd.name in genericIfaceTps) fail("fun interfaces with generic super-interfaces are not supported", Tok(K.ID, n, d.line))
+                    val sub = Subst(sd.typeParams.zip(args).toMap())
+                    sd.methods.map { m -> FunD(m.name, m.params.map { Param(it.name, sub.ty(it.type)) }, m.ret?.let { sub.ty(it) }, null, null, m.line, m.typeParams, m.recv?.let { sub.ty(it) }) }
+                }
+            }
             val defs = (listOf(n) + supers).flatMap { ifaceDefaults[it].orEmpty().map { m -> m.name } }.toSet()
-            val abs = (d.methods + superDs.flatMap { it.methods }).filter { it.name !in defs }.distinctBy { it.name }
+            val abs = (d.methods + superMs).filter { it.name !in defs }.distinctBy { it.name }
             val m = abs.singleOrNull() ?: fail("a fun interface needs exactly one abstract method", Tok(K.ID, n, d.line))
+            samMethods[n] = m
             if (m.typeParams.isNotEmpty() || m.name.startsWith("\$")) fail("this fun interface method is not supported", Tok(K.ID, n, d.line))
             val ret = m.ret ?: TypeRef("Unit", emptyList(), false)
             // An extension method (`fun Int.accept(s: String)`, lowered with the receiver first) takes `Int.(String) -> R`.
@@ -456,8 +467,7 @@ class Parser(toks: List<Tok>) {
         /** `I<A, B>` -> the function type of its abstract method with the interface's type arguments substituted. */
         fun samFnType(t: TypeRef): TypeRef {
             val d = funIfaces.getValue(t.name)
-            val defs = ifaceDefaults[t.name].orEmpty().map { it.name }.toSet()
-            val m = d.methods.first { it.name !in defs }
+            val m = samMethods.getValue(t.name)
             val sub = Subst(d.typeParams.zip(t.args).toMap())
             return TypeRef(if (m.recv != null) "\$FnR" else "\$Fn", m.params.map { sub.ty(it.type) } + sub.ty(m.ret ?: TypeRef("Unit", emptyList(), false)), t.nullable)
         }
