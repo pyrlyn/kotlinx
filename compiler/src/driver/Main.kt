@@ -19,9 +19,10 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --alloc <mimalloc|malloc|pool> object allocator: mimalloc (default; found via ${'$'}NEWKOTLIN_MIMALLOC_DIR,
                        pkg-config or Homebrew), system malloc/free, or free-list pool
   --gc <name>          memory manager, compiler/gc/<name>/gc.c (also --gc=<name>; default: ${'$'}NEWKOTLIN_GC or
-                       default): default (RC + cycle collector), incremental (budgeted
-                       cycle collector steps), epoch (deferred RC + background cycle
-                       collection), rc (RC only, cycles leak), boehm (RC + bdwgc)
+                       epoch): epoch (deferred RC + background cycle collection; alias
+                       "default"), perceus (RC + synchronous cycle collector, the
+                       pre-epoch default), incremental (budgeted
+                       cycle collector steps), rc (RC only, cycles leak), boehm (RC + bdwgc)
   -S                   only write LLVM IR to <output>"""
 
 private fun readFile(path: String): String {
@@ -128,11 +129,14 @@ private fun findMimalloc(): String? {
 
 fun compileToIr(src: String): String = compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program())))
 
+/** Collector used when neither --gc nor NEWKOTLIN_GC is given (and what --gc=default means). */
+const val DEFAULT_GC = "epoch"
+
 fun main(args: Array<String>) {
     var input: String? = null; var output: String? = null
     var runtime = getenv("NEWKOTLIN_RUNTIME")?.toKString() ?: "compiler/runtime/runtime.c"
     var target = Target.NATIVE
-    var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() } ?: "default"
+    var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() } ?: DEFAULT_GC
     var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false; var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
     var i = 0
     while (i < args.size) {
@@ -156,6 +160,7 @@ fun main(args: Array<String>) {
         }
         i++
     }
+    if (gc == "default") gc = DEFAULT_GC // "default" names whatever the default collector is (epoch); old one: perceus
     val cc = ccArg ?: findCc()
     if (!target.implemented) { fprintf(stderr, "target %s is not supported yet\n", target.flag); exit(1); return }
     if (input == null || output == null) { fprintf(stderr, "%s\n", USAGE); exit(2); return }
