@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2889,
-  "UNSUPPORTED": 2602
+  "PASS": 2894,
+  "UNSUPPORTED": 2597
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -13683,15 +13683,13 @@
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnClassObjectOfNestedClass2.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnEnum1.kt": {
-   "category": "other: unsupported call",
-   "detail": "unsupported call",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnEnum1.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnEnum2.kt": {
-   "category": "other: unsupported call",
-   "detail": "unsupported call",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/diagnostics/functions/invoke/onObjects/invokeOnEnum2.kt"
   },
   "box/box/diagnostics/functions/invoke/onObjects/invokeOnImportedEnum1.kt": {
@@ -14025,9 +14023,8 @@
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/nestedLambdas.kt"
   },
   "box/box/directInvokeOptimization/samConversion.kt": {
-   "category": "other: unsupported call",
-   "detail": "unsupported call",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/directInvokeOptimization/samConversion.kt"
   },
   "box/box/directInvokeOptimization/simpleAnonymousFun.kt": {
@@ -15576,15 +15573,13 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/genericContextOverride.kt"
   },
   "box/box/extensionProperties/genericValForPrimitiveType.kt": {
-   "category": "other: unsupported call",
-   "detail": "unsupported call",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/genericValForPrimitiveType.kt"
   },
   "box/box/extensionProperties/genericVarForPrimitiveType.kt": {
-   "category": "other: unsupported call",
-   "detail": "unsupported call",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/genericVarForPrimitiveType.kt"
   },
   "box/box/extensionProperties/inClass.kt": {
@@ -16998,8 +16993,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeInCompanionObjectWithFunctionalArgument.kt"
   },
   "box/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt": {
-   "category": "other: unsupported call",
-   "detail": "unsupported call",
+   "category": "other: cannot store Unit in 'x'",
+   "detail": "cannot store Unit in 'x'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt"
   },

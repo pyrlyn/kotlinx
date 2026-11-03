@@ -2083,6 +2083,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         val f = genExpr(callee)
         if (fnSig(f.t) != null) return invokeFn(f, e)
+        // `x(args)` on a value whose class declares `operator fun invoke`.
+        if (f.t is Ty.Cls && classes[f.t.name]?.methods?.containsKey("invoke") == true) return method(f, "invoke", e)
         fail("unsupported call")
     }
 
