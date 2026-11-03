@@ -2496,6 +2496,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (f.name == "with" && hasReturn(a.body.stmts) && all.size == 2 && i == 1 && a.body.params.isEmpty() && rawN[0] != null) return inlineWith(rawN[0]!!, a.body)
             if (f.name in SCOPE_FUN_NAMES && hasReturn(a.body.stmts)) fail("non-local return from a '${f.name}' lambda is not supported")
             if (pt.name == "\$FnR" && pt.args.size >= 2 && !isBound(pt.args[0])) builderInfer(a.body, pt.args[0], f.typeParams, env)
+            if (isFn && pt.args.dropLast(1).any { !isBound(it) }) usageInfer(a.body, pt, f.typeParams, env)
             val lps = if (isFn) pt.args.dropLast(1).map { res(it) }.takeIf { l -> l.all { it != null } }?.map { it!! } else null
             val lrt = if (isFn) res(pt.args.last()) else null
             rawN[i] = genLambda(a, lps, lrt, pt.name == "\$FnR")
@@ -2534,6 +2535,38 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * the called function. Calls on the implicit receiver inside the lambda (`yield(x)`, `put(k, v)`) whose parameters
      * are typed by the receiver's type parameters bind them from the (probed) argument types.
      */
+    /**
+     * Binds type parameters of a lambda's receiver/parameter types from how the lambda uses `this` / its parameters:
+     * `val x: Buildee<Target> = this` and `consume(it)` with a non-generic top-level `consume(p: String)`.
+     */
+    private fun usageInfer(b: Block, pt: TypeRef, tps: List<String>, env: MutableMap<String, Ty>) {
+        val recv = pt.name == "\$FnR"
+        val ps = pt.args.dropLast(1)
+        val rest = if (recv) ps.drop(1) else ps
+        val names = if (b.params.isNotEmpty()) b.params else if (rest.size == 1) listOf("it") else emptyList()
+        val byName = HashMap<String, TypeRef>()
+        if (recv) byName["this"] = ps[0]
+        names.forEachIndexed { i, n -> rest.getOrNull(i)?.let { byName[n] = it } }
+        fun bound(r: TypeRef): Boolean = (r.name !in tps || r.name in env) && r.args.all { bound(it) }
+        fun use(n: String, declared: TypeRef) {
+            val r = byName[n] ?: return
+            if (bound(r)) return
+            val t = try { resolve(declared) } catch (x: CompileError) { return }
+            try { unify(r, t, tps, env) } catch (x: CompileError) {}
+        }
+        fun ex(e: E?) {
+            if (e is CallE) {
+                val f = (e.callee as? NameE)?.n?.let { funDecls[it] }?.takeIf { it.typeParams.isEmpty() && it.recv == null }
+                e.args.forEachIndexed { i, a -> if (a is NameE && f != null && i < f.params.size) use(a.n, f.params[i].type) else ex(a) }
+            }
+        }
+        for (st in b.stmts) when (st) {
+            is VarS -> { val i = st.init; if (st.type != null && i is NameE) use(i.n, st.type) else ex(i) }
+            is ExprS -> ex(st.e)
+            else -> {}
+        }
+    }
+
     private fun builderInfer(b: Block, recv: TypeRef, tps: List<String>, env: MutableMap<String, Ty>) {
         val (ctps, methods) = genericClasses[recv.name]?.let { cd -> cd.typeParams to cd.methods.groupBy { it.name }.mapValues { (_, fs) -> fs.first().params.map { it.type } } }
             ?: BUILDER_STD[recv.name] ?: return
