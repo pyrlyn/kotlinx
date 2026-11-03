@@ -1854,8 +1854,11 @@ class Parser(toks: List<Tok>) {
             else {
                 // `= object : T { }`: the anonymous class is declared in a block body; the function returns T.
                 val anon = (ds.last() as LocalDeclS).d as ClassD
-                val r = ret ?: if (e is CallE && (e.callee as? NameE)?.n == anon.name) TypeRef(anon.supers.firstOrNull() ?: anon.name, anon.superTypeArgs[anon.supers.firstOrNull()] ?: emptyList(), false) else fail("expression body with an anonymous object needs an explicit return type")
-                FunD(name, params, r, Block(ds + RetS(e).also { it.line = line }), null, line, typeParams, recv)
+                val r = ret ?: if (e is CallE && (e.callee as? NameE)?.n == anon.name) TypeRef(anon.supers.firstOrNull() ?: anon.name, anon.superTypeArgs[anon.supers.firstOrNull()] ?: emptyList(), false) else null
+                // No declared return type and the body is more than the object itself (`(object : A {}) as A`): keep an
+                // expression body (a block-valued `when`) so the return type is inferred from the whole expression.
+                if (r == null) FunD(name, params, null, null, WhenE(null, listOf(null to Block(ds + ExprS(e).also { it.line = line }))).also { it.line = line }, line, typeParams, recv)
+                else FunD(name, params, r, Block(ds + RetS(e).also { it.line = line }), null, line, typeParams, recv)
             }
         }
         else if (isOp("{")) {
