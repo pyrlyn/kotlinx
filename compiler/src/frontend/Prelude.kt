@@ -325,7 +325,7 @@ fun BooleanArray.withIndex(): ArrayList<IndexedValue<Boolean>> { val r = ArrayLi
 fun UIntArray.withIndex(): ArrayList<IndexedValue<UInt>> { val r = ArrayList<IndexedValue<UInt>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 fun ULongArray.withIndex(): ArrayList<IndexedValue<ULong>> { val r = ArrayList<IndexedValue<ULong>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
-/** Copies of primitive arrays: `reversedArray()`, `copyOf()`. */
+/** Copies of primitive arrays: `reversedArray()`, `copyOf()`, `contentToString()`, `toList()`, `reversed()` (also for lists). */
 const val ARRAY_EXT = """
 fun IntArray.reversedArray(): IntArray { val n = size; val r = IntArray(n); var i = 0; while (i < n) { r[i] = this[n - 1 - i]; i++ }; return r }
 fun IntArray.copyOf(): IntArray { val n = size; val r = IntArray(n); var i = 0; while (i < n) { r[i] = this[i]; i++ }; return r }
@@ -345,8 +345,37 @@ fun UIntArray.reversedArray(): UIntArray { val n = size; val r = UIntArray(n); v
 fun UIntArray.copyOf(): UIntArray { val n = size; val r = UIntArray(n); var i = 0; while (i < n) { r[i] = this[i]; i++ }; return r }
 fun ULongArray.reversedArray(): ULongArray { val n = size; val r = ULongArray(n); var i = 0; while (i < n) { r[i] = this[n - 1 - i]; i++ }; return r }
 fun ULongArray.copyOf(): ULongArray { val n = size; val r = ULongArray(n); var i = 0; while (i < n) { r[i] = this[i]; i++ }; return r }
+fun IntArray.contentToString(): String { var s = "["; var i = 0; for (x in this) { if (i > 0) s += ", "; s += x; i++ }; return s + "]" }
+fun IntArray.toList(): ArrayList<Int> { val r = ArrayList<Int>(); for (x in this) r.add(x); return r }
+fun LongArray.contentToString(): String { var s = "["; var i = 0; for (x in this) { if (i > 0) s += ", "; s += x; i++ }; return s + "]" }
+fun LongArray.toList(): ArrayList<Long> { val r = ArrayList<Long>(); for (x in this) r.add(x); return r }
+fun ByteArray.contentToString(): String { var s = "["; var i = 0; for (x in this) { if (i > 0) s += ", "; s += x; i++ }; return s + "]" }
+fun ByteArray.toList(): ArrayList<Byte> { val r = ArrayList<Byte>(); for (x in this) r.add(x); return r }
+fun DoubleArray.contentToString(): String { var s = "["; var i = 0; for (x in this) { if (i > 0) s += ", "; s += x; i++ }; return s + "]" }
+fun DoubleArray.toList(): ArrayList<Double> { val r = ArrayList<Double>(); for (x in this) r.add(x); return r }
+fun FloatArray.contentToString(): String { var s = "["; var i = 0; for (x in this) { if (i > 0) s += ", "; s += x; i++ }; return s + "]" }
+fun FloatArray.toList(): ArrayList<Float> { val r = ArrayList<Float>(); for (x in this) r.add(x); return r }
+fun CharArray.contentToString(): String { var s = "["; var i = 0; for (x in this) { if (i > 0) s += ", "; s += x; i++ }; return s + "]" }
+fun CharArray.toList(): ArrayList<Char> { val r = ArrayList<Char>(); for (x in this) r.add(x); return r }
+fun BooleanArray.contentToString(): String { var s = "["; var i = 0; for (x in this) { if (i > 0) s += ", "; s += x; i++ }; return s + "]" }
+fun BooleanArray.toList(): ArrayList<Boolean> { val r = ArrayList<Boolean>(); for (x in this) r.add(x); return r }
+fun UIntArray.contentToString(): String { var s = "["; var i = 0; for (x in this) { if (i > 0) s += ", "; s += x; i++ }; return s + "]" }
+fun UIntArray.toList(): ArrayList<UInt> { val r = ArrayList<UInt>(); for (x in this) r.add(x); return r }
+fun ULongArray.contentToString(): String { var s = "["; var i = 0; for (x in this) { if (i > 0) s += ", "; s += x; i++ }; return s + "]" }
+fun ULongArray.toList(): ArrayList<ULong> { val r = ArrayList<ULong>(); for (x in this) r.add(x); return r }
+fun IntArray.reversed(): ArrayList<Int> { val r = ArrayList<Int>(); var i = size - 1; while (i >= 0) { r.add(this[i]); i-- }; return r }
+fun LongArray.reversed(): ArrayList<Long> { val r = ArrayList<Long>(); var i = size - 1; while (i >= 0) { r.add(this[i]); i-- }; return r }
+fun ByteArray.reversed(): ArrayList<Byte> { val r = ArrayList<Byte>(); var i = size - 1; while (i >= 0) { r.add(this[i]); i-- }; return r }
+fun DoubleArray.reversed(): ArrayList<Double> { val r = ArrayList<Double>(); var i = size - 1; while (i >= 0) { r.add(this[i]); i-- }; return r }
+fun FloatArray.reversed(): ArrayList<Float> { val r = ArrayList<Float>(); var i = size - 1; while (i >= 0) { r.add(this[i]); i-- }; return r }
+fun CharArray.reversed(): ArrayList<Char> { val r = ArrayList<Char>(); var i = size - 1; while (i >= 0) { r.add(this[i]); i-- }; return r }
+fun BooleanArray.reversed(): ArrayList<Boolean> { val r = ArrayList<Boolean>(); var i = size - 1; while (i >= 0) { r.add(this[i]); i-- }; return r }
+fun UIntArray.reversed(): ArrayList<UInt> { val r = ArrayList<UInt>(); var i = size - 1; while (i >= 0) { r.add(this[i]); i-- }; return r }
+fun ULongArray.reversed(): ArrayList<ULong> { val r = ArrayList<ULong>(); var i = size - 1; while (i >= 0) { r.add(this[i]); i-- }; return r }
+fun <T> ArrayList<T>.reversed(): ArrayList<T> { val r = ArrayList<T>(); var i = size - 1; while (i >= 0) { r.add(get(i)); i-- }; return r }
+fun <T> ArrayList<T>.toList(): ArrayList<T> { val r = ArrayList<T>(); for (x in this) r.add(x); return r }
 """
-private val ARRAY_EXT_USE = Regex("""\.(reversedArray|copyOf)\(""")
+private val ARRAY_EXT_USE = Regex("""\.(reversedArray|copyOf|contentToString|toList|reversed)\(""")
 /** `withIndex()` of progressions (needs both the range and the list prelude). */
 const val RANGE_LIST_EXT = """
 fun IntProgression.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }

@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3028,
-  "UNSUPPORTED": 2463
+  "PASS": 3040,
+  "UNSUPPORTED": 2451
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -580,15 +580,13 @@
    "upstream": "compiler/testData/codegen/box/arrays/forInReversed/reversedArrayReversedArrayOriginalUpdatedInLoopBody.kt"
   },
   "box/box/arrays/forInReversed/reversedOriginalUpdatedInLoopBody.kt": {
-   "category": "other: unknown method IntArray.reversed()",
-   "detail": "unknown method IntArray.reversed()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forInReversed/reversedOriginalUpdatedInLoopBody.kt"
   },
   "box/box/arrays/forInReversed/reversedReversedOriginalUpdatedInLoopBody.kt": {
-   "category": "other: unknown method IntArray.reversed()",
-   "detail": "unknown method IntArray.reversed()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forInReversed/reversedReversedOriginalUpdatedInLoopBody.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArray.kt": {
@@ -609,9 +607,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayIndicesReversed.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayReversed.kt": {
-   "category": "other: unknown method UIntArray.reversed()",
-   "detail": "unknown method UIntArray.reversed()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayReversed.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndex.kt": {
@@ -630,9 +627,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexNoIndexVar.kt"
   },
   "box/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexReversed.kt": {
-   "category": "other: unknown method ArrayList<IndexedValue$UInt>.reversed()",
-   "detail": "unknown method ArrayList<IndexedValue$UInt>.reversed()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/forInUnsignedArray/forInUnsignedArrayWithIndexReversed.kt"
   },
   "box/box/arrays/genericArrayInObjectLiteralConstructor.kt": {
@@ -1258,9 +1254,8 @@
    "upstream": "compiler/testData/codegen/box/basics/unit4.kt"
   },
   "box/box/bce/bceCases.kt": {
-   "category": "other: unknown method ArrayList<Int>.reversed()",
-   "detail": "unknown method ArrayList<Int>.reversed()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/bce/bceCases.kt"
   },
   "box/box/bce/customGetter.kt": {
@@ -8159,9 +8154,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArray/forPrimitiveIntArray.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayOfObjectArrayWithIndex.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.toList()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayOfObjectArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayOfPrimArrayWithIndex.kt": {
@@ -23801,8 +23795,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt": {
-   "category": "other: unknown method ArrayList<Int>.toList()",
-   "detail": "unknown method ArrayList<Int>.toList()",
+   "category": "strings / templates",
+   "detail": "unknown method ArrayList<Any>.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt"
   },
@@ -26099,9 +26093,8 @@
    "upstream": "compiler/testData/codegen/box/localClasses/withclosure.kt"
   },
   "box/box/localEscapeAnalysis/arraysFieldWrite.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method IntArray.contentToString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/localEscapeAnalysis/arraysFieldWrite.kt"
   },
   "box/box/lower/forLoopsLowering/arrays.kt": {
@@ -31306,9 +31299,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexNotDestructured.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexReversed.kt": {
-   "category": "other: unknown method ArrayList<IndexedValue$Int>.reversed()",
-   "detail": "unknown method ArrayList<IndexedValue$Int>.reversed()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/forInProgressionWithIndex/forInWithIndexReversed.kt"
   },
   "box/box/ranges/forInProgressionWithIndex/forInWithIndexWithDestructuringInLoop.kt": {
