@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2847,
-  "UNSUPPORTED": 2644
+  "PASS": 2867,
+  "UNSUPPORTED": 2624
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -3220,9 +3220,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/adapted.kt"
   },
   "box/box/callableReference/bound/array.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/array.kt"
   },
   "box/box/callableReference/bound/arrayConstructorArgument.kt": {
@@ -4261,9 +4260,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/nested.kt"
   },
   "box/box/callableReference/property/accessViaSubclass.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$Base$String.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/accessViaSubclass.kt"
   },
   "box/box/callableReference/property/accessorForPropertyWithPrivateSetter.kt": {
@@ -4282,9 +4280,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/delegatedMutable.kt"
   },
   "box/box/callableReference/property/enumNameOrdinal.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$E$String.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/enumNameOrdinal.kt"
   },
   "box/box/callableReference/property/extensionProperty.kt": {
@@ -4394,9 +4391,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt14330_2.kt"
   },
   "box/box/callableReference/property/kt15447.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt15447.kt"
   },
   "box/box/callableReference/property/kt74104.kt": {
@@ -4455,8 +4451,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleExtension.kt"
   },
   "box/box/callableReference/property/simpleMember.kt": {
-   "category": "other: unknown method $Fn$A$Int.get()",
-   "detail": "unknown method $Fn$A$Int.get()",
+   "category": "other: unknown property $Fn$A$Int.name",
+   "detail": "unknown property $Fn$A$Int.name",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMember.kt"
   },
@@ -4468,7 +4464,7 @@
   },
   "box/box/callableReference/property/simpleMutableMember.kt": {
    "category": "strings / templates",
-   "detail": "unknown method $Fn$Box$String.get()",
+   "detail": "unknown method $Fn$Box$String.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/simpleMutableMember.kt"
   },
@@ -14532,15 +14528,13 @@
    "upstream": "compiler/testData/codegen/box/enum/kt7257_boundReference1.kt"
   },
   "box/box/enum/kt7257_boundReference2.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_boundReference2.kt"
   },
   "box/box/enum/kt7257_boundReferenceWithImplicitReceiver.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $Fn$String.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/kt7257_boundReferenceWithImplicitReceiver.kt"
   },
   "box/box/enum/kt7257_explicitReceiver.kt": {
@@ -17088,8 +17082,8 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/kt3822invokeOnThis.kt"
   },
   "box/box/functions/kt1038.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "other: unknown method IntRange.where()",
+   "detail": "unknown method IntRange.where()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/kt1038.kt"
   },
@@ -18051,8 +18045,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt44241.kt"
   },
   "box/box/inference/pcla/issues/kt45083.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda with receiver needs a known receiver type",
+   "category": "other: invoke expects 1 arguments",
+   "detail": "invoke expects 1 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt45083.kt"
   },
@@ -20788,9 +20782,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionVal.kt": {
-   "category": "other: unknown method $Fn$Int.get()",
-   "detail": "unknown method $Fn$Int.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassExtensionVal.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionValGeneric.kt": {
@@ -20810,27 +20803,23 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassMemberFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassMemberVal.kt": {
-   "category": "other: unknown method $Fn$Int.get()",
-   "detail": "unknown method $Fn$Int.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassMemberVal.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassMemberValGeneric.kt": {
-   "category": "other: unknown method $Fn$Int.get()",
-   "detail": "unknown method $Fn$Int.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassMemberValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassPrimaryVal.kt": {
-   "category": "other: unknown method $Fn$Int.get()",
-   "detail": "unknown method $Fn$Int.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassPrimaryVal.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassPrimaryValGeneric.kt": {
-   "category": "other: unknown method $Fn$Int.get()",
-   "detail": "unknown method $Fn$Int.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/boundInlineClassPrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/constructorWithInlineClassParameters.kt": {
@@ -20877,9 +20866,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionVal.kt": {
-   "category": "other: unknown method $Fn$Z$Int.get()",
-   "detail": "unknown method $Fn$Z$Int.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionValGeneric.kt": {
@@ -20889,9 +20877,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassInternalPrimaryVal.kt": {
-   "category": "other: unknown method $Fn$Z$Int.get()",
-   "detail": "unknown method $Fn$Z$Int.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassInternalPrimaryVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassInternalPrimaryValGeneric.kt": {
@@ -20912,9 +20899,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberVal.kt": {
-   "category": "other: unknown method $Fn$Z$Int.get()",
-   "detail": "unknown method $Fn$Z$Int.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberValGeneric.kt": {
@@ -20935,9 +20921,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrimaryConstructorGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrimaryVal.kt": {
-   "category": "other: unknown method $Fn$Z$Int.get()",
-   "detail": "unknown method $Fn$Z$Int.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrimaryVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrimaryValGeneric.kt": {
@@ -20947,9 +20932,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrivatePrimaryVal.kt": {
-   "category": "other: unknown method $Fn$Z$Int.get()",
-   "detail": "unknown method $Fn$Z$Int.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrivatePrimaryVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrivatePrimaryValGeneric.kt": {
@@ -20959,26 +20943,26 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrivatePrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeBoundMemberVar.kt": {
-   "category": "other: unknown method $Fn$Z.get()",
-   "detail": "unknown method $Fn$Z.get()",
+   "category": "other: unknown method $Fn$Z.set()",
+   "detail": "unknown method $Fn$Z.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeBoundMemberVar.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeBoundMemberVarGeneric.kt": {
-   "category": "other: unknown method $Fn$Z$Int.get()",
-   "detail": "unknown method $Fn$Z$Int.get()",
+   "category": "other: unknown method $Fn$Z$Int.set()",
+   "detail": "unknown method $Fn$Z$Int.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeBoundMemberVarGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeMemberVar.kt": {
-   "category": "other: unknown method $Fn$C$Z.get()",
-   "detail": "unknown method $Fn$C$Z.get()",
+   "category": "other: unknown method $Fn$C$Z.set()",
+   "detail": "unknown method $Fn$C$Z.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeMemberVar.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeMemberVarGeneric.kt": {
-   "category": "other: unknown method $Fn$C$Z$Int.get()",
-   "detail": "unknown method $Fn$C$Z$Int.get()",
+   "category": "other: unknown method $Fn$C$Z$Int.set()",
+   "detail": "unknown method $Fn$C$Z$Int.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeMemberVarGeneric.kt"
   },
@@ -25613,8 +25597,8 @@
    "upstream": "compiler/testData/codegen/box/labels/labelOnExpression.kt"
   },
   "box/box/labels/labeledDeclarations.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
+   "category": "annotations",
+   "detail": "expected end of statement (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/labels/labeledDeclarations.kt"
   },
@@ -29448,9 +29432,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt6590_identityEquals.kt"
   },
   "box/box/primitiveTypes/kt665.kt": {
-   "category": "class bodies / constructors",
-   "detail": "unexpected top-level token (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt665.kt"
   },
   "box/box/primitiveTypes/kt711.kt": {
@@ -30403,15 +30386,13 @@
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/multipleModules.kt"
   },
   "box/box/propertyCallableReference/valClass.kt": {
-   "category": "other: unknown method $Fn$A$Int.get()",
-   "detail": "unknown method $Fn$A$Int.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/valClass.kt"
   },
   "box/box/propertyCallableReference/valExtension.kt": {
-   "category": "other: unknown method $Fn$A$Int.get()",
-   "detail": "unknown method $Fn$A$Int.get()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/propertyCallableReference/valExtension.kt"
   },
   "box/box/propertyCallableReference/valModule.kt": {
@@ -35060,9 +35041,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt13381.kt"
   },
   "box/box/regressions/kt14447.kt": {
-   "category": "interfaces",
-   "detail": "only member functions are supported in class/interface bodies (at '{')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/kt14447.kt"
   },
   "box/box/regressions/kt15196.kt": {

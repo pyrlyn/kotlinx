@@ -3532,7 +3532,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     /** Interface call through the object's vtable (slot = global interface-method index + VT_HEADER). */
-    private fun callIface(r: Val, ii: IfaceInfo, n: String, e0: CallE): Val {
+    private fun callIface(r: Val, ii: IfaceInfo, n0: String, e0: CallE): Val {
+        // A property reference (`A::x`, `a::x`) is a function value; `get(...)` on it reads the property like `invoke`.
+        val n = if (n0 == "get" && ii.name.startsWith("\$Fn") && "get" !in ii.methods) "invoke" else n0
         val sig = ii.methods[n] ?: fail("unknown method ${ii.name}.$n()")
         val idecl = ifaceDecls[ii.name]?.methods?.firstOrNull { it.name == n }
         val e1 = withCtx(idecl?.params, e0) ?: e0
