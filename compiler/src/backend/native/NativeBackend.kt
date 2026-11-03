@@ -2508,7 +2508,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Non-lambda arguments first (they bind type parameters), then lambdas typed from the partially bound signature.
         val all = allArgs(e)
         val rawN = arrayOfNulls<Val>(all.size)
-        all.forEachIndexed { i, a -> if (a !is LambdaE) { rawN[i] = genExpr(a); if (e.typeArgs.isEmpty()) unify(f.params[i].type, rawN[i]!!.t, f.typeParams, env) } }
+        // Lower bounds of the type parameters from the non-lambda arguments, solved together (see [Constraints]).
+        val cs = Constraints()
+        all.forEachIndexed { i, a -> if (a !is LambdaE) { rawN[i] = genExpr(a); if (e.typeArgs.isEmpty()) cs.collect(f.params[i].type, rawN[i]!!.t, f.typeParams) } }
+        cs.solveInto(env)
         bindExpectedRet(f, e, env)
         all.forEachIndexed { i, a ->
             if (a !is LambdaE) return@forEachIndexed
@@ -2778,6 +2781,39 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     /** Binds type parameters in [ref] against the concrete argument type [t]; the first binding wins (later args coerce). */
+    /**
+     * Constraint system of one generic call (step 2 of docs/constraint-solver-plan.md): lower bounds per type
+     * parameter, in argument order. A variable is fixed to its bound when all bounds agree, to the least common
+     * class/interface of class-typed bounds otherwise, else (no common supertype) to the first bound as before.
+     */
+    private inner class Constraints {
+        val lower = LinkedHashMap<String, ArrayList<Ty>>()
+        fun collect(ref: TypeRef, t: Ty, tps: List<String>) {
+            val one = LinkedHashMap<String, Ty>()
+            unify(ref, t, tps, one)
+            for ((k, v) in one) lower.getOrPut(k) { ArrayList() }.add(v)
+        }
+        fun solveInto(env: MutableMap<String, Ty>) {
+            for ((k, bs) in lower) if (k !in env) env[k] = solve(bs)
+        }
+        fun solve(bs: List<Ty>): Ty = bs.distinct().singleOrNull() ?: bs.drop(1).fold(bs[0] as Ty?) { a, b -> a?.let { lub(it, b) } } ?: bs[0]
+    }
+
+    /** Supertypes of a class/interface type, nearest first (the type itself, superclasses, then interfaces). */
+    private fun supertypes(t: Ty): List<Ty>? = when (t) {
+        is Ty.Cls -> { val ci = classes[t.name] ?: return null
+            (listOf(t.name) + ci.ancestors).map { Ty.Cls(it) as Ty } + (listOf(t.name) + ci.ancestors).flatMap { classes[it]?.supers.orEmpty() }.filter { it in ifaces }.distinct().map { Ty.Iface(it) } }
+        is Ty.Iface -> listOf(t)
+        else -> null
+    }
+
+    /** Least common supertype of two class/interface types (first shared supertype of [a]), or null. */
+    private fun lub(a: Ty, b: Ty): Ty? {
+        if (a == b) return a
+        val sb = supertypes(b)?.toSet() ?: return null
+        return supertypes(a)?.firstOrNull { it in sb && !(it is Ty.Cls && it.name.substringBefore('$') in genericClasses) && !(it is Ty.Iface && instOrigin[it.name] != null) }
+    }
+
     private fun unify(ref: TypeRef, t: Ty, tps: List<String>, env: MutableMap<String, Ty>) {
         if (ref.name in tps) { if (ref.name !in env && t != Ty.Nothing) env[ref.name] = t; return }
         when {
