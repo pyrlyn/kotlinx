@@ -232,6 +232,9 @@ export fn main(argc: c_int, argv: [*]const [*:0]const u8) c_int {
     }
     var st: c.KxGcStats = undefined;
     c.rt_gc_stats(&st);
+    // Found by mutation testing (rc/gc.c rt_gc_stats survived): a collector without cycle collection
+    // reports no collector activity at all.
+    if (!caps.cycles) check(st.collections == 0 and st.reclaimed == 0 and st.pause_ns_total == 0, @src(), "no cycle collector: all stats zero");
     check(st.pause_ns_total >= st.pause_ns_max and st.pause_ns_max >= 0, @src(), "pause_ns_total >= pause_ns_max >= 0");
     _ = c.printf("gc=%s collections=%lld reclaimed=%lld\n", c.rt_gc_name(), @as(c_longlong, st.collections), @as(c_longlong, st.reclaimed));
     if (kx.fails != 0) {
