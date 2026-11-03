@@ -5,7 +5,7 @@
 //! compile tests/kt|epoch|incremental/*.kt with newkotlinc and check output, exit status and debug counters.
 //!
 //! New tests (not ports) print "gc-api ..." lines; --ported-only skips them.
-//! usage: gc-suite --obj DIR [--ported-only] [--coverage DIR]   (cwd: anywhere inside the repository)
+//! usage: gc-suite --obj DIR [--ported-only | --mt-only] [--coverage DIR]   (cwd: anywhere inside the repository)
 //! env:   GCS="default boehm" (subset), NKC, NK_CC as in run.sh.
 const std = @import("std");
 const p = @import("proc.zig");
@@ -14,6 +14,7 @@ var fail = false;
 var obj_dir: []const u8 = "";
 var cov_dir: ?[]const u8 = null;
 var ported_only = false;
+var mt_only = false;
 var cc: []const u8 = "clang";
 var nkc: []const u8 = "";
 var out: []const u8 = "";
@@ -111,7 +112,8 @@ pub fn main(init: std.process.Init.Minimal) void {
         if (std.mem.eql(u8, a, "--obj")) obj_dir = p.gpa.dupe(u8, args.next().?) catch unreachable //
         else if (std.mem.eql(u8, a, "--coverage")) cov_dir = p.gpa.dupe(u8, args.next().?) catch unreachable //
         else if (std.mem.eql(u8, a, "--ported-only")) ported_only = true //
-        else @panic("usage: gc-suite --obj DIR [--ported-only] [--coverage DIR]");
+        else if (std.mem.eql(u8, a, "--mt-only")) mt_only = true //
+        else @panic("usage: gc-suite --obj DIR [--ported-only | --mt-only] [--coverage DIR]");
     }
     if (obj_dir.len == 0) @panic("--obj DIR is required");
     const root = repoRoot();
@@ -129,6 +131,10 @@ pub fn main(init: std.process.Init.Minimal) void {
     }
     const O = obj_dir;
     const gcs = listGcs();
+    if (mt_only) {
+        mtTests(gcs);
+        finish();
+    }
 
     for (gcs) |g| {
         const caps = p.readFile(p.fmt("compiler/gc/{s}/caps", .{g}));
@@ -206,10 +212,49 @@ pub fn main(init: std.process.Init.Minimal) void {
         p.out("FAIL gc-unknown\n", .{});
         fail = true;
     } else p.out("PASS gc-unknown\n", .{});
+    if (!ported_only) mtTests(gcs);
+    finish();
+}
+
+fn finish() noreturn {
     _ = p.run(.{ .argv = &.{ "rm", "-rf", out } });
     if (!fail) p.out("GC ALL PASSED\n", .{}) else {
         p.out("GC FAILED\n", .{});
         exit(1);
+    }
+    exit(0);
+}
+
+/// Multithreaded test (src/unit/mt_test.zig) for collectors with a concurrent collector thread (the
+/// "deferred" capability: epoch). The others run entirely on the mutator thread and make no thread-safety
+/// claim; they are reported as SKIP. Plain -O1/-O3 builds check the results; the TSan build (-O1,
+/// halt_on_error) additionally fails on any data race or mutex misuse inside the collector.
+fn mtTests(gcs: []const []const u8) void {
+    const env = [_][]const u8{ "KX_GC_EXIT_DRAIN=1", "KX_GC_THREADS=4", "KX_GC_LOG_CAP=256", "KX_GC_MIN_THRESHOLD=16" };
+    for (gcs) |g| {
+        const caps = p.readFile(p.fmt("compiler/gc/{s}/caps", .{g}));
+        if (!has(caps, "deferred")) {
+            p.out("SKIP gc-mt {s} (no concurrent collector)\n", .{g});
+            continue;
+        }
+        const gc_c = p.fmt("compiler/gc/{s}/gc.c", .{g});
+        const variants = [_]struct { name: []const u8, flags: []const []const u8, env: []const []const u8 }{
+            .{ .name = "-O1", .flags = &.{"-O1"}, .env = &.{} },
+            .{ .name = "-O3", .flags = &.{"-O3"}, .env = &.{} },
+            .{ .name = "tsan", .flags = &.{ "-O1", "-fsanitize=thread", "-fno-omit-frame-pointer", "-DRT_PLAIN_MALLOC" }, .env = &.{"TSAN_OPTIONS=halt_on_error=1:exitcode=66:second_deadlock_stack=1"} },
+        };
+        for (variants) |v| {
+            const exe = p.fmt("{s}/mt-{s}{s}", .{ out, g, v.name });
+            const err = p.fmt("{s}/mt-{s}{s}.err", .{ out, g, v.name });
+            const log = p.fmt("{s}/mt-{s}{s}.log", .{ out, g, v.name });
+            if (compileC(cat(&.{ v.flags, &.{ "-g", "-Icompiler/gc", p.fmt("{s}/mt_test.o", .{obj_dir}), "compiler/gc/tests/zig/src/unit/mt_shim.c", "compiler/runtime/runtime.c", gc_c, "-o", exe } }), err) and
+                runTo(exe, &.{g}, cat(&.{ &env, v.env }), .{ .file = log }, .{ .append = err }) == 0)
+                p.out("PASS gc-mt {s} {s}\n", .{ g, v.name })
+            else {
+                p.out("FAIL gc-mt {s} {s}\n", .{ g, v.name });
+                failHead(&.{ err, log }, 30);
+            }
+        }
     }
 }
 

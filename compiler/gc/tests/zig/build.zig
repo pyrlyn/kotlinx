@@ -1,5 +1,6 @@
 //! Zig GC test suite (see README.md).
 //!   zig build gc        - run the whole suite (ported run.sh cases + new gc-api tests), fails on any FAIL
+//!   zig build mt        - only the multithreaded collector tests (gc-mt, plain -O1/-O3 + TSan builds)
 //!   zig build ported    - only the cases ported from run.sh (output comparable line by line with run.sh)
 //!   zig build test      - unit tests of the suite's own helpers
 //!   zig build coverage  - suite built with clang source-based coverage; llvm-cov summary + HTML in coverage/
@@ -20,7 +21,7 @@ pub fn build(b: *std.Build) void {
 
     // Unit-level tests are Zig objects that export main(); the runner links each with runtime.c and one
     // collector using the C compiler and flags run.sh used (incl. -O1/-O3 and ASan builds).
-    const objs = [_][]const u8{ "gc_unit", "traversal", "one_pass", "api_test" };
+    const objs = [_][]const u8{ "gc_unit", "traversal", "one_pass", "api_test", "mt_test" };
     const install_objs = b.step("objs", "Build the unit-test objects");
     for (objs) |name| {
         const mod = b.createModule(.{
@@ -44,11 +45,11 @@ pub fn build(b: *std.Build) void {
 
     const obj_dir = b.getInstallPath(.prefix, "obj");
     const repo = b.path("../../../..");
-    inline for (.{ .{ "gc", "Run the Zig GC test suite", false }, .{ "ported", "Run only the cases ported from run.sh", true } }) |s| {
+    inline for (.{ .{ "gc", "Run the Zig GC test suite", "" }, .{ "ported", "Run only the cases ported from run.sh", "--ported-only" }, .{ "mt", "Run only the multithreaded collector tests (plain + TSan)", "--mt-only" } }) |s| {
         const run = b.addRunArtifact(runner);
         run.setCwd(repo);
         run.addArgs(&.{ "--obj", obj_dir });
-        if (s[2]) run.addArg("--ported-only");
+        if (s[2].len > 0) run.addArg(s[2]);
         if (gcs) |g| run.setEnvironmentVariable("GCS", g);
         run.has_side_effects = true;
         run.stdio = .inherit;

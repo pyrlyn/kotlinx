@@ -12,6 +12,7 @@ Requirements: Zig 0.16+, the C compiler `run.sh` uses (`/usr/bin/clang` on macOS
 cd compiler/gc/tests/zig
 zig build gc                    # whole suite: ported cases + new gc-api tests (non-zero exit on any FAIL)
 zig build ported                # only the cases ported from run.sh (same output as run.sh)
+zig build mt                    # only the multithreaded collector test (plain -O1/-O3 + TSan), also run by compiler/test.sh
 zig build gc -Dgcs="default epoch"   # subset of collectors (GCS= works too)
 zig build test                  # unit tests of the suite's own helpers
 ./compare.sh                    # run.sh vs Zig port: full output + every unit program, byte for byte
@@ -31,6 +32,7 @@ mutation/run.sh compiler/gc/epoch/gc.c 20 && mutation/report.py ~/Grok/kotlinx-g
 | `src/unit/traversal.zig` + `traversal_shim.c` | port of `archive/unit/traversal.c`; the shim includes the collector and exports the internals the test reads (no test logic) |
 | `src/unit/one_pass.zig` | port of `archive/incremental/one_pass.c` |
 | `src/unit/api_test.zig` | **new** tests: acyclic allocation, storage hooks, RC inc/dec, chains, sharing, trial deletion (garbage / referenced rings, exact counts), stats, epoch's deferred-RC log protocol (`rt_gc_log_inc/dec`, write barrier, cycle reclaimed) |
+| `src/unit/mt_test.zig` + `mt_shim.c` | **new** multithreaded test (`gc-mt` lines) for collectors with a concurrent collector (capability `deferred`: epoch; the others are SKIP, they run entirely on the mutator thread). 4 OS threads take turns as the mutator (the kxgc.h contract is one mutator at a time) and allocate, retain, release, rewire shared objects into cross-thread cycles, build garbage rings and call `rt_gc_collect` while the background collector and `KX_GC_THREADS=4` helpers run; small logs (`KX_GC_LOG_CAP=256`) force many hand-offs, untraced `aux` references make logs fill while returned objects are freed. Checks: no double free / use after free (magic word), everything freed at the end, stats. Built `-O1`, `-O3` and `-fsanitize=thread` (`halt_on_error`); the shim does the field publication in instrumented C so TSan sees the release/acquire pairs generated code has |
 | `compare.sh` | original vs port verification |
 | `coverage.sh` | `zig build coverage` backend |
 | `mutation/run.sh`, `mutation/report.py` | source-level mutation testing of the GC C code against this suite |
@@ -58,6 +60,7 @@ exactly as `run.sh` does. Scratch files go to `compiler/build/gc-zig-tmp` (`run.
 | `gc-incremental slice_black` | `incrementalTests` | 1 |
 | `gc-incremental one_pass` (`archive/incremental/one_pass.c`) | `src/unit/one_pass.zig` | 1 |
 | `gc-unknown` | runner | 1 |
+| (new) `gc-mt <gc> -O1/-O3/tsan` | `src/unit/mt_test.zig`, `zig build mt` | 3 (epoch) + 4 SKIP |
 | — (new) | `gc-api <gc> -O1/-O3` (`src/unit/api_test.zig`) | 10 |
 
 `compare.sh` masks only timing-dependent values that each suite asserts bounds on itself
