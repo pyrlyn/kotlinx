@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2950,
-  "UNSUPPORTED": 2541
+  "PASS": 2954,
+  "UNSUPPORTED": 2537
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -5330,8 +5330,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2485.kt"
   },
   "box/box/classes/kt249.kt": {
-   "category": "class bodies / constructors",
-   "detail": "nested declarations are only supported in classes (at 'class')",
+   "category": "objects / companion objects",
+   "detail": "unknown method Outer$Companion.Inner()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/classes/kt249.kt"
   },
@@ -5359,9 +5359,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt2607.kt"
   },
   "box/box/classes/kt2626.kt": {
-   "category": "enum classes",
-   "detail": "nested declarations are only supported in classes (at 'enum')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt2626.kt"
   },
   "box/box/classes/kt2711.kt": {
@@ -12740,8 +12739,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/delegateToSingleton.kt"
   },
   "box/box/delegatedProperty/delegateToSingleton/noInitializationOfOuterClass.kt": {
-   "category": "objects / companion objects",
-   "detail": "nested declarations are only supported in classes (at 'object')",
+   "category": "other: unknown type O.P",
+   "detail": "unknown type O.P",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateToSingleton/noInitializationOfOuterClass.kt"
   },
@@ -13127,8 +13126,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/protectedVarWithPrivateSet.kt"
   },
   "box/box/delegatedProperty/provideDelegate/commonCaseForInference.kt": {
-   "category": "interfaces",
-   "detail": "nested declarations are only supported in classes (at 'interface')",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/commonCaseForInference.kt"
   },
@@ -13184,8 +13183,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/inClass.kt"
   },
   "box/box/delegatedProperty/provideDelegate/inferenceFromReceiver2.kt": {
-   "category": "interfaces",
-   "detail": "nested declarations are only supported in classes (at 'interface')",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/inferenceFromReceiver2.kt"
   },
@@ -13232,8 +13231,8 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/localDifferentReceivers.kt"
   },
   "box/box/delegatedProperty/provideDelegate/memberExtension.kt": {
-   "category": "class bodies / constructors",
-   "detail": "nested declarations are only supported in classes (at 'class')",
+   "category": "operator/infix functions",
+   "detail": "operator member extension functions are not supported (at '",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/provideDelegate/memberExtension.kt"
   },
@@ -14312,8 +14311,8 @@
    "upstream": "compiler/testData/codegen/box/enum/inPackage.kt"
   },
   "box/box/enum/inclassobj.kt": {
-   "category": "enum classes",
-   "detail": "nested declarations are only supported in classes (at 'enum')",
+   "category": "unknown Context (stdlib API / unsupported decl)",
+   "detail": "unknown name 'Context'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/inclassobj.kt"
   },
@@ -24688,8 +24687,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/createdNestedInOuterMember.kt"
   },
   "box/box/innerNested/extenderNestedClass.kt": {
-   "category": "class bodies / constructors",
-   "detail": "nested declarations are only supported in classes (at 'class')",
+   "category": "other syntax (at '.')",
+   "detail": "unexpected top-level token (at '.')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/extenderNestedClass.kt"
   },
@@ -24792,9 +24791,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/kt6804.kt"
   },
   "box/box/innerNested/nestedClassInObject.kt": {
-   "category": "class bodies / constructors",
-   "detail": "nested declarations are only supported in classes (at 'class')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/innerNested/nestedClassInObject.kt"
   },
   "box/box/innerNested/nestedClassObject.kt": {
@@ -24826,8 +24824,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/nestedInnerClass.kt"
   },
   "box/box/innerNested/nestedObjects.kt": {
-   "category": "objects / companion objects",
-   "detail": "nested declarations are only supported in classes (at 'object')",
+   "category": "other: no field C in B",
+   "detail": "no field C in B",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/nestedObjects.kt"
   },
@@ -28332,8 +28330,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt18982.kt"
   },
   "box/box/objects/kt2398.kt": {
-   "category": "objects / companion objects",
-   "detail": "nested declarations are only supported in classes (at 'object')",
+   "category": "other: no field InnerObj in Obj",
+   "detail": "no field InnerObj in Obj",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt2398.kt"
   },
@@ -28350,8 +28348,8 @@
    "upstream": "compiler/testData/codegen/box/objects/kt2663_3.kt"
   },
   "box/box/objects/kt2675.kt": {
-   "category": "objects / companion objects",
-   "detail": "nested declarations are only supported in classes (at 'object')",
+   "category": "unknown foov (stdlib API / unsupported decl)",
+   "detail": "unknown name 'foov'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/kt2675.kt"
   },
@@ -28496,9 +28494,8 @@
    "upstream": "compiler/testData/codegen/box/objects/privateExtensionFromInitializer_kt4543.kt"
   },
   "box/box/objects/privateFunctionFromClosureInInitializer_kt5582.kt": {
-   "category": "objects / companion objects",
-   "detail": "nested declarations are only supported in classes (at 'object')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/objects/privateFunctionFromClosureInInitializer_kt5582.kt"
   },
   "box/box/objects/receiverInConstructor.kt": {
@@ -28596,8 +28593,8 @@
    "upstream": "compiler/testData/codegen/box/objects/thisInConstructor.kt"
   },
   "box/box/objects/thisRefToObjectInNestedClassConstructorCall.kt": {
-   "category": "class bodies / constructors",
-   "detail": "nested declarations are only supported in classes (at 'class')",
+   "category": "other: unknown method Derived.foo()",
+   "detail": "unknown method Derived.foo()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/objects/thisRefToObjectInNestedClassConstructorCall.kt"
   },
@@ -28877,8 +28874,8 @@
    "upstream": "compiler/testData/codegen/box/package/packageQualifiedMethod.kt"
   },
   "box/box/package/privateMembersInImportList.kt": {
-   "category": "class bodies / constructors",
-   "detail": "nested declarations are only supported in classes (at 'class')",
+   "category": "unknown E1 (stdlib API / unsupported decl)",
+   "detail": "unknown name 'E1'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/package/privateMembersInImportList.kt"
   },
@@ -36524,8 +36521,8 @@
    "upstream": "compiler/testData/codegen/box/statics/kt8089.kt"
   },
   "box/box/statics/syntheticAccessor.kt": {
-   "category": "objects / companion objects",
-   "detail": "nested declarations are only supported in classes (at 'object')",
+   "category": "unknown p (stdlib API / unsupported decl)",
+   "detail": "unknown name 'p'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/statics/syntheticAccessor.kt"
   },
@@ -37032,8 +37029,8 @@
    "upstream": "compiler/testData/codegen/box/super/superCallToNonGenericImplThroughGenericDefaultImpls.kt"
   },
   "box/box/super/superConstructor/kt13846.kt": {
-   "category": "class bodies / constructors",
-   "detail": "nested declarations are only supported in classes (at 'class')",
+   "category": "other: unsupported callable reference ::foo",
+   "detail": "unsupported callable reference ::foo",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt13846.kt"
   },
@@ -38953,9 +38950,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/namedArgumentGap.kt"
   },
   "box/box/versionOverloads/objectMembers.kt": {
-   "category": "objects / companion objects",
-   "detail": "nested declarations are only supported in classes (at 'object')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/objectMembers.kt"
   },
   "box/box/versionOverloads/operatorGet.kt": {
@@ -39244,8 +39240,8 @@
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/duplicatingItems.kt"
   },
   "box/box/when/enumOptimization/enumInsideClassObject.kt": {
-   "category": "enum classes",
-   "detail": "nested declarations are only supported in classes (at 'enum')",
+   "category": "objects / companion objects",
+   "detail": "unknown type A.Companion.Season",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/when/enumOptimization/enumInsideClassObject.kt"
   },

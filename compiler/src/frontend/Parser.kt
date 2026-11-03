@@ -801,6 +801,8 @@ class Parser(toks: List<Tok>) {
     /** Class name -> (companion object name, companion member names). */
     private val companionOf = HashMap<String, Pair<String, Set<String>>>()
     private var curClass: String? = null
+    /** Named object whose body is being parsed (nested classes/objects may be declared there). */
+    private var nestOwner: String? = null
     /** Object being parsed (members of objects see no [curClass]). */
     private var curObject: String? = null
 
@@ -824,8 +826,9 @@ class Parser(toks: List<Tok>) {
         val fields = ArrayList<FieldD>(); val inits = ArrayList<Any>()
         val sta = takeSuperArgs()
         val saved = curClass; curClass = null
+        val savedNestOwner = nestOwner; nestOwner = name
         val savedObj = curObject; curObject = name
-        val ms = try { braceOnNextLine(); if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved; curObject = savedObj }
+        val ms = try { braceOnNextLine(); if (isOp("{")) members(fields, inits) else emptyList() } finally { curClass = saved; curObject = savedObj; nestOwner = savedNestOwner }
         if (name !in objects) objects.add(name)
         // During its own initialization the object's global is not assigned yet: `Obj.x` in initializers means `this.x`.
         val self = Subst(emptyMap(), rw = { x: E -> if (x is NameE && x.n == name) NameE("this").also { it.line = x.line } else null })
@@ -1203,7 +1206,7 @@ class Parser(toks: List<Tok>) {
 
     /** A nested or inner declaration in a class body; false if the next member is not one. */
     private fun nestedDecl(): Boolean {
-        val outer = curClass
+        val outer = curClass ?: nestOwner?.takeIf { !(isId("inner")) }
         val save = p
         val inner = isId("inner") && t[p + 1].k == K.ID
         if (inner) next()
