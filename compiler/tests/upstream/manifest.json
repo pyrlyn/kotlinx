@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2997,
-  "UNSUPPORTED": 2494
+  "PASS": 3003,
+  "UNSUPPORTED": 2488
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -472,15 +472,13 @@
    "upstream": "compiler/testData/codegen/box/arrays/arrayConstructorsSimple.kt"
   },
   "box/box/arrays/arrayGetAssignMultiIndex.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ']' (at ',')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/arrayGetAssignMultiIndex.kt"
   },
   "box/box/arrays/arrayGetMultiIndex.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ']' (at ',')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/arrayGetMultiIndex.kt"
   },
   "box/box/arrays/arrayInstanceOf.kt": {
@@ -516,14 +514,14 @@
    "upstream": "compiler/testData/codegen/box/arrays/arraysOfInlineClass/arrayOfInlineClassOfArrayOfInlineClass.kt"
   },
   "box/box/arrays/collectionAssignGetMultiIndex.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ']' (at ',')",
+   "category": "other: ArrayList(capacity) is not supported",
+   "detail": "ArrayList(capacity) is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/collectionAssignGetMultiIndex.kt"
   },
   "box/box/arrays/collectionGetMultiIndex.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ']' (at ',')",
+   "category": "other: ArrayList(capacity) is not supported",
+   "detail": "ArrayList(capacity) is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/arrays/collectionGetMultiIndex.kt"
   },
@@ -806,9 +804,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt42932.kt"
   },
   "box/box/arrays/kt4348.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ']' (at ',')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/kt4348.kt"
   },
   "box/box/arrays/kt4357.kt": {
@@ -5887,9 +5884,8 @@
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/capturedInInlineOnlyIncrDecr.kt"
   },
   "box/box/closures/capturedVarsOptimization/capturedInInlineOnlyIndexedCAO.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ']' (at ',')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/capturedVarsOptimization/capturedInInlineOnlyIndexedCAO.kt"
   },
   "box/box/closures/capturedVarsOptimization/capturedVarsOfSize2.kt": {
@@ -17569,20 +17565,20 @@
    "upstream": "compiler/testData/codegen/box/increment/augmentedAssignmentWithComplexRhs.kt"
   },
   "box/box/increment/classNaryGetSet.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ']' (at ',')",
+   "category": "other syntax (at '++')",
+   "detail": "expected end of statement (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/classNaryGetSet.kt"
   },
   "box/box/increment/classVarargGetSet.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ']' (at ',')",
+   "category": "other syntax (at '++')",
+   "detail": "expected end of statement (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/classVarargGetSet.kt"
   },
   "box/box/increment/classVarargGetSetEvaluationOrder.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ']' (at ',')",
+   "category": "other syntax (at '++')",
+   "detail": "expected end of statement (at '++')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/increment/classVarargGetSetEvaluationOrder.kt"
   },
@@ -28722,9 +28718,8 @@
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt4987.kt"
   },
   "box/box/operatorConventions/nestedMaps.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ']' (at ',')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/operatorConventions/nestedMaps.kt"
   },
   "box/box/operatorConventions/operatorSetLambda.kt": {
@@ -38634,8 +38629,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/emptyVarArg.kt"
   },
   "box/box/vararg/evaluationOrder.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ']' (at ',')",
+   "category": "other: set expects 2 arguments",
+   "detail": "set expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/evaluationOrder.kt"
   },
@@ -38912,9 +38907,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/objectMembers.kt"
   },
   "box/box/versionOverloads/operatorGet.kt": {
-   "category": "other syntax (at ',')",
-   "detail": "expected ']' (at ',')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/operatorGet.kt"
   },
   "box/box/versionOverloads/operatorInvoke.kt": {
