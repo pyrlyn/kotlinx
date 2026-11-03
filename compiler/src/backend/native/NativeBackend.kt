@@ -3369,6 +3369,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 return lam(c.ctorParams.map { it.type }) { xs -> CallE(NameE(n).also { it.line = line }, emptyList(), xs, null).also { it.line = line } }
             }
             owner?.let { o -> if (n in o.methods || o.index(n) >= 0) return genRef(node, NameE("this").also { it.line = line }, n) }
+            // Top-level property `::x`: a getter function value.
+            // A local function that captures locals is a local holding a lambda: `::f` is that value.
+            lookup(n)?.let { l -> if (fnSig(l.t) != null) return genExpr(NameE(n).also { it.line = line }) }
+            if (n in globalVars || prog.globals.any { it.name == n } || "\$get\$$n" in sigs) return lam(emptyList()) { NameE(n).also { it.line = line } }
             fail("unsupported callable reference ::$n")
         }
         // Unbound reference through a type name.
