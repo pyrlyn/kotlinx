@@ -10,14 +10,31 @@ NKC=${NKC:-../bin/newkotlinc}
 gcs=${*:-default boehm}
 mkdir -p results/gc ../compiler/build/gcmicro
 for g in $gcs; do for m in time rss pause_total pause_max pause_p50 pause_p99 collections; do : > results/gc/micro-$g-$m.txt; done; done
+# Opt-in, off by default (the default run measures everything):
+#   MICRO_SKIP="gc:case ..."  skip these pairs entirely (e.g. "default:wide_graph_churn incremental:wide_graph_churn");
+#   MICRO_MAX_S=N             skip a pair whose warm-up run takes longer than N seconds (its rows show "—").
+# Skipped pairs get no row and no record.py entry, so they never mix with full measurements.
+skip=" ${MICRO_SKIP:-} "
+# Build every (case, GC) binary up front, in parallel (BUILD_JOBS, default 4), through the nkbuild.sh
+# content cache; no timed run overlaps a build.
+for src in gc/micro/*.kt; do for g in $gcs; do echo "$g $src"; done; done |
+  xargs -P "${BUILD_JOBS:-4}" -L1 sh -c './nkbuild.sh "../compiler/build/gcmicro/$0.$(basename "$1" .kt)" "'"$NKC"'" "$1" --gc="$0"'
 # Interleaved: every timed run goes through all GCs before the next one, so load drift hits all alike.
 for src in gc/micro/*.kt; do
-  c=$(basename "$src" .kt)
-  for g in $gcs; do b=../compiler/build/gcmicro/$g.$c; "$NKC" --gc="$g" "$src" -o "$b"; "$b" >/dev/null; eval "ts_$g=''"; done
-  for r in 1 2 3 4 5; do
-    for g in $gcs; do eval "ts_$g=\"\$ts_$g \$(../compiler/build/gcmicro/$g.$c | grep -oE 'nanos=[0-9]+' | cut -d= -f2)\""; done
-  done
+  c=$(basename "$src" .kt); run=""
   for g in $gcs; do
+    b=../compiler/build/gcmicro/$g.$c; eval "ts_$g=''"
+    case $skip in *" $g:$c "*) echo "micro: skip $g $c (MICRO_SKIP)" >&2; continue;; esac
+    t0=$(python3 -c 'import time; print(time.time())'); "$b" >/dev/null
+    if [ -n "${MICRO_MAX_S:-}" ] && python3 -c "import time,sys; sys.exit(0 if time.time()-$t0 > ${MICRO_MAX_S} else 1)"; then
+      echo "micro: skip $g $c (warm-up over MICRO_MAX_S=${MICRO_MAX_S}s)" >&2; continue
+    fi
+    run="$run $g"
+  done
+  for r in 1 2 3 4 5; do
+    for g in $run; do eval "ts_$g=\"\$ts_$g \$(../compiler/build/gcmicro/$g.$c | grep -oE 'nanos=[0-9]+' | cut -d= -f2)\""; done
+  done
+  for g in $run; do
     b=../compiler/build/gcmicro/$g.$c; eval "ts=\$ts_$g"
     python3 -c "v=sorted(map(int,'$ts'.split()))[1:4]; print('$c', round(sum(v)/3/1e6, 3))" >> results/gc/micro-$g-time.txt
     rss=$( { /usr/bin/time -l "$b" >/dev/null; } 2>&1 | awk '/maximum resident set size/ {print $1}')
