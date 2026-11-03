@@ -215,7 +215,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun isAny(t: Ty) = t is Ty.Iface && t.name == "Any"
     private fun boxName(t: Ty): String? = when (t) {
         Ty.I32 -> "Int"; Ty.I64 -> "Long"; Ty.F64 -> "Double"; Ty.F32 -> "Float"; Ty.I1 -> "Boolean"; Ty.Char -> "Char"; Ty.Str -> "String"
-        Ty.U32 -> "UInt"; Ty.U64 -> "ULong"; Ty.I8 -> "Byte"; else -> null
+        Ty.U32 -> "UInt"; Ty.U64 -> "ULong"; Ty.I8 -> "Byte"
+        is Ty.Arr -> t.toString()
+        else -> null
     }
 
     /** A value viewed as `Any`: objects as is, primitives and strings boxed into `AnyBox<T>` (owned). */
