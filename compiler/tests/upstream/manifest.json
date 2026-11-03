@@ -3143,7 +3143,7 @@
   },
   "box/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt": {
    "category": "type inference / mismatch",
-   "detail": "type mismatch: expected ArrayList<Int>, found IntArray",
+   "detail": "type mismatch: expected Int, found IntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt"
   },
@@ -38562,8 +38562,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/boxingArgumentsForVararg.kt"
   },
   "box/box/vararg/doNotCopyImmediatelyCreatedArrays.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected ArrayList<Boolean>, found BooleanArray",
+   "category": "unknown shortArrayOf (stdlib API / unsupported decl)",
+   "detail": "unknown function 'shortArrayOf'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/doNotCopyImmediatelyCreatedArrays.kt"
   },
@@ -38641,8 +38641,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/useSuspendFunResultAsVararg.kt"
   },
   "box/box/vararg/varargInFunParam.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected ArrayList<Int>, found IntArray",
+   "category": "generics",
+   "detail": "empty generic vararg is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/vararg/varargInFunParam.kt"
   },

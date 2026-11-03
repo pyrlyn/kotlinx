@@ -397,7 +397,7 @@ fun ULongArray.iterator(): ULongArrayIterator = ULongArrayIterator(this)
 class ListIterator__<T>(val a: ArrayList<T>) { var i = 0; fun hasNext(): Boolean = i < a.size; fun next(): T { val x = a.get(i); i++; return x } }
 fun <T> ArrayList<T>.iterator(): ListIterator__<T> = ListIterator__(this)
 """
-private val ARRAY_EXT_USE = Regex("""\.(reversedArray|copyOf|contentToString|toList|reversed|iterator)\(""")
+private val ARRAY_EXT_USE = Regex("""\.(reversedArray|copyOf|contentToString|toList|reversed|iterator)\(|[(,=]\s*\*\s*\w""")
 /** `withIndex()` of progressions (needs both the range and the list prelude). */
 const val RANGE_LIST_EXT = """
 fun IntProgression.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
