@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 2913,
-  "UNSUPPORTED": 2578
+  "PASS": 2921,
+  "UNSUPPORTED": 2570
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2734,8 +2734,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/adaptedVarargFunImportedFromObject.kt"
   },
   "box/box/callableReference/adaptedReferences/bothWithCoercionToUnit.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected String, found ArrayList<String>",
+   "category": "other: missing argument 't'",
+   "detail": "missing argument 't'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/bothWithCoercionToUnit.kt"
   },
@@ -2796,9 +2796,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextTypeWithSam.kt"
   },
   "box/box/callableReference/adaptedReferences/defaultAfterVararg.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected String, found ArrayList<String>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/defaultAfterVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/defaultWithGenericExpectedType.kt": {
@@ -2808,8 +2807,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/defaultWithGenericExpectedType.kt"
   },
   "box/box/callableReference/adaptedReferences/emptyVarargAndDefault.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected String, found ArrayList<String>",
+   "category": "other: missing argument 'y'",
+   "detail": "missing argument 'y'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/emptyVarargAndDefault.kt"
   },
@@ -2939,9 +2938,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorWithVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/largeVararg.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found ArrayList<Int>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/largeVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/localFunctionWithDefault.kt": {
@@ -2951,8 +2949,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/localFunctionWithDefault.kt"
   },
   "box/box/callableReference/adaptedReferences/manyDefaultsAndVararg.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected String, found ArrayList<String>",
+   "category": "other: missing argument 'd'",
+   "detail": "missing argument 'd'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/manyDefaultsAndVararg.kt"
   },
@@ -2976,20 +2974,18 @@
   },
   "box/box/callableReference/adaptedReferences/referenceToVarargWithDefaults.kt": {
    "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found ArrayList<Int>",
+   "detail": "type mismatch: expected Int, found IntArray",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/referenceToVarargWithDefaults.kt"
   },
   "box/box/callableReference/adaptedReferences/simpleDefaultArgument.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $Fn$String$String, found $Fn$String$String$String",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/simpleDefaultArgument.kt"
   },
   "box/box/callableReference/adaptedReferences/simpleEmptyVararg.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected String, found ArrayList<String>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/simpleEmptyVararg.kt"
   },
   "box/box/callableReference/adaptedReferences/suspendConversion/adaptedWithCoercionToUnit.kt": {
@@ -3186,9 +3182,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargViewedAsPrimitiveArray.kt"
   },
   "box/box/callableReference/adaptedReferences/varargWithDefaultValue.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected String, found ArrayList<String>",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargWithDefaultValue.kt"
   },
   "box/box/callableReference/arrayConstructor.kt": {
@@ -3688,9 +3683,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/classMemberFromTopLevelUnitOneStringArg.kt"
   },
   "box/box/callableReference/function/coercionToUnit.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $Fn$String$Unit, found $Fn$String$Boolean",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/coercionToUnit.kt"
   },
   "box/box/callableReference/function/constructorFromInnerClass.kt": {
@@ -20940,15 +20934,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassTypeTopLevelVarGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/kt37986.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected $Fn$R, found $Fn$R$R",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/kt37986.kt"
   },
   "box/box/inlineClasses/callableReferences/kt37986Generic.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $Fn$R$String, found $Fn$R$String$R$String",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/kt37986Generic.kt"
   },
   "box/box/inlineClasses/callableReferences/let/any.kt": {

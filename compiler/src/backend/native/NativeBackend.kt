@@ -3283,7 +3283,28 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** An argument with a known parameter type: lambdas get their parameter/return types from a function type. */
     private fun argFor(a: E, t: Ty, own: Boolean = false): Val =
-        if (a is LambdaE) fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t)) } else withExpected(a, t) { if (own) genArg(a) else genExpr(a) }
+        adaptedRef(a, t) ?: if (a is LambdaE) fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t)) } else withExpected(a, t) { if (own) genArg(a) else genExpr(a) }
+
+    /**
+     * Adapted reference `::f` passed where a function type is expected whose shape differs from `f`'s: defaults and
+     * varargs are filled in, and a result is dropped when `Unit` is expected. Lowered to a lambda of the expected type.
+     */
+    private fun adaptedRef(a: E, t: Ty): Val? {
+        if (a !is UnE || !a.op.startsWith("::") || a.e !is NullL) return null
+        val s = fnSig(t) ?: return null
+        if (isRecvFn(t)) return null
+        val n = a.op.drop(2)
+        val f = funDecls[n]?.takeIf { it.typeParams.isEmpty() && it.recv == null } ?: return null
+        val exact = f.params.size == s.params.size && f.params.none { it.vararg } && (f.ret?.let { resolve(it) } ?: return null).let { it == s.ret || s.ret != Ty.Unit }
+        if (exact) return null
+        if (s.params.size > f.params.size && f.params.none { it.vararg }) return null
+        val le = RefLambdas.map.getOrPut(a) {
+            val names = s.params.indices.map { "rp\$$it" }
+            val call = CallE(NameE(n).also { it.line = line }, emptyList(), names.map { NameE(it).also { x -> x.line = line } }, null).also { it.line = line }
+            LambdaE(Block(listOf(ExprS(call).also { it.line = line }), names, s.params.map { tyRef(it) })).also { it.line = line }
+        }
+        return genLambda(le, s.params, s.ret)
+    }
 
     /** Expected types of generic calls in result position, used to infer a type parameter that only appears in the return type. */
     private val expected = ArrayList<Pair<CallE, Ty>>()
