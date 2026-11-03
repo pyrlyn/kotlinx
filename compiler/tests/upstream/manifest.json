@@ -2,8 +2,8 @@
  "commit": "19c36e179da4ff601be5043468aefb63dcb1f201",
  "counts": {
   "N/A": 2984,
-  "PASS": 3003,
-  "UNSUPPORTED": 2488
+  "PASS": 3006,
+  "UNSUPPORTED": 2485
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -6063,14 +6063,14 @@
    "upstream": "compiler/testData/codegen/box/closures/kt11634_4.kt"
   },
   "box/box/closures/kt19389.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected Long, found String",
+   "category": "other: unknown method Int.get()",
+   "detail": "unknown method Int.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt19389.kt"
   },
   "box/box/closures/kt19389_set.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected Long, found String",
+   "category": "other: unknown method Int.set()",
+   "detail": "unknown method Int.set()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/kt19389_set.kt"
   },
@@ -17588,9 +17588,8 @@
    "upstream": "compiler/testData/codegen/box/increment/classWithGetSet.kt"
   },
   "box/box/increment/extOnLong.kt": {
-   "category": "other: cannot index Long",
-   "detail": "cannot index Long",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/extOnLong.kt"
   },
   "box/box/increment/genericClassWithGetSet.kt": {
@@ -17604,9 +17603,8 @@
    "upstream": "compiler/testData/codegen/box/increment/kt36956.kt"
   },
   "box/box/increment/memberExtOnLong.kt": {
-   "category": "other: cannot index Long",
-   "detail": "cannot index Long",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/memberExtOnLong.kt"
   },
   "box/box/increment/mutableListElement.kt": {
@@ -26615,9 +26613,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/nameBasedDestructuringUnderscoreWithRenaming.kt"
   },
   "box/box/multiDecl/positionalDestructuringFullForm.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at '[')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/positionalDestructuringFullForm.kt"
   },
   "box/box/multiDecl/positionalDestructuringShortForm.kt": {
@@ -28701,7 +28698,7 @@
   },
   "box/box/operatorConventions/kt44647.kt": {
    "category": "strings / templates",
-   "detail": "cannot index StringBuilder",
+   "detail": "unknown method StringBuilder.get()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/operatorConventions/kt44647.kt"
   },

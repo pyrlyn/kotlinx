@@ -2320,8 +2320,9 @@ class Parser(toks: List<Tok>) {
                 when (x) { is WhileS -> x.label = l; is ForS -> x.label = l; else -> fail("label on a non-loop") }
                 return x
             }
-            isId("val") || isId("var") -> {
-                val isVar = next().s == "var"
+            isId("val") || isId("var") || (isOp("[") && t[p + 1].k == K.ID && (t[p + 1].s == "val" || t[p + 1].s == "var")) -> {
+                // Full-form positional destructuring `[val a, var b] = x` has no leading keyword.
+                val isVar = if (isOp("[")) false else next().s == "var"
                 if (isOp("(") || isOp("[")) {
                     // `val (a, b) = x` and position-based `val [a, b] = x` (also `[val a, var b]`): componentN calls.
                     val close = if (isOp("(")) ")" else "]"
