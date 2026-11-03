@@ -2255,7 +2255,6 @@ class Parser(toks: List<Tok>) {
         if (peek().k == K.ID && peek().s == "suspend" && (t[p + 1].k == K.ID || t[p + 1].k == K.OP && t[p + 1].s == "(")) {
             next()
             val f = type()
-            if (!SuspendFuns.enabled) return f
             return when (f.name) {
                 "\$Fn" -> TypeRef("\$FnS", f.args, f.nullable)
                 "\$FnR" -> TypeRef("\$FnRS", f.args, f.nullable)

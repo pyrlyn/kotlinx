@@ -49,9 +49,13 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   lists, `HashMap`/`hashMapOf` with String keys (content-hashed, keys retained by the map; values stay primitive), computed
   `var` properties with `get()` and `set(v)` accessors.
 - kotlinx subsets (`compiler/src/frontend/Kotlinx.kt`, tests `kotlinx_coroutines`, `kotlinx_serialization`):
-  coroutines (`suspend` accepted; `runBlocking`, `coroutineScope`, `launch`, `async`/`await`, `Job`, `Channel`, cold
-  `Flow`): stackful coroutines (one mmap'ed stack each, ucontext) on a single-threaded scheduler, so `join`/`await`/
-  `receive`/`send`/`yield`/`delay` really suspend; `delay` is virtual time. Serialization: `@Serializable`
+  coroutines (`runBlocking` (also nested), `coroutineScope`, `launch`, `async`/`await`, `Job` with cancellation
+  (`cancel`, `isActive`, `CancellationException` at suspension points, children cancelled with the parent), `Channel`,
+  cold `Flow`): CPS. `suspend fun` and suspend function types (`suspend () -> T`, `suspend R.() -> T`) compile to LLVM
+  switched-resume coroutines (state machines whose live locals are spilled into a heap frame by CoroSplit); a suspend
+  call from a coroutine creates the callee's coroutine and awaits it. A single-threaded scheduler drives the jobs, so
+  `join`/`await`/`receive`/`send`/`yield`/`delay` really suspend; `delay` is virtual time. Suspend calls are only
+  allowed in suspend functions/lambdas (and in lambdas the compiler inlines, e.g. `forEach`). Serialization: `@Serializable`
   classes (Int/Long/Double/Boolean/String, nested @Serializable, `List<T>`, nullable) with `X.serializer()`,
   `Json.encodeToString/decodeFromString(serializer, ...)`, `parseToJsonElement` and the `JsonElement` tree.
 - Not yet: user generics, function types and general lambdas, inheritance from classes (open/abstract/sealed), objects and

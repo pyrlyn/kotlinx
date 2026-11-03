@@ -5,9 +5,9 @@ package newkotlin
  *
  * - kotlinx.coroutines subset: `runBlocking`, `coroutineScope`, `launch`, `async`/`await`, `Job` (join, cancel,
  *   isActive/isCompleted), `joinAll`, `awaitAll`, `yield`, `delay`, `Channel` (send/receive/trySend/close/consumeEach)
- *   and cold `Flow` (`flow { emit(x) }`, `flowOf`, `map`, `filter`, `collect`, `toList`). `suspend` is accepted on
- *   functions and function types. Coroutines are stackful (runtime.c `rt_co_*`, one mmap'ed stack per coroutine)
- *   on a single-threaded scheduler: `join`, `await`, `receive`, `send` (full or rendezvous channel), `yield` and
+ *   and cold `Flow` (`flow { emit(x) }`, `flowOf`, `map`, `filter`, `collect`, `toList`). Coroutines are CPS:
+ *   suspend functions and suspend lambdas are LLVM coroutines (NativeBackend.genCoroutine) driven by a
+ *   single-threaded scheduler: `join`, `await`, `receive`, `send` (full or rendezvous channel), `yield` and
  *   `delay` really suspend the calling coroutine. `delay` uses virtual time (timers ordered by wake-up time).
  *   `runBlocking`/`coroutineScope` return Unit (generic `T = Unit` parameters are not supported yet).
  * - kotlinx.serialization subset: `@Serializable` classes get a generated `KSerializer` (`X.serializer()`), `Json`
@@ -16,213 +16,6 @@ package newkotlin
  *   String, other @Serializable classes, List<T> of those, and nullable variants.
  */
 
-val KOTLINX_COROUTINES = """
-external fun rt_co_new(unused: Long): Long
-external fun rt_co_resume(h: Long): Int
-external fun rt_co_suspend(): Unit
-class CancellationException(message: String) : IllegalStateException(message)
-class ClosedReceiveChannelException(message: String) : IllegalStateException(message)
-object KxSched {
-    val ready = ArrayList<Job>()
-    val timers = ArrayList<Job>()
-    var current: Job? = null
-    var now = 0L
-    fun wake(j: Job) { ready.add(j) }
-    fun wakeAll(ws: ArrayList<Job>) {
-        for (w in ws) ready.add(w)
-        while (ws.size > 0) ws.removeAt(ws.size - 1)
-    }
-    fun addTimer(j: Job) {
-        timers.add(j)
-        var i = timers.size - 1
-        while (i > 0 && timers[i - 1].wakeAt > j.wakeAt) { val t = timers[i - 1]; timers[i - 1] = timers[i]; timers[i] = t; i-- }
-    }
-    fun runUntil(root: Job) {
-        while (!root.isCompleted) {
-            if (ready.size > 0) { val j = ready.removeAt(0); j.step() }
-            else if (timers.size > 0) { val j = timers.removeAt(0); if (j.wakeAt > now) now = j.wakeAt; j.step() }
-            else throw IllegalStateException("runBlocking: deadlock, no coroutine can make progress")
-        }
-    }
-    fun dropTimer(j: Job) {
-        var i = 0
-        while (i < timers.size) { if (timers[i] === j) { val t = timers.removeAt(i) } else i++ }
-    }
-    fun isReady(j: Job): Boolean { for (r in ready) if (r === j) return true; return false }
-    fun me(): Job {
-        val c = current
-        if (c == null) throw IllegalStateException("suspend function called outside a coroutine")
-        return c
-    }
-}
-fun kxCoEntry(id: Long) {
-    val j = KxSched.me()
-    try { j.body() } catch (e: CancellationException) { }
-}
-// Called after every suspension point: a cancelled coroutine resumes with CancellationException.
-fun kxSuspend() {
-    rt_co_suspend()
-    val j = KxSched.me()
-    if (j.isCancelled) throw CancellationException("Job was cancelled")
-}
-open class Job(body0: () -> Unit) {
-    var body: () -> Unit = body0
-    var handle = 0L
-    var started = false
-    var isCompleted = false
-    var isCancelled = false
-    var wakeAt = 0L
-    var scope: CoroutineScope? = null
-    val waiters = ArrayList<Job>()
-    val isActive: Boolean get() = !isCompleted && !isCancelled
-    fun step() {
-        if (isCompleted) return
-        if (handle == 0L) { started = true; handle = rt_co_new(0L) }
-        val prev = KxSched.current
-        KxSched.current = this
-        val done = rt_co_resume(handle)
-        KxSched.current = prev
-        if (done != 0) { handle = 0L; finish() }
-    }
-    fun finish() {
-        isCompleted = true
-        body = {}
-        KxSched.wakeAll(waiters)
-    }
-    fun cancel() {
-        if (isCompleted || isCancelled) return
-        isCancelled = true
-        val sc = scope
-        if (sc != null) for (c in sc.children) c.cancel()
-        if (!started) { finish(); return }
-        // A suspended coroutine is resumed so its suspension point throws CancellationException.
-        if (KxSched.current !== this) {
-            KxSched.dropTimer(this)
-            if (!KxSched.isReady(this)) KxSched.wake(this)
-        }
-    }
-    fun join() {
-        while (!isCompleted) {
-            waiters.add(KxSched.me())
-            kxSuspend()
-        }
-    }
-}
-class Deferred<T>(val compute: () -> T) {
-    var result: T? = null
-    var hasResult = false
-    val job: Job = Job { result = compute(); hasResult = true }
-    val isCompleted: Boolean get() = job.isCompleted
-    fun await(): T {
-        job.join()
-        if (!hasResult) throw CancellationException("Deferred was cancelled")
-        return result!!
-    }
-    fun cancel() { job.cancel() }
-}
-class CoroutineScope {
-    val children = ArrayList<Job>()
-    // Members too, so calls inside nested lambdas of a scope builder resolve.
-    fun yield() { kxYield() }
-    val isActive: Boolean get() { val c = KxSched.current; return c == null || !c.isCancelled }
-    fun ensureActive() { val c = KxSched.current; if (c != null && c.isCancelled) throw CancellationException("Job was cancelled") }
-    fun launch(block: CoroutineScope.() -> Unit): Job {
-        val child = CoroutineScope()
-        val j = Job { with(child, block); child.joinChildren() }
-        j.scope = child
-        children.add(j); KxSched.wake(j)
-        return j
-    }
-    fun <T> async(block: CoroutineScope.() -> T): Deferred<T> {
-        val child = CoroutineScope()
-        val d = Deferred<T> { val r = with(child, block); child.joinChildren(); r }
-        d.job.scope = child
-        children.add(d.job); KxSched.wake(d.job)
-        return d
-    }
-    fun joinChildren() {
-        var i = 0
-        while (i < children.size) { children[i].join(); i++ }
-        while (children.size > 0) children.removeAt(children.size - 1)
-    }
-}
-fun runBlocking(block: CoroutineScope.() -> Unit) {
-    // Nested inside a coroutine: shares the event loop and waits for the block like coroutineScope.
-    if (KxSched.current != null) { coroutineScope(block); return }
-    val s = CoroutineScope()
-    val root = Job { with(s, block); s.joinChildren() }
-    KxSched.wake(root)
-    KxSched.runUntil(root)
-}
-fun coroutineScope(block: CoroutineScope.() -> Unit) {
-    val s = CoroutineScope()
-    with(s, block)
-    s.joinChildren()
-}
-fun kxYield() { KxSched.wake(KxSched.me()); kxSuspend() }
-fun yield() { kxYield() }
-fun delay(ms: Long) {
-    val j = KxSched.me()
-    j.wakeAt = KxSched.now + ms
-    KxSched.addTimer(j)
-    kxSuspend()
-}
-fun currentTimeVirtual(): Long = KxSched.now
-fun joinAll(jobs: List<Job>) { for (j in jobs) j.join() }
-fun <T> awaitAll(ds: List<Deferred<T>>): List<T> { val r = ArrayList<T>(); for (d in ds) r.add(d.await()); return r }
-class Channel<T>(val capacity: Int) {
-    val buf = ArrayList<T>()
-    val receivers = ArrayList<Job>()
-    val senders = ArrayList<Job>()
-    var sent = 0L
-    var received = 0L
-    var isClosedForSend = false
-    val isEmpty: Boolean get() = buf.size == 0
-    val isClosedForReceive: Boolean get() = isClosedForSend && buf.size == 0
-    fun send(x: T) {
-        if (isClosedForSend) throw IllegalStateException("Channel was closed")
-        while (capacity > 0 && buf.size >= capacity) { senders.add(KxSched.me()); kxSuspend() }
-        buf.add(x)
-        val ticket = sent
-        sent++
-        KxSched.wakeAll(receivers)
-        // Rendezvous (capacity 0): the sender resumes once a receiver took its element.
-        while (capacity == 0 && received <= ticket) { senders.add(KxSched.me()); kxSuspend() }
-    }
-    fun trySend(x: T): Boolean {
-        if (isClosedForSend || (capacity >= 0 && buf.size >= capacity)) return false
-        buf.add(x); sent++; KxSched.wakeAll(receivers); return true
-    }
-    fun receive(): T {
-        while (buf.size == 0) {
-            if (isClosedForSend) throw ClosedReceiveChannelException("Channel was closed")
-            receivers.add(KxSched.me()); kxSuspend()
-        }
-        received++
-        KxSched.wakeAll(senders)
-        return buf.removeAt(0)
-    }
-    fun close() { isClosedForSend = true; KxSched.wakeAll(receivers) }
-    fun consumeEach(f: (T) -> Unit) {
-        while (true) {
-            while (buf.size == 0 && !isClosedForSend) { receivers.add(KxSched.me()); kxSuspend() }
-            if (buf.size == 0) return
-            received++
-            KxSched.wakeAll(senders)
-            f(buf.removeAt(0))
-        }
-    }
-}
-class FlowCollector<T>(val sink: (T) -> Unit) { fun emit(x: T) { sink(x) } }
-class Flow<T>(val run: (FlowCollector<T>) -> Unit) {
-    fun collect(f: (T) -> Unit) { run(FlowCollector<T>(f)) }
-    fun toList(): List<T> { val r = ArrayList<T>(); collect { r.add(it) }; return r }
-}
-fun <T> flow(block: FlowCollector<T>.() -> Unit): Flow<T> = Flow<T> { c -> with(c, block) }
-fun <T> flowOf(xs: List<T>): Flow<T> = Flow<T> { c -> for (x in xs) c.emit(x) }
-fun <T, R> Flow<T>.map(f: (T) -> R): Flow<R> { val src = this; return Flow<R> { out -> src.collect { out.emit(f(it)) } } }
-fun <T> Flow<T>.filter(p: (T) -> Boolean): Flow<T> { val src = this; return Flow<T> { out -> src.collect { if (p(it)) out.emit(it) } } }
-"""
 
 val KOTLINX_SERIALIZATION = """
 class SerializationException(message: String) : IllegalArgumentException(message)
@@ -493,7 +286,7 @@ fun withSerializable(src: String): String {
  * heap frame, NativeBackend.genCoroutine); `kxCoSuspend()` is the primitive suspension point, `kxCoStart` /
  * `kxCoResume` / `kxCoDestroy` drive a job's root coroutine from the single-threaded scheduler.
  */
-val KOTLINX_COROUTINES_CPS = """
+val KOTLINX_COROUTINES = """
 class CancellationException(message: String) : IllegalStateException(message)
 class ClosedReceiveChannelException(message: String) : IllegalStateException(message)
 object KxSched {

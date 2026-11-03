@@ -1,4 +1,3 @@
-// nkc: cps
 // CPS coroutines: suspend funs and suspend lambdas are LLVM coroutines driven by the raw primitives.
 class Box(val n: Int)
 suspend fun tick(name: String, n: Int, log: ArrayList<String>): Int {

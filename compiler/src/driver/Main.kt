@@ -129,7 +129,7 @@ private fun findMimalloc(): String? {
 }
 
 /** Source text to LLVM IR: lex, parse, merge the prelude and `Any` support, then generate code. */
-fun compileToIr(src0: String): String { SuspendFuns.enabled = "// nkc: cps" in src0; val src = withSerializable(src0); return compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program()))) }
+fun compileToIr(src0: String): String { val src = withSerializable(src0); return compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program()))) }
 
 /** The `newkotlinc` command; see docs/usage.md for the options. */
 fun main(args: Array<String>) {

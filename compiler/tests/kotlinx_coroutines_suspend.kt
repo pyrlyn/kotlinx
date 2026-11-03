@@ -1,4 +1,4 @@
-// Real suspension (stackful coroutines): yield interleaves, delay orders by virtual time,
+// Real suspension (CPS coroutines): yield interleaves, delay orders by virtual time,
 // channels block senders/receivers, join/await suspend mid-body.
 import kotlinx.coroutines.*
 

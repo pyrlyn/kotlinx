@@ -77,10 +77,8 @@ object Externs { val names = HashSet<String>() }
  * private renames) that all keep the line, so suspend-ness is looked up by line and (a suffix/prefix of) the name.
  */
 object SuspendFuns {
-    /** CPS coroutines (source marker `// nkc: cps` while the stackful implementation is still the default). */
-    var enabled = false
     val byLine = HashMap<Int, ArrayList<String>>()
-    fun add(line: Int, name: String) { if (enabled) byLine.getOrPut(line) { ArrayList() }.add(name) }
+    fun add(line: Int, name: String) { byLine.getOrPut(line) { ArrayList() }.add(name) }
     fun isSuspend(f: FunD): Boolean = byLine[f.line]?.any { n -> f.name == n || f.name.endsWith("\$" + n) || f.name.endsWith("." + n) || f.name.startsWith(n + "\$") } == true
 }
 /** Numbers lambda blocks once, so each gets a stable id. */
