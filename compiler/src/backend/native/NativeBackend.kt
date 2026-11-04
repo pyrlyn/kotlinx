@@ -2443,7 +2443,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return invokeFn(genExpr(callee), e)
         }
         // `x.fn(args)` for a local `fn: R.(A) -> X`: invoke with `x` as the receiver argument.
-        if (callee is MemberE && !callee.safe && lookup(callee.n)?.let { isRecvFn(it.t) } == true && probeType(callee.recv)?.let { hasMemberNamed(it, callee.n) } != true)
+        if (callee is MemberE && !callee.safe && (lookup(callee.n)?.t ?: capturedFnType(callee.n))?.let { isRecvFn(it) } == true && probeType(callee.recv)?.let { hasMemberNamed(it, callee.n) } != true)
             return invokeFn(genExpr(NameE(callee.n).also { it.line = line }), CallE(NameE(callee.n), e.typeArgs, listOf(callee.recv) + e.args, e.lambda).also { it.line = e.line })
         if (callee is NameE && (lookup(callee.n) == null || (callee.n in classes && scopes.none { callee.n in it.vars }))) return genNamedCall(callee.n, e)
         if (callee is MemberE) {
@@ -2845,6 +2845,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val tys = e.args.map { genExpr(it).t }
                 body.setLength(sb); allocas.setLength(sa); cur = sc; term = st
                 cd.ctorParams.forEachIndexed { i, p -> unify(p.type, tys[i], cd.typeParams, env) }
+                // `block(Controller())` / `val c: Controller<String> = Controller()`: the rest from the expected type.
+                if (cd.typeParams.any { it !in env }) expected.lastOrNull { it.first === e }?.second?.let { ex ->
+                    val one = LinkedHashMap<String, Ty>()
+                    unify(TypeRef(n, cd.typeParams.map { TypeRef(it, emptyList(), false) }, false), ex, cd.typeParams, one)
+                    for ((k, v) in one) if (k !in env) env[k] = v
+                }
                 cd.typeParams.map { tp -> tyRef(env[tp] ?: fail("cannot infer type parameter $tp of $n; pass it explicitly")) }
             }
             return genNamedCall((instanceTy(n, ta) as Ty.Cls).name, CallE(e.callee, emptyList(), e.args, e.lambda))
@@ -4127,6 +4133,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         try { return f() } finally { while (expected.size > n) expected.removeAt(expected.size - 1) }
     }
 
+    /** The type of the enclosing class's field [n] (a closure's captured value inside its `invoke`), if any. */
+    private fun capturedFnType(n: String): Ty? = owner?.fields?.firstOrNull { it.first == n }?.second
+
     private fun isRecvFn(t: Ty) = t is Ty.Iface && t.name.startsWith("\$FnR")
 
     /** The `invoke` signature if [t] is a function type. */
@@ -4382,6 +4391,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         } else if (declared.isEmpty()) (if (ptys.size == 1) listOf("it") else ptys.indices.map { "\$ctxp$it" }) else declared.mapIndexed { i, n -> if (n == "_") "\$_$i" else n }
         val free = LinkedHashSet<String>()
         for (s in b0.stmts) for (u in Uses.ofStmt(s)) free.add(u.node.n)
+        // `x.f()` with `f` a local value of a receiver function type (`A.() -> Unit`): uses `f`.
+        Subst(emptyMap(), rw = { y -> if (y is CallE && y.callee is MemberE && scopes.any { sc -> sc.vars[y.callee.n]?.let { isRecvFn(it.t) } == true }) free.add(y.callee.n); null }).block(b0)
         val caps = ArrayList<Pair<String, Ty>>()
         var outer = false
         val o = owner
