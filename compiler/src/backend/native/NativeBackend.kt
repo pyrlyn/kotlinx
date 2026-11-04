@@ -2353,6 +2353,51 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         else -> false
     }
 
+    /** Chooses among overloads of top-level [n] by argument count and (probed) argument types; a lambda literal by
+     *  its result type (`{ "" }` prefers `() -> String`, `{ Unit }` prefers `() -> Unit`). */
+    private fun pickOverload(n: String, e: CallE): String {
+        val all = allArgs(e)
+        val cands = Overloads.map.getValue(n).filter { f -> f.params.size == all.size || (f.params.size > all.size && f.params.drop(all.size).all { it.default != null }) }
+        if (cands.isEmpty()) fail("no overload of $n takes ${all.size} arguments")
+        if (cands.size == 1) return cands[0].name
+        fun lamRet(a: LambdaE): Ty? {
+            if (a.body.params.isNotEmpty()) return null
+            val last = (a.body.stmts.lastOrNull() as? ExprS)?.e ?: return Ty.Unit
+            return probeType(last)
+        }
+        var best: String? = null; var bestScore = -1
+        for (f in cands) {
+            var score = 0; var ok = true
+            for ((i, a) in all.withIndex()) {
+                if (a is NamedE) continue
+                val pt = try { resolve(f.params[i].type) } catch (x: CompileError) { ok = false; break }
+                if (a is LambdaE) {
+                    // A fun interface parameter (SAM conversion): its single method's signature.
+                    val sig = fnSig(pt) ?: (pt as? Ty.Iface)?.let { ifaces[it.name]?.methods?.values?.singleOrNull() }
+                    if (sig == null) { score += 0; continue }
+                    val lr = lamRet(a)
+                    score += if (lr != null && lr == sig.ret) 3 else if (sig.ret == Ty.Unit) 1 else if (lr == null) 1 else 0
+                    continue
+                }
+                val at = probeType(a)
+                score += when {
+                    at == null -> 0
+                    at == pt -> 4
+                    isFnTwin(at, pt) -> 3
+                    isSuspendConversion(at, pt) -> 1
+                    isAny(pt) -> 1
+                    at is Ty.Cls && (pt is Ty.Cls || pt is Ty.Iface) && classes[at.name]?.let { ci -> pt.toString() in ci.ancestors || pt.toString() in ci.supers } == true -> 2
+                    pt is Ty.NBox && pt.inner == at -> 2
+                    at.isNum && pt.isNum -> 0
+                    else -> { ok = false; 0 }
+                }
+                if (!ok) break
+            }
+            if (ok && score > bestScore) { best = f.name; bestScore = score }
+        }
+        return best ?: fail("no overload of $n matches the arguments")
+    }
+
     private fun genCall(e: CallE): Val {
         val callee = e.callee
         if (callee is MemberE && !callee.safe && callee.recv is NameE && (callee.recv as NameE).n == "super") return superCall(callee.n, e)
@@ -2360,7 +2405,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (qn != null && qn in NANOS) return Val(emitT("call i64 @rt_nanos()"), Ty.I64)
         if (qn != null && (qn == "kotlin.math.sqrt" || qn == "kotlin.math.abs")) return genNamedCall(qn, e)
         scopeFn(e)?.let { return genBlockBody(it, true) }
-        if (callee is NameE && callee.n == "\$typeHint") return Val("", Ty.Unit)  // builder-inference hint (Parser.typeHint)
+        if (callee is NameE && callee.n == "\$typeHint") return Val("", Ty.Unit)
+        if (callee is NameE && callee.n in Overloads.map && lookup(callee.n) == null) {
+            val pick = pickOverload(callee.n, e)
+            // The parser's SAM wrapping skips overloaded names: wrap lambdas passed to fun-interface parameters here.
+            val fps = Overloads.map.getValue(callee.n).first { it.name == pick }.params
+            val all = allArgs(e).mapIndexed { i, a ->
+                val pt = fps.getOrNull(i)?.type
+                if (a is LambdaE && pt != null && pt.args.isEmpty() && "${pt.name}\$Sam" in classes) CallE(NameE("${pt.name}\$Sam").also { it.line = e.line }, emptyList(), listOf(a), null).also { it.line = e.line } else a
+            }
+            val wrapped = e.lambda != null && all.last() !is LambdaE
+            return genCall(CallE(NameE(pick).also { it.line = callee.line }, e.typeArgs, if (e.lambda == null || wrapped) all else e.args, if (wrapped) null else e.lambda).also { it.line = e.line; it.infix = e.infix })
+        }  // builder-inference hint (Parser.typeHint)
         // `recv.e(args)` with a local `e: R.(A) -> X` (no member `e` on recv): `e(recv, args)`.
         if (callee is MemberE && !callee.safe && (callee.recv as? NameE)?.n != "super") {
             val m = callee

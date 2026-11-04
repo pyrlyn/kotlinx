@@ -7,8 +7,24 @@ package newkotlin
  * until the instance set is closed. Each instance has exact field types, so primitives stay unboxed and the
  * Perceus RC / cycle analysis (cyclic classes, field release functions) is computed per instance.
  */
+/** Overloaded top-level functions: source name -> renamed declarations (`f$ov0`, ...), resolved per call by the backend. */
+object Overloads { val map = HashMap<String, List<FunD>>() }
+
+/** Renames non-generic top-level overloads apart (`main` and extension functions are left alone). */
+fun renameOverloads(p: Program): Program {
+    Overloads.map.clear()
+    val groups = p.funs.groupBy { it.name }.filter { (n, fs) -> fs.size > 1 && n != "main" && !n.startsWith("ext$") && fs.all { it.typeParams.isEmpty() } }
+    if (groups.isEmpty()) return p
+    val renamed = HashMap<FunD, FunD>()
+    for ((n, fs) in groups) {
+        val nfs = fs.mapIndexed { i, f -> FunD("$n\$ov$i", f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams, f.recv).also { renamed[f] = it } }
+        Overloads.map[n] = nfs
+    }
+    return Program(p.funs.map { renamed[it] ?: it }, p.classes, p.ifaces, p.globals, p.companions)
+}
+
 fun compileGenerics(p00: Program): String {
-    val p0 = boxCapturedVars(rewriteStatics(p00))
+    val p0 = boxCapturedVars(rewriteStatics(renameOverloads(p00)))
     val generic = p0.classes.filter { it.typeParams.isNotEmpty() }.associateBy { it.name }
     val inst = LinkedHashMap<String, ClassD>()
     val extraClasses = LinkedHashMap<String, ClassD>()
