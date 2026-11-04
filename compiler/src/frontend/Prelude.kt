@@ -314,6 +314,22 @@ fun <T> ArrayList<T>.forEachIndexed(action: (Int, T) -> Unit) { var i = 0; for (
 fun <T> ArrayList<T>.indexOfFirst(predicate: (T) -> Boolean): Int { var i = 0; for (x in this) { if (predicate(x)) return i; i++ }; return -1 }
 fun <T> ArrayList<T>.indexOfLast(predicate: (T) -> Boolean): Int { var i = size - 1; while (i >= 0) { if (predicate(get(i))) return i; i-- }; return -1 }
 fun <T> ArrayList<T>.addAll(xs: ArrayList<T>): Boolean { for (x in xs) add(x); return xs.size != 0 }
+// In-place stable merge sort (natural order of the element type).
+fun <T> ArrayList<T>.kxMergeSort(tmp: ArrayList<T>, lo: Int, hi: Int, desc: Boolean) {
+    if (hi - lo < 2) return
+    val mid = (lo + hi) / 2
+    kxMergeSort(tmp, lo, mid, desc); kxMergeSort(tmp, mid, hi, desc)
+    var i = lo; var j = mid; var k = lo
+    while (k < hi) {
+        val takeLeft = j >= hi || (i < mid && (if (desc) !(get(i) < get(j)) else !(get(j) < get(i))))
+        if (takeLeft) { tmp[k] = get(i); i++ } else { tmp[k] = get(j); j++ }
+        k++
+    }
+    k = lo
+    while (k < hi) { this[k] = tmp[k]; k++ }
+}
+fun <T> ArrayList<T>.sort() { val tmp = ArrayList<T>(); for (x in this) tmp.add(x); kxMergeSort(tmp, 0, size, false) }
+fun <T> ArrayList<T>.sortDescending() { val tmp = ArrayList<T>(); for (x in this) tmp.add(x); kxMergeSort(tmp, 0, size, true) }
 data class IndexedValue<T>(val index: Int, val value: T)
 fun <T> ArrayList<T>.withIndex(): ArrayList<IndexedValue<T>> { val r = ArrayList<IndexedValue<T>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 fun String.withIndex(): ArrayList<IndexedValue<Char>> { val r = ArrayList<IndexedValue<Char>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
@@ -446,7 +462,7 @@ const val RANGE_LIST_EXT = """
 fun IntProgression.asSequence(): List<Int> = toList()
 fun IntProgression.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
-private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex|asSequence|forEachIndexed|indexOfFirst|indexOfLast|addAll)\(|-=|\bin\b""")
+private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex|asSequence|forEachIndexed|indexOfFirst|indexOfLast|addAll|sort|sortDescending)\(|-=|\bin\b""")
 
 /** `indices` / `lastIndex` of lists, arrays and strings as extension properties. */
 const val INDICES = """
@@ -538,11 +554,49 @@ data class KClass(val simpleName: String?, val qualifiedName: String?) {
 """
 private val KCLASS_USE = Regex("""::\s*class\b""")
 
+
+private val STRING_EXT = """
+fun String.substring(startIndex: Int, endIndex: Int = this.length): String {
+    if (startIndex < 0 || endIndex > length || startIndex > endIndex) throw IndexOutOfBoundsException("begin " + startIndex + ", end " + endIndex + ", length " + length)
+    val sb = StringBuilder()
+    var i = startIndex
+    while (i < endIndex) { sb.append(this[i]); i++ }
+    return sb.toString()
+}
+var kt_parseOk = false
+fun kt_parseLong(s: String, min: Long, max: Long): Long {
+    kt_parseOk = false
+    if (s.length == 0) return 0L
+    var i = 0
+    var neg = false
+    if (s[0] == '-' || s[0] == '+') { neg = s[0] == '-'; i = 1; if (s.length == 1) return 0L }
+    var v = 0L
+    while (i < s.length) {
+        val c = s[i]
+        if (c < '0' || c > '9') return 0L
+        val d = (c - '0').toLong()
+        if (neg) { if (v < (min + d) / 10L) return 0L; v = v * 10L - d } else { if (v > (max - d) / 10L) return 0L; v = v * 10L + d }
+        i++
+    }
+    kt_parseOk = true
+    return v
+}
+fun String.toLong(): Long { val v = kt_parseLong(this, -9223372036854775807L - 1L, 9223372036854775807L); if (!kt_parseOk) throw NumberFormatException("For input string: \"" + this + "\""); return v }
+fun String.toInt(): Int { val v = kt_parseLong(this, -2147483648L, 2147483647L); if (!kt_parseOk) throw NumberFormatException("For input string: \"" + this + "\""); return v.toInt() }
+"""
+private val STRING_NULLABLE = """
+fun String.toLongOrNull(): Long? { val v = kt_parseLong(this, -9223372036854775807L - 1L, 9223372036854775807L); if (!kt_parseOk) return null; return v }
+fun String.toIntOrNull(): Int? { val v = kt_parseLong(this, -2147483648L, 2147483647L); if (!kt_parseOk) return null; return v.toInt() }
+"""
+private val STRING_NULLABLE_USE = Regex("""\.to(Int|Long)OrNull\(""")
+private val STRING_EXT_USE = Regex("""\.(substring|toInt|toLong|toIntOrNull|toLongOrNull)\(""")
+
 fun withPrelude(src: String, p: Program): Program {
-    val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val result = RESULT_USE.containsMatchIn(src); val exc = result || EXC_USE.containsMatchIn(src); val zip = ZIP_USE.containsMatchIn(src); val sets = SETS_USE.containsMatchIn(src); val pairs = zip || PAIR_USE.containsMatchIn(src)
-    val cmp = COMPARABLE_USE.containsMatchIn(src); val arrx = sets || ARRAY_EXT_USE.containsMatchIn(src); val lists = arrx || LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src); val lz = LAZY_USE.containsMatchIn(src); val anyObj = ANY_OBJ_USE.containsMatchIn(src); val mm = MIN_MAX_USE.containsMatchIn(src); val el = EMPTY_LIST_USE.containsMatchIn(src); val mmod = MEMORY_MODEL_USE.containsMatchIn(src); val kcls = KCLASS_USE.containsMatchIn(src)
-    if (!sets && !arrx && !kcls && !ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon && !lz && !anyObj && !mm && !el && !mmod) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (result) RESULT else "") + (if (pairs) PAIRS else "") + (if (zip) ZIP_EXT else "") + (if (sets) SETS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (arrx) ARRAY_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "") + (if (lz) LAZY else "") + (if (anyObj) ANY_OBJ else "") + (if (mm) MIN_MAX else "") + (if (el) EMPTY_LIST else "") + (if (mmod) MEMORY_MODEL else "") + (if (kcls) KCLASS else "")
+    val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val result = RESULT_USE.containsMatchIn(src) || COROUTINES_USE.containsMatchIn(src); val strx = STRING_EXT_USE.containsMatchIn(src); val exc = result || COROUTINES_USE.containsMatchIn(src) || SERIALIZATION_USE.containsMatchIn(src) || EXC_USE.containsMatchIn(src); val zip = ZIP_USE.containsMatchIn(src); val sets = SETS_USE.containsMatchIn(src); val pairs = zip || PAIR_USE.containsMatchIn(src)
+    val cmp = COMPARABLE_USE.containsMatchIn(src); val arrx = sets || ARRAY_EXT_USE.containsMatchIn(src); val lists = arrx || LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = COROUTINES_USE.containsMatchIn(src) || SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src); val lz = LAZY_USE.containsMatchIn(src); val anyObj = ANY_OBJ_USE.containsMatchIn(src); val mm = MIN_MAX_USE.containsMatchIn(src); val el = EMPTY_LIST_USE.containsMatchIn(src); val mmod = MEMORY_MODEL_USE.containsMatchIn(src); val kcls = KCLASS_USE.containsMatchIn(src)
+    val coro = COROUTINES_USE.containsMatchIn(src); val ser = SERIALIZATION_USE.containsMatchIn(src)
+    if (!strx && !coro && !ser && !sets && !arrx && !kcls && !ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon && !lz && !anyObj && !mm && !el && !mmod) return p
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (result) RESULT else "") + (if (pairs) PAIRS else "") + (if (zip) ZIP_EXT else "") + (if (sets) SETS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (arrx) ARRAY_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "") + (if (lz) LAZY else "") + (if (anyObj) ANY_OBJ else "") + (if (mm) MIN_MAX else "") + (if (el) EMPTY_LIST else "") + (if (mmod) MEMORY_MODEL else "") + (if (kcls) KCLASS else "") + (if (strx) STRING_EXT else "") + (if (strx && STRING_NULLABLE_USE.containsMatchIn(src)) STRING_NULLABLE else "") + (if (coro) KOTLINX_COROUTINES else "") + (if (ser) KOTLINX_SERIALIZATION else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },
@@ -555,7 +609,7 @@ val ANY_BOXED = listOf("Int", "Long", "Double", "Float", "Boolean", "Char", "Str
 val ANY_BOXED_ARRAYS = listOf("IntArray", "LongArray", "DoubleArray", "FloatArray", "BooleanArray", "CharArray", "UIntArray", "ULongArray", "ByteArray")
 // Nullable primitives (`Int?`) and safe calls (`a?.x` may yield one) are boxed like `Any`.
 // A nullable type parameter (`T?`, short names) may be instantiated with a primitive, which is boxed too.
-private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UInt|ULong|Byte|Short|UByte|UShort)\?|\?\.|\b[A-Z]\?|\bResult\b|\brunCatching\b|\bNumber\b""")
+private val ANY_USE = Regex("""\bAny\b|\b(Int|Long|Double|Float|Boolean|Char|UInt|ULong|Byte|Short|UByte|UShort)\?|\?\.|\b[A-Z]\?|\bResult\b|\brunCatching\b|\bNumber\b|\.to(Int|Long)OrNull\(|\bkotlin\.coroutines\b|\bContinuation\b""")
 
 /**
  * `Any`: a built-in interface with no methods that every class implements. Primitives and strings are boxed into

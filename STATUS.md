@@ -45,6 +45,24 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   a generic super-interface are still unsupported.
 - Local classes and anonymous objects in generic functions may use the function's type parameters: the lifted class
   becomes generic over them and is instantiated per monomorphized function. Classes with abstract methods always dispatch virtually.
+- Stdlib additions: `String.toInt/toLong/toIntOrNull/toLongOrNull`, `substring` (prelude), `List.sum()` of numeric
+  lists, `HashMap`/`hashMapOf` with String keys (content-hashed, keys retained by the map; values stay primitive), computed
+  `var` properties with `get()` and `set(v)` accessors.
+- kotlinx subsets (`compiler/src/frontend/Kotlinx.kt`, tests `kotlinx_coroutines`, `kotlinx_serialization`):
+  coroutines (`runBlocking` (also nested), `coroutineScope`, `launch`, `async`/`await`, `Job` with cancellation
+  (`cancel`, `isActive`, `CancellationException` at suspension points, children cancelled with the parent), `Channel`,
+  cold `Flow`): CPS. `suspend fun` and suspend function types (`suspend () -> T`, `suspend R.() -> T`) compile to LLVM
+  switched-resume coroutines (state machines whose live locals are spilled into a heap frame by CoroSplit); a suspend
+  call from a coroutine creates the callee's coroutine and awaits it. A single-threaded scheduler drives the jobs, so
+  `join`/`await`/`receive`/`send`/`yield`/`delay` really suspend; `delay` is virtual time. Structured concurrency: a failing child cancels its siblings and the
+  parent's body, and the failure is rethrown by `runBlocking`/`coroutineScope`/`await`; on a deadlock every suspended
+  coroutine is cancelled and unwound (its frame and objects are freed) before runBlocking throws. `suspend fun main()`
+  runs in a generated `runBlocking`. `supervisorScope`, `CoroutineExceptionHandler` and `launch(SupervisorJob() + handler)`
+  route child failures to the handler. Low-level `kotlin.coroutines`: `Continuation`, `resume`/`resumeWithException`,
+  `suspendCoroutine`, `startCoroutine`/`createCoroutine` (also with a receiver). Suspend calls are only
+  allowed in suspend functions/lambdas (and in lambdas the compiler inlines, e.g. `forEach`). Serialization: `@Serializable`
+  classes (Int/Long/Double/Boolean/String, nested @Serializable, `List<T>`, nullable) with `X.serializer()`,
+  `Json.encodeToString/decodeFromString(serializer, ...)`, `parseToJsonElement` and the `JsonElement` tree.
 - Not yet: user generics, function types and general lambdas, inheritance from classes (open/abstract/sealed), objects and
   companions, enums, inline/value classes, extension and operator functions, default/named arguments, exceptions,
   labeled jumps. `compiler/tests/upstream/report.md` ranks the missing features by upstream test count.

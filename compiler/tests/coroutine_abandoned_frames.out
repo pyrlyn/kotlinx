@@ -1,0 +1,3 @@
+receiver unwound 1
+sender unwound 2
+caught: runBlocking: deadlock, no coroutine can make progress
