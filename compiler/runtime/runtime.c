@@ -47,6 +47,7 @@ int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
 #define REL_STACK (4 * 1024 * 1024)
 char *rt_rel_limit;
 int rt_rel_draining;
+_Thread_local int rt_trav_mode;
 static size_t rel_drain_room;
 static PtrStack rel_pending;
 
@@ -263,14 +264,38 @@ char *rt_sb_done(SB *s) { char *r = s->buf; ((int64_t *)r)[-1] = 1; LK(LK_SB, -1
 // ---- ArrayList (reference counted; elements stored as 64-bit slots) -------
 
 typedef void (*release_fn)(void *);
-typedef struct { int64_t rc; int64_t len, cap; int64_t *data; release_fn rel; } List;
+/* Deferred RC (epoch) only: `gc` is set once the list is stored in a field of a traced object, where the
+ * concurrent collector can read it; from then on its storage is published with release stores and freed
+ * with rt_gc_free_later. `owner` is the traced object whose field holds it, the only object the collector
+ * traverses it from; every change the collector could see logs that owner as modified (rt_gc_write_barrier),
+ * as a field store would. `ctrav`: the collector took over the element references of a dead owner. */
+typedef struct { int64_t rc; int64_t len, cap; int64_t *data; release_fn rel; void *owner; int32_t gc, ctrav; } List;
+#define LD(x) __atomic_load_n(&(x), __ATOMIC_RELAXED)
+#define LDA(x) __atomic_load_n(&(x), __ATOMIC_ACQUIRE)
+#define ST(x, v) __atomic_store_n(&(x), (v), __ATOMIC_RELAXED)
+#define STR(x, v) __atomic_store_n(&(x), (v), __ATOMIC_RELEASE)
+#define OWNER_MOD(c) do { if (__builtin_expect((c)->owner != NULL, 0)) rt_gc_write_barrier((c)->owner); } while (0)
 
 List *rt_list_new(release_fn rel) {
     List *l = malloc(sizeof *l);
-    l->rc = 1; l->len = 0; l->cap = 0; l->data = NULL; l->rel = rel; LK(LK_LIST, 1);
+    l->rc = 1; l->len = 0; l->cap = 0; l->data = NULL; l->rel = rel; l->owner = NULL; l->gc = 0; l->ctrav = 0; LK(LK_LIST, 1);
     return l;
 }
+/* Grows a collector-visible list without realloc: the collector may still read the old storage. */
+static __attribute__((noinline)) void list_grow_gc(List *l) {
+    int64_t cap = l->cap ? l->cap * 2 : 10;
+    int64_t *d = rt_gc_mem_alloc((size_t)cap * 8), *old = l->data;
+    if (l->len) memcpy(d, old, (size_t)l->len * 8);
+    STR(l->data, d); l->cap = cap;
+    if (old) rt_gc_free_later(old);
+}
 void rt_list_add(List *l, int64_t v) {
+    if (__builtin_expect(l->gc, 0)) {
+        if (l->len == l->cap) list_grow_gc(l);
+        ST(l->data[l->len], v); STR(l->len, l->len + 1);   /* element before length: the collector reads len first */
+        OWNER_MOD(l);
+        return;
+    }
     if (l->len == l->cap) { l->cap = l->cap ? l->cap * 2 : 10; l->data = rt_gc_mem_realloc(l->data, (size_t)l->cap * 8); }
     l->data[l->len++] = v;
 }
@@ -289,20 +314,36 @@ static inline void bounds(List *l, int64_t i) {
  * (PR #3 shifted rt_list_get across a cache-line boundary: refpass 131.6 -> 145 ms). */
 #define RT_HOT __attribute__((hot, aligned(64)))
 RT_HOT int64_t rt_list_get(List *l, int64_t i) { bounds(l, i); return l->data[i]; }
-RT_HOT int64_t rt_list_set(List *l, int64_t i, int64_t v) { bounds(l, i); int64_t o = l->data[i]; l->data[i] = v; return o; }
+RT_HOT int64_t rt_list_set(List *l, int64_t i, int64_t v) { bounds(l, i); int64_t o = l->data[i]; ST(l->data[i], v); OWNER_MOD(l); return o; }
 RT_HOT int64_t rt_list_size(List *l) { return l->len; }
 /* Removes and returns element i; ownership of a reference element moves to the caller. */
 int64_t rt_list_remove_at(List *l, int64_t i) {
     bounds(l, i); int64_t o = l->data[i];
+    if (__builtin_expect(l->gc, 0)) {
+        /* word by word (memmove may tear a slot the collector reads), length last */
+        for (int64_t j = i; j + 1 < l->len; j++) ST(l->data[j], l->data[j + 1]);
+        STR(l->len, l->len - 1); OWNER_MOD(l);
+        return o;
+    }
     memmove(l->data + i, l->data + i + 1, (size_t)(l->len - i - 1) * 8); l->len--;
     return o;
 }
-void rt_list_release(List *l) {
-    if (!l || --l->rc > 0) return;
+static void list_free(List *l) {
     LK(LK_LIST, -1);
-    if (l->rel) for (int64_t i = 0; i < l->len; i++) l->rel((void *)(intptr_t)l->data[i]);
-    rt_gc_mem_free(l->data); free(l);
+    if (l->gc) { rt_gc_free_later(l->data); rt_gc_free_later(l); } else { rt_gc_mem_free(l->data); free(l); }
 }
+void rt_list_release(List *l) {
+    if (!l) return;
+    if (l->rc > 1) { ST(l->rc, l->rc - 1); OWNER_MOD(l); return; }   /* a shared list becomes traversable */
+    if (l->rel) for (int64_t i = 0; i < l->len; i++) l->rel((void *)(intptr_t)l->data[i]);
+    list_free(l);
+}
+/* Deferred RC: a retain of a list the collector may traverse (it then holds more than one reference). */
+void rt_list_retain_gc(List *l) { if (l) { ST(l->rc, l->rc + 1); OWNER_MOD(l); } }
+/* Deferred RC: l is about to be stored in a field of traced object obj (which logs itself as modified). */
+void rt_list_own(List *l, void *obj) { if (l) { l->gc = 1; if (!l->owner) ST(l->owner, obj); } }
+/* Deferred RC: the field of obj that held l was overwritten. */
+void rt_list_disown(List *l, void *obj) { if (l && l->owner == obj) ST(l->owner, NULL); }
 
 /* Cycle collection through lists: a list owned only by its object (count 1) is traversed as part of it, its
  * elements being that object's children (NativeBackend @trav). The collector then releases the elements, so a
@@ -314,8 +355,29 @@ void rt_list_trav(List *l, void (*visit)(void *)) {
 void rt_list_release_untraced(List *l) {
     if (!l) return;
     if (l->rc != 1) { rt_list_release(l); return; }
-    LK(LK_LIST, -1);
-    rt_gc_mem_free(l->data); free(l);
+    list_free(l);
+}
+/* Deferred RC (the collector runs next to the mutator): traversed only from its owner and while that holds
+ * the only reference; both can change concurrently, but every such change logs the owner as modified, so a
+ * detection that saw the old state fails its Delta test. Length before storage before elements (acquire),
+ * the order list_grow_gc / rt_list_add publish them in; old storage stays valid (rt_gc_free_later). */
+void rt_list_trav_owned(List *l, void *owner, void (*visit)(void *)) {
+    if (!l) return;
+    int ok;
+    if (rt_trav_mode == RT_TRAV_FREE) ok = l->ctrav;
+    else {
+        ok = LD(l->owner) == owner && LD(l->rc) == 1;
+        if (rt_trav_mode == RT_TRAV_RELEASE) ST(l->ctrav, ok);
+    }
+    if (!ok) return;
+    int64_t n = LDA(l->len); int64_t *d = LDA(l->data);
+    for (int64_t i = 0; i < n; i++) visit((void *)(intptr_t)LD(d[i]));
+}
+/* Deferred RC: relo of the dead owner (or holder) of l. */
+void rt_list_release_owned(List *l, void *obj) {
+    if (!l) return;
+    if (l->owner == obj) ST(l->owner, NULL);
+    if (l->ctrav) list_free(l); else rt_list_release(l);
 }
 
 // ---- primitive arrays: pointer to { int64 length; elements... }, refcount at -8 ----
@@ -342,8 +404,9 @@ void rt_oob(int64_t i, int64_t len) {
 // ---- HashMap<primitive|String, primitive>: open addressing, linear probing --------
 // String keys (`skeys`): the slot holds the string pointer (retained by the map), hashed and compared by content.
 
-typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; release_fn vrel; } Map;
+typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; release_fn vrel; void *owner; int32_t gc, ctrav; } Map;
 // Reference values (`vrel` set): the map owns one reference per value; overwrites and the map release drop it.
+// `owner`, `gc`, `ctrav`: as for List (deferred RC only).
 
 static inline uint64_t map_hash(int64_t k) {
     uint64_t x = (uint64_t)k;
@@ -357,7 +420,7 @@ static inline uint64_t map_hash_str(const char *s) {
 }
 Map *rt_map_new(void) {
     Map *m = malloc(sizeof *m);
-    m->skeys = 0; m->vrel = NULL; m->rc = 1; m->size = 0; m->cap = 16;
+    m->skeys = 0; m->vrel = NULL; m->owner = NULL; m->gc = 0; m->ctrav = 0; m->rc = 1; m->size = 0; m->cap = 16;
     m->keys = malloc(16 * 8); m->vals = rt_gc_mem_alloc(16 * 8); m->used = calloc(16, 1); LK(LK_MAP, 1);
     return m;
 }
@@ -377,6 +440,20 @@ static inline int64_t map_find(Map *m, int64_t k) {
 }
 static void map_grow(Map *m) {
     Map old = *m;
+    if (m->gc) {
+        /* Collector-visible: rehash into new tables, then publish values, used flags and capacity in that order
+         * (the collector reads them backwards). Zeroed values: a collector that pairs the old used flags with
+         * the new values reads null or a moved live value, never garbage. The old tables stay valid. */
+        Map n = old; n.cap *= 2; n.size = 0;
+        n.keys = malloc((size_t)n.cap * 8); n.vals = rt_gc_mem_calloc((size_t)n.cap * 8); n.used = calloc((size_t)n.cap, 1);
+        for (int64_t i = 0; i < old.cap; i++) if (old.used[i]) {
+            int64_t j = map_find(&n, old.keys[i]);
+            n.used[j] = 1; n.keys[j] = old.keys[i]; n.vals[j] = old.vals[i]; n.size++;
+        }
+        m->keys = n.keys; m->size = n.size; STR(m->vals, n.vals); STR(m->used, n.used); STR(m->cap, n.cap);
+        free(old.keys); rt_gc_free_later(old.vals); rt_gc_free_later(old.used);
+        return;
+    }
     m->cap *= 2; m->size = 0;
     m->keys = malloc((size_t)m->cap * 8); m->vals = rt_gc_mem_alloc((size_t)m->cap * 8); m->used = calloc((size_t)m->cap, 1);
     for (int64_t i = 0; i < old.cap; i++) if (old.used[i]) {
@@ -388,6 +465,15 @@ static void map_grow(Map *m) {
 void rt_map_put(Map *m, int64_t k, int64_t v) {
     if ((m->size + 1) * 4 > m->cap * 3) map_grow(m);
     int64_t i = map_find(m, k);
+    if (__builtin_expect(m->gc, 0)) {
+        /* value before used flag: the collector reads the flag first */
+        int64_t o = m->vals[i]; int fresh = !m->used[i];
+        ST(m->vals[i], v);
+        if (fresh) { m->keys[i] = k; STR(m->used[i], 1); m->size++; if (m->skeys) rt_hdr_retain((void *)(intptr_t)k); }
+        OWNER_MOD(m);
+        if (!fresh && m->vrel) m->vrel((void *)(intptr_t)o);
+        return;
+    }
     if (!m->used[i]) { m->used[i] = 1; m->keys[i] = k; m->size++; if (m->skeys) rt_hdr_retain((void *)(intptr_t)k); }
     else if (m->vrel) m->vrel((void *)(intptr_t)m->vals[i]);
     m->vals[i] = v;
@@ -405,14 +491,20 @@ int64_t rt_map_get(Map *m, int64_t k) {
     return m->vals[i];
 }
 int64_t rt_map_size(Map *m) { return m->size; }
-void rt_map_release(Map *m) {
-    if (!m || --m->rc > 0) return;
+/* Memory only: keys are released here, values by the caller (or by the collector). */
+static void map_free(Map *m) {
     LK(LK_MAP, -1);
-    for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) {
-        if (m->skeys) rt_str_release((char *)(intptr_t)m->keys[i]);
-        if (m->vrel) m->vrel((void *)(intptr_t)m->vals[i]);
-    }
-    free(m->keys); rt_gc_mem_free(m->vals); free(m->used); free(m); }
+    if (m->skeys) for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) rt_str_release((char *)(intptr_t)m->keys[i]);
+    free(m->keys);
+    if (m->gc) { rt_gc_free_later(m->vals); rt_gc_free_later(m->used); rt_gc_free_later(m); }
+    else { rt_gc_mem_free(m->vals); free(m->used); free(m); }
+}
+void rt_map_release(Map *m) {
+    if (!m) return;
+    if (m->rc > 1) { ST(m->rc, m->rc - 1); OWNER_MOD(m); return; }
+    if (m->vrel) for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) m->vrel((void *)(intptr_t)m->vals[i]);
+    map_free(m);
+}
 
 /* Cycle collection through map values: like rt_list_trav / rt_list_release_untraced. */
 void rt_map_trav(Map *m, void (*visit)(void *)) {
@@ -421,9 +513,28 @@ void rt_map_trav(Map *m, void (*visit)(void *)) {
 void rt_map_release_untraced(Map *m) {
     if (!m) return;
     if (m->rc != 1) { rt_map_release(m); return; }
-    LK(LK_MAP, -1);
-    if (m->skeys) for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) rt_str_release((char *)(intptr_t)m->keys[i]);
-    free(m->keys); rt_gc_mem_free(m->vals); free(m->used); free(m);
+    map_free(m);
+}
+/* Deferred RC: like rt_list_trav_owned. Capacity, used flags, values: the reverse of map_grow's publication. */
+void rt_map_trav_owned(Map *m, void *owner, void (*visit)(void *)) {
+    if (!m || !m->vrel) return;
+    int ok;
+    if (rt_trav_mode == RT_TRAV_FREE) ok = m->ctrav;
+    else {
+        ok = LD(m->owner) == owner && LD(m->rc) == 1;
+        if (rt_trav_mode == RT_TRAV_RELEASE) ST(m->ctrav, ok);
+    }
+    if (!ok) return;
+    int64_t cap = LDA(m->cap); uint8_t *used = LDA(m->used); int64_t *vals = LDA(m->vals);
+    for (int64_t i = 0; i < cap; i++) if (LDA(used[i])) visit((void *)(intptr_t)LD(vals[i]));
+}
+void rt_map_retain_gc(Map *m) { if (m) { ST(m->rc, m->rc + 1); OWNER_MOD(m); } }
+void rt_map_own(Map *m, void *obj) { if (m) { m->gc = 1; if (!m->owner) ST(m->owner, obj); } }
+void rt_map_disown(Map *m, void *obj) { if (m && m->owner == obj) ST(m->owner, NULL); }
+void rt_map_release_owned(Map *m, void *obj) {
+    if (!m) return;
+    if (m->owner == obj) ST(m->owner, NULL);
+    if (m->ctrav) map_free(m); else rt_map_release(m);
 }
 
 // Object allocation, reference counting slow paths and the cycle collector live in compiler/gc/ (kxgc.h).
