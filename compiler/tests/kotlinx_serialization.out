@@ -1,0 +1,8 @@
+{"name":"Ann \"A\"","age":31,"score":2.5,"admin":true,"id":9000000000,"tags":["x","y"],"home":{"city":"Kyiv","zip":1001},"nick":null,"past":[{"city":"Lviv","zip":79000}]}
+User(name=Ann "A", age=31, score=2.5, admin=true, id=9000000000, tags=[x, y], home=Address(city=Kyiv, zip=1001), nick=null, past=[Address(city=Lviv, zip=79000)])
+true
+Bo -4 100.0 Odesa! b
+[1,{"k":[true,null]},"s\n"]
+3
+Field 'zip' is required, but it was missing
+Unexpected JSON token at offset 5: expected ':'

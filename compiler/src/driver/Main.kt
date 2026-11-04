@@ -22,6 +22,8 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
                        default): default (RC + cycle collector), incremental (budgeted
                        cycle collector steps), epoch (deferred RC + background cycle
                        collection), rc (RC only, cycles leak), boehm (RC + bdwgc)
+  --link <arg>         extra linker input for `external fun` (FFI): a .c/.o/.a file, -l<lib>, -L<dir> or a
+                       linker flag; repeatable (also --link=<arg>)
   -S                   only write LLVM IR to <output>"""
 
 private fun readFile(path: String): String {
@@ -127,7 +129,11 @@ private fun findMimalloc(): String? {
 }
 
 /** Source text to LLVM IR: lex, parse, merge the prelude and `Any` support, then generate code. */
-fun compileToIr(src: String): String = compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program())))
+/** `suspend fun main()`: renamed and run by a generated `fun main() = runBlocking { ... }` (same line numbers). */
+private val SUSPEND_MAIN = Regex("""(?m)^suspend\s+fun\s+main\s*\(\s*\)""")
+fun compileToIr(src00: String): String {
+    val src0 = if (SUSPEND_MAIN.containsMatchIn(src00)) SUSPEND_MAIN.replace(src00, "suspend fun kxSuspendMain()") + "\nfun main() = runBlocking { kxSuspendMain() }\n" else src00
+    val src = withSerializable(src0); return compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program()))) }
 
 /** The `newkotlinc` command; see docs/usage.md for the options. */
 fun main(args: Array<String>) {
@@ -137,6 +143,7 @@ fun main(args: Array<String>) {
     if (getenv("NEWKOTLIN_NO_BORROW_FIELD_LOCALS")?.toKString()?.let { it.isNotEmpty() && it != "0" } == true) borrowFieldLocals = false
     var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() } ?: "default"
     var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false; var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
+    val links = ArrayList<String>()
     var i = 0
     while (i < args.size) {
         when (val a = args[i]) {
@@ -151,9 +158,11 @@ fun main(args: Array<String>) {
             "--cflags" -> cflags = args[++i]
             "--opt" -> optPath = args[++i]
             "--no-opt" -> noOpt = true
+            "--link" -> links.add(args[++i])
             "-S" -> onlyIr = true
             "-h", "--help" -> { println(USAGE); return }
             else -> if (a.startsWith("--gc=")) gc = a.substringAfter('=')
+            else if (a.startsWith("--link=")) links.add(a.substringAfter('='))
             else if (a.startsWith("--target=")) target = Target.parse(a.substringAfter('=')) ?: run { fprintf(stderr, "unknown target: %s\n", a); exit(2); return }
             else if (input == null && !a.startsWith("-")) input = a else { fprintf(stderr, "unknown argument: %s\n%s\n", a, USAGE); exit(2) }
         }
@@ -219,7 +228,7 @@ fun main(args: Array<String>) {
         val pipeline = if ("-flto" in cflags) "lto-pre-link<O3>" else "default<O3>"
         run1("'$opt' -passes='$pipeline' -S '$ll' -o '$linkLl'")
     }
-    val cmd = "$cc $cflags$def -Wno-override-module -I'$gcDir' $gcFlags '$linkLl' '$runtime' '$gcSrc'$link -o '$output'"
+    val cmd = "$cc $cflags$def -Wno-override-module -I'$gcDir' $gcFlags '$linkLl' '$runtime' '$gcSrc'$link${links.joinToString("") { " '$it'" }} -o '$output'"
     val rc = system(cmd)
     cleanup()
     if (rc != 0) { fprintf(stderr, "clang failed (%d): %s\n", rc, cmd); exit(1) }

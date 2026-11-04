@@ -45,7 +45,7 @@ and one `compiler/gc/<name>/gc.c` using exactly the compiler and flags `run.sh` 
 way. Capabilities that were `#ifdef KX_CAP_*` in the C tests reach the Zig tests as arguments.
 Kotlin-program tests (`../kt`, `../epoch`, `../incremental`) are inputs shared with `run.sh`: the runner
 compiles them with `newkotlinc` and checks stdout, exit status, `leak-check: OK` and the debug counters
-exactly as `run.sh` does. Scratch files go to `compiler/build/gc-zig-tmp` (`run.sh` uses `gc-tmp`).
+exactly as `run.sh` does. Scratch files go to `compiler/build/gc-zig-tmp-<pid>`, one per run so concurrent runs do not collide (`run.sh` uses `gc-tmp`).
 
 ## Mapping (original -> port)
 

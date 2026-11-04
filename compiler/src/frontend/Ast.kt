@@ -70,6 +70,17 @@ class Block(val stmts: List<S>, val params: List<String> = emptyList(), val para
 /** `Owner.name` of every `const val` member (declared in a class or object body), for `isPermanent()`. */
 object ConstFields { val names = HashSet<String>() }
 
+/** Names of top-level `external fun` declarations: implemented in C, linked via `--link`, called through the C ABI. */
+object Externs { val names = HashSet<String>() }
+/**
+ * `suspend fun` declarations by source line and name. FunD is copied by many rewrites (extensions, generics,
+ * private renames) that all keep the line, so suspend-ness is looked up by line and (a suffix/prefix of) the name.
+ */
+object SuspendFuns {
+    val byLine = HashMap<Int, ArrayList<String>>()
+    fun add(line: Int, name: String) { byLine.getOrPut(line) { ArrayList() }.add(name) }
+    fun isSuspend(f: FunD): Boolean = byLine[f.line]?.any { n -> f.name == n || f.name.endsWith("\$" + n) || f.name.endsWith("." + n) || f.name.startsWith(n + "\$") } == true
+}
 /** Numbers lambda blocks once, so each gets a stable id. */
 object LamIds {
     private var next = 0

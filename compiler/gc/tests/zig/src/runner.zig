@@ -98,6 +98,7 @@ fn repoRoot() []const u8 {
 extern "c" fn chdir(path: [*:0]const u8) c_int;
 extern "c" fn exit(code: c_int) noreturn;
 extern "c" fn system(cmd: [*:0]const u8) c_int;
+extern "c" fn getpid() c_int;
 
 fn listGcs() []const []const u8 {
     if (p.env("GCS")) |g| return p.words(g);
@@ -128,8 +129,9 @@ pub fn main(init: std.process.Init.Minimal) void {
     if (!p.executable(nkc)) _ = p.run(.{ .argv = &.{"compiler/build.sh"}, .stderr = .inherit });
     p.default_timeout_s = testTimeout(); // after the compiler build, which may legitimately take long
     cc = p.env("NK_CC") orelse (if (p.executable("/usr/bin/clang")) "/usr/bin/clang" else "clang");
-    // A separate scratch dir, so this can run next to run.sh (which owns compiler/build/gc-tmp).
-    out = "compiler/build/gc-zig-tmp";
+    // A separate scratch dir, so this can run next to run.sh (which owns compiler/build/gc-tmp), and one per
+    // process: two concurrent suites sharing it delete and overwrite each other's binaries (rc=126, "compile").
+    out = p.fmt("compiler/build/gc-zig-tmp-{d}", .{getpid()});
     _ = p.run(.{ .argv = &.{ "rm", "-rf", out } });
     p.mkdirP(out);
     if (cov_dir) |d| {

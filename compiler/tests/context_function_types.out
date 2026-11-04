@@ -1,0 +1,6 @@
+class fun
+context fun
+> hello
+> world
+2> context fun
+OK

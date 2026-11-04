@@ -29,3 +29,4 @@ bin/newkotlinc /tmp/hello.kt -o /tmp/hello   # works from any directory
 - [Benchmarks](docs/benchmarks.md): running and comparing benchmarks, committed results.
 - [Architecture](compiler/docs/ARCHITECTURE.md): pipeline, key files, how to add a feature (start here to contribute).
 - [GC](compiler/gc/README.md), [STATUS.md](STATUS.md), [bench/table.md](bench/table.md), feature roadmap [#22](https://github.com/pyrlyn/kotlinx/issues/22).
+- GC extraction plan (not done yet): [`compiler/gc/docs/extraction-plan.md`](compiler/gc/docs/extraction-plan.md); current state: [`STATUS.md`](STATUS.md#status-2026-11-03).

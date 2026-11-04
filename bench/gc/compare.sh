@@ -10,6 +10,9 @@ rounds=${ROUNDS:-3}
 mkdir -p results/gc; args=""
 # Interleaved: ROUNDS rounds (default 3), each running every GC once, in rotated order, so drift in
 # machine load affects all GCs alike; the table uses the per-case median over the rounds.
+# Build every GC's binaries once, in parallel, before any timed run (cached by content in nkbuild.sh, so
+# the rounds reuse them instead of recompiling 17 cases x GCs x ROUNDS times). No measurement overlaps a build.
+for g in $gcs; do echo "$g"; done | xargs -P "${BUILD_JOBS:-4}" -I{} env NKBENCH_BUILD_ONLY=1 NKFLAGS="--gc={} ${NKFLAGS:-}" ./nkbench.sh "gc-build-{}"
 set -- $gcs
 for r in $(seq 1 "$rounds"); do
   for g in "$@"; do

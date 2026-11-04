@@ -1,0 +1,14 @@
+outer start
+n1:body
+n1:b
+n1:a
+after n1
+n2:body
+n2:b
+n2:a
+deep
+outer end
+top:body
+top:b
+top:a
+virtual time 31

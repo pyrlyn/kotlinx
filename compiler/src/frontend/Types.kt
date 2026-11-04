@@ -10,6 +10,8 @@ sealed class Ty {
     object F32 : Ty() { override fun toString() = "Float" }
     object F64 : Ty() { override fun toString() = "Double" }
     object Unit : Ty() { override fun toString() = "Unit" }
+    /** A stored Unit value (parameter, property or local of type Unit, e.g. `Result<Unit>`); always `kotlin.Unit`. */
+    object UnitV : Ty() { override fun toString() = "Unit" }
     object Nothing : Ty() { override fun toString() = "Nothing" }
     object Str : Ty() { override fun toString() = "String" }
     /** Opaque C pointer (FILE*, CPointer<*>, char* from getenv). */
@@ -29,7 +31,7 @@ sealed class Ty {
 }
 
 val Ty.llvm: String get() = when (this) {
-    Ty.I8 -> "i8"; Ty.I32, Ty.U32, Ty.Char -> "i32"; Ty.I64, Ty.U64 -> "i64"; Ty.I1 -> "i1"; Ty.F32 -> "float"; Ty.F64 -> "double"
+    Ty.I8 -> "i8"; Ty.I32, Ty.U32, Ty.Char -> "i32"; Ty.I64, Ty.U64 -> "i64"; Ty.I1, Ty.UnitV -> "i1"; Ty.F32 -> "float"; Ty.F64 -> "double"
     Ty.Unit, Ty.Nothing -> "void"
     else -> "ptr"
 }

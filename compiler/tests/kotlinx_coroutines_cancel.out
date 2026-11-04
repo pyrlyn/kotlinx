@@ -1,0 +1,7 @@
+[tick0, tick1, tick2, cleanup]
+true true false
+spins>0: true
+[caught: Job was cancelled]
+[child done, parent done]
+await: Deferred was cancelled
+virtual time 30

@@ -1,0 +1,10 @@
+start;imm 7;
+start;imm 7;got 10;
+completed
+start;imm 7;got 10;got2 25;
+result res5
+failure boom
+recv x5
+created
+lazy body
+lazy 42
