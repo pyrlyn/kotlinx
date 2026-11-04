@@ -160,7 +160,7 @@ pub fn measure(a: std.mem.Allocator, cfg: Config, b: Bench, gc: []const u8) !Mea
     // Boehm is a benchmark-only baseline from bench/gc/third_party/boehm, reachable through bench/gc/gcdir.sh.
     var env: []const []const u8 = &.{};
     if (std.mem.eql(u8, gc, "boehm")) {
-        const gd = try spawn(a, &.{ "sh", try std.fmt.allocPrint(a, "{s}/bench/gc/gcdir.sh", .{cfg.root}) }, &.{}, cfg.root);
+        const gd = try spawn(a, &.{ "/bin/sh", try std.fmt.allocPrint(a, "{s}/bench/gc/gcdir.sh", .{cfg.root}) }, &.{}, cfg.root);
         if (!gd.exit_ok) return error.GcDirFailed;
         env = &.{try std.fmt.allocPrint(a, "NEWKOTLIN_GC_DIR={s}/compiler/build/bench-gc-dir", .{cfg.root})};
     }
