@@ -1268,8 +1268,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is VarS -> {
                 val v0 = if (s.type != null) argFor(s.init, resolve(s.type), true) else genArg(s.init)
                 if (v0.t == Ty.Nothing) return
-                val t = s.type?.let { resolve(it) } ?: v0.t
-                if (t == Ty.Unit) fail("cannot store Unit in '${s.name}'")
+                // `val r = unitCall()`: a Unit local holds the `Unit$V` value.
+                val t = (s.type?.let { resolve(it) } ?: v0.t).let { if (it == Ty.Unit) Ty.UnitV else it }
                 var v = coerce(v0, t)
                 if (t.isRef) v = consume(v)
                 val l = declare(s.name, t, s.isVar, true)

@@ -12,4 +12,6 @@ fun main() {
     val f = Result.failure<Unit>(IllegalStateException("bad"))
     println(f.exceptionOrNull()?.message)
     println(id(Unit))
+    val u = println("side effect")
+    println(u)
 }

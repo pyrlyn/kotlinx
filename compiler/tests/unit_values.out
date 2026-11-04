@@ -4,3 +4,5 @@ true
 kotlin.Unit
 bad
 kotlin.Unit
+side effect
+kotlin.Unit

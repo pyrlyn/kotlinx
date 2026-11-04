@@ -201,7 +201,7 @@ fun kxArr(e: JsonElement?, what: String): JsonArray {
 }
 """
 
-val COROUTINES_USE = Regex("""\brunBlocking\b|\bcoroutineScope\b|\bChannel<|\bflow(Of)?\s*[<{(]|\bsuspend\b|\bkotlin\.coroutines\b|\bContinuation\b""")
+val COROUTINES_USE = Regex("""\brunBlocking\b|\bcoroutineScope\b|\bChannel<|\bflow(Of)?\s*[<{(]|\bsuspend\b|\bkotlin\.coroutines\b|\bContinuation\b|\bsupervisorScope\b|\bCoroutineExceptionHandler\b""")
 val SERIALIZATION_USE = Regex("""@Serializable|\bJson\.|\bKSerializer\b|\bJson(Element|Object|Array|Primitive|Null)\b""")
 private val SERIALIZABLE_CLASS = Regex("""@Serializable\s+(?:data\s+)?class\s+(\w+)""")
 
@@ -430,6 +430,9 @@ class CoroutineScope {
     val children = ArrayList<Job>()
     var failure: Throwable? = null
     var owner: Job? = null
+    // supervisorScope: a failed child does not fail the scope; its exception goes to the handler instead.
+    var supervisor = false
+    var handler: CoroutineExceptionHandler? = null
     suspend fun yield() { kxYield() }
     val isActive: Boolean get() { val c = KxSched.current; return c == null || !c.cancelling() }
     fun ensureActive() { val c = KxSched.current; if (c != null && c.cancelling()) throw CancellationException("Job was cancelled") }
@@ -440,26 +443,40 @@ class CoroutineScope {
         val o = owner
         if (o != null) KxSched.poke(o)
     }
-    fun launch(block: suspend CoroutineScope.() -> Unit): Job {
+    fun launch(context: CoroutineContext = EmptyCoroutineContext, block: suspend CoroutineScope.() -> Unit): Job {
         val child = CoroutineScope()
         val parent = this
-        val j = Job { kxRunScoped(child) { block(child) }; val f = child.failure; if (f != null) parent.fail(f) }
+        val h = kxHandlerOf(context)
+        child.handler = if (h != null) h else handler
+        // launch(SupervisorJob()): not a child for failure purposes, its exception goes to the handler.
+        val detached = kxIsSupervisor(context)
+        val j = Job {
+            kxRunScoped(child) { block(child) }
+            val f = child.failure
+            if (f != null) { if (detached) kxHandle(child.handler, f) else parent.childFailed(f, child.handler) }
+        }
         j.scope = child; child.owner = j; j.scopes.add(child)
         children.add(j); KxSched.wake(j)
         return j
     }
+    // A launched child failed: a supervisor hands the exception to the handler, a regular scope fails.
+    fun childFailed(e: Throwable, h: CoroutineExceptionHandler?) {
+        if (!supervisor) { fail(e); return }
+        kxHandle(h, e)
+    }
     fun <T> async(block: suspend CoroutineScope.() -> T): Deferred<T> {
         val child = CoroutineScope()
+        child.handler = handler
         val parent = this
         val d = Deferred<T> {
             try { val r = block(child); child.joinChildren(); r }
             catch (e: CancellationException) {
                 child.joinChildrenQuiet()
                 val f = child.failure
-                if (f != null) { parent.fail(f); throw f }
+                if (f != null) { if (!parent.supervisor) parent.fail(f); throw f }
                 throw e
             }
-            catch (e: Throwable) { child.fail(e); child.joinChildrenQuiet(); parent.fail(e); throw e }
+            catch (e: Throwable) { child.fail(e); child.joinChildrenQuiet(); if (!parent.supervisor) parent.fail(e); throw e }
         }
         d.job.scope = child; child.owner = d.job; d.job.scopes.add(child)
         children.add(d.job); KxSched.wake(d.job)
@@ -506,6 +523,39 @@ suspend fun coroutineScope(block: suspend CoroutineScope.() -> Unit) {
     val f = s.failure
     if (f != null) throw f
     if (cancelled) throw CancellationException("Job was cancelled")
+}
+suspend fun supervisorScope(block: suspend CoroutineScope.() -> Unit) {
+    val j = KxSched.me()
+    val s = CoroutineScope()
+    s.owner = j
+    s.supervisor = true
+    if (j.scopes.size > 0) s.handler = j.scopes[j.scopes.size - 1].handler
+    j.scopes.add(s)
+    var cancelled = false
+    try { block(s); s.joinChildren() }
+    catch (e: CancellationException) { cancelled = true }
+    catch (e: Throwable) { s.fail(e) }
+    s.joinChildrenQuiet()
+    j.scopes.removeAt(j.scopes.size - 1)
+    val f = s.failure
+    if (f != null) throw f
+    if (cancelled) throw CancellationException("Job was cancelled")
+}
+class CoroutineExceptionHandler(val handler: (CoroutineContext, Throwable) -> Unit) : CoroutineContext
+class KxSupervisorJob : CoroutineContext
+fun SupervisorJob(): CoroutineContext = KxSupervisorJob()
+class KxCtx(val a: CoroutineContext, val b: CoroutineContext) : CoroutineContext
+operator fun CoroutineContext.plus(other: CoroutineContext): CoroutineContext = KxCtx(this, other)
+fun kxHandlerOf(c: CoroutineContext): CoroutineExceptionHandler? {
+    if (c is CoroutineExceptionHandler) return c
+    if (c is KxCtx) { val r = kxHandlerOf(c.b); if (r != null) return r; return kxHandlerOf(c.a) }
+    return null
+}
+fun kxHandle(h: CoroutineExceptionHandler?, e: Throwable) { if (h != null) h.handler(EmptyCoroutineContext, e) }
+fun kxIsSupervisor(c: CoroutineContext): Boolean {
+    if (c is KxSupervisorJob) return true
+    if (c is KxCtx) return kxIsSupervisor(c.a) || kxIsSupervisor(c.b)
+    return false
 }
 suspend fun kxYield() { KxSched.wake(KxSched.me()); kxSuspend() }
 suspend fun yield() { kxYield() }
