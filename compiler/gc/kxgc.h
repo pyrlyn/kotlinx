@@ -41,6 +41,9 @@ void *rt_alloc_trace(int64_t size);           /* possibly cyclic object */
 void rt_free_trace(void *p, int64_t size);    /* possibly cyclic object whose count reached zero */
 void rt_cc_possible_root(void *p);            /* traced object decremented to a non-zero count */
 void rt_cc_dead(void *p);                     /* traced object at zero count, fields already released */
+/* Traced object p (count unchanged) may have become the last way into a garbage cycle, as after a decrement:
+ * a release of a collection left only p's field holding it (runtime.c, Holders). No-op at count zero. */
+void rt_gc_root_hint(void *p);
 
 // ---- deferred RC (only called by code generated for GCs with the "deferred" capability, e.g. epoch) ----
 void rt_gc_log_inc(void *p);                  /* retain of a traced object */
@@ -82,6 +85,9 @@ extern int rt_rel_draining;
  * RT_TRAV_FREE: the mutator frees a dead object: visit exactly when the collector took them over. */
 enum { RT_TRAV_SCAN = 0, RT_TRAV_RELEASE = 1, RT_TRAV_FREE = 2 };
 extern _Thread_local int rt_trav_mode;
+/* Deferred RC: a relo sets it when the dead object owned a collection (runtime.c); the implementation then
+ * keeps the object's memory until the logs that may still name it have been applied. */
+extern int rt_relo_owner;
 #ifdef RT_LEAKCHECK
 void rt_leak_obj(int64_t d);                  /* live object counter for --leak-check */
 #endif

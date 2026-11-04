@@ -7,7 +7,8 @@
 //   * Traced (possibly cyclic) objects: generated code never touches their header after initialization.
 //     Retain/release append (pointer | op) to the current epoch log (rt_gc_log_inc / rt_gc_log_dec); a
 //     reference store into a traced object's field is a release store followed by rt_gc_write_barrier,
-//     which logs the object as modified.
+//     which logs the object as modified. A release that leaves an ArrayList/HashMap with one reference logs
+//     the object holding it as a possible root (rt_gc_root_hint, applied with the decrements).
 //   * Epoch boundary (log full: log_cap entries, adaptive LOG_MIN..LOG_CAP): the log is handed to the collector (one mutex
 //     round-trip) and the mutator frees objects the collector found dead, under a time budget
 //     (KX_GC_FREE_BUDGET_US, default half of KX_GC_TARGET_PAUSE_US) only beyond a backlog of KX_GC_BOUNDARY_KEEP
@@ -399,13 +400,14 @@ static int q_fixed, q_win, q_win_bad, q_cool, pool_len;   /* guarded by mu */
 static int64_t q_target_ns; static size_t dbg_q_max;
 static int major_slack = -1;          /* KX_GC_MAJOR_SLACK: queue limit multiplier while a major runs (default 1: off; measured: the mutator fills any slack within a major) */
 static _Atomic int c_in_major;         /* collector is in a major detection */
-enum { OP_INC = 0, OP_DEC = 1, OP_MOD = 2 };
+enum { OP_INC = 0, OP_DEC = 1, OP_MOD = 2, OP_ROOT = 3 };   /* OP_ROOT: rt_gc_root_hint */
 /* frees: runtime memory the mutator released while the collector could still read it (rt_gc_free_later) */
 typedef struct Log { struct Log *next; size_t n; uint64_t seq; PtrStack frees; uintptr_t a[LOG_CAP]; } Log;
 static Log *cur;                                   /* mutator */
 static Log *q_head, *q_tail, *log_pool;            /* guarded by mu */
 static size_t q_len;
 static uint64_t handed, applied;                   /* guarded by mu */
+static uint64_t m_applied;                         /* mutator: `applied` as of its last look under mu */
 static PtrStack ret_shared;                             /* dead objects for the mutator, guarded by mu */
 static int full_req, coll_quiet, shutting;         /* guarded by mu */
 static uint64_t full_done;
@@ -495,19 +497,38 @@ static void handoff(void) {
         if (max_queued > dbg_q_max) dbg_q_max = max_queued;
     }
     stack_move(&ret_local, &ret_shared);
+    m_applied = applied;
     if (!cur) cur = log_new();
     pthread_mutex_unlock(&mu);
 }
 /* Frees dead traced objects returned by the collector: release acyclic fields, free memory. */
 static void mut_release_child(void *t) { if (t && !is_traced(t)) vtab(t)->rel(t); }
+/* Dead owners of collections (rt_relo_owner) with the sequence number of the log that has to be applied before
+ * their memory can go: OWNER_MOD and rt_gc_root_hint reach an owner through the collection, not through a
+ * counted reference, so entries naming it can be logged after it died, up to its relo. Pairs (object, seq). */
+static PtrStack m_held;
+static void free_held(int all) {
+    size_t k = 0;
+    for (size_t i = 0; i < m_held.len; i += 2) {
+        void *p = m_held.items[i]; uint64_t seq = (uint64_t)(uintptr_t)m_held.items[i + 1];
+        if (all || seq <= m_applied) vtab(p)->freemem(p);
+        else { m_held.items[k++] = p; m_held.items[k++] = m_held.items[i + 1]; }
+    }
+    m_held.len = k;
+}
 static void free_returned(void *p) {
     rt_trav_mode = RT_TRAV_FREE;
     vtab(p)->trav(p, mut_release_child);
     rt_trav_mode = RT_TRAV_SCAN;
+    rt_relo_owner = 0;
     vtab(p)->relo(p);
-    vtab(p)->freemem(p);
+    if (!rt_relo_owner) { vtab(p)->freemem(p); return; }
+    /* entries logged up to now are in the current log (handed next, as handed + 1) or in a handed one */
+    stack_push(&m_held, p);
+    stack_push(&m_held, (void *)(uintptr_t)(cur && cur->n ? handed + 1 : handed));
 }
 static void process_returns(int64_t budget_ns, int64_t t0, size_t keep) {
+    if (m_held.len) free_held(0);
     while (ret_pos + keep < ret_local.len) {
         free_returned(ret_local.items[ret_pos++]); dbg_bfreed++;
         if (budget_ns >= 0 && (ret_pos & 31) == 0 && rt_nanos() - t0 > budget_ns) break;
@@ -567,6 +588,7 @@ static inline __attribute__((always_inline)) void log_op(uintptr_t e) {
 __attribute__((always_inline)) void rt_gc_log_inc(void *p) { if (p) log_op((uintptr_t)p | OP_INC); }
 __attribute__((always_inline)) void rt_gc_log_dec(void *p) { if (p) log_op((uintptr_t)p | OP_DEC); }
 __attribute__((always_inline)) void rt_gc_write_barrier(void *obj) { log_op((uintptr_t)obj | OP_MOD); }
+void rt_gc_root_hint(void *p) { log_op((uintptr_t)p | OP_ROOT); }
 /* Freed when the collector takes the current log (see collector_main). Without a log the collector has not
  * started, so it cannot be reading p. */
 void rt_gc_free_later(void *p) {
@@ -719,7 +741,20 @@ static void dec_apply(void *p) {
     }
     else possible_root(p);
 }
-/* Increments first, then decrements (see the header comment). The first pass compacts the decrements to
+/* rt_gc_root_hint: as a decrement that leaves the count unchanged (dec_apply). A dead object (count zero; its
+ * memory is held until this log is applied, see m_held) needs nothing. */
+static void hint_apply(void *p) {
+    uint64_t h = *header(p);
+    if ((h & KX_CNT_MASK) == 0) return;
+    if ((h & STABLE_BIT) && defer_live) {
+        *header(p) = h | DIRTY_BIT;
+        if (!(h & (KX_BUF_BIT | CAND_BIT))) { set_color(p, PURPLE); set_bit(p, KX_BUF_BIT); stack_push(&c_live_def, p); dbg_deferred_live++; }
+        return;
+    }
+    touch(p);
+    possible_root(p);
+}
+/* Increments first, then decrements and root hints (see the header comment). The first pass compacts those to
  * the front of the log (it is collector-private once dequeued), so the second pass reads only those
  * (software prefetch of the headers measured ~15% slower). */
 static void apply_log(Log *l) {
@@ -731,7 +766,8 @@ static void apply_log(Log *l) {
         else l->a[nd++] = e;
     }
     for (size_t i = 0; i < nd; i++) {
-        dec_apply((void *)(l->a[i] & ~(uintptr_t)3));
+        uintptr_t e = l->a[i]; void *p = (void *)(e & ~(uintptr_t)3);
+        if ((e & 3) == OP_DEC) dec_apply(p); else hint_apply(p);
     }
 }
 
@@ -1287,7 +1323,8 @@ static size_t validate(uint64_t id, Members m) {
         int pm = rt_trav_mode; rt_trav_mode = RT_TRAV_RELEASE;
         for (size_t i = 0; i < m.n; i++) { void *x = m.a[i]; vtab(x)->trav(x, free_cycle_child); }
         rt_trav_mode = pm;
-        for (size_t i = 0; i < m.n; i++) { void *x = m.a[i]; clr_bit(x, CAND_BIT); set_color(x, BLACK); set_crc(x, 0); if (has(x, KX_BUF_BIT)) set_bit(x, ZOMBIE_BIT); else ret_push(x); }
+        /* Count zeroed: a root hint logged before a member's memory went back (m_held) must see it dead. */
+        for (size_t i = 0; i < m.n; i++) { void *x = m.a[i]; clr_bit(x, CAND_BIT); set_color(x, BLACK); set_crc(x, 0); *header(x) &= ~KX_CNT_MASK; if (has(x, KX_BUF_BIT)) set_bit(x, ZOMBIE_BIT); else ret_push(x); }
         freed = m.n; dbg_pass++;
     } else {
         for (size_t i = 0; i < m.n; i++) {
@@ -1557,11 +1594,13 @@ void rt_gc_collect(void) {
         uint64_t want = full_done + 1; full_req = 1; pthread_cond_signal(&cv_work);
         while (full_done < want) pthread_cond_wait(&cv_done, &mu);
         stack_move(&ret_local, &ret_shared);
+        m_applied = applied;
         pthread_mutex_unlock(&mu);
         size_t returned = ret_local.len - ret_pos;
         process_returns(-1, t0, 0);
         if (!had_ops && !returned && !(cur && (cur->n || cur->frees.len))) break;
     }
+    free_held(1);   /* the queue is empty and every handed log applied */
     dbg_exit_ns = rt_nanos() - t0;
     note_pause(t0);
     in_boundary = 0;

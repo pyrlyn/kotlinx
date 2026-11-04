@@ -133,8 +133,14 @@ Ownership rules:
 Adaptive threshold: if a collection reclaimed less than 1/4 of what it traced (the roots were live, e.g.
 relinked LRU nodes), the threshold doubles, up to 2^18; a productive collection resets it to 10 000.
 
-Limitation: an ArrayList/HashMap is traced only while the object holding it has the only reference, so a
-cycle through a shared collection is not reclaimed.
+An ArrayList/HashMap field of a traced object is traversed only from its owner and only while its count is
+1 (sole ownership). Every traced object that stores the collection in a field is recorded as a holder
+(`rt_list_hold` / `rt_map_hold`); the first is the owner, and when it overwrites the field or dies the next
+holder takes over (`rt_list_disown` / `rt_map_disown`). A release that brings a shared collection back to
+count 1 makes the owner a possible root (`rt_gc_root_hint`), because the release of a local alias, or of
+the last other holder, may be the last chance to see the cycle: with "move at last use" the owner itself
+may never get a decrement. Collect-white takes over the elements of a collection it visited
+(`rt_trav_mode` = `RT_TRAV_RELEASE` sets `ctrav`), so the owner's `relo` only frees its memory.
 
 ## 6. Incremental collector
 
@@ -165,9 +171,14 @@ changes the generated code for traced (cyclic) classes only:
 ArrayList and HashMap fields of traced objects (lists and maps whose elements may close a cycle) stay
 reference counted on the mutator, but the collector traverses them, so cycles through them are reclaimed:
 
-- the first traced object that stores a collection in a field becomes its owner (`rt_list_own` /
-  `rt_map_own`; an overwrite or the owner's death disowns it). The collector visits the elements only
-  from the owner and only while the count is 1, as the other collectors do with sole ownership;
+- every traced object that stores a collection in a field becomes a holder (`rt_list_own` /
+  `rt_map_own`), the first one its owner; an overwrite or the owner's death passes ownership to the next
+  holder (`rt_list_disown` / `rt_map_disown`). The collector visits the elements only from the owner and
+  only while the count is 1, as the other collectors do (section 5);
+- a release that leaves the count at 1 logs a root hint for the owner (`rt_gc_root_hint`, op `OP_ROOT`),
+  applied like a decrement that leaves the count unchanged. The memory of a dead owner that a logged hint
+  or write barrier may still name waits (`m_held`) until the collector has applied that log; members of a
+  freed cycle get count 0, so such a hint sees them dead;
 - every mutation of an owned collection, and every retain or release of it, calls
   `rt_gc_write_barrier(owner)`, so a Sigma/Delta test that read stale contents fails;
 - the mutator publishes an element before the new length (release); the collector reads length, then
@@ -177,9 +188,6 @@ reference counted on the mutator, but the collector traverses them, so cycles th
 - when the collector frees a passing cycle it takes over the element references of the owned collections
   it visited (`rt_trav_mode` = `RT_TRAV_RELEASE` sets `ctrav`), and the owner's `relo` then only frees
   their memory.
-
-A collection that loses its owner while another object still holds it (count above 1) is not traversed
-again until it is stored into a field anew; a cycle through it is not reclaimed.
 
 Epoch boundary (log full, 32768 entries): the mutator hands the log over (one mutex round-trip) and frees
 dead objects returned by the collector under `KX_GC_FREE_BUDGET_US` (default half the target pause, 1.5 ms); allocation also frees

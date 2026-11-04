@@ -7,7 +7,7 @@
 // PURPLE and calls rt_cc_possible_root, which buffers it once. When the buffer reaches the adaptive
 // threshold, and at program exit, the collector runs MarkRoots / ScanRoots / CollectRoots over all
 // buffered roots in one pause. Everything else (acyclic classes, lists, maps, builders) is plain RC.
-// Limitation: cycles that pass through an ArrayList/HashMap are not traced.
+// ArrayList/HashMap fields are traversed from their owner while it holds the only reference (architecture.md §5).
 // Docs: compiler/gc/docs/architecture.md.
 #include <stdint.h>
 #include <stdlib.h>
