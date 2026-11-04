@@ -2990,6 +2990,24 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val isFn = ptn == "\$Fn" || ptn == "\$FnR"
                 if (f.name == "with" && hasReturn(a.body.stmts) && all.size == 2 && i == 1 && a.body.params.isEmpty() && rawN[0] != null) return inlineWith(rawN[0]!!, a.body)
                 if (f.name in SCOPE_FUN_NAMES && hasReturn(a.body.stmts)) fail("non-local return from a '${f.name}' lambda is not supported")
+                // `build { it.yield(this) }` for `UserKlass.(Buildee<FT>) -> Unit`: the builder is the parameter. Its
+                // calls are read as receiver calls, `this` (the bound receiver) as a value of the receiver's type.
+                if (ptn == "\$FnR" && pt.args.size == 3 && isBound(pt.args[0]) && !isBound(pt.args[1]) && a.body.params.size <= 1) {
+                    val pn = a.body.params.firstOrNull() ?: "it"
+                    val rt = res(pt.args[0])
+                    if (rt != null) {
+                        lateinit var rw2: Subst
+                        rw2 = Subst(emptyMap(), rw = { y -> when {
+                            y is CallE && y.callee is MemberE && !y.callee.safe && (y.callee.recv as? NameE)?.n == pn ->
+                                CallE(NameE(y.callee.n).also { it.line = y.line }, y.typeArgs, y.args.map { rw2.e(it) }, y.lambda?.let { rw2.block(it) }).also { it.line = y.line }
+                            y is NameE && y.n == "this" -> NameE("\$recvArg").also { it.line = y.line }
+                            // The receiver's own properties (`name`), unless a local of that name is in scope.
+                            y is NameE && lookup(y.n) == null && (rt as? Ty.Cls)?.let { c -> classes[c.name]?.let { it.index(y.n) >= 0 || "\$prop\$${y.n}" in it.methods } } == true ->
+                                MemberE(NameE("\$recvArg").also { it.line = y.line }, y.n, false).also { it.line = y.line }
+                            else -> null } })
+                        builderInfer(rw2.block(a.body), pt.args[1], f.typeParams, env, listOf("\$recvArg" to rt))
+                    }
+                }
                 if (ptn == "\$FnR" && pt.args.size >= 2 && !isBound(pt.args[0])) {
                     val lpTys = pt.args.subList(1, pt.args.size - 1).map { res(it) }
                     val lpNames = if (a.body.params.isNotEmpty()) a.body.params else if (lpTys.size == 1) listOf("it") else emptyList()
@@ -3230,7 +3248,17 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
         }
         /** Follows lambda-local vals to the expression whose type is known outside the lambda. */
-        fun origin(a: E, depth: Int = 0): E { if (depth < 8 && a is NameE && lookup(a.n) == null) locals[a.n]?.let { v -> if (v.type == null && !v.isVar) return origin(v.init, depth + 1) }; return a }
+        fun origin(a: E, depth: Int = 0): E {
+            if (depth < 8 && a is NameE && lookup(a.n) == null) locals[a.n]?.let { v -> if (v.type == null && !v.isVar) return origin(v.init, depth + 1) }
+            // Through a generic pass-through function (`fun <T> id(x: T): T`): `yield(id(arg))`, `consume(id(materialize()))`.
+            if (depth < 8 && a is CallE && a.callee is NameE && a.args.size == 1 && a.lambda == null && a.args[0] !is NamedE && a.callee.n !in methods && lookup(a.callee.n) == null) {
+                val g = funDecls[a.callee.n]
+                val tp = g?.typeParams?.singleOrNull()
+                if (g != null && tp != null && g.recv == null && g.params.size == 1 && g.params[0].type.let { it.name == tp && !it.nullable && it.args.isEmpty() } &&
+                    g.ret?.let { it.name == tp && !it.nullable && it.args.isEmpty() } == true) return origin(a.args[0], depth + 1)
+            }
+            return a
+        }
         /** `materialize()` (a receiver method returning a free type) flowing into a place of known type [t]. */
         fun sink(a: E, t: Ty) {
             val o = origin(a)
