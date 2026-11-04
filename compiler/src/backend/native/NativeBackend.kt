@@ -2360,6 +2360,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (qn != null && qn in NANOS) return Val(emitT("call i64 @rt_nanos()"), Ty.I64)
         if (qn != null && (qn == "kotlin.math.sqrt" || qn == "kotlin.math.abs")) return genNamedCall(qn, e)
         scopeFn(e)?.let { return genBlockBody(it, true) }
+        if (callee is NameE && callee.n == "\$typeHint") return Val("", Ty.Unit)  // builder-inference hint (Parser.typeHint)
         // `recv.e(args)` with a local `e: R.(A) -> X` (no member `e` on recv): `e(recv, args)`.
         if (callee is MemberE && !callee.safe && (callee.recv as? NameE)?.n != "super") {
             val m = callee
@@ -3051,6 +3052,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         // Nullable sinks are skipped: class types do not carry nullability, so `CT` would be bound non-null.
         for (v in locals.values) if (v.type != null && !v.type.nullable) { val vt = try { resolve(v.type) } catch (x: CompileError) { null }; if (vt != null) sink(v.init, vt) }
+        // Types named by local declarations that use the receiver (`fun f(): Buildee<Target> = this`): Parser.typeHint.
+        for (c in calls) if ((c.callee as NameE).n == "\$typeHint") for (ta in c.typeArgs)
+            if (ta.name == recv.name && recv.args.any { free(it) } && ta.args.none { free(it) }) try { unify(recv, resolve(ta), tps, env) } catch (x: CompileError) {}
         // `var temp = arg; temp = materialize()` (or an outer variable): the target's type.
         for ((n, value) in assigns) {
             val outer = lookup(n)

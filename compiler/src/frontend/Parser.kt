@@ -2363,6 +2363,7 @@ class Parser(toks: List<Tok>) {
         val params = ArrayList<String>(); val ptypes = ArrayList<TypeRef?>()
         val outerDecls = pendingDecls; pendingDecls = ArrayList(); bodyLevel++
         val pre = ArrayList<S>()
+        if (lambda) lambdaDepth++
         val stmts = try { nested(0) {
             if (lambda) {
                 // `x, y: T ->` parameter list (backtracks if it is not one).
@@ -2399,7 +2400,7 @@ class Parser(toks: List<Tok>) {
                 if (!(tk.k == K.NL || (tk.k == K.OP && (tk.s == ";" || tk.s == "}")))) fail("expected end of statement")
             }
             ss
-        } } finally { pendingDecls = outerDecls; bodyLevel-- }
+        } } finally { pendingDecls = outerDecls; bodyLevel--; if (lambda) lambdaDepth-- }
         expectOp("}")
         return Block(stmts, params, ptypes)
     }
@@ -2427,7 +2428,22 @@ class Parser(toks: List<Tok>) {
     }
 
     /** Parses a local declaration into a [LocalDeclS]; [liftLocals] hoists it after parsing. */
+    private var lambdaDepth = 0
+    /** Generic types named by a local declaration that uses `this` inside a lambda: a `$typeHint` for builder inference. */
+    private fun typeHint(d: Any, from: Int, line: Int) {
+        if (lambdaDepth == 0 || (from until p).none { t[it].k == K.ID && t[it].s == "this" }) return
+        val refs = ArrayList<TypeRef>()
+        fun fn(f: FunD) { f.ret?.let { refs.add(it) }; f.params.forEach { refs.add(it.type) } }
+        when (d) {
+            is FunD -> fn(d)
+            is ClassD -> { d.fields.forEach { f -> f.type?.let { refs.add(it) } }; d.methods.forEach { fn(it) }; d.superTypeArgs.forEach { (n, a) -> refs.add(TypeRef(n, a, false)) } }
+        }
+        val gen = refs.filter { it.args.isNotEmpty() }
+        if (gen.isNotEmpty()) pendingDecls.add(ExprS(CallE(NameE("\$typeHint").also { it.line = line }, gen, emptyList(), null).also { it.line = line }).also { it.line = line })
+    }
+
     private fun localDecl(): S {
+        val from = p
         var isData = false; var isEnum = false; var isValue = false
         while (peek().s in LOCAL_MODIFIERS && t[p + 1].k == K.ID) {
             when (next().s) { "data" -> isData = true; "enum" -> isEnum = true; "value" -> isValue = true }
@@ -2446,7 +2462,30 @@ class Parser(toks: List<Tok>) {
             }
         } finally { curClass = saved }
         sawLocal = true
-        return LocalDeclS(d)
+        typeHint(d, from, t[from].line)
+        return LocalDeclS(outerThis(d, t[from].line))
+    }
+
+    private var outerThisN = 0
+    /** A local function (plain `this`) or class (`this@label`) inside a lambda using the enclosing receiver: it reads a
+     *  `val $othisN = this` declared before it, so lifting captures it like any local. */
+    private fun outerThis(d: Any, line: Int): Any {
+        if (lambdaDepth == 0) return d
+        val n = "\$othis${outerThisN}"
+        var hit = false
+        val plain = d is FunD && d.recv == null
+        val sub = Subst(emptyMap(), rw = { x -> if (x is NameE && ((plain && x.n == "this") || x.n.startsWith("this@"))) { hit = true; NameE(n).also { it.line = x.line } } else null })
+        val r: Any = when (d) {
+            is FunD -> FunD(d.name, d.params, d.ret, d.body?.let { sub.block(it) }, d.exprBody?.let { sub.e(it) }, d.line, d.typeParams, d.recv)
+            is ClassD -> ClassD(d.name, d.fields.map { f -> FieldD(f.name, f.type, f.isVar, f.init?.let { sub.e(it) }, f.lateinit) }, d.supers, d.methods.map { m ->
+                FunD(m.name, m.params, m.ret, m.body?.let { sub.block(it) }, m.exprBody?.let { sub.e(it) }, m.line, m.typeParams, m.recv) }, d.line,
+                d.ctorParams, d.inits.map { if (it is Block) sub.block(it) else it }, d.superArgs?.map { sub.e(it) }, d.typeParams, d.enumEntries, d.isValue, d.superTypeArgs)
+            else -> d
+        }
+        if (!hit) return d
+        outerThisN++
+        pendingDecls.add(VarS(n, false, null, NameE("this").also { it.line = line }).also { it.line = line })
+        return r
     }
 
     private fun stmt(): S {
