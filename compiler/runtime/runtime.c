@@ -342,8 +342,15 @@ void rt_oob(int64_t i, int64_t len) {
 // ---- HashMap<primitive|String, primitive>: open addressing, linear probing --------
 // String keys (`skeys`): the slot holds the string pointer (retained by the map), hashed and compared by content.
 
-typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; release_fn vrel; } Map;
+/* Insertion-ordered hash map (iteration follows insertion, as LinkedHashMap / mutableMapOf).
+ * Entries live in dense arrays keys/vals/used (n entries, room for dcap; a removed entry keeps its place with
+ * used = 0 until the next rehash compacts them). idx is an open-addressing table of cap slots holding an entry
+ * index, EMPTY or TOMB. */
+typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; release_fn vrel;
+                 int64_t n, dcap, tombs; int64_t *idx; } Map;
 // Reference values (`vrel` set): the map owns one reference per value; overwrites and the map release drop it.
+#define MAP_EMPTY (-1)
+#define MAP_TOMB (-2)
 
 static inline uint64_t map_hash(int64_t k) {
     uint64_t x = (uint64_t)k;
@@ -355,75 +362,114 @@ static inline uint64_t map_hash_str(const char *s) {
     for (; *s; s++) { h ^= (uint8_t)*s; h *= 1099511628211ULL; }
     return h ^ (h >> 32);
 }
+static inline uint64_t map_hash_of(Map *m, int64_t k) { return m->skeys ? map_hash_str((const char *)(intptr_t)k) : map_hash(k); }
+static inline int map_eq(Map *m, int64_t a, int64_t b) { return m->skeys ? strcmp((const char *)(intptr_t)a, (const char *)(intptr_t)b) == 0 : a == b; }
 Map *rt_map_new(void) {
     Map *m = malloc(sizeof *m);
-    m->skeys = 0; m->vrel = NULL; m->rc = 1; m->size = 0; m->cap = 16;
-    m->keys = malloc(16 * 8); m->vals = rt_gc_mem_alloc(16 * 8); m->used = calloc(16, 1); LK(LK_MAP, 1);
+    m->skeys = 0; m->vrel = NULL; m->rc = 1; m->size = 0; m->cap = 16; m->n = 0; m->dcap = 12; m->tombs = 0;
+    m->keys = malloc(12 * 8); m->vals = rt_gc_mem_alloc(12 * 8); m->used = malloc(12);
+    m->idx = malloc(16 * 8); for (int i = 0; i < 16; i++) m->idx[i] = MAP_EMPTY;
+    LK(LK_MAP, 1);
     return m;
 }
 Map *rt_smap_new(void) { Map *m = rt_map_new(); m->skeys = 1; return m; }
 Map *rt_map_with_vrel(Map *m, release_fn rel) { m->vrel = rel; return m; }
-static inline int64_t map_find(Map *m, int64_t k) {
-    uint64_t mask = (uint64_t)m->cap - 1;
-    if (m->skeys) {
-        const char *ks = (const char *)(intptr_t)k;
-        uint64_t i = map_hash_str(ks) & mask;
-        while (m->used[i] && strcmp((const char *)(intptr_t)m->keys[i], ks) != 0) i = (i + 1) & mask;
-        return (int64_t)i;
+/* Slot of key k in idx, or -1 - (first free slot for inserting it). */
+static int64_t map_slot(Map *m, int64_t k) {
+    uint64_t mask = (uint64_t)m->cap - 1, i = map_hash_of(m, k) & mask;
+    int64_t freeSlot = -1;
+    for (;;) {
+        int64_t e = m->idx[i];
+        if (e == MAP_EMPTY) return -1 - (freeSlot >= 0 ? freeSlot : (int64_t)i);
+        if (e == MAP_TOMB) { if (freeSlot < 0) freeSlot = (int64_t)i; }
+        else if (map_eq(m, m->keys[e], k)) return (int64_t)i;
+        i = (i + 1) & mask;
     }
-    uint64_t i = map_hash(k) & mask;
-    while (m->used[i] && m->keys[i] != k) i = (i + 1) & mask;
-    return (int64_t)i;
 }
-static void map_grow(Map *m) {
-    Map old = *m;
-    m->cap *= 2; m->size = 0;
-    m->keys = malloc((size_t)m->cap * 8); m->vals = rt_gc_mem_alloc((size_t)m->cap * 8); m->used = calloc((size_t)m->cap, 1);
-    for (int64_t i = 0; i < old.cap; i++) if (old.used[i]) {
-        int64_t j = map_find(m, old.keys[i]);
-        m->used[j] = 1; m->keys[j] = old.keys[i]; m->vals[j] = old.vals[i]; m->size++;
-    }
-    free(old.keys); rt_gc_mem_free(old.vals); free(old.used);
+/* Rebuilds idx (cap slots) over the live entries, compacting the dense arrays. */
+static void map_rehash(Map *m, int64_t cap) {
+    int64_t w = 0;
+    for (int64_t r = 0; r < m->n; r++) if (m->used[r]) { m->keys[w] = m->keys[r]; m->vals[w] = m->vals[r]; m->used[w] = 1; w++; }
+    m->n = w; m->tombs = 0;
+    free(m->idx); m->cap = cap; m->idx = malloc((size_t)cap * 8);
+    for (int64_t i = 0; i < cap; i++) m->idx[i] = MAP_EMPTY;
+    uint64_t mask = (uint64_t)cap - 1;
+    for (int64_t e = 0; e < m->n; e++) { uint64_t i = map_hash_of(m, m->keys[e]) & mask; while (m->idx[i] != MAP_EMPTY) i = (i + 1) & mask; m->idx[i] = e; }
 }
 void rt_map_put(Map *m, int64_t k, int64_t v) {
-    if ((m->size + 1) * 4 > m->cap * 3) map_grow(m);
-    int64_t i = map_find(m, k);
-    if (!m->used[i]) { m->used[i] = 1; m->keys[i] = k; m->size++; if (m->skeys) rt_hdr_retain((void *)(intptr_t)k); }
-    else if (m->vrel) m->vrel((void *)(intptr_t)m->vals[i]);
-    m->vals[i] = v;
+    int64_t s = map_slot(m, k);
+    if (s >= 0) { int64_t e = m->idx[s]; if (m->vrel) m->vrel((void *)(intptr_t)m->vals[e]); m->vals[e] = v; return; }
+    if ((m->size + m->tombs + 1) * 4 > m->cap * 3 || m->n == m->dcap) {
+        if (m->n == m->dcap && m->size * 2 < m->n) map_rehash(m, m->cap); /* many removed entries: compact */
+        if (m->n == m->dcap) {
+            m->dcap *= 2;
+            m->keys = realloc(m->keys, (size_t)m->dcap * 8); m->used = realloc(m->used, (size_t)m->dcap);
+            m->vals = rt_gc_mem_realloc(m->vals, (size_t)m->dcap * 8);
+        }
+        if ((m->size + m->tombs + 1) * 4 > m->cap * 3) map_rehash(m, (m->size + 1) * 4 > m->cap * 3 ? m->cap * 2 : m->cap);
+        s = map_slot(m, k);
+    }
+    int64_t e = m->n++;
+    m->keys[e] = k; m->vals[e] = v; m->used[e] = 1; m->size++;
+    if (m->idx[-1 - s] == MAP_TOMB) m->tombs--;
+    m->idx[-1 - s] = e;
+    if (m->skeys) rt_hdr_retain((void *)(intptr_t)k);
 }
-int32_t rt_map_contains(Map *m, int64_t k) { return m->used[map_find(m, k)]; }
-int64_t rt_map_get_or(Map *m, int64_t k, int64_t d) { int64_t i = map_find(m, k); return m->used[i] ? m->vals[i] : d; }
+int32_t rt_map_contains(Map *m, int64_t k) { return map_slot(m, k) >= 0; }
+int64_t rt_map_get_or(Map *m, int64_t k, int64_t d) { int64_t s = map_slot(m, k); return s >= 0 ? m->vals[m->idx[s]] : d; }
 int64_t rt_map_get(Map *m, int64_t k) {
-    int64_t i = map_find(m, k);
-    if (!m->used[i]) {
+    int64_t s = map_slot(m, k);
+    if (s < 0) {
         fflush(stdout);
         if (m->skeys) fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %s not in map\n", (const char *)(intptr_t)k);
         else fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %" PRId64 " not in map\n", k);
         exit(1);
     }
-    return m->vals[i];
+    return m->vals[m->idx[s]];
+}
+/* Removes k; returns its value (the map's reference passes to the caller) or d when absent. */
+int64_t rt_map_remove(Map *m, int64_t k, int64_t d) {
+    int64_t s = map_slot(m, k);
+    if (s < 0) return d;
+    int64_t e = m->idx[s], v = m->vals[e];
+    m->idx[s] = MAP_TOMB; m->tombs++; m->used[e] = 0; m->size--;
+    if (m->skeys) rt_str_release((char *)(intptr_t)m->keys[e]);
+    return v;
+}
+void rt_map_clear(Map *m) {
+    for (int64_t e = 0; e < m->n; e++) if (m->used[e]) {
+        if (m->skeys) rt_str_release((char *)(intptr_t)m->keys[e]);
+        if (m->vrel) m->vrel((void *)(intptr_t)m->vals[e]);
+    }
+    m->n = 0; m->size = 0; m->tombs = 0;
+    for (int64_t i = 0; i < m->cap; i++) m->idx[i] = MAP_EMPTY;
 }
 int64_t rt_map_size(Map *m) { return m->size; }
+/* Iteration over entry positions 0 until rt_map_end, skipping dead ones (insertion order). */
+int64_t rt_map_end(Map *m) { return m->n; }
+int32_t rt_map_live(Map *m, int64_t e) { return m->used[e]; }
+int64_t rt_map_key_at(Map *m, int64_t e) { return m->keys[e]; }
+int64_t rt_map_val_at(Map *m, int64_t e) { return m->vals[e]; }
+static void map_free(Map *m) { free(m->keys); rt_gc_mem_free(m->vals); free(m->used); free(m->idx); free(m); }
 void rt_map_release(Map *m) {
     if (!m || --m->rc > 0) return;
     LK(LK_MAP, -1);
-    for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) {
-        if (m->skeys) rt_str_release((char *)(intptr_t)m->keys[i]);
-        if (m->vrel) m->vrel((void *)(intptr_t)m->vals[i]);
+    for (int64_t e = 0; e < m->n; e++) if (m->used[e]) {
+        if (m->skeys) rt_str_release((char *)(intptr_t)m->keys[e]);
+        if (m->vrel) m->vrel((void *)(intptr_t)m->vals[e]);
     }
-    free(m->keys); rt_gc_mem_free(m->vals); free(m->used); free(m); }
-
+    map_free(m);
+}
 /* Cycle collection through map values: like rt_list_trav / rt_list_release_untraced. */
 void rt_map_trav(Map *m, void (*visit)(void *)) {
-    if (m && m->rc == 1 && m->vrel) for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) visit((void *)(intptr_t)m->vals[i]);
+    if (m && m->rc == 1 && m->vrel) for (int64_t e = 0; e < m->n; e++) if (m->used[e]) visit((void *)(intptr_t)m->vals[e]);
 }
 void rt_map_release_untraced(Map *m) {
     if (!m) return;
     if (m->rc != 1) { rt_map_release(m); return; }
     LK(LK_MAP, -1);
-    if (m->skeys) for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) rt_str_release((char *)(intptr_t)m->keys[i]);
-    free(m->keys); rt_gc_mem_free(m->vals); free(m->used); free(m);
+    if (m->skeys) for (int64_t e = 0; e < m->n; e++) if (m->used[e]) rt_str_release((char *)(intptr_t)m->keys[e]);
+    map_free(m);
 }
 
 // Object allocation, reference counting slow paths and the cycle collector live in compiler/gc/ (kxgc.h).

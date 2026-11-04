@@ -330,6 +330,25 @@ fun <T> ArrayList<T>.kxMergeSort(tmp: ArrayList<T>, lo: Int, hi: Int, desc: Bool
 }
 fun <T> ArrayList<T>.sort() { val tmp = ArrayList<T>(); for (x in this) tmp.add(x); kxMergeSort(tmp, 0, size, false) }
 fun <T> ArrayList<T>.sortDescending() { val tmp = ArrayList<T>(); for (x in this) tmp.add(x); kxMergeSort(tmp, 0, size, true) }
+fun <T, K> ArrayList<T>.kxMergeSortBy(tmp: ArrayList<T>, lo: Int, hi: Int, desc: Boolean, sel: (T) -> K) {
+    if (hi - lo < 2) return
+    val mid = (lo + hi) / 2
+    kxMergeSortBy(tmp, lo, mid, desc, sel); kxMergeSortBy(tmp, mid, hi, desc, sel)
+    var i = lo; var j = mid; var k = lo
+    while (k < hi) {
+        val takeLeft = j >= hi || (i < mid && (if (desc) !(sel(get(i)) < sel(get(j))) else !(sel(get(j)) < sel(get(i)))))
+        if (takeLeft) { tmp[k] = get(i); i++ } else { tmp[k] = get(j); j++ }
+        k++
+    }
+    k = lo
+    while (k < hi) { this[k] = tmp[k]; k++ }
+}
+fun <T, K> ArrayList<T>.sortBy(sel: (T) -> K) { val tmp = ArrayList<T>(); for (x in this) tmp.add(x); kxMergeSortBy(tmp, 0, size, false, sel) }
+fun <T, K> ArrayList<T>.sortByDescending(sel: (T) -> K) { val tmp = ArrayList<T>(); for (x in this) tmp.add(x); kxMergeSortBy(tmp, 0, size, true, sel) }
+fun <T> ArrayList<T>.sorted(): ArrayList<T> { val r = ArrayList<T>(); for (x in this) r.add(x); r.sort(); return r }
+fun <T> ArrayList<T>.sortedDescending(): ArrayList<T> { val r = ArrayList<T>(); for (x in this) r.add(x); r.sortDescending(); return r }
+fun <T, K> ArrayList<T>.sortedBy(sel: (T) -> K): ArrayList<T> { val r = ArrayList<T>(); for (x in this) r.add(x); r.sortBy(sel); return r }
+fun <T, K> ArrayList<T>.sortedByDescending(sel: (T) -> K): ArrayList<T> { val r = ArrayList<T>(); for (x in this) r.add(x); r.sortByDescending(sel); return r }
 data class IndexedValue<T>(val index: Int, val value: T)
 fun <T> ArrayList<T>.withIndex(): ArrayList<IndexedValue<T>> { val r = ArrayList<IndexedValue<T>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 fun String.withIndex(): ArrayList<IndexedValue<Char>> { val r = ArrayList<IndexedValue<Char>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
@@ -462,7 +481,7 @@ const val RANGE_LIST_EXT = """
 fun IntProgression.asSequence(): List<Int> = toList()
 fun IntProgression.withIndex(): ArrayList<IndexedValue<Int>> { val r = ArrayList<IndexedValue<Int>>(); var i = 0; for (x in this) { r.add(IndexedValue(i, x)); i++ }; return r }
 """
-private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex|asSequence|forEachIndexed|indexOfFirst|indexOfLast|addAll|sort|sortDescending)\(|-=|\bin\b""")
+private val LIST_USE = Regex("""\.(indexOf|lastIndexOf|contains|remove|isEmpty|isNotEmpty|clear|first|last|firstOrNull|lastOrNull|withIndex|asSequence|forEachIndexed|indexOfFirst|indexOfLast|addAll|sort|sortDescending|sortBy|sortByDescending|sorted|sortedDescending|sortedBy|sortedByDescending)\(|-=|\bin\b""")
 
 /** `indices` / `lastIndex` of lists, arrays and strings as extension properties. */
 const val INDICES = """
@@ -591,12 +610,85 @@ fun String.toIntOrNull(): Int? { val v = kt_parseLong(this, -2147483648L, 214748
 private val STRING_NULLABLE_USE = Regex("""\.to(Int|Long)OrNull\(""")
 private val STRING_EXT_USE = Regex("""\.(substring|toInt|toLong|toIntOrNull|toLongOrNull)\(""")
 
+/** Common String functions (byte-wise over the UTF-8 representation; case mapping is ASCII only). */
+const val STRING_MORE = """
+fun String.isEmpty(): Boolean = kxStrBytes(this) == 0
+fun String.isNotEmpty(): Boolean = kxStrBytes(this) != 0
+fun String.kxMatchAt(s: String, at: Int): Boolean {
+    val n = kxStrBytes(s)
+    if (at < 0 || at + n > kxStrBytes(this)) return false
+    var i = 0
+    while (i < n) { if (kxStrByte(this, at + i) != kxStrByte(s, i)) return false; i++ }
+    return true
+}
+fun String.indexOf(s: String, startIndex: Int = 0): Int {
+    var i = if (startIndex < 0) 0 else startIndex
+    val last = kxStrBytes(this) - kxStrBytes(s)
+    while (i <= last) { if (kxMatchAt(s, i)) return i; i++ }
+    return -1
+}
+fun String.lastIndexOf(s: String): Int {
+    var i = kxStrBytes(this) - kxStrBytes(s)
+    while (i >= 0) { if (kxMatchAt(s, i)) return i; i-- }
+    return -1
+}
+fun String.contains(s: String): Boolean = indexOf(s) >= 0
+fun String.startsWith(s: String): Boolean = kxMatchAt(s, 0)
+fun String.endsWith(s: String): Boolean = kxMatchAt(s, kxStrBytes(this) - kxStrBytes(s))
+fun kxIsWs(c: Char): Boolean = c == ' ' || c == '\t' || c == '\n' || c == '\r'
+fun String.trim(): String {
+    var a = 0; var b = length
+    while (a < b && kxIsWs(this[a])) a++
+    while (b > a && kxIsWs(this[b - 1])) b--
+    return substring(a, b)
+}
+fun String.isBlank(): Boolean = trim().length == 0
+fun String.lowercase(): String { val sb = StringBuilder(); for (c in this) sb.append(if (c >= 'A' && c <= 'Z') c + 32 else c); return sb.toString() }
+fun String.uppercase(): String { val sb = StringBuilder(); for (c in this) sb.append(if (c >= 'a' && c <= 'z') c - 32 else c); return sb.toString() }
+fun String.replace(old: String, new: String): String {
+    if (old.length == 0) return this
+    val sb = StringBuilder()
+    var i = 0
+    while (true) {
+        val j = indexOf(old, i)
+        if (j < 0) { sb.append(substring(i)); break }
+        sb.append(substring(i, j)); sb.append(new); i = j + old.length
+    }
+    return sb.toString()
+}
+fun String.split(delim: String): List<String> {
+    val r = ArrayList<String>()
+    var i = 0
+    while (true) {
+        val j = indexOf(delim, i)
+        if (j < 0 || delim.length == 0) { r.add(substring(i)); break }
+        r.add(substring(i, j)); i = j + delim.length
+    }
+    return r
+}
+fun String.repeat(n: Int): String { val sb = StringBuilder(); var i = 0; while (i < n) { sb.append(this); i++ }; return sb.toString() }
+fun String.lines(): List<String> = replace("\r\n", "\n").split("\n")
+"""
+private val STRING_MORE_USE = Regex("""\.(isEmpty|isNotEmpty|indexOf|lastIndexOf|contains|startsWith|endsWith|trim|isBlank|lowercase|uppercase|replace|split|repeat|lines)\(""")
+
+/** UTF-8 bytes of strings (strings are UTF-8 internally: a byte-wise copy; decoding goes through a C string). */
+const val BYTES = """
+fun String.encodeToByteArray(): ByteArray { val n = kxStrBytes(this); val b = ByteArray(n); var i = 0; while (i < n) { b[i] = kxStrByte(this, i); i++ }; return b }
+fun ByteArray.decodeToString(startIndex: Int = 0, endIndex: Int = size): String {
+    val t = ByteArray(endIndex - startIndex + 1)
+    var i = startIndex
+    while (i < endIndex) { t[i - startIndex] = this[i]; i++ }
+    return t.usePinned { it.addressOf(0).toKString() }
+}
+"""
+private val BYTES_USE = Regex("""\.(encodeToByteArray|decodeToString)\(""")
+
 fun withPrelude(src: String, p: Program): Program {
     val idx = INDICES_USE.containsMatchIn(src); val ranges = idx || RANGE_USE.containsMatchIn(src); val result = RESULT_USE.containsMatchIn(src) || COROUTINES_USE.containsMatchIn(src); val strx = STRING_EXT_USE.containsMatchIn(src); val exc = result || COROUTINES_USE.containsMatchIn(src) || SERIALIZATION_USE.containsMatchIn(src) || EXC_USE.containsMatchIn(src); val zip = ZIP_USE.containsMatchIn(src); val sets = SETS_USE.containsMatchIn(src); val pairs = zip || PAIR_USE.containsMatchIn(src)
     val cmp = COMPARABLE_USE.containsMatchIn(src); val arrx = sets || ARRAY_EXT_USE.containsMatchIn(src); val lists = arrx || LIST_USE.containsMatchIn(src); val linit = LIST_INIT_USE.containsMatchIn(src); val scope = COROUTINES_USE.containsMatchIn(src) || SCOPE_USE.containsMatchIn(src); val aon = ARRAY_OF_NULLS_USE.containsMatchIn(src); val lz = LAZY_USE.containsMatchIn(src); val anyObj = ANY_OBJ_USE.containsMatchIn(src); val mm = MIN_MAX_USE.containsMatchIn(src); val el = EMPTY_LIST_USE.containsMatchIn(src); val mmod = MEMORY_MODEL_USE.containsMatchIn(src); val kcls = KCLASS_USE.containsMatchIn(src)
-    val coro = COROUTINES_USE.containsMatchIn(src); val ser = SERIALIZATION_USE.containsMatchIn(src)
-    if (!strx && !coro && !ser && !sets && !arrx && !kcls && !ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon && !lz && !anyObj && !mm && !el && !mmod) return p
-    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (result) RESULT else "") + (if (pairs) PAIRS else "") + (if (zip) ZIP_EXT else "") + (if (sets) SETS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (arrx) ARRAY_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "") + (if (lz) LAZY else "") + (if (anyObj) ANY_OBJ else "") + (if (mm) MIN_MAX else "") + (if (el) EMPTY_LIST else "") + (if (mmod) MEMORY_MODEL else "") + (if (kcls) KCLASS else "") + (if (strx) STRING_EXT else "") + (if (strx && STRING_NULLABLE_USE.containsMatchIn(src)) STRING_NULLABLE else "") + (if (coro) KOTLINX_COROUTINES else "") + (if (ser) KOTLINX_SERIALIZATION else "")
+    val coro = COROUTINES_USE.containsMatchIn(src); val ser = SERIALIZATION_USE.containsMatchIn(src); val bytes = BYTES_USE.containsMatchIn(src); val strm = STRING_MORE_USE.containsMatchIn(src)
+    if (!strm && !bytes && !strx && !coro && !ser && !sets && !arrx && !kcls && !ranges && !exc && !pairs && !cmp && !lists && !linit && !scope && !aon && !lz && !anyObj && !mm && !el && !mmod) return p
+    val text = (if (ranges) INT_PROGRESSION + LONG_PROGRESSION + CHAR_PROGRESSION + (if (UNSIGNED_USE.containsMatchIn(src)) UNSIGNED_PROGRESSION else "") else "") + (if (exc) EXCEPTION_CLASSES else "") + (if (result) RESULT else "") + (if (pairs) PAIRS else "") + (if (zip) ZIP_EXT else "") + (if (sets) SETS else "") + (if (cmp) COMPARABLE else "") + (if (lists) LIST_EXT else "") + (if (arrx) ARRAY_EXT else "") + (if (lists && ranges) RANGE_LIST_EXT else "") + (if (idx) INDICES else "") + (if (linit) LIST_INIT else "") + (if (scope) SCOPE_FUNS else "") + (if (aon) ARRAY_OF_NULLS else "") + (if (lz) LAZY else "") + (if (anyObj) ANY_OBJ else "") + (if (mm) MIN_MAX else "") + (if (el) EMPTY_LIST else "") + (if (mmod) MEMORY_MODEL else "") + (if (kcls) KCLASS else "") + (if (strx || strm) STRING_EXT else "") + (if (strm) STRING_MORE else "") + (if (strx && STRING_NULLABLE_USE.containsMatchIn(src)) STRING_NULLABLE else "") + (if (coro) KOTLINX_COROUTINES else "") + (if (ser) KOTLINX_SERIALIZATION else "") + (if (bytes) BYTES else "")
     val lib = Parser(Lexer(text).lex()).program()
     val taken = p.funs.map { it.name }.toSet() + p.classes.map { it.name }
     return Program(p.funs + lib.funs.filter { it.name !in taken }, p.classes + lib.classes.filter { it.name !in taken },

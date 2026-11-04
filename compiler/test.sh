@@ -23,8 +23,11 @@ done
 # FFI: `external fun` + --link (tests/ffi/: C sources are linked, so they are not in the tests/*.kt loop).
 for t in compiler/tests/ffi/ffi*.kt; do
   n=ffi_$(basename "$t" .kt)
-  if ! "$NKC" "$t" --link "${t%.kt}.c" -o "$out/$n" 2>"$out/$n.err"; then echo "FAIL $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
-  check "$n" "$("$out/$n" 2>&1)" "$(cat "${t%.kt}.out")"
+  # Extra linker inputs (e.g. -lsqlite3) in <test>.link; programs run under --leak-check.
+  extra=(); if [ -f "${t%.kt}.link" ]; then for l in $(cat "${t%.kt}.link"); do extra+=(--link "$l"); done; fi
+  if ! "$NKC" "$t" --leak-check --link "${t%.kt}.c" ${extra[@]+"${extra[@]}"} -o "$out/$n" 2>"$out/$n.err"; then echo "FAIL $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
+  check "$n" "$("$out/$n" 2>"$out/$n.leak")" "$(cat "${t%.kt}.out")"
+  grep -q "leak-check: OK" "$out/$n.leak" || { echo "FAIL $n: leak: $(grep -v 'live=0' "$out/$n.leak" | head -3)"; fail=1; }
 done
 # kxbindgen: bindings generated from a C header, prepended to the program (one input file per compile).
 if python3 compiler/tools/kxbindgen.py compiler/tests/ffi/gen_demo.h -o "$out/gen_demo.bind.kt" >/dev/null; then
