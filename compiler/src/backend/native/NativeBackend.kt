@@ -312,6 +312,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Interface upcast: dispatch goes through global method slots, so the object is reused as is.
         if (v.t is Ty.Iface && t is Ty.Iface && ifaceDecls[v.t.name]?.supers?.contains(t.name) == true) return Val(v.v, t, v.owned)
         if (v.t is Ty.Cls && t is Ty.Cls && t.name in classes.getValue(v.t.name).ancestors) return Val(v.v, t, v.owned)
+        // A function value taking supertypes where subtypes are passed (`Buildee.() -> Unit` as `Anon.() -> Unit`):
+        // `invoke` dispatches by name and objects upcast as is, so the closure is reused.
+        val fs = fnSig(v.t); val ts = fnSig(t)
+        if (fs != null && ts != null && isRecvFn(v.t) == isRecvFn(t) && isSuspFnName((v.t as Ty.Iface).name) == isSuspFnName((t as Ty.Iface).name) &&
+            fs.params.size == ts.params.size && fs.ret == ts.ret &&
+            fs.params.indices.all { i -> fs.params[i] == ts.params[i] || (ts.params[i].llvm == "ptr" && fs.params[i].llvm == "ptr" && fits(ts.params[i], fs.params[i])) })
+            return Val(v.v, t, v.owned)
         fail("type mismatch: expected $t, found ${v.t}")
     }
 
