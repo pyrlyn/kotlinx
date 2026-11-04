@@ -14,4 +14,7 @@ fun main() {
     println(id(Unit))
     val u = println("side effect")
     println(u)
+    val g: () -> Unit = {}
+    g() as Unit
+    println(g() as Unit)
 }

@@ -3353,6 +3353,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         if (v.t.llvm != "ptr") {
             if (v.t == target) return v
+            if ((v.t == Ty.Unit || v.t == Ty.UnitV) && (target == Ty.Unit || target == Ty.UnitV)) return coerce(v, target)
             fail("unsupported cast from ${v.t} to $target")
         }
         if (v.v == "null") {
