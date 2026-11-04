@@ -3167,7 +3167,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
         }
         // Nullable sinks are skipped: class types do not carry nullability, so `CT` would be bound non-null.
-        for (v in locals.values) if (v.type != null && !v.type.nullable) { val vt = try { resolve(v.type) } catch (x: CompileError) { null }; if (vt != null) sink(v.init, vt) }
+        fun refNullable(r: TypeRef) = r.nullable && (try { resolve(TypeRef(r.name, r.args, false)) } catch (x: CompileError) { null }).let { it is Ty.Cls || it is Ty.Iface }
+        for (v in locals.values) if (v.type != null && (!v.type.nullable || refNullable(v.type))) { val vt = try { resolve(v.type) } catch (x: CompileError) { null }; if (vt != null) sink(v.init, vt) }
         // Types named by local declarations that use the receiver (`fun f(): Buildee<Target> = this`): Parser.typeHint.
         for (c in calls) if ((c.callee as NameE).n == "\$typeHint") for (ta in c.typeArgs)
             if (ta.name == recv.name && recv.args.any { free(it) } && ta.args.none { free(it) }) try { unify(recv, resolve(ta), tps, env) } catch (x: CompileError) {}
@@ -3222,7 +3223,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val ps = sigs[n]?.params ?: om?.params?.map { p -> try { resolve(p.type) } catch (x: CompileError) { Ty.Unit } } ?: continue
             if (ps.size != c.args.size) continue
             val decl = funDecls[n]
-            c.args.forEachIndexed { i, a -> if (decl?.params?.getOrNull(i)?.type?.nullable != true && om?.params?.getOrNull(i)?.type?.nullable != true) sink(a, ps[i]) }
+            c.args.forEachIndexed { i, a -> val dt = decl?.params?.getOrNull(i)?.type ?: om?.params?.getOrNull(i)?.type
+                if (dt?.nullable != true || refNullable(dt)) sink(a, ps[i]) }
         }
         for (c in calls) {
             val n = (c.callee as NameE).n

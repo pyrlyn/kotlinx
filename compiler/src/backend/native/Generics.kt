@@ -302,10 +302,14 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
         is UnE -> UnE(x.op, e(x.e))
         is NamedE -> NamedE(x.name, e(x.e))
         is IsE -> IsE(e(x.e), ty(x.type), x.neg)
-        is AsE -> AsE(e(x.e), ty(x.type), x.safe)
+        // `x as T` is unchecked (erasure): with T a class type a null passes through, as in Kotlin.
+        is AsE -> AsE(e(x.e), ty(x.type).let { t -> if (x.type.name in env && x.type.args.isEmpty() && !x.type.nullable && t.name !in VALUE_TYPE_NAMES && !t.name.startsWith("\$")) TypeRef(t.name, t.args, true) else t }, x.safe)
         is IfE -> IfE(e(x.cond), block(x.th), blockN(x.el))
         is LambdaE -> LambdaE(block(x.body))
         is TryE -> TryE(block(x.body), x.catches.map { Catch(it.name, ty(it.type), block(it.body)) }, blockN(x.fin))
         is WhenE -> WhenE(x.subj?.let { e(it) }, x.branches.map { (c, b) -> c?.map { e(it) } to block(b) })
     }.also { if (it !== x) it.line = x.line }
 }
+
+/** Type names whose nullable form is boxed (a cast to them stays non-null in generic instances). */
+private val VALUE_TYPE_NAMES = setOf("Int", "Long", "Short", "Byte", "Double", "Float", "Boolean", "Char", "String", "UInt", "ULong", "UShort", "UByte", "Unit", "Any", "Nothing")
