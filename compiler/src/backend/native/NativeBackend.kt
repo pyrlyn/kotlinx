@@ -318,6 +318,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "double" -> emitT("bitcast double ${v.v} to i64")
         "float" -> emitT("zext i32 ${emitT("bitcast float ${v.v} to i32")} to i64")
         "i1" -> emitT("zext i1 ${v.v} to i64")
+        "void" -> "0"  // a Unit element
         else -> emitT("sext ${v.t.llvm} ${v.v} to i64")
     }
 
@@ -326,6 +327,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "i64" -> s
         "double" -> emitT("bitcast i64 $s to double")
         "float" -> emitT("bitcast i32 ${emitT("trunc i64 $s to i32")} to float")
+        "void" -> ""
         else -> emitT("trunc i64 $s to ${t.llvm}")
     }
 
@@ -2724,6 +2726,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 else if (n == "ArrayList" && e.args.isNotEmpty()) fail("ArrayList(collection) is not supported")
                 val vals = if (capOnly) emptyList() else e.args.map { genArg(it) }
                 val et = e.typeArgs.singleOrNull()?.let { resolve(it) } ?: vals.firstOrNull()?.t ?: fail("$n needs an explicit element type, e.g. $n<Long>()")
+                    .let { if (it == Ty.Unit) Ty.UnitV else it }
                 val rel = releaseFn(et) ?: "null"
                 val l = emitT("call ptr @rt_list_new(ptr $rel)")
                 for (v in vals) emit("call void @rt_list_add(ptr $l, i64 ${toSlot(consume(coerce(v, et)))})")
@@ -3001,11 +3004,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         /** Lambda-local `val`s: name -> declared type or initializer (types flow through them). */
         val locals = HashMap<String, VarS>()
+        /** `x = value` assignments to plain names (`temp = materialize()`). */
+        val assigns = ArrayList<Pair<String, E>>()
         fun stImpl(s: S) {
             when (s) {
                 is ExprS -> ex(s.e)
                 is VarS -> { locals[s.name] = s; ex(s.init) }
-                is AssignS -> ex(s.value)
+                is AssignS -> { if (s.op == "=" && s.target is NameE) assigns.add(s.target.n to s.value); ex(s.value) }
                 is RetS -> ex(s.e)
                 else -> {}
             }
@@ -3025,6 +3030,23 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         // Nullable sinks are skipped: class types do not carry nullability, so `CT` would be bound non-null.
         for (v in locals.values) if (v.type != null && !v.type.nullable) { val vt = try { resolve(v.type) } catch (x: CompileError) { null }; if (vt != null) sink(v.init, vt) }
+        // `var temp = arg; temp = materialize()` (or an outer variable): the target's type.
+        for ((n, value) in assigns) {
+            val outer = lookup(n)
+            val vt = if (outer != null) (if (locals[n] == null) outer.t else null) else locals[n]?.let { v ->
+                if (v.type != null) (if (v.type.nullable) null else try { resolve(v.type) } catch (x: CompileError) { null })
+                else origin(v.init).let { o -> if (o is CallE && o.callee is NameE && o.callee.n in rets && lookup(o.callee.n) == null) null else probeType(o) }
+            }
+            if (vt != null && vt !is Ty.NBox) sink(value, vt)
+            // `var temp = materialize(); temp = arg`: the assigned value's type flows back into the initializer.
+            val lv = locals[n]
+            if (vt == null && outer == null && lv != null && lv.type == null) {
+                val o = origin(value)
+                val t = if (o is NameE) (lookup(o.n)?.t ?: locals[o.n]?.type?.let { try { resolve(it) } catch (x: CompileError) { null } })
+                    else if (o is CallE && o.callee is NameE && o.callee.n in rets) null else probeType(o)
+                if (t != null && t !is Ty.NBox) sink(lv.init, t)
+            }
+        }
         for (c in calls) {
             val n = (c.callee as NameE).n
             if (n in methods || c.lambda != null || c.args.any { it is NamedE }) continue
@@ -4072,6 +4094,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             Subst(emptyMap(), { x -> if (x is NameE && x.n in recvNames) MemberE(NameE("\$recv"), x.n, false).also { it.line = x.line } else null }).block(lamBody0)
         }
         if (recvNames.isNotEmpty()) caps.add("\$recv" to recvL!!.t)
+        // `this` of an enclosing extension / receiver lambda used in a plain lambda: captured as `$thisCap`
+        // (inside the lambda's own code `this` is the closure object).
+        val ti = if ("this" in pnames) -1 else caps.indexOfFirst { it.first == "this" }
+        val lamBodyT = if (ti < 0) lamBody else {
+            caps[ti] = "\$thisCap" to caps[ti].second
+            ThisCaps.map.getOrPut(lamBody) { Subst(emptyMap(), { x -> if (x is NameE && x.n == "this") NameE("\$thisCap").also { it.line = x.line } else null }).block(lamBody) }
+        }
         val rt = when {
             ret == Ty.Unit -> Ty.Unit
             ret != null -> ret
@@ -4091,18 +4120,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val fnT = fnTy(ptys, rt, asRecvFn, susp)
         // Inside a generic function instance, a body naming its type parameters (`it as T`) is compiled as its own
         // class with them substituted (the class is generated outside the instance's type bindings).
-        val usedTps = if (tenv.isEmpty()) emptyList() else typeNamesIn(lamBody).filter { it in tenv }.distinct().sorted()
-        val body1 = if (usedTps.isEmpty()) lamBody else Subst(usedTps.associateWith { tyRef(tenv.getValue(it)) }).block(lamBody)
+        val usedTps = if (tenv.isEmpty()) emptyList() else typeNamesIn(lamBodyT).filter { it in tenv }.distinct().sorted()
+        val body1 = if (usedTps.isEmpty()) lamBodyT else Subst(usedTps.associateWith { tyRef(tenv.getValue(it)) }).block(lamBodyT)
         // Function types do not track nullable primitives (`(B?) -> Int?` is `(B) -> Int`): a null result (from a
         // safe call or a null literal in the body) would be unboxed and fail at run time.
-        if (rt is Ty.NBox && mayYieldNull(lamBody)) fail("lambdas returning a nullable ${rt.inner} are not supported")
+        if (rt is Ty.NBox && mayYieldNull(lamBodyT)) fail("lambdas returning a nullable ${rt.inner} are not supported")
         val name = mangle((if (susp) "\$LamS" else "\$Lam") + LamIds.id(b0), (caps.map { it.second } + ptys + rt + usedTps.map { tenv.getValue(it) }).map { tyRef(it) })
         if (name !in classes) {
             val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i])) }, tyRef(rt), null,
                 WhenE(null, listOf(null to body1)).also { it.line = line }, line)
             throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line))
         }
-        val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "\$self" else if (n == "\$recv") "this" else n).also { it.line = line } }, null))
+        val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "\$self" else if (n == "\$recv" || n == "\$thisCap") "this" else n).also { it.line = line } }, null))
         return Val(v.v, fnT, v.owned)
     }
 
@@ -4890,4 +4919,5 @@ done:
 
 /** Lambda-with-receiver bodies with `this` added as first parameter; kept across code-generation restarts (stable ids). */
 private object RecvCaps { val map = HashMap<Block, Block>() }
+private object ThisCaps { val map = HashMap<Block, Block>() }
 object RecvLambdas { val map = HashMap<Block, Block>() }

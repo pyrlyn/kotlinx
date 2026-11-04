@@ -179,6 +179,9 @@ class Parser(toks: List<Tok>) {
     private val topAnon = ArrayList<ClassD>()
     private var bodyLevel = 0
     private var anonN = 0
+    /** Name given to the anonymous function being parsed (`fun(x: Int) = ...`, `fun String.(y: String) = ...`). */
+    private var anonFun: String? = null
+    private fun fname(): String = anonFun?.takeIf { isOp("(") } ?: ident()
 
     /** Data class: generated toString, componentN, hashCode and `$equals` (structural `==`) over the constructor properties. */
     /** Value classes as declared (single- and multi-field), for [checkValueRecursion]. */
@@ -1994,13 +1997,16 @@ class Parser(toks: List<Tok>) {
         val save = p
         var recv: TypeRef? = null
         // Receiver in parentheses: `fun (suspend () -> T).startCoroutine(...)`.
-        val parenRecv = if (isOp("(")) { val rt = type(); expectOp("."); recv = rt; ident() } else null
+        val parenRecv = if (anonFun != null && isOp("(")) anonFun
+            // `fun String.(y: String)`: a simple receiver (type() would read `String.(...)` as a function type).
+            else if (anonFun != null && peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == "." && t[p + 2].k == K.OP && t[p + 2].s == "(") { recv = TypeRef(ident(), emptyList(), false); next(); anonFun }
+            else if (isOp("(")) { val rt = type(); expectOp("."); recv = rt; ident() } else null
         if (parenRecv == null) ident()
         val name = if (parenRecv != null) parenRecv else if (isOp(".") || isOp("<") || isOp("?") || isOp("?.")) {
             p = save
             val rt = type()
             if (isOp("?.")) { next(); recv = TypeRef(rt.name, rt.args, true); ident() }
-            else if (isOp(".")) { next(); recv = rt; ident() }
+            else if (isOp(".")) { next(); recv = rt; fname() }
             else if (rt.args.isEmpty() && rt.name.contains('.')) { recv = TypeRef(rt.name.substringBeforeLast('.'), emptyList(), false); rt.name.substringAfterLast('.') }
             else fail("expected '('")
         } else { p = save; ident() }
@@ -2031,8 +2037,8 @@ class Parser(toks: List<Tok>) {
             if (ds.isEmpty()) FunD(name, params, ret, null, e, line, typeParams, recv)
             else {
                 // `= object : T { }`: the anonymous class is declared in a block body; the function returns T.
-                val anon = (ds.last() as LocalDeclS).d as ClassD
-                val r = ret ?: if (e is CallE && (e.callee as? NameE)?.n == anon.name) TypeRef(anon.supers.firstOrNull() ?: anon.name, anon.superTypeArgs[anon.supers.firstOrNull()] ?: emptyList(), false) else null
+                val anon = (ds.last() as LocalDeclS).d as? ClassD
+                val r = ret ?: if (anon != null && e is CallE && (e.callee as? NameE)?.n == anon.name) TypeRef(anon.supers.firstOrNull() ?: anon.name, anon.superTypeArgs[anon.supers.firstOrNull()] ?: emptyList(), false) else null
                 // No declared return type and the body is more than the object itself (`(object : A {}) as A`): keep an
                 // expression body (a block-valued `when`) so the return type is inferred from the whole expression.
                 if (r == null) FunD(name, params, null, null, WhenE(null, listOf(null to Block(ds + ExprS(e).also { it.line = line }))).also { it.line = line }, line, typeParams, recv)
@@ -2673,6 +2679,14 @@ class Parser(toks: List<Tok>) {
             e = when (tk.s) {
                 ".", "?." -> {
                     p++; skipNLOnly()
+                    // `recv.(fnExpr)(args)`: a function-with-receiver value called on recv, i.e. `fnExpr(recv, args)`.
+                    if (tk.s == "." && isOp("(")) {
+                        val f = primary()
+                        if (!isOp("(")) fail("expected '(' after 'recv.(function)'", peek())
+                        val a = args()
+                        e = CallE(f, emptyList(), listOf(e) + a, null).also { it.line = line }
+                        continue
+                    }
                     val m = MemberE(e, ident(), tk.s == "?.").also { it.line = line }
                     // `recv.f<Int>(args)`: explicit type arguments of a member call.
                     explicitTypeArgs()?.let { ta ->
@@ -2721,6 +2735,15 @@ class Parser(toks: List<Tok>) {
             })
             K.ID -> when (tk.s) {
                 "object" -> if (isOp(":") || isOp("{")) anonObject(tk.line) else fail("unexpected 'object'", tk)
+                // Anonymous function: declared as a local function before the statement, used as `::name`.
+                "fun" -> if (bodyLevel > 0 && (isOp("(") || peek().k == K.ID)) {
+                    p--
+                    val n = "\$af${anonN++}"
+                    val sv = anonFun; anonFun = n
+                    val fd = try { function() } finally { anonFun = sv }
+                    pendingDecls.add(LocalDeclS(fd).also { it.line = tk.line }); sawLocal = true
+                    UnE("::" + n, if (fd.recv != null) NameE(fd.recv!!.name).also { it.line = tk.line } else NullL()).also { it.line = tk.line }
+                } else fail("unexpected 'fun'", tk)
                 "true" -> BoolL(true)
                 "false" -> BoolL(false)
                 "null" -> NullL()

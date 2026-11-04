@@ -340,6 +340,17 @@ object KxSched {
         for (p in parked) ready.add(p)
         if (deadlock) throw IllegalStateException("runBlocking: deadlock, no coroutine can make progress")
     }
+    // After the outermost runBlocking: detached jobs still pending are cancelled and unwound (frames freed).
+    fun drainDetached() {
+        var rounds = 0
+        while (live.size > 0 && rounds < 1000) {
+            var i = 0
+            while (i < live.size) { val j = live[i]; if (!j.running) j.cancel(); i++ }
+            while (ready.size > 0) ready.removeAt(0).step()
+            while (timers.size > 0) timers.removeAt(0).step()
+            rounds++
+        }
+    }
     fun me(): Job {
         val c = current
         if (c == null) throw IllegalStateException("suspend function called outside a coroutine")
@@ -456,7 +467,9 @@ class CoroutineScope {
             if (f != null) { if (detached) kxHandle(child.handler, f) else parent.childFailed(f, child.handler) }
         }
         j.scope = child; child.owner = j; j.scopes.add(child)
-        children.add(j); KxSched.wake(j)
+        // A detached job is not a child: the scope neither waits for it nor cancels it.
+        if (!detached) children.add(j)
+        KxSched.wake(j)
         return j
     }
     // A launched child failed: a supervisor hands the exception to the handler, a regular scope fails.
@@ -506,6 +519,7 @@ fun runBlocking(block: suspend CoroutineScope.() -> Unit) {
     s.owner = root; root.scope = s; root.scopes.add(s)
     KxSched.wake(root)
     KxSched.runUntil(root)
+    if (KxSched.current == null) KxSched.drainDetached()
     val f = s.failure
     if (f != null) throw f
 }
