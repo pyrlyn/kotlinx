@@ -2599,6 +2599,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** Type of [e] without emitting code (generation is rolled back), or null if it does not compile. */
     private fun probeType(e: E): Ty? = probe { genExpr(e).t }
 
+    /** [probeType] with extra names in scope (lambda parameters of known types). */
+    private fun probeWith(ps: List<Pair<String, Ty>>, e: E): Ty? {
+        if (ps.isEmpty()) return probeType(e)
+        scopes.add(Scope().also { sc -> ps.forEach { (n, t) -> sc.vars[n] = Local("%probe.$n", t, false) } })
+        try { return probeType(e) } finally { scopes.removeAt(scopes.size - 1) }
+    }
+
     private val secondaryCache = HashMap<CallE, String>()
 
     /** The secondary-constructor factory `C$sec$k` a constructor call resolves to, or null for the primary constructor. */
@@ -2978,7 +2985,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (f.name == "with" && hasReturn(a.body.stmts) && all.size == 2 && i == 1 && a.body.params.isEmpty() && rawN[0] != null) return inlineWith(rawN[0]!!, a.body)
                 if (f.name in SCOPE_FUN_NAMES && hasReturn(a.body.stmts)) fail("non-local return from a '${f.name}' lambda is not supported")
                 if (ptn == "\$FnR" && pt.args.size >= 2 && !isBound(pt.args[0])) {
-                    builderInfer(a.body, pt.args[0], f.typeParams, env)
+                    val lpTys = pt.args.subList(1, pt.args.size - 1).map { res(it) }
+                    val lpNames = if (a.body.params.isNotEmpty()) a.body.params else if (lpTys.size == 1) listOf("it") else emptyList()
+                    builderInfer(a.body, pt.args[0], f.typeParams, env,
+                        if (lpNames.size == lpTys.size && lpTys.all { it != null }) lpNames.zip(lpTys.map { it!! }) else emptyList())
                     // A builder whose lambda gives no type information (`build {}` in an `if`/`when`/vararg next to
                     // `build { setTypeVariable(x) }`): the type a sibling call of the same builder just inferred.
                     val key = "$curFunKey:${f.name}"
@@ -2986,7 +2996,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     if (!isBound(pt.args[0]) && sib != null && e.line - sib.first in 0..6)
                         for (tp in f.typeParams) if (tp !in env) sib.second[tp]?.let { env[tp] = it }
                     if (isBound(pt.args[0])) lastBuilder[key] = e.line to HashMap(env)
-                }
+                } else if (ptn == "\$FnR" && pt.args.size >= 2 && e.typeArgs.isNotEmpty()) lastBuilder["$curFunKey:${f.name}"] = e.line to HashMap(env)
                 if (isFn && pt.args.dropLast(1).any { !isBound(it) }) usageInfer(a.body, pt, f.typeParams, env)
                 val lps = if (isFn) pt.args.dropLast(1).map { res(it) }.takeIf { l -> l.all { it != null } }?.map { it!! } else null
                 val lrt = if (isFn) res(pt.args.last())?.let { if (it == Ty.UnitV) Ty.Unit else it } else null
@@ -3079,7 +3089,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
     }
 
-    private fun builderInfer(b: Block, recv: TypeRef, tps: List<String>, env: MutableMap<String, Ty>) {
+    private fun builderInfer(b: Block, recv: TypeRef, tps: List<String>, env: MutableMap<String, Ty>, lamParams: List<Pair<String, Ty>> = emptyList()) {
         val (ctps, methods0) = genericClasses[recv.name]?.let { cd -> cd.typeParams to cd.methods.groupBy { it.name }.mapValues { (_, fs) -> fs.first().params.map { it.type } } }
             ?: genericIfaces[recv.name]?.let { d -> d.typeParams to d.methods.groupBy { it.name }.mapValues { (_, fs) -> fs.first().params.map { it.type } } }
             ?: BUILDER_STD[recv.name] ?: return
@@ -3170,9 +3180,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val pts = pr.args.dropLast(1); val ret = pr.args.last()
             val names = if (a.body.params.isNotEmpty()) a.body.params else if (pts.size == 1) listOf("it") else emptyList()
             if (names.size != pts.size) return
-            if (free(ret) && pts.isEmpty()) {
+            fun bound(r: TypeRef): Boolean = (r.name !in tps || r.name in env) && r.args.all { bound(it) }
+            val ptys = if (pts.all { bound(it) }) { val sv = tenv; tenv = sv + env; try { pts.map { resolve(it) } } catch (x: CompileError) { null } finally { tenv = sv } } else null
+            // (a nullable result `K?` is skipped: binding K from it is not modeled)
+            if (free(ret) && !ret.nullable && ptys != null) {
                 val last = (a.body.stmts.lastOrNull() as? ExprS)?.e
-                val t = if (last == null) Ty.Unit else probeType(last)
+                val t = if (last == null) Ty.Unit else probeWith(names.zip(ptys), last)
                 if (t != null && t != Ty.RawPtr && t != Ty.Nothing) try { unify(ret, if (t == Ty.Unit) Ty.UnitV else t, tps, env) } catch (x: CompileError) {}
             }
             pts.forEachIndexed { i, ptr ->
@@ -3269,6 +3282,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val ps = sigs[n]?.params ?: om?.params?.map { p -> try { resolve(p.type) } catch (x: CompileError) { Ty.Unit } } ?: continue
             if (ps.size != c.args.size) continue
             val decl = funDecls[n]
+            // `foo(this)` with `fun foo(c: Controller<String>)`: the receiver's type.
+            c.args.forEachIndexed { i, a -> if ((a as? NameE)?.n == "this" && recv.args.any { free(it) }) try { unify(recv, ps[i], tps, env) } catch (x: CompileError) {} }
             c.args.forEachIndexed { i, a -> val dt = decl?.params?.getOrNull(i)?.type ?: om?.params?.getOrNull(i)?.type
                 if (dt?.nullable != true || refNullable(dt)) sink(a, ps[i]) }
         }
@@ -3284,7 +3299,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val o = origin(a)
                 val t = (if (o is NameE && lookup(o.n) == null) locals[o.n]?.type?.let { try { resolve(it) } catch (x: CompileError) { null } } else null)
                     ?: (if (o is NameE && lookup(o.n) == null) recvField(o.n) else null)
-                    ?: probeType(o) ?: return@forEachIndexed
+                    ?: probeWith(lamParams, o) ?: return@forEachIndexed
                 if (t != Ty.Unit && t != Ty.RawPtr && t != Ty.Args) unify(pr, t, tps, env)
             }
         }
