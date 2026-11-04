@@ -2275,8 +2275,8 @@ class Parser(toks: List<Tok>) {
             val f = type()
             return when (f.name) {
                 "\$Fn", "\$FnS" -> TypeRef(f.name, cs + f.args, f.nullable)
-                "\$FnR" -> TypeRef("\$Fn", cs + f.args, f.nullable)
-                "\$FnRS" -> TypeRef("\$FnS", cs + f.args, f.nullable)
+                "\$FnR" -> TypeRef("\$Fn", cs + f.args, f.nullable).also { CtxRecvFnTypes.add(it, cs.size) }
+                "\$FnRS" -> TypeRef("\$FnS", cs + f.args, f.nullable).also { CtxRecvFnTypes.add(it, cs.size) }
                 else -> fail("expected a function type after 'context(...)'")
             }
         }
@@ -2941,4 +2941,13 @@ class Parser(toks: List<Tok>) {
         expectOp("}")
         return WhenE(subj, branches)
     }
+}
+
+/**
+ * `context(C) R.(P) -> T` is the plain function type `(C, R, P) -> T`; its lambdas take `R` as `this`. The function
+ * types written that way (argument lists, with the receiver's index), matched by NativeBackend.genLambda.
+ */
+object CtxRecvFnTypes {
+    val all = ArrayList<Pair<List<TypeRef>, Int>>()
+    fun add(t: TypeRef, recvAt: Int) { if (all.none { it.second == recvAt && it.first.toString() == t.args.toString() }) all.add(t.args to recvAt) }
 }

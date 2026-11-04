@@ -4025,12 +4025,25 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun invokeFn(f: Val, e: CallE): Val {
         val ii = ifaces.getValue((f.t as Ty.Iface).name)
-        val v = callIface(f, ii, "invoke", e)
+        // `context(C) R.() -> T` invoked without its context arguments: they come from the implicit values in scope.
+        val sig = fnSig(f.t)
+        val k = recvCtxCount(f.t)
+        val e2 = if (sig != null && k > 0 && e.args.none { it is NamedE } && allArgs(e).size == sig.params.size - k)
+            CallE(e.callee, e.typeArgs, sig.params.take(k).map { ctxArg(it) } + e.args, e.lambda).also { it.line = e.line } else e
+        val v = callIface(f, ii, "invoke", e2)
         releaseIfOwned(f)
         return v
     }
 
     /**
+    /** The number of context parameters of a `context(C) R.(P) -> T` type [t] (Parser's CtxRecvFnTypes), else 0. */
+    private fun recvCtxCount(t: Ty): Int {
+        val s = fnSig(t) ?: return 0
+        return CtxRecvFnTypes.all.firstOrNull { (args, _) -> args.size == s.params.size + 1 && args.withIndex().all { (i, a) ->
+            val want = if (i < s.params.size) s.params[i] else s.ret
+            (try { resolve(a) } catch (x: CompileError) { null }).let { r -> r == want || (r == Ty.UnitV && want == Ty.Unit) } } }?.second ?: 0
+    }
+
      * Lambda literal -> closure object: a synthesized class `$Lam<id>$<types>` whose fields are the captured locals
      * (by value; captured `var`s were boxed into `$Ref` cells by the frontend) and, inside a class, `$outer` (`this`),
      * implementing the function-type interface with an `invoke` method holding the body. Captures are retained into
@@ -4202,12 +4215,24 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val b1 = RecvLambdas.map.getOrPut(b0) { Block(b0.stmts, listOf("this") + names.mapIndexed { i, n -> if (n == "_") "\$_$i" else n }, emptyList()) }
             return genLambda(LambdaE(b1).also { it.line = e.line }, ps, ret, false, asRecvFn = true, susp = susp)
         }
-        val ptys: List<Ty> = if (declared.isEmpty()) {
+        val ptys0: List<Ty> = if (declared.isEmpty()) {
             ps ?: emptyList()
         } else declared.mapIndexed { i, n -> b0.paramTypes.getOrNull(i)?.let { resolve(it) } ?: ps?.getOrNull(i) ?: fail("cannot infer the type of lambda parameter '$n'") }
-        if (ps != null && ps.size != ptys.size) fail("lambda expects ${ps.size} parameters, has ${ptys.size}")
+        // `context(C) R.(P) -> T` (Parser's CtxRecvFnTypes): context values, then `this`, then the declared parameters.
+        val recvAt = if (ps == null || receiver || asRecvFn) -1 else CtxRecvFnTypes.all.firstOrNull { (args, k) ->
+            args.size == ps.size + 1 && declared.size <= ps.size - k - 1 && args.withIndex().all { (i, a) ->
+                val want = if (i < ps.size) ps[i] else ret
+                want == null || (try { resolve(a) } catch (x: CompileError) { null }).let { r -> r == want || (r == Ty.UnitV && want == Ty.Unit) || (r == Ty.Unit && want == Ty.UnitV) }
+            } }?.second ?: -1
+        val ptys = if (recvAt >= 0) ps!! else ptys0
+        if (recvAt < 0 && ps != null && ps.size != ptys.size) fail("lambda expects ${ps.size} parameters, has ${ptys.size}")
         // Several implicit parameters only come from context function types (`context(A, B) () -> R`).
-        val pnames = if (declared.isEmpty()) (if (ptys.size == 1) listOf("it") else ptys.indices.map { "\$ctxp$it" }) else declared.mapIndexed { i, n -> if (n == "_") "\$_$i" else n }
+        val pnames = if (recvAt >= 0) {
+            val rest = ps!!.size - recvAt - 1
+            val dn = if (declared.isEmpty()) (if (rest == 1) listOf("it") else if (rest == 0) emptyList() else fail("lambda needs $rest parameters")) else declared.mapIndexed { i, n -> if (n == "_") "\$_$i" else n }
+            if (dn.size != rest) fail("lambda expects $rest parameters, has ${dn.size}")
+            (0 until recvAt).map { "\$ctxp$it" } + "this" + dn
+        } else if (declared.isEmpty()) (if (ptys.size == 1) listOf("it") else ptys.indices.map { "\$ctxp$it" }) else declared.mapIndexed { i, n -> if (n == "_") "\$_$i" else n }
         val free = LinkedHashSet<String>()
         for (s in b0.stmts) for (u in Uses.ofStmt(s)) free.add(u.node.n)
         val caps = ArrayList<Pair<String, Ty>>()
@@ -4265,7 +4290,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val sb = body.length; val sa = allocas.length; val sc = cur; val st = term; val sm = HashSet(moveNodes)
                 val sco = inCoroutine; inCoroutine = susp
                 scopes.add(Scope())
-                pnames.forEachIndexed { i, n -> val l = declare(n, ptys[i], false, false); if (declared.isEmpty() && !asRecvFn) scopes.last().vars["\$ctx\$p${tmpN++}"] = l }
+                pnames.forEachIndexed { i, n -> val l = declare(n, ptys[i], false, false); if ((declared.isEmpty() && !asRecvFn && recvAt < 0) || i < recvAt) scopes.last().vars["\$ctx\$p${tmpN++}"] = l }
                 val t = try { genBlockBody(b0, true).t } finally {
                     scopes.removeAt(scopes.size - 1); inCoroutine = sco
                     body.setLength(sb); allocas.setLength(sa); cur = sc; term = st; moveNodes.clear(); moveNodes.addAll(sm)
