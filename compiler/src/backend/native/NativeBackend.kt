@@ -2299,7 +2299,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val c = e.callee
         fun <T : E> T.l(): T = also { it.line = e.line }
         fun <T : S> T.l(): T = also { it.line = e.line }
-        if (c is NameE && e.typeArgs.isEmpty() && lookup(c.n) == null && !funDecls.containsKey(c.n)) {
+        if (c is NameE && e.typeArgs.isEmpty() && lookup(c.n) == null && !funDecls.containsKey(c.n) && c.n !in Overloads.map) {
             if (c.n == "run" && e.args.isEmpty() && body.params.isEmpty()) return body
             if (c.n == "repeat" && e.args.size == 1 && body.params.size <= 1) {
                 val p = body.params.firstOrNull() ?: "it"
@@ -2932,7 +2932,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // A generic call argument (`Continuation(ctx) { ... }`) is generated after the others, with the parameter type as
             // its expected type when the other arguments bound it (its own type arguments are then inferred from it).
             fun genericArg(a: E) = a is CallE && (a.callee as? NameE)?.n?.let { it in genericFuns && it !in sigs } == true
-            all.forEachIndexed { i, a -> if (a !is LambdaE && !genericArg(a)) { rawN[i] = genExpr(a); track(rawN[i]!!); if (e.typeArgs.isEmpty()) cs.collect(f.params[i].type, rawN[i]!!.t, f.typeParams) } }
+            // `::f` of an overloaded function: resolved after the other arguments, from the bound parameter type.
+            fun ovRef(a: E) = a is UnE && a.op.startsWith("::") && a.e is NullL && a.op.drop(2) in Overloads.map && lookup(a.op.drop(2)) == null
+            all.forEachIndexed { i, a -> if (a !is LambdaE && !genericArg(a) && !ovRef(a)) { rawN[i] = genExpr(a); track(rawN[i]!!); if (e.typeArgs.isEmpty()) cs.collect(f.params[i].type, rawN[i]!!.t, f.typeParams) } }
             if (all.any { it !is LambdaE && genericArg(it) }) {
                 val env0 = LinkedHashMap(env)
                 Constraints().also { c0 -> all.indices.forEach { i -> if (rawN[i] != null && e.typeArgs.isEmpty()) c0.collect(f.params[i].type, rawN[i]!!.t, f.typeParams) } }.solveInto(env0)
@@ -2949,6 +2951,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             cs.solveInto(env)
             bindExpectedRet(f, e, env)
             all.forEachIndexed { i, a ->
+                if (ovRef(a)) {
+                    val pt = f.params[i].type
+                    val sv = tenv; tenv = sv + env
+                    val et = try { resolve(pt) } catch (x: CompileError) { fail("cannot infer the type of ${(a as UnE).op}") } finally { tenv = sv }
+                    rawN[i] = adaptedRef(a, et) ?: fail("cannot resolve ${(a as UnE).op}")
+                    track(rawN[i]!!)
+                    return@forEachIndexed
+                }
                 if (a !is LambdaE) return@forEachIndexed
                 val pt = f.params[i].type
                 fun isBound(r: TypeRef): Boolean = (r.name !in f.typeParams || r.name in env) && r.args.all { isBound(it) }
@@ -3052,6 +3062,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun builderInfer(b: Block, recv: TypeRef, tps: List<String>, env: MutableMap<String, Ty>) {
         val (ctps, methods) = genericClasses[recv.name]?.let { cd -> cd.typeParams to cd.methods.groupBy { it.name }.mapValues { (_, fs) -> fs.first().params.map { it.type } } }
+            ?: genericIfaces[recv.name]?.let { d -> d.typeParams to d.methods.groupBy { it.name }.mapValues { (_, fs) -> fs.first().params.map { it.type } } }
             ?: BUILDER_STD[recv.name] ?: return
         /** Return types of the receiver's no-argument methods (`materialize(): CT`). */
         val rets = genericClasses[recv.name]?.methods?.filter { it.params.isEmpty() && it.ret != null }?.groupBy { it.name }?.mapValues { it.value.first().ret!! } ?: emptyMap()
@@ -3928,7 +3939,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (a !is UnE || !a.op.startsWith("::") || a.e !is NullL) return null
         val s = fnSig(t) ?: return null
         if (isRecvFn(t)) return null
-        val n = a.op.drop(2)
+        var n = a.op.drop(2)
+        // `::f` of an overloaded top-level function: the overload whose parameter types match the expected type.
+        if (n in Overloads.map && lookup(n) == null) {
+            val c = Overloads.map.getValue(n).filter { o -> o.params.size == s.params.size && o.params.withIndex().all { (i, q) -> (try { resolve(q.type) } catch (x: CompileError) { null }) == s.params[i] } }
+            n = c.singleOrNull()?.name ?: fail("cannot choose an overload of ::$n for ${t}")
+            val le = RefLambdas.map.getOrPut(a) {
+                val names = s.params.indices.map { "rp\$$it" }
+                val call = CallE(NameE(n).also { it.line = line }, emptyList(), names.map { NameE(it).also { x -> x.line = line } }, null).also { it.line = line }
+                LambdaE(Block(listOf(ExprS(call).also { it.line = line }), names, s.params.map { tyRef(it) })).also { it.line = line }
+            }
+            return genLambda(le, s.params, s.ret, susp = t is Ty.Iface && isSuspFnName(t.name))
+        }
         val f = funDecls[n]?.takeIf { it.typeParams.isEmpty() && it.recv == null } ?: return null
         val exact = f.params.size == s.params.size && f.params.none { it.vararg } && (f.ret?.let { resolveRet(it) } ?: return null).let { it == s.ret || s.ret != Ty.Unit }
         if (exact) return null

@@ -1644,7 +1644,12 @@ class Parser(toks: List<Tok>) {
                                 c.supers.flatMap { sn -> (classes + decls.filterIsInstance<ClassD>()).filter { it.name == sn }.flatMap { sc -> sc.fields.map { it.name } + sc.ctorParams.map { it.name } + sc.methods.map { it.name.removePrefix("\$prop\$") } + inherited(sc, seen + 1) } }.toSet()
                             val body = HashSet<String>(); localDeclNames(ClassD(d.name, d.fields, d.supers, d.methods, d.line, d.ctorParams, d.inits, null, d.typeParams), body)
                             if (capd.any { it in body && it in inherited(d) }) no()
-                            capCls[d.name] = capd.map { c -> c to (localType(f, c) ?: no()) }
+                            // An untyped capture (e.g. the lambda receiver `$othisN`) takes the declared type of a property or
+                            // getter that is just that name (`val p: T = this@build`, `val p: T get() = this@build`).
+                            fun usageType(c: String): TypeRef? =
+                                d.fields.firstOrNull { it.type != null && (it.init as? NameE)?.n == c }?.type
+                                    ?: d.methods.firstOrNull { it.ret != null && it.params.isEmpty() && ((it.exprBody as? NameE)?.n == c || ((it.body?.stmts?.singleOrNull() as? RetS)?.e as? NameE)?.n == c) }?.ret
+                            capCls[d.name] = capd.map { c -> c to (localType(f, c) ?: usageType(c) ?: no()) }
                         }
                         val n = if (d is ClassD) d.name else (d as InterfaceD).name
                         val nn = fresh(n)
@@ -2477,9 +2482,10 @@ class Parser(toks: List<Tok>) {
         val sub = Subst(emptyMap(), rw = { x -> if (x is NameE && ((plain && x.n == "this") || x.n.startsWith("this@"))) { hit = true; NameE(n).also { it.line = x.line } } else null })
         val r: Any = when (d) {
             is FunD -> FunD(d.name, d.params, d.ret, d.body?.let { sub.block(it) }, d.exprBody?.let { sub.e(it) }, d.line, d.typeParams, d.recv)
-            is ClassD -> ClassD(d.name, d.fields.map { f -> FieldD(f.name, f.type, f.isVar, f.init?.let { sub.e(it) }, f.lateinit) }, d.supers, d.methods.map { m ->
+            is ClassD -> { val nf = HashMap<FieldD, FieldD>(); fun fd(f: FieldD) = nf.getOrPut(f) { FieldD(f.name, f.type, f.isVar, f.init?.let { sub.e(it) }, f.lateinit) }
+                ClassD(d.name, d.fields.map { fd(it) }, d.supers, d.methods.map { m ->
                 FunD(m.name, m.params, m.ret, m.body?.let { sub.block(it) }, m.exprBody?.let { sub.e(it) }, m.line, m.typeParams, m.recv) }, d.line,
-                d.ctorParams, d.inits.map { if (it is Block) sub.block(it) else it }, d.superArgs?.map { sub.e(it) }, d.typeParams, d.enumEntries, d.isValue, d.superTypeArgs)
+                d.ctorParams, d.inits.map { if (it is Block) sub.block(it) else if (it is FieldD) fd(it) else it }, d.superArgs?.map { sub.e(it) }, d.typeParams, d.enumEntries, d.isValue, d.superTypeArgs) }
             else -> d
         }
         if (!hit) return d
