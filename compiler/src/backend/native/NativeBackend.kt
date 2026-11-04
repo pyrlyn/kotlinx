@@ -477,6 +477,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         fun targets(t: Ty): List<String> = when (t) {
             is Ty.Cls -> classes.values.filter { it.name == t.name || t.name in it.ancestors }.map { it.name }
             is Ty.Iface -> classes.values.filter { t.name in it.supers }.map { it.name }
+            // An ArrayList of objects: its elements are the object's children (tracedList), mutable like a var.
+            is Ty.ListTy -> if (tracedList(t)) targets(t.elem) else emptyList()
             else -> emptyList()
         }
         val edges = HashMap<String, List<Pair<String, Boolean>>>()
@@ -486,7 +488,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // that captures it), so closure captures count like var edges: such cycles can exist.
             val closure = c.name.startsWith("\$Lam")
             edges[c.name] = generateSequence(c) { x -> x.superClass?.let { classDecls[it] } }.toList()
-                .flatMap { x -> x.fields }.flatMap { f -> targets(ci.fields[ci.index(f.name)].second).map { it to (f.isVar || closure) } }
+                .flatMap { x -> x.fields }.flatMap { f -> val ft = ci.fields[ci.index(f.name)].second; targets(ft).map { it to (f.isVar || closure || ft is Ty.ListTy) } }
         }
         fun reach(from: String): Set<String> {
             val seen = HashSet<String>(); val work = ArrayList<String>(); work.add(from)
@@ -551,6 +553,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     private fun isTraced(t: Ty) = t is Ty.Cls || t is Ty.Iface
+    /**
+     * An ArrayList field of objects is traversed by the collector through its elements (runtime rt_list_trav; only
+     * while the list has no other owner). Not with deferred RC, whose collector runs next to the mutator.
+     */
+    private fun tracedList(t: Ty) = t is Ty.ListTy && isTraced(t.elem) && !deferredRc
 
     private fun genClass(c: ClassInfo) {
         globals.append("${c.llType} = type { i64, ptr${c.fields.joinToString("") { ", " + it.second.llvm }} }\n")
@@ -611,10 +618,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         f.append("define internal void @trav.${c.name}(ptr %p, ptr %fn) {\nentry:\n")
         c.fields.forEachIndexed { i, (_, t) ->
             if (isTraced(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ${if (deferredRc && cyc) "atomic ptr, ptr %f$i acquire, align 8" else "ptr, ptr %f$i"}\n  call void %fn(ptr %v$i)\n")
+            else if (tracedList(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void @rt_list_trav(ptr %v$i, ptr %fn)\n")
         }
         f.append("  ret void\n}\n\ndefine internal void @relo.${c.name}(ptr %p) {\nentry:\n")
         c.fields.forEachIndexed { i, (_, t) ->
-            if (!isTraced(t)) releaseFn(t)?.let { fn -> f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void $fn(ptr %v$i)\n") }
+            if (!isTraced(t)) (if (tracedList(t)) "@rt_list_release_untraced" else releaseFn(t))?.let { fn -> f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void $fn(ptr %v$i)\n") }
         }
         f.append("  ret void\n}\n\ndefine internal void @free.${c.name}(ptr %p) {\nentry:\n")
         f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n  call void ${if (cyc) "@rt_free_trace" else "@rt_free"}(ptr %p, i64 %sz)\n  ret void\n}\n\n")
@@ -5197,6 +5205,8 @@ declare i64 @rt_list_set(ptr, i64, i64)
 declare i64 @rt_list_remove_at(ptr, i64)
 declare i64 @rt_list_size(ptr)
 declare void @rt_list_release(ptr)
+declare void @rt_list_trav(ptr, ptr)
+declare void @rt_list_release_untraced(ptr)
 declare ptr @rt_arr_new(i64, i64)
 declare void @rt_oob(i64, i64) noreturn cold
 declare void @rt_print_char(i32)

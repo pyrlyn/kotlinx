@@ -304,6 +304,20 @@ void rt_list_release(List *l) {
     rt_gc_mem_free(l->data); free(l);
 }
 
+/* Cycle collection through lists: a list owned only by its object (count 1) is traversed as part of it, its
+ * elements being that object's children (NativeBackend @trav). The collector then releases the elements, so a
+ * dead object's list goes with rt_list_release_untraced (memory only); a shared list is released normally. The
+ * count cannot change between the two calls (nothing else references the list). */
+void rt_list_trav(List *l, void (*visit)(void *)) {
+    if (l && l->rc == 1) for (int64_t i = 0; i < l->len; i++) visit((void *)(intptr_t)l->data[i]);
+}
+void rt_list_release_untraced(List *l) {
+    if (!l) return;
+    if (l->rc != 1) { rt_list_release(l); return; }
+    LK(LK_LIST, -1);
+    rt_gc_mem_free(l->data); free(l);
+}
+
 // ---- primitive arrays: pointer to { int64 length; elements... }, refcount at -8 ----
 
 void *rt_arr_new(int64_t n, int64_t elem) {
