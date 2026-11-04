@@ -2977,7 +2977,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val isFn = ptn == "\$Fn" || ptn == "\$FnR"
                 if (f.name == "with" && hasReturn(a.body.stmts) && all.size == 2 && i == 1 && a.body.params.isEmpty() && rawN[0] != null) return inlineWith(rawN[0]!!, a.body)
                 if (f.name in SCOPE_FUN_NAMES && hasReturn(a.body.stmts)) fail("non-local return from a '${f.name}' lambda is not supported")
-                if (ptn == "\$FnR" && pt.args.size >= 2 && !isBound(pt.args[0])) builderInfer(a.body, pt.args[0], f.typeParams, env)
+                if (ptn == "\$FnR" && pt.args.size >= 2 && !isBound(pt.args[0])) {
+                    builderInfer(a.body, pt.args[0], f.typeParams, env)
+                    // A builder whose lambda gives no type information (`build {}` in an `if`/`when`/vararg next to
+                    // `build { setTypeVariable(x) }`): the type a sibling call of the same builder just inferred.
+                    val key = "$curFunKey:${f.name}"
+                    val sib = lastBuilder[key]
+                    if (!isBound(pt.args[0]) && sib != null && e.line - sib.first in 0..6)
+                        for (tp in f.typeParams) if (tp !in env) sib.second[tp]?.let { env[tp] = it }
+                    if (isBound(pt.args[0])) lastBuilder[key] = e.line to HashMap(env)
+                }
                 if (isFn && pt.args.dropLast(1).any { !isBound(it) }) usageInfer(a.body, pt, f.typeParams, env)
                 val lps = if (isFn) pt.args.dropLast(1).map { res(it) }.takeIf { l -> l.all { it != null } }?.map { it!! } else null
                 val lrt = if (isFn) res(pt.args.last())?.let { if (it == Ty.UnitV) Ty.Unit else it } else null
@@ -4073,6 +4082,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
          (a.name.startsWith("\$FnR$") && b.name == "\$FnRS$" + a.name.removePrefix("\$FnR$")))
     private var suspConvN = 0
     private var curFunKey = ""
+    /** Per function and builder: the line and type bindings of the last builder call whose type was inferred. */
+    private val lastBuilder = HashMap<String, Pair<Int, Map<String, Ty>>>()
     /** Wraps [v] in a suspend lambda forwarding its arguments (the value is held in a scope local). */
     private fun suspendConvert(v: Val, t: Ty.Iface): Val {
         val sig = fnSig(v.t)!!
