@@ -1723,7 +1723,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     else -> fail("unknown unary ${e.op}")
                 }
             }
-            is IfE -> {
+            is IfE -> commonType(listOfNotNull(tailOf(e.th), tailOf(e.el)).takeIf { e.el != null && expected.none { x -> x.first === tailOf(e.th) } } ?: emptyList())
+                ?.let { t -> withExpected(e, t) { genIf(e) } } ?: genIf(e)
+            is WhenE -> commonType(e.branches.mapNotNull { tailOf(it.second) }.takeIf { l -> l.none { x -> expected.any { it.first === x } } } ?: emptyList())
+                ?.let { t -> withExpected(e, t) { genWhen(e) } } ?: genWhen(e)
+            is TryE -> genTry(e, true)
+        }
+    }
+
+    private fun genIf(e: IfE): Val {
+        run {
                 val inh = if (e === inheritFor) inheritLocals else emptyList()
                 if (e === inheritFor) { inheritFor = null; inheritLocals = emptyList() }
                 val c = coerce(genExpr(e.cond), Ty.I1)
@@ -1742,11 +1751,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val b = try { if (e.el != null) genBlockBody(e.el, true) else Val("", Ty.Unit) } finally { scopes.removeAt(scopes.size - 1) }
                 if (!term) { res.add(b to cur); br(le) }
                 startBlock(le)
-                merge(res, e.el != null)
+                return merge(res, e.el != null)
             }
-            is WhenE -> genWhen(e)
-            is TryE -> genTry(e, true)
-        }
     }
 
     // ---------------------------------------------------------------- exceptions
@@ -2828,7 +2834,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val capOnly = n == "ArrayList" && e.args.size == 1 && e.args[0] !is NamedE && e.typeArgs.isNotEmpty() && probeType(e.args[0])?.isInt == true
                 if (capOnly) releaseIfOwned(genExpr(e.args[0]))
                 else if (n == "ArrayList" && e.args.isNotEmpty()) fail("ArrayList(collection) is not supported")
-                val vals = if (capOnly) emptyList() else e.args.map { genArg(it) }
+                // Elements typed only together (`listOf(build { set(x) }, build {})`, also packed varargs): their common type.
+                val ct = if (capOnly || e.typeArgs.isNotEmpty()) null else commonType(e.args)
+                // `listOf(bar<Char> {}, bar {})` (kt35914): a bare call takes the explicit type arguments of a sibling call
+                // of the same generic function.
+                val sib = e.args.filterIsInstance<CallE>().filter { it.typeArgs.isNotEmpty() && (it.callee as? NameE)?.n in genericFuns }
+                    .groupBy { (it.callee as NameE).n }.mapValues { (_, l) -> l.map { it.typeArgs }.distinct().singleOrNull() }
+                fun withSib(a: E): E = if (a is CallE && a.typeArgs.isEmpty() && a.callee is NameE) sib[a.callee.n]?.let { ta ->
+                    CallE(a.callee, ta, a.args, a.lambda).also { it.line = a.line } } ?: a else a
+                val vals = if (capOnly) emptyList() else e.args.map(::withSib).map { a -> if (ct != null) withExpected(a, ct) { genArg(a) } else genArg(a) }
                 val et = e.typeArgs.singleOrNull()?.let { resolve(it) } ?: vals.firstOrNull()?.t ?: fail("$n needs an explicit element type, e.g. $n<Long>()")
                     .let { if (it == Ty.Unit) Ty.UnitV else it }
                 val rel = releaseFn(et) ?: "null"
@@ -2861,8 +2875,6 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     for ((k, v) in one) if (k !in env) env[k] = v
                 }
                 // `when { ... -> build { setTypeVariable(x) }; else -> Buildee() }`: the sibling builder's type.
-                if (cd.typeParams.any { it !in env } && e.args.isEmpty()) lastBuilt["$curFunKey:$n"]?.let { (l, m) ->
-                    if (e.line - l in 0..6) for (tp in cd.typeParams) if (tp !in env) m[tp]?.let { env[tp] = it } }
                 cd.typeParams.map { tp -> tyRef(env[tp] ?: fail("cannot infer type parameter $tp of $n; pass it explicitly")) }
             }
             return genNamedCall((instanceTy(n, ta) as Ty.Cls).name, CallE(e.callee, emptyList(), e.args, e.lambda))
@@ -3026,16 +3038,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     builderInfer(a.body, pt.args[0], f.typeParams, env,
                         if (lpNames.size == lpTys.size && lpTys.all { it != null }) lpNames.zip(lpTys.map { it!! }) else emptyList())
                     // A builder whose lambda gives no type information (`build {}` in an `if`/`when`/vararg next to
-                    // `build { setTypeVariable(x) }`): the type a sibling call of the same builder just inferred.
-                    val key = "$curFunKey:${f.name}"
-                    val sib = lastBuilder[key]
-                    if (!isBound(pt.args[0]) && sib != null && e.line - sib.first in 0..6)
-                        for (tp in f.typeParams) if (tp !in env) sib.second[tp]?.let { env[tp] = it }
-                    if (isBound(pt.args[0])) lastBuilder[key] = e.line to HashMap(env)
-                    // For a bare `Buildee()` next to it (a sibling `when` branch): the builder's instance type.
-                    if (isBound(pt.args[0])) genericClasses[pt.args[0].name]?.let { cd -> if (cd.typeParams.size == pt.args[0].args.size)
-                        lastBuilt["$curFunKey:${cd.name}"] = e.line to cd.typeParams.zip(pt.args[0].args.map { res(it) }).mapNotNull { (k, v) -> v?.let { k to it } }.toMap() }
-                } else if (ptn == "\$FnR" && pt.args.size >= 2 && e.typeArgs.isNotEmpty()) lastBuilder["$curFunKey:${f.name}"] = e.line to HashMap(env)
+                    // `build { setTypeVariable(x) }`): the expected type, which is the branches' common type (commonType).
+                    if (!isBound(pt.args[0])) bindExpectedRet(f, e, env)
+                }
                 if (isFn && pt.args.dropLast(1).any { !isBound(it) }) usageInfer(a.body, pt, f.typeParams, env)
                 val lps = if (isFn) pt.args.dropLast(1).map { res(it) }.takeIf { l -> l.all { it != null } }?.map { it!! } else null
                 val lrt = if (isFn) res(pt.args.last())?.let { if (it == Ty.UnitV) Ty.Unit else it } else null
@@ -3150,6 +3155,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             fun ms(r: TypeRef): TypeRef = m[r.name]?.let { if (r.nullable) TypeRef(it.name, it.args, true) else it } ?: TypeRef(r.name, r.args.map { ms(it) }, r.nullable)
             if (isProp) { f.ret?.let { propT[prop] = ms(it) } }
             else { extM[key] = f.params.drop(1).map { ms(it.type) }; if (f.params.size == 1) f.ret?.let { extR[key] = ms(it) } }
+        }
+        // A function or property with a context parameter of the receiver's class and concrete arguments
+        // (`context(c: Controller<String>) fun findUser()`) fixes the receiver's arguments when used in the lambda.
+        for ((key, f) in funDecls) {
+            val cp = f.params.firstOrNull { it.ctx } ?: continue
+            val rt = cp.type
+            if (rt.name == recv.name && rt.args.size == ctps.size && f.typeParams.isEmpty() && rt.args.none { it.name in tps })
+                concrete.getOrPut(key.removePrefix("\$prop\$").removePrefix("\$get\$")) { rt }
         }
         /** A receiver property's declared type: field, accessor (generic extensions on the class become its methods), or extension. */
         fun propType(n: String): TypeRef? = propT[n] ?: genericClasses[recv.name]?.let { cd ->
@@ -4222,9 +4235,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private var suspConvN = 0
     private var curFunKey = ""
     /** Per function and builder: the line and type bindings of the last builder call whose type was inferred. */
-    private val lastBuilder = HashMap<String, Pair<Int, Map<String, Ty>>>()
-    /** "fun:Class" -> (line, the class's type arguments) of the last builder lambda over that class (see above). */
-    private val lastBuilt = HashMap<String, Pair<Int, Map<String, Ty>>>()
+    /**
+     * The common type of alternative values ([tails]: `if`/`when` branch results, vararg arguments) when only some of
+     * them determine it (`if (c) build { set(x) } else build {}`, `else -> Buildee()`): each is probed on its own; the
+     * ones that cannot be typed alone are left out, and a single type among the others is the result. Only computed
+     * when some tail is a call of a generic function or class (the others are typed alone anyway).
+     */
+    private fun commonType(tails: List<E>): Ty? {
+        fun generic(x: E) = x is CallE && (x.callee as? NameE)?.n?.let { it in genericFuns || it in genericClasses } == true
+        if (tails.size < 2 || tails.none { generic(it) }) return null
+        val ts = tails.map { x -> try { probeType(x) } catch (c: CompileError) { null } }
+        if (ts.none { it == null }) return null
+        val known = ts.filterNotNull().filter { (it is Ty.Cls || it is Ty.Iface) && fnSig(it) == null }.distinct()  // function types: left to the old path (kt35914)
+        return known.singleOrNull()
+    }
+    private fun tailOf(b: Block?): E? = (b?.stmts?.lastOrNull() as? ExprS)?.e
     /** Wraps [v] in a suspend lambda forwarding its arguments (the value is held in a scope local). */
     private fun suspendConvert(v: Val, t: Ty.Iface): Val {
         val sig = fnSig(v.t)!!
