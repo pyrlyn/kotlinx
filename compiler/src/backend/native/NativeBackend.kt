@@ -1377,6 +1377,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         when (target) {
             is NameE -> {
                 val l = lookup(target.n)
+                // Inside a receiver lambda: a property of its receiver (field or setter) wins over the enclosing class's.
+                if (l == null && (lookup("this")?.t as? Ty.Cls)?.let { classes[it.name] }?.let { it !== owner && (it.index(target.n) >= 0 || "\$set\$${target.n}" in it.methods) } == true)
+                    return assign(MemberE(NameE("this").also { it.line = target.line }, target.n, false).also { it.line = target.line }, value)
                 if (l == null && owner != null && (owner!!.index(target.n) >= 0 || "\$set\$${target.n}" in owner!!.methods)) return assign(MemberE(NameE("this"), target.n, false), value)
                 // Inside a member extension: a property of the extension receiver (its field or setter).
                 if (l == null && (lookup("\$this_ext")?.t as? Ty.Cls)?.let { classes[it.name] }?.let { it.index(target.n) >= 0 || "\$set\$${target.n}" in it.methods } == true)
@@ -1384,9 +1387,6 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (l == null && "\$tset\$${target.n}" in funDecls) { releaseIfOwned(genNamedCall("\$tset\$${target.n}", CallE(NameE("\$tset\$${target.n}"), emptyList(), listOf(value), null).also { it.line = line })); return }
                 if (l == null) fail("unknown variable '${target.n}'")
                 if (!l.isVar) fail("val '${target.n}' cannot be reassigned")
-                // Inside a receiver lambda: a property of its receiver (field or setter) wins over the enclosing class's.
-                if (l == null && (lookup("this")?.t as? Ty.Cls)?.let { classes[it.name] }?.let { it !== owner && (it.index(target.n) >= 0 || "\$set\$${target.n}" in it.methods) } == true)
-                    return assign(MemberE(NameE("this").also { it.line = target.line }, target.n, false).also { it.line = target.line }, value)
                 var v = coerce(argFor(value, l.t, true), l.t)
                 if (l.t.isRef) {
                     v = consume(v)
@@ -3070,13 +3070,6 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         /** Return types of the receiver's no-argument methods (`materialize(): CT`). */
         val rets0 = genericClasses[recv.name]?.methods?.filter { it.params.isEmpty() && it.ret != null }?.groupBy { it.name }?.mapValues { it.value.first().ret!! } ?: emptyMap()
         if (ctps.size != recv.args.size) return
-        val sub = ctps.zip(recv.args).toMap()
-        fun subst(r: TypeRef): TypeRef = sub[r.name]?.let { if (r.nullable) TypeRef(it.name, it.args, true) else it } ?: TypeRef(r.name, r.args.map { subst(it) }, r.nullable)
-        /** A property of the (generic) receiver read unqualified (`emit(key)`): its type once its type arguments are bound. */
-        fun recvField(n: String): Ty? {
-            val ft = genericClasses[recv.name]?.fields?.firstOrNull { it.name == n }?.type?.let { subst(it) } ?: return null
-            fun bound(r: TypeRef): Boolean = (r.name !in tps || r.name in env) && r.args.all { bound(it) }
-            if (!bound(ft)) return null
         // Extensions on the receiver's class (`fun <E> Buildee<E>.f(x: E)`, `val <E> Buildee<E>.p: E`), in the class's
         // type parameters: generic ones act like members; ones on a concrete receiver (`fun Buildee<A>.f()`) fix it.
         val extM = HashMap<String, List<TypeRef>>(); val extR = HashMap<String, TypeRef>(); val propT = HashMap<String, TypeRef>()
@@ -3099,10 +3092,19 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 ?: cd.methods.firstOrNull { it.name == "\$set\$$n" && it.params.size == 1 }?.params?.get(0)?.type }
         val methods = extM + methods0
         val rets = extR + rets0
+        val sub = ctps.zip(recv.args).toMap()
+        fun subst(r: TypeRef): TypeRef = sub[r.name]?.let { if (r.nullable) TypeRef(it.name, it.args, true) else it } ?: TypeRef(r.name, r.args.map { subst(it) }, r.nullable)
+        /** A property of the (generic) receiver read unqualified (`emit(key)`): its type once its type arguments are bound. */
+        fun recvField(n: String): Ty? {
+            val ft = genericClasses[recv.name]?.fields?.firstOrNull { it.name == n }?.type?.let { subst(it) } ?: return null
+            fun bound(r: TypeRef): Boolean = (r.name !in tps || r.name in env) && r.args.all { bound(it) }
+            if (!bound(ft)) return null
             val sv = tenv; tenv = sv + env
             return try { resolve(ft) } catch (x: CompileError) { null } finally { tenv = sv }
         }
         val calls = ArrayList<CallE>()
+        /** Names read in the body (also `this.p`): extension properties used there. */
+        val names = HashSet<String>()
         var stF: (S) -> Unit = {}
         fun ex(e: E?) {
             when (e) {
@@ -3112,8 +3114,6 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     else if (e.callee is MemberE && !e.callee.safe && (e.callee.recv as? NameE)?.n == "this") calls.add(CallE(NameE(e.callee.n).also { it.line = e.line }, e.typeArgs, e.args, null).also { it.line = e.line })
                     if (e.callee !is NameE) ex(e.callee); e.args.forEach { ex(it) }; e.lambda?.stmts?.forEach { stF(it) } }
                 is LambdaE -> e.body.stmts.forEach { stF(it) }
-        /** Names read in the body (also `this.p`): extension properties used there. */
-        val names = HashSet<String>()
                 is NamedE -> ex(e.e)
                 is BinE -> { ex(e.l); ex(e.r) }
                 is UnE -> ex(e.e)
@@ -3152,6 +3152,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val r = rets[o.callee.n]?.let { subst(it) } ?: return
                 if (free(r) && t != Ty.Unit && t != Ty.RawPtr && t != Ty.Args) unify(r, t, tps, env)
             }
+            // A receiver property (`consume(value)`, member or extension).
+            val pn = (o as? NameE)?.n ?: ((o as? MemberE)?.takeIf { (it.recv as? NameE)?.n == "this" }?.n)
+            if (pn != null && (o !is NameE || (lookup(pn) == null && pn !in locals))) {
+                val r = propType(pn)?.let { subst(it) } ?: return
+                if (free(r) && !r.nullable && t != Ty.Unit && t != Ty.RawPtr && t != Ty.Args) unify(r, t, tps, env)
+            }
         }
         // Nullable sinks are skipped: class types do not carry nullability, so `CT` would be bound non-null.
         for (v in locals.values) if (v.type != null && !v.type.nullable) { val vt = try { resolve(v.type) } catch (x: CompileError) { null }; if (vt != null) sink(v.init, vt) }
@@ -3159,19 +3165,6 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         for (c in calls) if ((c.callee as NameE).n == "\$typeHint") for (ta in c.typeArgs)
             if (ta.name == recv.name && recv.args.any { free(it) } && ta.args.none { free(it) }) try { unify(recv, resolve(ta), tps, env) } catch (x: CompileError) {}
         // `var temp = arg; temp = materialize()` (or an outer variable): the target's type.
-            // A receiver property (`consume(value)`, member or extension).
-            val pn = (o as? NameE)?.n ?: ((o as? MemberE)?.takeIf { (it.recv as? NameE)?.n == "this" }?.n)
-            if (pn != null && (o !is NameE || (lookup(pn) == null && pn !in locals))) {
-                val r = propType(pn)?.let { subst(it) } ?: return
-                if (free(r) && !r.nullable && t != Ty.Unit && t != Ty.RawPtr && t != Ty.Args) unify(r, t, tps, env)
-            }
-        for ((n, value) in assigns) {
-            val outer = lookup(n)
-            val vt = if (outer != null) (if (locals[n] == null) outer.t else null) else locals[n]?.let { v ->
-                if (v.type != null) (if (v.type.nullable) null else try { resolve(v.type) } catch (x: CompileError) { null })
-                else origin(v.init).let { o -> if (o is CallE && o.callee is NameE && o.callee.n in rets && lookup(o.callee.n) == null) null else probeType(o) }
-            }
-            if (vt != null && vt !is Ty.NBox) sink(value, vt)
         // Extensions on a concrete receiver type (`this.f()` with `fun Buildee<A>.f()`) fix the receiver's arguments.
         if (recv.args.any { free(it) }) for ((n, rt) in concrete) if (n in names || calls.any { (it.callee as NameE).n == n }) {
             try { unify(recv, resolve(rt), tps, env) } catch (x: CompileError) {}
@@ -3186,6 +3179,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val t = (if (o is NameE) (lookup(o.n)?.t ?: locals[o.n]?.type?.let { try { resolve(it) } catch (x: CompileError) { null } }) else probeType(o)) ?: continue
             if (t != Ty.Unit && t !is Ty.NBox) try { unify(r, t, tps, env) } catch (x: CompileError) {}
         }
+        for ((n, value) in assigns) {
+            val outer = lookup(n)
+            val vt = if (outer != null) (if (locals[n] == null) outer.t else null) else locals[n]?.let { v ->
+                if (v.type != null) (if (v.type.nullable) null else try { resolve(v.type) } catch (x: CompileError) { null })
+                else origin(v.init).let { o -> if (o is CallE && o.callee is NameE && o.callee.n in rets && lookup(o.callee.n) == null) null else probeType(o) }
+            }
+            if (vt != null && vt !is Ty.NBox) sink(value, vt)
             // `var temp = materialize(); temp = arg`: the assigned value's type flows back into the initializer.
             val lv = locals[n]
             if (vt == null && outer == null && lv != null && lv.type == null) {
