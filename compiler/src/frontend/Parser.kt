@@ -1964,7 +1964,9 @@ class Parser(toks: List<Tok>) {
     /** `context(a: A, _: B)` before the next declaration (a function). */
     private var pendingCtx: List<Param>? = null
     private var ctxN = 0
-    private fun isContextDecl() = isId("context") && t[p + 1].k == K.OP && t[p + 1].s == "("
+    private fun isContextDecl() = isId("context") && t[p + 1].k == K.OP && t[p + 1].s == "(" &&
+        // `context(a: A)` (a declaration), not a call `context(value) { ... }`
+        t[p + 2].k == K.ID && t[p + 3].k == K.OP && t[p + 3].s == ":"
     private fun contextDecl() {
         next(); expectOp("(")
         val ps = ArrayList<Param>()
@@ -2258,6 +2260,21 @@ class Parser(toks: List<Tok>) {
     }
 
     private fun type(): TypeRef {
+        // `context(A, B) (P) -> R`: a function type whose context arguments come first (`(A, B, P) -> R`); a lambda of
+        // this type gets its implicit parameters as context values (NativeBackend.genLambda).
+        if (isId("context") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
+            next(); next()
+            val cs = ArrayList<TypeRef>()
+            while (!isOp(")")) { skipNL(); cs.add(type()); skipNL(); if (isOp(",")) next(); skipNL() }
+            expectOp(")")
+            val f = type()
+            return when (f.name) {
+                "\$Fn", "\$FnS" -> TypeRef(f.name, cs + f.args, f.nullable)
+                "\$FnR" -> TypeRef("\$Fn", cs + f.args, f.nullable)
+                "\$FnRS" -> TypeRef("\$FnS", cs + f.args, f.nullable)
+                else -> fail("expected a function type after 'context(...)'")
+            }
+        }
         // `suspend` function types are plain function types: coroutines run on a single-threaded scheduler (Coroutines.kt).
         // `suspend` function types are `$FnS` / `$FnRS` (their invoke is a coroutine, see NativeBackend.genCoroutine).
         if (peek().k == K.ID && peek().s == "suspend" && (t[p + 1].k == K.ID || t[p + 1].k == K.OP && t[p + 1].s == "(")) {

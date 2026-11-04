@@ -113,6 +113,13 @@ class Lexer(private val src: String, private var line: Int = 1) {
             val v = src.substring(ds, i).replace("_", "").toULong(16).toLong()
             suffix(v, st); return
         }
+        if (src.startsWith("0b", i) || src.startsWith("0B", i)) {
+            i += 2
+            val ds = i
+            while (i < src.length && (src[i] == '0' || src[i] == '1' || src[i] == '_')) i++
+            val v = src.substring(ds, i).replace("_", "").toULong(2).toLong()
+            suffix(v, st); return
+        }
         while (i < src.length && (src[i].isDigit() || src[i] == '_')) i++
         val frac = i + 1 < src.length && src[i] == '.' && src[i + 1].isDigit()
         val exp = !frac && i + 1 < src.length && (src[i] == 'e' || src[i] == 'E') && (src[i + 1].isDigit() || src[i + 1] == '-' || src[i + 1] == '+')

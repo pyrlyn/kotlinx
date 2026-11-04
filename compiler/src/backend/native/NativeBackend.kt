@@ -4088,10 +4088,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return genLambda(LambdaE(b1).also { it.line = e.line }, ps, ret, false, asRecvFn = true, susp = susp)
         }
         val ptys: List<Ty> = if (declared.isEmpty()) {
-            if (ps == null || ps.size <= 1) ps ?: emptyList() else fail("lambda needs ${ps.size} parameters")
+            ps ?: emptyList()
         } else declared.mapIndexed { i, n -> b0.paramTypes.getOrNull(i)?.let { resolve(it) } ?: ps?.getOrNull(i) ?: fail("cannot infer the type of lambda parameter '$n'") }
         if (ps != null && ps.size != ptys.size) fail("lambda expects ${ps.size} parameters, has ${ptys.size}")
-        val pnames = if (declared.isEmpty()) (if (ptys.size == 1) listOf("it") else emptyList()) else declared.mapIndexed { i, n -> if (n == "_") "\$_$i" else n }
+        // Several implicit parameters only come from context function types (`context(A, B) () -> R`).
+        val pnames = if (declared.isEmpty()) (if (ptys.size == 1) listOf("it") else ptys.indices.map { "\$ctxp$it" }) else declared.mapIndexed { i, n -> if (n == "_") "\$_$i" else n }
         val free = LinkedHashSet<String>()
         for (s in b0.stmts) for (u in Uses.ofStmt(s)) free.add(u.node.n)
         val caps = ArrayList<Pair<String, Ty>>()
@@ -4149,7 +4150,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val sb = body.length; val sa = allocas.length; val sc = cur; val st = term; val sm = HashSet(moveNodes)
                 val sco = inCoroutine; inCoroutine = susp
                 scopes.add(Scope())
-                pnames.forEachIndexed { i, n -> declare(n, ptys[i], false, false) }
+                pnames.forEachIndexed { i, n -> val l = declare(n, ptys[i], false, false); if (declared.isEmpty() && !asRecvFn) scopes.last().vars["\$ctx\$p${tmpN++}"] = l }
                 val t = try { genBlockBody(b0, true).t } finally {
                     scopes.removeAt(scopes.size - 1); inCoroutine = sco
                     body.setLength(sb); allocas.setLength(sa); cur = sc; term = st; moveNodes.clear(); moveNodes.addAll(sm)
@@ -4167,7 +4168,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (rt is Ty.NBox && mayYieldNull(lamBodyT)) fail("lambdas returning a nullable ${rt.inner} are not supported")
         val name = mangle((if (susp) "\$LamS" else "\$Lam") + LamIds.id(b0), (caps.map { it.second } + ptys + rt + usedTps.map { tenv.getValue(it) }).map { tyRef(it) })
         if (name !in classes) {
-            val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i])) }, tyRef(rt), null,
+            // Implicit parameters are also context values (a lambda of a `context(A) () -> R` type).
+            val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i]), ctx = declared.isEmpty() && !asRecvFn) }, tyRef(rt), null,
                 WhenE(null, listOf(null to body1)).also { it.line = line }, line)
             throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line))
         }
