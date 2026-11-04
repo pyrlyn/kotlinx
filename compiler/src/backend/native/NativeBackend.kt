@@ -3236,11 +3236,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (names.size != pts.size) return
             fun bound(r: TypeRef): Boolean = (r.name !in tps || r.name in env) && r.args.all { bound(it) }
             val ptys = if (pts.all { bound(it) }) { val sv = tenv; tenv = sv + env; try { pts.map { resolve(it) } } catch (x: CompileError) { null } finally { tenv = sv } } else null
-            // (a nullable result `K?` is skipped: binding K from it is not modeled)
-            if (free(ret) && !ret.nullable && ptys != null) {
+            // A nullable result `K?` binds K from the body's non-null type (`parse { it as Int }`: K = Int).
+            if (free(ret) && ptys != null) {
                 val last = (a.body.stmts.lastOrNull() as? ExprS)?.e
-                val t = if (last == null) Ty.Unit else probeWith(names.zip(ptys), last)
-                if (t != null && t != Ty.RawPtr && t != Ty.Nothing) try { unify(ret, if (t == Ty.Unit) Ty.UnitV else t, tps, env) } catch (x: CompileError) {}
+                val t0 = if (last == null) Ty.Unit else probeWith(names.zip(ptys), last)
+                val t = if (ret.nullable && t0 is Ty.NBox) t0.inner else t0
+                val r = if (ret.nullable) TypeRef(ret.name, ret.args, false) else ret
+                if (t != null && t != Ty.RawPtr && t != Ty.Nothing && !(ret.nullable && t == Ty.Unit)) try { unify(r, if (t == Ty.Unit) Ty.UnitV else t, tps, env) } catch (x: CompileError) {}
             }
             pts.forEachIndexed { i, ptr ->
                 if (!free(ptr)) return@forEachIndexed
@@ -3768,7 +3770,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (excMode) throwNew("ClassCastException", Val(cstr(msg), Ty.Str))
         else { emit("call void @rt_panic(ptr ${cstr("ClassCastException: $msg")})"); emit("unreachable"); term = true }
         startBlock(lok)
-        return if (unboxing) unbox(v, target) else Val(v.v, target, v.owned)
+        // A cast between different representations (`it as Int` with `it: String`) always fails: the ok branch is
+        // dead, its value only has to have the target's IR type.
+        return if (unboxing) unbox(v, target) else if (v.t.llvm != target.llvm) Val("undef", target) else Val(v.v, target, v.owned)
     }
 
     /** Smart casts implied by [cond] being true (positive) or false: local name -> narrowed type. */
