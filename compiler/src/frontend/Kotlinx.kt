@@ -707,4 +707,14 @@ fun <R, T> (suspend R.() -> T).startCoroutine(receiver: R, completion: Continuat
     val g: suspend () -> T = { f(receiver) }
     g.startCoroutine(completion)
 }
+fun <R, T> (suspend (R) -> T).startCoroutine(receiver: R, completion: Continuation<T>) {
+    val f = this
+    val g: suspend () -> T = { f(receiver) }
+    g.startCoroutine(completion)
+}
+fun <R, T> (suspend R.() -> T).createCoroutine(receiver: R, completion: Continuation<T>): Continuation<Unit> {
+    val f = this
+    val g: suspend () -> T = { f(receiver) }
+    return g.createCoroutine(completion)
+}
 """

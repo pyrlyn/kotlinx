@@ -265,6 +265,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** The primitive or string inside an `AnyBox` (borrowed unless [v] is owned, then the box is released). */
     private fun unbox(v: Val, target: Ty): Val {
+        if (target == Ty.UnitV) return Val("false", Ty.UnitV)  // the Unit? sentinel
         val ci = classes.getValue("AnyBox${anyBoxName(target)}")
         val x = Val(emitT("load ${target.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${v.v}, i32 0, i32 2")}"), target)
         if (!v.owned) return x
@@ -279,12 +280,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun coerce(v: Val, t: Ty): Val {
         if (v.t == t) return v
         if (isFnTwin(v.t, t)) return Val(v.v, t, v.owned)
+        if (isSuspendConversion(v.t, t)) return suspendConvert(v, t as Ty.Iface)
         // Unreachable value (after `throw`): keep the slot well-typed.
         if (v.t == Ty.Nothing) return if (t.llvm == "void") v else Val("undef", t)
         // A Unit value stored as a type argument's `Unit$V` placeholder.
         if (v.t == Ty.Unit && t == Ty.UnitV) return Val("false", Ty.UnitV)
         if (t == Ty.UnitV && v.v == "null") return Val("false", Ty.UnitV)  // `T?` = Unit? holds no null
         if (v.t == Ty.UnitV && t == Ty.Unit) return Val("", Ty.Unit)
+        if (v.t == Ty.NBox(Ty.UnitV) && (t == Ty.Unit || t == Ty.UnitV)) return if (t == Ty.Unit) Val("", Ty.Unit) else Val("false", Ty.UnitV)
         if (isAny(t)) return toAny(v, t)
         // Into code that drops nullability (generic instances): a checked unbox, like `!!`.
         if (v.t is Ty.NBox && t !is Ty.NBox && t.llvm != "ptr" && t != Ty.Unit) return coerce(genNonNull(v), t)
@@ -640,6 +643,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             emit("store ${t.llvm} %a.${p.name}, ptr ${l.slot}")
             if (p.ctx) scopes.last().vars["\$ctx\$p${tmpN++}"] = l
         }
+        suspConvN = 0; curFunKey = "${cls?.name}.${f.name}.${f.line}.${instSym}"
         if (f.exprBody != null) {
             val v = argFor(f.exprBody, retTy)
             if (!term) emitReturn(v)
@@ -2278,13 +2282,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         startBlock(lc)
         val v0 = f(if (r.t is Ty.NBox) unbox(Val(r.v, r.t, false), r.t.inner) else r)
         // A primitive result is boxed: `a?.x` has type `Int?`.
-        val v = if (v0.t.llvm != "ptr" && v0.t != Ty.Unit && canBox(v0.t)) coerce(v0, Ty.NBox(v0.t)) else v0
+        // A Unit result (`c?.method()`, type `Unit?`): a non-null static sentinel, never released.
+        val unitR = v0.t == Ty.Unit || v0.t == Ty.UnitV
+        val v = if (unitR) Val("@rt_unit_sentinel", Ty.NBox(Ty.UnitV)) else if (v0.t.llvm != "ptr" && canBox(v0.t)) coerce(v0, Ty.NBox(v0.t)) else v0
         if (v.t.llvm != "ptr") fail("safe call result must be a reference")
         val vFrom = cur
         br(le)
         startBlock(le)
         // An owned call result (`f()?.g()`, or a field retained from a temporary receiver) stays owned.
-        return Val(emitT("phi ptr [ null, %$from ], [ ${v.v}, %$vFrom ]"), v.t, v.t is Ty.NBox || v.owned)
+        return Val(emitT("phi ptr [ null, %$from ], [ ${v.v}, %$vFrom ]"), v.t, !unitR && (v.t is Ty.NBox || v.owned))
     }
 
     /** Stdlib scope functions with a lambda literal (`let`, `also`, `run`, `repeat`), lowered to plain blocks. */
@@ -2340,6 +2346,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return finishCall("call ${sig.ret.llvm} @m.$impl.$n(ptr %this${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args, susp = sig.suspend)
     }
 
+    /** Whether values of type [t] have a member function or property [n] (classes and interfaces only; builtins: assumed none). */
+    private fun hasMemberNamed(t: Ty, n: String): Boolean = when (t) {
+        is Ty.Cls -> "${t.name}.$n" in methodSigs || classes[t.name]?.let { it.index(n) >= 0 || n in it.methods || "\$prop\$$n" in it.methods || n in it.impl } ?: false
+        is Ty.Iface -> ifaces[t.name]?.methods?.containsKey(n) ?: false
+        else -> false
+    }
+
     private fun genCall(e: CallE): Val {
         val callee = e.callee
         if (callee is MemberE && !callee.safe && callee.recv is NameE && (callee.recv as NameE).n == "super") return superCall(callee.n, e)
@@ -2347,6 +2360,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (qn != null && qn in NANOS) return Val(emitT("call i64 @rt_nanos()"), Ty.I64)
         if (qn != null && (qn == "kotlin.math.sqrt" || qn == "kotlin.math.abs")) return genNamedCall(qn, e)
         scopeFn(e)?.let { return genBlockBody(it, true) }
+        // `recv.e(args)` with a local `e: R.(A) -> X` (no member `e` on recv): `e(recv, args)`.
+        if (callee is MemberE && !callee.safe && (callee.recv as? NameE)?.n != "super") {
+            val m = callee
+            val l = lookup(m.n)
+            // (also a plain function type: an anonymous `fun R.(...)` is typed without its receiver here)
+            if (l != null && fnSig(l.t)?.params?.size == allArgs(e).size + 1 && probeType(m.recv)?.let { rt -> !hasMemberNamed(rt, m.n) } == true)
+                return invokeFn(genExpr(NameE(m.n).also { it.line = m.line }), CallE(NameE(m.n).also { it.line = m.line }, e.typeArgs, listOf(m.recv) + e.args, e.lambda).also { it.line = e.line })
+        }
         if (callee is NameE && lookup(callee.n)?.let { fnSig(it.t) } != null) {
             val ft = lookup(callee.n)!!.t
             // `fn()` for `fn: R.() -> X` inside a scope with an implicit receiver: `this` is the first argument.
@@ -2355,7 +2376,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return invokeFn(genExpr(callee), e)
         }
         // `x.fn(args)` for a local `fn: R.(A) -> X`: invoke with `x` as the receiver argument.
-        if (callee is MemberE && !callee.safe && lookup(callee.n)?.let { isRecvFn(it.t) } == true)
+        if (callee is MemberE && !callee.safe && lookup(callee.n)?.let { isRecvFn(it.t) } == true && probeType(callee.recv)?.let { hasMemberNamed(it, callee.n) } != true)
             return invokeFn(genExpr(NameE(callee.n).also { it.line = line }), CallE(NameE(callee.n), e.typeArgs, listOf(callee.recv) + e.args, e.lambda).also { it.line = e.line })
         if (callee is NameE && (lookup(callee.n) == null || (callee.n in classes && scopes.none { callee.n in it.vars }))) return genNamedCall(callee.n, e)
         if (callee is MemberE) {
@@ -3864,6 +3885,25 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * `invoke` signature), so a value of one converts to the other without a wrapper.
      */
     private fun twinFn(ps: List<Ty>, r: Ty, receiver: Boolean, susp: Boolean = false): Ty.Iface? = if (ps.isEmpty()) null else fnTy(ps, r, !receiver, susp)
+    /** A plain function value where a suspend function type is expected (`(A) -> R` to `suspend (A) -> R`). */
+    private fun isSuspendConversion(a: Ty, b: Ty): Boolean = a is Ty.Iface && b is Ty.Iface &&
+        ((a.name.startsWith("\$Fn$") && b.name == "\$FnS$" + a.name.removePrefix("\$Fn$")) ||
+         (a.name.startsWith("\$FnR$") && b.name == "\$FnRS$" + a.name.removePrefix("\$FnR$")))
+    private var suspConvN = 0
+    private var curFunKey = ""
+    /** Wraps [v] in a suspend lambda forwarding its arguments (the value is held in a scope local). */
+    private fun suspendConvert(v: Val, t: Ty.Iface): Val {
+        val sig = fnSig(v.t)!!
+        val tmp = "\$sconv${suspConvN++}"
+        val l = declare(tmp, v.t, false, true)
+        emit("store ptr ${consume(v).v}, ptr ${l.slot}")
+        val ps = sig.params.indices.map { "\$sp$it" }
+        val call = CallE(NameE(tmp).also { it.line = line }, emptyList(), ps.map { NameE(it).also { x -> x.line = line } }, null).also { it.line = line }
+        // Cached per function and site: a restart of the function's generation must reuse the same lambda class.
+        val lam = SuspConvLambdas.map.getOrPut("$curFunKey|$tmp|${v.t}|$t") { LambdaE(Block(listOf(ExprS(call).also { it.line = line }), ps, emptyList())).also { it.line = line } }
+        val r = genLambda(lam, sig.params, sig.ret, false, susp = true)
+        return if (r.t == t) r else Val(r.v, t, r.owned)
+    }
     private fun isFnTwin(a: Ty, b: Ty): Boolean = a is Ty.Iface && b is Ty.Iface &&
         ((a.name.startsWith("\$FnR$") && b.name == "\$Fn$" + a.name.removePrefix("\$FnR$")) || (b.name.startsWith("\$FnR$") && a.name == "\$Fn$" + b.name.removePrefix("\$FnR$")) ||
          (a.name.startsWith("\$FnRS$") && b.name == "\$FnS$" + a.name.removePrefix("\$FnRS$")) || (b.name.startsWith("\$FnRS$") && a.name == "\$FnS$" + b.name.removePrefix("\$FnRS$")))
@@ -4765,6 +4805,12 @@ private fun tbaaMeta(): String = buildString {
 private val PRELUDE = """
 target triple = "arm64-apple-macosx14.0.0"
 @rt_argc = global i32 0
+; `Unit?` non-null value: an object header with a huge refcount (retain/release never free it).
+@rt_unit_sentinel = internal global { i64, ptr } { i64 1125899906842624, ptr @vt.rt_unit }
+@vt.rt_unit = internal constant [1 x ptr] [ptr @rt_unit_rel]
+define internal void @rt_unit_rel(ptr %p) {
+  ret void
+}
 @rt_exc = internal global ptr null
 declare ptr @malloc(i64)
 declare token @llvm.coro.id(i32, ptr, ptr, ptr)
@@ -4920,4 +4966,5 @@ done:
 /** Lambda-with-receiver bodies with `this` added as first parameter; kept across code-generation restarts (stable ids). */
 private object RecvCaps { val map = HashMap<Block, Block>() }
 private object ThisCaps { val map = HashMap<Block, Block>() }
+private object SuspConvLambdas { val map = HashMap<String, LambdaE>() }
 object RecvLambdas { val map = HashMap<Block, Block>() }

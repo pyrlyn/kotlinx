@@ -816,7 +816,7 @@ class Parser(toks: List<Tok>) {
                     cd.inits, cd.superArgs, cd.typeParams, cd.enumEntries, cd.isValue, cd.superTypeArgs)
                 continue
             }
-            funs.add(FunD("ext$" + recv.name.replace('.', '_').replace("$", "") + "$" + f.name, listOf(Param("this", recv)) + f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams))
+            funs.add(FunD("ext$" + recv.name.replace('.', '_').replace("$", "") + (if (recv.name.startsWith("\$Fn")) "${recv.args.size}" else "") + "$" + f.name, listOf(Param("this", recv)) + f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams))
         }
     }
 
