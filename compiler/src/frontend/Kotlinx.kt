@@ -645,6 +645,14 @@ class KcLambdaContinuation<T>(override val context: CoroutineContext, val f: (Re
     override fun resumeWith(result: Result<T>) { f(result) }
 }
 fun <T> Continuation(context: CoroutineContext, resumeWith: (Result<T>) -> Unit): Continuation<T> = KcLambdaContinuation<T>(context, resumeWith)
+// `c as Continuation<B>` for a `Continuation<A>` (unchecked in Kotlin): resumes c with the value cast back to A.
+class KcCastCont<A, B>(val c: Continuation<A>) : Continuation<B> {
+    override val context: CoroutineContext get() = c.context
+    override fun resumeWith(result: Result<B>) {
+        val e = result.exceptionOrNull()
+        if (e != null) c.resumeWith(Result.failure<A>(e)) else c.resumeWith(Result.success<A>(result.getOrNull() as A))
+    }
+}
 fun <T> Continuation<T>.resume(value: T) { resumeWith(Result.success(value)) }
 fun <T> Continuation<T>.resumeWithException(exception: Throwable) { resumeWith(Result.failure<T>(exception)) }
 // Drives one started coroutine (the root of a chain of awaiting LLVM coroutines); resuming any continuation of the

@@ -3102,6 +3102,25 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (t != Ty.Unit && t != Ty.RawPtr && t != Ty.Args) unify(pr, t, tps, env)
             }
         }
+        // `val x: Buildee<TargetType> = this` (also in local functions / classes inside the lambda): a type naming the
+        // receiver's class with concrete arguments, in a body that uses its receiver, binds the receiver's arguments.
+        if (recv.args.any { free(it) }) {
+            val seq = ArrayList<String>()
+            val probe = object : AbstractMap<String, TypeRef>() {
+                override val entries: Set<Map.Entry<String, TypeRef>> get() = emptySet()
+                override fun get(key: String): TypeRef? { seq.add(key); return null }
+            }
+            Subst(probe).block(b)
+            var usesThis = false
+            Subst(emptyMap(), rw = { x -> if (x is NameE && (x.n == "this" || x.n.startsWith("this@"))) usesThis = true; null }).block(b)
+            if (usesThis) for (k in seq.indices) {
+                if (seq[k] != recv.name || k + recv.args.size >= seq.size + 1) continue
+                val args = (1..recv.args.size).map { seq.getOrNull(k + it) ?: "" }
+                if (args.any { it.isEmpty() || it in tps || (it !in classes && it !in classDecls && it !in setOf("Int", "Long", "String", "Double", "Boolean", "Char")) }) continue
+                val cand = TypeRef(recv.name, args.map { TypeRef(it, emptyList(), false) }, false)
+                try { unify(recv, resolve(cand), tps, env); break } catch (x: CompileError) {}
+            }
+        }
     }
 
     /**
@@ -3385,6 +3404,20 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (e.type.name == "Number" && !isAny(v.t) && !v.t.isNum) fail("cast to Number is not supported")
         val star = e.type.args.any { it.name == "*" }
         val target = if (e.type.name == "Any") v.t else if (star) (v.t.takeIf { v.t is Ty.Cls || v.t is Ty.Iface } ?: fail("unsupported cast to ${e.type.name}<*>")) else resolve(TypeRef(e.type.name, e.type.args, false))
+        // `c as Continuation<Any>` with `c: Continuation<IC>`: unchecked (erased) between instances of one generic
+        // interface whose type arguments are all references (same layout of the objects behind them).
+        if (v.t is Ty.Iface && target is Ty.Iface && v.t != target && !e0.safe) {
+            val oa = instOrigin[v.t.name]; val ob = instOrigin[target.name]
+            val prim = setOf("Int", "Long", "Double", "Float", "Boolean", "Char", "Short", "Byte", "Unit", "UInt", "ULong", "UByte", "UShort")
+            // Continuations convert their values (`Any` holds boxed primitives and strings): an adapter.
+            if (oa != null && ob != null && oa.first == "Continuation" && ob.first == "Continuation" && "KcCastCont" in genericClasses) {
+                val tmp = "\$ccast${suspConvN++}"
+                val l = declare(tmp, v.t, false, true)
+                emit("store ptr ${consume(v).v}, ptr ${l.slot}")
+                return genExpr(CallE(NameE("KcCastCont").also { it.line = line }, listOf(oa.second[0], ob.second[0]), listOf(NameE(tmp).also { it.line = line }), null).also { it.line = line }).let { r -> Val(r.v, target, r.owned) }
+            }
+            if (oa != null && ob != null && oa.first == ob.first && (oa.second + ob.second).none { it.name in prim && !it.nullable }) return Val(v.v, target, v.owned)
+        }
         // Instances of one generic class with different type arguments are distinct monomorphized classes.
         if (v.t is Ty.Cls && target is Ty.Cls && v.t != target && '$' in v.t.name && v.t.name.substringBefore('$') == target.name.substringBefore('$'))
             fail("unchecked cast between instances of generic class ${e.type.name} is not supported")
