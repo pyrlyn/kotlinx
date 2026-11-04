@@ -3159,6 +3159,42 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         stF = ::stImpl
         b.stmts.forEach { stImpl(it) }
         fun free(r: TypeRef): Boolean = (r.name in tps && r.name !in env) || r.args.any { free(it) }
+        /**
+         * A lambda for a receiver function-type parameter or property (`() -> TV`, `(TV) -> Unit`): its result type
+         * binds the result; how its parameter is used (`f(it)` with a known parameter type, `it.m()` with a method only
+         * one class has) binds the parameter.
+         */
+        fun lamInfer(pr: TypeRef, a: LambdaE) {
+            val bn = baseFn(pr.name)
+            if (bn != "\$Fn" || pr.args.isEmpty()) return
+            val pts = pr.args.dropLast(1); val ret = pr.args.last()
+            val names = if (a.body.params.isNotEmpty()) a.body.params else if (pts.size == 1) listOf("it") else emptyList()
+            if (names.size != pts.size) return
+            if (free(ret) && pts.isEmpty()) {
+                val last = (a.body.stmts.lastOrNull() as? ExprS)?.e
+                val t = if (last == null) Ty.Unit else probeType(last)
+                if (t != null && t != Ty.RawPtr && t != Ty.Nothing) try { unify(ret, if (t == Ty.Unit) Ty.UnitV else t, tps, env) } catch (x: CompileError) {}
+            }
+            pts.forEachIndexed { i, ptr ->
+                if (!free(ptr)) return@forEachIndexed
+                val pn = names[i]
+                var found: Ty? = null
+                fun scan(x: E) {
+                    if (found != null) return
+                    if (x is CallE && x.callee is NameE) {
+                        val j = x.args.indexOfFirst { (it as? NameE)?.n == pn }
+                        val fps = if (j >= 0 && lookup(x.callee.n) == null) sigs[x.callee.n]?.params else null
+                        if (fps != null && fps.size == x.args.size) found = fps[j]
+                    }
+                    if (x is CallE && x.callee is MemberE && (x.callee.recv as? NameE)?.n == pn) {
+                        val owners = classes.values.filter { x.callee.n in it.methods }
+                        if (owners.size == 1) found = Ty.Cls(owners[0].name)
+                    }
+                }
+                Subst(emptyMap(), rw = { x -> scan(x); null }).block(a.body)
+                found?.let { t -> try { unify(ptr, t, tps, env) } catch (x: CompileError) {} }
+            }
+        }
         /** Follows lambda-local vals to the expression whose type is known outside the lambda. */
         fun origin(a: E, depth: Int = 0): E { if (depth < 8 && a is NameE && lookup(a.n) == null) locals[a.n]?.let { v -> if (v.type == null && !v.isVar) return origin(v.init, depth + 1) }; return a }
         /** `materialize()` (a receiver method returning a free type) flowing into a place of known type [t]. */
@@ -3192,6 +3228,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (lookup(n) != null || n in locals) continue
             val r = propType(n)?.let { subst(it) } ?: continue
             if (!free(r) || r.nullable) continue
+            if (value is LambdaE) { lamInfer(r, value); continue }
             val o = origin(value)
             val t = (if (o is NameE) (lookup(o.n)?.t ?: locals[o.n]?.type?.let { try { resolve(it) } catch (x: CompileError) { null } }) else probeType(o)) ?: continue
             if (t != Ty.Unit && t !is Ty.NBox) try { unify(r, t, tps, env) } catch (x: CompileError) {}
@@ -3238,9 +3275,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         for (c in calls) {
             val n = (c.callee as NameE).n
             val ps = methods[n] ?: continue
-            if (ps.size != c.args.size || c.lambda != null) continue
-            c.args.forEachIndexed { i, a ->
+            val cargs = allArgs(c)
+            if (ps.size != cargs.size) continue
+            cargs.forEachIndexed { i, a ->
                 val pr = subst(ps[i])
+                if (free(pr) && a is LambdaE) { lamInfer(pr, a); return@forEachIndexed }
                 if (!free(pr) || a is LambdaE || a is NamedE) return@forEachIndexed
                 val o = origin(a)
                 val t = (if (o is NameE && lookup(o.n) == null) locals[o.n]?.type?.let { try { resolve(it) } catch (x: CompileError) { null } } else null)
