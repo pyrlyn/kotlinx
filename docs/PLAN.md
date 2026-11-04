@@ -75,7 +75,7 @@ State as of main `3ae5715` (#178) plus the `feat/kotlinx-lib-3` and `feat/kotlin
 Rule for every step: one change -> `compiler/test.sh` green, upstream 3093/3093, new golden test under `--leak-check` -> commit, push to a feature branch, PR. main only via PR.
 
 ### P0 - correctness and memory
-1. Done for default/incremental: ArrayList, HashMap values (#177), `Array<T>` (a list). HashMap keys of objects are not supported at all (keys are Int/Long/Char/String). Epoch: not done - its collector reads collections concurrently with the mutator; would need collection-level barriers (left out on purpose).
+1. Done: ArrayList, HashMap values (#177), `Array<T>` (a list); epoch through collection owners and write barriers (#180). HashMap keys of objects are not supported at all (keys are Int/Long/Char/String).
 2. Done: lambdas and coroutines capturing collections and their owners are leak-free (`leaks_lambdas_coroutines`, `kotlinx_coroutines_more`).
 3. Done: replace the "neighbouring builder within a few lines" heuristic (`8a57783`, `f525d34`) with a real common type of `if`/`when` branches.
 4. Done: fix codegen for nullable result `K?` (LLVM got `ret i32` for `ptr`) and turn substituteStub `K?` inference back on.

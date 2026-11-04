@@ -19,7 +19,7 @@ def version_line(s): return next((l.strip() for l in s.splitlines() if "version"
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("suite"); ap.add_argument("bench")
-    ap.add_argument("--run", required=True); ap.add_argument("--gc", default=os.environ.get("NEWKOTLIN_GC", "default"))
+    ap.add_argument("--run", required=True); ap.add_argument("--gc", default=os.environ.get("NEWKOTLIN_GC", "epoch"))
     ap.add_argument("--ref"); ap.add_argument("--date"); ap.add_argument("--commit"); ap.add_argument("--note"); ap.add_argument("--load")
     ap.add_argument("metrics", nargs="*")
     a = ap.parse_args()

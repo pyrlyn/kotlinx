@@ -1,4 +1,4 @@
-// Default KotlinX memory manager (newkotlinc --gc=default): Perceus-style reference counting (fast paths
+// Original (pre-epoch default) KotlinX memory manager (newkotlinc --gc=perceus; was --gc=default before epoch became the default): Perceus-style reference counting (fast paths
 // inlined by the code generator) + a synchronous trial-deletion cycle collector (Bacon & Rajan 2001)
 // over the tracing region.
 //
@@ -90,5 +90,5 @@ static void collect_cycles(void) {
 
 /* Runs until the buffer is empty: freeing garbage can buffer the roots of garbage it alone kept reachable. */
 void rt_gc_collect(void) { while (cc_roots.len && !cc_running) collect_cycles(); }
-const char *rt_gc_name(void) { return "default"; }
+const char *rt_gc_name(void) { return "perceus"; }
 void rt_gc_stats(KxGcStats *out) { *out = gc_stats; }

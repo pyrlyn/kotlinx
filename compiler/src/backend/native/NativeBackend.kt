@@ -226,6 +226,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         !deferredRc -> "rt_retain"
         t is Ty.Cls && t.name !in poly -> if (t.name in cyclic) "rt_gc_log_inc" else "rt_retain"
         t is Ty.Cls || t is Ty.Iface -> "rt_retain_dyn"   // class instance of unknown dynamic class
+        ownedColl(t) != null -> "rt_${ownedColl(t)}_retain_gc"   // a second reference stops its traversal: log the owner
         else -> "rt_retain"                                // lists, maps, builders: runtime objects, never traced
     }}(ptr $v)")
     private fun release(v: Val) { releaseFn(v.t)?.let { emit("call void $it(ptr ${v.v})") } }
@@ -557,9 +558,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun isTraced(t: Ty) = t is Ty.Cls || t is Ty.Iface
     /**
      * An ArrayList field of objects is traversed by the collector through its elements (runtime rt_list_trav; only
-     * while the list has no other owner). Not with deferred RC, whose collector runs next to the mutator.
+     * while the list has no other owner). With deferred RC the collector runs next to the mutator: such a list
+     * (or map) records the traced object whose field holds it (rt_list_own / rt_list_disown), is traversed only
+     * from that owner (rt_list_trav_owned), and every change to it logs the owner as modified (runtime.c).
      */
-    private fun tracedList(t: Ty) = !deferredRc && ((t is Ty.ListTy && isTraced(t.elem)) || (t is Ty.MapTy && isTraced(t.v)))
+    private fun tracedList(t: Ty) = (t is Ty.ListTy && isTraced(t.elem)) || (t is Ty.MapTy && isTraced(t.v))
+    /** Deferred RC: runtime entry point for a traced list or map field ("list" / "map"), else null. */
+    private fun ownedColl(t: Ty) = if (deferredRc && tracedList(t)) (if (t is Ty.MapTy) "map" else "list") else null
 
     private fun genClass(c: ClassInfo) {
         globals.append("${c.llType} = type { i64, ptr${c.fields.joinToString("") { ", " + it.second.llvm }} }\n")
@@ -620,11 +625,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         f.append("define internal void @trav.${c.name}(ptr %p, ptr %fn) {\nentry:\n")
         c.fields.forEachIndexed { i, (_, t) ->
             if (isTraced(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ${if (deferredRc && cyc) "atomic ptr, ptr %f$i acquire, align 8" else "ptr, ptr %f$i"}\n  call void %fn(ptr %v$i)\n")
-            else if (tracedList(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void @rt_${if (t is Ty.MapTy) "map" else "list"}_trav(ptr %v$i, ptr %fn)\n")
+            else if (tracedList(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n" + (ownedColl(t)?.let { k ->
+                "  %v$i = load ${if (cyc) "atomic ptr, ptr %f$i acquire, align 8" else "ptr, ptr %f$i"}\n  call void @rt_${k}_trav_owned(ptr %v$i, ptr %p, ptr %fn)\n" }
+                ?: "  %v$i = load ptr, ptr %f$i\n  call void @rt_${if (t is Ty.MapTy) "map" else "list"}_trav(ptr %v$i, ptr %fn)\n"))
         }
         f.append("  ret void\n}\n\ndefine internal void @relo.${c.name}(ptr %p) {\nentry:\n")
         c.fields.forEachIndexed { i, (_, t) ->
-            if (!isTraced(t)) (if (tracedList(t)) (if (t is Ty.MapTy) "@rt_map_release_untraced" else "@rt_list_release_untraced") else releaseFn(t))?.let { fn -> f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void $fn(ptr %v$i)\n") }
+            val ok = ownedColl(t)
+            if (ok != null) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void @rt_${ok}_release_owned(ptr %v$i, ptr %p)\n")
+            else if (!isTraced(t)) (if (tracedList(t)) (if (t is Ty.MapTy) "@rt_map_release_untraced" else "@rt_list_release_untraced") else releaseFn(t))?.let { fn -> f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void $fn(ptr %v$i)\n") }
         }
         f.append("  ret void\n}\n\ndefine internal void @free.${c.name}(ptr %p) {\nentry:\n")
         f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n  call void ${if (cyc) "@rt_free_trace" else "@rt_free"}(ptr %p, i64 %sz)\n  ret void\n}\n\n")
@@ -964,6 +973,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val v = consume(coerce(v0, ft))
             val fp = emitT("getelementptr ${ci.llType}, ptr %this, i32 0, i32 ${idx + 2}")
             if (deferredRc && ci.name in cyclic && ft.llvm == "ptr") {
+                ownedColl(ft)?.let { emit("call void @rt_${it}_own(ptr ${v.v}, ptr %this)") }
                 emit("store atomic ptr ${v.v}, ptr $fp release, align 8")
                 emit("call void @rt_gc_write_barrier(ptr %this)")
             } else emit("store ${ft.llvm} ${v.v}, ptr $fp${tbField(ft.llvm)}")
@@ -1062,7 +1072,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun initObj(ci: ClassInfo, p: String, vals: List<Val>) {
         emit("store i64 1, ptr $p")
         emit("store ptr @vt.${ci.name}, ptr ${emitT("getelementptr ${ci.llType}, ptr $p, i32 0, i32 1")}")
-        vals.forEachIndexed { i, v -> emit("store ${v.t.llvm} ${v.v}, ptr ${emitT("getelementptr ${ci.llType}, ptr $p, i32 0, i32 ${i + 2}")}${tbField(v.t.llvm)}") }
+        vals.forEachIndexed { i, v ->
+            if (deferredRc && ci.name in cyclic) ownedColl(ci.fields[i].second)?.let { emit("call void @rt_${it}_own(ptr ${v.v}, ptr $p)") }
+            emit("store ${v.t.llvm} ${v.v}, ptr ${emitT("getelementptr ${ci.llType}, ptr $p, i32 0, i32 ${i + 2}")}${tbField(v.t.llvm)}")
+        }
     }
 
     /**
@@ -1445,8 +1458,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     v = consume(v)
                     val old = emitT("load ptr, ptr $ptr${tbField("ptr")}")
                     if (deferredRc && ci.name in cyclic) {
+                        val oc = ownedColl(ft)
+                        if (oc != null) emit("call void @rt_${oc}_own(ptr ${v.v}, ptr ${r.v})")
                         emit("store atomic ptr ${v.v}, ptr $ptr release, align 8")
                         emit("call void @rt_gc_write_barrier(ptr ${r.v})")
+                        if (oc != null) emit("call void @rt_${oc}_disown(ptr $old, ptr ${r.v})")
                     } else emit("store ptr ${v.v}, ptr $ptr${tbField("ptr")}")
                     release(Val(old, ft))
                 } else emit("store ${ft.llvm} ${v.v}, ptr $ptr${tbField(ft.llvm)}")
@@ -5390,6 +5406,16 @@ declare void @rt_list_trav(ptr, ptr)
 declare void @rt_list_release_untraced(ptr)
 declare void @rt_map_trav(ptr, ptr)
 declare void @rt_map_release_untraced(ptr)
+declare void @rt_list_trav_owned(ptr, ptr, ptr)
+declare void @rt_list_release_owned(ptr, ptr)
+declare void @rt_list_retain_gc(ptr)
+declare void @rt_list_own(ptr, ptr)
+declare void @rt_list_disown(ptr, ptr)
+declare void @rt_map_trav_owned(ptr, ptr, ptr)
+declare void @rt_map_release_owned(ptr, ptr)
+declare void @rt_map_retain_gc(ptr)
+declare void @rt_map_own(ptr, ptr)
+declare void @rt_map_disown(ptr, ptr)
 declare ptr @rt_arr_new(i64, i64)
 declare void @rt_oob(i64, i64) noreturn cold
 declare void @rt_print_char(i32)

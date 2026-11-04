@@ -1,6 +1,6 @@
 #!/bin/bash
 # GC tests (separate from feature and upstream tests). For every implementation in compiler/gc/*/gc.c
-# (or $GCS, e.g. GCS="default boehm"), according to its caps file
+# (or $GCS, e.g. GCS="perceus boehm"), according to its caps file
 # (cycles = reclaims unreachable cycles, precise = live object count is exact at exit, asan = ASan-compatible):
 #   1. unit/gc_unit.c: C tests of the kxgc.h interface (built with clang, -O1 and -O3).
 #   2. kt/*.kt: GC-agnostic Kotlin tests; stdout must equal <name>.out. Tests marked "// gc-needs: cycles"
@@ -25,14 +25,14 @@ for g in $gcs; do
     if eval "$CC" $o -g -Icompiler/gc $def $extra compiler/gc/tests/archive/unit/gc_unit.c compiler/runtime/runtime.c "compiler/gc/$g/gc.c" -o "$out/unit-$g" 2>"$out/unit-$g.err" \
        && "$out/unit-$g" >"$out/unit-$g.log" 2>&1; then echo "PASS gc-unit $g $o"
     else echo "FAIL gc-unit $g $o"; cat "$out/unit-$g.err" "$out/unit-$g.log" 2>/dev/null | head -20; fail=1; fi
-    if [ "$g" = default ] || [ "$g" = incremental ]; then
+    if [ "$g" = perceus ] || [ "$g" = incremental ]; then
       testdef=""; [ "$g" = incremental ] && testdef=-DTEST_INCREMENTAL
       if "$CC" $o -g -Icompiler/gc $testdef compiler/gc/tests/archive/unit/traversal.c compiler/runtime/runtime.c -o "$out/traversal-$g" 2>"$out/traversal-$g.err" \
          && "$out/traversal-$g" >"$out/traversal-$g.log" 2>&1; then echo "PASS gc-traversal $g $o"
       else echo "FAIL gc-traversal $g $o"; cat "$out/traversal-$g.err" "$out/traversal-$g.log" 2>/dev/null | head -20; fail=1; fi
     fi
   done
-  if [ "$g" = default ] || [ "$g" = incremental ]; then
+  if [ "$g" = perceus ] || [ "$g" = incremental ]; then
     testdef=""; [ "$g" = incremental ] && testdef=-DTEST_INCREMENTAL
     if "$CC" -O1 -g -fsanitize=address -fno-omit-frame-pointer -DRT_PLAIN_MALLOC -Icompiler/gc $testdef \
        compiler/gc/tests/archive/unit/traversal.c compiler/runtime/runtime.c -o "$out/traversal-$g.asan" 2>"$out/traversal-$g.asanerr" \

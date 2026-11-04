@@ -4,7 +4,7 @@
 #ifdef TEST_INCREMENTAL
 #include "../../../../incremental/gc.c"
 #else
-#include "../../../../default/gc.c"
+#include "../../../../perceus/gc.c"
 #endif
 
 uint64_t kxt_ref_count(void *p) { return ref_count(p); }

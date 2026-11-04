@@ -11,8 +11,8 @@ for spec in "main:$1" "branch:$2"; do
   label=${spec%%:*}; tree=$(cd "${spec#*:}" && pwd); d=$out/$label; mkdir -p "$d"
   (cd "$tree/compiler" && ./build.sh > "$d/build.log" 2>&1) || { echo "build failed: $tree" >&2; exit 1; }
   "$here/paced-run.sh" "$tree" "$d"
-  (cd "$tree" && ROUNDS=${ROUNDS:-3} bench/gc/compare.sh epoch default > /dev/null 2>&1)
+  (cd "$tree" && ROUNDS=${ROUNDS:-3} bench/gc/compare.sh epoch perceus > /dev/null 2>&1)
   cp "$tree/bench/results/gc/nk-table.md" "$d/nk-table.md"
-  for g in epoch default; do cp "$tree/bench/results/gc/nk-$g.txt" "$d/nk-$g.txt"; done
+  for g in epoch perceus; do cp "$tree/bench/results/gc/nk-$g.txt" "$d/nk-$g.txt"; done
   echo "done $label $(git -C "$tree" rev-parse --short HEAD)"
 done

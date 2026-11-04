@@ -400,7 +400,8 @@ static int64_t q_target_ns; static size_t dbg_q_max;
 static int major_slack = -1;          /* KX_GC_MAJOR_SLACK: queue limit multiplier while a major runs (default 1: off; measured: the mutator fills any slack within a major) */
 static _Atomic int c_in_major;         /* collector is in a major detection */
 enum { OP_INC = 0, OP_DEC = 1, OP_MOD = 2 };
-typedef struct Log { struct Log *next; size_t n; uint64_t seq; uintptr_t a[LOG_CAP]; } Log;
+/* frees: runtime memory the mutator released while the collector could still read it (rt_gc_free_later) */
+typedef struct Log { struct Log *next; size_t n; uint64_t seq; PtrStack frees; uintptr_t a[LOG_CAP]; } Log;
 static Log *cur;                                   /* mutator */
 static Log *q_head, *q_tail, *log_pool;            /* guarded by mu */
 static size_t q_len;
@@ -441,7 +442,7 @@ static int64_t free_budget_ns = -1;
 static void *collector_main(void *);
 static Log *log_new(void) {
     Log *l = log_pool;
-    if (l) { log_pool = l->next; pool_len--; } else { dbg_log_allocs++; l = malloc(sizeof *l); if (!l) rt_panic("OutOfMemoryError"); }
+    if (l) { log_pool = l->next; pool_len--; } else { dbg_log_allocs++; l = malloc(sizeof *l); if (!l) rt_panic("OutOfMemoryError"); l->frees = (PtrStack){0}; }
     l->n = 0; l->next = NULL; return l;
 }
 /* Hands the current log to the collector; takes the dead objects it returned. Caller holds no lock. */
@@ -451,7 +452,7 @@ static void handoff(void) {
         coll_started = 1;
         if (pthread_create(&coll_thread, NULL, collector_main, NULL)) rt_panic("epoch GC: cannot start the collector thread");
     }
-    if (cur && cur->n) {
+    if (cur && (cur->n || cur->frees.len)) {
         cur->seq = ++handed;
         if (q_tail) q_tail->next = cur; else q_head = cur;
         q_tail = cur; q_len++;
@@ -500,7 +501,9 @@ static void handoff(void) {
 /* Frees dead traced objects returned by the collector: release acyclic fields, free memory. */
 static void mut_release_child(void *t) { if (t && !is_traced(t)) vtab(t)->rel(t); }
 static void free_returned(void *p) {
+    rt_trav_mode = RT_TRAV_FREE;
     vtab(p)->trav(p, mut_release_child);
+    rt_trav_mode = RT_TRAV_SCAN;
     vtab(p)->relo(p);
     vtab(p)->freemem(p);
 }
@@ -564,6 +567,13 @@ static inline __attribute__((always_inline)) void log_op(uintptr_t e) {
 __attribute__((always_inline)) void rt_gc_log_inc(void *p) { if (p) log_op((uintptr_t)p | OP_INC); }
 __attribute__((always_inline)) void rt_gc_log_dec(void *p) { if (p) log_op((uintptr_t)p | OP_DEC); }
 __attribute__((always_inline)) void rt_gc_write_barrier(void *obj) { log_op((uintptr_t)obj | OP_MOD); }
+/* Freed when the collector takes the current log (see collector_main). Without a log the collector has not
+ * started, so it cannot be reading p. */
+void rt_gc_free_later(void *p) {
+    if (!p) return;
+    if (!cur) { free(p); return; }
+    stack_push(&cur->frees, p);
+}
 
 // ---- collector (background thread): header bits are collector-owned for traced objects ----
 // Header word of a traced object under epoch (bits 0-34 as in object.inc; the rest is collector-owned):
@@ -652,7 +662,9 @@ static void release_children(void *p) {
     stack_push(&c_dying, p);
     if (c_releasing) return;
     c_releasing = 1;
+    int pm = rt_trav_mode; rt_trav_mode = RT_TRAV_RELEASE;   /* may run inside validate's release loop */
     while (c_dying.len) { void *x = stack_pop(&c_dying); vtab(x)->trav(x, release_dead_child); }
+    rt_trav_mode = pm;
     c_releasing = 0;
 }
 static void possible_root(void *p) {
@@ -1272,7 +1284,9 @@ static size_t validate(uint64_t id, Members m) {
         if (*header(m.a[i]) & (DIRTY_BIT | DEAD_BIT)) { ok = 0; dbg_fail_delta++; break; }
     size_t freed = 0;
     if (ok) {
+        int pm = rt_trav_mode; rt_trav_mode = RT_TRAV_RELEASE;
         for (size_t i = 0; i < m.n; i++) { void *x = m.a[i]; vtab(x)->trav(x, free_cycle_child); }
+        rt_trav_mode = pm;
         for (size_t i = 0; i < m.n; i++) { void *x = m.a[i]; clr_bit(x, CAND_BIT); set_color(x, BLACK); set_crc(x, 0); if (has(x, KX_BUF_BIT)) set_bit(x, ZOMBIE_BIT); else ret_push(x); }
         freed = m.n; dbg_pass++;
     } else {
@@ -1405,6 +1419,10 @@ static void *collector_main(void *arg) {
             Log *l = q_head; q_head = l->next; if (!q_head) q_tail = NULL; q_len--; q_seen = q_len;
             pthread_cond_broadcast(&cv_done);
             pthread_mutex_unlock(&mu);
+            /* No trace is running here, and every later read of a field sees the stores made before this
+             * log was handed, so nothing can still reach memory freed before then. */
+            for (size_t i = 0; i < l->frees.len; i++) free(l->frees.items[i]);
+            l->frees.len = 0;
             int64_t ta = rt_nanos(); apply_log(l); dbg_logs++;
             if ((int64_t)c_live_def.len >= 4096 && ((int64_t)c_live_def.len * defer_flush >= c_stable_n || c_live_def.len >= DEFER_FLUSH_MAX)) flush_live_def();
             else if (c_zombies >= 4096 && c_zombies * 2 >= c_live_def.len + c_deferred.len) sweep_deferred();
@@ -1476,7 +1494,7 @@ static void *collector_main(void *arg) {
             pthread_mutex_lock(&mu);
             applied = l->seq;
             /* keep only as many spare logs as the queue may hold again; return the rest after a spike */
-            if ((size_t)pool_len > max_queued + 2) free(l); else { l->next = log_pool; log_pool = l; pool_len++; }
+            if ((size_t)pool_len > max_queued + 2) { free(l->frees.items); free(l); } else { l->next = log_pool; log_pool = l; pool_len++; }
             if (q_len <= max_queued && atomic_load_explicit(&c_in_major, memory_order_relaxed)) atomic_store(&c_in_major, 0);
             pthread_cond_broadcast(&cv_done);
         } else if (full_req) {
@@ -1532,7 +1550,7 @@ void rt_gc_collect(void) {
     in_boundary = 1;
     int64_t t0 = rt_nanos();
     for (int round = 0;; round++) {
-        int had_ops = cur && cur->n;
+        int had_ops = cur && (cur->n || cur->frees.len);
         handoff();
         pthread_mutex_lock(&mu);
         while (q_head) pthread_cond_wait(&cv_done, &mu);
@@ -1542,7 +1560,7 @@ void rt_gc_collect(void) {
         pthread_mutex_unlock(&mu);
         size_t returned = ret_local.len - ret_pos;
         process_returns(-1, t0, 0);
-        if (!had_ops && !returned && !(cur && cur->n)) break;
+        if (!had_ops && !returned && !(cur && (cur->n || cur->frees.len))) break;
     }
     dbg_exit_ns = rt_nanos() - t0;
     note_pause(t0);

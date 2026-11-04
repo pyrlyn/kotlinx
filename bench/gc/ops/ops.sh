@@ -1,9 +1,9 @@
 #!/bin/bash
 # Per-operation mutator cost (ns/op, median of 5) of each GC for the shapes in ops.c; GCs interleaved,
-# ROUNDS (default 5) rounds, median per op over rounds. ./ops.sh [gc ...] (default: epoch default boehm)
+# ROUNDS (default 5) rounds, median per op over rounds. ./ops.sh [gc ...] (default: epoch perceus boehm)
 set -eu
 cd "$(dirname "$0")"; C=../../../compiler; out=${OUT:-$C/build/gc-ops}; mkdir -p "$out"
-cc=${NK_CC:-clang}; gcs=${*:-epoch default boehm}
+cc=${NK_CC:-clang}; gcs=${*:-epoch perceus boehm}
 for g in $gcs; do
   extra=""; [ -f "$C/gc/$g/config.sh" ] && extra=$(bash "$C/gc/$g/config.sh")
   grep -qw deferred "$C/gc/$g/caps" && extra="$extra -DDEFERRED"

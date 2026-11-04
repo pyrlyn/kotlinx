@@ -4,7 +4,7 @@
 //!   zig build ported    - only the cases ported from run.sh (output comparable line by line with run.sh)
 //!   zig build test      - unit tests of the suite's own helpers
 //!   zig build coverage  - suite built with clang source-based coverage; llvm-cov summary + HTML in coverage/
-//! Options: -Dgcs="default epoch" restricts collectors (same as GCS= for run.sh).
+//! Options: -Dgcs="perceus epoch" restricts collectors (same as GCS= for run.sh).
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {

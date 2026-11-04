@@ -1,6 +1,6 @@
 // Reference cycles through ArrayList elements are collected: the cycle analysis counts list elements as children
-// of the owning object, and the collector traverses a list while the object is its only owner. (Default and
-// incremental collectors; with deferred RC (epoch) lists are not traversed.)
+// of the owning object, and the collector traverses a list while the object is its only owner. (Under deferred RC
+// (epoch) only from the object that first stored it.)
 class Node(val name: String) {
     val children = ArrayList<Node>()
     var parent: Node? = null

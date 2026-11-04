@@ -6,7 +6,7 @@
 //!
 //! New tests (not ports) print "gc-api ..." lines; --ported-only skips them.
 //! usage: gc-suite --obj DIR [--ported-only | --mt-only] [--coverage DIR]   (cwd: anywhere inside the repository)
-//! env:   GCS="default boehm" (subset), NKC, NK_CC as in run.sh.
+//! env:   GCS="perceus boehm" (subset), NKC, NK_CC as in run.sh.
 const std = @import("std");
 const p = @import("proc.zig");
 
@@ -166,7 +166,7 @@ pub fn main(init: std.process.Init.Minimal) void {
         if (has(caps, "cycles")) capargs.append(p.gpa, "cycles") catch unreachable;
         if (has(caps, "precise")) capargs.append(p.gpa, "precise") catch unreachable;
         const gc_c = p.fmt("compiler/gc/{s}/gc.c", .{g});
-        const trav_gc = std.mem.eql(u8, g, "default") or std.mem.eql(u8, g, "incremental");
+        const trav_gc = std.mem.eql(u8, g, "perceus") or std.mem.eql(u8, g, "incremental");
         const testdef: []const []const u8 = if (std.mem.eql(u8, g, "incremental")) &.{"-DTEST_INCREMENTAL"} else &.{};
 
         for (opts) |o| {
