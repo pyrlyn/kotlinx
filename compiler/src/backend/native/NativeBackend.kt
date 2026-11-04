@@ -2415,7 +2415,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (qn != null && qn in NANOS) return Val(emitT("call i64 @rt_nanos()"), Ty.I64)
         if (qn != null && (qn == "kotlin.math.sqrt" || qn == "kotlin.math.abs")) return genNamedCall(qn, e)
         scopeFn(e)?.let { return genBlockBody(it, true) }
-        if (callee is NameE && callee.n == "\$typeHint") return Val("", Ty.Unit)
+        if (callee is NameE && (callee.n == "\$typeHint" || callee.n == "\$classHint")) return Val("", Ty.Unit)
         if (callee is NameE && callee.n in Overloads.map && lookup(callee.n) == null) {
             val pick = pickOverload(callee.n, e)
             // The parser's SAM wrapping skips overloaded names: wrap lambdas passed to fun-interface parameters here.
@@ -3168,6 +3168,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         stF = ::stImpl
         b.stmts.forEach { stImpl(it) }
+        // Local classes using the receiver (Parser's RecvLocalClasses): their `$cap$$othisN.m(args)` calls.
+        for (c in calls.toList()) if ((c.callee as NameE).n == "\$classHint") {
+            val cd = genericClasses[(c.args.singleOrNull() as? NameE)?.n] ?: continue
+            val tp = cd.typeParams.firstOrNull { it.startsWith("R\$") } ?: continue
+            val cap = "\$cap\$" + tp.removePrefix("R\$")
+            // Read the class body as if written in the lambda: `$cap$$othisN.m(a)` -> `m(a)`, `$cap$x` -> `x`.
+            var strip: Subst? = null
+            strip = Subst(emptyMap(), rw = { y -> when {
+                y is CallE && y.callee is MemberE && !y.callee.safe && (y.callee.recv as? NameE)?.n == cap ->
+                    CallE(NameE(y.callee.n).also { it.line = y.line }, y.typeArgs, y.args.map { strip!!.e(it) }, y.lambda?.let { strip!!.block(it) }).also { it.line = y.line }
+                y is NameE && y.n.startsWith("\$cap\$") -> NameE(y.n.removePrefix("\$cap\$")).also { it.line = y.line }
+                else -> null } })
+            cd.methods.forEach { m -> m.body?.let { strip!!.block(it).stmts.forEach { s -> stImpl(s) } }; m.exprBody?.let { stImpl(ExprS(strip!!.e(it)).also { s -> s.line = it.line }) } }
+            cd.inits.forEach { if (it is Block) strip!!.block(it).stmts.forEach { s -> stImpl(s) } }
+        }
         fun free(r: TypeRef): Boolean = (r.name in tps && r.name !in env) || r.args.any { free(it) }
         /**
          * A lambda for a receiver function-type parameter or property (`() -> TV`, `(TV) -> Unit`): its result type
