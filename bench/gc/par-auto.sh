@@ -12,7 +12,7 @@ cases="${CASES:-alloc_throughput cyclic_garbage live_heap_churn bigheap huge_liv
 labels="default epoch-T1 epoch-T4"
 src() { if [ -f "gc/micro/$1.kt" ]; then echo "gc/micro/$1.kt"; else echo "cases/$1/kotlin/Main.kt"; fi; }
 for c in $cases; do
-  "$NKC" --gc=default "$(src $c)" -o "$tmp/default.$c"; "$NKC" --gc=epoch "$(src $c)" -o "$tmp/epoch.$c"
+  "$NKC" --gc=perceus "$(src $c)" -o "$tmp/default.$c"; "$NKC" --gc=epoch "$(src $c)" -o "$tmp/epoch.$c"
   for l in $labels; do for m in pause time rss; do : > "$tmp/$l.$c.$m"; done; done
   for r in $(seq "$runs"); do
     for l in $labels; do

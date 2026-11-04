@@ -24,7 +24,7 @@ else
 fi
 [ -f data/words.txt ] || python3 gen_data.py >/dev/null
 cat data/words.txt > /dev/null
-gc=$(echo " ${NKFLAGS:-} " | grep -oE -- '--gc[= ][a-z0-9_-]+' | tail -1 | sed -E 's/--gc[= ]//'); gc=${gc:-${NEWKOTLIN_GC:-default}}
+gc=$(echo " ${NKFLAGS:-} " | grep -oE -- '--gc[= ][a-z0-9_-]+' | tail -1 | sed -E 's/--gc[= ]//'); gc=${gc:-${NEWKOTLIN_GC:-epoch}}
 out=results/nk/$name.txt; : > "$out"
 echo "# $name ${ref:-working tree} $(date '+%Y-%m-%d %H:%M %Z') load: $(sysctl -n vm.loadavg)" >> "$out"
 # NKBENCH_BUILD_ONLY=1: only build (through the nkbuild.sh cache) and exit, nothing is run or recorded.

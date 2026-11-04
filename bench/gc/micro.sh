@@ -2,12 +2,12 @@
 # GC-only microbenchmarks (bench/gc/micro/*.kt) per GC implementation: time (warm-up + 5 runs, mean of the
 # middle 3), peak RSS (/usr/bin/time -l), and the collector's own statistics (KX_GC_STATS=1: collections,
 # total, p50, p99 and max pause). Writes bench/results/gc/micro-<gc>-<metric>.txt and prints one table per metric
-# (best value per row in bold).   bench/gc/micro.sh [gc ...]   (default: default boehm)
+# (best value per row in bold).   bench/gc/micro.sh [gc ...]   (default: epoch boehm perceus)
 # One file per benchmark: bench/results/gc-micro/<bench>.json (one run per GC with all metrics, see record.py).
 set -eu
 cd "$(dirname "$0")/.."
 NKC=${NKC:-../bin/newkotlinc}
-gcs=${*:-default boehm}
+gcs=${*:-epoch boehm perceus}
 mkdir -p results/gc ../compiler/build/gcmicro
 for g in $gcs; do for m in time rss pause_total pause_max pause_p50 pause_p99 collections; do : > results/gc/micro-$g-$m.txt; done; done
 # Opt-in, off by default (the default run measures everything):

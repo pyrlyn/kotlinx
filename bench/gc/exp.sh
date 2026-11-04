@@ -17,7 +17,7 @@ src() { if [ -f "gc/micro/$1.kt" ]; then echo "gc/micro/$1.kt"; else echo "cases
 for c in $cases; do
   for l in $labels; do
     case $l in
-      default) "$NKC" --gc=default "$(src $c)" -o "$tmp/$l.$c" ;;
+      default) "$NKC" --gc=perceus "$(src $c)" -o "$tmp/$l.$c" ;;
       epoch) "$NKC" --gc=epoch "$(src $c)" -o "$tmp/$l.$c" ;;
       epoch-base) NEWKOTLIN_GC_DIR="$base" "$NKC" --gc=epoch "$(src $c)" -o "$tmp/$l.$c" ;;
     esac

@@ -1,6 +1,6 @@
 // Per-operation mutator cost of the GC interface (kxgc.h), as generated code issues it for a possibly cyclic
 // class. Isolates what the lru benchmark does per get(): retain/release of a live object, a reference store
-// with its barrier, allocate + drop, and an LRU move-to-front. Build/run: ./ops.sh (epoch default boehm).
+// with its barrier, allocate + drop, and an LRU move-to-front. Build/run: ./ops.sh (epoch perceus boehm).
 //   -DDEFERRED: epoch code shape (rt_gc_log_inc / rt_gc_log_dec / release store + rt_gc_write_barrier);
 //   otherwise inline RC as for default/boehm (NativeBackend.kt @rel.C).
 #include <stdio.h>

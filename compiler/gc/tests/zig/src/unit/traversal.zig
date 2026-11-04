@@ -1,5 +1,5 @@
 //! Port of compiler/gc/tests/unit/traversal.c: trial-deletion traversal scratch space and behavior of the
-//! default / incremental collectors. Linked with traversal_shim.c, which includes the collector and
+//! perceus / incremental collectors. Linked with traversal_shim.c, which includes the collector and
 //! exports the internals (counts, colors, work-list capacity) the C test read directly.
 const std = @import("std");
 const kx = @import("kx.zig");

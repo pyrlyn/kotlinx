@@ -45,7 +45,7 @@ of `compiler/src` except `driver/Main.kt` (posix file I/O, clang driver) is plai
 `jvm/` compiles the same sources for the JVM straight from `../../compiler/src` and runs PIT on them.
 
 - Tests: `GoldenTest`, the feature golden suite of `compiler/test.sh` (`compiler/tests/*.kt` → `*.out`)
-  in-process: `compileToIr` on the JVM, then clang `-O1` (system malloc, `--gc=default`) and the
+  in-process: `compileToIr` on the JVM, then clang `-O1` (system malloc, `--gc=perceus`) and the
   program's output must equal `.out`. When the IR is byte-identical to the unmutated compiler's IR
   (`build/ir-baseline.txt`), the program is one that already passed, so clang is skipped.
 - Not covered by PIT: `driver/Main.kt`, the benchmark checksums and upstream tests of `test.sh`, the

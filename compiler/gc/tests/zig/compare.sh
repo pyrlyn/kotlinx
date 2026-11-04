@@ -56,7 +56,7 @@ for g in $gcs; do
       eval "$CC" $o -g -Icompiler/gc $def $extra "$obj/gc_unit.o" compiler/runtime/runtime.c "compiler/gc/$g/gc.c" -o "$OUT/unit-$g$o.zig" 2>/dev/null
       cmpbin "gc_unit-$g$o" "$OUT/unit-$g$o.c" "$OUT/unit-$g$o.zig" "" "" "$zargs"
     fi
-    if [ "$g" = default ] || [ "$g" = incremental ]; then
+    if [ "$g" = perceus ] || [ "$g" = incremental ]; then
       td=""; [ "$g" = incremental ] && td=-DTEST_INCREMENTAL
       "$CC" $o -g -Icompiler/gc $td compiler/gc/tests/archive/unit/traversal.c compiler/runtime/runtime.c -o "$OUT/trav-$g$o.c" 2>/dev/null
       "$CC" $o -g -Icompiler/gc $td "$obj/traversal.o" compiler/gc/tests/zig/src/unit/traversal_shim.c compiler/runtime/runtime.c -o "$OUT/trav-$g$o.zig" 2>/dev/null

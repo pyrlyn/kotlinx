@@ -389,7 +389,7 @@ pub const Harness = union(enum) {
     link: struct {
         runtime: []const u8,
         gc_dir: []const u8,
-        gc: []const u8 = "default",
+        gc: []const u8 = "perceus",
         cc: []const u8 = "/usr/bin/clang",
         cflags: []const u8 = "-O1",
         timeout_ms: i64 = 30_000,

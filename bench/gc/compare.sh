@@ -1,11 +1,11 @@
 #!/bin/bash
 # KotlinX benchmark suite (bench/nkbench.sh: warm-up + 5 runs, mean of the middle 3) per GC
 # implementation, interleaved over ROUNDS rounds (median per case), then a table with the best value per row in bold.
-#   bench/gc/compare.sh [gc ...]      (default: default boehm)  -> bench/results/gc/nk-<gc>.txt, table on stdout,
+#   bench/gc/compare.sh [gc ...]      (default: epoch boehm perceus)  -> bench/results/gc/nk-<gc>.txt, table on stdout,
 #   and one file per benchmark: bench/results/gc-nk/<case>.json (one run per GC, see record.py)
 set -eu
 cd "$(dirname "$0")/.."
-gcs=${*:-default boehm}
+gcs=${*:-epoch boehm perceus}
 rounds=${ROUNDS:-3}
 mkdir -p results/gc; args=""
 # Interleaved: ROUNDS rounds (default 3), each running every GC once, in rotated order, so drift in

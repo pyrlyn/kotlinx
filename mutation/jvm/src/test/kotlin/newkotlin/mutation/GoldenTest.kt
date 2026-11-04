@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * The golden feature suite of compiler/test.sh (compiler/tests/<name>.kt -> <name>.out), run on the JVM build:
- * compileToIr in-process, then clang (no opt, -O1, system malloc, --gc=default) and the program's output must
+ * compileToIr in-process, then clang (no opt, -O1, system malloc, --gc=perceus) and the program's output must
  * equal <name>.out. When the IR is byte-identical to the IR of the unmutated compiler (build/ir-baseline.txt,
  * written by `-Dkx.writeBaseline=true test` after every test passed through clang), the program is the same
  * one that already passed, so clang is skipped. That keeps a mutation run in minutes, not hours.
@@ -53,7 +53,7 @@ class GoldenTest {
         val exe = File(dir, name)
         val cc = System.getenv("NK_CC") ?: "/usr/bin/clang"
         val build = ProcessBuilder(cc, "-O1", "-DRT_PLAIN_MALLOC", "-Wno-override-module", "-w", "-I", "$root/compiler/gc",
-            ll.path, "$root/compiler/runtime/runtime.c", "$root/compiler/gc/default/gc.c", "-o", exe.path)
+            ll.path, "$root/compiler/runtime/runtime.c", "$root/compiler/gc/perceus/gc.c", "-o", exe.path)
             .redirectErrorStream(true).start()
         val bout = build.inputStream.bufferedReader().readText()
         if (!build.waitFor(120, TimeUnit.SECONDS) || build.exitValue() != 0) fail<Unit>("$name: clang failed: ${bout.take(2000)}")

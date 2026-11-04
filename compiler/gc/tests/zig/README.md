@@ -15,7 +15,7 @@ zig build ported                # only the cases ported from run.sh (same output
 zig build mt                    # only the multithreaded collector test (plain -O1/-O3 + TSan), also run by compiler/test.sh
 # every test command has a timeout: KX_GC_TEST_TIMEOUT seconds (default 300, 0 = none); a hung one prints TIMEOUT and fails
 # compiler/gc/tests/zig/mutation/mt_locks.sh   # lock-removal mutants against the MT test (after zig build install)
-zig build gc -Dgcs="default epoch"   # subset of collectors (GCS= works too)
+zig build gc -Dgcs="perceus epoch"   # subset of collectors (GCS= works too)
 zig build test                  # unit tests of the suite's own helpers
 ./compare.sh                    # run.sh vs Zig port: full output + every unit program, byte for byte
 zig build coverage              # clang source-based coverage -> coverage/ (gitignored)

@@ -27,7 +27,7 @@ pub fn main(init: std.process.Init) !u8 {
     var harness: []const u8 = "lli";
     var runtime: ?[]const u8 = null;
     var gc_dir: ?[]const u8 = null;
-    var gc: []const u8 = "default";
+    var gc: []const u8 = "perceus";
     var ops_arg: []const u8 = "icmp-flip,arith-swap";
     var skip: ?[]const u8 = null;
     var all_functions = false;
