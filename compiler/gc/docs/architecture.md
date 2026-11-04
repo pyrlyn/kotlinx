@@ -133,7 +133,8 @@ Ownership rules:
 Adaptive threshold: if a collection reclaimed less than 1/4 of what it traced (the roots were live, e.g.
 relinked LRU nodes), the threshold doubles, up to 2^18; a productive collection resets it to 10 000.
 
-Limitation: cycles through an ArrayList/HashMap are not traced by the RC implementations.
+Limitation: an ArrayList/HashMap is traced only while the object holding it has the only reference, so a
+cycle through a shared collection is not reclaimed.
 
 ## 6. Incremental collector
 
@@ -160,6 +161,25 @@ changes the generated code for traced (cyclic) classes only:
 - FBIP reuse is disabled for traced classes (their count is not known to the mutator).
 
 `rt_gc_write_barrier` is an empty function in every other implementation and is never emitted for them.
+
+ArrayList and HashMap fields of traced objects (lists and maps whose elements may close a cycle) stay
+reference counted on the mutator, but the collector traverses them, so cycles through them are reclaimed:
+
+- the first traced object that stores a collection in a field becomes its owner (`rt_list_own` /
+  `rt_map_own`; an overwrite or the owner's death disowns it). The collector visits the elements only
+  from the owner and only while the count is 1, as the other collectors do with sole ownership;
+- every mutation of an owned collection, and every retain or release of it, calls
+  `rt_gc_write_barrier(owner)`, so a Sigma/Delta test that read stale contents fails;
+- the mutator publishes an element before the new length (release); the collector reads length, then
+  storage (acquire). Grown storage is copied, not reallocated, and the old block, like the memory of a
+  freed owned collection, goes through `rt_gc_free_later`: it is freed once the collector has taken the
+  log that was current, so a traversal still reading it never sees freed memory;
+- when the collector frees a passing cycle it takes over the element references of the owned collections
+  it visited (`rt_trav_mode` = `RT_TRAV_RELEASE` sets `ctrav`), and the owner's `relo` then only frees
+  their memory.
+
+A collection that loses its owner while another object still holds it (count above 1) is not traversed
+again until it is stored into a field anew; a cycle through it is not reclaimed.
 
 Epoch boundary (log full, 32768 entries): the mutator hands the log over (one mutex round-trip) and frees
 dead objects returned by the collector under `KX_GC_FREE_BUDGET_US` (default half the target pause, 1.5 ms); allocation also frees

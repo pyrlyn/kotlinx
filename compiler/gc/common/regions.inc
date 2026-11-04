@@ -103,3 +103,4 @@ void rt_gc_mem_free(void *p) { free(p); }
 void rt_gc_log_inc(void *p) { (void)p; rt_panic("rt_gc_log_inc without deferred RC"); }
 void rt_gc_log_dec(void *p) { (void)p; rt_panic("rt_gc_log_dec without deferred RC"); }
 void rt_gc_write_barrier(void *obj) { (void)obj; }
+void rt_gc_free_later(void *p) { (void)p; rt_panic("rt_gc_free_later without deferred RC"); }
