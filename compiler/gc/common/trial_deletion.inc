@@ -96,11 +96,15 @@ static void collect_white_child(void *child) {
 }
 static void collect_white(void *root) {
     if (!collect_white_claim(root)) return;
+    /* A list or map traversed here gives its elements up to the collector (runtime.c rt_list_trav), so the
+     * garbage object's relo frees only its memory. */
+    rt_trav_mode = RT_TRAV_RELEASE;
     while (cc_work.len) {
         void *obj = stack_pop(&cc_work);
         vtab(obj)->trav(obj, collect_white_child);
         stack_push(&cc_garbage, obj); /* freed after all roots are processed: other garbage may still point here */
     }
+    rt_trav_mode = RT_TRAV_SCAN;
 }
 /* Drops the garbage objects' references to acyclic children through the normal RC path. */
 static void release_acyclic_children(void) {

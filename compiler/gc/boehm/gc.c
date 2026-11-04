@@ -46,7 +46,9 @@ static void release_acyclic(void *t) { if (t && !vtab(t)->cyclic) vtab(t)->rel(t
 /* Unreachable cycle member: release the acyclic objects and other fields it still owns; bdwgc frees the memory. */
 static void on_unreachable(void *p, void *cd) {
     (void)cd;
+    rt_trav_mode = RT_TRAV_RELEASE;   /* a list traversed here gives its elements up: relo frees only memory */
     vtab(p)->trav(p, release_acyclic);
+    rt_trav_mode = RT_TRAV_SCAN;
     vtab(p)->relo(p);
     gc_st.reclaimed++;
 #ifdef RT_LEAKCHECK
@@ -94,4 +96,5 @@ void rt_gc_stats(KxGcStats *out) { *out = gc_st; out->collections = (int64_t)GC_
 void rt_gc_log_inc(void *p) { (void)p; rt_panic("rt_gc_log_inc without deferred RC"); }
 void rt_gc_log_dec(void *p) { (void)p; rt_panic("rt_gc_log_dec without deferred RC"); }
 void rt_gc_write_barrier(void *obj) { (void)obj; }
+void rt_gc_root_hint(void *p) { (void)p; }   /* bdwgc finds unreachable cycles by tracing */
 void rt_gc_free_later(void *p) { (void)p; rt_panic("rt_gc_free_later without deferred RC"); }
