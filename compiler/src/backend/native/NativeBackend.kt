@@ -3351,6 +3351,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (dt?.nullable != true || refNullable(dt)) sink(a, ps[i]) }
         }
         val nothingArgs = HashMap<String, HashSet<Ty>>()
+        val sameAs = ArrayList<Pair<String, String>>()
         for (c in calls) {
             val n = (c.callee as NameE).n
             val ps = methods[n] ?: continue
@@ -3361,6 +3362,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (free(pr) && a is LambdaE) { lamInfer(pr, a); return@forEachIndexed }
                 if (!free(pr) || a is LambdaE || a is NamedE) return@forEachIndexed
                 val o = origin(a)
+                // `emit2(get())` with `get(): K1` into a `K2` parameter: K2 is K1 (bound below once K1 is).
+                if (o is CallE && o.callee is NameE && o.args.isEmpty() && o.lambda == null && lookup(o.callee.n) == null && pr.args.isEmpty() && !pr.nullable)
+                    rets[o.callee.n]?.let { subst(it) }?.let { r -> if (r.name in tps && r.args.isEmpty() && r.name != pr.name) sameAs.add(pr.name to r.name) }
                 val t = (if (o is NameE && lookup(o.n) == null) locals[o.n]?.type?.let { try { resolve(it) } catch (x: CompileError) { null } } else null)
                     ?: (if (o is NameE && lookup(o.n) == null) recvField(o.n) else null)
                     ?: probeWith(lamParams, o) ?: return@forEachIndexed
@@ -3388,6 +3392,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 try { unify(recv, resolve(cand), tps, env); break } catch (x: CompileError) {}
             }
         }
+        repeat(2) { for ((x, y) in sameAs) { if (x !in env) env[y]?.let { env[x] = it }; if (y !in env) env[x]?.let { env[y] = it } } }
         for ((tp, ts) in nothingArgs) if (tp !in env) env[tp] = if (Ty.RawPtr in ts) Ty.RawPtr else Ty.Nothing
     }
 
@@ -3689,7 +3694,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Instances of one generic class with different type arguments are distinct monomorphized classes.
         if (v.t is Ty.Cls && target is Ty.Cls && v.t != target && '$' in v.t.name && v.t.name.substringBefore('$') == target.name.substringBefore('$'))
             fail("unchecked cast between instances of generic class ${e.type.name} is not supported")
-        if (v.v == "null" && target.llvm != "ptr") fail("unchecked cast of null to non-nullable $target is not supported")
+        // `null as Int` (also `null as T` in an instance with T = Int): always a NullPointerException, as in Kotlin.
+        if (v.v == "null" && target.llvm != "ptr") {
+            if (excMode) throwNew("NullPointerException", Val("null", Ty.Str))
+            else { emit("call void @rt_panic(ptr ${cstr("NullPointerException")})"); emit("unreachable"); term = true }
+            return Val("undef", Ty.Nothing)
+        }
         // `x as Int` with `x: Int?` (also `v as T` in an instance with T = Int): null check, then unbox.
         if (v.t is Ty.NBox && target.llvm != "ptr" && !e0.type.nullable && !e0.safe) {
             if (v.t.inner == target) return genNonNull(v)
