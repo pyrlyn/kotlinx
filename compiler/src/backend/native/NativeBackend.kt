@@ -2851,6 +2851,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     unify(TypeRef(n, cd.typeParams.map { TypeRef(it, emptyList(), false) }, false), ex, cd.typeParams, one)
                     for ((k, v) in one) if (k !in env) env[k] = v
                 }
+                // `when { ... -> build { setTypeVariable(x) }; else -> Buildee() }`: the sibling builder's type.
+                if (cd.typeParams.any { it !in env } && e.args.isEmpty()) lastBuilt["$curFunKey:$n"]?.let { (l, m) ->
+                    if (e.line - l in 0..6) for (tp in cd.typeParams) if (tp !in env) m[tp]?.let { env[tp] = it } }
                 cd.typeParams.map { tp -> tyRef(env[tp] ?: fail("cannot infer type parameter $tp of $n; pass it explicitly")) }
             }
             return genNamedCall((instanceTy(n, ta) as Ty.Cls).name, CallE(e.callee, emptyList(), e.args, e.lambda))
@@ -3020,6 +3023,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     if (!isBound(pt.args[0]) && sib != null && e.line - sib.first in 0..6)
                         for (tp in f.typeParams) if (tp !in env) sib.second[tp]?.let { env[tp] = it }
                     if (isBound(pt.args[0])) lastBuilder[key] = e.line to HashMap(env)
+                    // For a bare `Buildee()` next to it (a sibling `when` branch): the builder's instance type.
+                    if (isBound(pt.args[0])) genericClasses[pt.args[0].name]?.let { cd -> if (cd.typeParams.size == pt.args[0].args.size)
+                        lastBuilt["$curFunKey:${cd.name}"] = e.line to cd.typeParams.zip(pt.args[0].args.map { res(it) }).mapNotNull { (k, v) -> v?.let { k to it } }.toMap() }
                 } else if (ptn == "\$FnR" && pt.args.size >= 2 && e.typeArgs.isNotEmpty()) lastBuilder["$curFunKey:${f.name}"] = e.line to HashMap(env)
                 if (isFn && pt.args.dropLast(1).any { !isBound(it) }) usageInfer(a.body, pt, f.typeParams, env)
                 val lps = if (isFn) pt.args.dropLast(1).map { res(it) }.takeIf { l -> l.all { it != null } }?.map { it!! } else null
@@ -4194,6 +4200,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private var curFunKey = ""
     /** Per function and builder: the line and type bindings of the last builder call whose type was inferred. */
     private val lastBuilder = HashMap<String, Pair<Int, Map<String, Ty>>>()
+    /** "fun:Class" -> (line, the class's type arguments) of the last builder lambda over that class (see above). */
+    private val lastBuilt = HashMap<String, Pair<Int, Map<String, Ty>>>()
     /** Wraps [v] in a suspend lambda forwarding its arguments (the value is held in a scope local). */
     private fun suspendConvert(v: Val, t: Ty.Iface): Val {
         val sig = fnSig(v.t)!!
