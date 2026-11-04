@@ -28,7 +28,7 @@ State as of main `3ae5715` (#178) plus the `feat/kotlinx-lib-3` and `feat/kotlin
 - `@Serializable` codegen: a `KSerializer` singleton per class, `X.serializer()` rewritten.
 
 ### GC / leaks
-- Collectors: default (Perceus RC + synchronous cycle collector), incremental, epoch, rc, boehm.
+- Collectors: default (Perceus RC + synchronous cycle collector), incremental, epoch, rc.
 - Cycle collection follows references held in `ArrayList` elements (#176, default + incremental) and `HashMap` values (#177).
 - Fixed (#176, `ff51827`, golden tests): constructor arguments leaked when a later argument throws; leading-dot continuation line in a class body; companion `val` with a custom getter.
 - Leak fixes: nullable primitive in a template, owned temp receiver when a call/`lateinit` read throws (#175), owned receiver of a throwing generic member call (#176).
