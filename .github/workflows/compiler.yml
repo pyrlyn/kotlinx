@@ -20,6 +20,8 @@ jobs:
       - uses: mlugg/setup-zig@v2
         with:
           version: 0.16.0
+      - name: mimalloc (default allocator) and bdwgc (--gc boehm tests)
+        run: brew install mimalloc bdw-gc
       - name: Kotlin/Native toolchain
         run: |
           mkdir -p ~/.konan
