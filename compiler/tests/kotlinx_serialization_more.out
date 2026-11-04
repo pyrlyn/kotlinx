@@ -1,0 +1,4 @@
+{"no":7,"items":[{"id":1,"item_name":"pen","qty":1,"tags":[]},{"id":2,"item_name":"ink","qty":3,"tags":["blue"]}],"role":"ADMIN","note":null,"nested":[[1,2],[]]}
+true
+Order(no=1, items=[Item(id=5, name=cup, qty=1, tags=[])], role=USER, note=null, nested=[[3]])
+Role does not contain element with name 'BOSS'

@@ -1,0 +1,34 @@
+# KotlinX compiler on macOS (Apple Silicon): build, compiler/test.sh, upstream tests (also under --leak-check).
+name: compiler
+on:
+  pull_request:
+    paths: ["compiler/**", ".github/workflows/compiler.yml"]
+  push:
+    branches: [main]
+    paths: ["compiler/**", ".github/workflows/compiler.yml"]
+concurrency:
+  group: compiler-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: macos-15
+    timeout-minutes: 120
+    env:
+      KN_VERSION: "2.4.21"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: 0.16.0
+      - name: Kotlin/Native toolchain
+        run: |
+          mkdir -p ~/.konan
+          curl -fsSL "https://github.com/JetBrains/kotlin/releases/download/v${KN_VERSION}/kotlin-native-prebuilt-macos-aarch64-${KN_VERSION}.tar.gz" | tar xz -C ~/.konan
+      - name: Build compiler
+        run: NEWKOTLIN_KN_FLAGS=-opt compiler/build.sh
+      - name: compiler/test.sh
+        run: compiler/test.sh
+      - name: Upstream tests
+        run: python3 compiler/tests/upstream/run.py --nkc compiler/build/newkotlinc.kexe --jobs 3
+      - name: Upstream tests under --leak-check (report only)
+        run: python3 compiler/tests/upstream/run.py --leak-check --nkc compiler/build/newkotlinc.kexe --jobs 3 || true

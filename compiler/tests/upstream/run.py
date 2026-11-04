@@ -116,6 +116,8 @@ def feature_bucket(msg):
             return name
     return "other: " + m[:60]
 
+LEAK_CHECK = False
+
 def run_one(path, nkc, timeout, cflags, src=None):
     """Return dict(status, detail, feature).
     status in PASS N/A SKIPPED_TARGET UNSUPPORTED MISCOMPILE COMPILER_CRASH. Test files are only read; the
@@ -146,6 +148,8 @@ def run_one(path, nkc, timeout, cflags, src=None):
         cmd = [nkc, kt, "-o", exe, "--runtime", RUNTIME]
         if cflags:
             cmd += ["--cflags", cflags]
+        if LEAK_CHECK:
+            cmd += ["--leak-check"]
         try:
             c = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, errors="replace")
         except subprocess.TimeoutExpired:
@@ -161,7 +165,11 @@ def run_one(path, nkc, timeout, cflags, src=None):
             return {"status": "MISCOMPILE", "detail": "run timeout"}
         out = r.stdout
         ok = (out.strip() == "OK") if mode == "box" else (out.rstrip("\n") == expected.rstrip("\n"))
+        if ok and LEAK_CHECK and "leak-check: FAIL" in r.stderr:
+            return {"status": "LEAK", "detail": " ".join(l for l in r.stderr.splitlines() if "leak-check" in l and "live=0" not in l)[:300]}
         if ok and r.returncode == 0:
+            if LEAK_CHECK and "leak-check: OK" not in r.stderr:
+                return {"status": "LEAK", "detail": " ".join(l for l in r.stderr.splitlines() if "leak-check" in l and "live=0" not in l)[:300]}
             return {"status": "PASS", "detail": mode}
         return {"status": "MISCOMPILE", "detail": f"exit={r.returncode} stdout={out[-200:]!r} stderr={r.stderr[-200:]!r}"}
 
@@ -187,8 +195,11 @@ def main():
     ap.add_argument("--timeout", type=float, default=10)
     ap.add_argument("--cflags", default=None)
     ap.add_argument("--json")
+    ap.add_argument("--leak-check", action="store_true", help="compile with --leak-check; a passing test that leaks is LEAK")
     ap.add_argument("paths", nargs="*")
     a = ap.parse_args()
+    global LEAK_CHECK
+    LEAK_CHECK = a.leak_check
     paths = a.paths or sorted(os.path.join(dp, f) for sub in ("box", "native")
                               for dp, _, fs in os.walk(os.path.join(HERE, sub)) for f in fs if f.endswith(".kt"))
     res = run_many([(p, p, None) for p in paths], a.nkc, a.jobs, a.timeout, a.cflags)

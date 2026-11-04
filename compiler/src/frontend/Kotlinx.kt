@@ -204,6 +204,25 @@ fun kxArr(e: JsonElement?, what: String): JsonArray {
 val COROUTINES_USE = Regex("""\brunBlocking\b|\bcoroutineScope\b|\bChannel<|\bflow(Of)?\s*[<{(]|\bsuspend\b|\bkotlin\.coroutines\b|\bContinuation\b|\bsupervisorScope\b|\bCoroutineExceptionHandler\b""")
 val SERIALIZATION_USE = Regex("""@Serializable|\bJson\.|\bKSerializer\b|\bJson(Element|Object|Array|Primitive|Null)\b""")
 private val SERIALIZABLE_CLASS = Regex("""@Serializable\s+(?:data\s+)?class\s+(\w+)""")
+private val SERIALIZABLE_ENUM = Regex("""@Serializable\s+enum\s+class\s+(\w+)""")
+
+/** The primary-constructor parameter list text of `class name(...)` in [src] (null if none). */
+private fun ctorText(src: String, name: String): String? {
+    val m = Regex("""\bclass\s+$name\s*\(""").find(src) ?: return null
+    var d = 1; var i = m.range.last + 1; val st = i
+    while (i < src.length && d > 0) { when (src[i]) { '(' -> d++; ')' -> d-- ; '"' -> { i++; while (i < src.length && src[i] != '"') { if (src[i] == '\\') i++; i++ } } }; i++ }
+    return src.substring(st, i - 1)
+}
+/** Splits [s] at top-level commas (outside (), <>, [], {} and strings). */
+private fun splitTop(s: String): List<String> {
+    val out = ArrayList<String>(); var d = 0; var st = 0; var i = 0
+    while (i < s.length) {
+        when (s[i]) { '(', '<', '[', '{' -> d++; ')', '>', ']', '}' -> d--; '"' -> { i++; while (i < s.length && s[i] != '"') { if (s[i] == '\\') i++; i++ } }; ',' -> if (d == 0) { out.add(s.substring(st, i)); st = i + 1 } }
+        i++
+    }
+    if (s.substring(st).isNotBlank()) out.add(s.substring(st))
+    return out
+}
 
 /**
  * The kotlinx.serialization plugin: for every `@Serializable class X` appends `class X_KxSerializer : KSerializer<X>`
@@ -213,7 +232,8 @@ private val SERIALIZABLE_CLASS = Regex("""@Serializable\s+(?:data\s+)?class\s+(\
  */
 fun withSerializable(src: String): String {
     val names = SERIALIZABLE_CLASS.findAll(src).map { it.groupValues[1] }.toList()
-    if (names.isEmpty()) return src
+    val enums = SERIALIZABLE_ENUM.findAll(src).map { it.groupValues[1] }.toList()
+    if (names.isEmpty() && enums.isEmpty()) return src
     val prog = Parser(Lexer(src).lex()).program()
     val gen = StringBuilder()
     var n = 0
@@ -234,6 +254,7 @@ fun withSerializable(src: String): String {
                 "$f($v)"
             }
             in names -> "${t.name}_kxSerializer.serialize($v)"
+            in enums -> "JsonPrimitive($v.name, true)"
             else -> throw CompileError("@Serializable: unsupported property type ${ty(t)}")
         }
     }
@@ -260,6 +281,11 @@ fun withSerializable(src: String): String {
                 gen.append("fun $f(e: JsonElement?): ${t.name} { val r = kxReq(e, \"$what\"); return ${t.name}_kxSerializer.deserialize(r) }\n")
                 "$f($e)"
             }
+            in enums -> {
+                val f = "kxDec_${n++}"
+                gen.append("fun $f(s: String): ${t.name} { for (x in ${t.name}.values()) if (x.name == s) return x; throw SerializationException(\"${t.name} does not contain element with name '\" + s + \"'\") }\n")
+                "$f(kxPrim($e, \"$what\").content)"
+            }
             else -> throw CompileError("@Serializable: unsupported property type ${ty(t)}")
         }
     }
@@ -267,16 +293,31 @@ fun withSerializable(src: String): String {
     for (name in names) {
         val c = prog.classes.firstOrNull { it.name == name } ?: throw CompileError("@Serializable class $name not found")
         val ps = c.ctorParams
-        val encs = ps.joinToString("") { "b.put(\"${it.name}\", ${enc(it.type, "value." + it.name)}); " }
+        // `@SerialName("x")` on a property and `= default` values, read from the constructor's source text.
+        val texts = ctorText(src, name)?.let { splitTop(it) } ?: emptyList()
+        fun textOf(pn: String) = texts.firstOrNull { Regex("""(?:\bva[lr]\s+)?\b$pn\s*:""").containsMatchIn(it) }
+        fun key(pn: String) = textOf(pn)?.let { Regex("""@SerialName\(\s*"([^"]*)"\s*\)""").find(it)?.groupValues?.get(1) } ?: pn
+        fun default(pn: String): String? = textOf(pn)?.let { t -> var d = 0; var at = -1
+            for ((i, ch) in t.withIndex()) { when (ch) { '(', '<', '[', '{' -> d++; ')', '>', ']', '}' -> d--; '=' -> if (d == 0 && at < 0) at = i } }
+            if (at < 0) null else t.substring(at + 1).trim() }
+        val encs = ps.joinToString("") { "b.put(\"${key(it.name)}\", ${enc(it.type, "value." + it.name)}); " }
         // Decoded into locals first: a throwing decoder inside a constructor argument list would leak the
-        // already evaluated arguments.
-        val decs = ps.withIndex().joinToString("") { (i, p) -> "val p$i = ${dec(p.type, "o.get(\"${p.name}\")", p.name)}; " }
+        // already evaluated arguments. A missing key takes the property's default.
+        val decs = ps.withIndex().joinToString("") { (i, p) ->
+            val k = key(p.name); val d = default(p.name)
+            if (d == null) "val p$i = ${dec(p.type, "o.get(\"$k\")", k)}; "
+            else "val p$i: ${ty(p.type)} = if (o.get(\"$k\") == null) ($d) else ${dec(p.type, "o.get(\"$k\")", k)}; " }
         val args = ps.indices.joinToString(", ") { "p$it" }
         gen.append("class ${name}_KxSerializer : KSerializer<$name> {\n" +
             "    override fun serialize(value: $name): JsonElement { val b = JsonObjectBuilder(); $encs; return b.build() }\n" +
             "    override fun deserialize(element: JsonElement): $name { val o = kxObj(element, \"$name\"); $decs return $name($args) }\n}\n")
         out = out.replace(Regex("""\b$name\.serializer\(\)"""), "${name}_kxSerializer")
         gen.append("val ${name}_kxSerializer: KSerializer<$name> = ${name}_KxSerializer()\n")
+    }
+    // Reified forms: `Json.decodeFromString<T>(s)` and `Json.encodeToString<T>(v)` name the serializer.
+    for (name in names) {
+        out = out.replace(Regex("""\bdecodeFromString<$name>\("""), "decodeFromString(${name}_kxSerializer, ")
+        out = out.replace(Regex("""\bencodeToString<$name>\("""), "encodeToString(${name}_kxSerializer, ")
     }
     return out + "\n" + gen
 }
@@ -287,7 +328,8 @@ fun withSerializable(src: String): String {
  * `kxCoResume` / `kxCoDestroy` drive a job's root coroutine from the single-threaded scheduler.
  */
 val KOTLINX_COROUTINES = """
-class CancellationException(message: String) : IllegalStateException(message)
+open class CancellationException(message: String) : IllegalStateException(message)
+class TimeoutCancellationException(message: String) : CancellationException(message)
 class ClosedReceiveChannelException(message: String) : IllegalStateException(message)
 object KxSched {
     val ready = ArrayList<Job>()
@@ -582,6 +624,8 @@ suspend fun delay(ms: Long) {
 fun currentTimeVirtual(): Long = KxSched.now
 suspend fun joinAll(jobs: List<Job>) { for (j in jobs) j.join() }
 suspend fun <T> awaitAll(ds: List<Deferred<T>>): List<T> { val r = ArrayList<T>(); for (d in ds) r.add(d.await()); return r }
+suspend fun List<Job>.joinAll() { for (j in this) j.join() }
+suspend fun <T> List<Deferred<T>>.awaitAll(): List<T> { val r = ArrayList<T>(); for (d in this) r.add(d.await()); return r }
 class Channel<T>(val capacity: Int) {
     val buf = ArrayList<T>()
     val receivers = ArrayList<Job>()
@@ -634,6 +678,79 @@ fun <T> flow(block: suspend FlowCollector<T>.() -> Unit): Flow<T> = Flow<T> { c 
 fun <T> flowOf(xs: List<T>): Flow<T> = Flow<T> { c -> for (x in xs) c.emit(x) }
 fun <T, R> Flow<T>.map(f: (T) -> R): Flow<R> { val src = this; return Flow<R> { out -> src.collect { out.emit(f(it)) } } }
 fun <T> Flow<T>.filter(p: (T) -> Boolean): Flow<T> { val src = this; return Flow<T> { out -> src.collect { if (p(it)) out.emit(it) } } }
+fun <T> Flow<T>.onEach(f: (T) -> Unit): Flow<T> { val src = this; return Flow<T> { out -> src.collect { f(it); out.emit(it) } } }
+fun <T> Flow<T>.drop(n: Int): Flow<T> { val src = this; return Flow<T> { out -> var i = 0; src.collect { if (i >= n) out.emit(it); i++ } } }
+fun <T, R> Flow<T>.transform(f: suspend FlowCollector<R>.(T) -> Unit): Flow<R> { val src = this; return Flow<R> { out -> src.collect { f(out, it) } } }
+// take(n): the upstream is stopped with a private exception once n values went through.
+class KxTag
+class KxFlowAbort(val owner: KxTag) : CancellationException("Flow was aborted")
+fun <T> Flow<T>.take(n: Int): Flow<T> {
+    val src = this
+    return Flow<T> { out ->
+        if (n > 0) {
+            var i = 0
+            val tag = KxTag()
+            try { src.collect { out.emit(it); i++; if (i >= n) throw KxFlowAbort(tag) } }
+            catch (e: KxFlowAbort) { if (e.owner !== tag) throw e }
+        }
+    }
+}
+suspend fun <T, R> Flow<T>.fold(initial: R, f: (R, T) -> R): R { var acc = initial; collect { acc = f(acc, it) }; return acc }
+suspend fun <T> Flow<T>.count(): Int { var n = 0; collect { n++ }; return n }
+suspend fun <T> Flow<T>.first(): T {
+    val r = ArrayList<T>()
+    val tag = KxTag()
+    try { collect { r.add(it); throw KxFlowAbort(tag) } } catch (e: KxFlowAbort) { if (e.owner !== tag) throw e }
+    if (r.size == 0) throw NoSuchElementException("Expected at least one element")
+    return r[0]
+}
+fun <T> Channel<T>.receiveAsFlow(): Flow<T> { val ch = this; return Flow<T> { out -> ch.consumeEach { out.emit(it) } } }
+// ---- withTimeout / withContext / Dispatchers (single-threaded: dispatchers only name the context) ----
+object Dispatchers {
+    val Default: CoroutineContext = EmptyCoroutineContext
+    val IO: CoroutineContext = EmptyCoroutineContext
+    val Main: CoroutineContext = EmptyCoroutineContext
+    val Unconfined: CoroutineContext = EmptyCoroutineContext
+}
+suspend fun <T> withContext(context: CoroutineContext, block: suspend CoroutineScope.() -> T): T {
+    val j = KxSched.me()
+    val s = CoroutineScope()
+    s.owner = j
+    if (j.scopes.size > 0) s.handler = j.scopes[j.scopes.size - 1].handler
+    j.scopes.add(s)
+    val r = ArrayList<T>()
+    var err: Throwable? = null
+    try { r.add(block(s)); s.joinChildren() } catch (e: Throwable) { err = e; s.fail(e) }
+    if (err != null) s.joinChildrenQuiet()
+    j.scopes.removeAt(j.scopes.size - 1)
+    val f = s.failure
+    if (f != null) throw f
+    return r[0]
+}
+// The block runs in a scope of the calling job; a timer job fails that scope after ms (virtual time), so the
+// block's next suspension throws and the timeout surfaces as TimeoutCancellationException.
+class KxTimeout { var fired = false; var done = false }
+suspend fun <T> withTimeout(ms: Long, block: suspend CoroutineScope.() -> T): T {
+    val j = KxSched.me()
+    val s = CoroutineScope()
+    s.owner = j
+    j.scopes.add(s)
+    val t = KxTimeout()
+    val timer = Job { try { delay(ms); if (!t.done) { t.fired = true; s.fail(TimeoutCancellationException("Timed out waiting for " + ms + " ms")) } } catch (e: CancellationException) { } }
+    KxSched.wake(timer)
+    val r = ArrayList<T>()
+    var err: Throwable? = null
+    try { r.add(block(s)); s.joinChildren() } catch (e: Throwable) { err = e }
+    if (err != null) s.joinChildrenQuiet()
+    t.done = true; timer.cancel(); j.scopes.removeAt(j.scopes.size - 1)
+    if (t.fired) throw TimeoutCancellationException("Timed out waiting for " + ms + " ms")
+    val e = err
+    if (e != null) throw e
+    return r[0]
+}
+suspend fun <T> withTimeoutOrNull(ms: Long, block: suspend CoroutineScope.() -> T): T? {
+    try { return withTimeout(ms, block) } catch (e: TimeoutCancellationException) { return null }
+}
 // ---- kotlin.coroutines (low level): Continuation, startCoroutine, createCoroutine, suspendCoroutine ----
 interface CoroutineContext
 object EmptyCoroutineContext : CoroutineContext

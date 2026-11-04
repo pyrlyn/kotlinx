@@ -1,0 +1,5 @@
+User(id=1, name=Ann, age=31)
+User(id=4, name=Dee 'quoted', age=31)
+User(id=3, name=Cy, age=45)
+1
+sqlite: no such table: nope

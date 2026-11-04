@@ -404,9 +404,19 @@ void rt_oob(int64_t i, int64_t len) {
 // ---- HashMap<primitive|String, primitive>: open addressing, linear probing --------
 // String keys (`skeys`): the slot holds the string pointer (retained by the map), hashed and compared by content.
 
-typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; release_fn vrel; void *owner; int32_t gc, ctrav; } Map;
+/* Insertion-ordered hash map (iteration follows insertion, as LinkedHashMap / mutableMapOf).
+ * Entries live in dense arrays keys/vals/used (n entries, room for dcap; a removed entry keeps its place with
+ * used = 0 until the next rehash compacts them). idx is an open-addressing table of cap slots holding an entry
+ * index, EMPTY or TOMB. */
+typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; release_fn vrel;
+                 int64_t n, dcap, tombs; int64_t *idx; void *owner; int32_t gc, ctrav; } Map;
 // Reference values (`vrel` set): the map owns one reference per value; overwrites and the map release drop it.
-// `owner`, `gc`, `ctrav`: as for List (deferred RC only).
+// `owner`, `gc`, `ctrav`: as for List (deferred RC only). The concurrent collector reads n, used and vals, never
+// keys or idx: an entry's value is stored before its used flag and the flag before n (release), so a collector
+// that sees a flag set sees its value; a gc map copies vals and used when they grow instead of reallocating them,
+// and frees the old blocks with rt_gc_free_later.
+#define MAP_EMPTY (-1)
+#define MAP_TOMB (-2)
 
 static inline uint64_t map_hash(int64_t k) {
     uint64_t x = (uint64_t)k;
@@ -418,104 +428,138 @@ static inline uint64_t map_hash_str(const char *s) {
     for (; *s; s++) { h ^= (uint8_t)*s; h *= 1099511628211ULL; }
     return h ^ (h >> 32);
 }
+static inline uint64_t map_hash_of(Map *m, int64_t k) { return m->skeys ? map_hash_str((const char *)(intptr_t)k) : map_hash(k); }
+static inline int map_eq(Map *m, int64_t a, int64_t b) { return m->skeys ? strcmp((const char *)(intptr_t)a, (const char *)(intptr_t)b) == 0 : a == b; }
 Map *rt_map_new(void) {
     Map *m = malloc(sizeof *m);
-    m->skeys = 0; m->vrel = NULL; m->owner = NULL; m->gc = 0; m->ctrav = 0; m->rc = 1; m->size = 0; m->cap = 16;
-    m->keys = malloc(16 * 8); m->vals = rt_gc_mem_alloc(16 * 8); m->used = calloc(16, 1); LK(LK_MAP, 1);
+    m->skeys = 0; m->vrel = NULL; m->owner = NULL; m->gc = 0; m->ctrav = 0;
+    m->rc = 1; m->size = 0; m->cap = 16; m->n = 0; m->dcap = 12; m->tombs = 0;
+    m->keys = malloc(12 * 8); m->vals = rt_gc_mem_alloc(12 * 8); m->used = malloc(12);
+    m->idx = malloc(16 * 8); for (int i = 0; i < 16; i++) m->idx[i] = MAP_EMPTY;
+    LK(LK_MAP, 1);
     return m;
 }
 Map *rt_smap_new(void) { Map *m = rt_map_new(); m->skeys = 1; return m; }
 Map *rt_map_with_vrel(Map *m, release_fn rel) { m->vrel = rel; return m; }
-static inline int64_t map_find(Map *m, int64_t k) {
-    uint64_t mask = (uint64_t)m->cap - 1;
-    if (m->skeys) {
-        const char *ks = (const char *)(intptr_t)k;
-        uint64_t i = map_hash_str(ks) & mask;
-        while (m->used[i] && strcmp((const char *)(intptr_t)m->keys[i], ks) != 0) i = (i + 1) & mask;
-        return (int64_t)i;
+/* Slot of key k in idx, or -1 - (first free slot for inserting it). */
+static int64_t map_slot(Map *m, int64_t k) {
+    uint64_t mask = (uint64_t)m->cap - 1, i = map_hash_of(m, k) & mask;
+    int64_t freeSlot = -1;
+    for (;;) {
+        int64_t e = m->idx[i];
+        if (e == MAP_EMPTY) return -1 - (freeSlot >= 0 ? freeSlot : (int64_t)i);
+        if (e == MAP_TOMB) { if (freeSlot < 0) freeSlot = (int64_t)i; }
+        else if (map_eq(m, m->keys[e], k)) return (int64_t)i;
+        i = (i + 1) & mask;
     }
-    uint64_t i = map_hash(k) & mask;
-    while (m->used[i] && m->keys[i] != k) i = (i + 1) & mask;
-    return (int64_t)i;
 }
-static void map_grow(Map *m) {
-    Map old = *m;
-    if (m->gc) {
-        /* Collector-visible: rehash into new tables, then publish values, used flags and capacity in that order
-         * (the collector reads them backwards). Zeroed values: a collector that pairs the old used flags with
-         * the new values reads null or a moved live value, never garbage. The old tables stay valid. */
-        Map n = old; n.cap *= 2; n.size = 0;
-        n.keys = malloc((size_t)n.cap * 8); n.vals = rt_gc_mem_calloc((size_t)n.cap * 8); n.used = calloc((size_t)n.cap, 1);
-        for (int64_t i = 0; i < old.cap; i++) if (old.used[i]) {
-            int64_t j = map_find(&n, old.keys[i]);
-            n.used[j] = 1; n.keys[j] = old.keys[i]; n.vals[j] = old.vals[i]; n.size++;
-        }
-        m->keys = n.keys; m->size = n.size; STR(m->vals, n.vals); STR(m->used, n.used); STR(m->cap, n.cap);
-        free(old.keys); rt_gc_free_later(old.vals); rt_gc_free_later(old.used);
-        return;
-    }
-    m->cap *= 2; m->size = 0;
-    m->keys = malloc((size_t)m->cap * 8); m->vals = rt_gc_mem_alloc((size_t)m->cap * 8); m->used = calloc((size_t)m->cap, 1);
-    for (int64_t i = 0; i < old.cap; i++) if (old.used[i]) {
-        int64_t j = map_find(m, old.keys[i]);
-        m->used[j] = 1; m->keys[j] = old.keys[i]; m->vals[j] = old.vals[i]; m->size++;
-    }
-    free(old.keys); rt_gc_mem_free(old.vals); free(old.used);
+/* Rebuilds idx (cap slots) over the live entries, compacting the dense arrays. */
+static void map_rehash(Map *m, int64_t cap) {
+    int64_t w = 0;
+    for (int64_t r = 0; r < m->n; r++) if (m->used[r]) { m->keys[w] = m->keys[r]; ST(m->vals[w], m->vals[r]); STR(m->used[w], 1); w++; }
+    STR(m->n, w); m->tombs = 0;
+    free(m->idx); m->cap = cap; m->idx = malloc((size_t)cap * 8);
+    for (int64_t i = 0; i < cap; i++) m->idx[i] = MAP_EMPTY;
+    uint64_t mask = (uint64_t)cap - 1;
+    for (int64_t e = 0; e < m->n; e++) { uint64_t i = map_hash_of(m, m->keys[e]) & mask; while (m->idx[i] != MAP_EMPTY) i = (i + 1) & mask; m->idx[i] = e; }
+}
+/* Doubles the dense arrays. A gc map copies all of the old ones (also the entries past n a collector with a stale n
+ * may still read) into zeroed blocks, then publishes values before flags. */
+static void map_grow_dense(Map *m) {
+    int64_t old = m->dcap;
+    m->dcap *= 2;
+    m->keys = realloc(m->keys, (size_t)m->dcap * 8);
+    if (!m->gc) { m->used = realloc(m->used, (size_t)m->dcap); m->vals = rt_gc_mem_realloc(m->vals, (size_t)m->dcap * 8); return; }
+    int64_t *v = rt_gc_mem_calloc((size_t)m->dcap * 8); uint8_t *u = calloc((size_t)m->dcap, 1);
+    if (!u) rt_panic("OutOfMemoryError");
+    memcpy(v, m->vals, (size_t)old * 8); memcpy(u, m->used, (size_t)old);
+    int64_t *ov = m->vals; uint8_t *ou = m->used;
+    STR(m->vals, v); STR(m->used, u);
+    rt_gc_free_later(ov); rt_gc_free_later(ou);
 }
 void rt_map_put(Map *m, int64_t k, int64_t v) {
-    if ((m->size + 1) * 4 > m->cap * 3) map_grow(m);
-    int64_t i = map_find(m, k);
-    if (__builtin_expect(m->gc, 0)) {
-        /* value before used flag: the collector reads the flag first */
-        int64_t o = m->vals[i]; int fresh = !m->used[i];
-        ST(m->vals[i], v);
-        if (fresh) { m->keys[i] = k; STR(m->used[i], 1); m->size++; if (m->skeys) rt_hdr_retain((void *)(intptr_t)k); }
-        OWNER_MOD(m);
-        if (!fresh && m->vrel) m->vrel((void *)(intptr_t)o);
+    int64_t s = map_slot(m, k);
+    if (s >= 0) {
+        int64_t e = m->idx[s], o = m->vals[e];
+        ST(m->vals[e], v); OWNER_MOD(m);
+        if (m->vrel) m->vrel((void *)(intptr_t)o);
         return;
     }
-    if (!m->used[i]) { m->used[i] = 1; m->keys[i] = k; m->size++; if (m->skeys) rt_hdr_retain((void *)(intptr_t)k); }
-    else if (m->vrel) m->vrel((void *)(intptr_t)m->vals[i]);
-    m->vals[i] = v;
+    if ((m->size + m->tombs + 1) * 4 > m->cap * 3 || m->n == m->dcap) {
+        if (m->n == m->dcap && m->size * 2 < m->n) map_rehash(m, m->cap); /* many removed entries: compact */
+        if (m->n == m->dcap) map_grow_dense(m);
+        if ((m->size + m->tombs + 1) * 4 > m->cap * 3) map_rehash(m, (m->size + 1) * 4 > m->cap * 3 ? m->cap * 2 : m->cap);
+        s = map_slot(m, k);
+    }
+    int64_t e = m->n;
+    m->keys[e] = k; ST(m->vals[e], v); STR(m->used[e], 1); STR(m->n, e + 1); m->size++;
+    if (m->idx[-1 - s] == MAP_TOMB) m->tombs--;
+    m->idx[-1 - s] = e;
+    if (m->skeys) rt_hdr_retain((void *)(intptr_t)k);
+    OWNER_MOD(m);
 }
-int32_t rt_map_contains(Map *m, int64_t k) { return m->used[map_find(m, k)]; }
-int64_t rt_map_get_or(Map *m, int64_t k, int64_t d) { int64_t i = map_find(m, k); return m->used[i] ? m->vals[i] : d; }
+int32_t rt_map_contains(Map *m, int64_t k) { return map_slot(m, k) >= 0; }
+int64_t rt_map_get_or(Map *m, int64_t k, int64_t d) { int64_t s = map_slot(m, k); return s >= 0 ? m->vals[m->idx[s]] : d; }
 int64_t rt_map_get(Map *m, int64_t k) {
-    int64_t i = map_find(m, k);
-    if (!m->used[i]) {
+    int64_t s = map_slot(m, k);
+    if (s < 0) {
         fflush(stdout);
         if (m->skeys) fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %s not in map\n", (const char *)(intptr_t)k);
         else fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %" PRId64 " not in map\n", k);
         exit(1);
     }
-    return m->vals[i];
+    return m->vals[m->idx[s]];
+}
+/* Removes k; returns its value (the map's reference passes to the caller) or d when absent. */
+int64_t rt_map_remove(Map *m, int64_t k, int64_t d) {
+    int64_t s = map_slot(m, k);
+    if (s < 0) return d;
+    int64_t e = m->idx[s], v = m->vals[e];
+    m->idx[s] = MAP_TOMB; m->tombs++; ST(m->used[e], 0); m->size--;
+    if (m->skeys) rt_str_release((char *)(intptr_t)m->keys[e]);
+    OWNER_MOD(m);
+    return v;
+}
+void rt_map_clear(Map *m) {
+    int64_t n = m->n;
+    STR(m->n, 0); m->size = 0; m->tombs = 0;
+    for (int64_t i = 0; i < m->cap; i++) m->idx[i] = MAP_EMPTY;
+    OWNER_MOD(m);
+    for (int64_t e = 0; e < n; e++) if (m->used[e]) {
+        if (m->skeys) rt_str_release((char *)(intptr_t)m->keys[e]);
+        if (m->vrel) m->vrel((void *)(intptr_t)m->vals[e]);
+    }
 }
 int64_t rt_map_size(Map *m) { return m->size; }
+/* Iteration over entry positions 0 until rt_map_end, skipping dead ones (insertion order). */
+int64_t rt_map_end(Map *m) { return m->n; }
+int32_t rt_map_live(Map *m, int64_t e) { return m->used[e]; }
+int64_t rt_map_key_at(Map *m, int64_t e) { return m->keys[e]; }
+int64_t rt_map_val_at(Map *m, int64_t e) { return m->vals[e]; }
 /* Memory only: keys are released here, values by the caller (or by the collector). */
 static void map_free(Map *m) {
     LK(LK_MAP, -1);
-    if (m->skeys) for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) rt_str_release((char *)(intptr_t)m->keys[i]);
-    free(m->keys);
+    if (m->skeys) for (int64_t e = 0; e < m->n; e++) if (m->used[e]) rt_str_release((char *)(intptr_t)m->keys[e]);
+    free(m->keys); free(m->idx);
     if (m->gc) { rt_gc_free_later(m->vals); rt_gc_free_later(m->used); rt_gc_free_later(m); }
     else { rt_gc_mem_free(m->vals); free(m->used); free(m); }
 }
 void rt_map_release(Map *m) {
     if (!m) return;
     if (m->rc > 1) { ST(m->rc, m->rc - 1); OWNER_MOD(m); return; }
-    if (m->vrel) for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) m->vrel((void *)(intptr_t)m->vals[i]);
+    if (m->vrel) for (int64_t e = 0; e < m->n; e++) if (m->used[e]) m->vrel((void *)(intptr_t)m->vals[e]);
     map_free(m);
 }
-
 /* Cycle collection through map values: like rt_list_trav / rt_list_release_untraced. */
 void rt_map_trav(Map *m, void (*visit)(void *)) {
-    if (m && m->rc == 1 && m->vrel) for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) visit((void *)(intptr_t)m->vals[i]);
+    if (m && m->rc == 1 && m->vrel) for (int64_t e = 0; e < m->n; e++) if (m->used[e]) visit((void *)(intptr_t)m->vals[e]);
 }
 void rt_map_release_untraced(Map *m) {
     if (!m) return;
     if (m->rc != 1) { rt_map_release(m); return; }
     map_free(m);
 }
-/* Deferred RC: like rt_list_trav_owned. Capacity, used flags, values: the reverse of map_grow's publication. */
+/* Deferred RC: like rt_list_trav_owned. n, then used flags, then values: the reverse of their publication. */
 void rt_map_trav_owned(Map *m, void *owner, void (*visit)(void *)) {
     if (!m || !m->vrel) return;
     int ok;
@@ -525,8 +569,8 @@ void rt_map_trav_owned(Map *m, void *owner, void (*visit)(void *)) {
         if (rt_trav_mode == RT_TRAV_RELEASE) ST(m->ctrav, ok);
     }
     if (!ok) return;
-    int64_t cap = LDA(m->cap); uint8_t *used = LDA(m->used); int64_t *vals = LDA(m->vals);
-    for (int64_t i = 0; i < cap; i++) if (LDA(used[i])) visit((void *)(intptr_t)LD(vals[i]));
+    int64_t n = LDA(m->n); uint8_t *used = LDA(m->used); int64_t *vals = LDA(m->vals);
+    for (int64_t e = 0; e < n; e++) if (LDA(used[e])) visit((void *)(intptr_t)LD(vals[e]));
 }
 void rt_map_retain_gc(Map *m) { if (m) { ST(m->rc, m->rc + 1); OWNER_MOD(m); } }
 void rt_map_own(Map *m, void *obj) { if (m) { m->gc = 1; if (!m->owner) ST(m->owner, obj); } }
