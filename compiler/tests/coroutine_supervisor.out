@@ -1,0 +1,9 @@
+handled child a
+b survives
+a done=true b done=true
+await async fail
+scope alive
+body body fails
+caught regular scope
+handled detached
+done

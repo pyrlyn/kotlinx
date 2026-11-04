@@ -10,17 +10,35 @@ Run `mise install` in the repo first (bdwgc for `--gc=boehm`). Results go to `be
   the GC's own statistics (`KX_GC_STATS=1`: collections, total and max pause), one table per metric.
 - `./table.py label=file ...`: the table builder used by both (also for before/after runs of `nkbench.sh`).
 
+### Run time
+
+Where the ~1 h of a full `micro.sh default incremental epoch boehm` + `compare.sh` (same four) goes
+(2026-11-03 run): `micro.sh` ~50 min, `compare.sh` ~5 min. Every micro (case, GC) pair runs 8 times
+(warm-up, 5 timed, peak RSS, `KX_GC_STATS`), so `wide_graph_churn` alone is (100 s default + 194 s
+incremental) x 8 ≈ 39 min, and `huge_live_churn` default/incremental (~18 s) x 8 x 2 ≈ 5 min. Compiling is
+~0.6 s per binary; `compare.sh` used to rebuild all 17 cases per GC in every round (204 serial builds ≈ 2 min).
+
+- Binaries are built once, in parallel (`BUILD_JOBS`, default 4), before any timed run, through the
+  content-addressed cache `bench/nkbuild.sh` (`compiler/build/nkcache/`; key = compiler binary, runtime and
+  GC sources, source file, flags; `NKBUILD_NOCACHE=1` rebuilds). Code and data are identical to a fresh
+  build. No timed run overlaps a build; runs stay sequential and interleaved, iterations unchanged.
+- Opt-in only, for quick iterations (a skipped pair has no row, shown as "—", and no `record.py` entry):
+  `MICRO_SKIP="default:wide_graph_churn incremental:wide_graph_churn"` or `MICRO_MAX_S=60` (skip a pair
+  whose warm-up exceeds 60 s). Either cuts the full four-GC run from ~1 h to ~15 min.
+- Not done: running GCs in parallel. epoch uses background threads, so this would need a control run
+  proving the medians stay within noise.
+
 Close other heavy processes; results within ±3-5% are noise on a loaded machine.
 
 ## Shared-edge traversal regression
 
-`compiler/gc/tests/unit/traversal.c` checks live reference-count restoration, exact cycle reclamation,
+`compiler/gc/tests/archive/unit/traversal.c` checks live reference-count restoration, exact cycle reclamation,
 and bounded traversal scratch space for a ring with 64 references per node to its successor. It also
-checks a queued sibling restored by ScanBlack. `compiler/gc/tests/run.sh` runs it for `default` and
+checks a queued sibling restored by ScanBlack. The Zig suite (`compiler/gc/tests/zig`, port `src/unit/traversal.zig`) runs it for `default` and
 `incremental` at `-O1`, `-O3`, and under ASan. From the repository root, benchmark a larger ring with:
 
 ```sh
-clang -O3 -Icompiler/gc compiler/gc/tests/unit/traversal.c compiler/runtime/runtime.c -o /tmp/gc-traversal
+clang -O3 -Icompiler/gc compiler/gc/tests/archive/unit/traversal.c compiler/runtime/runtime.c -o /tmp/gc-traversal
 /usr/bin/time -l /tmp/gc-traversal 32768
 # Add -DTEST_INCREMENTAL to select the incremental collector.
 ```

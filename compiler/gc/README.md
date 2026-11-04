@@ -84,4 +84,14 @@ interface (`tests/unit/gc_unit.c`, -O1 and -O3) and the GC-agnostic Kotlin tests
 Tests marked `// gc-needs: cycles` are skipped for implementations that do not reclaim cycles.
 `GCS="perceus boehm" compiler/gc/tests/run.sh` limits the set.
 
+**All new GC tests are written in Zig** in [`tests/zig`](tests/zig/README.md): a 1:1 port of `run.sh`
+(`zig build ported`, verified against it by `compare.sh`), new unit tests of the C interface
+(`zig build gc`), coverage (`zig build coverage`) and source-level mutation testing (`tests/zig/mutation`).
+
 Benchmarks comparing implementations: [`bench/gc`](../../bench/gc/README.md).
+
+## Planned: separate project
+
+The GC code (collectors, `kxgc.h`, `common/`, tests, benchmarks, mutation tooling) is planned to move out of
+this repository into its own project. Nothing has moved yet. What goes there, the API boundary and how to
+build, link, select, test and pin it afterwards: [`docs/extraction-plan.md`](docs/extraction-plan.md).

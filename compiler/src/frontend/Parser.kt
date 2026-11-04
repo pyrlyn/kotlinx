@@ -9,7 +9,7 @@ private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sum
 /** Names after which `{` does not start a trailing lambda. */
 private val NO_TRAILING = setOf("try", "do", "else", "finally", "init", "object", "catch", "return", "this")
 
-private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix", "sealed", "lateinit", "tailrec")
+private val MEMBER_MODS = setOf("override", "open", "public", "private", "protected", "internal", "final", "abstract", "const", "operator", "infix", "sealed", "lateinit", "tailrec", "suspend")
 
 /**
  * Upper bounds of type parameters, by "<declaration line>:<name>" (declarations are copied and renamed by later
@@ -21,6 +21,13 @@ object TypeParamBounds {
 }
 
 /** Names of lifted local declarations (a local function wins over a member of an implicit receiver). */
+/** Local classes inside lambdas ("name@line") -> the `$othisN` value holding the lambda's `this`. */
+object RecvLocalClasses {
+    val map = HashMap<String, String>(); val implicitOnly = HashSet<String>()
+    /** `$othisN` -> its concrete type, for a class that is itself the builder's type argument (see recvClasses). */
+    val capType = HashMap<String, TypeRef>()
+}
+
 object LiftedLocals { val names = HashSet<String>(); var usesRef = false }
 
 private var argTmp = 0
@@ -144,6 +151,7 @@ private fun keepIdx(q: Int, ts: List<Tok>, keep: Set<String>): Boolean {
 
 const val COLL_LIT = "\$collLit"
 
+/** Recursive-descent parser from tokens to a `Program`. */
 class Parser(toks: List<Tok>) {
     /** Tokens padded with extra EOF tokens, so lookahead (`t[p + 1]`) at the end of an unclosed file is an error, not a crash. */
     private val t: List<Tok> = companionExtensions(if (toks.isNotEmpty() && toks.last().k == K.EOF) toks + List(8) { toks.last() } else toks)
@@ -178,6 +186,9 @@ class Parser(toks: List<Tok>) {
     private val topAnon = ArrayList<ClassD>()
     private var bodyLevel = 0
     private var anonN = 0
+    /** Name given to the anonymous function being parsed (`fun(x: Int) = ...`, `fun String.(y: String) = ...`). */
+    private var anonFun: String? = null
+    private fun fname(): String = anonFun?.takeIf { isOp("(") } ?: ident()
 
     /** Data class: generated toString, componentN, hashCode and `$equals` (structural `==`) over the constructor properties. */
     /** Value classes as declared (single- and multi-field), for [checkValueRecursion]. */
@@ -255,6 +266,18 @@ class Parser(toks: List<Tok>) {
      * top-level functions `ext$Recv$name(this: Recv, ...)`, which the backend calls for `recv.name(...)`.
      */
     /** `get() = e` / `get() { ... }` after a property declaration (possibly on the next line): the getter as a function. */
+    /** `set(v) { ... }` / `set(v) = expr` after a computed property's getter: the setter `$set$n(v)`. */
+    private fun setterNoField(n: String, ty: TypeRef): FunD? {
+        val save = p
+        while (t[p].k == K.NL) p++
+        if (!(isId("set") && t[p + 1].k == K.OP && t[p + 1].s == "(")) { p = save; return null }
+        val line = next().line
+        expectOp("("); val pn = ident(); if (isOp(":")) { next(); type() }; expectOp(")")
+        val unit = TypeRef("Unit", emptyList(), false)
+        return if (isOp("=")) { next(); skipNLOnly(); FunD("\$set\$$n", listOf(Param(pn, ty)), unit, Block(listOf(ExprS(expr()))), null, line) }
+        else FunD("\$set\$$n", listOf(Param(pn, ty)), unit, block(), null, line)
+    }
+
     private fun getter(fname: String, ty: TypeRef?, typeParams: List<String>, recv: TypeRef?): FunD? {
         val save = p
         while (t[p].k == K.NL) p++
@@ -800,7 +823,7 @@ class Parser(toks: List<Tok>) {
                     cd.inits, cd.superArgs, cd.typeParams, cd.enumEntries, cd.isValue, cd.superTypeArgs)
                 continue
             }
-            funs.add(FunD("ext$" + recv.name.replace('.', '_') + "$" + f.name, listOf(Param("this", recv)) + f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams))
+            funs.add(FunD("ext$" + recv.name.replace('.', '_').replace("$", "") + (if (recv.name.startsWith("\$Fn")) "${recv.args.size}" else "") + "$" + f.name, listOf(Param("this", recv)) + f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams))
         }
     }
 
@@ -837,12 +860,18 @@ class Parser(toks: List<Tok>) {
                     classes.add(ClassD(c.name, c.fields, c.supers, ms, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, null, true, c.superTypeArgs))
                 }
                 tk.k == K.ID && tk.s == "data" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(dataClass(classDecl())) }
-                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "operator", "infix", "tailrec", "const", "open", "final", "abstract", "sealed") -> p++
+                tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "operator", "infix", "tailrec", "const", "open", "final", "abstract", "sealed", "suspend") -> p++
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && topProperty(funs) -> { pendingGlobal?.let { globals.add(it) }; pendingGlobal = null }
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && (t[p + 1].k == K.OP && t[p + 1].s == "<" ||
                     t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> funs.addAll(extProperty())
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> { noCtx(); globals.add(stmt() as VarS); if (pendingStmts.isNotEmpty()) fail("top-level destructuring declarations are not supported", tk) }
                 tk.k == K.ID && tk.s == "fun" && t[p + 1].k == K.ID && t[p + 1].s == "interface" -> { p++; ifaces.add(interfaceDecl().also { funIfaces[it.name] = it }) }
+                // `external fun f(x: Int): Int` (no body): a C function of the same name (FFI, see Externs).
+                tk.k == K.ID && tk.s == "external" && t[p + 1].k == K.ID && t[p + 1].s == "fun" -> {
+                    p++; val f = function()
+                    if (f.body != null || f.exprBody != null || f.ret == null || f.typeParams.isNotEmpty() || f.recv != null) fail("an external fun needs an explicit return type and no body, type parameters or receiver", tk)
+                    Externs.names.add(f.name); funs.add(f)
+                }
                 tk.k == K.ID && tk.s == "fun" -> funs.add(function())
                 isContextDecl() -> contextDecl()
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var" || tk.s == "class" || tk.s == "object" || tk.s == "interface") && pendingCtx != null -> noCtx()
@@ -957,7 +986,9 @@ class Parser(toks: List<Tok>) {
         val saved = curClass; curClass = null
         val outerDecls = pendingDecls; pendingDecls = ArrayList(); val lvl = bodyLevel; bodyLevel = 0
         val ms = try { nested(0) { if (isOp("{")) members(fields, inits) else emptyList() } } finally { curClass = saved; pendingDecls = outerDecls; bodyLevel = lvl }
-        val c = ClassD(name, fields, supers, ms, line, emptyList(), inits, superArgs, superTypeArgs = sta)
+        val c0 = ClassD(name, fields, supers, ms, line, emptyList(), inits, superArgs, superTypeArgs = sta)
+        // Inside a lambda its body may use the lambda's receiver, like a local class (outerThis).
+        val c = if (bodyLevel > 0) outerThis(c0, line) as ClassD else c0
         if (bodyLevel > 0) { pendingDecls.add(LocalDeclS(c).also { it.line = line }); sawLocal = true } else topAnon.add(c)
         return CallE(NameE(name).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line }
     }
@@ -1009,7 +1040,12 @@ class Parser(toks: List<Tok>) {
                     val n = ident()
                     val ty = if (isOp(":")) { next(); type() } else null
                     if (isId("by")) { val (df, acc) = delegated(n, ty, isVar, NameE("this"), "\$prop\$$n", "\$set\$$n"); props.add(df); inits.add(df); ms.addAll(acc); continue }
-                    getter("\$prop\$$n", ty, emptyList(), null)?.let { ms.add(it); continue }
+                    // A computed property (no backing field): a getter, and for `var` an optional setter on the next line.
+                    getter("\$prop\$$n", ty, emptyList(), null)?.let { g ->
+                        ms.add(g)
+                        if (isVar) setterNoField(n, ty ?: g.ret ?: fail("a var property with accessors needs a type"))?.let { ms.add(it) }
+                        continue
+                    }
                     // `abstract val x: T` in a class: an abstract getter, like an interface property.
                     if (isAbstract && !isVar && ty != null && !isOp("=")) { ms.add(FunD("\$prop\$$n", emptyList(), ty, null, null, peek().line)); continue }
                     // Without an initializer (`lateinit var x: T`, or assigned in an `init` block) the property starts at
@@ -1065,7 +1101,9 @@ class Parser(toks: List<Tok>) {
                             withSupers.superArgs, superTypeArgs = withSupers.superTypeArgs)
                     }
                     companions.add(od)
-                    companionOf[cls] = od.name to (od.fields.map { it.name } + od.methods.map { it.name }).toSet() + cn
+                    // Properties with accessors are methods `$prop$x` / `$set$x`; `C.x` resolves through the property name.
+                    companionOf[cls] = od.name to (od.fields.map { it.name } + od.methods.map { it.name } +
+                        od.methods.map { it.name.removePrefix("\$prop\$").removePrefix("\$set\$") }).toSet() + cn
                     continue
                 }
                 if (nestedDecl()) continue
@@ -1371,7 +1409,7 @@ class Parser(toks: List<Tok>) {
                     x is UnE && x.op.startsWith("::") && x.e is NameE && x.op.drop(2).let { n -> nestedIn[n] == x.e.n && n !in innerOf } -> UnE(x.op, NullL()).also { it.line = x.line }
                     x is NameE && x.n.startsWith("this@") -> {
                         val l = x.n.removePrefix("this@")
-                        NameE(if (l == ctx) "this" else if (l == outerName) "outer\$" else fail("unknown label this@$l")).also { it.line = x.line }
+                        NameE(if (l == ctx) "\$self" else if (l == outerName) "outer\$" else fail("unknown label this@$l")).also { it.line = x.line }
                     }
                     x is NameE && x.n in outerNames -> MemberE(outerRef(x.line), x.n, false).also { it.line = x.line }
                     x is CallE && x.callee is NameE && x.callee.n in innerOf -> {
@@ -1512,8 +1550,71 @@ class Parser(toks: List<Tok>) {
                 c.enumEntries?.map { (n, a) -> n to a.map { sub.e(it) } }, c.isValue, c.superTypeArgs)
         }
         // Lifts the local declarations directly inside [f0]; returns the rewritten function. [owner]: class of a method.
+        val methodNames: Set<String> by lazy { classes.flatMap { c -> c.methods.map { it.name.removePrefix("\$prop\$") } + c.fields.map { it.name } }.toSet() + ifaces.flatMap { i -> i.methods.map { it.name.removePrefix("\$prop\$") } } }
+        /**
+         * A local class in a lambda calling methods it does not declare and no function or local provides
+         * (`yield(x)`): calls on the lambda's receiver, kept as `$othisN` (the class captures it as a property of
+         * the class's extra type parameter `R$$othisN`, so its type comes from the construction).
+         */
+        fun recvClasses(f: FunD): FunD {
+            if (RecvLocalClasses.map.isEmpty()) return f
+            val known = HashSet<String>(); funs.forEach { known.add(it.name) }; classes.forEach { known.add(it.name) }; known.addAll(localsOf(f))
+            Subst(emptyMap(), srw = { x -> if (x is LocalDeclS) when (val d = x.d) { is FunD -> known.add(d.name); is ClassD -> known.add(d.name); is InterfaceD -> known.add(d.name) }; null }).fn(f)
+            val used = HashSet<String>()
+            // The call each local class's lambda is passed to (`build { class L ... }` -> "build").
+            val lambdaOf = HashMap<String, String>()
+            Subst(emptyMap(), rw = { y ->
+                if (y is CallE && y.callee is NameE) (listOfNotNull(y.lambda) + y.args.mapNotNull { (it as? LambdaE)?.body }).forEach { lb ->
+                    lb.stmts.forEach { st -> ((st as? LocalDeclS)?.d as? ClassD)?.let { lambdaOf["${it.name}@${it.line}"] = y.callee.n } } }
+                null
+            }).fn(f)
+            /**
+             * A class naming itself (`yield(Local())`, `yield(this)`, `val a: Local`) is the builder's type argument:
+             * a generic capture would be the infinite `Local<Buildee<Local<...>>>`, so the receiver is captured with
+             * the callee's receiver type over the class (`fun <FT> build(i: Buildee<FT>.() -> Unit)` -> `Buildee<L>`).
+             */
+            fun selfCapType(d: ClassD): TypeRef? {
+                var self = false
+                val seen = object : AbstractMap<String, TypeRef>() {
+                    override val entries: Set<Map.Entry<String, TypeRef>> get() = emptySet()
+                    override fun get(key: String): TypeRef? { if (key == d.name) self = true; return null }
+                }
+                val probe = Subst(seen, rw = { y ->
+                    if ((y is NameE && y.n == d.name) || (y is CallE && y.callee is NameE && y.callee.n == d.name) || (y is CallE && y.args.any { (it as? NameE)?.n == "this" })) self = true
+                    null })
+                d.methods.forEach { probe.fn(it) }; d.inits.forEach { if (it is Block) probe.block(it) }; d.fields.forEach { fd -> fd.init?.let { probe.e(it) }; fd.type?.let { probe.ty(it) } }
+                if (!self) return null
+                val callee = funs.firstOrNull { it.name == lambdaOf["${d.name}@${d.line}"] } ?: return null
+                if (callee.typeParams.size != 1) return null
+                val rt = callee.params.lastOrNull()?.type?.takeIf { it.name == "\$FnR" }?.args?.firstOrNull() ?: return null
+                if (rt.args.none { it.name == callee.typeParams[0] }) return null
+                return Subst(mapOf(callee.typeParams[0] to TypeRef(d.name, emptyList(), false))).ty(rt)
+            }
+            val g0 = Subst(emptyMap(), srw = { x ->
+                val d = (x as? LocalDeclS)?.d as? ClassD
+                val n = d?.let { RecvLocalClasses.map["${it.name}@${it.line}"] }
+                if (d == null || n == null || d.typeParams.any { it.startsWith("R\$") }) null else {
+                    val called = HashSet<String>()
+                    val probe = Subst(emptyMap(), rw = { y -> if (y is CallE && y.callee is NameE) called.add(y.callee.n); null })
+                    d.methods.forEach { probe.fn(it) }; d.inits.forEach { if (it is Block) probe.block(it) }; d.fields.forEach { fd -> fd.init?.let { probe.e(it) } }
+                    val rc = (called - ownNames(d) - known).filter { it in methodNames }.toSet()
+                    if (rc.isEmpty()) null else { used.add(n)
+                        val sub = Subst(emptyMap(), rw = { y -> if (y is CallE && y.callee is NameE && y.callee.n in rc)
+                            CallE(MemberE(NameE(n).also { it.line = y.line }, y.callee.n, false).also { it.line = y.line }, y.typeArgs, y.args, y.lambda).also { it.line = y.line } else null })
+                        val c = copyClass(sub, d, d.name)
+                        val st = selfCapType(d)
+                        if (st != null) RecvLocalClasses.capType[n] = st
+                        LocalDeclS(ClassD(c.name, c.fields, c.supers, c.methods, d.line, c.ctorParams, c.inits, c.superArgs, if (st != null) c.typeParams else c.typeParams + "R\$$n", c.enumEntries, c.isValue, c.superTypeArgs)).also { it.line = x.line }
+                    }
+                }
+            }).fn(f)
+            // `val $othisN = this` added for a class that turned out not to use the receiver: dropped (the lambda may
+            // have no `this`).
+            val g = Subst(emptyMap(), srw = { x -> if (x is VarS && x.name in RecvLocalClasses.implicitOnly && x.name !in used) ExprS(BoolL(true)).also { it.line = x.line } else null }).fn(g0)
+            return FunD(g.name, g.params, g.ret, g.body, g.exprBody, g.line, f.typeParams, f.recv)
+        }
         fun lift(f0: FunD, owner: ClassD?, newMethods: MutableList<FunD>): FunD {
-            var f = f0
+            var f = recvClasses(f0)
             while (true) {
                 val decls = ArrayList<Any>()
                 Subst(emptyMap(), srw = { x -> if (x is LocalDeclS) decls.add(x.d); null }).fn(f)
@@ -1615,7 +1716,12 @@ class Parser(toks: List<Tok>) {
                                 c.supers.flatMap { sn -> (classes + decls.filterIsInstance<ClassD>()).filter { it.name == sn }.flatMap { sc -> sc.fields.map { it.name } + sc.ctorParams.map { it.name } + sc.methods.map { it.name.removePrefix("\$prop\$") } + inherited(sc, seen + 1) } }.toSet()
                             val body = HashSet<String>(); localDeclNames(ClassD(d.name, d.fields, d.supers, d.methods, d.line, d.ctorParams, d.inits, null, d.typeParams), body)
                             if (capd.any { it in body && it in inherited(d) }) no()
-                            capCls[d.name] = capd.map { c -> c to (localType(f, c) ?: no()) }
+                            // An untyped capture (e.g. the lambda receiver `$othisN`) takes the declared type of a property or
+                            // getter that is just that name (`val p: T = this@build`, `val p: T get() = this@build`).
+                            fun usageType(c: String): TypeRef? =
+                                d.fields.firstOrNull { it.type != null && (it.init as? NameE)?.n == c }?.type
+                                    ?: d.methods.firstOrNull { it.ret != null && it.params.isEmpty() && ((it.exprBody as? NameE)?.n == c || ((it.body?.stmts?.singleOrNull() as? RetS)?.e as? NameE)?.n == c) }?.ret
+                            capCls[d.name] = capd.map { c -> c to (localType(f, c) ?: usageType(c) ?: d.typeParams.firstOrNull { it == "R\$$c" }?.let { TypeRef(it, emptyList(), false) } ?: RecvLocalClasses.capType[c] ?: no()) }
                         }
                         val n = if (d is ClassD) d.name else (d as InterfaceD).name
                         val nn = fresh(n)
@@ -1683,7 +1789,15 @@ class Parser(toks: List<Tok>) {
                     if (x !is LocalDeclS) null
                     // Declarations nested deeper (inside a lifted local function) are lifted with that function.
                     // (Inside a local function turned into a lambda they are still dropped, as before.)
-                    else if (decls.none { it === x.d } && inLambdaFns.none { it === x.d }) null
+                    else if (decls.none { it === x.d } && inLambdaFns.none { it === x.d }) {
+                        // A local function nested in a lifted class's method (`class L { fun m() { fun f(a: L) } }`):
+                        // lifted later with the method, so the renamed classes it names are renamed here (unless it
+                        // declares classes of those names itself).
+                        val g = x.d as? FunD
+                        val own = HashSet<String>()
+                        g?.let { Subst(emptyMap(), srw = { y -> ((y as? LocalDeclS)?.d as? ClassD)?.let { own.add(it.name) }; null }).fn(it) }
+                        if (g == null || types.isEmpty() || own.any { it in types }) null else LocalDeclS(copyFun(sub.fn(g), g)).also { it.line = x.line }
+                    }
                     else if (x.d is FunD && x.d in asLambda) {
                         val g = x.d
                         val ret = g.ret ?: if (g.body != null) TypeRef("Unit", emptyList(), false) else null
@@ -1691,7 +1805,13 @@ class Parser(toks: List<Tok>) {
                         val ty = ret?.let { TypeRef("\$Fn", gps.map { it.type } + it, false) }
                         val body = g.body ?: Block(listOf(ExprS(g.exprBody!!).also { it.line = g.line }))
                         VarS(g.name, false, ty, LambdaE(sub.block(Block(body.stmts, gps.map { it.name }, gps.map { it.type }))).also { it.line = g.line }).also { it.line = g.line }
-                    } else ExprS(BoolL(true)).also { it.line = x.line }
+                    } else if ((x.d as? ClassD)?.typeParams?.any { it.startsWith("R\$") } == true)
+                        // Builder inference reads the class's receiver calls (NativeBackend.builderInfer).
+                        ExprS(CallE(NameE("\$classHint").also { it.line = x.line }, emptyList(), listOf(NameE(rename[x.d.name] ?: x.d.name).also { it.line = x.line }), null).also { it.line = x.line }).also { it.line = x.line }
+                    else if (x.d is ClassD && capCls[x.d.name]?.any { it.first in RecvLocalClasses.capType } == true)
+                        // The class is the builder's type argument (recvClasses): a hint binding the receiver's type.
+                        ExprS(CallE(NameE("\$typeHint").also { it.line = x.line }, capCls.getValue(x.d.name).mapNotNull { RecvLocalClasses.capType[it.first] }.map { sub.ty(it) }, emptyList(), null).also { it.line = x.line }).also { it.line = x.line }
+                    else ExprS(BoolL(true)).also { it.line = x.line }
                 })
                 f = copyFun(sub.fn(f), f)
                 for (d in decls) when (d) {
@@ -1707,8 +1827,8 @@ class Parser(toks: List<Tok>) {
                         // Inside the class the captured values are its hidden `$cap$x` properties.
                         val names = cs.map { it.first }.toSet()
                         val r = copyClass(Subst(emptyMap(), rw = { x -> if (x is NameE && x.n in names) NameE("\$cap\$" + x.n).also { it.line = x.line } else null }), c, c.name)
-                        ClassD(r.name, cs.map { (n, t) -> FieldD("\$cap\$" + n, t, false) } + r.fields, r.supers, r.methods, r.line,
-                            cs.map { (n, t) -> Param("\$cap\$" + n, t) } + r.ctorParams, r.inits, r.superArgs, r.typeParams, r.enumEntries, r.isValue, r.superTypeArgs)
+                        ClassD(r.name, cs.map { (n, t) -> FieldD("\$cap\$" + n, sub.ty(t), false) } + r.fields, r.supers, r.methods, r.line,
+                            cs.map { (n, t) -> Param("\$cap\$" + n, sub.ty(t)) } + r.ctorParams, r.inits, r.superArgs, r.typeParams, r.enumEntries, r.isValue, r.superTypeArgs)
                     })
                     is InterfaceD -> ifaces.add(InterfaceD(rename[d.name] ?: d.name, d.methods.map { copyFun(sub.fn(it), it) }, d.line, d.typeParams, d.supers))
                 }
@@ -1935,7 +2055,9 @@ class Parser(toks: List<Tok>) {
     /** `context(a: A, _: B)` before the next declaration (a function). */
     private var pendingCtx: List<Param>? = null
     private var ctxN = 0
-    private fun isContextDecl() = isId("context") && t[p + 1].k == K.OP && t[p + 1].s == "("
+    private fun isContextDecl() = isId("context") && t[p + 1].k == K.OP && t[p + 1].s == "(" &&
+        // `context(a: A)` (a declaration), not a call `context(value) { ... }`
+        t[p + 2].k == K.ID && t[p + 3].k == K.OP && t[p + 3].s == ":"
     private fun contextDecl() {
         next(); expectOp("(")
         val ps = ArrayList<Param>()
@@ -1955,20 +2077,33 @@ class Parser(toks: List<Tok>) {
 
     private fun function(): FunD {
         val ctxPs = takeCtx()
+        // `suspend` is one of the modifiers right before `fun` (the callers skip modifiers).
+        var mp = p - 1; var isSusp = false
+        while (mp >= 0 && (t[mp].k == K.ID || t[mp].k == K.NL) && !(t[mp].k == K.ID && t[mp].s in setOf("fun", "val", "var", "class", "object", "interface"))) {
+            if (t[mp].k == K.ID && t[mp].s == "suspend") isSusp = true
+            if (t[mp].k == K.ID && t[mp].s !in MEMBER_MODS && t[mp].s !in LOCAL_MODIFIERS && t[mp].s != "inline") break
+            mp--
+        }
         val line = next().line
         val typeParams = typeParams()
         // Extension receiver: `fun Recv.name`, `fun Box<T>.name`, `fun String?.name`.
         val save = p
-        ident()
         var recv: TypeRef? = null
-        val name = if (isOp(".") || isOp("<") || isOp("?") || isOp("?.")) {
+        // Receiver in parentheses: `fun (suspend () -> T).startCoroutine(...)`.
+        val parenRecv = if (anonFun != null && isOp("(")) anonFun
+            // `fun String.(y: String)`: a simple receiver (type() would read `String.(...)` as a function type).
+            else if (anonFun != null && peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == "." && t[p + 2].k == K.OP && t[p + 2].s == "(") { recv = TypeRef(ident(), emptyList(), false); next(); anonFun }
+            else if (isOp("(")) { val rt = type(); expectOp("."); recv = rt; ident() } else null
+        if (parenRecv == null) ident()
+        val name = if (parenRecv != null) parenRecv else if (isOp(".") || isOp("<") || isOp("?") || isOp("?.")) {
             p = save
             val rt = type()
             if (isOp("?.")) { next(); recv = TypeRef(rt.name, rt.args, true); ident() }
-            else if (isOp(".")) { next(); recv = rt; ident() }
+            else if (isOp(".")) { next(); recv = rt; fname() }
             else if (rt.args.isEmpty() && rt.name.contains('.')) { recv = TypeRef(rt.name.substringBeforeLast('.'), emptyList(), false); rt.name.substringAfterLast('.') }
             else fail("expected '('")
         } else { p = save; ident() }
+        if (isSusp) SuspendFuns.add(line, name)
         expectOp("(")
         val params = nested(1) {
             val ps = ArrayList<Param>(ctxPs)
@@ -1995,8 +2130,8 @@ class Parser(toks: List<Tok>) {
             if (ds.isEmpty()) FunD(name, params, ret, null, e, line, typeParams, recv)
             else {
                 // `= object : T { }`: the anonymous class is declared in a block body; the function returns T.
-                val anon = (ds.last() as LocalDeclS).d as ClassD
-                val r = ret ?: if (e is CallE && (e.callee as? NameE)?.n == anon.name) TypeRef(anon.supers.firstOrNull() ?: anon.name, anon.superTypeArgs[anon.supers.firstOrNull()] ?: emptyList(), false) else null
+                val anon = (ds.last() as LocalDeclS).d as? ClassD
+                val r = ret ?: if (anon != null && e is CallE && (e.callee as? NameE)?.n == anon.name) TypeRef(anon.supers.firstOrNull() ?: anon.name, anon.superTypeArgs[anon.supers.firstOrNull()] ?: emptyList(), false) else null
                 // No declared return type and the body is more than the object itself (`(object : A {}) as A`): keep an
                 // expression body (a block-valued `when`) so the return type is inferred from the whole expression.
                 if (r == null) FunD(name, params, null, null, WhenE(null, listOf(null to Block(ds + ExprS(e).also { it.line = line }))).also { it.line = line }, line, typeParams, recv)
@@ -2216,6 +2351,32 @@ class Parser(toks: List<Tok>) {
     }
 
     private fun type(): TypeRef {
+        // `context(A, B) (P) -> R`: a function type whose context arguments come first (`(A, B, P) -> R`); a lambda of
+        // this type gets its implicit parameters as context values (NativeBackend.genLambda).
+        if (isId("context") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
+            next(); next()
+            val cs = ArrayList<TypeRef>()
+            while (!isOp(")")) { skipNL(); cs.add(type()); skipNL(); if (isOp(",")) next(); skipNL() }
+            expectOp(")")
+            val f = type()
+            return when (f.name) {
+                "\$Fn", "\$FnS" -> TypeRef(f.name, cs + f.args, f.nullable)
+                "\$FnR" -> TypeRef("\$Fn", cs + f.args, f.nullable).also { CtxRecvFnTypes.add(it, cs.size) }
+                "\$FnRS" -> TypeRef("\$FnS", cs + f.args, f.nullable).also { CtxRecvFnTypes.add(it, cs.size) }
+                else -> fail("expected a function type after 'context(...)'")
+            }
+        }
+        // `suspend` function types are plain function types: coroutines run on a single-threaded scheduler (Coroutines.kt).
+        // `suspend` function types are `$FnS` / `$FnRS` (their invoke is a coroutine, see NativeBackend.genCoroutine).
+        if (peek().k == K.ID && peek().s == "suspend" && (t[p + 1].k == K.ID || t[p + 1].k == K.OP && t[p + 1].s == "(")) {
+            next()
+            val f = type()
+            return when (f.name) {
+                "\$Fn" -> TypeRef("\$FnS", f.args, f.nullable)
+                "\$FnR" -> TypeRef("\$FnRS", f.args, f.nullable)
+                else -> fail("expected a function type after 'suspend'")
+            }
+        }
         if (isOp("(")) {
             // Function type `(A, B) -> R` (TypeRef "$Fn" with args = params + return), or a parenthesized type.
             next()
@@ -2293,6 +2454,7 @@ class Parser(toks: List<Tok>) {
         val params = ArrayList<String>(); val ptypes = ArrayList<TypeRef?>()
         val outerDecls = pendingDecls; pendingDecls = ArrayList(); bodyLevel++
         val pre = ArrayList<S>()
+        if (lambda) lambdaDepth++
         val stmts = try { nested(0) {
             if (lambda) {
                 // `x, y: T ->` parameter list (backtracks if it is not one).
@@ -2329,7 +2491,7 @@ class Parser(toks: List<Tok>) {
                 if (!(tk.k == K.NL || (tk.k == K.OP && (tk.s == ";" || tk.s == "}")))) fail("expected end of statement")
             }
             ss
-        } } finally { pendingDecls = outerDecls; bodyLevel-- }
+        } } finally { pendingDecls = outerDecls; bodyLevel--; if (lambda) lambdaDepth-- }
         expectOp("}")
         return Block(stmts, params, ptypes)
     }
@@ -2340,7 +2502,7 @@ class Parser(toks: List<Tok>) {
         VarS(n, isVar, null, CallE(MemberE(NameE(d).also { it.line = line }, "component${i + 1}", false).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line }).also { it.line = line }
 
     /** Modifiers that may precede a local declaration; they have no effect here. */
-    private val LOCAL_MODIFIERS = setOf("inline", "tailrec", "operator", "infix", "private", "data", "open", "abstract", "sealed", "enum", "value")
+    private val LOCAL_MODIFIERS = setOf("inline", "tailrec", "operator", "infix", "private", "data", "open", "abstract", "sealed", "enum", "value", "suspend")
 
     /** A local `fun` / `class` / `object` / `interface` starts at the current token (after optional modifiers). */
     private fun localDeclAhead(): Boolean {
@@ -2357,7 +2519,22 @@ class Parser(toks: List<Tok>) {
     }
 
     /** Parses a local declaration into a [LocalDeclS]; [liftLocals] hoists it after parsing. */
+    private var lambdaDepth = 0
+    /** Generic types named by a local declaration that uses `this` inside a lambda: a `$typeHint` for builder inference. */
+    private fun typeHint(d: Any, from: Int, line: Int) {
+        if (lambdaDepth == 0 || (from until p).none { t[it].k == K.ID && t[it].s == "this" }) return
+        val refs = ArrayList<TypeRef>()
+        fun fn(f: FunD) { f.ret?.let { refs.add(it) }; f.params.forEach { refs.add(it.type) } }
+        when (d) {
+            is FunD -> fn(d)
+            is ClassD -> { d.fields.forEach { f -> f.type?.let { refs.add(it) } }; d.methods.forEach { fn(it) }; d.superTypeArgs.forEach { (n, a) -> refs.add(TypeRef(n, a, false)) } }
+        }
+        val gen = refs.filter { it.args.isNotEmpty() }
+        if (gen.isNotEmpty()) pendingDecls.add(ExprS(CallE(NameE("\$typeHint").also { it.line = line }, gen, emptyList(), null).also { it.line = line }).also { it.line = line })
+    }
+
     private fun localDecl(): S {
+        val from = p
         var isData = false; var isEnum = false; var isValue = false
         while (peek().s in LOCAL_MODIFIERS && t[p + 1].k == K.ID) {
             when (next().s) { "data" -> isData = true; "enum" -> isEnum = true; "value" -> isValue = true }
@@ -2376,7 +2553,44 @@ class Parser(toks: List<Tok>) {
             }
         } finally { curClass = saved }
         sawLocal = true
-        return LocalDeclS(d)
+        typeHint(d, from, t[from].line)
+        return LocalDeclS(outerThis(d, t[from].line))
+    }
+
+    private var outerThisN = 0
+    /** A local function (plain `this`) or class (`this@label`) inside a lambda using the enclosing receiver: it reads a
+     *  `val $othisN = this` declared before it, so lifting captures it like any local. */
+    private fun outerThis(d: Any, line: Int): Any {
+        if (lambdaDepth == 0) return d
+        val n = "\$othis${outerThisN}"
+        var hit = false
+        val plain = d is FunD && d.recv == null
+        val sub = Subst(emptyMap(), rw = { x -> if (x is NameE && ((plain && x.n == "this") || x.n.startsWith("this@"))) { hit = true; NameE(n).also { it.line = x.line } } else null })
+        val r: Any = when (d) {
+            is FunD -> FunD(d.name, d.params, d.ret, d.body?.let { sub.block(it) }, d.exprBody?.let { sub.e(it) }, d.line, d.typeParams, d.recv)
+            is ClassD -> { val nf = HashMap<FieldD, FieldD>(); fun fd(f: FieldD) = nf.getOrPut(f) { FieldD(f.name, f.type, f.isVar, f.init?.let { sub.e(it) }, f.lateinit) }
+                ClassD(d.name, d.fields.map { fd(it) }, d.supers, d.methods.map { m ->
+                FunD(m.name, m.params, m.ret, m.body?.let { sub.block(it) }, m.exprBody?.let { sub.e(it) }, m.line, m.typeParams, m.recv) }, d.line,
+                d.ctorParams, d.inits.map { if (it is Block) sub.block(it) else if (it is FieldD) fd(it) else it }, d.superArgs?.map { sub.e(it) }, d.typeParams, d.enumEntries, d.isValue, d.superTypeArgs) }
+            else -> d
+        }
+        // A local class whose body calls names it does not declare may use the lambda's implicit receiver
+        // (`build { class L { init { yield(x) } } }`); the lifting pass decides (RecvLocalClasses).
+        var implicit = false
+        if (d is ClassD && d.enumEntries == null) {
+            val called = HashSet<String>()
+            val probe = Subst(emptyMap(), rw = { x -> if (x is CallE && x.callee is NameE) called.add(x.callee.n); null })
+            d.methods.forEach { probe.fn(it) }
+            d.inits.forEach { if (it is Block) probe.block(it) }
+            d.fields.forEach { f -> f.init?.let { probe.e(it) } }
+            implicit = (called - ownNames(d)).isNotEmpty()
+        }
+        if (!hit && !implicit) return d
+        if (d is ClassD) RecvLocalClasses.map["${d.name}@${d.line}"] = n
+        if (!hit) RecvLocalClasses.implicitOnly.add(n)
+        outerThisN++
+        pendingDecls.add(VarS(n, false, null, NameE("this").also { it.line = line }).also { it.line = line })
+        return r
     }
 
     private fun stmt(): S {
@@ -2615,12 +2829,25 @@ class Parser(toks: List<Tok>) {
     private fun postfix(): E {
         var e = primary()
         while (true) {
+            // A line starting with `.` / `?.` continues the expression (no statement can start with them).
+            if (t[p].k == K.NL) {
+                var j = p; while (t[j].k == K.NL) j++
+                if (t[j].k == K.OP && (t[j].s == "." || t[j].s == "?.")) p = j
+            }
             val tk = peek()
             if (tk.k != K.OP) break
             val line = tk.line
             e = when (tk.s) {
                 ".", "?." -> {
                     p++; skipNLOnly()
+                    // `recv.(fnExpr)(args)`: a function-with-receiver value called on recv, i.e. `fnExpr(recv, args)`.
+                    if (tk.s == "." && isOp("(")) {
+                        val f = primary()
+                        if (!isOp("(")) fail("expected '(' after 'recv.(function)'", peek())
+                        val a = args()
+                        e = CallE(f, emptyList(), listOf(e) + a, null).also { it.line = line }
+                        continue
+                    }
                     val m = MemberE(e, ident(), tk.s == "?.").also { it.line = line }
                     // `recv.f<Int>(args)`: explicit type arguments of a member call.
                     explicitTypeArgs()?.let { ta ->
@@ -2669,6 +2896,15 @@ class Parser(toks: List<Tok>) {
             })
             K.ID -> when (tk.s) {
                 "object" -> if (isOp(":") || isOp("{")) anonObject(tk.line) else fail("unexpected 'object'", tk)
+                // Anonymous function: declared as a local function before the statement, used as `::name`.
+                "fun" -> if (bodyLevel > 0 && (isOp("(") || peek().k == K.ID)) {
+                    p--
+                    val n = "\$af${anonN++}"
+                    val sv = anonFun; anonFun = n
+                    val fd = try { function() } finally { anonFun = sv }
+                    pendingDecls.add(LocalDeclS(fd).also { it.line = tk.line }); sawLocal = true
+                    UnE("::" + n, if (fd.recv != null) NameE(fd.recv!!.name).also { it.line = tk.line } else NullL()).also { it.line = tk.line }
+                } else fail("unexpected 'fun'", tk)
                 "true" -> BoolL(true)
                 "false" -> BoolL(false)
                 "null" -> NullL()
@@ -2683,7 +2919,8 @@ class Parser(toks: List<Tok>) {
                     val j = stmt()
                     WhenE(null, listOf(null to Block(listOf(j)))).also { it.line = tk.line }
                 }
-                "this" -> if (t[p].k == K.OP && t[p].s == "@" && t[p + 1].k == K.ID) { p++; NameE("this@" + ident()) } else NameE("this")
+                // `this@C` in class C: the class instance even inside receiver lambdas (NativeBackend's `$self`).
+                "this" -> if (t[p].k == K.OP && t[p].s == "@" && t[p + 1].k == K.ID) { p++; val l = ident(); NameE(if (l == curClass) "\$self" else "this@$l") } else NameE("this")
                 else -> {
                     if (tk.s in GENERIC_CALLS && t[p].k == K.OP && t[p].s == "<") {
                         p++
@@ -2804,4 +3041,13 @@ class Parser(toks: List<Tok>) {
         expectOp("}")
         return WhenE(subj, branches)
     }
+}
+
+/**
+ * `context(C) R.(P) -> T` is the plain function type `(C, R, P) -> T`; its lambdas take `R` as `this`. The function
+ * types written that way (argument lists, with the receiver's index), matched by NativeBackend.genLambda.
+ */
+object CtxRecvFnTypes {
+    val all = ArrayList<Pair<List<TypeRef>, Int>>()
+    fun add(t: TypeRef, recvAt: Int) { if (all.none { it.second == recvAt && it.first.toString() == t.args.toString() }) all.add(t.args to recvAt) }
 }

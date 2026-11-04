@@ -8,11 +8,31 @@ NKC=${NKC:-compiler/build/newkotlinc.kexe}
 [ -f bench/data/words.txt ] || python3 bench/gen_data.py >/dev/null
 out=compiler/build/test-tmp; rm -rf "$out"; mkdir -p "$out"; fail=0
 check() { if [ "$2" = "$3" ]; then echo "PASS $1"; else echo "FAIL $1: expected '$3', got '$2'"; fail=1; fi; }
+# Golden tests run with --leak-check: the report lines are filtered from the output, and a program that ends normally
+# must exit 0 (exit 3 = live objects at exit). Programs that end with an uncaught exception are exempt from the leak
+# gate (unwinding to the top leaves the exception and its frames' objects live by design).
 for t in compiler/tests/*.kt; do
   n=$(basename "$t" .kt)
-  if ! "$NKC" "$t" -o "$out/$n" 2>"$out/$n.err"; then echo "FAIL $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
-  check "$n" "$("$out/$n" 2>&1)" "$(cat compiler/tests/$n.out)"
+  if ! "$NKC" --leak-check "$t" -o "$out/$n" 2>"$out/$n.err"; then echo "FAIL $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
+  raw=$("$out/$n" 2>&1); rc=$?
+  check "$n" "$(printf '%s\n' "$raw" | grep -v -e '^leak-check: ' -e '^region: ')" "$(cat compiler/tests/$n.out)"
+  if [ $rc -ne 0 ] && ! grep -q '^Exception in thread' compiler/tests/$n.out; then
+    echo "FAIL $n: leak-check exit $rc: $(printf '%s\n' "$raw" | grep -E '^leak-check: .* live=[1-9]' | tr '\n' ' ')"; fail=1
+  fi
 done
+# FFI: `external fun` + --link (tests/ffi/: C sources are linked, so they are not in the tests/*.kt loop).
+for t in compiler/tests/ffi/ffi*.kt; do
+  n=ffi_$(basename "$t" .kt)
+  if ! "$NKC" "$t" --link "${t%.kt}.c" -o "$out/$n" 2>"$out/$n.err"; then echo "FAIL $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
+  check "$n" "$("$out/$n" 2>&1)" "$(cat "${t%.kt}.out")"
+done
+# kxbindgen: bindings generated from a C header, prepended to the program (one input file per compile).
+if python3 compiler/tools/kxbindgen.py compiler/tests/ffi/gen_demo.h -o "$out/gen_demo.bind.kt" >/dev/null; then
+  cat "$out/gen_demo.bind.kt" compiler/tests/ffi/gen_demo.main.kt > "$out/gen_demo.kt"
+  if "$NKC" "$out/gen_demo.kt" --link compiler/tests/ffi/gen_demo.c -o "$out/gen_demo" 2>"$out/gen_demo.err"; then
+    check kxbindgen "$("$out/gen_demo" 2>&1)" "$(cat compiler/tests/ffi/gen_demo.out)"
+  else echo "FAIL kxbindgen: compile: $(cat "$out/gen_demo.err")"; fail=1; fi
+else echo "FAIL kxbindgen: generator failed"; fail=1; fi
 while read -r case src key expected; do
   "$NKC" "$src" -o "$out/bench_$case" || { echo "FAIL bench $case: compile"; fail=1; continue; }
   got=$(BENCH_DATA=bench/data/words.txt "$out/bench_$case" | grep -oE "$key=[-0-9]+" | cut -d= -f2)
@@ -35,6 +55,22 @@ refpass bench/cases/refpass/kotlin/Main.kt checksum -538200000
 cycles bench/cases/cycles/kotlin/Main.kt checksum 120488000000
 lru bench/cases/lru/kotlin/Main.kt checksum 322182091481
 G
+# IR checks (compiler/tests/ir/*.kt): `// IR <fn>: <ERE>` must match a line of function @k.<fn> in the unoptimized IR,
+# `// IR-NOT <fn>: <ERE>` must match none (escape decisions, allocation kinds).
+for t in compiler/tests/ir/*.kt; do
+  n=ir_$(basename "$t" .kt)
+  if ! "$NKC" -S "$t" -o "$out/$n.ll" 2>"$out/$n.err"; then echo "FAIL $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
+  bad=0
+  while IFS= read -r line; do
+    kind=${line%% *}; rest=${line#* }; fn=${rest%%:*}; re=${rest#*: }
+    body=$(awk -v f="@k.$fn(" 'index($0, "define ") == 1 && index($0, f) { on = 1; next } on && /^}/ { exit } on' "$out/$n.ll")
+    [ -n "$body" ] || { echo "FAIL $n: no function @k.$fn"; bad=1; continue; }
+    if printf '%s\n' "$body" | grep -qE -- "$re"; then hit=1; else hit=0; fi
+    if [ "$kind" = IR ] && [ $hit = 0 ]; then echo "FAIL $n: $fn: no match for /$re/"; bad=1; fi
+    if [ "$kind" = IR-NOT ] && [ $hit = 1 ]; then echo "FAIL $n: $fn: unexpected /$re/"; bad=1; fi
+  done < <(sed -n 's|^// \(IR\(-NOT\)\{0,1\} [A-Za-z0-9_]*: .*\)$|\1|p' "$t")
+  [ $bad = 0 ] && echo "PASS $n" || fail=1
+done
 # Error reporting: an unknown name must fail with a line number.
 printf 'fun main() {\n  println(nope)\n}\n' > "$out/bad.kt"
 msg=$("$NKC" "$out/bad.kt" -o "$out/bad" 2>&1)
@@ -49,7 +85,10 @@ for t in js wasm jvm; do
 done
 # Leak tests (own tests, compiler/tests/leaks): runtime live-object count, ASan, macOS leaks.
 NKC="$NKC" compiler/tests/leaks/run.sh || fail=1
-# GC tests (compiler/gc/tests): interface unit tests + GC-agnostic Kotlin tests for every --gc implementation.
-NKC="$NKC" compiler/gc/tests/run.sh || fail=1
+# GC tests (compiler/gc/tests/zig): Zig suite, ported interface unit tests + GC-agnostic Kotlin tests for every --gc
+# implementation (legacy shell suite archived in compiler/gc/tests/archive).
+( export NKC="$(cd "$(dirname "$NKC")" && pwd)/$(basename "$NKC")"; cd compiler/gc/tests/zig && zig build ported ) || fail=1
+# Multithreaded collector test (epoch: background collector + helpers; plain -O1/-O3 and a TSan build).
+( cd compiler/gc/tests/zig && zig build mt ) || fail=1
 rm -rf "$out"
 [ $fail = 0 ] && echo "ALL PASSED" || { echo "SOME FAILED"; exit 1; }
