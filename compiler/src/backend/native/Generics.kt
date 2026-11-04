@@ -85,7 +85,9 @@ fun compileGenerics(p00: Program): String {
             if (inst.size >= 1000) throw CompileError("too many generic class instances (recursive generic type?)")
             val cd = generic.getValue(n.name)
             origin[m] = n.name to n.args
-            inst[m] = Subst(cd.typeParams.zip(n.args).toMap()).cls(cd, m)
+            // `C<Nothing>`: members of type `Nothing` hold no value; typed `Nothing?` (a null pointer) in the instance.
+            val args = n.args.map { if (it.name == "Nothing" && !it.nullable && it.args.isEmpty()) TypeRef("Nothing", emptyList(), true) else it }
+            inst[m] = Subst(cd.typeParams.zip(args).toMap()).cls(cd, m)
         }
     }
 }

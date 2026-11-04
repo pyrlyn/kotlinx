@@ -171,7 +171,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         "Double" -> Ty.F64
         "Float" -> Ty.F32
         "Unit" -> Ty.Unit
-        "Nothing" -> if (t.nullable) fail("unknown type Nothing?") else Ty.Nothing
+        "Nothing" -> if (t.nullable) Ty.RawPtr else Ty.Nothing
         "String" -> Ty.Str
         "Number" -> if ("Any" in ifaces && "Number" !in classes) Ty.Iface("Any") else fail("unknown type Number")
         "Char" -> Ty.Char
@@ -3308,6 +3308,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             c.args.forEachIndexed { i, a -> val dt = decl?.params?.getOrNull(i)?.type ?: om?.params?.getOrNull(i)?.type
                 if (dt?.nullable != true || refNullable(dt)) sink(a, ps[i]) }
         }
+        val nothingArgs = HashMap<String, HashSet<Ty>>()
         for (c in calls) {
             val n = (c.callee as NameE).n
             val ps = methods[n] ?: continue
@@ -3321,6 +3322,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val t = (if (o is NameE && lookup(o.n) == null) locals[o.n]?.type?.let { try { resolve(it) } catch (x: CompileError) { null } } else null)
                     ?: (if (o is NameE && lookup(o.n) == null) recvField(o.n) else null)
                     ?: probeWith(lamParams, o) ?: return@forEachIndexed
+                // `yield(null)` / `yield(throw e)`: `Nothing?` / `Nothing` unless something else binds it (below).
+                if (pr.name in tps && pr.args.isEmpty() && ((t == Ty.RawPtr && o is NullL) || t == Ty.Nothing)) nothingArgs.getOrPut(pr.name) { HashSet() }.add(t)
                 if (t != Ty.Unit && t != Ty.RawPtr && t != Ty.Args) unify(pr, t, tps, env)
             }
         }
@@ -3343,6 +3346,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 try { unify(recv, resolve(cand), tps, env); break } catch (x: CompileError) {}
             }
         }
+        for ((tp, ts) in nothingArgs) if (tp !in env) env[tp] = if (Ty.RawPtr in ts) Ty.RawPtr else Ty.Nothing
     }
 
     /**
