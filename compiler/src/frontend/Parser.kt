@@ -1400,7 +1400,7 @@ class Parser(toks: List<Tok>) {
                     x is UnE && x.op.startsWith("::") && x.e is NameE && x.op.drop(2).let { n -> nestedIn[n] == x.e.n && n !in innerOf } -> UnE(x.op, NullL()).also { it.line = x.line }
                     x is NameE && x.n.startsWith("this@") -> {
                         val l = x.n.removePrefix("this@")
-                        NameE(if (l == ctx) "this" else if (l == outerName) "outer\$" else fail("unknown label this@$l")).also { it.line = x.line }
+                        NameE(if (l == ctx) "\$self" else if (l == outerName) "outer\$" else fail("unknown label this@$l")).also { it.line = x.line }
                     }
                     x is NameE && x.n in outerNames -> MemberE(outerRef(x.line), x.n, false).also { it.line = x.line }
                     x is CallE && x.callee is NameE && x.callee.n in innerOf -> {
@@ -2820,7 +2820,8 @@ class Parser(toks: List<Tok>) {
                     val j = stmt()
                     WhenE(null, listOf(null to Block(listOf(j)))).also { it.line = tk.line }
                 }
-                "this" -> if (t[p].k == K.OP && t[p].s == "@" && t[p + 1].k == K.ID) { p++; NameE("this@" + ident()) } else NameE("this")
+                // `this@C` in class C: the class instance even inside receiver lambdas (NativeBackend's `$self`).
+                "this" -> if (t[p].k == K.OP && t[p].s == "@" && t[p + 1].k == K.ID) { p++; val l = ident(); NameE(if (l == curClass) "\$self" else "this@$l") } else NameE("this")
                 else -> {
                     if (tk.s in GENERIC_CALLS && t[p].k == K.OP && t[p].s == "<") {
                         p++

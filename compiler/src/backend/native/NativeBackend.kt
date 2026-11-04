@@ -3082,12 +3082,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         fun ex(e: E?) {
             when (e) {
                 null -> {}
-                is CallE -> { if (e.callee is NameE) calls.add(e); if (e.callee !is NameE) ex(e.callee); e.args.forEach { ex(it) } }
+                // Nested plain lambdas (`execute { yield(arg) }`) still see the builder's receiver.
+                is CallE -> { if (e.callee is NameE) calls.add(e); if (e.callee !is NameE) ex(e.callee); e.args.forEach { ex(it) }; e.lambda?.stmts?.forEach { stF(it) } }
+                is LambdaE -> e.body.stmts.forEach { stF(it) }
                 is NamedE -> ex(e.e)
                 is BinE -> { ex(e.l); ex(e.r) }
                 is UnE -> ex(e.e)
                 is MemberE -> ex(e.recv)
                 is IfE -> { ex(e.cond); e.th.stmts.forEach { stF(it) }; e.el?.stmts?.forEach { stF(it) } }
+                is TryE -> { e.body.stmts.forEach { stF(it) }; e.catches.forEach { c -> c.body.stmts.forEach { stF(it) } }; e.fin?.stmts?.forEach { stF(it) } }
+                is WhenE -> { ex(e.subj); e.branches.forEach { (cs, bl) -> cs?.forEach { ex(it) }; bl.stmts.forEach { stF(it) } } }
                 else -> {}
             }
         }
@@ -3101,6 +3105,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 is VarS -> { locals[s.name] = s; ex(s.init) }
                 is AssignS -> { if (s.op == "=" && s.target is NameE) assigns.add(s.target.n to s.value); ex(s.value) }
                 is RetS -> ex(s.e)
+                is WhileS -> { ex(s.cond); s.body.stmts.forEach { stImpl(it) } }
+                is ForS -> { ex(s.iter); s.body.stmts.forEach { stImpl(it) } }
                 else -> {}
             }
         }
@@ -3142,7 +3148,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         for (c in calls) {
             val n = (c.callee as NameE).n
             if (n in methods || c.lambda != null || c.args.any { it is NamedE }) continue
-            val gd = funDecls[n]
+            val gd = funDecls[n] ?: (if (lookup(n) == null) owner?.methods?.get(n) else null)
             if (gd != null && gd.typeParams.isNotEmpty() && gd.params.size == c.args.size) {
                 // `shareTypeInfo(x, materialize())` with `fun <T> shareTypeInfo(from: T, to: T)`: the other argument's type.
                 gd.params.forEachIndexed { i, p ->
@@ -3154,10 +3160,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 }
                 continue
             }
-            val ps = sigs[n]?.params ?: continue
+            // (also a method of the enclosing class: local functions of methods are lifted to methods)
+            val om = if (lookup(n) == null && n !in sigs) owner?.methods?.get(n)?.takeIf { it.typeParams.isEmpty() } else null
+            val ps = sigs[n]?.params ?: om?.params?.map { p -> try { resolve(p.type) } catch (x: CompileError) { Ty.Unit } } ?: continue
             if (ps.size != c.args.size) continue
             val decl = funDecls[n]
-            c.args.forEachIndexed { i, a -> if (decl?.params?.getOrNull(i)?.type?.nullable != true) sink(a, ps[i]) }
+            c.args.forEachIndexed { i, a -> if (decl?.params?.getOrNull(i)?.type?.nullable != true && om?.params?.getOrNull(i)?.type?.nullable != true) sink(a, ps[i]) }
         }
         for (c in calls) {
             val n = (c.callee as NameE).n
@@ -4023,6 +4031,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         ((a.name.startsWith("\$FnR$") && b.name == "\$Fn$" + a.name.removePrefix("\$FnR$")) || (b.name.startsWith("\$FnR$") && a.name == "\$Fn$" + b.name.removePrefix("\$FnR$")) ||
          (a.name.startsWith("\$FnRS$") && b.name == "\$FnS$" + a.name.removePrefix("\$FnRS$")) || (b.name.startsWith("\$FnRS$") && a.name == "\$FnS$" + b.name.removePrefix("\$FnRS$")))
 
+    /** The number of context parameters of a `context(C) R.(P) -> T` type [t] (Parser's CtxRecvFnTypes), else 0. */
+    private fun recvCtxCount(t: Ty): Int {
+        val s = fnSig(t) ?: return 0
+        return CtxRecvFnTypes.all.firstOrNull { (args, _) -> args.size == s.params.size + 1 && args.withIndex().all { (i, a) ->
+            val want = if (i < s.params.size) s.params[i] else s.ret
+            (try { resolve(a) } catch (x: CompileError) { null }).let { r -> r == want || (r == Ty.UnitV && want == Ty.Unit) } } }?.second ?: 0
+    }
+
     private fun invokeFn(f: Val, e: CallE): Val {
         val ii = ifaces.getValue((f.t as Ty.Iface).name)
         // `context(C) R.() -> T` invoked without its context arguments: they come from the implicit values in scope.
@@ -4036,14 +4052,6 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     /**
-    /** The number of context parameters of a `context(C) R.(P) -> T` type [t] (Parser's CtxRecvFnTypes), else 0. */
-    private fun recvCtxCount(t: Ty): Int {
-        val s = fnSig(t) ?: return 0
-        return CtxRecvFnTypes.all.firstOrNull { (args, _) -> args.size == s.params.size + 1 && args.withIndex().all { (i, a) ->
-            val want = if (i < s.params.size) s.params[i] else s.ret
-            (try { resolve(a) } catch (x: CompileError) { null }).let { r -> r == want || (r == Ty.UnitV && want == Ty.Unit) } } }?.second ?: 0
-    }
-
      * Lambda literal -> closure object: a synthesized class `$Lam<id>$<types>` whose fields are the captured locals
      * (by value; captured `var`s were boxed into `$Ref` cells by the frontend) and, inside a class, `$outer` (`this`),
      * implementing the function-type interface with an `invoke` method holding the body. Captures are retained into
@@ -4256,14 +4264,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (l.t == Ty.Args || l.t == Ty.Pinned) fail("cannot capture '$n' in a lambda")
                 caps.add(n to l.t); continue
             }
-            if (o != null && (n == "this" || o.index(n) >= 0 || n in o.methods || "\$prop\$$n" in o.methods)) outer = true
+            if (o != null && (n == "this" || n == "\$self" || o.index(n) >= 0 || n in o.methods || "\$prop\$$n" in o.methods)) outer = true
         }
         val capNames = caps.map { it.first }.toSet()
         val lamBody0 = if (!outer) b0 else b0.rewritten ?: run {
             val oc = o!!
             Subst(emptyMap(), { x ->
                 when {
-                    x is NameE && x.n == "this" -> NameE("\$outer")
+                    x is NameE && (x.n == "this" || x.n == "\$self") -> NameE("\$outer")
                     x is NameE && x.n !in pnames && x.n !in capNames && (oc.index(x.n) >= 0 || "\$prop\$${x.n}" in oc.methods) -> MemberE(NameE("\$outer"), x.n, false)
                     x is NameE && x.n !in pnames && x.n !in capNames && x.n in oc.methods -> MemberE(NameE("\$outer"), x.n, false)
                     else -> null
