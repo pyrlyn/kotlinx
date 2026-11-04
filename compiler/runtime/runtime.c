@@ -414,6 +414,18 @@ void rt_map_release(Map *m) {
     }
     free(m->keys); rt_gc_mem_free(m->vals); free(m->used); free(m); }
 
+/* Cycle collection through map values: like rt_list_trav / rt_list_release_untraced. */
+void rt_map_trav(Map *m, void (*visit)(void *)) {
+    if (m && m->rc == 1 && m->vrel) for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) visit((void *)(intptr_t)m->vals[i]);
+}
+void rt_map_release_untraced(Map *m) {
+    if (!m) return;
+    if (m->rc != 1) { rt_map_release(m); return; }
+    LK(LK_MAP, -1);
+    if (m->skeys) for (int64_t i = 0; i < m->cap; i++) if (m->used[i]) rt_str_release((char *)(intptr_t)m->keys[i]);
+    free(m->keys); rt_gc_mem_free(m->vals); free(m->used); free(m);
+}
+
 // Object allocation, reference counting slow paths and the cycle collector live in compiler/gc/ (kxgc.h).
 
 
