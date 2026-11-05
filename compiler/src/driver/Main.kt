@@ -22,7 +22,7 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
                        epoch): epoch (deferred RC + background cycle collection; alias
                        "default"), perceus (RC + synchronous cycle collector, the
                        pre-epoch default), incremental (budgeted
-                       cycle collector steps), rc (RC only, cycles leak), boehm (RC + bdwgc)
+                       cycle collector steps), rc (RC only, cycles leak)
   --link <arg>         extra linker input for `external fun` (FFI): a .c/.o/.a file, -l<lib>, -L<dir> or a
                        linker flag; repeatable (also --link=<arg>)
   -S                   only write LLVM IR to <output>"""
