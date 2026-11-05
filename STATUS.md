@@ -91,28 +91,28 @@ Then copy the NewKotlin rows into `bench/table.md`.
 - Cases: sum, alloc, recursion, file, strings, hashmap, sort, nbody, matmul, dispatch, closures, trees, free, refpass, cycles, lru, bigheap (Rust/Zig/Kotlin; Kotlin built by Kotlin Native and KotlinX compiler).
 - KotlinX compiler: frontend (`compiler/src/frontend`) + compile-time backends (`compiler/src/backend/{native,js,wasm,jvm}`); `--target=native` default and only implemented; js/wasm/jvm exit non-zero with "target <x> is not supported yet".
 - Allocation: mimalloc default (`--alloc mimalloc`, found via `$NEWKOTLIN_MIMALLOC_DIR`, pkg-config or Homebrew; `brew install mimalloc`; clear error if missing), `--alloc malloc` (system) and `--alloc pool` optional. Leak tests: leak-count on the default build; ASan and macOS `leaks` on `--alloc malloc` builds. Benchmarks: see README.md.
-- Memory manager: `compiler/gc` behind `kxgc.h`, selected with `newkotlinc --gc=epoch|perceus|incremental|rc|boehm`
-  (default = epoch, `--gc=default` is an alias; perceus = RC + cycle collector, the pre-epoch default; boehm = RC + bdwgc). Tests: `compiler/gc/tests/zig` (`zig build ported`/`zig build gc`; legacy shell suite in `compiler/gc/tests/archive`); benchmarks: `bench/gc`.
+- Memory manager: `compiler/gc` behind `kxgc.h`, selected with `newkotlinc --gc=epoch|perceus|incremental|rc`
+  (default = epoch, `--gc=default` is an alias; perceus = RC + cycle collector, the pre-epoch default). Tests: `compiler/gc/tests/zig` (`zig build ported`/`zig build gc`; legacy shell suite in `compiler/gc/tests/archive`); benchmarks: `bench/gc`.
 - Resume: `cd bench && ./build.sh && ./round.sh && RESULTS=results/round ./summarize.sh`; `compiler/test.sh` for compiler tests; `compiler/tests/upstream/run.py` for upstream tests.
 
 ## Status 2026-11-03
 
 In-progress items are marked as such; numbers are only those already committed or in open PRs.
 
-- **GC (C):** all collectors are C (`compiler/gc/{perceus,incremental,epoch,rc,boehm}/gc.c`, shared
+- **GC (C):** all collectors are C (`compiler/gc/{perceus,incremental,epoch,rc}/gc.c`, shared
   `common/*.inc`, API `kxgc.h`). The GC is planned to become a separate project; see
   [`compiler/gc/docs/extraction-plan.md`](compiler/gc/docs/extraction-plan.md) (planned, nothing moved).
 - **Epoch collector:** #147 (short adaptive logs) is merged: `cyclic_garbage` peak RSS 22.6 -> 4.1 MiB.
   `epoch` is the default collector (Polar Quest, #161); the old default is now `perceus`.
   GC benchmark re-run: #148 (open). Faster GC benchmark runs (build cache, parallel builds, opt-in skip of slow
   pairs): #154 (open).
-- **GC targets vs Boehm** (equal priority): `cyclic_garbage` epoch peak RSS at or below Boehm (3.4 MiB; 4.1 MiB
-  after #147); beat Boehm on big live heaps (`huge_live_churn` / `big_live_churn`) and on `lru`. No regression
-  beyond the post-#147 baseline in other categories, except up to ~5% where epoch already strongly beats Boehm.
+- **GC targets vs the bench/gc baseline** (equal priority): `cyclic_garbage` epoch peak RSS at or below the bench/gc baseline (3.4 MiB; 4.1 MiB
+  after #147); beat the bench/gc baseline on big live heaps (`huge_live_churn` / `big_live_churn`) and on `lru`. No regression
+  beyond the post-#147 baseline in other categories, except up to ~5% where epoch already strongly beats the bench/gc baseline.
   Variant exploration is in progress; no results yet.
 - **Zig GC regression benchmarks:** `bench/gc/zig`, PR #155 (open). Median of N runs (time from `nanos=`, peak
-  RSS, max pause from `KX_GC_STATS=1`); thresholds: +5% allowed where boehm/epoch >= 1.5, no regression elsewhere,
-  plus a 3% noise margin; `cyclic_garbage` peak RSS must be <= 3.4 MiB and <= Boehm in the same run (expected to
+  RSS, max pause from `KX_GC_STATS=1`); thresholds: +5% allowed where baseline/epoch >= 1.5, no regression elsewhere,
+  plus a 3% noise margin; `cyclic_garbage` peak RSS must be <= 3.4 MiB and <= the bench/gc baseline in the same run (expected to
   fail until the cyclic-garbage work lands). Baselines in `baselines.zon`; refresh with `zig build update-baselines`
   after every known-good improvement, so baselines follow the latest known-good numbers.
 - **GC tests in Zig:** all new GC tests are written in Zig. Porting the existing C unit tests and Kotlin GC tests

@@ -41,8 +41,7 @@ int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
 // first call empties the stack itself, with the limit moved just below its own frame, so the release goes
 // no deeper than rel_drain_room past that call, and every object is released before it returns. Recursion
 // would have released the deferred objects before their parents are freed; the difference is visible only
-// to the collector, which does not start meanwhile (kxgc.h). bdwgc, which cannot see this stack, does not
-// either: it collects only inside an allocation, and nothing here allocates from it.
+// to the collector, which does not start meanwhile (kxgc.h).
 // Only the mutator thread releases objects (the epoch collector returns dead ones to it), so one limit is enough.
 #define REL_STACK (4 * 1024 * 1024)
 char *rt_rel_limit;
