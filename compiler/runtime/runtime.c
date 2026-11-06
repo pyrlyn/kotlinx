@@ -9,6 +9,9 @@
 #include <unistd.h>
 
 #include "kxgc.h" /* memory manager interface; implementation in compiler/gc/<name>/gc.c (newkotlinc --gc) */
+#if !defined(KXGC_API_VERSION) || KXGC_API_VERSION != 1
+#error "compiler/gc (pyrlyn/gc) has an incompatible kxgc.h; update the submodule pin: git submodule update --init"
+#endif
 #include "common/object.inc"
 
 // ---- leak check (newkotlinc --leak-check => -DRT_LEAKCHECK) ----------------

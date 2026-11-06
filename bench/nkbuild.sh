@@ -12,7 +12,7 @@ cache=$root/compiler/build/nkcache; mkdir -p "$cache" "$(dirname "$out")"
 exe=$nkc; [ -f "$root/compiler/build/newkotlinc.kexe" ] && case $nkc in *bin/newkotlinc) exe=$root/compiler/build/newkotlinc.kexe;; esac
 rt=${NEWKOTLIN_RUNTIME:-$root/compiler/runtime/runtime.c}; rtdir=$(dirname "$rt")
 key=$( { echo "args: $* | gc=${NEWKOTLIN_GC:-} opt=${NK_OPT:-} rt=$rt"; clang --version 2>/dev/null | head -1
-  find "$rtdir" "$rtdir/../gc" -path '*/tests' -prune -o -path '*/docs' -prune -o -type f \( -name '*.c' -o -name '*.h' \) -print | LC_ALL=C sort | xargs cat
+  find "$rtdir" "$rtdir/../gc" -path '*/tests' -prune -o -path '*/bench' -prune -o -path '*/docs' -prune -o -type f \( -name '*.c' -o -name '*.h' \) -print | LC_ALL=C sort | xargs cat
   cat "$exe" "$src"; } | shasum -a 256 | cut -c1-24)
 if [ -z "${NKBUILD_NOCACHE:-}" ] && [ -x "$cache/$key" ]; then cp -p "$cache/$key" "$out"; exit 0; fi
 "$nkc" "$@" "$src" -o "$cache/$key.tmp.$$"
