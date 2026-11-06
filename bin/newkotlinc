@@ -5,6 +5,8 @@ root="$(cd "$(dirname "$0")/.." && pwd)"
 exe="$root/compiler/build/newkotlinc.kexe"
 [ -x "$exe" ] || "$root/compiler/build.sh" >&2 || exit 1
 export NEWKOTLIN_RUNTIME="${NEWKOTLIN_RUNTIME:-$root/compiler/runtime/runtime.c}"
+# Vendored C GC (no git submodule). Override with NEWKOTLIN_GC_DIR if needed.
+export NEWKOTLIN_GC_DIR="${NEWKOTLIN_GC_DIR:-$root/native/gc/c}"
 # Use the opt pinned by the repo mise.toml (a mise shim outside the repo has no version set).
 if [ -z "${NK_OPT:-}" ] && command -v mise >/dev/null; then
   o=$(cd "$root" && mise which opt 2>/dev/null) && export NK_OPT="$o"

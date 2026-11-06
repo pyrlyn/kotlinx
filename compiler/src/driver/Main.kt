@@ -18,7 +18,7 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --leak-check         count live runtime objects; report at exit, exit 3 on a leak
   --alloc <mimalloc|malloc|pool> object allocator: mimalloc (default; found via ${'$'}NEWKOTLIN_MIMALLOC_DIR,
                        pkg-config or Homebrew), system malloc/free, or free-list pool
-  --gc <name>          memory manager, compiler/gc/<name>/gc.c (also --gc=<name>; default: ${'$'}NEWKOTLIN_GC or
+  --gc <name>          memory manager, native/gc/c/<name>/gc.c (also --gc=<name>; default: ${'$'}NEWKOTLIN_GC or
                        epoch): epoch (deferred RC + background cycle collection; alias
                        "default"), perceus (RC + synchronous cycle collector, the
                        pre-epoch default), incremental (budgeted
@@ -178,7 +178,7 @@ fun main(args: Array<String>) {
     if (input == null || output == null) { fprintf(stderr, "%s\n", USAGE); exit(2); return }
     // A GC whose caps file lists "deferred" needs deferred-RC code generation (see NativeBackend.deferredRc).
     run {
-        val dir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../gc")
+        val dir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/c")
         val caps = if (access("$dir/$gc/caps", F_OK) == 0) (try { readFile("$dir/$gc/caps") } catch (e: CompileError) { "" }) else ""
         deferredRc = caps.split(Regex("\\s+")).contains("deferred")
     }
@@ -187,7 +187,7 @@ fun main(args: Array<String>) {
     }
     if (onlyIr) { writeFile(output, ir); return }
     // GC implementations: <gcDir>/<name>/gc.c (+ optional config.sh printing extra clang flags), interface <gcDir>/kxgc.h.
-    val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../gc")
+    val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/c")
     val gcSrc = "$gcDir/$gc/gc.c"
     if (gc.isEmpty() || '/' in gc || access(gcSrc, F_OK) != 0) {
         fprintf(stderr, "unknown --gc %s: no %s\n", gc, gcSrc); exit(2); return

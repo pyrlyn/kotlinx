@@ -88,10 +88,10 @@ for t in js wasm jvm; do
 done
 # Leak tests (own tests, compiler/tests/leaks): runtime live-object count, ASan, macOS leaks.
 NKC="$NKC" compiler/tests/leaks/run.sh || fail=1
-# GC tests (compiler/gc/tests/zig): Zig suite, ported interface unit tests + GC-agnostic Kotlin tests for every --gc
+# GC tests (native/gc/c/tests/zig): Zig suite, ported interface unit tests + GC-agnostic Kotlin tests for every --gc
 # implementation (legacy shell suite archived in compiler/gc/tests/archive).
-( export NKC="$(cd "$(dirname "$NKC")" && pwd)/$(basename "$NKC")"; cd compiler/gc/tests/zig && zig build ported ) || fail=1
+( export NKC="$(cd "$(dirname "$NKC")" && pwd)/$(basename "$NKC")"; cd native/gc/c/tests/zig && zig build ported ) || fail=1
 # Multithreaded collector test (epoch: background collector + helpers; plain -O1/-O3 and a TSan build).
-( cd compiler/gc/tests/zig && zig build mt ) || fail=1
+( cd native/gc/c/tests/zig && zig build mt ) || fail=1
 rm -rf "$out"
 [ $fail = 0 ] && echo "ALL PASSED" || { echo "SOME FAILED"; exit 1; }

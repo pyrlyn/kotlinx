@@ -24,7 +24,7 @@ If none is found, compilation fails with an error.
 
 ## Garbage collector
 
-The memory manager lives in [`compiler/gc`](../compiler/gc/README.md) behind a stable interface and is
+The memory manager lives in [`native/gc/c`](../native/gc/c/README.md) behind a stable interface and is
 selected per build: `--gc=epoch` (deferred RC + background cycle collection, the default; `--gc=default` is an alias),
 `--gc=perceus` (RC + synchronous cycle collector, the default before epoch; formerly `--gc=default`), `--gc=rc` (no cycle collector).
 GC benchmarks: [`bench/gc`](../bench/gc/README.md).

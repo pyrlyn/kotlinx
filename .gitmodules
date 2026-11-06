@@ -1,3 +1,0 @@
-[submodule "compiler/gc"]
-	path = compiler/gc
-	url = https://github.com/pyrlyn/gc

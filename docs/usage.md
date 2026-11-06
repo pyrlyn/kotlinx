@@ -22,7 +22,7 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `--no-opt` | Skip the `opt` step. |
 | `--leak-check` | Count live runtime objects and report at exit; the program exits 3 on a leak. |
 | `--alloc <a>` | `mimalloc` (default), `malloc` or `pool`. |
-| `--gc <name>`, `--gc=<name>` | Memory manager from `compiler/gc/<name>/gc.c`: `epoch` (deferred RC + background cycle collection; `default` is an alias), `perceus` (RC + synchronous cycle collector, the pre-epoch default), `incremental` (budgeted cycle collector steps), `rc` (RC only, cycles leak). Default: `$NEWKOTLIN_GC`, else `epoch`. |
+| `--gc <name>`, `--gc=<name>` | Memory manager from `native/gc/c/<name>/gc.c`: `epoch` (deferred RC + background cycle collection; `default` is an alias), `perceus` (RC + synchronous cycle collector, the pre-epoch default), `incremental` (budgeted cycle collector steps), `rc` (RC only, cycles leak). Default: `$NEWKOTLIN_GC`, else `epoch`. |
 | `-h`, `--help` | Print the usage text. |
 
 ## Environment
@@ -31,7 +31,7 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | --- | --- |
 | `NEWKOTLIN_RUNTIME` | Default `--runtime`. |
 | `NEWKOTLIN_GC` | Default `--gc`. |
-| `NEWKOTLIN_GC_DIR` | Directory holding the GC implementations (default: `../gc` next to the runtime). |
+| `NEWKOTLIN_GC_DIR` | Directory holding the GC implementations (default: `native/gc/c` (vendored; was `compiler/gc` submodule)). |
 | `NEWKOTLIN_MIMALLOC_DIR` | Where to find `libmimalloc`. |
 | `NK_CC`, `NK_OPT` | Default C compiler and `opt`. |
 
