@@ -1,0 +1,21 @@
+.{
+    .name = .kotlinx_native_gc,
+    .version = "0.1.0",
+    .minimum_zig_version = "0.17.1",
+    .fingerprint = 0x8a691ee41a9faf52,
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "c",
+        "zig",
+        "smoke",
+        "README.md",
+        "PROVENANCE.md",
+        "c.sha",
+        "zig.sha",
+    },
+    .dependencies = .{
+        // Vendored in-tree Zig collectors (pyrlyn/gc@cf79057). Path dep keeps the PR self-contained.
+        .kxgc_zig = .{ .path = "zig" },
+    },
+}

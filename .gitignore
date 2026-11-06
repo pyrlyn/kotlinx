@@ -11,3 +11,11 @@ bench/kllvm/*
 .zig-cache/
 compiler/build/
 .upstream-cache/
+
+# Former git submodule working tree (vendored to native/gc/c)
+/compiler/gc/
+/_local_regression/
+
+# Zig build outputs (gc-libs, smokes)
+native/gc/**/zig-out/
+native/gc/**/.zig-cache/

@@ -2,10 +2,10 @@
 name: compiler
 on:
   pull_request:
-    paths: ["compiler/**", ".github/workflows/compiler.yml"]
+    paths: ["compiler/**", "native/gc/**", "bench/gc", "bin/newkotlinc", ".github/workflows/compiler.yml"]
   push:
     branches: [main]
-    paths: ["compiler/**", ".github/workflows/compiler.yml"]
+    paths: ["compiler/**", "native/gc/**", "bench/gc", "bin/newkotlinc", ".github/workflows/compiler.yml"]
 concurrency:
   group: compiler-${{ github.ref }}
   cancel-in-progress: true
@@ -17,15 +17,32 @@ jobs:
       KN_VERSION: "2.4.21"
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: true
+      # Native Zig GC port / gc-libs need 0.17.1. Legacy native/gc/c/tests/zig was written for 0.16.x.
+      # GC is vendored under native/gc/ (path deps); no compiler/gc git submodule.
       - uses: mlugg/setup-zig@v2
         with:
-          version: 0.16.0
+          version: 0.17.1
+      # Pre-existing gap vs 6704d2b: runners do not ship mimalloc; default --alloc mimalloc needs it.
+      - name: mimalloc (default allocator)
+        run: brew install mimalloc
+      # macos-15 images ship Homebrew llvm@18 while /usr/bin/clang is LLVM 17; findOpt picks newest llvm@N
+      # and then rejects it. Pair NK_CC/NK_OPT to the same Homebrew llvm so IR major matches.
+      - name: Pin matching Homebrew LLVM opt/clang
+        run: |
+          llvm_prefix="$(ls -d /opt/homebrew/opt/llvm@* /opt/homebrew/opt/llvm 2>/dev/null | sort -V | tail -1)"
+          test -n "$llvm_prefix" && test -x "$llvm_prefix/bin/opt" && test -x "$llvm_prefix/bin/clang"
+          echo "NK_OPT=$llvm_prefix/bin/opt" >> "$GITHUB_ENV"
+          echo "NK_CC=$llvm_prefix/bin/clang" >> "$GITHUB_ENV"
+          "$llvm_prefix/bin/opt" --version | head -1
+          "$llvm_prefix/bin/clang" --version | head -1
       - name: Kotlin/Native toolchain
         run: |
           mkdir -p ~/.konan
           curl -fsSL "https://github.com/JetBrains/kotlin/releases/download/v${KN_VERSION}/kotlin-native-prebuilt-macos-aarch64-${KN_VERSION}.tar.gz" | tar xz -C ~/.konan
+      - name: Build Zig GC static libs
+        run: |
+          zig version
+          ( cd native/gc/zig && zig build gc-libs )
       - name: Build compiler
         run: NEWKOTLIN_KN_FLAGS=-opt compiler/build.sh
       - name: compiler/test.sh

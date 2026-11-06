@@ -1,10 +1,78 @@
 #!/bin/bash
 # KotlinX compiler launcher: builds compiler/build/newkotlinc.kexe on first use, then runs it.
 # Usage: bin/newkotlinc Main.kt -o main && ./main
+#
+# Zig GC backend (default NEWKOTLIN_GC_RUNTIME=zig / --gc-runtime=zig): always runs
+#   zig build gc-libs
+# so collector source changes rebuild into zig-out/lib/libgc-*.a (Zig cache = incremental).
+# --gc-runtime=c skips Zig. Direct newkotlinc.kexe does not build libs (see native/gc/README.md).
 root="$(cd "$(dirname "$0")/.." && pwd)"
 exe="$root/compiler/build/newkotlinc.kexe"
 [ -x "$exe" ] || "$root/compiler/build.sh" >&2 || exit 1
 export NEWKOTLIN_RUNTIME="${NEWKOTLIN_RUNTIME:-$root/compiler/runtime/runtime.c}"
+# Vendored C GC metadata/sources (caps, kxgc.h, optional --gc-runtime=c).
+export NEWKOTLIN_GC_DIR="${NEWKOTLIN_GC_DIR:-$root/native/gc/c}"
+export NEWKOTLIN_GC_ZIG_LIB_DIR="${NEWKOTLIN_GC_ZIG_LIB_DIR:-$root/native/gc/zig/zig-out/lib}"
+# Default collector backend is Zig (experimental). Set NEWKOTLIN_GC_RUNTIME=c for the C collectors.
+export NEWKOTLIN_GC_RUNTIME="${NEWKOTLIN_GC_RUNTIME:-zig}"
+
+# Parse CLI for --gc-runtime / --gc (env defaults apply when flags absent).
+parse_gc_cli() {
+  GC_RUNTIME_CLI="${NEWKOTLIN_GC_RUNTIME:-zig}"
+  GC_NAME_CLI=""
+  local prev="" a
+  for a in "$@"; do
+    if [ "$prev" = "--gc-runtime" ]; then
+      GC_RUNTIME_CLI="$a"
+      prev=""
+      continue
+    fi
+    if [ "$prev" = "--gc" ]; then
+      GC_NAME_CLI="$a"
+      prev=""
+      continue
+    fi
+    case "$a" in
+      --gc-runtime=*) GC_RUNTIME_CLI="${a#--gc-runtime=}" ;;
+      --gc-runtime) prev="--gc-runtime" ;;
+      --gc=*) GC_NAME_CLI="${a#--gc=}" ;;
+      --gc) prev="--gc" ;;
+      *) prev="" ;;
+    esac
+  done
+  if [ "$GC_NAME_CLI" = "default" ]; then GC_NAME_CLI="epoch"; fi
+}
+
+ensure_zig_gc_libs() {
+  parse_gc_cli "$@"
+  case "$GC_RUNTIME_CLI" in
+    c|C) return 0 ;;
+  esac
+  local zigbin="${ZIG:-}"
+  if [ -z "$zigbin" ]; then
+    if command -v zig >/dev/null 2>&1; then zigbin=$(command -v zig); else
+      echo "error: Zig 0.17.1 required to build GC libs (gc-runtime=zig). Set ZIG=/path/to/zig or install official 0.17.1, or use --gc-runtime=c" >&2
+      return 1
+    fi
+  fi
+  local ver; ver=$("$zigbin" version 2>/dev/null || true)
+  if [ "$ver" != "0.17.1" ]; then
+    echo "error: need official Zig 0.17.1 for native GC libs (got '${ver:-missing}'). Set ZIG=... or use --gc-runtime=c" >&2
+    return 1
+  fi
+  # Always rebuild the selected collector and allocation mode; incompatible modes must not share an archive.
+  local -a zargs=(build gc-libs)
+  case " $* " in *" --leak-check "*) zargs+=(-Dleakcheck=true) ;; esac
+  case " $* " in *" --alloc pool"*|*" --alloc=pool "*) zargs+=(-Dpool=true) ;; esac
+  case " $* " in *" --alloc malloc"*|*" --alloc=malloc "*) zargs+=(-Dplain-malloc=true) ;; esac
+  case "$GC_NAME_CLI" in
+    epoch|perceus|incremental|rc) zargs+=(-Dgc="$GC_NAME_CLI") ;;
+  esac
+  echo "zig build gc-libs${GC_NAME_CLI:+ -Dgc=$GC_NAME_CLI} (Zig $ver; incremental)…" >&2
+  ( cd "$root/native/gc/zig" && "$zigbin" "${zargs[@]}" ) || return 1
+}
+ensure_zig_gc_libs "$@" || exit 1
+
 # Use the opt pinned by the repo mise.toml (a mise shim outside the repo has no version set).
 if [ -z "${NK_OPT:-}" ] && command -v mise >/dev/null; then
   o=$(cd "$root" && mise which opt 2>/dev/null) && export NK_OPT="$o"
