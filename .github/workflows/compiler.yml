@@ -25,6 +25,16 @@ jobs:
       # Pre-existing gap vs 6704d2b: runners do not ship mimalloc; default --alloc mimalloc needs it.
       - name: mimalloc (default allocator)
         run: brew install mimalloc
+      # macos-15 images ship Homebrew llvm@18 while /usr/bin/clang is LLVM 17; findOpt picks newest llvm@N
+      # and then rejects it. Pair NK_CC/NK_OPT to the same Homebrew llvm so IR major matches.
+      - name: Pin matching Homebrew LLVM opt/clang
+        run: |
+          llvm_prefix="$(ls -d /opt/homebrew/opt/llvm@* /opt/homebrew/opt/llvm 2>/dev/null | sort -V | tail -1)"
+          test -n "$llvm_prefix" && test -x "$llvm_prefix/bin/opt" && test -x "$llvm_prefix/bin/clang"
+          echo "NK_OPT=$llvm_prefix/bin/opt" >> "$GITHUB_ENV"
+          echo "NK_CC=$llvm_prefix/bin/clang" >> "$GITHUB_ENV"
+          "$llvm_prefix/bin/opt" --version | head -1
+          "$llvm_prefix/bin/clang" --version | head -1
       - name: Kotlin/Native toolchain
         run: |
           mkdir -p ~/.konan
