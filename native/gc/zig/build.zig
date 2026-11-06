@@ -11,7 +11,31 @@ const std = @import("std");
 
 const all_gcs = [_][]const u8{ "rc", "perceus", "incremental", "epoch" };
 
+pub fn configureCollector(b: *std.Build, lib: *std.Build.Step.Compile, with_leakcheck: bool) void {
+    const options = b.addOptions();
+    options.addOption(bool, "leakcheck", with_leakcheck);
+    options.addOption(bool, "pool", false);
+    options.addOption(bool, "plain_malloc", false);
+    const host_options = b.createModule(.{ .root_source_file = b.path("src/lib/host_options.zig") });
+    host_options.addImport("gc_options", options.createModule());
+    const leakcheck = b.createModule(.{ .root_source_file = b.path("src/lib/leakcheck.zig") });
+    leakcheck.addImport("host_options", host_options);
+    lib.root_module.addImport("leakcheck", leakcheck);
+    lib.linkLibC();
+}
+
 pub fn build(b: *std.Build) void {
+    const with_leakcheck = b.option(bool, "leakcheck", "Enable C runtime leak-check ABI hooks") orelse false;
+    const with_pool = b.option(bool, "pool", "Enable pooled RT allocations") orelse false;
+    const with_plain_malloc = b.option(bool, "plain-malloc", "Use malloc for tracing allocations") orelse false;
+    const options = b.addOptions();
+    options.addOption(bool, "leakcheck", with_leakcheck);
+    options.addOption(bool, "pool", with_pool);
+    options.addOption(bool, "plain_malloc", with_plain_malloc);
+    const host_options = b.createModule(.{ .root_source_file = b.path("src/lib/host_options.zig") });
+    host_options.addImport("gc_options", options.createModule());
+    const leakcheck = b.createModule(.{ .root_source_file = b.path("src/lib/leakcheck.zig") });
+    leakcheck.addImport("host_options", host_options);
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
     const only = b.option([]const u8, "gc", "Collector to build/test (default: all)");
@@ -23,6 +47,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .link_libc = true,
     });
+    host.addImport("host_options", host_options);
     // Adapter for linking into KotlinX programs that already provide runtime.c symbols.
     const runtime_host = b.addModule("runtime_host", .{
         .root_source_file = b.path("src/runtime_host.zig"),
@@ -30,6 +55,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .link_libc = true,
     });
+    runtime_host.addImport("host_options", host_options);
 
     // Export each collector as a path-dependency module (standalone host for tests/benches).
     inline for (all_gcs) |g| {
@@ -41,6 +67,7 @@ pub fn build(b: *std.Build) void {
         });
         mod.addImport("kxgc", kxgc);
         mod.addImport("host", host);
+        mod.addImport("leakcheck", leakcheck);
     }
 
     const test_step = b.step("test", "Run native Zig GC regression for selected collectors");
@@ -58,6 +85,7 @@ pub fn build(b: *std.Build) void {
         .optimize = bench_opt,
         .link_libc = true,
     });
+    host_fast.addImport("host_options", host_options);
 
     // Libs always ReleaseFast for program linking (Darwin: no LTO on the archive).
     const lib_opt: std.builtin.Optimize = .fast;
@@ -68,6 +96,8 @@ pub fn build(b: *std.Build) void {
         .optimize = lib_opt,
         .link_libc = true,
     });
+    kxgc_lib.addImport("host_options", host_options);
+    runtime_host_lib.addImport("host_options", host_options);
 
     for (all_gcs) |g| {
         if (only) |want| if (!std.mem.eql(u8, want, g)) continue;
@@ -80,6 +110,8 @@ pub fn build(b: *std.Build) void {
         });
         coll.addImport("kxgc", kxgc);
         coll.addImport("host", host);
+        coll.addImport("leakcheck", leakcheck);
+        coll.addImport("host_options", host_options);
 
         const suite = b.addExecutable(.{
             .name = b.fmt("gc-test-{s}", .{g}),
@@ -101,6 +133,27 @@ pub fn build(b: *std.Build) void {
         run.has_side_effects = true;
         test_step.dependOn(&run.step);
 
+        if (std.mem.eql(u8, g, "epoch")) {
+            const inc_suite = b.addExecutable(.{
+                .name = "gc-test-epoch-incmajor",
+                .root_module = b.createModule(.{
+                    .root_source_file = b.path("tests/native/epoch_incmajor.zig"),
+                    .target = target,
+                    .optimize = optimize,
+                    .link_libc = true,
+                    .imports = &.{
+                        .{ .name = "collector", .module = coll },
+                        .{ .name = "kxgc", .module = kxgc },
+                        .{ .name = "host", .module = host },
+                    },
+                }),
+            });
+            b.installArtifact(inc_suite);
+            const inc_run = b.addRunArtifact(inc_suite);
+            inc_run.has_side_effects = true;
+            test_step.dependOn(&inc_run.step);
+        }
+
         const bcoll = b.createModule(.{
             .root_source_file = b.path(b.fmt("src/{s}.zig", .{g})),
             .target = target,
@@ -109,6 +162,8 @@ pub fn build(b: *std.Build) void {
         });
         bcoll.addImport("kxgc", kxgc);
         bcoll.addImport("host", host_fast);
+        bcoll.addImport("leakcheck", leakcheck);
+        bcoll.addImport("host_options", host_options);
 
         const ops = b.addExecutable(.{
             .name = b.fmt("gc-ops-{s}", .{g}),
@@ -141,6 +196,8 @@ pub fn build(b: *std.Build) void {
         });
         coll_rt.addImport("kxgc", kxgc_lib);
         coll_rt.addImport("host", runtime_host_lib);
+        coll_rt.addImport("leakcheck", leakcheck);
+        coll_rt.addImport("host_options", host_options);
 
         const lib = b.addLibrary(.{
             .name = b.fmt("gc-{s}", .{g}),
@@ -155,5 +212,4 @@ pub fn build(b: *std.Build) void {
         b.getInstallStep().dependOn(&install_lib.step);
     }
 
-    _ = runtime_host;
 }

@@ -60,8 +60,11 @@ ensure_zig_gc_libs() {
     echo "error: need official Zig 0.17.1 for native GC libs (got '${ver:-missing}'). Set ZIG=... or use --gc-runtime=c" >&2
     return 1
   fi
-  # Always invoke zig build so source changes rebuild; Zig's cache skips work when unchanged.
+  # Always rebuild the selected collector and allocation mode; incompatible modes must not share an archive.
   local -a zargs=(build gc-libs)
+  case " $* " in *" --leak-check "*) zargs+=(-Dleakcheck=true) ;; esac
+  case " $* " in *" --alloc pool"*|*" --alloc=pool "*) zargs+=(-Dpool=true) ;; esac
+  case " $* " in *" --alloc malloc"*|*" --alloc=malloc "*) zargs+=(-Dplain-malloc=true) ;; esac
   case "$GC_NAME_CLI" in
     epoch|perceus|incremental|rc) zargs+=(-Dgc="$GC_NAME_CLI") ;;
   esac

@@ -150,7 +150,8 @@ fun main(args: Array<String>) {
     if (getenv("NEWKOTLIN_NO_BORROW_FIELD_LOCALS")?.toKString()?.let { it.isNotEmpty() && it != "0" } == true) borrowFieldLocals = false
     var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() } ?: DEFAULT_GC
     var gcRuntime = getenv("NEWKOTLIN_GC_RUNTIME")?.toKString()?.takeIf { it.isNotEmpty() } ?: "zig"
-    var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false; var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
+    var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false
+    var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
     val links = ArrayList<String>()
     var i = 0
     while (i < args.size) {
@@ -224,6 +225,9 @@ fun main(args: Array<String>) {
                 "cd native/gc/zig && zig build gc-libs  (Zig 0.17.1), or set NEWKOTLIN_GC_ZIG_LIB_DIR, or --gc-runtime=c\n", lib)
             exit(1); return
         }
+        // libgc is LLVM machine code: Clang LTO cannot inspect a Zig archive.
+        // Keep native code opaque and optimize the generated program only.
+        if ("-flto" in cflags) cflags = cflags.replace("-flto", "")
         "'$lib'"
     }
     val ll = "$output.ll"
@@ -255,7 +259,7 @@ fun main(args: Array<String>) {
             // Kotlin IR with the newer llc instead loses runtime LTO and measured 7-125% slower, so this is an error.
             cleanup()
             fprintf(stderr, "error: opt %s is LLVM %d, newer than %s (LLVM %d), which cannot read its IR. Use an opt of " +
-                "LLVM <= %d (e.g. conda:llvm-tools %d.x via mise, or --opt/NK_OPT), or --no-opt\n", opt, optMajor, cc, ccMajor, ccMajor, ccMajor)
+                "LLVM <= %d (e.g. conda:llvm-tools %d.x via mise, or --opt/NK_OPT), or --no-opt\n", opt, optMajor, cc, ccMajor, ccMajor)
             exit(1); return
         }
         linkLl = "$output.opt.ll"; tmps.add(linkLl)

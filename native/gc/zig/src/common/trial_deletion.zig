@@ -1,6 +1,7 @@
 //! Bacon & Rajan trial-deletion passes. Port of `common/trial_deletion.inc`.
 const host = @import("host");
 const obj = @import("object.zig");
+const regions = @import("regions.zig");
 
 pub const CC_THRESHOLD: usize = 10000;
 pub const CC_MAX_THRESHOLD: usize = 1 << 18;
@@ -29,6 +30,7 @@ pub fn TrialDeletion(comptime claim_skips_buffered: bool) type {
             while (self.work.len != 0) {
                 const o = self.work.pop().?;
                 self.traced += 1;
+                regions.visit(o);
                 if (obj.vtab(o).trav) |trav| trav(o, markGrayChild);
             }
         }
@@ -80,7 +82,7 @@ pub fn TrialDeletion(comptime claim_skips_buffered: bool) type {
             while (self.work.len != 0) {
                 const o = self.work.pop().?;
                 if (obj.color(o) != obj.WHITE) continue;
-                if (obj.refCount(o) > 0) self.scanBlack(o) else if (obj.vtab(o).trav) |trav| trav(o, scanChild);
+                if (obj.refCount(o) > 0) self.scanBlack(o) else if (obj.vtab(o).trav) |trav| trav(o, scanChild); regions.visit(o);
             }
         }
 
@@ -104,7 +106,7 @@ pub fn TrialDeletion(comptime claim_skips_buffered: bool) type {
             host.rt_trav_mode = 1; // RT_TRAV_RELEASE
             while (self.work.len != 0) {
                 const o = self.work.pop().?;
-                if (obj.vtab(o).trav) |trav| trav(o, collectWhiteChild);
+                if (obj.vtab(o).trav) |trav| trav(o, collectWhiteChild); regions.visit(o);
                 self.garbage.push(o);
             }
             host.rt_trav_mode = 0; // RT_TRAV_SCAN
@@ -136,4 +138,3 @@ pub fn TrialDeletion(comptime claim_skips_buffered: bool) type {
         }
     };
 }
-

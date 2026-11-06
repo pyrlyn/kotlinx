@@ -9,7 +9,9 @@ Frozen C collector SHA: `21f34a960f8b56d1dcdf1ab55b8e5e14e4e8ff31`.
 
 ```
 src/kxgc.zig                 KXGC_API_VERSION 1 types / ABI
-src/host.zig                 runtime symbols (rt_nanos, rt_panic, rt_rel_draining, …)
+src/host.zig                 standalone runtime symbols (clock, panic, pause accounting)
+src/runtime_host.zig         KotlinX adapter; runtime callbacks stay in runtime.c
+src/lib/host_util.zig        shared allocator / environment / RSS helpers for both hosts
 src/common/{object,regions,trial_deletion}.zig
 src/{rc,perceus,incremental,epoch}.zig
 tests/native/suite.zig       gc_unit + api_test + traversal + one_pass
@@ -67,6 +69,9 @@ Paired Mac numbers for SHA `31bdbcf` live on the runner at
 | `perceus/gc.c` | yes |
 | `incremental/gc.c` | yes |
 | `epoch/gc.c` logs, CRC TD, Sigma/Delta, generations, drain | yes |
+| epoch incremental-major and side-minor traversal | serial; native regression covers 2,605,000 objects |
+| epoch leak/debug counters, paced free, madvise accounting | yes |
+| `RT_LEAKCHECK` region tags / counters, traversal validation | yes for common-region collectors |
 | epoch slab-release allocator (default on, `KX_GC_SLAB_RELEASE=0` restores bump/free-list) | yes (serial) |
 | `tests/archive/unit/gc_unit.c` | yes (native) |
 | `tests/zig/src/unit/api_test.zig` | yes (native) |
@@ -78,20 +83,57 @@ Paired Mac numbers for SHA `31bdbcf` live on the runner at
 
 | Piece | Why it stays |
 |---|---|
-| `tests/kt/*.kt`, `tests/epoch/*.kt`, `tests/incremental/*.kt` | Need `newkotlinc` + KotlinX runtime. Not in this repo. |
+| `c/tests/kt/*.kt`, `c/tests/epoch/*.kt`, `c/tests/incremental/*.kt` | Kotlin integration tests, verified via `bin/newkotlinc`; not standalone module tests. |
 | `bench/micro.sh`, `bench/compare.sh`, `bench/zig` | Need `newkotlinc` / `nkbench.sh`. Kotlin harnesses, not collectors. |
 | `bench/third_party/boehm` | Third-party C (bdwgc). Benchmark-only. |
 | `tests/zig/*` existing harness | Still links **C** collectors. Historical C-via-Zig suite. |
 | `tests/zig/mutation` | Mutates C source. |
-| epoch parallel MarkGray/Scan, incremental major, side-minor, early validation | C pause/RSS paths. Not claimed equivalent. Serial collector thread = `KX_GC_THREADS=1`. |
-| `RT_LEAKCHECK` / ASan region tags | Compiler-driven. |
-| KotlinX `runtime.c` | Lives in pyrlyn/kotlinx. Host stub matches its clock on macOS. |
+| epoch parallel MarkGray/Scan, adaptive worker cost model and early-validation helpers | C pause paths; not claimed equivalent. Serial = `KX_GC_THREADS=1`. |
+| epoch full diagnostic dump / stack release / major slack | Only the numeric debug fields asserted by the regression are ported. |
+| epoch common-region traversal accounting | C epoch bypasses those regions; leak-object counts and the other collectors' region reports remain available. |
+| KotlinX `runtime.c` | Shared runtime at `compiler/runtime/runtime.c`; not replaced by this port. Host stub matches its clock on macOS. |
+
+## Runtime integration and duplication review
+
+`host.zig` and `runtime_host.zig` are separate ABI adapters, not alternative
+collectors: the former exports runtime callbacks for standalone tests; the
+latter imports the same symbols from KotlinX `runtime.c`. They must not be linked
+into the same executable. Both use the shared non-callback helpers in
+`lib/host_util.zig`. `kxgc.zig` is the Zig ABI view; translate-C `kxgc_c` in the
+umbrella build is its C-header view, not a second implementation. Collectors reuse
+`lib/leakcheck.zig`, which only gates a declaration/call to `rt_leak_obj`; the
+actual object-accounting hook remains in `runtime.c`.
+
+The connected Zig module already covers object header/color/count operations and
+pointer stacks in `common/object.zig`, allocation/region tags, pool/malloc modes
+and traversal accounting in `common/regions.zig`, and the MarkGray/Scan/CollectWhite
+passes in `common/trial_deletion.zig`. RC, Perceus and incremental reuse these
+implementations rather than translating a second copy. Perceus and incremental
+still have collector-specific scheduling/root-buffer code. Epoch reuses the
+object/stack helpers but requires its own concurrent CRC/Sigma/Delta, candidate
+validation and generational traversal; its superficially similar MarkGray/Scan
+is not interchangeable with the immediate-RC trial-deletion module.
+
+The build always rebuilds the selected collector's static archive (cached when
+unchanged). `bin/newkotlinc` maps `--leak-check`, `--alloc pool`, and `--alloc
+malloc` to archive options; direct compiler-binary invocations must build the
+corresponding archive themselves. On Darwin, compiler LTO is disabled for the
+Zig archive link; the generated IR is still optimized normally.
+
+## Baseline shared runtime leaks
+
+Upstream `--leak-check` reports 3 existing shared-runtime leaks reproduced
+identically on the unchanged original C collectors and Zig; they are not fixed
+by this port and are not a Zig-specific regression. Results remain **3090 PASS,
+3 LEAK / 3093**, not all green: `bce/withGetter.kt` (ArrayList),
+`enum/initEnumAfterObjectAccess.kt` (string), and `inline/kt66017.kt` (ArrayList),
+each with `live=1`. The three C-reference reruns also report **3 LEAK / 3**;
+no tests are excluded or reclassified as passed.
 
 ## Verdict
 
-**NOT READY.** Native tests pass on Zig 0.17.1 (Debug and ReleaseFast, 4/4).
-Mac SHA `19d8182` official scripts passed; epoch `field_store` closed to +1.4%.
-Remaining Mac bottleneck is epoch `alloc_drop` (C 13.07 vs Zig 15.24 ns, +16.6%
-at N=4M). This SHA thins `allocTrace`/`freeTrace`/`slab_*` so Darwin no-LTO
-matches C’s inlined alloc/drop protocol. Full collector parity is still
-incomplete. Linux VM timings are not Mac-to-Mac. Do not update C baselines.
+GC selection requires an explicit collector name and the matching runtime
+backend. Native and Kotlin-linked regressions exercise the Zig backend,
+including the epoch queue, paced-free, madvise, and incremental-major paths. Full
+collector parity is not claimed: the C parallel helpers and detailed diagnostics
+remain as documented above. Do not update C benchmark baselines from this port.

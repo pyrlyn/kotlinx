@@ -444,3 +444,7 @@ pub fn main() u8 {
     std.debug.print("SUITE OK\n", .{});
     return 0;
 }
+
+export fn rt_leak_obj(delta: i64) callconv(.c) void {
+    _ = delta;
+}
