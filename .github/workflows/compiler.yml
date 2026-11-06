@@ -22,6 +22,9 @@ jobs:
       - uses: mlugg/setup-zig@v2
         with:
           version: 0.17.1
+      # Pre-existing gap vs 6704d2b: runners do not ship mimalloc; default --alloc mimalloc needs it.
+      - name: mimalloc (default allocator)
+        run: brew install mimalloc
       - name: Kotlin/Native toolchain
         run: |
           mkdir -p ~/.konan
