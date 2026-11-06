@@ -1,8 +1,9 @@
 # Plan: extracting the GC into a separate project
 
-**Status: planned, nothing has moved yet.** The GC code still lives in `compiler/gc` and everything in
-[`../README.md`](../README.md) is current. This page describes the intended split so that new GC work
-(code, tests, benchmarks) already respects the future boundary.
+**Status (KotlinX consumer): done as an in-tree path dependency.** Collectors are vendored under
+`native/gc/c/` (C snapshot) and `native/gc/zig/` (Zig port); there is no `compiler/gc` git submodule.
+This document remains as historical design notes from the standalone-repo plan; see `native/gc/README.md`
+for the current KotlinX wiring (`--gc-runtime=zig|c`).
 
 ## What moves to the GC project
 

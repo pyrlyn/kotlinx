@@ -1,33 +1,31 @@
-# KotlinX memory manager (GC)
+# KotlinX memory manager (GC) — vendored C snapshot
 
-Standalone home of the [KotlinX](https://github.com/pyrlyn/kotlinx) garbage collectors, their tests and
-benchmarks. Extracted from `pyrlyn/kotlinx` at `9d9c1af` (`compiler/gc/` -> repository root,
-`bench/gc/` -> [`bench/`](bench/)) following [`docs/extraction-plan.md`](docs/extraction-plan.md).
+> **Vendored into KotlinX** at `native/gc/c/` from pyrlyn/gc `@6acde649c454e710ca1bc79e04651b0ef07b1b26`.
+> This is a **path dependency** inside the KotlinX tree (not a git submodule).
+> Collector **bodies** (`kxgc.h`, `*/gc.c`, `common/*.inc`) match that snapshot byte-for-byte.
+> Surrounding docs/scripts may describe the old standalone-repo / submodule workflow; prefer
+> [`../../README.md`](../README.md) and KotlinX `bin/newkotlinc` for current wiring.
+> Zig collectors live separately under `native/gc/zig/` (`@cf79057` + `runtime_host` adapter).
 
-## How KotlinX uses this repository
+## How KotlinX uses this tree
 
-- KotlinX pins an exact commit of this repository as a git submodule at `compiler/gc`, so the default
-  `NEWKOTLIN_GC_DIR` (`<runtime dir>/../gc`) points at it and nothing else changes for the compiler.
-  `bench/gc` in KotlinX is a symlink to `compiler/gc/bench`.
-- The only contract is [`kxgc.h`](kxgc.h). It defines `KXGC_API_VERSION`; KotlinX checks it at compile
-  time. Any change to a signature or to the object layout is a breaking change: bump the version and
-  update KotlinX in the same pin-bump PR.
-- Collectors stay single-file C translation units (`<name>/gc.c`), compiled by `newkotlinc` together with
-  the runtime and the program (`clang -O3 -flto`). No prebuilt library.
+- Default collector **backend** is the experimental **Zig** port (`--gc-runtime=zig`, `NEWKOTLIN_GC_RUNTIME=zig`):
+  `newkotlinc` links `native/gc/zig/zig-out/lib/libgc-<name>.a` with `compiler/runtime/runtime.c`.
+- **C** backend (`--gc-runtime=c`): compiles `<this-dir>/<name>/gc.c` in the same clang invocation as before.
+- Caps / `kxgc.h` / config.sh are always read from this C tree (`NEWKOTLIN_GC_DIR`, default `native/gc/c`).
+- `bench/gc` in KotlinX is a symlink to `native/gc/c/bench`.
+- The shared program runtime remains `compiler/runtime/runtime.c` for both backends (only the collector is swapped).
 
-## Working on the GC
-
-The tests and benchmarks need a KotlinX checkout (runtime sources and a `newkotlinc` build). Work inside
-KotlinX's submodule:
+## Working on collectors inside KotlinX
 
 ```
-git clone --recurse-submodules https://github.com/pyrlyn/kotlinx && cd kotlinx/compiler && ./build.sh
-cd gc/tests/zig && zig build gc        # full Zig GC suite (see tests/zig/README.md)
-cd ../../bench/zig && zig build test   # Zig regression benchmarks against baselines.zon
+cd native/gc/zig && zig build gc-libs   # Zig 0.17.1: static libs for --gc-runtime=zig
+cd native/gc && zig build smoke         # scoped C + Zig module smokes
+bin/newkotlinc --gc=epoch Main.kt -o main          # default Zig backend
+bin/newkotlinc --gc-runtime=c --gc=epoch Main.kt -o main
 ```
 
-To release a GC change: merge it here, then open a KotlinX PR that bumps the `compiler/gc` submodule and
-runs `compiler/test.sh` plus the GC benchmarks.
+Legacy C-via-Zig suite under `tests/zig` expects Zig **0.16.x**. The native Zig port / `gc-libs` need **0.17.1**.
 
 ## Overview
 

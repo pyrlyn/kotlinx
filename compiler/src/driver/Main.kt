@@ -18,11 +18,14 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --leak-check         count live runtime objects; report at exit, exit 3 on a leak
   --alloc <mimalloc|malloc|pool> object allocator: mimalloc (default; found via ${'$'}NEWKOTLIN_MIMALLOC_DIR,
                        pkg-config or Homebrew), system malloc/free, or free-list pool
-  --gc <name>          memory manager, native/gc/c/<name>/gc.c (also --gc=<name>; default: ${'$'}NEWKOTLIN_GC or
-                       epoch): epoch (deferred RC + background cycle collection; alias
-                       "default"), perceus (RC + synchronous cycle collector, the
-                       pre-epoch default), incremental (budgeted
-                       cycle collector steps), rc (RC only, cycles leak)
+  --gc <name>          collector name (also --gc=<name>; default: ${'$'}NEWKOTLIN_GC or epoch):
+                       epoch (deferred RC + background cycle collection; alias "default"),
+                       perceus (RC + synchronous cycle collector), incremental (budgeted
+                       cycle steps), rc (RC only, cycles leak). Caps/metadata from native/gc/c/<name>/.
+  --gc-runtime <zig|c> collector implementation language (also --gc-runtime=; default:
+                       ${'$'}NEWKOTLIN_GC_RUNTIME or zig). zig links native/gc/zig/zig-out/lib/libgc-<name>.a
+                       (experimental Zig port); c links native/gc/c/<name>/gc.c. Only the collector
+                       backend changes; compiler/runtime/runtime.c is always linked.
   --link <arg>         extra linker input for `external fun` (FFI): a .c/.o/.a file, -l<lib>, -L<dir> or a
                        linker flag; repeatable (also --link=<arg>)
   -S                   only write LLVM IR to <output>"""
@@ -146,6 +149,7 @@ fun main(args: Array<String>) {
     var target = Target.NATIVE
     if (getenv("NEWKOTLIN_NO_BORROW_FIELD_LOCALS")?.toKString()?.let { it.isNotEmpty() && it != "0" } == true) borrowFieldLocals = false
     var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() } ?: DEFAULT_GC
+    var gcRuntime = getenv("NEWKOTLIN_GC_RUNTIME")?.toKString()?.takeIf { it.isNotEmpty() } ?: "zig"
     var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false; var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
     val links = ArrayList<String>()
     var i = 0
@@ -155,6 +159,7 @@ fun main(args: Array<String>) {
             "--target" -> target = Target.parse(args[++i]) ?: run { fprintf(stderr, "unknown target: %s\n", args[i]); exit(2); return }
             "--runtime" -> runtime = args[++i]
             "--gc" -> gc = args[++i]
+            "--gc-runtime" -> gcRuntime = args[++i]
             "--emit-llvm" -> emitLl = true
             "--leak-check" -> leakCheck = true
             "--alloc" -> alloc = args[++i].also { if (it != "mimalloc" && it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be mimalloc, malloc or pool\n"); exit(2) } }
@@ -166,6 +171,7 @@ fun main(args: Array<String>) {
             "-S" -> onlyIr = true
             "-h", "--help" -> { println(USAGE); return }
             else -> if (a.startsWith("--gc=")) gc = a.substringAfter('=')
+            else if (a.startsWith("--gc-runtime=")) gcRuntime = a.substringAfter('=')
             else if (a.startsWith("--link=")) links.add(a.substringAfter('='))
             else if (a.startsWith("--target=")) target = Target.parse(a.substringAfter('=')) ?: run { fprintf(stderr, "unknown target: %s\n", a); exit(2); return }
             else if (input == null && !a.startsWith("-")) input = a else { fprintf(stderr, "unknown argument: %s\n%s\n", a, USAGE); exit(2) }
@@ -173,6 +179,9 @@ fun main(args: Array<String>) {
         i++
     }
     if (gc == "default") gc = DEFAULT_GC // "default" names whatever the default collector is (epoch); old one: perceus
+    if (gcRuntime != "zig" && gcRuntime != "c") {
+        fprintf(stderr, "--gc-runtime must be zig or c (got %s)\n", gcRuntime); exit(2); return
+    }
     val cc = ccArg ?: findCc()
     if (!target.implemented) { fprintf(stderr, "target %s is not supported yet\n", target.flag); exit(1); return }
     if (input == null || output == null) { fprintf(stderr, "%s\n", USAGE); exit(2); return }
@@ -186,15 +195,37 @@ fun main(args: Array<String>) {
         fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1); return
     }
     if (onlyIr) { writeFile(output, ir); return }
-    // GC implementations: <gcDir>/<name>/gc.c (+ optional config.sh printing extra clang flags), interface <gcDir>/kxgc.h.
+    // GC: caps/metadata and C sources under <gcDir>; Zig static libs under <zigLibDir>/libgc-<name>.a.
+    // Only the collector backend is zig|c; runtime.c is always the shared KotlinX runtime.
     val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/c")
-    val gcSrc = "$gcDir/$gc/gc.c"
-    if (gc.isEmpty() || '/' in gc || access(gcSrc, F_OK) != 0) {
-        fprintf(stderr, "unknown --gc %s: no %s\n", gc, gcSrc); exit(2); return
+    val zigLibDir = getenv("NEWKOTLIN_GC_ZIG_LIB_DIR")?.toKString()
+        ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/zig/zig-out/lib")
+    if (gc.isEmpty() || '/' in gc) {
+        fprintf(stderr, "unknown --gc %s\n", gc); exit(2); return
+    }
+    val gcCapsPath = "$gcDir/$gc/caps"
+    if (access(gcCapsPath, F_OK) != 0 && access("$gcDir/$gc/gc.c", F_OK) != 0) {
+        fprintf(stderr, "unknown --gc %s: no %s/ or %s/gc.c\n", gc, gcDir, gc); exit(2); return
     }
     val gcFlags = if (access("$gcDir/$gc/config.sh", F_OK) == 0) {
         capture("sh '$gcDir/$gc/config.sh'") ?: run { fprintf(stderr, "error: %s/%s/config.sh failed\n", gcDir, gc); exit(1); return }
     } else ""
+    val gcObj = if (gcRuntime == "c") {
+        val gcSrc = "$gcDir/$gc/gc.c"
+        if (access(gcSrc, F_OK) != 0) {
+            fprintf(stderr, "unknown --gc %s: no %s\n", gc, gcSrc); exit(2); return
+        }
+        "'$gcSrc'"
+    } else {
+        val lib = "$zigLibDir/libgc-$gc.a"
+        if (access(lib, F_OK) != 0) {
+            fprintf(stderr, "error: Zig GC archive missing: %s\n" +
+                "Build it once (Zig 0.17.1): cd native/gc/zig && zig build gc-libs\n" +
+                "Or set NEWKOTLIN_GC_ZIG_LIB_DIR, or use --gc-runtime=c\n", lib)
+            exit(1); return
+        }
+        "'$lib'"
+    }
     val ll = "$output.ll"
     writeFile(ll, ir)
     val def = (if (alloc == "pool") " -DRT_POOL" else "") + (if (alloc == "malloc") " -DRT_PLAIN_MALLOC" else "") + (if (leakCheck) " -DRT_LEAKCHECK" else "")
@@ -233,7 +264,7 @@ fun main(args: Array<String>) {
         val pipeline = if ("-flto" in cflags) "lto-pre-link<O3>" else "default<O3>"
         run1("'$opt' -passes='$pipeline' -S '$ll' -o '$linkLl'")
     }
-    val cmd = "$cc $cflags$def -Wno-override-module -I'$gcDir' $gcFlags '$linkLl' '$runtime' '$gcSrc'$link${links.joinToString("") { " '$it'" }} -o '$output'"
+    val cmd = "$cc $cflags$def -Wno-override-module -I'$gcDir' $gcFlags '$linkLl' '$runtime' $gcObj$link${links.joinToString("") { " '$it'" }} -o '$output'"
     val rc = system(cmd)
     cleanup()
     if (rc != 0) { fprintf(stderr, "clang failed (%d): %s\n", rc, cmd); exit(1) }

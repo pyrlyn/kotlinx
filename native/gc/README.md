@@ -1,45 +1,38 @@
-# Native GC integration (no git submodule)
+# Native GC integration (path dependency)
 
-KotlinX vendors the GC in-tree under `native/gc/` instead of a `compiler/gc` git submodule.
+KotlinX vendors GC sources under `native/gc/` (no `compiler/gc` git submodule).
 
-| Path | Contents |
+| Path | Role |
 |---|---|
-| `c/` | Frozen C collectors from pyrlyn/gc `@6acde64` (`kxgc.h`, `epoch/gc.c`, …) |
-| `zig/` | Frozen native Zig port from pyrlyn/gc `@cf79057` (`src/`, `tests/native`, …) |
-| `smoke/` | Scoped C and Zig smoke programs (not stubs; real collector sources) |
-| `build.zig` | Umbrella: Zig modules + C sources via `link_libc` |
+| `c/` | C collectors @`6acde64` (`kxgc.h`, `*/gc.c`, benches, legacy tests) |
+| `zig/` | Zig collectors @`cf79057` + `runtime_host.zig` adapter |
+| `smoke/` | Scoped smokes (`kxgc_c` `@cImport`, Zig `@import`) |
+| `build.zig` | Umbrella: path-dep modules + C `kxgc_c` via translate-c |
 
-## How `newkotlinc` finds the C GC
+## Toolchain
 
-`bin/newkotlinc` sets `NEWKOTLIN_GC_DIR` to `native/gc/c` when unset. `Main.kt` uses the same
-default relative to the runtime (`compiler/runtime/../../native/gc/c`). The compiler still compiles
-`<gcDir>/<name>/gc.c` together with `runtime.c` via clang (`--gc=epoch|perceus|…`). This is path
-configuration for the existing C codegen, not a rewrite of the Kotlin/Native compiler into Zig.
-
-## Zig modules
-
-From this directory with official Zig **0.17.1**:
+- **Native Zig port / `gc-libs` / umbrella smokes:** official **Zig 0.17.1** (`ZIG=` or PATH).
+- **Legacy** `c/tests/zig` (C collectors driven from Zig): Zig **0.16.x** (CI historically 0.16.0).
+- Do not use mise 0.17.0 or 0.18.0-dev for the native port.
 
 ```sh
-zig build smoke                 # C smoke + Zig smoke (separate processes)
-zig build c-smoke -Doptimize=Debug
-zig build c-smoke -Doptimize=ReleaseFast
-zig build zig-smoke -Doptimize=Debug
-zig build zig-smoke -Doptimize=ReleaseFast
+cd native/gc/zig && zig build gc-libs          # libgc-{epoch,perceus,incremental,rc}.a
+cd native/gc && zig build smoke                # Debug/ReleaseFast via -Doptimize=
+bin/newkotlinc Main.kt -o main                 # default --gc-runtime=zig
+bin/newkotlinc --gc-runtime=c Main.kt -o main  # C collector .c sources
 ```
 
-Consumer-style imports in the Zig smoke:
+## Modules
 
-```zig
-const kxgc = @import("kxgc");
-const host = @import("host");       // runtime-symbol adapter (tests/benches)
-const collector = @import("epoch"); // real Zig epoch collector
-```
+| `@import` | Source |
+|---|---|
+| `kxgc` / `host` / `epoch` / … | `b.dependency("kxgc_zig").module(...)` (standalone `host` for Zig-only tests) |
+| `runtime_host` | Same package; externs to `runtime.c` (used when building `libgc-*.a`) |
+| `kxgc_c` | `b.addTranslateC(smoke/kxgc_c_root.h)` → vendored `c/kxgc.h` (Zig 0.17; `@cImport` removed) |
 
-C and Zig smokes are **separate executables** so `host` exports do not collide with `runtime.c`.
+`host` (standalone exports) must not be linked together with `runtime.c`. Program links use `runtime_host`.
 
-The vendored Zig package can also be built on its own: `cd zig && zig build test` (still needs 0.17.1).
+## What changes for programs
 
-## Provenance
-
-See [`PROVENANCE.md`](PROVENANCE.md). Do not replace collector bodies with stubs.
+Only the **collector backend** is Zig or C. `compiler/runtime/runtime.c` is always linked.
+Zig port parity is incomplete vs C (see `zig/docs/zig-port.md`); defaulting to Zig is experimental on this branch.

@@ -6,6 +6,7 @@
 //!   zig build test                   # run native regression for all collectors
 //!   zig build test -Dgc=perceus      # one collector
 //!   zig build bench                  # optimized ops benches (ReleaseFast; LTO on ELF/COFF only)
+//!   zig build gc-libs                # static libs for KotlinX (runtime_host; link with runtime.c)
 const std = @import("std");
 
 const all_gcs = [_][]const u8{ "rc", "perceus", "incremental", "epoch" };
@@ -22,12 +23,31 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .link_libc = true,
     });
+    // Adapter for linking into KotlinX programs that already provide runtime.c symbols.
+    const runtime_host = b.addModule("runtime_host", .{
+        .root_source_file = b.path("src/runtime_host.zig"),
+        .target = target,
+        .optimize = optimize,
+        .link_libc = true,
+    });
+
+    // Export each collector as a path-dependency module (standalone host for tests/benches).
+    inline for (all_gcs) |g| {
+        const mod = b.addModule(g, .{
+            .root_source_file = b.path(b.fmt("src/{s}.zig", .{g})),
+            .target = target,
+            .optimize = optimize,
+            .link_libc = true,
+        });
+        mod.addImport("kxgc", kxgc);
+        mod.addImport("host", host);
+    }
 
     const test_step = b.step("test", "Run native Zig GC regression for selected collectors");
     const bench_step = b.step("bench", "Build and run native ops benches (ReleaseFast)");
+    const libs_step = b.step("gc-libs", "Install static libs (runtime_host) for KotlinX --gc-runtime=zig");
     const bench_opt: std.builtin.Optimize = if (optimize == .debug) .fast else optimize;
-    // Zig 0.17.1: LLVM LTO needs LLD. The self-hosted Mach-O linker cannot do LLVM LTO
-    // ("error: LTO requires using LLD"). Keep full LTO on ELF/COFF; keep ReleaseFast on Darwin.
+    // Zig 0.17.1: LLVM LTO needs LLD. The self-hosted Mach-O linker cannot do LLVM LTO.
     const ops_lto: std.zig.LtoMode = switch (target.result.ofmt) {
         .elf, .coff, .wasm => .full,
         else => .none,
@@ -36,6 +56,16 @@ pub fn build(b: *std.Build) void {
         .root_source_file = b.path("src/host.zig"),
         .target = target,
         .optimize = bench_opt,
+        .link_libc = true,
+    });
+
+    // Libs always ReleaseFast for program linking (Darwin: no LTO on the archive).
+    const lib_opt: std.builtin.Optimize = .fast;
+    const kxgc_lib = b.createModule(.{ .root_source_file = b.path("src/kxgc.zig") });
+    const runtime_host_lib = b.createModule(.{
+        .root_source_file = b.path("src/runtime_host.zig"),
+        .target = target,
+        .optimize = lib_opt,
         .link_libc = true,
     });
 
@@ -101,5 +131,29 @@ pub fn build(b: *std.Build) void {
         run_ops.addPassthruArgs();
         run_ops.has_side_effects = true;
         bench_step.dependOn(&run_ops.step);
+
+        // Static library for KotlinX: collector + runtime_host (extern → runtime.c).
+        const coll_rt = b.createModule(.{
+            .root_source_file = b.path(b.fmt("src/{s}.zig", .{g})),
+            .target = target,
+            .optimize = lib_opt,
+            .link_libc = true,
+        });
+        coll_rt.addImport("kxgc", kxgc_lib);
+        coll_rt.addImport("host", runtime_host_lib);
+
+        const lib = b.addLibrary(.{
+            .name = b.fmt("gc-{s}", .{g}),
+            .linkage = .static,
+            .root_module = coll_rt,
+        });
+        // Keep the archive free of Zig LTO bitcode so clang -flto can link it with runtime.c.
+        lib.lto = .none;
+        const install_lib = b.addInstallArtifact(lib, .{});
+        libs_step.dependOn(&install_lib.step);
+        // Default install also places libs when `zig build` / `zig build install` runs.
+        b.getInstallStep().dependOn(&install_lib.step);
     }
+
+    _ = runtime_host;
 }

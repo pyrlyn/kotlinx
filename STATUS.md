@@ -93,6 +93,8 @@ Then copy the NewKotlin rows into `bench/table.md`.
 - Allocation: mimalloc default (`--alloc mimalloc`, found via `$NEWKOTLIN_MIMALLOC_DIR`, pkg-config or Homebrew; `brew install mimalloc`; clear error if missing), `--alloc malloc` (system) and `--alloc pool` optional. Leak tests: leak-count on the default build; ASan and macOS `leaks` on `--alloc malloc` builds. Benchmarks: see README.md.
 - Memory manager: `native/gc/c` behind `kxgc.h`, selected with `newkotlinc --gc=epoch|perceus|incremental|rc`
   (default = epoch, `--gc=default` is an alias; perceus = RC + cycle collector, the pre-epoch default). Tests: `native/gc/c/tests/zig` (`zig build ported`/`zig build gc`; legacy shell suite in `native/gc/c/tests/archive`); benchmarks: `bench/gc`.
+- **GC runtime backend (local `local/gc-extract-regression`):** default `--gc-runtime=zig` links `native/gc/zig/zig-out/lib/libgc-<name>.a` (experimental Zig port @cf79057 + `runtime_host`); `--gc-runtime=c` compiles `native/gc/c/<name>/gc.c`. Shared `compiler/runtime/runtime.c` always. Zig port parity incomplete vs C (see `native/gc/zig/docs/zig-port.md`).
+
 - Resume: `cd bench && ./build.sh && ./round.sh && RESULTS=results/round ./summarize.sh`; `compiler/test.sh` for compiler tests; `compiler/tests/upstream/run.py` for upstream tests.
 
 ## Status 2026-11-03

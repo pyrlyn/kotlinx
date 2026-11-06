@@ -1,12 +1,18 @@
-//! Zig entry for the C epoch smoke executable. C provides `main`.
-//! This file exists so `zig build` can own the link of runtime.c + epoch/gc.c + smoke.
+//! Zig entry for the C epoch smoke. Verifies `@import("kxgc_c")` (translate-c of kxgc.h).
 const std = @import("std");
+const kxgc_c = @import("kxgc_c");
 
-// C translation unit defines main; Zig root must still provide a start.
-// We re-export by calling the C smoke from Zig main instead: rename C entry.
 extern fn c_epoch_smoke_main() c_int;
 
 pub fn main() u8 {
-    const rc = c_epoch_smoke_main();
-    return @intCast(rc);
+    // translate-c exposes the preprocessor macro as a constant.
+    if (kxgc_c.KXGC_API_VERSION != 1) {
+        std.debug.print("C-SMOKE FAILED: KXGC_API_VERSION={d}\n", .{kxgc_c.KXGC_API_VERSION});
+        return 1;
+    }
+    if (@sizeOf(kxgc_c.KxGcStats) != 32) {
+        std.debug.print("C-SMOKE FAILED: KxGcStats size={d}\n", .{@sizeOf(kxgc_c.KxGcStats)});
+        return 1;
+    }
+    return @intCast(c_epoch_smoke_main());
 }

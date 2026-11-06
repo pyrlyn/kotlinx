@@ -1,12 +1,10 @@
-//! Umbrella native build for KotlinX GC after submodule removal.
+//! Umbrella native build for KotlinX GC (vendored path dependencies; no git submodule).
 //!
-//! - C collectors: vendored under `c/` (pyrlyn/gc@6acde64), compiled as C sources with link_libc.
-//! - Zig collectors: vendored under `zig/` (pyrlyn/gc@cf79057), consumed as modules via @import.
-//!
-//! This does not rewrite the Kotlin/Native `newkotlinc` compiler. It provides:
-//! 1) a Zig module graph consumers can `@import("kxgc")` / `@import("host")` / `@import("epoch")`,
-//! 2) a C smoke that links real `compiler/runtime/runtime.c` + `c/epoch/gc.c`,
-//! 3) a Zig smoke in a separate process (host adapter, no duplicate runtime exports).
+//! - C collectors: `c/` (pyrlyn/gc@6acde64) via `@import("kxgc_c")` (@cImport of kxgc.h) + .c sources.
+//! - Zig collectors: `zig/` path dep (pyrlyn/gc@cf79057 + runtime_host adapter); modules via
+//!   `b.dependency("kxgc_zig").module(...)`.
+//! - KotlinX programs: `zig build gc-libs` in `zig/` produces `libgc-<name>.a` linked by newkotlinc
+//!   when `--gc-runtime=zig` (default). `compiler/runtime/runtime.c` stays the shared runtime.
 //!
 //! Requires official Zig 0.17.1.
 const std = @import("std");
@@ -15,44 +13,30 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    // --- Zig modules (real collector sources; unmodified under zig/src) ---
-    const kxgc = b.addModule("kxgc", .{
-        .root_source_file = b.path("zig/src/kxgc.zig"),
+    // Path dependency: use exported modules from the vendored Zig package (not only b.path).
+    const gcdep = b.dependency("kxgc_zig", .{
+        .target = target,
+        .optimize = optimize,
     });
-    const host = b.addModule("host", .{
-        .root_source_file = b.path("zig/src/host.zig"),
+    const kxgc = gcdep.module("kxgc");
+    const host = gcdep.module("host");
+    const epoch = gcdep.module("epoch");
+    _ = gcdep.module("rc");
+    _ = gcdep.module("perceus");
+    _ = gcdep.module("incremental");
+    _ = gcdep.module("runtime_host");
+
+    // C ABI module: Zig 0.17 translate-c of vendored kxgc.h (replaces removed @cImport).
+    const kxgc_c_tc = b.addTranslateC(.{
+        .root_source_file = b.path("smoke/kxgc_c_root.h"),
         .target = target,
         .optimize = optimize,
         .link_libc = true,
     });
-    const epoch = b.addModule("epoch", .{
-        .root_source_file = b.path("zig/src/epoch.zig"),
-        .target = target,
-        .optimize = optimize,
-        .link_libc = true,
-    });
-    epoch.addImport("kxgc", kxgc);
-    epoch.addImport("host", host);
+    kxgc_c_tc.addIncludePath(b.path("c"));
+    const kxgc_c = kxgc_c_tc.addModule("kxgc_c");
 
-    // Also expose other collectors the same way (separate processes choose one).
-    inline for (.{ "rc", "perceus", "incremental" }) |name| {
-        const mod = b.addModule(name, .{
-            .root_source_file = b.path(b.fmt("zig/src/{s}.zig", .{name})),
-            .target = target,
-            .optimize = optimize,
-            .link_libc = true,
-        });
-        mod.addImport("kxgc", kxgc);
-        mod.addImport("host", host);
-    }
-
-    // Path dependency package (zig/build.zig.zon) stays available for `cd zig && zig build test`.
-    _ = b.dependency("kxgc_zig", .{
-        .target = target,
-        .optimize = optimize,
-    });
-
-    // --- Zig smoke (Debug / ReleaseFast via -Doptimize=...) ---
+    // --- Zig smoke: @import kxgc/host/epoch from the path dependency ---
     const zig_smoke = b.addExecutable(.{
         .name = "zig-epoch-smoke",
         .root_module = b.createModule(.{
@@ -68,19 +52,14 @@ pub fn build(b: *std.Build) void {
         }),
     });
     b.installArtifact(zig_smoke);
-
     const run_zig = b.addRunArtifact(zig_smoke);
     run_zig.has_side_effects = true;
-    const zig_step = b.step("zig-smoke", "Run Zig epoch smoke (@import kxgc/host/epoch)");
+    const zig_step = b.step("zig-smoke", "Run Zig epoch smoke (@import path-dep modules)");
     zig_step.dependOn(&run_zig.step);
 
-    // --- C smoke: compile C collector sources + real KotlinX runtime.c ---
+    // --- C smoke: @import("kxgc_c") + link runtime.c + c/epoch/gc.c ---
     const runtime_c = b.path("../../compiler/runtime/runtime.c");
-    const c_flags = [_][]const u8{
-        "-std=c11",
-        "-DRT_PLAIN_MALLOC",
-        "-Wno-unused-parameter",
-    };
+    const c_flags = [_][]const u8{ "-std=c11", "-DRT_PLAIN_MALLOC", "-Wno-unused-parameter" };
     const c_smoke = b.addExecutable(.{
         .name = "c-epoch-smoke",
         .root_module = b.createModule(.{
@@ -88,6 +67,9 @@ pub fn build(b: *std.Build) void {
             .target = target,
             .optimize = optimize,
             .link_libc = true,
+            .imports = &.{
+                .{ .name = "kxgc_c", .module = kxgc_c },
+            },
         }),
     });
     c_smoke.root_module.addCSourceFile(.{ .file = b.path("smoke/c_epoch_smoke.c"), .flags = &c_flags });
@@ -95,13 +77,34 @@ pub fn build(b: *std.Build) void {
     c_smoke.root_module.addCSourceFile(.{ .file = runtime_c, .flags = &c_flags });
     c_smoke.root_module.addIncludePath(b.path("c"));
     b.installArtifact(c_smoke);
-
     const run_c = b.addRunArtifact(c_smoke);
     run_c.has_side_effects = true;
-    const c_step = b.step("c-smoke", "Run C epoch smoke (runtime.c + c/epoch/gc.c)");
+    const c_step = b.step("c-smoke", "Run C epoch smoke (@import kxgc_c + runtime.c + gc.c)");
     c_step.dependOn(&run_c.step);
 
-    const smoke = b.step("smoke", "Run C and Zig epoch smokes (separate processes)");
+    // Zig-linked C-API check: Zig driver links libgc-epoch.a + runtime.c and uses @import("kxgc_c").
+    const zig_rt_smoke = b.addExecutable(.{
+        .name = "zig-runtime-epoch-smoke",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("smoke/zig_runtime_epoch_smoke.zig"),
+            .target = target,
+            .optimize = optimize,
+            .link_libc = true,
+            .imports = &.{
+                .{ .name = "kxgc_c", .module = kxgc_c },
+            },
+        }),
+    });
+    zig_rt_smoke.root_module.addCSourceFile(.{ .file = runtime_c, .flags = &c_flags });
+    zig_rt_smoke.root_module.addIncludePath(b.path("c"));
+    zig_rt_smoke.root_module.addObjectFile(b.path("zig/zig-out/lib/libgc-epoch.a"));
+    b.installArtifact(zig_rt_smoke);
+    const run_zrt = b.addRunArtifact(zig_rt_smoke);
+    run_zrt.has_side_effects = true;
+    const zrt_step = b.step("zig-runtime-smoke", "Link Zig libgc-epoch.a with runtime.c; @import(kxgc_c)");
+    zrt_step.dependOn(&run_zrt.step);
+
+    const smoke = b.step("smoke", "C smoke + Zig module smoke (+ zig-runtime if libs present)");
     smoke.dependOn(c_step);
     smoke.dependOn(zig_step);
 }
