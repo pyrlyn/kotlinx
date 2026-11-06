@@ -17,8 +17,8 @@ jobs:
       KN_VERSION: "2.4.21"
     steps:
       - uses: actions/checkout@v4
-        with:
       # Native Zig GC port / gc-libs need 0.17.1. Legacy native/gc/c/tests/zig was written for 0.16.x.
+      # GC is vendored under native/gc/ (path deps); no compiler/gc git submodule.
       - uses: mlugg/setup-zig@v2
         with:
           version: 0.17.1
@@ -26,6 +26,10 @@ jobs:
         run: |
           mkdir -p ~/.konan
           curl -fsSL "https://github.com/JetBrains/kotlin/releases/download/v${KN_VERSION}/kotlin-native-prebuilt-macos-aarch64-${KN_VERSION}.tar.gz" | tar xz -C ~/.konan
+      - name: Build Zig GC static libs
+        run: |
+          zig version
+          ( cd native/gc/zig && zig build gc-libs )
       - name: Build compiler
         run: NEWKOTLIN_KN_FLAGS=-opt compiler/build.sh
       - name: compiler/test.sh
