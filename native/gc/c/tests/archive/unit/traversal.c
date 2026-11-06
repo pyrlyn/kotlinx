@@ -1,9 +1,9 @@
 /* Include the collector to check traversal scratch space as well as public GC behavior.
  * Build with -DTEST_INCREMENTAL for the other consumer of trial_deletion.inc. */
 #ifdef TEST_INCREMENTAL
-#include "../../incremental/gc.c"
+#include "../../../incremental/gc.c"
 #else
-#include "../../perceus/gc.c"
+#include "../../../perceus/gc.c"
 #endif
 
 #include <assert.h>

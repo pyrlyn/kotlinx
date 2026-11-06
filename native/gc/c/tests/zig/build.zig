@@ -17,7 +17,7 @@ pub fn build(b: *std.Build) void {
         .os_version_min = .{ .semver = .{ .major = 13, .minor = 0, .patch = 0 } },
     }) else target;
     const optimize = b.standardOptimizeOption(.{ .preferred_optimize_mode = .ReleaseSafe });
-    const gcs = b.option([]const u8, "gcs", "Collectors to test (default: every compiler/gc/*/gc.c)");
+    const gcs = b.option([]const u8, "gcs", "Collectors to test (default: every native/gc/c/*/gc.c)");
 
     // Unit-level tests are Zig objects that export main(); the runner links each with runtime.c and one
     // collector using the C compiler and flags run.sh used (incl. -O1/-O3 and ASan builds).
@@ -43,7 +43,9 @@ pub fn build(b: *std.Build) void {
     const runner = b.addExecutable(.{ .name = "gc-suite", .root_module = rmod });
     b.installArtifact(runner);
 
-    const obj_dir = b.getInstallPath(.prefix, "obj");
+    // Zig 0.17 removed Build.getInstallPath; objects install to this package's zig-out/obj.
+    // Runner cwd is the KotlinX repo root, so pass a repo-relative path.
+    const obj_dir = "native/gc/c/tests/zig/zig-out/obj";
     const repo = b.path("../../../..");
     inline for (.{ .{ "gc", "Run the Zig GC test suite", "" }, .{ "ported", "Run only the cases ported from run.sh", "--ported-only" }, .{ "mt", "Run only the multithreaded collector tests (plain + TSan)", "--mt-only" } }) |s| {
         const run = b.addRunArtifact(runner);
@@ -59,7 +61,7 @@ pub fn build(b: *std.Build) void {
 
     const cov = b.addSystemCommand(&.{ "sh", "coverage.sh" });
     cov.setCwd(b.path("."));
-    cov.addArgs(&.{ b.getInstallPath(.bin, "gc-suite"), obj_dir });
+    cov.addArgs(&.{ "zig-out/bin/gc-suite", obj_dir });
     if (gcs) |g| cov.setEnvironmentVariable("GCS", g);
     cov.has_side_effects = true;
     cov.stdio = .inherit;

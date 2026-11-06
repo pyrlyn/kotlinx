@@ -88,7 +88,8 @@ fn repoRoot() []const u8 {
     const cwd = std.c.getcwd(&buf, buf.len) orelse @panic("getcwd");
     var dir: []const u8 = p.gpa.dupe(u8, std.mem.sliceTo(@as([*:0]u8, @ptrCast(cwd)), 0)) catch @panic("oom");
     while (true) {
-        if (p.exists(p.fmt("{s}/compiler/gc/kxgc.h", .{dir}))) return dir;
+        if (p.exists(p.fmt("{s}/native/gc/c/kxgc.h", .{dir}))) return dir;
+        if (p.exists(p.fmt("{s}/compiler/gc/kxgc.h", .{dir}))) return dir; // legacy layout
         const slash = std.mem.lastIndexOfScalar(u8, dir, '/') orelse @panic("not inside the KotlinX repository");
         if (slash == 0) @panic("not inside the KotlinX repository");
         dir = dir[0..slash];
@@ -103,8 +104,8 @@ extern "c" fn getpid() c_int;
 fn listGcs() []const []const u8 {
     if (p.env("GCS")) |g| return p.words(g);
     var names: std.ArrayList([]const u8) = .empty;
-    // Same order as the shell glob compiler/gc/*/gc.c (alphabetical).
-    const lst = p.capture(.{ .argv = &.{ "/bin/sh", "-c", "for d in compiler/gc/*/gc.c; do basename \"$(dirname \"$d\")\"; done" } }, p.fmt("{s}/gcs.txt", .{out}), false);
+    // Same order as the shell glob native/gc/c/*/gc.c (alphabetical).
+    const lst = p.capture(.{ .argv = &.{ "/bin/sh", "-c", "for d in native/gc/c/*/gc.c; do basename \"$(dirname \"$d\")\"; done" } }, p.fmt("{s}/gcs.txt", .{out}), false);
     var it = std.mem.tokenizeScalar(u8, lst.text, '\n');
     while (it.next()) |n| names.append(p.gpa, n) catch @panic("oom");
     return names.items;
@@ -146,9 +147,9 @@ pub fn main(init: std.process.Init.Minimal) void {
     }
 
     for (gcs) |g| {
-        const caps = p.readFile(p.fmt("compiler/gc/{s}/caps", .{g}));
+        const caps = p.readFile(p.fmt("native/gc/c/{s}/caps", .{g}));
         var extra: []const []const u8 = &.{};
-        const cfg = p.fmt("compiler/gc/{s}/config.sh", .{g});
+        const cfg = p.fmt("native/gc/c/{s}/config.sh", .{g});
         if (p.exists(cfg)) {
             const r = p.capture(.{ .argv = &.{ "sh", cfg } }, p.fmt("{s}/cfg-{s}", .{ out, g }), false);
             if (r.status != 0) {
@@ -165,7 +166,7 @@ pub fn main(init: std.process.Init.Minimal) void {
         var capargs: std.ArrayList([]const u8) = .empty;
         if (has(caps, "cycles")) capargs.append(p.gpa, "cycles") catch unreachable;
         if (has(caps, "precise")) capargs.append(p.gpa, "precise") catch unreachable;
-        const gc_c = p.fmt("compiler/gc/{s}/gc.c", .{g});
+        const gc_c = p.fmt("native/gc/c/{s}/gc.c", .{g});
         const trav_gc = std.mem.eql(u8, g, "perceus") or std.mem.eql(u8, g, "incremental");
         const testdef: []const []const u8 = if (std.mem.eql(u8, g, "incremental")) &.{"-DTEST_INCREMENTAL"} else &.{};
 
@@ -177,7 +178,7 @@ pub fn main(init: std.process.Init.Minimal) void {
             const exe = p.fmt("{s}/unit-{s}", .{ out, g });
             const err = p.fmt("{s}/unit-{s}.err", .{ out, g });
             const log = p.fmt("{s}/unit-{s}.log", .{ out, g });
-            if (compileC(cat(&.{ &.{ o, "-g", "-Icompiler/gc" }, def.items, extra, &.{ p.fmt("{s}/gc_unit.o", .{O}), "compiler/runtime/runtime.c", gc_c, "-o", exe } }), err) and
+            if (compileC(cat(&.{ &.{ o, "-g", "-Inative/gc/c" }, def.items, extra, &.{ p.fmt("{s}/gc_unit.o", .{O}), "compiler/runtime/runtime.c", gc_c, "-o", exe } }), err) and
                 runTo(exe, capargs.items, &.{}, .{ .file = log }, .stdout) == 0)
                 p.out("PASS gc-unit {s} {s}\n", .{ g, o })
             else {
@@ -188,7 +189,7 @@ pub fn main(init: std.process.Init.Minimal) void {
                 const texe = p.fmt("{s}/traversal-{s}", .{ out, g });
                 const terr = p.fmt("{s}/traversal-{s}.err", .{ out, g });
                 const tlog = p.fmt("{s}/traversal-{s}.log", .{ out, g });
-                if (compileC(cat(&.{ &.{ o, "-g", "-Icompiler/gc" }, testdef, &.{ p.fmt("{s}/traversal.o", .{O}), "compiler/gc/tests/zig/src/unit/traversal_shim.c", "compiler/runtime/runtime.c", "-o", texe } }), terr) and
+                if (compileC(cat(&.{ &.{ o, "-g", "-Inative/gc/c" }, testdef, &.{ p.fmt("{s}/traversal.o", .{O}), "native/gc/c/tests/zig/src/unit/traversal_shim.c", "compiler/runtime/runtime.c", "-o", texe } }), terr) and
                     runTo(texe, &.{}, &.{}, .{ .file = tlog }, .stdout) == 0)
                     p.out("PASS gc-traversal {s} {s}\n", .{ g, o })
                 else {
@@ -204,7 +205,7 @@ pub fn main(init: std.process.Init.Minimal) void {
             const exe = p.fmt("{s}/traversal-{s}.asan", .{ out, g });
             const err = p.fmt("{s}/traversal-{s}.asanerr", .{ out, g });
             const log = p.fmt("{s}/traversal-{s}.asanlog", .{ out, g });
-            if (compileC(cat(&.{ &.{ "-O1", "-g", "-fsanitize=address", "-fno-omit-frame-pointer", "-DRT_PLAIN_MALLOC", "-Icompiler/gc" }, testdef, &.{ p.fmt("{s}/traversal.o", .{O}), "compiler/gc/tests/zig/src/unit/traversal_shim.c", "compiler/runtime/runtime.c", "-o", exe } }), err) and
+            if (compileC(cat(&.{ &.{ "-O1", "-g", "-fsanitize=address", "-fno-omit-frame-pointer", "-DRT_PLAIN_MALLOC", "-Inative/gc/c" }, testdef, &.{ p.fmt("{s}/traversal.o", .{O}), "native/gc/c/tests/zig/src/unit/traversal_shim.c", "compiler/runtime/runtime.c", "-o", exe } }), err) and
                 runTo(exe, &.{}, &.{}, .{ .file = log }, .stdout) == 0)
                 p.out("PASS gc-traversal-asan {s}\n", .{g})
             else {
@@ -217,7 +218,7 @@ pub fn main(init: std.process.Init.Minimal) void {
     epochTests(gcs);
     incrementalTests(gcs, O);
     // Selecting an unknown implementation is a compile error.
-    if (nk(&.{ "--gc=nope", "compiler/gc/tests/kt/reuse.kt", "-o", p.fmt("{s}/nope", .{out}) }, .null)) {
+    if (nk(&.{ "--gc=nope", "native/gc/c/tests/kt/reuse.kt", "-o", p.fmt("{s}/nope", .{out}) }, .null)) {
         p.out("FAIL gc-unknown\n", .{});
         fail = true;
     } else p.out("PASS gc-unknown\n", .{});
@@ -241,12 +242,12 @@ fn finish() noreturn {
 fn mtTests(gcs: []const []const u8) void {
     const env = [_][]const u8{ "KX_GC_EXIT_DRAIN=1", "KX_GC_THREADS=4", "KX_GC_LOG_CAP=256", "KX_GC_MIN_THRESHOLD=16", "KX_GC_MAJOR_RATIO=1" };
     for (gcs) |g| {
-        const caps = p.readFile(p.fmt("compiler/gc/{s}/caps", .{g}));
+        const caps = p.readFile(p.fmt("native/gc/c/{s}/caps", .{g}));
         if (!has(caps, "deferred")) {
             p.out("SKIP gc-mt {s} (no concurrent collector)\n", .{g});
             continue;
         }
-        const gc_c = p.fmt("compiler/gc/{s}/gc.c", .{g});
+        const gc_c = p.fmt("native/gc/c/{s}/gc.c", .{g});
         const tsan_env = "TSAN_OPTIONS=halt_on_error=1:exitcode=66:second_deadlock_stack=1";
         // tiny fixed major steps: an incremental major spans many logs and the idle gaps between turns
         const slow_major = [_][]const u8{ "KX_GC_MAJOR_STEP_US=0", "KX_GC_MAJOR_STEP=64" };
@@ -262,7 +263,7 @@ fn mtTests(gcs: []const []const u8) void {
             const exe = p.fmt("{s}/mt-{s}{s}", .{ out, g, v.name });
             const err = p.fmt("{s}/mt-{s}{s}.err", .{ out, g, v.name });
             const log = p.fmt("{s}/mt-{s}{s}.log", .{ out, g, v.name });
-            if (compileC(cat(&.{ v.flags, &.{ "-g", "-Icompiler/gc", p.fmt("{s}/mt_test.o", .{obj_dir}), "compiler/gc/tests/zig/src/unit/mt_shim.c", "compiler/runtime/runtime.c", gc_c, "-o", exe } }), err) and
+            if (compileC(cat(&.{ v.flags, &.{ "-g", "-Inative/gc/c", p.fmt("{s}/mt_test.o", .{obj_dir}), "native/gc/c/tests/zig/src/unit/mt_shim.c", "compiler/runtime/runtime.c", gc_c, "-o", exe } }), err) and
                 runTo(exe, &.{g}, cat(&.{ &env, v.env }), .{ .file = log }, .{ .append = err }) == 0)
                 p.out("PASS gc-mt {s} {s}\n", .{ g, v.name })
             else {
@@ -277,7 +278,7 @@ fn apiTest(g: []const u8, o: []const u8, def: []const []const u8, extra: []const
     const exe = p.fmt("{s}/api-{s}", .{ out, g });
     const err = p.fmt("{s}/api-{s}.err", .{ out, g });
     const log = p.fmt("{s}/api-{s}.log", .{ out, g });
-    if (compileC(cat(&.{ &.{ o, "-g", "-Icompiler/gc" }, def, extra, &.{ p.fmt("{s}/api_test.o", .{obj_dir}), "compiler/runtime/runtime.c", gc_c, "-o", exe } }), err) and
+    if (compileC(cat(&.{ &.{ o, "-g", "-Inative/gc/c" }, def, extra, &.{ p.fmt("{s}/api_test.o", .{obj_dir}), "compiler/runtime/runtime.c", gc_c, "-o", exe } }), err) and
         runTo(exe, cat(&.{ &.{g}, capargs }), &.{"KX_GC_EXIT_DRAIN=1"}, .{ .file = log }, .stdout) == 0)
         p.out("PASS gc-api {s} {s}\n", .{ g, o })
     else {
@@ -287,11 +288,11 @@ fn apiTest(g: []const u8, o: []const u8, def: []const []const u8, extra: []const
 }
 
 fn ktTests(g: []const u8, caps: []const u8) void {
-    const names = p.capture(.{ .argv = &.{ "/bin/sh", "-c", "for t in compiler/gc/tests/kt/*.kt; do basename \"$t\" .kt; done" } }, p.fmt("{s}/kt.txt", .{out}), false);
+    const names = p.capture(.{ .argv = &.{ "/bin/sh", "-c", "for t in native/gc/c/tests/kt/*.kt; do basename \"$t\" .kt; done" } }, p.fmt("{s}/kt.txt", .{out}), false);
     var it = std.mem.tokenizeScalar(u8, names.text, '\n');
     while (it.next()) |n| {
-        const t = p.fmt("compiler/gc/tests/kt/{s}.kt", .{n});
-        const exp = p.trimNl(p.readFile(p.fmt("compiler/gc/tests/kt/{s}.out", .{n})));
+        const t = p.fmt("native/gc/c/tests/kt/{s}.kt", .{n});
+        const exp = p.trimNl(p.readFile(p.fmt("native/gc/c/tests/kt/{s}.out", .{n})));
         if (std.mem.indexOf(u8, p.readFile(t), "// gc-needs: cycles") != null and lineStarts(p.readFile(t), "// gc-needs: cycles") and !has(caps, "cycles")) {
             p.out("SKIP gc {s} {s} (no cycle collection)\n", .{ g, n });
             continue;
@@ -365,7 +366,7 @@ fn epochTests(gcs: []const []const u8) void {
     // grow the log queue / log pool without bound: adaptive limit <= 16, at most limit + 2 spare logs.
     {
         const exe = p.fmt("{s}/epoch.queue_spike", .{out});
-        if (nk(&.{ "--gc=epoch", "compiler/gc/tests/epoch/queue_spike.kt", "-o", exe }, .null)) {
+        if (nk(&.{ "--gc=epoch", "native/gc/c/tests/epoch/queue_spike.kt", "-o", exe }, .null)) {
             noteBinary(exe);
             // dbg=$(... 2>&1 >/dev/null): stderr only.
             const dbgf = p.fmt("{s}.dbg", .{exe});
@@ -385,7 +386,7 @@ fn epochTests(gcs: []const []const u8) void {
     // Epoch: KX_GC_BOUNDARY_KEEP=16384 frees most dead objects paced by allocations, not at the boundary;
     // both settings free everything (--leak-check) with the same checksum.
     {
-        const t = "compiler/gc/tests/epoch/paced_free.kt";
+        const t = "native/gc/c/tests/epoch/paced_free.kt";
         const want = "checksum=2000001000000";
         const exe = p.fmt("{s}/epoch.paced", .{out});
         const lc = p.fmt("{s}/epoch.paced.lc", .{out});
@@ -418,7 +419,7 @@ fn epochTests(gcs: []const []const u8) void {
     // Epoch: freed big blocks are released with madvise (madvised > 0), KX_GC_MADVISE=0 turns it off; both
     // free everything with the same checksum.
     {
-        const t = "compiler/gc/tests/epoch/madvise_big.kt";
+        const t = "native/gc/c/tests/epoch/madvise_big.kt";
         const want = "checksum=800000";
         const exe = p.fmt("{s}/epoch.madv", .{out});
         const lc = p.fmt("{s}/epoch.madv.lc", .{out});
@@ -458,7 +459,7 @@ fn incrementalTests(gcs: []const []const u8, O: []const u8) void {
     {
         const exe = p.fmt("{s}/incremental.slice_black", .{out});
         const err = p.fmt("{s}.err", .{exe});
-        if (nkCflags(&.{ "--gc=incremental", "--alloc", "malloc" }, "-O1 -g -fsanitize=address -fno-omit-frame-pointer", &.{ "compiler/gc/tests/incremental/slice_black.kt", "-o", exe })) {
+        if (nkCflags(&.{ "--gc=incremental", "--alloc", "malloc" }, "-O1 -g -fsanitize=address -fno-omit-frame-pointer", &.{ "native/gc/c/tests/incremental/slice_black.kt", "-o", exe })) {
             noteBinary(exe);
             const r = p.capture(.{ .argv = &.{exe}, .env = covEnv(&.{"KX_GC_BUDGET_US=300"}), .stderr = .{ .file = err } }, p.fmt("{s}.stdout", .{exe}), false);
             if (r.status == 0 and std.mem.eql(u8, r.text, "53215861")) p.out("PASS gc-incremental slice_black\n", .{}) else {
@@ -474,7 +475,7 @@ fn incrementalTests(gcs: []const []const u8, O: []const u8) void {
     {
         const exe = p.fmt("{s}/incremental.one_pass", .{out});
         const err = p.fmt("{s}/incremental.one_pass.err", .{out});
-        if (compileC(&.{ "-O1", "-g", "-Icompiler/gc", p.fmt("{s}/one_pass.o", .{O}), "compiler/runtime/runtime.c", "compiler/gc/incremental/gc.c", "-o", exe }, err) and
+        if (compileC(&.{ "-O1", "-g", "-Inative/gc/c", p.fmt("{s}/one_pass.o", .{O}), "compiler/runtime/runtime.c", "native/gc/c/incremental/gc.c", "-o", exe }, err) and
             runTo(exe, &.{}, &.{"KX_GC_BUDGET_US=0"}, .inherit, .{ .append = err }) == 0)
             p.out("PASS gc-incremental one_pass\n", .{})
         else {

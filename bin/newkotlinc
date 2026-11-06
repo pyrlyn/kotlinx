@@ -1,6 +1,11 @@
 #!/bin/bash
 # KotlinX compiler launcher: builds compiler/build/newkotlinc.kexe on first use, then runs it.
 # Usage: bin/newkotlinc Main.kt -o main && ./main
+#
+# Zig GC backend (default NEWKOTLIN_GC_RUNTIME=zig / --gc-runtime=zig): always runs
+#   zig build gc-libs
+# so collector source changes rebuild into zig-out/lib/libgc-*.a (Zig cache = incremental).
+# --gc-runtime=c skips Zig. Direct newkotlinc.kexe does not build libs (see native/gc/README.md).
 root="$(cd "$(dirname "$0")/.." && pwd)"
 exe="$root/compiler/build/newkotlinc.kexe"
 [ -x "$exe" ] || "$root/compiler/build.sh" >&2 || exit 1
@@ -11,27 +16,42 @@ export NEWKOTLIN_GC_ZIG_LIB_DIR="${NEWKOTLIN_GC_ZIG_LIB_DIR:-$root/native/gc/zig
 # Default collector backend is Zig (experimental). Set NEWKOTLIN_GC_RUNTIME=c for the C collectors.
 export NEWKOTLIN_GC_RUNTIME="${NEWKOTLIN_GC_RUNTIME:-zig}"
 
-# Ensure Zig collector archives exist when using the Zig backend (cached by zig build).
-ensure_zig_gc_libs() {
-  case "${NEWKOTLIN_GC_RUNTIME}" in
-    c|C) return 0 ;;
-  esac
-  # Skip if user already passes --gc-runtime=c on the CLI (env still zig by default).
+# Parse CLI for --gc-runtime / --gc (env defaults apply when flags absent).
+parse_gc_cli() {
+  GC_RUNTIME_CLI="${NEWKOTLIN_GC_RUNTIME:-zig}"
+  GC_NAME_CLI=""
+  local prev="" a
   for a in "$@"; do
+    if [ "$prev" = "--gc-runtime" ]; then
+      GC_RUNTIME_CLI="$a"
+      prev=""
+      continue
+    fi
+    if [ "$prev" = "--gc" ]; then
+      GC_NAME_CLI="$a"
+      prev=""
+      continue
+    fi
     case "$a" in
-      --gc-runtime=c|--gc-runtime=C) return 0 ;;
-      --gc-runtime) return 0 ;; # next arg checked loosely; rebuild is cheap if zig
+      --gc-runtime=*) GC_RUNTIME_CLI="${a#--gc-runtime=}" ;;
+      --gc-runtime) prev="--gc-runtime" ;;
+      --gc=*) GC_NAME_CLI="${a#--gc=}" ;;
+      --gc) prev="--gc" ;;
+      *) prev="" ;;
     esac
   done
-  local need=0 g
-  for g in epoch perceus incremental rc; do
-    [ -f "$NEWKOTLIN_GC_ZIG_LIB_DIR/libgc-$g.a" ] || need=1
-  done
-  [ "$need" = 0 ] && return 0
+  if [ "$GC_NAME_CLI" = "default" ]; then GC_NAME_CLI="epoch"; fi
+}
+
+ensure_zig_gc_libs() {
+  parse_gc_cli "$@"
+  case "$GC_RUNTIME_CLI" in
+    c|C) return 0 ;;
+  esac
   local zigbin="${ZIG:-}"
   if [ -z "$zigbin" ]; then
     if command -v zig >/dev/null 2>&1; then zigbin=$(command -v zig); else
-      echo "error: Zig 0.17.1 required to build GC libs (NEWKOTLIN_GC_RUNTIME=zig). Set ZIG=/path/to/zig or install official 0.17.1, or use --gc-runtime=c" >&2
+      echo "error: Zig 0.17.1 required to build GC libs (gc-runtime=zig). Set ZIG=/path/to/zig or install official 0.17.1, or use --gc-runtime=c" >&2
       return 1
     fi
   fi
@@ -40,8 +60,13 @@ ensure_zig_gc_libs() {
     echo "error: need official Zig 0.17.1 for native GC libs (got '${ver:-missing}'). Set ZIG=... or use --gc-runtime=c" >&2
     return 1
   fi
-  echo "building Zig GC static libs (once; cached)…" >&2
-  ( cd "$root/native/gc/zig" && "$zigbin" build gc-libs ) || return 1
+  # Always invoke zig build so source changes rebuild; Zig's cache skips work when unchanged.
+  local -a zargs=(build gc-libs)
+  case "$GC_NAME_CLI" in
+    epoch|perceus|incremental|rc) zargs+=(-Dgc="$GC_NAME_CLI") ;;
+  esac
+  echo "zig build gc-libs${GC_NAME_CLI:+ -Dgc=$GC_NAME_CLI} (Zig $ver; incremental)…" >&2
+  ( cd "$root/native/gc/zig" && "$zigbin" "${zargs[@]}" ) || return 1
 }
 ensure_zig_gc_libs "$@" || exit 1
 

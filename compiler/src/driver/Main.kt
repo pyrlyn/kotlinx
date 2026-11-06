@@ -220,8 +220,8 @@ fun main(args: Array<String>) {
         val lib = "$zigLibDir/libgc-$gc.a"
         if (access(lib, F_OK) != 0) {
             fprintf(stderr, "error: Zig GC archive missing: %s\n" +
-                "Build it once (Zig 0.17.1): cd native/gc/zig && zig build gc-libs\n" +
-                "Or set NEWKOTLIN_GC_ZIG_LIB_DIR, or use --gc-runtime=c\n", lib)
+                "Direct newkotlinc.kexe does not rebuild libs. Use bin/newkotlinc (runs zig build gc-libs), or\n" +
+                "cd native/gc/zig && zig build gc-libs  (Zig 0.17.1), or set NEWKOTLIN_GC_ZIG_LIB_DIR, or --gc-runtime=c\n", lib)
             exit(1); return
         }
         "'$lib'"

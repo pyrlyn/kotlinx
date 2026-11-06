@@ -1,6 +1,6 @@
 //! Umbrella native build for KotlinX GC (vendored path dependencies; no git submodule).
 //!
-//! - C collectors: `c/` (pyrlyn/gc@6acde64) via `@import("kxgc_c")` (@cImport of kxgc.h) + .c sources.
+//! - C collectors: `c/` (pyrlyn/gc@6acde64) via `@import("kxgc_c")` (addTranslateC of kxgc.h) + .c sources.
 //! - Zig collectors: `zig/` path dep (pyrlyn/gc@cf79057 + runtime_host adapter); modules via
 //!   `b.dependency("kxgc_zig").module(...)`.
 //! - KotlinX programs: `zig build gc-libs` in `zig/` produces `libgc-<name>.a` linked by newkotlinc
