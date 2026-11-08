@@ -19,7 +19,7 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
 ## KotlinX compiler (`compiler/`)
 - Pipeline: `src/frontend/Lexer.kt` -> `Parser.kt` (AST in `Ast.kt`, types in `Types.kt`) -> `Uses.kt` (last-use analysis for
   Perceus) -> `src/backend/native/NativeBackend.kt` (type checking + LLVM IR) -> `clang -O3 -flto` with `runtime/runtime.c`.
-  Entry point `src/driver/Main.kt`; `--target=native` is the default and the only implemented target (js/wasm/jvm stubs exit non-zero).
+  Entry point `src/driver/Main.kt`; `--target=native` is the default; `--target=wasm` emits the same IR for wasm32-wasi (`backend/native/LlvmTarget.kt`, see `docs/usage.md`); js/jvm stubs exit non-zero; vs JetBrains Kotlin/Wasm: `bench/results/wasm/README.md`.
 - Language subset: top-level functions, top-level properties (`val`/`var`/`const val`), classes with primary-constructor
   fields and methods, interfaces with virtual dispatch, val/var, if/when expressions, while, for over ranges/arrays/lists/strings,
   unlabeled `break`/`continue`, lambdas as trailing blocks for built-ins, ArrayList/HashMap/StringBuilder/arrays, string
