@@ -60,9 +60,11 @@ inline fn flags(o: *anyopaque) *u32 {
     const w: [*]u32 = @ptrCast(@alignCast(o));
     return &w[1];
 }
+/// The vtable pointer follows the 8-byte header word (kx.VTAB_OFFSET), also where pointers are 4 bytes (wasm32).
 inline fn vtab(o: *anyopaque) *const kx.VTab {
-    const w: [*]const *const kx.VTab = @ptrCast(@alignCast(o));
-    return w[1];
+    const b: [*]const u8 = @ptrCast(o);
+    const slot: *const *const kx.VTab = @ptrCast(@alignCast(b + kx.VTAB_OFFSET));
+    return slot.*;
 }
 inline fn isCyclic(o: *anyopaque) bool {
     return vtab(o).cyclic != null;
