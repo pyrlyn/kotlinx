@@ -4,3 +4,6 @@ Without `--gc`, `--target=js` links the `compact` collector when the program all
 cyclic class (`rt_alloc_trace` in the program IR; see `allocatesCyclic` in `compiler/src/driver/JsDriver.kt`), else
 plain reference counting (`rc`). `compiler/test.sh` builds each file here with `LL2JS_PRETTY=1` and checks the
 output and the linked collector: `cyclic_*.kt` must link compact, `acyclic_*.kt` rc.
+
+`acyclic_counts.kt` also covers the 32-bit collection counts and lengths of `--target=js` (`rt_cnt` in
+`compiler/runtime/runtime.c`): list growth, map rehash and removal, long builders and shared references.
