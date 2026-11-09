@@ -1,2 +1,2 @@
-23:21  up 4 days, 12:41, 1 user, load averages: 42.88 33.90 23.76
-23:24  up 4 days, 12:43, 1 user, load averages: 15.31 26.28 22.16
+ 0:51  up 4 days, 14:10, 1 user, load averages: 14.86 11.13 9.45
+ 0:54  up 4 days, 14:13, 1 user, load averages: 12.08 10.91 9.59

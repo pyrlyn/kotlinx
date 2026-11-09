@@ -1,6 +1,6 @@
 #!/bin/bash
 # Golden tests (compiler/tests/*.kt + .out) compiled with --target=wasm and run under Node's WASI.
-# Needs zig (or NK_WASM_CC) and node. Usage: compiler/tests/wasm/run.sh [test.kt ...]; JOBS=8 by default.
+# Needs Zig 0.17.1 (GC archives, and the linker unless NK_WASM_CC is set) and node. Usage: compiler/tests/wasm/run.sh [test.kt ...]; JOBS=8 by default.
 # Prints PASS/FAIL/CFAIL per test and a summary; exits 1 if any test fails. Output files: $OUT (default a temp dir).
 cd "$(dirname "$0")/../../.."
 root=$PWD
@@ -8,6 +8,8 @@ export NKC=${NKC:-$root/compiler/build/newkotlinc.kexe}
 export NEWKOTLIN_RUNTIME=${NEWKOTLIN_RUNTIME:-$root/compiler/runtime/runtime.c}
 export OUT=${OUT:-$(mktemp -d)}
 export ROOT=$root
+# Zig GC archives for wasm32-wasi (default --gc-runtime=zig), built once before the parallel compiles.
+"$root/bin/newkotlinc" --gc-libs-only --target=wasm || exit 1
 
 one() {
   local f=$1 b o out; b=$(basename "$f" .kt); o=${f%.kt}.out

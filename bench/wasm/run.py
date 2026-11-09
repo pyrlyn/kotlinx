@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Runs the modules built by wasm/build.sh under Node and writes a comparison table.
 
-Per case: one warm-up run per variant, then RUNS runs round-robin over the variants (kx, kx-opt, kw, kw-opt).
+Per case: one warm-up run per variant, then RUNS runs round-robin over the variants (kx, kx-opt, kx-c, kw, kw-opt).
+The KotlinX / Kotlin/Wasm ratio uses the default build (Zig collector: kx, kx-opt); kx-c is shown for comparison.
 Kernel time = the program's own `nanos=` (same clock source for both: monotonic), median of RUNS.
 Wall = whole `node` process (startup, compile/instantiate, run), median. Peak RSS from /usr/bin/time -l, median.
 Size = main.wasm bytes and gzip -9 bytes (kw also needs its 659-byte main.mjs loader; kx uses wasm/run.mjs).
@@ -16,8 +17,8 @@ RUNS = int(sys.argv[1]) if len(sys.argv) > 1 else 5
 # Kotlin/Wasm's deep(100_000) overflows V8's default stack (kw-opt needs ~7 MB, kw more): every variant runs with a
 # 64 MB process stack limit (macOS hard limit) and a matching V8 limit.
 NODE = ["sh", "-c", 'ulimit -s 65520 && exec node --no-warnings --stack-size=60000 "$@"', "node"]
-VARIANTS = ["kx", "kx-opt", "kw", "kw-opt"]
-LABEL = {"kx": "KotlinX → LLVM → wasm32", "kx-opt": "KotlinX + wasm-opt -O3",
+VARIANTS = ["kx", "kx-opt", "kx-c", "kw", "kw-opt"]
+LABEL = {"kx": "KotlinX → LLVM → wasm32", "kx-opt": "KotlinX + wasm-opt -O3", "kx-c": "KotlinX, C collector",
          "kw": "Kotlin/Wasm (DCE)", "kw-opt": "Kotlin/Wasm + Binaryen (Gradle prod)"}
 cases = os.environ.get("CASES", "").split() or sorted(os.listdir("wasm/out"), key=lambda c: (c != "sum", c))
 

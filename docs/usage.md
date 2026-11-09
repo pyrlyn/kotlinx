@@ -35,6 +35,7 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `NEWKOTLIN_GC_DIR` | Caps / `kxgc.h` / C `gc.c` tree (default: `native/gc/c`). |
 | `NEWKOTLIN_GC_RUNTIME` | `zig` (default) or `c` — collector backend language. |
 | `NEWKOTLIN_GC_ZIG_LIB_DIR` | Directory with `libgc-<name>.a` (default: `native/gc/zig/zig-out/lib`). |
+| `NEWKOTLIN_GC_ZIG_WASM_LIB_DIR` | Same for `--target=wasm` (default: `native/gc/zig/zig-out/wasm32-wasi/lib`). |
 | `NEWKOTLIN_MIMALLOC_DIR` | Where to find `libmimalloc`. |
 | `NK_CC`, `NK_OPT` | Default C compiler and `opt`. |
 | `NK_WASM_CC` | C compiler and linker for `--target=wasm` (default: `zig cc -target wasm32-wasi`). |
@@ -43,11 +44,16 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 
 `--target=wasm` reuses the whole native pipeline: the frontend, `NativeBackend` (with `LlvmTarget.WASM32`:
 wasm32 triple and data layout, 32-bit `size_t`/`long` for libc calls, entry `__main_argc_argv`), `opt`,
-`runtime.c` and a pyrlyn/gc collector from `native/gc/c`. Objects live in linear memory and are managed by the
-collector, not by the engine's GC. Defaults and limits:
+`runtime.c` and a pyrlyn/gc collector. Objects live in linear memory and are managed by the collector, not by the
+engine's GC. Defaults and limits:
 
 - `--gc perceus` (synchronous cycle collection; `incremental` and `rc` also work; `epoch` needs threads),
-  `--gc-runtime=c` (the Zig archives are host code), `--alloc malloc` (wasi-libc) or `pool`; no `--link`.
+  `--alloc malloc` (wasi-libc) or `pool`; no `--link`.
+- `--gc-runtime=zig` (default) links the Zig collectors built for wasm32-wasi:
+  `native/gc/zig/zig-out/wasm32-wasi/lib/libgc-<name>.a` (or `$NEWKOTLIN_GC_ZIG_WASM_LIB_DIR`), a separate prefix
+  so the host archives in `zig-out/lib` stay intact. `bin/newkotlinc --target=wasm` rebuilds them like the host
+  ones; `bin/newkotlinc --gc-libs-only --target=wasm [--gc ...] [--alloc ...]` only builds them. Direct
+  `newkotlinc.kexe` needs them built first. `--gc-runtime=c` compiles `native/gc/c/<name>/gc.c` instead.
 - Linker: `zig cc -target wasm32-wasi` (clang 21 with wasi-libc and wasm-ld), so `opt` must be LLVM 21 or older;
   links with `-s -Wl,-z,stack-size=8388608`.
 - Run with any WASI preview1 host, e.g. `node bench/wasm/run.mjs main.wasm` (preopens the current directory).

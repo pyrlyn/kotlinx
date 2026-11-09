@@ -7,7 +7,8 @@ import platform.posix.*
 
 private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --target <t>         native (default; LLVM, native binary), wasm (same LLVM IR for wasm32-wasi, linked with
-                       ${'$'}NK_WASM_CC or `zig cc -target wasm32-wasi`; GC perceus, --gc-runtime=c, --alloc malloc),
+                       ${'$'}NK_WASM_CC or `zig cc -target wasm32-wasi`; GC perceus, --alloc malloc; Zig GC archives
+                       from native/gc/zig/zig-out/wasm32-wasi/lib or ${'$'}NEWKOTLIN_GC_ZIG_WASM_LIB_DIR),
                        js, jvm (not implemented)
   --runtime <file.c>   C runtime to link (default: ${'$'}NEWKOTLIN_RUNTIME or compiler/runtime/runtime.c)
   --emit-llvm          also keep <output>.ll
@@ -147,6 +148,9 @@ const val DEFAULT_GC = "epoch"
 /** Collector for --target=wasm when none is given: synchronous cycle collection, no threads. */
 const val WASM_GC = "perceus"
 
+/** Install prefix of the wasm32-wasi Zig GC archives, relative to native/gc/zig (`zig build gc-libs -p ...`). */
+const val WASM_ZIG_PREFIX = "zig-out/wasm32-wasi"
+
 /** The `newkotlinc` command; see docs/usage.md for the options. */
 fun main(args: Array<String>) {
     var input: String? = null; var output: String? = null
@@ -185,15 +189,14 @@ fun main(args: Array<String>) {
         i++
     }
     val wasm = target == Target.WASM
-    // wasm32-wasi has no threads (epoch collects in the background) and the Zig GC archives are host code.
+    // wasm32-wasi has no threads (epoch collects in the background).
     if (gc == null) gc = if (wasm) WASM_GC else DEFAULT_GC
     if (gc == "default") gc = DEFAULT_GC // "default" names whatever the default collector is (epoch); old one: perceus
-    if (gcRuntime == null) gcRuntime = if (wasm) "c" else "zig"
+    if (gcRuntime == null) gcRuntime = "zig"
     if (alloc == null) alloc = if (wasm) "malloc" else "mimalloc"
     if (wasm) {
         llvmTarget = LlvmTarget.WASM32
         val bad = when {
-            gcRuntime != "c" -> "--target=wasm needs --gc-runtime=c"
             alloc == "mimalloc" -> "--target=wasm supports --alloc malloc or pool"
             gc == DEFAULT_GC -> "--target=wasm has no threads for the $gc collector; use --gc perceus, incremental or rc"
             links.isNotEmpty() -> "--target=wasm does not support --link"
@@ -222,8 +225,9 @@ fun main(args: Array<String>) {
     // GC: caps/metadata and C sources under <gcDir>; Zig static libs under <zigLibDir>/libgc-<name>.a.
     // Only the collector backend is zig|c; runtime.c is always the shared KotlinX runtime.
     val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/c")
-    val zigLibDir = getenv("NEWKOTLIN_GC_ZIG_LIB_DIR")?.toKString()
-        ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/zig/zig-out/lib")
+    // wasm archives live under their own prefix so they never replace the host ones in zig-out/lib.
+    val zigLibDir = getenv(if (wasm) "NEWKOTLIN_GC_ZIG_WASM_LIB_DIR" else "NEWKOTLIN_GC_ZIG_LIB_DIR")?.toKString()
+        ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/zig/" + (if (wasm) WASM_ZIG_PREFIX else "zig-out") + "/lib")
     if (gc.isEmpty() || '/' in gc) {
         fprintf(stderr, "unknown --gc %s\n", gc); exit(2); return
     }
@@ -245,12 +249,15 @@ fun main(args: Array<String>) {
         if (access(lib, F_OK) != 0) {
             fprintf(stderr, "error: Zig GC archive missing: %s\n" +
                 "Direct newkotlinc.kexe does not rebuild libs. Use bin/newkotlinc (runs zig build gc-libs), or\n" +
-                "cd native/gc/zig && zig build gc-libs  (Zig 0.17.1), or set NEWKOTLIN_GC_ZIG_LIB_DIR, or --gc-runtime=c\n", lib)
+                "cd native/gc/zig && zig build gc-libs%s  (Zig 0.17.1), or set %s, or --gc-runtime=c\n", lib,
+                if (wasm) " -Dtarget=wasm32-wasi -p $WASM_ZIG_PREFIX" else "",
+                if (wasm) "NEWKOTLIN_GC_ZIG_WASM_LIB_DIR" else "NEWKOTLIN_GC_ZIG_LIB_DIR")
             exit(1); return
         }
         // libgc is LLVM machine code: Clang LTO cannot inspect a Zig archive.
-        // Keep native code opaque and optimize the generated program only.
-        if ("-flto" in cflags) cflags = cflags.replace("-flto", "")
+        // Keep native code opaque and optimize the generated program only. wasm-ld (lld) links LTO bitcode
+        // with a machine-code archive, so wasm keeps -flto for the program and runtime.c.
+        if (!wasm && "-flto" in cflags) cflags = cflags.replace("-flto", "")
         "'$lib'"
     }
     val ll = "$output.ll"
