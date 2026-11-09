@@ -1049,13 +1049,145 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             sb.append("}\n")
         }
 
+        // ---- variable reuse --------------------------------------------------------------------------------------
+        /** Set of small ints (value ids) as a bit array. */
+        inner class Bits(n: Int) {
+            val w = LongArray((n + 63) ushr 6)
+            operator fun get(k: Int) = (w[k ushr 6] ushr (k and 63)) and 1L != 0L
+            fun set(k: Int) { w[k ushr 6] = w[k ushr 6] or (1L shl (k and 63)) }
+            fun clear(k: Int) { w[k ushr 6] = w[k ushr 6] and (1L shl (k and 63)).inv() }
+            /** this |= o; true if this changed. */
+            fun or(o: Bits): Boolean { var c = false; for (k in w.indices) { val v = w[k] or o.w[k]; if (v != w[k]) { w[k] = v; c = true } }; return c }
+            fun copy() = Bits(w.size * 64).also { o -> w.copyInto(o.w) }
+            fun forEach(f: (Int) -> Unit) { for (k in w.indices) { var v = w[k]; while (v != 0L) { val b = v.countTrailingZeroBits(); f((k shl 6) + b); v = v and (v - 1) } } }
+        }
+
+        /**
+         * Gives SSA values whose live ranges do not overlap the same JS variable. One `let` name per SSA value makes
+         * inlined copies of the same code differ only in their local names, which defeats gzip's matches; reused
+         * names are also fewer and shorter.
+         *
+         * Liveness is computed on the LLVM CFG. A use of an inlined value (inlineSet) is a use of the values its
+         * expression reads, at the inlining point; a use of a lazyHi load also reads its pointer. A result also
+         * conflicts with the operands of its own instruction, because the parts of a multi-part result are
+         * assigned one by one while the operands are still read. Phi results are written by the copies at the end
+         * of each predecessor: they conflict with each other and with everything live into their block, and
+         * phiCopies orders the copies by the final names. Values of different part kinds (int32, i1, double,
+         * float, BigInt) never share a variable, so a variable keeps one JS type. Parameters keep their own
+         * names, which later values may reuse.
+         *
+         * Prefills vals for every value that gets variables; returns false (no reuse) for very large functions.
+         */
+        fun allocateLocals(ps: List<String>): Boolean {
+            val ids = HashMap<String, Int>(); val names = ArrayList<String>()
+            fun id(n: String) { if (n !in ids) { ids[n] = names.size; names.add(n) } }
+            for (p in f.params) id(p.name)
+            for (b in blocks) for (i in b.insts) { val r = i.res ?: continue; if (useCount[r] != null && r !in inlineSet) id(r) }
+            val n = names.size
+            if (n > 12000) return false
+            val leafMemo = HashMap<String, IntArray>()
+            fun leaves(v: String): IntArray {
+                leafMemo[v]?.let { return it }
+                val d = defs[v]
+                val r = when {
+                    d != null && v in inlineSet -> localsOf(d).flatMap { leaves(it).asIterable() }.distinct().toIntArray()
+                    d != null && v in lazyHi -> (listOfNotNull(ids[v]) + localsOf(d).flatMap { leaves(it).asIterable() }).distinct().toIntArray()
+                    else -> ids[v]?.let { intArrayOf(it) } ?: IntArray(0)
+                }
+                leafMemo[v] = r; return r
+            }
+            fun uses(i: LlInst): IntArray = localsOf(i).flatMap { leaves(it).asIterable() }.distinct().toIntArray()
+            val nb = blocks.size
+            val preds = Array(nb) { ArrayList<Int>() }
+            for (b in 0 until nb) for (s in succ[b]) preds[s].add(b)
+            // per block: upward-exposed uses, defs (phi results included), phi uses per predecessor edge
+            val ue = Array(nb) { Bits(n) }; val df = Array(nb) { Bits(n) }
+            val phiDefs = Array(nb) { ArrayList<Int>() }
+            val edgeUse = HashMap<Long, Bits>()
+            for ((bi, b) in blocks.withIndex()) {
+                for (i in b.insts.reversed()) {
+                    if (i.op == "phi") {
+                        val r = ids[i.res ?: continue] ?: continue
+                        df[bi].set(r); ue[bi].clear(r); phiDefs[bi].add(r)
+                        for ((v, lbl) in i.incoming) if (v is VLocal) {
+                            val pb = bIndex[lbl] ?: continue
+                            val e = edgeUse.getOrPut(pb.toLong() * nb + bi) { Bits(n) }
+                            for (k in leaves(v.name)) e.set(k)
+                        }
+                        continue
+                    }
+                    i.res?.let { ids[it] }?.let { df[bi].set(it); ue[bi].clear(it) }
+                    for (k in uses(i)) ue[bi].set(k)
+                }
+            }
+            val liveIn = Array(nb) { Bits(n) }; val liveOut = Array(nb) { Bits(n) }
+            var changed = true
+            while (changed) {
+                changed = false
+                for (bi in nb - 1 downTo 0) {
+                    val out = liveOut[bi]
+                    for (s in succ[bi]) {
+                        val li = liveIn[s].copy(); for (p in phiDefs[s]) li.clear(p)
+                        out.or(li); edgeUse[bi.toLong() * nb + s]?.let { out.or(it) }
+                    }
+                    val inn = out.copy()
+                    for (k in inn.w.indices) inn.w[k] = (out.w[k] and df[bi].w[k].inv()) or ue[bi].w[k]
+                    if (liveIn[bi].or(inn)) changed = true
+                }
+            }
+            // interference
+            val adj = Array(n) { Bits(n) }
+            fun edge(a: Int, b: Int) { if (a != b) { adj[a].set(b); adj[b].set(a) } }
+            for ((bi, b) in blocks.withIndex()) {
+                val live = liveOut[bi].copy()
+                for (i in b.insts.reversed()) {
+                    if (i.op == "phi") continue
+                    val us = uses(i)
+                    i.res?.let { ids[it] }?.let { d -> live.forEach { edge(d, it) }; for (u in us) edge(d, u); live.clear(d) }
+                    for (u in us) live.set(u)
+                }
+                val tops = if (bi == 0) phiDefs[bi] + f.params.mapNotNull { ids[it.name] } else phiDefs[bi]
+                for (p in tops) live.clear(p)
+                for (p in tops) { live.forEach { edge(p, it) }; for (q in tops) edge(p, q) }
+            }
+            // colors: one list of variable names per part kind; parameters keep theirs
+            fun kinds(t: LTy): List<Char> = if (t is LInt && t.bits == 1) listOf('c') else parts(t)
+            val pool = HashMap<Char, ArrayList<String>>()
+            val color = arrayOfNulls<List<String>>(n)   // value id -> its variables (one per non-zero part)
+            var pk = 0
+            for (p in f.params) {
+                val ks = kinds(p.ty); val vs = ps.subList(pk, pk + ks.size); pk += ks.size
+                ids[p.name]?.let { color[it] = vs }
+                for ((k, c) in ks.withIndex()) pool.getOrPut(c) { ArrayList() }.add(vs[k])
+            }
+            for (b in blocks) for (i in b.insts) {
+                val r = i.res ?: continue; val id = ids[r] ?: continue
+                val ks = if (r in lazyHi) listOf('i') else kinds(resultType(i))
+                val busy = HashSet<String>(); adj[id].forEach { o -> color[o]?.let { busy.addAll(it) } }
+                val zeroHi = r !in lazyHi && hiZero(i)
+                val vs = ks.mapIndexed { k, c ->
+                    if (k == 1 && zeroHi) "0" else {
+                        val pl = pool.getOrPut(c) { ArrayList() }
+                        (pl.firstOrNull { it !in busy } ?: newVar().also { pl.add(it) }).also { busy.add(it) }
+                    }
+                }
+                color[id] = vs.filter { it != "0" }
+                vals[r] = vs
+            }
+            return true
+        }
+
         fun gen(): String {
             val ps = f.params.flatMap { p -> parts(p.ty).map { newVar() }.also { vals[p.name] = it } }
             declared.clear() // parameters are not declared with let
             analyze()
             // every used, non-inlined result gets its variable up front (the dispatch fallback may emit a use first)
+            val reuse = allocateLocals(ps)
             for (b in blocks) for (i in b.insts) { val r = i.res ?: continue; if (useCount[r] != null && r !in inlineSet && r !in lazyHi) defineVars(i) }
-            for (b in blocks) for (i in b.insts) if (i.res in lazyHi) vals[i.res!!] = listOf(newVar(), loadExpr(i.srcTy, op1(i, 0), 0, i.align)[1])
+            for (b in blocks) for (i in b.insts) if (i.res in lazyHi) {
+                val lo = if (reuse) vals[i.res!!]!![0] else newVar()
+                vals[i.res!!] = listOf(lo, loadExpr(i.srcTy, op1(i, 0), 0, i.align)[1])
+            }
             if (depthProbe) emit("D=D+1|0")
             if (fp != null) emit("${fp}=S=S-$frame|0")
             val reducible = cfg()

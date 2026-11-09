@@ -7,3 +7,6 @@ output and the linked collector: `cyclic_*.kt` must link compact, `acyclic_*.kt`
 
 `acyclic_counts.kt` also covers the 32-bit collection counts and lengths of `--target=js` (`rt_cnt` in
 `compiler/runtime/runtime.c`): list growth, map rehash and removal, long builders and shared references.
+
+`acyclic_locals.kt` covers JsGen variable reuse (`allocateLocals` in `compiler/src/backend/js/JsGen.kt`): phi swaps
+and rotations in loops, Long values, and booleans and doubles live across branches.
