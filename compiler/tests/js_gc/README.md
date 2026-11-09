@@ -16,3 +16,6 @@ read in others, nested objects, Long and Double fields.
 
 `acyclic_control.kt` covers the label peephole (`open`/`close` in `JsGen.kt`): labeled break and continue in
 nested loops, when chains, early returns, do-while.
+
+`acyclic_data.kt` covers the data segment string (`JsBackend.byteString`): quotes, backslashes, newlines, digits
+after NUL, UTF-8 text.

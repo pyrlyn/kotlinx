@@ -31,7 +31,7 @@ collector as the native target, so programs behave the same (same output, same c
    for each unrolled copy separately; the copies also cost size).
 5. `compiler/src/backend/js`: `LlParser.kt` reads the IR text, `JsGen.kt` emits one JS function per LLVM function,
    `JsBackend.kt` prepends the parts of `compiler/runtime/js/runtime.js` the code uses and appends the data
-   segment (base64) and the start call.
+   segment (a string with one char per byte, `JsBackend.byteString`) and the start call.
 
 ## Output
 

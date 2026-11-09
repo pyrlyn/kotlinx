@@ -373,13 +373,13 @@ function $_exit(c) { $exit(c); }
 function $abort() { _flush(); throw new Error("abort()"); }
 function $atexit(f) { return 0; }
 
-function _b64(s) { const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
 function _start(data, dataStart, dataEnd, ctors, main) {
   const top = dataEnd + STACK + 15 & -16;
   // 32 MB to start (pages are committed as they are touched): every _grow replaces the views, which throws away
   // V8's optimized code that embeds them, so the heap behind the 8 MB stack starts with room to spare.
   buf = new ArrayBuffer(Math.max(1 << 25, top + (1 << 22) + 65535 & -65536)); _views();
-  U8.set(_b64(data), dataStart);
+  // data: the data segment as a string of byte values (JsBackend.byteString)
+  for (let i = 0; i < data.length; i++) U8[dataStart + i] = data.charCodeAt(i);
   S = top; BRK = top;
   let code = 0;
   try {

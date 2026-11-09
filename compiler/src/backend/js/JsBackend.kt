@@ -1,8 +1,4 @@
-@file:OptIn(kotlin.io.encoding.ExperimentalEncodingApi::class)
-
 package newkotlin
-
-import kotlin.io.encoding.Base64
 
 /**
  * Js target, last step: the linked and optimized LLVM IR of the whole program (program + runtime.c + GC + js/libc.c)
@@ -24,10 +20,31 @@ object JsBackend {
         val rt = usedRuntime(if (compact) compactRuntime(runtimeJs) else runtimeJs, code)
         val out = StringBuilder(rt.length + code.length + 1024)
         out.append("(function(){\n").append(rt).append('\n').append(code)
-        out.append("_start(\"").append(Base64.encode(gen.dataBytes())).append("\",").append(gen.dataStart).append(',')
+        out.append("_start(\"").append(byteString(gen.dataBytes())).append("\",").append(gen.dataStart).append(',')
             .append(gen.dataEnd).append(",[").append(gen.ctors.joinToString(",")).append("],").append(gen.jsName(main.name)).append(");\n")
         out.append("})();\n")
         return out.toString()
+    }
+
+    /**
+     * Bytes as the body of a JS string literal, one char per byte: printable ASCII as is, NUL as `\0`, the rest
+     * escaped. The data segment is mostly C strings, zeros and small integers, which gzip compresses better in
+     * this form than in base64 (and the loader needs no atob).
+     */
+    fun byteString(b: ByteArray): String {
+        val s = StringBuilder(b.size + b.size / 4)
+        for (k in b.indices) {
+            val c = b[k].toInt() and 255
+            when {
+                c == 0 -> s.append(if (k + 1 < b.size && b[k + 1].toInt() in 48..57) "\\x00" else "\\0")
+                c == 34 -> s.append("\\\"")
+                c == 92 -> s.append("\\\\")
+                c == 10 -> s.append("\\n")
+                c in 32..126 -> s.append(c.toChar())
+                else -> s.append("\\x").append("0123456789abcdef"[c shr 4]).append("0123456789abcdef"[c and 15])
+            }
+        }
+        return s.toString()
     }
 
     /** runtime.js without comment lines, indentation and blank lines (it has no multi-line strings). */
