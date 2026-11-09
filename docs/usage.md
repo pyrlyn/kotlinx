@@ -22,7 +22,7 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `--no-opt` | Skip the `opt` step. |
 | `--leak-check` | Count live runtime objects and report at exit; the program exits 3 on a leak. |
 | `--alloc <a>` | `mimalloc` (default), `malloc` or `pool`. |
-| `--gc <name>`, `--gc=<name>` | Collector: `epoch` / `perceus` / `incremental` / `rc` (default `$NEWKOTLIN_GC` or `epoch`; `incremental` for `--target=js`, which has no threads for `epoch`). Caps from `native/gc/c/<name>/`. |
+| `--gc <name>`, `--gc=<name>` | Collector: `epoch` / `perceus` / `incremental` / `compact` / `rc` (default `$NEWKOTLIN_GC` or `epoch`; `compact` for `--target=js`, which has no threads for `epoch`). Caps from `native/gc/c/<name>/`; `compact` exists only in Zig (`--gc-runtime=zig`). |
 | `--gc-runtime <zig\|c>` | Collector backend (default `$NEWKOTLIN_GC_RUNTIME` or `zig`). `zig` links `libgc-<name>.a`; `c` compiles `native/gc/c/<name>/gc.c`. Shared `runtime.c` always. |
 | `-h`, `--help` | Print the usage text. |
 
@@ -35,10 +35,10 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `NEWKOTLIN_GC_DIR` | Caps / `kxgc.h` / C `gc.c` tree (default: `native/gc/c`). |
 | `NEWKOTLIN_GC_RUNTIME` | `zig` (default) or `c` — collector backend language. |
 | `NEWKOTLIN_GC_ZIG_LIB_DIR` | Directory with `libgc-<name>.a` (default: `native/gc/zig/zig-out/lib`). |
-| `NEWKOTLIN_GC_ZIG_WASM_LIB_DIR` | Same for `--target=wasm` (default: `native/gc/zig/zig-out/wasm32-wasi/lib`). |
+| `NEWKOTLIN_GC_ZIG_WASM_LIB_DIR` | Same for `--target=wasm` and the `libgc-<name>.bc` of `--target=js` (default: `native/gc/zig/zig-out/wasm32-wasi/lib`). |
 | `NEWKOTLIN_MIMALLOC_DIR` | Where to find `libmimalloc`. |
 | `NK_CC`, `NK_OPT` | Default C compiler and `opt`. |
-| `NK_WASM_CC` | C compiler and linker for `--target=wasm` (default: `zig cc -target wasm32-wasi`). |
+| `NK_WASM_CC` | C compiler and linker for `--target=wasm`, C compiler for `--target=js` (default: `zig cc -target wasm32-wasi`). |
 
 ## Wasm target
 

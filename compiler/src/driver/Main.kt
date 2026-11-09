@@ -6,10 +6,11 @@ import kotlinx.cinterop.*
 import platform.posix.*
 
 private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
-  --target <t>         native (default; LLVM, native binary), js (JavaScript for node, via LLVM IR), wasm (same
-                       LLVM IR for wasm32-wasi, linked with ${'$'}NK_WASM_CC or `zig cc -target wasm32-wasi`; GC
-                       perceus, --alloc malloc; Zig GC archives from native/gc/zig/zig-out/wasm32-wasi/lib or
-                       ${'$'}NEWKOTLIN_GC_ZIG_WASM_LIB_DIR), jvm (executable jar; LLVM IR translated to JVM
+  --target <t>         native (default; LLVM, native binary), js (JavaScript for node, via wasm32 LLVM IR; Zig GC
+                       bitcode from the wasm32-wasi lib directory below), wasm (same LLVM IR for wasm32-wasi,
+                       linked with ${'$'}NK_WASM_CC or `zig cc -target wasm32-wasi`; GC perceus, --alloc malloc; Zig GC
+                       archives from native/gc/zig/zig-out/wasm32-wasi/lib or ${'$'}NEWKOTLIN_GC_ZIG_WASM_LIB_DIR),
+                       jvm (executable jar; LLVM IR translated to JVM
                        bytecode, needs java 21+; GC perceus, --gc-runtime c, --alloc pool)
   --runtime <file.c>   C runtime to link (default: ${'$'}NEWKOTLIN_RUNTIME or compiler/runtime/runtime.c)
   --emit-llvm          also keep <output>.ll
@@ -25,8 +26,9 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --gc <name>          collector name (also --gc=<name>; default: ${'$'}NEWKOTLIN_GC or epoch):
                        epoch (deferred RC + background cycle collection; alias "default"),
                        perceus (RC + synchronous cycle collector), incremental (budgeted
-                       cycle steps), rc (RC only, cycles leak). Caps/metadata from native/gc/c/<name>/.
-                       --target=js: incremental by default; epoch is not available (no threads).
+                       cycle steps), compact (RC + small synchronous cycle collector, made for
+                       --target=js), rc (RC only, cycles leak). Caps/metadata from native/gc/c/<name>/.
+                       --target=js: compact by default; epoch is not available (no threads).
   --gc-runtime <zig|c> collector implementation language (also --gc-runtime=; default:
                        ${'$'}NEWKOTLIN_GC_RUNTIME or zig). zig links native/gc/zig/zig-out/lib/libgc-<name>.a
                        (experimental Zig port); c links native/gc/c/<name>/gc.c. Only the collector
@@ -61,7 +63,8 @@ const val DEFAULT_GC = "epoch"
 /** Collector for --target=wasm when none is given: synchronous cycle collection, no threads. */
 const val WASM_GC = "perceus"
 
-/** Install prefix of the wasm32-wasi Zig GC archives, relative to native/gc/zig (`zig build gc-libs -p ...`). */
+/** Install prefix of the wasm32-wasi Zig GC archives and bitcode, relative to native/gc/zig (`zig build gc-libs -p ...`,
+ *  `zig build gc-bc -p ...` for --target=js). */
 const val WASM_ZIG_PREFIX = "zig-out/wasm32-wasi"
 
 /** The `newkotlinc` command; see docs/usage.md for the options. */
@@ -111,7 +114,10 @@ fun main(args: Array<String>) {
         if (alloc == null) alloc = "pool"
         if (alloc == "mimalloc") { fprintf(stderr, "--target jvm supports --alloc pool or malloc\n"); exit(2); return }
     }
-    // wasm32-wasi has no threads (epoch collects in the background); js uses the incremental collector.
+    // js: the program, runtime.c and the collector are compiled for wasm32 (4-byte pointers and size_t).
+    val wasm32 = wasm || target == Target.JS
+    if (target == Target.JS) llvmTarget = LlvmTarget.JS32
+    // wasm32-wasi has no threads (epoch collects in the background); js uses the compact collector.
     if (gc == null) gc = if (wasm) WASM_GC else if (target == Target.JS) JS_DEFAULT_GC else DEFAULT_GC
     if (gc == "default") gc = DEFAULT_GC // "default" names whatever the default collector is (epoch); old one: perceus
     if (gcRuntime == null) gcRuntime = "zig"
@@ -129,7 +135,7 @@ fun main(args: Array<String>) {
     if (gcRuntime != "zig" && gcRuntime != "c") {
         fprintf(stderr, "--gc-runtime must be zig or c (got %s)\n", gcRuntime); exit(2); return
     }
-    val cc = ccArg ?: if (wasm) (getenv("NK_WASM_CC")?.toKString() ?: "zig cc -target wasm32-wasi") else findCc()
+    val cc = ccArg ?: if (wasm32) (getenv("NK_WASM_CC")?.toKString() ?: "zig cc -target wasm32-wasi") else findCc()
     // A compiler command with arguments (`zig cc ...`): its LLVM version picks the opt below.
     if (' ' in cc) majorCache[cc] = capture("$cc --version 2>/dev/null | grep -oE 'clang version [0-9]+' | head -1")?.substringAfterLast(' ')?.toIntOrNull()
     if (!target.implemented) { fprintf(stderr, "target %s is not supported yet\n", target.flag); exit(1); return }
@@ -147,9 +153,9 @@ fun main(args: Array<String>) {
     // GC: caps/metadata and C sources under <gcDir>; Zig static libs under <zigLibDir>/libgc-<name>.a.
     // Only the collector backend is zig|c; runtime.c is always the shared KotlinX runtime.
     val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/c")
-    // wasm archives live under their own prefix so they never replace the host ones in zig-out/lib.
-    val zigLibDir = getenv(if (wasm) "NEWKOTLIN_GC_ZIG_WASM_LIB_DIR" else "NEWKOTLIN_GC_ZIG_LIB_DIR")?.toKString()
-        ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/zig/" + (if (wasm) WASM_ZIG_PREFIX else "zig-out") + "/lib")
+    // wasm32 archives (wasm) and bitcode (js) live under their own prefix so they never replace the host ones in zig-out/lib.
+    val zigLibDir = getenv(if (wasm32) "NEWKOTLIN_GC_ZIG_WASM_LIB_DIR" else "NEWKOTLIN_GC_ZIG_LIB_DIR")?.toKString()
+        ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/zig/" + (if (wasm32) WASM_ZIG_PREFIX else "zig-out") + "/lib")
     if (gc.isEmpty() || '/' in gc) {
         fprintf(stderr, "unknown --gc %s\n", gc); exit(2); return
     }

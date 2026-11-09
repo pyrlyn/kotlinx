@@ -3,10 +3,9 @@ package newkotlin
 /*
  * LLVM IR (LlModule) -> JavaScript.
  *
- * Memory model: one ArrayBuffer with typed-array views (I8 U8 I16 U16 I32 F32 F64). The IR keeps the 64-bit
- * data layout it was compiled with (pointers occupy 8 bytes in memory), but addresses are JS int32 values below
- * 2 GB: a pointer is stored as its low word plus a zero high word, and pointer-sized integer arithmetic only
- * uses the low word.
+ * Memory model: one ArrayBuffer with typed-array views (I8 U8 I16 U16 I32 F32 F64). The IR has wasm32's data
+ * layout (driver/JsDriver.kt): a pointer, size_t or long is 4 bytes in memory and one int32 value, an address
+ * below 2 GB.
  *
  * Values: every SSA value is a list of JS scalars ("parts"): i1..i32 and ptr one int32 (i8/i16 kept sign-extended,
  * i1 as a boolean or 0/1), i64 two int32 parts (low, high), float/double one number, structs the concatenation of
@@ -27,17 +26,17 @@ private fun isWide(t: LTy) = t is LInt && t.bits > 32 && t.bits != 64 && t.bits 
 
 class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, private val runtimeNames: Set<String> = emptySet(),
             private val compact: Boolean = true) {
-    // ---- layout (LP64, "e-m:o-i64:64-i128:128-n32:64-S128") -------------------------------------------
+    // ---- layout (wasm32, "e-m:e-p:32:32-i64:64-i128:128-n32-S128") ---------------------------------------
     fun sizeOf(t: LTy): Long = when (t) {
         is LInt -> when { t.bits <= 8 -> 1; t.bits <= 16 -> 2; t.bits <= 32 -> 4; t.bits <= 64 -> 8; else -> 16 }
-        LPtr -> 8; LFloat -> 4; LDouble -> 8
+        LPtr -> 4; LFloat -> 4; LDouble -> 8
         is LArr -> t.n * sizeOf(t.elem)
         is LStruct -> { var o = 0L; for (f in t.fields) { if (!t.packed) o = alignUp(o, alignOf(f)); o += sizeOf(f) }; if (t.packed) o else alignUp(o, alignOf(t)) }
         else -> throw CompileError("JS backend: no size for $t")
     }
     fun alignOf(t: LTy): Long = when (t) {
         is LInt -> minOf(sizeOf(t), 16)
-        LPtr, LDouble -> 8; LFloat -> 4
+        LDouble -> 8; LPtr, LFloat -> 4
         is LArr -> alignOf(t.elem)
         is LStruct -> if (t.packed) 1 else t.fields.maxOfOrNull { alignOf(it) } ?: 1
         else -> 1
@@ -145,7 +144,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             }
             t == LDouble -> put(off, (v as VFloat).v.toRawBits(), 8)
             t == LFloat -> put(off, (v as VFloat).v.toFloat().toRawBits().toLong(), 4)
-            t == LPtr -> put(off, constInt(v), 8)
+            t == LPtr -> put(off, constInt(v), 4)
             t is LInt -> put(off, constInt(v), sizeOf(t).toInt())
             else -> throw CompileError("JS backend: initializer of type $t")
         }
@@ -227,6 +226,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
         val defs = HashMap<String, LlInst>()
         val vals = HashMap<String, List<String>>()   // SSA local -> part expressions (var names or inlined code)
         val inlineSet = HashSet<String>()
+        val lazyHi = HashSet<String>()   // i64 loads whose high word is re-read at each use (see analyze)
         val paramTypes = HashMap<String, LTy>()
         var fp: String? = null
         var depthProbe = false
@@ -248,7 +248,15 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             d.isNaN() -> "NaN"; d == Double.POSITIVE_INFINITY -> "Infinity"; d == Double.NEGATIVE_INFINITY -> "-Infinity"
             d == 0.0 && 1.0 / d < 0 -> "-0"
             d == kotlin.math.floor(d) && kotlin.math.abs(d) < 1e15 -> d.toLong().toString()
-            else -> d.toString()
+            // Kotlin/Native's Double.toString does not always read back as d (e.g. 2^-25, 2^-1017 or some integers
+            // above 1e17); then d is written exactly as m * 2^e (-1074 <= e <= 971, so 2**e is exact in JS).
+            else -> d.toString().takeIf { it.toDouble() == d } ?: run {
+                val b = d.toRawBits(); val be = ((b ushr 52) and 0x7ff).toInt()
+                var m = if (be == 0) b and 0xfffffffffffffL else b and 0xfffffffffffffL or (1L shl 52)
+                var e = if (be == 0) -1074 else be - 1075
+                while (m and 1L == 0L) { m = m shr 1; e++ }
+                "(" + (if (b < 0) "-" else "") + m + "*2**" + e + ")"
+            }
         }
 
         /** JS expressions for each part of value v of type t. */
@@ -360,7 +368,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                         else { emit("_st(${w(a)},${es[0]},4)"); emit("_st($p+${off + 4},${es[1]},4)") }
                     else -> throw CompileError("JS backend: store i${t.bits}")
                 }
-                LPtr -> if (align >= 4 || align == 0) { st("I32", 2, es[0]); emit("I32[$p+${off + 4}>>2]=0") } else { emit("_st(${w(a)},${es[0]},4)"); emit("_st($p+${off + 4},0,4)") }
+                LPtr -> if (align >= 4 || align == 0) st("I32", 2, es[0]) else emit("_st(${w(a)},${es[0]},4)")
                 LFloat -> if (align >= 4 || align == 0) st("F32", 2, es[0]) else emit("_stf(${w(a)},${es[0]})")
                 LDouble -> if (align >= 8 || align == 0) st("F64", 3, es[0]) else emit("_std(${w(a)},${es[0]})")
                 is LStruct -> { var k0 = 0; t.fields.forEachIndexed { k, ft -> val n = parts(ft).size; store(ft, p, off + fieldOffset(t, k), minOf(align, alignOf(ft).toInt()), es.subList(k0, k0 + n)); k0 += n } }
@@ -388,16 +396,20 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             // use counts; phi uses and cross-block uses disable inlining
             val noInline = HashSet<String>()
             val userAt = HashMap<String, Pair<Int, Int>>()
+            val users = HashMap<String, ArrayList<Pair<Int, Int>>>()
             for ((bi, b) in blocks.withIndex()) for ((ii, i) in b.insts.withIndex()) {
                 if (i.op == "phi") { for ((v, _) in i.incoming) if (v is VLocal) { useCount[v.name] = (useCount[v.name] ?: 0) + 2; noInline.add(v.name) }; continue }
-                for (n in localsOf(i)) { useCount[n] = (useCount[n] ?: 0) + 1; userAt[n] = bi to ii }
+                for (n in localsOf(i)) { useCount[n] = (useCount[n] ?: 0) + 1; userAt[n] = bi to ii; users.getOrPut(n) { ArrayList() }.add(bi to ii) }
             }
+            val evalAts = blocks.map { b -> IntArray(b.insts.size) { it } }
             for ((bi, b) in blocks.withIndex()) {
-                val evalAt = IntArray(b.insts.size) { it }
+                val evalAt = evalAts[bi]
                 for (ii in b.insts.indices.reversed()) {
                     val i = b.insts[ii]; val r = i.res ?: continue
                     if (r in noInline || useCount[r] != 1 || userAt[r]?.first != bi) continue
-                    if (parts(resultType(i)).size != 1) continue
+                    // Multi-part values inline only as an i64 load into an icmp (a Kotlin array length against an
+                    // index): the comparison then reads the high word only when the low words do not decide it.
+                    if (parts(resultType(i)).size != 1 && !(i.op == "load" && isI64(i.ty) && b.insts[userAt[r]!!.second].op == "icmp")) continue
                     val pure = i.op in pureOps && !(i.op == "alloca" && bi != 0)
                     if (!pure && i.op != "load") continue
                     if (i.op == "alloca" && i.ops[0].second !is VInt) continue
@@ -405,6 +417,22 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                     if (i.op == "load" && (ii + 1 until at).any { sideEffect(b.insts[it]) }) continue
                     inlineSet.add(r); evalAt[ii] = at
                 }
+            }
+            // An i64 load (a Kotlin array length) used by icmps in its block and by calls at the start of a block
+            // only it branches to (the rt_oob report) keeps only its low word in a variable: each use re-reads the
+            // high word from memory, so a bounds check usually decided by the low words never loads it.
+            val onlyPred = IntArray(blocks.size) { -1 }
+            for ((bi, ss) in succ.withIndex()) for (s in ss) onlyPred[s] = if (onlyPred[s] == -1 || onlyPred[s] == bi) bi else -2
+            for ((bi, b) in blocks.withIndex()) for ((ii, i) in b.insts.withIndex()) {
+                val r = i.res ?: continue
+                if (i.op != "load" || !isI64(i.ty) || r in inlineSet || r in noInline || useCount[r] == null || i.align in 1..3) continue
+                val p = i.ops[0].second
+                if (!(p is VGlobal || p is VLocal && p.name !in inlineSet)) continue
+                fun clean(blk: Int, from: Int, to: Int) = (from until to).none { sideEffect(blocks[blk].insts[it]) }
+                if (users[r]!!.all { (ub, ui) ->
+                        if (ub == bi) ui > ii && b.insts[ui].op == "icmp" && clean(bi, ii + 1, evalAts[bi][ui])
+                        else blocks[ub].insts[ui].op == "call" && onlyPred[ub] == bi && clean(bi, ii + 1, b.insts.size) && clean(ub, 0, evalAts[ub][ui])
+                    }) lazyHi.add(r)
             }
             // static frame for entry-block allocas with constant size
             for (i in blocks[0].insts) if (i.op == "alloca" && i.ops[0].second is VInt) {
@@ -416,7 +444,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             val dynamic = blocks.any { b -> b.insts.any { (it.op == "alloca" && !allocaOff.containsKey(it.res)) || (it.op == "call" && (it.callee as? VGlobal)?.name?.startsWith("llvm.stack") == true) } }
             if (frame > 0 || dynamic) fp = newVar()
             // Stack depth probes (runtime.c's bounded release compares llvm.stacksave / frameaddress with rt_rel_limit):
-            // JS frames do not move S, so such functions count their nesting in D and _fa() reports S-(D<<7).
+            // JS frames do not move S, so such functions count their nesting in D and _fa() reports S-(D<<12).
             val callees = blocks.flatMap { b -> b.insts.mapNotNull { (it.callee as? VGlobal)?.name } }.toSet()
             depthProbe = callees.any { it.startsWith("llvm.frameaddress") } ||
                 (callees.any { it.startsWith("llvm.stacksave") } && callees.none { it.startsWith("llvm.stackrestore") })
@@ -476,11 +504,11 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                 "load" -> {
                     val p = op1(i, 0)
                     val es = loadExpr(i.srcTy, if (parts(i.srcTy).size > 1) simple(p) else p, 0, i.align)
-                    setResult(i, es)
+                    if (i.res in lazyHi) emit("${vals[i.res]!![0]}=${es[0]}") else setResult(i, es)
                 }
                 "store" -> {
                     val vt = i.ops[0].first; val es = ex(i.ops[0].second, vt); val p = op1(i, 1)
-                    store(vt, if (es.size > 1 || vt == LPtr) simple(p) else p, 0, i.align, es)
+                    store(vt, if (es.size > 1) simple(p) else p, 0, i.align, es)
                 }
                 "extractvalue" -> {
                     val at = i.ops[0].first; val es = ex(i.ops[0].second, at)
@@ -549,10 +577,11 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                 val lows = if (pred == "eq" || pred == "ne") "${w(x)}$lo${w(y)}" else "(${w(x)}>>>0)$lo(${w(y)}>>>0)"
                 // same high word (one variable or equal literals): the low words decide
                 if (xh == yh && atom(xh)) return lows
-                // one high word is 0 (indices, lengths below 2^32): a sign/zero test on the other one
+                // one high word is 0 (indices, lengths below 2^32): a sign/zero test on the other one; a high word
+                // still to be loaded (lazyHi) goes after the low words, which usually decide a bounds check
                 if (pred[0] == 'u' && (xh == "0" || yh == "0")) {
-                    val big = pred == "ugt" || pred == "uge"
-                    return if ((yh == "0") == big) "${w(if (yh == "0") xh else yh)}!=0||$lows" else "!${w(if (yh == "0") xh else yh)}&&$lows"
+                    val big = pred == "ugt" || pred == "uge"; val h = w(if (yh == "0") xh else yh)
+                    return if ((yh == "0") != big) "!$h&&$lows" else if (atom(h)) "$h!=0||$lows" else "$lows||$h!=0"
                 }
                 if (y == "0" && yh == "0") when (pred) {
                     "eq" -> return "!(${w(x)}|${w(xh)})"
@@ -560,14 +589,14 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                     "slt" -> return "${w(xh)}<0"
                     "sge" -> return "${w(xh)}>=0"
                 }
-                return when (pred) {
-                    "eq" -> "${w(x)}==${w(y)}&&${w(xh)}==${w(yh)}"
-                    "ne" -> "${w(x)}!=${w(y)}||${w(xh)}!=${w(yh)}"
-                    "slt", "sle", "sgt", "sge" -> { val o = mapOf("slt" to "<", "sle" to "<=", "sgt" to ">", "sge" to ">=")[pred]!!; val s = o.substring(0, 1)
-                        "${w(xh)}$s${w(yh)}||${w(xh)}==${w(yh)}&&(${w(x)}>>>0)$o(${w(y)}>>>0)" }
-                    else -> { val o = mapOf("ult" to "<", "ule" to "<=", "ugt" to ">", "uge" to ">=")[pred]!!; val s = o.substring(0, 1)
-                        "(${w(xh)}>>>0)$s(${w(yh)}>>>0)||${w(xh)}==${w(yh)}&&(${w(x)}>>>0)$o(${w(y)}>>>0)" }
-                }
+                if (pred == "eq") return "${w(x)}==${w(y)}&&${w(xh)}==${w(yh)}"
+                if (pred == "ne") return "${w(x)}!=${w(y)}||${w(xh)}!=${w(yh)}"
+                // the high words are read twice: an inlined load goes to a variable first
+                fun once(e: String) = if (atom(e) || e.toLongOrNull() != null) e else simple(e)
+                val xh1 = once(xh); val yh1 = once(yh)
+                val o = lo; val s = o.substring(0, 1)
+                return if (pred[0] == 's') "${w(xh1)}$s${w(yh1)}||${w(xh1)}==${w(yh1)}&&(${w(x)}>>>0)$o(${w(y)}>>>0)"
+                    else "(${w(xh1)}>>>0)$s(${w(yh1)}>>>0)||${w(xh1)}==${w(yh1)}&&(${w(x)}>>>0)$o(${w(y)}>>>0)"
             }
             val b0 = bitsOf(t); val x = a[0]; val y = b[0]
             return when (pred) {
@@ -757,7 +786,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                         val arr = if (unit == 4) "I32" else "U8"; val sh = if (unit == 4) ">>2" else ""
                         val tmps = (0 until len step unit.toLong()).map { k -> val t = newVar(); emit("$t=$arr[${w(ss)}+$k$sh]"); k to t }
                         for ((k, t) in tmps) emit("$arr[${w(ds)}+$k$sh]=$t")
-                    } else { val ss = simple(s); emit("U8.copyWithin($d,$ss,${w(ss)}+${w(a[2])}|0)") }
+                    } else emit("\$memcpy($d,$s,${a[2]})")
                 }
                 name.startsWith("memset") -> {
                     val d = simple(a[0]); val len = (i.ops[2].second as? VInt)?.v; val b = (i.ops[1].second as? VInt)?.v
@@ -766,7 +795,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                         val word = (b and 255) * 0x01010101L
                         for (k in 0 until len step 4) emit("I32[${w(d)}+$k>>2]=${word.toInt()}")
                     } else if (len != null && len > 0 && len <= 8) for (k in 0 until len) emit("U8[${w(d)}+$k]=${a[1]}")
-                    else emit("U8.fill(${a[1]},$d,${w(d)}+${w(a[2])}|0)")
+                    else emit("\$memset($d,${a[1]},${a[2]})")
                 }
                 name.startsWith("lifetime.") || name.startsWith("assume") || name.startsWith("dbg.") || name.startsWith("experimental.noalias") ||
                     name.startsWith("invariant.") || name.startsWith("sideeffect") || name.startsWith("donothing") || name.startsWith("var.annotation") -> {}
@@ -1025,7 +1054,8 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             declared.clear() // parameters are not declared with let
             analyze()
             // every used, non-inlined result gets its variable up front (the dispatch fallback may emit a use first)
-            for (b in blocks) for (i in b.insts) { val r = i.res ?: continue; if (useCount[r] != null && r !in inlineSet) defineVars(i) }
+            for (b in blocks) for (i in b.insts) { val r = i.res ?: continue; if (useCount[r] != null && r !in inlineSet && r !in lazyHi) defineVars(i) }
+            for (b in blocks) for (i in b.insts) if (i.res in lazyHi) vals[i.res!!] = listOf(newVar(), loadExpr(i.srcTy, op1(i, 0), 0, i.align)[1])
             if (depthProbe) emit("D=D+1|0")
             if (fp != null) emit("${fp}=S=S-$frame|0")
             val reducible = cfg()
