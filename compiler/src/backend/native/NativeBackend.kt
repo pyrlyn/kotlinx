@@ -586,7 +586,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun genClass(c: ClassInfo) {
         globals.append("${c.llType} = type { i64, ptr${c.fields.joinToString("") { ", " + it.second.llvm }} }\n")
         // vtable: [release, trace children, release untraced fields, free memory, is-cyclic, interface methods...]
-        val vt = listOf("ptr @rel.${c.name}", "ptr @trav.${c.name}", "ptr @relo.${c.name}", "ptr @free.${c.name}",
+        // --target=js: every collector there (compact, incremental, perceus) traces and relo-releases cyclic objects
+        // only (candidates come from rel.C of a cyclic class, children are filtered by is-cyclic), so an acyclic
+        // class has no trav/relo hooks: less code for the JS output.
+        val hooks = !rc32() || c.name in cyclic
+        val vt = listOf("ptr @rel.${c.name}", if (hooks) "ptr @trav.${c.name}" else "ptr null", if (hooks) "ptr @relo.${c.name}" else "ptr null", "ptr @free.${c.name}",
             "ptr ${if (c.name in cyclic) "inttoptr (i64 1 to ptr)" else "null"}") +
             slots.map { m ->
                 val base = m.removeSuffix(NARROW)
@@ -651,20 +655,23 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             "fr:\n  call void @rt_free_trace(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         else f.append("  call void @rt_free(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         // Collector hooks: trace class/interface children; release other reference fields; free memory only.
-        f.append("define internal void @trav.${c.name}(ptr %p, ptr %fn) {\nentry:\n")
-        c.fields.forEachIndexed { i, (_, t) ->
-            if (isTraced(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ${if (deferredRc && cyc) "atomic ptr, ptr %f$i acquire, align 8" else "ptr, ptr %f$i"}\n  call void %fn(ptr %v$i)\n")
-            else if (tracedList(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n" + (ownedColl(t)?.let { k ->
-                "  %v$i = load ${if (cyc) "atomic ptr, ptr %f$i acquire, align 8" else "ptr, ptr %f$i"}\n  call void @rt_${k}_trav_owned(ptr %v$i, ptr %p, ptr %fn)\n" }
-                ?: "  %v$i = load ptr, ptr %f$i\n  call void @rt_${if (t is Ty.MapTy) "map" else "list"}_trav(ptr %v$i, ptr %fn)\n"))
+        if (hooks) {
+            f.append("define internal void @trav.${c.name}(ptr %p, ptr %fn) {\nentry:\n")
+            c.fields.forEachIndexed { i, (_, t) ->
+                if (isTraced(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ${if (deferredRc && cyc) "atomic ptr, ptr %f$i acquire, align 8" else "ptr, ptr %f$i"}\n  call void %fn(ptr %v$i)\n")
+                else if (tracedList(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n" + (ownedColl(t)?.let { k ->
+                    "  %v$i = load ${if (cyc) "atomic ptr, ptr %f$i acquire, align 8" else "ptr, ptr %f$i"}\n  call void @rt_${k}_trav_owned(ptr %v$i, ptr %p, ptr %fn)\n" }
+                    ?: "  %v$i = load ptr, ptr %f$i\n  call void @rt_${if (t is Ty.MapTy) "map" else "list"}_trav(ptr %v$i, ptr %fn)\n"))
+            }
+            f.append("  ret void\n}\n\ndefine internal void @relo.${c.name}(ptr %p) {\nentry:\n")
+            c.fields.forEachIndexed { i, (_, t) ->
+                val ok = ownedColl(t)
+                if (ok != null) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void @rt_${ok}_release_owned(ptr %v$i, ptr %p)\n")
+                else if (!isTraced(t)) (if (tracedList(t)) (if (t is Ty.MapTy) "@rt_map_release_untraced" else "@rt_list_release_untraced") else releaseFn(t))?.let { fn -> f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n${disown(c, t, "%v$i")}  call void $fn(ptr %v$i)\n") }
+            }
+            f.append("  ret void\n}\n\n")
         }
-        f.append("  ret void\n}\n\ndefine internal void @relo.${c.name}(ptr %p) {\nentry:\n")
-        c.fields.forEachIndexed { i, (_, t) ->
-            val ok = ownedColl(t)
-            if (ok != null) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void @rt_${ok}_release_owned(ptr %v$i, ptr %p)\n")
-            else if (!isTraced(t)) (if (tracedList(t)) (if (t is Ty.MapTy) "@rt_map_release_untraced" else "@rt_list_release_untraced") else releaseFn(t))?.let { fn -> f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n${disown(c, t, "%v$i")}  call void $fn(ptr %v$i)\n") }
-        }
-        f.append("  ret void\n}\n\ndefine internal void @free.${c.name}(ptr %p) {\nentry:\n")
+        f.append("define internal void @free.${c.name}(ptr %p) {\nentry:\n")
         f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n  call void ${if (cyc) "@rt_free_trace" else "@rt_free"}(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         funcs.append(f)
     }
