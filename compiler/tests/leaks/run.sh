@@ -10,6 +10,7 @@ set -u
 cd "$(dirname "$0")/../../.."
 NKC=${NKC:-compiler/build/newkotlinc.kexe}
 [ -x "$NKC" ] || compiler/build.sh >/dev/null
+. compiler/tests/leaks/leaks_at_exit.sh
 out=compiler/build/leak-tmp; rm -rf "$out"; mkdir -p "$out"; fail=0
 for t in compiler/tests/leaks/*.kt; do
   n=$(basename "$t" .kt); exp=$(cat "compiler/tests/leaks/$n.out")
@@ -37,7 +38,7 @@ for t in compiler/tests/leaks/*.kt; do
   got=$("$out/$n.asan" 2>"$out/$n.asanerr"); rc=$?
   if [ $rc -eq 0 ] && [ "$got" = "$exp" ]; then echo "PASS asan $n"; else echo "FAIL asan $n (rc=$rc)"; head -20 "$out/$n.asanerr"; fail=1; fi
   "$NKC" --alloc malloc "$t" -o "$out/$n" 2>/dev/null
-  leaks --atExit -- "$out/$n" >"$out/$n.leaks" 2>&1; lrc=$?
+  leaks_at_exit "$out/$n.leaks" "$out/$n"; lrc=$?
   if grep -q " 0 leaks for 0 total leaked bytes" "$out/$n.leaks"; then echo "PASS leaks $n"
   else echo "FAIL leaks $n (leaks rc=$lrc)"; grep -E "leaks for|ROOT|^Leak|error|rror:" "$out/$n.leaks" | head -20; fail=1; fi
 done

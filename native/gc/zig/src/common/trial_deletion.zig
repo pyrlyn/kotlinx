@@ -35,7 +35,7 @@ pub fn TrialDeletion(comptime claim_skips_buffered: bool) type {
             }
         }
 
-        fn markGrayClaim(self: *Self, o: *anyopaque) void {
+        inline fn markGrayClaim(self: *Self, o: *anyopaque) void {
             if (obj.color(o) == obj.GRAY) return;
             obj.setColor(o, obj.GRAY);
             self.work.push(o);
@@ -71,7 +71,7 @@ pub fn TrialDeletion(comptime claim_skips_buffered: bool) type {
             }
         }
 
-        fn scanClaim(self: *Self, o: *anyopaque) void {
+        inline fn scanClaim(self: *Self, o: *anyopaque) void {
             if (obj.color(o) != obj.GRAY) return;
             obj.setColor(o, obj.WHITE);
             self.work.push(o);
@@ -93,7 +93,7 @@ pub fn TrialDeletion(comptime claim_skips_buffered: bool) type {
             }
         }
 
-        fn collectWhiteClaim(self: *Self, o: *anyopaque) bool {
+        inline fn collectWhiteClaim(self: *Self, o: *anyopaque) bool {
             if (obj.color(o) != obj.WHITE) return false;
             if (claim_skips_buffered and obj.isBuffered(o)) return false;
             obj.setColor(o, obj.BLACK);

@@ -6,6 +6,7 @@
 #   zig build gc-libs
 # so collector source changes rebuild into zig-out/lib/libgc-*.a (Zig cache = incremental).
 # --gc-runtime=c skips Zig. Direct newkotlinc.kexe does not build libs (see native/gc/README.md).
+# --target=js runs `zig build gc-bc` instead (LLVM bitcode of the collector, default incremental).
 root="$(cd "$(dirname "$0")/.." && pwd)"
 exe="$root/compiler/build/newkotlinc.kexe"
 [ -x "$exe" ] || "$root/compiler/build.sh" >&2 || exit 1
@@ -20,6 +21,7 @@ export NEWKOTLIN_GC_RUNTIME="${NEWKOTLIN_GC_RUNTIME:-zig}"
 parse_gc_cli() {
   GC_RUNTIME_CLI="${NEWKOTLIN_GC_RUNTIME:-zig}"
   GC_NAME_CLI=""
+  TARGET_CLI="native"
   local prev="" a
   for a in "$@"; do
     if [ "$prev" = "--gc-runtime" ]; then
@@ -32,15 +34,23 @@ parse_gc_cli() {
       prev=""
       continue
     fi
+    if [ "$prev" = "--target" ]; then
+      TARGET_CLI="$a"
+      prev=""
+      continue
+    fi
     case "$a" in
       --gc-runtime=*) GC_RUNTIME_CLI="${a#--gc-runtime=}" ;;
       --gc-runtime) prev="--gc-runtime" ;;
       --gc=*) GC_NAME_CLI="${a#--gc=}" ;;
       --gc) prev="--gc" ;;
+      --target=*) TARGET_CLI="${a#--target=}" ;;
+      --target) prev="--target" ;;
       *) prev="" ;;
     esac
   done
   if [ "$GC_NAME_CLI" = "default" ]; then GC_NAME_CLI="epoch"; fi
+  if [ "$TARGET_CLI" = "js" ] && [ -z "$GC_NAME_CLI" ]; then GC_NAME_CLI="${NEWKOTLIN_GC:-incremental}"; fi
   WASM_CLI=""
   case " $* " in *" --target=wasm "*|*" --target wasm "*) WASM_CLI=1 ;; esac
 }
@@ -63,7 +73,9 @@ ensure_zig_gc_libs() {
     return 1
   fi
   # Always rebuild the selected collector and allocation mode; incompatible modes must not share an archive.
-  local -a zargs=(build gc-libs)
+  local step=gc-libs
+  if [ "$TARGET_CLI" = "js" ]; then step=gc-bc; fi
+  local -a zargs=(build "$step")
   case " $* " in *" --leak-check "*) zargs+=(-Dleakcheck=true) ;; esac
   case " $* " in *" --alloc pool"*|*" --alloc=pool "*) zargs+=(-Dpool=true) ;; esac
   case " $* " in *" --alloc malloc"*|*" --alloc=malloc "*) zargs+=(-Dplain-malloc=true) ;; esac
@@ -76,7 +88,7 @@ ensure_zig_gc_libs() {
   case "$GC_NAME_CLI" in
     epoch|perceus|incremental|rc) zargs+=(-Dgc="$GC_NAME_CLI") ;;
   esac
-  echo "zig build gc-libs${GC_NAME_CLI:+ -Dgc=$GC_NAME_CLI} (Zig $ver; incremental)…" >&2
+  echo "zig build $step${GC_NAME_CLI:+ -Dgc=$GC_NAME_CLI} (Zig $ver; incremental)…" >&2
   ( cd "$root/native/gc/zig" && "$zigbin" "${zargs[@]}" ) || return 1
 }
 ensure_zig_gc_libs "$@" || exit 1
@@ -84,8 +96,9 @@ ensure_zig_gc_libs "$@" || exit 1
 # (used by scripts that then run newkotlinc.kexe many times in parallel).
 [ "${1:-}" = "--gc-libs-only" ] && exit 0
 
-# Use the opt pinned by the repo mise.toml (a mise shim outside the repo has no version set).
-if [ -z "${NK_OPT:-}" ] && command -v mise >/dev/null; then
+# Use the opt pinned by the repo mise.toml (a mise shim outside the repo has no version set). Not for js: it
+# needs LLVM 22+ to read the Zig bitcode, and newkotlinc finds one itself.
+if [ -z "${NK_OPT:-}" ] && [ "$TARGET_CLI" != "js" ] && command -v mise >/dev/null; then
   o=$(cd "$root" && mise which opt 2>/dev/null) && export NK_OPT="$o"
 fi
 exec "$exe" "$@"

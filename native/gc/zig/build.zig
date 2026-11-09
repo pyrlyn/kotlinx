@@ -73,6 +73,7 @@ pub fn build(b: *std.Build) void {
     const test_step = b.step("test", "Run native Zig GC regression for selected collectors");
     const bench_step = b.step("bench", "Build and run native ops benches (ReleaseFast)");
     const libs_step = b.step("gc-libs", "Install static libs (runtime_host) for KotlinX --gc-runtime=zig");
+    const bc_step = b.step("gc-bc", "Install LLVM bitcode of the runtime_host libs (KotlinX --target=js)");
     const bench_opt: std.builtin.Optimize = if (optimize == .debug) .fast else optimize;
     // Zig 0.17.1: LLVM LTO needs LLD. The self-hosted Mach-O linker cannot do LLVM LTO.
     const ops_lto: std.zig.LtoMode = switch (target.result.ofmt) {
@@ -89,6 +90,9 @@ pub fn build(b: *std.Build) void {
 
     // Libs always ReleaseFast for program linking (Darwin: no LTO on the archive).
     const lib_opt: std.builtin.Optimize = .fast;
+    // The gc-bc bitcode (--target=js) is ReleaseSmall: JS size matters there, and the collector's hot helpers are
+    // `inline fn`, so it runs as fast as ReleaseFast.
+    const bc_opt: std.builtin.Optimize = .small;
     const kxgc_lib = b.createModule(.{ .root_source_file = b.path("src/kxgc.zig") });
     const runtime_host_lib = b.createModule(.{
         .root_source_file = b.path("src/runtime_host.zig"),
@@ -210,6 +214,23 @@ pub fn build(b: *std.Build) void {
         libs_step.dependOn(&install_lib.step);
         // Default install also places libs when `zig build` / `zig build install` runs.
         b.getInstallStep().dependOn(&install_lib.step);
+
+        // LLVM bitcode of the same library for newkotlinc --target=js, which links it with the program's IR and
+        // translates the whole module to JavaScript (single-threaded collectors only).
+        const bc_mod = b.createModule(.{
+            .root_source_file = b.path(b.fmt("src/{s}.zig", .{g})),
+            .target = target,
+            .optimize = bc_opt,
+            .link_libc = true,
+        });
+        bc_mod.addImport("kxgc", kxgc_lib);
+        bc_mod.addImport("host", runtime_host_lib);
+        bc_mod.addImport("leakcheck", leakcheck);
+        bc_mod.addImport("host_options", host_options);
+        const bc_lib = b.addLibrary(.{ .name = b.fmt("gc-{s}-bc", .{g}), .linkage = .static, .root_module = bc_mod });
+        bc_lib.lto = .none;
+        const bc = b.addInstallFile(bc_lib.getEmittedLlvmBc(), b.fmt("lib/libgc-{s}.bc", .{g}));
+        bc_step.dependOn(&bc.step);
     }
 
 }

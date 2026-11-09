@@ -8,7 +8,7 @@ package newkotlin
  */
 enum class Target(val flag: String, val implemented: Boolean) {
     NATIVE("native", true),
-    JS("js", false),
+    JS("js", true),
     WASM("wasm", true),
     JVM("jvm", false);
 

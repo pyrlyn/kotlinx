@@ -19,7 +19,7 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
 ## KotlinX compiler (`compiler/`)
 - Pipeline: `src/frontend/Lexer.kt` -> `Parser.kt` (AST in `Ast.kt`, types in `Types.kt`) -> `Uses.kt` (last-use analysis for
   Perceus) -> `src/backend/native/NativeBackend.kt` (type checking + LLVM IR) -> `clang -O3 -flto` with `runtime/runtime.c`.
-  Entry point `src/driver/Main.kt`; `--target=native` is the default; `--target=wasm` emits the same IR for wasm32-wasi (`backend/native/LlvmTarget.kt`, see `docs/usage.md`); js/jvm stubs exit non-zero; vs JetBrains Kotlin/Wasm: `bench/results/wasm/README.md`.
+  Entry point `src/driver/Main.kt`; `--target=native` is the default. `--target=wasm` emits the same IR for wasm32-wasi (`backend/native/LlvmTarget.kt`, see `docs/usage.md`); vs JetBrains Kotlin/Wasm: `bench/results/wasm/README.md`. `--target=js` links the program IR, runtime.c, `runtime/js/libc.c` and the Zig GC bitcode, runs opt once and translates the LLVM IR to JavaScript (`src/backend/js`, `src/driver/JsDriver.kt`; docs/js-target.md). The jvm stub exits non-zero.
 - Language subset: top-level functions, top-level properties (`val`/`var`/`const val`), classes with primary-constructor
   fields and methods, interfaces with virtual dispatch, val/var, if/when expressions, while, for over ranges/arrays/lists/strings,
   unlabeled `break`/`continue`, lambdas as trailing blocks for built-ins, ArrayList/HashMap/StringBuilder/arrays, string
@@ -89,7 +89,7 @@ Then copy the NewKotlin rows into `bench/table.md`.
 
 ## Status 2026-10-29
 - Cases: sum, alloc, recursion, file, strings, hashmap, sort, nbody, matmul, dispatch, closures, trees, free, refpass, cycles, lru, bigheap (Rust/Zig/Kotlin; Kotlin built by Kotlin Native and KotlinX compiler).
-- KotlinX compiler: frontend (`compiler/src/frontend`) + compile-time backends (`compiler/src/backend/{native,js,wasm,jvm}`); `--target=native` default; `--target=wasm` reuses the native backend (see the pipeline note above); js/jvm exit non-zero with "target <x> is not supported yet".
+- KotlinX compiler: frontend (`compiler/src/frontend`) + compile-time backends (`compiler/src/backend/{native,js,wasm,jvm}`); `--target=native` default; `--target=wasm` reuses the native backend (see the pipeline note above); `--target=js` implemented (LLVM IR -> JS, docs/js-target.md); jvm exits non-zero with "target jvm is not supported yet".
 - Allocation: mimalloc default (`--alloc mimalloc`, found via `$NEWKOTLIN_MIMALLOC_DIR`, pkg-config or Homebrew; `brew install mimalloc`; clear error if missing), `--alloc malloc` (system) and `--alloc pool` optional. Leak tests: leak-count on the default build; ASan and macOS `leaks` on `--alloc malloc` builds. Benchmarks: see README.md.
 - Memory manager: `native/gc/c` behind `kxgc.h`, selected with `newkotlinc --gc=epoch|perceus|incremental|rc`
   (default = epoch, `--gc=default` is an alias; perceus = RC + cycle collector, the pre-epoch default). Tests: `native/gc/c/tests/zig` (`zig build ported`/`zig build gc`; legacy shell suite in `native/gc/c/tests/archive`); benchmarks: `bench/gc`.

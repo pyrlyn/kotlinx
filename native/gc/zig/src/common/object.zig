@@ -64,20 +64,24 @@ pub const PtrStack = struct {
     cap: usize = 0,
     owned: bool = false,
 
-    pub fn push(self: *PtrStack, obj: ?*anyopaque) void {
-        if (self.len == self.cap) {
-            const new_cap = if (self.cap == 0) PTR_STACK_INITIAL_CAPACITY else self.cap * 2;
-            const bytes = new_cap * @sizeOf(?*anyopaque);
-            const raw = if (self.cap == 0)
-                host.malloc(bytes)
-            else
-                host.realloc(@ptrCast(self.items), bytes);
-            self.items = @ptrCast(@alignCast(raw));
-            self.cap = new_cap;
-            self.owned = true;
-        }
+    /// Inlined even in ReleaseSmall (the --target=js bitcode): the cycle collector pushes once per edge.
+    pub inline fn push(self: *PtrStack, obj: ?*anyopaque) void {
+        if (self.len == self.cap) self.grow();
         self.items[self.len] = obj;
         self.len += 1;
+    }
+
+    fn grow(self: *PtrStack) void {
+        @branchHint(.cold);
+        const new_cap = if (self.cap == 0) PTR_STACK_INITIAL_CAPACITY else self.cap * 2;
+        const bytes = new_cap * @sizeOf(?*anyopaque);
+        const raw = if (self.cap == 0)
+            host.malloc(bytes)
+        else
+            host.realloc(@ptrCast(self.items), bytes);
+        self.items = @ptrCast(@alignCast(raw));
+        self.cap = new_cap;
+        self.owned = true;
     }
 
     pub fn pop(self: *PtrStack) ?*anyopaque {

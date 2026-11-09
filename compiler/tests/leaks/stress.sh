@@ -9,12 +9,13 @@ set -u
 cd "$(dirname "$0")/../../.."
 NKC=${NKC:-compiler/build/newkotlinc.kexe}
 n=${1:-dlist}; runs=${2:-50}; export KX_GC_THREADS=${KX_GC_THREADS:-4}
+. compiler/tests/leaks/leaks_at_exit.sh
 out=compiler/build/leak-stress; mkdir -p "$out"; fail=0
 "$NKC" --gc=epoch --alloc malloc "compiler/tests/leaks/$n.kt" -o "$out/$n" 2>/dev/null || { echo "FAIL compile"; exit 1; }
 "$NKC" --gc=epoch --leak-check "compiler/tests/leaks/$n.kt" -o "$out/$n.lc" 2>/dev/null || { echo "FAIL compile lc"; exit 1; }
 one() {
   local i=$1
-  leaks --atExit -- "$out/$n" >"$out/$n.leaks.$i" 2>&1; local rc=$?
+  leaks_at_exit "$out/$n.leaks.$i" "$out/$n"; local rc=$?
   if grep -q " 0 leaks for 0 total leaked bytes" "$out/$n.leaks.$i"; then rm -f "$out/$n.leaks.$i"
   else echo "FAIL leaks $n run $i (rc=$rc): $out/$n.leaks.$i"; grep -E "leaks for|ROOT LEAK" "$out/$n.leaks.$i" | head -3; fi
 }
