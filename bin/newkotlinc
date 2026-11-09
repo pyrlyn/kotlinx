@@ -51,6 +51,8 @@ parse_gc_cli() {
     esac
   done
   if [ "$GC_NAME_CLI" = "default" ]; then GC_NAME_CLI="epoch"; fi
+  JS_AUTO_GC=""
+  if [ "$TARGET_CLI" = "js" ] && [ -z "$GC_NAME_CLI" ] && [ -z "${NEWKOTLIN_GC:-}" ]; then JS_AUTO_GC=1; fi
   if [ "$TARGET_CLI" = "js" ] && [ -z "$GC_NAME_CLI" ]; then GC_NAME_CLI="${NEWKOTLIN_GC:-compact}"; fi
   # the jvm target translates the C collector with the program
   if [ "$TARGET_CLI" = "jvm" ]; then GC_RUNTIME_CLI=c; fi
@@ -95,6 +97,11 @@ ensure_zig_gc_libs() {
   esac
   echo "zig build $step${GC_NAME_CLI:+ -Dgc=$GC_NAME_CLI} (Zig $ver; incremental)…" >&2
   ( cd "$root/native/gc/zig" && "$zigbin" "${zargs[@]}" ) || return 1
+  # js without --gc: newkotlinc links rc instead of compact when the program has no cyclic class (JS_ACYCLIC_GC).
+  if [ -n "$JS_AUTO_GC" ]; then
+    local -a rargs=(); local a; for a in "${zargs[@]}"; do case "$a" in -Dgc=*) ;; *) rargs+=("$a") ;; esac; done
+    ( cd "$root/native/gc/zig" && "$zigbin" "${rargs[@]}" -Dgc=rc ) || return 1
+  fi
 }
 ensure_zig_gc_libs "$@" || exit 1
 # `bin/newkotlinc --gc-libs-only [options]`: build the archives the options select, compile nothing

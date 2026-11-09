@@ -11,6 +11,23 @@ import platform.posix.*
  */
 const val JS_DEFAULT_GC = "compact"
 
+/**
+ * Collector for --target=js when none is given and the program never allocates a possibly cyclic object (see
+ * [allocatesCyclic]): nothing can reach the cycle collector then, so plain reference counting is equivalent and
+ * drops the collector code.
+ */
+const val JS_ACYCLIC_GC = "rc"
+
+/**
+ * Whether program IR allocates an object of a possibly cyclic class. NativeBackend.computeCyclic marks a class
+ * cyclic when it lies on a cycle of reference fields (class, interface, `Any`, function values and their captures,
+ * ArrayList/HashMap elements, `outer$`, delegates) with a mutable edge, and every such object is allocated with
+ * rt_alloc_trace. Only those objects call rt_cc_possible_root (their release functions) or register as holders of
+ * a list/map (rt_list_hold, so runtime.c's root hints), so without an rt_alloc_trace call the collector never runs.
+ * NativeBackend only emits constructors and allocations of classes the program uses.
+ */
+fun allocatesCyclic(ir: String): Boolean = ir.contains("call ptr @rt_alloc_trace(")
+
 /** Oldest LLVM whose opt/llvm-link read the Zig 0.17.1 collector bitcode (LLVM 22). */
 private const val JS_MIN_LLVM = 22
 

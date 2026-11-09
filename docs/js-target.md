@@ -79,7 +79,9 @@ collector as the native target, so programs behave the same (same output, same c
   enough (it usually pins the native target's opt to the C compiler's LLVM), then the usual search
   ([toolchain.md](toolchain.md)). `llvm-link` is taken from the same directory as `opt`.
 - `zig cc` (or `$NK_WASM_CC`, or `--cc`) compiling for wasm32-wasi; another target is rejected.
-- Collector: `compact` by default (`native/gc/zig/src/compact.zig`: reference counting plus a small synchronous cycle
+- Collector: without `--gc` (and `NEWKOTLIN_GC`), `rc` when the program never allocates a possibly cyclic object
+  (no `rt_alloc_trace` call in its IR, see `allocatesCyclic` in `driver/JsDriver.kt`; nothing could reach a cycle
+  collector, so plain reference counting behaves the same and drops the collector code), else `compact` (`native/gc/zig/src/compact.zig`: reference counting plus a small synchronous cycle
   collector, written for this target's size and speed); `incremental`, `perceus` and `rc` also work. `epoch` needs a
   background thread and is rejected.
 - Not supported: `--leak-check`, `--link`. Threads do not exist; `runBlocking`/coroutines run on the single-threaded
