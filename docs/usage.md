@@ -12,7 +12,7 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | Option | Meaning |
 | --- | --- |
 | `-o <output>` | Output binary (or IR file with `-S`). Required. |
-| `--target <t>`, `--target=<t>` | `native` (default). `js`, `wasm` and `jvm` are accepted but not implemented yet. |
+| `--target <t>`, `--target=<t>` | `native` (default) or `jvm` (an executable jar, see [jvm.md](jvm.md)). `js` and `wasm` are accepted but not implemented yet. |
 | `--runtime <file.c>` | C runtime to link. Default: `$NEWKOTLIN_RUNTIME`, else `compiler/runtime/runtime.c`. |
 | `--emit-llvm` | Also keep `<output>.ll`. |
 | `-S` | Write only the LLVM IR to `<output>`; nothing is compiled or linked. |

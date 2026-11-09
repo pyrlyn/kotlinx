@@ -11,15 +11,19 @@ check() { if [ "$2" = "$3" ]; then echo "PASS $1"; else echo "FAIL $1: expected 
 # Golden tests run with --leak-check: the report lines are filtered from the output, and a program that ends normally
 # must exit 0 (exit 3 = live objects at exit). Programs that end with an uncaught exception are exempt from the leak
 # gate (unwinding to the top leaves the exception and its frames' objects live by design).
-for t in compiler/tests/*.kt; do
-  n=$(basename "$t" .kt)
-  if ! "$NKC" --leak-check "$t" -o "$out/$n" 2>"$out/$n.err"; then echo "FAIL $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
-  raw=$("$out/$n" 2>&1); rc=$?
-  check "$n" "$(printf '%s\n' "$raw" | grep -v -e '^leak-check: ' -e '^region: ')" "$(cat compiler/tests/$n.out)"
-  if [ $rc -ne 0 ] && ! grep -q '^Exception in thread' compiler/tests/$n.out; then
-    echo "FAIL $n: leak-check exit $rc: $(printf '%s\n' "$raw" | grep -E '^leak-check: .* live=[1-9]' | tr '\n' ' ')"; fail=1
-  fi
-done
+golden() { # golden <label prefix> [compiler flags...]
+  local pre=$1; shift
+  for t in compiler/tests/*.kt; do
+    local n; n=$(basename "$t" .kt)
+    if ! "$NKC" "$@" --leak-check "$t" -o "$out/$pre$n" 2>"$out/$pre$n.err"; then echo "FAIL $pre$n: compile: $(cat "$out/$pre$n.err")"; fail=1; continue; fi
+    local raw rc; raw=$("$out/$pre$n" 2>&1); rc=$?
+    check "$pre$n" "$(printf '%s\n' "$raw" | grep -v -e '^leak-check: ' -e '^region: ')" "$(cat compiler/tests/$n.out)"
+    if [ $rc -ne 0 ] && ! grep -q '^Exception in thread' compiler/tests/$n.out; then
+      echo "FAIL $pre$n: leak-check exit $rc: $(printf '%s\n' "$raw" | grep -E '^leak-check: .* live=[1-9]' | tr '\n' ' ')"; fail=1
+    fi
+  done
+}
+golden ""
 # FFI: `external fun` + --link (tests/ffi/: C sources are linked, so they are not in the tests/*.kt loop).
 for t in compiler/tests/ffi/ffi*.kt; do
   n=ffi_$(basename "$t" .kt)
@@ -36,11 +40,15 @@ if python3 compiler/tools/kxbindgen.py compiler/tests/ffi/gen_demo.h -o "$out/ge
     check kxbindgen "$("$out/gen_demo" 2>&1)" "$(cat compiler/tests/ffi/gen_demo.out)"
   else echo "FAIL kxbindgen: compile: $(cat "$out/gen_demo.err")"; fail=1; fi
 else echo "FAIL kxbindgen: generator failed"; fail=1; fi
-while read -r case src key expected; do
-  "$NKC" "$src" -o "$out/bench_$case" || { echo "FAIL bench $case: compile"; fail=1; continue; }
-  got=$(BENCH_DATA=bench/data/words.txt "$out/bench_$case" | grep -oE "$key=[-0-9]+" | cut -d= -f2)
-  check "bench $case" "$got" "$expected"
-done <<'G'
+bench() { # bench <label prefix> [compiler flags...]
+  local pre=$1; shift
+  while read -r case src key expected; do
+    "$NKC" "$@" "$src" -o "$out/${pre}bench_$case" || { echo "FAIL ${pre}bench $case: compile"; fail=1; continue; }
+    got=$(BENCH_DATA=bench/data/words.txt "$out/${pre}bench_$case" | grep -oE "$key=[-0-9]+" | cut -d= -f2)
+    check "${pre}bench $case" "$got" "$expected"
+  done <<< "$BENCH"
+}
+BENCH=$(cat <<'G'
 sum bench/kotlin/Main.kt sum -430663335525468082
 alloc bench/cases/alloc/kotlin/Main.kt checksum 31012435000000
 recursion bench/cases/recursion/kotlin/Main.kt checksum 5002228309
@@ -58,6 +66,15 @@ refpass bench/cases/refpass/kotlin/Main.kt checksum -538200000
 cycles bench/cases/cycles/kotlin/Main.kt checksum 120488000000
 lru bench/cases/lru/kotlin/Main.kt checksum 322182091481
 G
+)
+bench ""
+# --target jvm (LLVM IR -> JVM bytecode): the golden tests and the benchmark checksums again, when java 21+ is on PATH.
+# It needs LLVM opt <= clang's version (NK_OPT, as bin/newkotlinc picks it from mise).
+if command -v java >/dev/null 2>&1; then
+  if [ -z "${NK_OPT:-}" ] && command -v mise >/dev/null 2>&1; then NK_OPT=$(mise which opt 2>/dev/null) && export NK_OPT; fi
+  golden jvm_ --target jvm
+  bench jvm_ --target jvm
+else echo "SKIP target-jvm: java not found"; fi
 # IR checks (compiler/tests/ir/*.kt): `// IR <fn>: <ERE>` must match a line of function @k.<fn> in the unoptimized IR,
 # `// IR-NOT <fn>: <ERE>` must match none (escape decisions, allocation kinds).
 for t in compiler/tests/ir/*.kt; do
@@ -82,7 +99,7 @@ case "$msg" in *"line 2: unknown name 'nope'"*) echo "PASS error-message";; *) e
 printf 'fun main() {\n  if (true) {\n' > "$out/eof.kt"
 msg=$("$NKC" "$out/eof.kt" -o "$out/eof" 2>&1)
 case "$msg" in *"error: line 3:"*) echo "PASS eof-error";; *) echo "FAIL eof-error: $msg"; fail=1;; esac
-for t in js wasm jvm; do
+for t in js wasm; do
   msg=$("$NKC" --target=$t "$out/bad.kt" -o "$out/x" 2>&1); rc=$?
   if [ $rc -ne 0 ] && [ "$msg" = "target $t is not supported yet" ]; then echo "PASS target-$t"; else echo "FAIL target-$t: rc=$rc $msg"; fail=1; fi
 done

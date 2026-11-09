@@ -21,6 +21,11 @@ src/driver/Main.kt        compileToIr(src) = compileGenerics(withAny(src, withPr
   backend/native/NativeBackend.kt  type checking + LLVM IR text emission (one big class)
   frontend/Uses.kt        last-use analysis for Perceus RC (drop after last use, moves)
 then: opt (lto-pre-link<O3>) -> clang -O3 -flto with runtime/runtime.c + gc/<name>/gc.c (+ mimalloc)
+--target jvm (driver/JvmLink.kt): clang -emit-llvm of runtime.c + gc.c + runtime/jvm/libc.c, llvm-link, opt O2
+  backend/jvm/LlvmIr.kt     LLVM IR text parser
+  backend/jvm/JvmBackend.kt LLVM IR -> JVM bytecode (class Main; memory through Unsafe, see docs/jvm.md)
+  backend/jvm/ClassFile.kt  class file writer (version 49: verified by type inference, no stack map frames)
+  runtime/jvm/KxRt.java     libc/libm subset on the JVM; jar = launcher + Main + KxRt
 ```
 
 There is no separate typed IR: the parser produces an AST, desugars it into a smaller AST, and the backend type-checks

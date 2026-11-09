@@ -6,7 +6,8 @@ import kotlinx.cinterop.*
 import platform.posix.*
 
 private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
-  --target <t>         native (default; LLVM, native binary), js, wasm, jvm (only native is implemented)
+  --target <t>         native (default; LLVM, native binary), js, wasm, jvm (executable jar; LLVM IR
+                       translated to JVM bytecode, needs java 21+); js and wasm are not implemented
   --runtime <file.c>   C runtime to link (default: ${'$'}NEWKOTLIN_RUNTIME or compiler/runtime/runtime.c)
   --emit-llvm          also keep <output>.ll
   --cc <clang>         C compiler/linker (default: ${'$'}NK_CC, Apple clang, newest mise conda:clang, else clang)
@@ -30,7 +31,7 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
                        linker flag; repeatable (also --link=<arg>)
   -S                   only write LLVM IR to <output>"""
 
-private fun readFile(path: String): String {
+internal fun readFile(path: String): String {
     val f = fopen(path, "rb") ?: throw CompileError("cannot open $path")
     try {
         fseek(f, 0, SEEK_END); val n = ftell(f).toInt(); fseek(f, 0, SEEK_SET)
@@ -40,7 +41,7 @@ private fun readFile(path: String): String {
     } finally { fclose(f) }
 }
 
-private fun writeFile(path: String, text: String) {
+internal fun writeFile(path: String, text: String) {
     val f = fopen(path, "wb") ?: throw CompileError("cannot write $path")
     val b = text.encodeToByteArray()
     if (b.isNotEmpty()) b.usePinned { fwrite(it.addressOf(0), 1u, b.size.toULong(), f) }
@@ -53,7 +54,7 @@ private fun hasLib(dir: String): Boolean =
 private fun pkgConfigLibdir(): String? = capture("pkg-config --variable=libdir mimalloc 2>/dev/null")
 
 /** First line of a shell command's stdout, or null. */
-private fun capture(cmd: String): String? {
+internal fun capture(cmd: String): String? {
     val p = popen(cmd, "r") ?: return null
     val out = StringBuilder()
     memScoped {
@@ -69,7 +70,7 @@ private fun capture(cmd: String): String? {
 private val majorCache = HashMap<String, Int?>()
 
 /** Memoized; mise install paths (".../conda-llvm-tools/21.1.8/bin/opt") give it without running the tool (~0.15 s each). */
-private fun majorVersion(tool: String): Int? = majorCache.getOrPut(tool) {
+internal fun majorVersion(tool: String): Int? = majorCache.getOrPut(tool) {
     Regex("/mise/installs/conda-(?:llvm-tools|clang)/(\\d+)[^/]*/bin/").find(tool)?.let { return@getOrPut it.groupValues[1].toInt() }
     majorVersionRun(tool)
 }
@@ -93,7 +94,7 @@ private fun captureAll(cmd: String): List<String> {
  * mise `conda:clang`, else `clang`. Apple clang's LTO measured faster than conda clang 23 (matmul 10 vs 16 ms,
  * refpass 130 vs 148 ms) and its link step about 2x faster; findOpt then picks an opt its LLVM can read.
  */
-private fun findCc(): String {
+internal fun findCc(): String {
     getenv("NK_CC")?.toKString()?.let { return it }
     if (access("/usr/bin/clang", X_OK) == 0) capture("/usr/bin/clang --version 2>/dev/null")?.let { v ->
         if (v.startsWith("Apple")) { majorCache["/usr/bin/clang"] = Regex("version (\\d+)").find(v)?.groupValues?.get(1)?.toIntOrNull(); return "/usr/bin/clang" }
@@ -103,7 +104,7 @@ private fun findCc(): String {
         .firstOrNull { access(it, X_OK) == 0 } ?: "clang"
 }
 
-private fun findOpt(explicit: String?, cc: String): String? {
+internal fun findOpt(explicit: String?, cc: String): String? {
     (explicit ?: getenv("NK_OPT")?.toKString())?.let { return if (access(it, X_OK) == 0) it else null }
     // mise shims (also returned by xcrun, which searches PATH) cost ~0.4 s per call and pick the version by the
     // current directory; skip them and use the mise installs below.
@@ -150,6 +151,7 @@ fun main(args: Array<String>) {
     if (getenv("NEWKOTLIN_NO_BORROW_FIELD_LOCALS")?.toKString()?.let { it.isNotEmpty() && it != "0" } == true) borrowFieldLocals = false
     var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() } ?: DEFAULT_GC
     var gcRuntime = getenv("NEWKOTLIN_GC_RUNTIME")?.toKString()?.takeIf { it.isNotEmpty() } ?: "zig"
+    var gcSet = getenv("NEWKOTLIN_GC")?.toKString()?.isNotEmpty() == true; var gcRuntimeSet = false; var allocSet = false
     var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false
     var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
     val links = ArrayList<String>()
@@ -159,11 +161,11 @@ fun main(args: Array<String>) {
             "-o" -> output = args[++i]
             "--target" -> target = Target.parse(args[++i]) ?: run { fprintf(stderr, "unknown target: %s\n", args[i]); exit(2); return }
             "--runtime" -> runtime = args[++i]
-            "--gc" -> gc = args[++i]
-            "--gc-runtime" -> gcRuntime = args[++i]
+            "--gc" -> { gc = args[++i]; gcSet = true }
+            "--gc-runtime" -> { gcRuntime = args[++i]; gcRuntimeSet = true }
             "--emit-llvm" -> emitLl = true
             "--leak-check" -> leakCheck = true
-            "--alloc" -> alloc = args[++i].also { if (it != "mimalloc" && it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be mimalloc, malloc or pool\n"); exit(2) } }
+            "--alloc" -> alloc = args[++i].also { allocSet = true }.also { if (it != "mimalloc" && it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be mimalloc, malloc or pool\n"); exit(2) } }
             "--cc" -> ccArg = args[++i]
             "--cflags" -> cflags = args[++i]
             "--opt" -> optPath = args[++i]
@@ -171,13 +173,21 @@ fun main(args: Array<String>) {
             "--link" -> links.add(args[++i])
             "-S" -> onlyIr = true
             "-h", "--help" -> { println(USAGE); return }
-            else -> if (a.startsWith("--gc=")) gc = a.substringAfter('=')
-            else if (a.startsWith("--gc-runtime=")) gcRuntime = a.substringAfter('=')
+            else -> if (a.startsWith("--gc=")) { gc = a.substringAfter('='); gcSet = true }
+            else if (a.startsWith("--gc-runtime=")) { gcRuntime = a.substringAfter('='); gcRuntimeSet = true }
             else if (a.startsWith("--link=")) links.add(a.substringAfter('='))
             else if (a.startsWith("--target=")) target = Target.parse(a.substringAfter('=')) ?: run { fprintf(stderr, "unknown target: %s\n", a); exit(2); return }
             else if (input == null && !a.startsWith("-")) input = a else { fprintf(stderr, "unknown argument: %s\n%s\n", a, USAGE); exit(2) }
         }
         i++
+    }
+    if (target == Target.JVM) {
+        // The collector is translated with the program: C sources only, and no collector threads (epoch has one).
+        if (gcRuntimeSet && gcRuntime != "c") { fprintf(stderr, "--target jvm needs --gc-runtime c\n"); exit(2); return }
+        gcRuntime = "c"
+        if (!gcSet) gc = "perceus"
+        if (!allocSet) alloc = "pool"
+        if (alloc == "mimalloc") { fprintf(stderr, "--target jvm supports --alloc pool or malloc\n"); exit(2); return }
     }
     if (gc == "default") gc = DEFAULT_GC // "default" names whatever the default collector is (epoch); old one: perceus
     if (gcRuntime != "zig" && gcRuntime != "c") {
@@ -229,6 +239,13 @@ fun main(args: Array<String>) {
         // Keep native code opaque and optimize the generated program only.
         if ("-flto" in cflags) cflags = cflags.replace("-flto", "")
         "'$lib'"
+    }
+    val def0 = (if (alloc == "pool") " -DRT_POOL" else "") + (if (alloc == "malloc") " -DRT_PLAIN_MALLOC" else "") + (if (leakCheck) " -DRT_LEAKCHECK" else "")
+    if (target == Target.JVM) {
+        val opt = findOpt(optPath, cc) ?: run { fprintf(stderr, "error: LLVM opt not found (--opt <path> or NK_OPT); the jvm target needs it\n"); exit(1); return }
+        try { linkJvm(ir, output, runtime, gcObj.trim('\''), "$def0 -I'$gcDir' $gcFlags", links, cc, opt, emitLl) }
+        catch (e: CompileError) { fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1) }
+        return
     }
     val ll = "$output.ll"
     writeFile(ll, ir)

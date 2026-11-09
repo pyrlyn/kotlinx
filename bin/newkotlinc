@@ -37,6 +37,9 @@ parse_gc_cli() {
       --gc-runtime) prev="--gc-runtime" ;;
       --gc=*) GC_NAME_CLI="${a#--gc=}" ;;
       --gc) prev="--gc" ;;
+      --target=jvm) GC_RUNTIME_CLI=c ;; # the jvm target translates the C collector with the program
+      jvm) [ "$prev" = "--target" ] && GC_RUNTIME_CLI=c; prev="" ;;
+      --target) prev="--target" ;;
       *) prev="" ;;
     esac
   done

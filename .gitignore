@@ -19,3 +19,4 @@ compiler/build/
 # Zig build outputs (gc-libs, smokes)
 native/gc/**/zig-out/
 native/gc/**/.zig-cache/
+/bench/jvm/out/

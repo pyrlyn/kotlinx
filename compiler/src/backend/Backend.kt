@@ -9,7 +9,7 @@ enum class Target(val flag: String, val implemented: Boolean) {
     NATIVE("native", true),
     JS("js", false),
     WASM("wasm", false),
-    JVM("jvm", false);
+    JVM("jvm", true);
 
     companion object { fun parse(s: String): Target? = entries.firstOrNull { it.flag == s } }
 }
