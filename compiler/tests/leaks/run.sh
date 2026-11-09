@@ -9,6 +9,7 @@
 set -u
 cd "$(dirname "$0")/../../.."
 NKC=${NKC:-compiler/build/newkotlinc.kexe}
+. compiler/tests/leaks/at_exit.sh
 [ -x "$NKC" ] || compiler/build.sh >/dev/null
 . compiler/tests/leaks/leaks_at_exit.sh
 out=compiler/build/leak-tmp; rm -rf "$out"; mkdir -p "$out"; fail=0
