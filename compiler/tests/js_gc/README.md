@@ -19,3 +19,6 @@ nested loops, when chains, early returns, do-while.
 
 `acyclic_data.kt` covers the data segment string (`JsBackend.byteString`): quotes, backslashes, newlines, digits
 after NUL, UTF-8 text.
+
+`cyclic_mixed.kt` covers garbage cycles that own acyclic objects: on `--target=js` acyclic classes have no
+trav/relo hooks (NativeBackend `genClass`), and the collectors release them through `rel`.
