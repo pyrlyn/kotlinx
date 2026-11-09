@@ -14,6 +14,7 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
                        bytecode, needs java 21+; GC perceus, --gc-runtime c, --alloc pool)
   --runtime <file.c>   C runtime to link (default: ${'$'}NEWKOTLIN_RUNTIME or compiler/runtime/runtime.c)
   --emit-llvm          also keep <output>.ll
+  --minify             --target=js: minify the output with esbuild or bun (whichever is on PATH; NK_MINIFIER)
   --cc <clang>         C compiler/linker (default: ${'$'}NK_CC, Apple clang, newest mise conda:clang, else clang)
   --cflags "<flags>"   optimization flags for clang (default: -O3 -flto)
   --opt <path>         LLVM opt run on the IR before linking (lto-pre-link<O3> with -flto, else default<O3>);
@@ -76,7 +77,7 @@ fun main(args: Array<String>) {
     var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() }
     var gcRuntime = getenv("NEWKOTLIN_GC_RUNTIME")?.toKString()?.takeIf { it.isNotEmpty() }
     var gcRuntimeSet = false // --gc-runtime given on the command line (bin/newkotlinc always exports NEWKOTLIN_GC_RUNTIME)
-    var alloc: String? = null; var leakCheck = false; var emitLl = false; var onlyIr = false
+    var alloc: String? = null; var leakCheck = false; var emitLl = false; var onlyIr = false; var minify = false
     var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
     val links = ArrayList<String>()
     var i = 0
@@ -88,6 +89,7 @@ fun main(args: Array<String>) {
             "--gc" -> gc = args[++i]
             "--gc-runtime" -> { gcRuntime = args[++i]; gcRuntimeSet = true }
             "--emit-llvm" -> emitLl = true
+            "--minify" -> minify = true
             "--leak-check" -> leakCheck = true
             "--alloc" -> alloc = args[++i].also { if (it != "mimalloc" && it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be mimalloc, malloc or pool\n"); exit(2) } }
             "--cc" -> ccArg = args[++i]
@@ -173,7 +175,7 @@ fun main(args: Array<String>) {
     if (target == Target.JS) {
         if (gcRuntime != "zig") { fprintf(stderr, "--target=js links the Zig collector (--gc-runtime=zig)\n"); exit(2); return }
         if (leakCheck || links.isNotEmpty()) { fprintf(stderr, "--target=js does not support --leak-check or --link\n"); exit(2); return }
-        buildJs(ir, output, runtime, gc, gcDir, gcFlags, zigLibDir, cc, optPath, emitLl)
+        buildJs(ir, output, runtime, gc, gcDir, gcFlags, zigLibDir, cc, optPath, emitLl, minify)
         return
     }
     val gcObj = if (gcRuntime == "c") {

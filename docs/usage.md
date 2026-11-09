@@ -15,6 +15,7 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `--target <t>`, `--target=<t>` | `native` (default); `wasm`: the same LLVM IR for wasm32-wasi, linked into a `.wasm` module (see [Wasm target](#wasm-target)); `js`: one JavaScript file for node (see [js-target.md](js-target.md)); `jvm`: an executable jar (see [jvm.md](jvm.md)). |
 | `--runtime <file.c>` | C runtime to link. Default: `$NEWKOTLIN_RUNTIME`, else `compiler/runtime/runtime.c`. |
 | `--emit-llvm` | Also keep `<output>.ll`. |
+| `--minify` | `--target=js`: minify the output with esbuild or bun, whichever is on `PATH` (or `NK_MINIFIER`, a path to one of them). |
 | `-S` | Write only the LLVM IR to `<output>`; nothing is compiled or linked. |
 | `--cc <clang>` | C compiler and linker. Default: `$NK_CC`, Apple clang at `/usr/bin/clang`, the newest mise `conda:clang`, else `clang`. |
 | `--cflags "<flags>"` | Optimization flags for clang. Default: `-O3 -flto`. |

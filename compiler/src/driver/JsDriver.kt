@@ -40,7 +40,7 @@ private const val JS_MIN_LLVM = 22
  * host's 64-bit layout: pointers, `size_t` and `long` are one int32 in JavaScript, not two words.
  */
 internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gcDir: String, gcFlags: String, zigLibDir: String,
-                     cc: String, optPath: String?, emitLl: Boolean) {
+                     cc: String, optPath: String?, emitLl: Boolean, minify: Boolean = false) {
     fun fail(msg: String): Nothing { fprintf(stderr, "error: %s\n", msg); exit(1); throw IllegalStateException() }
     if (gc == "epoch") fail("--target=js: the epoch collector needs a background thread; use --gc compact (default for js), perceus, incremental or rc")
     val gcBc = "$zigLibDir/libgc-$gc.bc"
@@ -96,5 +96,22 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
     val js = try { JsBackend.translate(readFile(optLl), readFile(runtimeJs), compact) { fprintf(stderr, "warning: %s\n", it) } }
         catch (e: CompileError) { cleanup(); fail(e.message ?: "JS backend failed") }
     writeFile(output, js)
+    if (minify) {
+        val min = "$output.min.tmp.js"
+        run(minifyCommand(output, min) ?: run { cleanup(); fail("--minify: neither esbuild nor bun is on PATH (or set NK_MINIFIER to one of them)") })
+        if (rename(min, output) != 0) { remove(min); cleanup(); fail("--minify: cannot replace $output") }
+    }
     cleanup()
+}
+
+/**
+ * Shell command that minifies JS file [src] into [dst] (identifiers, whitespace, constant folding), or null if no
+ * minifier is found: `NK_MINIFIER` (a path to esbuild or bun), else esbuild, else bun on PATH. Output names are
+ * already short, so this mostly saves the minifier's expression rewrites and runtime.js's local names.
+ */
+internal fun minifyCommand(src: String, dst: String): String? {
+    val tool = getenv("NK_MINIFIER")?.toKString()?.takeIf { it.isNotEmpty() }
+        ?: listOf("esbuild", "bun").firstOrNull { system("command -v $it >/dev/null 2>&1") == 0 } ?: return null
+    return if (tool.substringAfterLast('/').startsWith("bun")) "'$tool' build --minify '$src' --outfile '$dst' >/dev/null"
+    else "'$tool' --minify --log-level=warning '$src' --outfile='$dst'"
 }

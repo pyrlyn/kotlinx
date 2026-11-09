@@ -123,6 +123,13 @@ if command -v node >/dev/null && [ -s "$out/js.js" ]; then
     else echo "FAIL js-gc $n: collector $got (want $want) or wrong output"; fail=1; fi
   done
 else echo "SKIP js-gc (no node or target-js skipped)"; fi
+# --minify: same output, smaller file (needs esbuild or bun on PATH).
+if command -v node >/dev/null && [ -s "$out/js.js" ]; then
+  if ! command -v esbuild >/dev/null && ! command -v bun >/dev/null; then echo "SKIP target-js-minify (no esbuild or bun)"
+  elif "$NKC" --target=js --minify "$out/js.kt" -o "$out/js.min.js" 2>"$out/jsmin.err" && [ "$(node "$out/js.min.js")" = "sum=135000000000" ] \
+      && [ "$(wc -c < "$out/js.min.js")" -lt "$(wc -c < "$out/js.js")" ]; then echo "PASS target-js-minify"
+  else echo "FAIL target-js-minify: $(head -c 300 "$out/jsmin.err")"; fail=1; fi
+fi
 # Leak tests (own tests, compiler/tests/leaks): runtime live-object count, ASan, macOS leaks.
 NKC="$NKC" compiler/tests/leaks/run.sh || fail=1
 # GC tests:
