@@ -16,11 +16,17 @@ import newkotlin.jvm.JvmBackend
  * `java -jar "$0"`, followed by the jar itself (zip readers locate the archive from its end).
  */
 
-/** JVM options of the launcher prefix: no tiered-JIT size limit (translated functions can be large). */
-private const val JVM_OPTS = "-XX:-DontCompileHugeMethods"
-
 /** Class name of the translated program inside the jar. */
 private const val MAIN_CLASS = "Main"
+
+/**
+ * JVM options of the launcher prefix (sh words, quoted where the shell could glob). No tiered-JIT size limit
+ * (translated functions can be large); the program's own methods are compiled after 1/20 of the usual invocation
+ * and loop counts (a translated method is hot from its first call, and short programs otherwise run mostly
+ * interpreted); `quiet` keeps the CompileCommand banner off stdout.
+ */
+private const val JVM_OPTS = "-XX:-DontCompileHugeMethods -XX:CompileCommand=quiet " +
+    "'-XX:CompileCommand=CompileThresholdScaling,$MAIN_CLASS::*,0.05'"
 
 private fun sh(cmd: String, cleanup: () -> Unit) {
     val r = system(cmd)
@@ -93,7 +99,7 @@ internal fun linkJvm(ir: String, output: String, runtime: String, gcSrc: String,
     // Whole-program optimization: everything but main is internal. Vectorizers off (no vector types on the JVM).
     sh("'$opt' -passes='internalize,default<O2>' -internalize-public-api-list=main,exit -vectorize-loops=false " +
         "-vectorize-slp=false '$tmp/linked.bc' -S -o '$tmp/opt.ll'", ::cleanup)
-    if (keepIr) sh("cp '$tmp/opt.ll' '$output.opt.ll'", ::cleanup)
+    if (keepIr) sh("cp '$tmp/linked.bc' '$output.linked.bc' && cp '$tmp/opt.ll' '$output.opt.ll'", ::cleanup)
 
     val classBytes = try {
         JvmBackend(readFile("$tmp/opt.ll"), MAIN_CLASS, runtimeFunctions(readFile(kxrt))).generate()
@@ -101,7 +107,8 @@ internal fun linkJvm(ir: String, output: String, runtime: String, gcSrc: String,
     writeBytes("$tmp/classes/$MAIN_CLASS.class", classBytes)
 
     val rtClasses = runtimeClasses(kxrt, "$rtDir/../build/jvm-runtime")
-    writeFile("$tmp/manifest.txt", "Main-Class: $MAIN_CLASS\nAdd-Exports: java.base/jdk.internal.misc\n")
+    // jdk.internal.misc: Unsafe (memory); jdk.internal.util: Preconditions.checkIndex (bounds checks)
+    writeFile("$tmp/manifest.txt", "Main-Class: $MAIN_CLASS\nAdd-Exports: java.base/jdk.internal.misc java.base/jdk.internal.util\n")
     sh("cp '$rtClasses'/*.class '$tmp/classes/' && '${jdkTool("jar")}' --create --file '$tmp/out.jar' " +
         "--manifest '$tmp/manifest.txt' -C '$tmp/classes' .", ::cleanup)
     writeFile("$tmp/launcher", "#!/bin/sh\nexec java $JVM_OPTS -jar \"\$0\" \"\$@\"\n")

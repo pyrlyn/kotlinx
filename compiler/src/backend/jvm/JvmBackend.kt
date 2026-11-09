@@ -19,13 +19,17 @@ const val KXRT = "KxRt"
 private const val UNSAFE = "jdk/internal/misc/Unsafe"
 private const val UNSAFE_D = "Ljdk/internal/misc/Unsafe;"
 
+/** Constant-size llvm.memcpy/memmove/memset up to this many bytes are lowered to inline Unsafe get/put chunks. */
+private const val INLINE_MEM = 64L
+
 /** FILE* handles of the C standard streams (must match KxRt.java). */
 private val STD_STREAMS = mapOf("__stdinp" to 1L, "stdin" to 1L, "__stdoutp" to 2L, "stdout" to 2L, "__stderrp" to 3L, "stderr" to 3L)
 
 /** Symbolic constant: address of [global] + [add], or the absolute value [add] when [global] is null. */
 private class Sym(val global: String?, val add: Long)
 
-class JvmBackend(private val ir: String, private val className: String, private val runtimeFuncs: Set<String>) {
+class JvmBackend(private val ir: String, private val className: String, private val runtimeFuncs: Set<String>,
+                 private val outlineLoops: Boolean = true) {
     private lateinit var m: LModule
     private val cb = ClassBuilder(className, interfaces = listOf("java/lang/Runnable"))
     private val cp get() = cb.cp
@@ -35,12 +39,19 @@ class JvmBackend(private val ir: String, private val className: String, private 
     private var gSize = 0L
     private val icalls = LinkedHashMap<String, String>()     // descriptor -> dispatcher name
     private val extWrappers = LinkedHashMap<String, String>() // external function used as a value -> wrapper name
+    /** Bounds checks become Preconditions.checkIndex, reported by run() through rt_oob (needs rt_oob(i64, i64)). */
+    private var oobHandler = false
 
     private fun err(msg: String): Nothing = throw CompileError("jvm: $msg")
 
     /** Class file bytes of the translated program. */
     fun generate(): ByteArray {
         m = parseLlvmIr(ir)
+        val outliner = LoopOutliner(m)
+        if (outlineLoops) outliner.run()
+        oobHandler = m.funcs["rt_oob"]?.let { f ->
+            !f.isDecl && f.ret.r() === VoidT && f.params.size == 2 && f.params.all { (it.r() as? IntT)?.bits == 64 }
+        } == true
         nameFunctions()
         collectFunctionIds()
         val ctors = layoutGlobals()
@@ -49,6 +60,7 @@ class JvmBackend(private val ir: String, private val className: String, private 
         for ((ext, w) in extWrappers) wrapper(ext, w)
         clinit(); entry(ctors)
         cb.field(ACC_PUBLIC or ACC_STATIC or ACC_FINAL, "G", "J")
+        for ((n, t) in outliner.fields) cb.field(ACC_PRIVATE or ACC_STATIC, n, kind(t).toString())
         return cb.bytes()
     }
 
@@ -250,6 +262,8 @@ class JvmBackend(private val ir: String, private val className: String, private 
         c.load('A', 0); c.static(KXRT, "start", "(Ljava/lang/Runnable;[Ljava/lang/String;)V"); c.op(Op.RETURN, 0)
         cb.method(ACC_PUBLIC or ACC_STATIC, "main", "([Ljava/lang/String;)V", c)
         c = Code(cp, false); c.maxLocals = 1
+        val start = Label()
+        c.place(start)
         for (k in ctors) { val f = m.funcs[k] ?: err("unknown constructor @$k"); c.static(className, jname[k]!!, desc(f.type)) }
         val main = m.funcs["main"] ?: err("no main function")
         when (main.params.size) {
@@ -263,6 +277,16 @@ class JvmBackend(private val ir: String, private val className: String, private 
         val exit = m.funcs["exit"]?.takeIf { !it.isDecl }
         if (exit != null) c.static(className, jname["exit"]!!, desc(exit.type)) else c.static(KXRT, "exit", "(I)V")
         c.op(Op.RETURN, 0)
+        if (oobHandler) {
+            // a failed bounds check (see boundsCheck): report it with the program's rt_oob, which exits
+            val end = Label(); val h = Label()
+            c.place(end); c.place(h); c.stack = 1
+            c.op(Op.POP, -1)
+            c.field(Op.GETSTATIC, KXRT, "oobIndex", "J"); c.field(Op.GETSTATIC, KXRT, "oobLength", "J")
+            c.static(className, jname["rt_oob"]!!, "(JJ)V")
+            c.op(Op.RETURN, 0)
+            c.handlers.add(Code.Handler(start, end, h, "$KXRT\$Oob"))
+        }
         cb.method(ACC_PUBLIC, "run", "()V", c)
     }
 
@@ -477,6 +501,31 @@ class JvmBackend(private val ir: String, private val className: String, private 
             if (next?.name != to) { c.jump(Op.GOTO, label(to)); }
         }
 
+        /**
+         * A Kotlin bounds check: `br (icmp ult idx, len), ok, bad` (or an equivalent predicate) where `bad` only calls
+         * rt_oob(idx, len). Returns (idx, len, ok); the check is then emitted as Preconditions.checkIndex, which C2
+         * eliminates or hoists out of loops (an explicit unsigned compare is kept in every iteration).
+         * checkIndex also fails for a negative length, which rt_oob's length (an array size) never is.
+         */
+        fun boundsCheck(br: Inst, b: Block): Triple<TV, TV, String>? {
+            if (!oobHandler) return null
+            val v = br.ops[0].v as? Local ?: return null
+            val cmp = defs[v.name]?.takeIf { it.op == "icmp" && uses[v.name] == 1 && b.insts.contains(it) } ?: return null
+            if (cmp.ops[0].t.r() !is IntT || kind(cmp.ops[0].t) != 'J') return null
+            val (idx, len, okOnTrue) = when (cmp.pred) {
+                "ult" -> Triple(cmp.ops[0], cmp.ops[1], true); "ugt" -> Triple(cmp.ops[1], cmp.ops[0], true)
+                "uge" -> Triple(cmp.ops[0], cmp.ops[1], false); "ule" -> Triple(cmp.ops[1], cmp.ops[0], false)
+                else -> return null
+            }
+            val bad = blockOf[br.labels[if (okOnTrue) 1 else 0]]!!.insts
+            if (bad.size != 2 || bad[1].op != "unreachable") return null
+            val call = bad[0]
+            if (call.op != "call" || (call.callee as? GlobalRef)?.name != "rt_oob" || call.ops.size != 2) return null
+            fun same(a: LValue, x: LValue) = (a is Local && x is Local && a.name == x.name) || (a is CInt && x is CInt && a.v == x.v)
+            if (!same(call.ops[0].v, idx.v) || !same(call.ops[1].v, len.v)) return null
+            return Triple(idx, len, br.labels[if (okOnTrue) 0 else 1])
+        }
+
         /** Jumps to [target] when the i1 condition [cond] (negated if [neg]) holds; falls through otherwise. */
         fun condJump(cond: TV, target: Label, neg: Boolean) {
             val v = cond.v
@@ -493,8 +542,9 @@ class JvmBackend(private val ir: String, private val className: String, private 
                 "ult" to "uge", "uge" to "ult", "ule" to "ugt", "ugt" to "ule")
             val p = if (neg) inv[i.pred]!! else i.pred
             val a = i.ops[0]; val b = i.ops[1]; val t = a.t
-            val unsigned = p[0] == 'u'
-            val signedP = if (unsigned) "s" + p.substring(1) else p
+            // samesign: unsigned and signed order agree, and a signed compare keeps loops counted for C2
+            val unsigned = p[0] == 'u' && !i.samesign
+            val signedP = if (p[0] == 'u') "s" + p.substring(1) else p
             val ifOp = mapOf("eq" to Op.IFEQ, "ne" to Op.IFNE, "slt" to Op.IFLT, "sge" to Op.IFGE, "sgt" to Op.IFGT, "sle" to Op.IFLE)[signedP]!!
             if (kind(t) == 'I') {
                 val bz = (b.v is CInt && (b.v as CInt).v == 0L) || b.v === CZero
@@ -551,6 +601,12 @@ class JvmBackend(private val ir: String, private val className: String, private 
             when (i.op) {
                 "phi" -> {}
                 "br" -> if (i.labels.size == 1) goto(b, i.labels[0], next) else {
+                    boundsCheck(i, b)?.let { (idx, len, ok) ->
+                        push(idx); push(len); c.field(Op.GETSTATIC, KXRT, "OOB", "L$KXRT\$Oob;")
+                        c.static("jdk/internal/util/Preconditions", "checkIndex", "(JJLjava/util/function/BiFunction;)J")
+                        c.op(Op.POP2, -2)
+                        goto(b, ok, next); return
+                    }
                     val tl = i.labels[0]; val fl = i.labels[1]
                     when {
                         !hasCopies(b, tl) -> { condJump(i.ops[0], label(tl), false); goto(b, fl, next) }
@@ -659,6 +715,9 @@ class JvmBackend(private val ir: String, private val className: String, private 
                     c.iconst(1); c.jump(Op.GOTO, end); c.adj(-1); c.place(no); c.iconst(0); c.place(end); c.store('I', sl[1])
                 }
                 "fence" -> {}
+                // live-out values of an outlined loop (LoopOutline.kt): static fields of the class
+                "kx.put" -> { push(i.ops[0]); c.field(Op.PUTSTATIC, className, i.pred, kind(i.ops[0].t).toString()) }
+                "kx.get" -> { c.field(Op.GETSTATIC, className, i.pred, kind(i.ty).toString()); storeRes(i) }
                 else -> err("@${f.name}: unsupported instruction ${i.op}")
             }
         }
@@ -921,6 +980,39 @@ class JvmBackend(private val ir: String, private val className: String, private 
             result(i)
         }
 
+        /** Greedy 8/4/2/1-byte chunks (offset, size) covering [n] bytes. */
+        fun chunks(n: Long): List<Pair<Long, Int>> {
+            val r = ArrayList<Pair<Long, Int>>(); var off = 0L
+            for (sz in intArrayOf(8, 4, 2, 1)) while (n - off >= sz) { r.add(off to sz); off += sz }
+            return r
+        }
+        fun uaddr(p: TV, off: Long) { c.field(Op.GETSTATIC, KXRT, "U", UNSAFE_D); addr(p, off) }
+        fun memDesc(sz: Int) = when (sz) { 8 -> "Long" to 'J'; 4 -> "Int" to 'I'; 2 -> "Short" to 'S'; else -> "Byte" to 'B' }
+        /** Small constant-size memcpy/memmove: every chunk is loaded into a local before the first store (overlap-safe),
+         *  so no Unsafe.copyMemory call (a VM call on every use). */
+        fun inlineCopy(dst: TV, src: TV, n: Long) {
+            val cs = chunks(n)
+            val slots = cs.map { (off, sz) ->
+                val (nm, d) = memDesc(sz)
+                uaddr(src, off); c.invoke(Op.INVOKEVIRTUAL, UNSAFE, "get$nm", "(J)$d")
+                val k = if (sz == 8) 'J' else 'I'; val s = newSlot(k); c.store(k, s); s
+            }
+            for ((idx, ch) in cs.withIndex()) {
+                val (nm, d) = memDesc(ch.second)
+                uaddr(dst, ch.first); c.load(if (ch.second == 8) 'J' else 'I', slots[idx]); c.invoke(Op.INVOKEVIRTUAL, UNSAFE, "put$nm", "(J$d)V")
+            }
+        }
+        /** Small constant memset: stores of the repeated byte. */
+        fun inlineSet(dst: TV, v: Long, n: Long) {
+            val pat = (v and 0xFF) * 0x0101010101010101L
+            for ((off, sz) in chunks(n)) {
+                val (nm, d) = memDesc(sz)
+                uaddr(dst, off)
+                if (sz == 8) c.lconst(pat) else c.iconst(when (sz) { 4 -> pat.toInt(); 2 -> pat.toInt().toShort().toInt(); else -> pat.toInt().toByte().toInt() })
+                c.invoke(Op.INVOKEVIRTUAL, UNSAFE, "put$nm", "(J$d)V")
+            }
+        }
+
         fun math(name: String, t: LType, nargs: Int, owner: String = "java/lang/Math") {
             val f = kind(t) == 'F'
             for (k in 0 until nargs) { push(curCall!!.ops[k]); if (f) c.op(Op.F2D, 1) }
@@ -946,12 +1038,16 @@ class JvmBackend(private val ir: String, private val className: String, private 
                 "threadlocal.address", "ssa.copy", "annotation" -> push(ops[0])
                 "objectsize" -> { val min = (ops[1].v as? CInt)?.v ?: 0; pushInt(t, if (min != 0L) 0 else -1) }
                 "memcpy", "memmove", "memcpy.inline" -> {
-                    c.field(Op.GETSTATIC, KXRT, "U", UNSAFE_D); push(ops[1]); push(ops[0]); push(ops[2]); toLong(ops[2].t)
-                    c.invoke(Op.INVOKEVIRTUAL, UNSAFE, "copyMemory", "(JJJ)V"); return
+                    val n = (ops[2].v as? CInt)?.v
+                    if (n != null && n in 0..INLINE_MEM) { inlineCopy(ops[0], ops[1], n); return }
+                    push(ops[0]); push(ops[1]); push(ops[2]); toLong(ops[2].t)
+                    c.static(KXRT, if (base == "memmove") "memmove" else "memcpy", "(JJJ)J"); c.op(Op.POP2, -2); return
                 }
                 "memset", "memset.inline" -> {
-                    c.field(Op.GETSTATIC, KXRT, "U", UNSAFE_D); push(ops[0]); push(ops[2]); toLong(ops[2].t); push(ops[1])
-                    c.invoke(Op.INVOKEVIRTUAL, UNSAFE, "setMemory", "(JJB)V"); return
+                    val n = (ops[2].v as? CInt)?.v; val v = (ops[1].v as? CInt)?.v
+                    if (n != null && v != null && n in 0..INLINE_MEM) { inlineSet(ops[0], v, n); return }
+                    push(ops[0]); push(ops[1]); push(ops[2]); toLong(ops[2].t)
+                    c.static(KXRT, "memset", "(JIJ)J"); c.op(Op.POP2, -2); return
                 }
                 "smax", "smin" -> {
                     if (kind(t) == 'I') { push(ops[0]); push(ops[1]); c.static("java/lang/Math", base.substring(1), "(II)I") }

@@ -110,6 +110,9 @@ class Code(val cp: ConstPool, val wide: Boolean) {
     var stack = 0; var maxStack = 0; var maxLocals = 0
     private class Fix(val at: Int, val patch: Int, val l: Label, val four: Boolean)
     private val fixes = ArrayList<Fix>()
+    /** Exception table entries: code in [start, end) throwing [type] (an internal class name) continues at [handler]. */
+    class Handler(val start: Label, val end: Label, val handler: Label, val type: String)
+    val handlers = ArrayList<Handler>()
 
     fun adj(d: Int) { stack += d; if (stack > maxStack) maxStack = stack }
     fun op(o: Int, delta: Int) { b.u1(o); adj(delta) }
@@ -189,7 +192,8 @@ class Code(val cp: ConstPool, val wide: Boolean) {
 
 class ClassBuilder(val name: String, val superName: String = "java/lang/Object", val interfaces: List<String> = emptyList()) {
     val cp = ConstPool()
-    private class M(val acc: Int, val name: String, val desc: String, val code: ByteArray, val maxStack: Int, val maxLocals: Int)
+    private class M(val acc: Int, val name: String, val desc: String, val code: ByteArray, val maxStack: Int, val maxLocals: Int,
+                    val handlers: List<IntArray>)
     private class F(val acc: Int, val name: String, val desc: String)
     private val methods = ArrayList<M>()
     private val fields = ArrayList<F>()
@@ -197,7 +201,8 @@ class ClassBuilder(val name: String, val superName: String = "java/lang/Object",
     fun field(acc: Int, name: String, desc: String) { fields.add(F(acc, name, desc)) }
     fun method(acc: Int, name: String, desc: String, c: Code) {
         val bytes = c.finish()
-        methods.add(M(acc, name, desc, bytes, c.maxStack, c.maxLocals))
+        val hs = c.handlers.map { intArrayOf(it.start.pos, it.end.pos, it.handler.pos, cp.cls(it.type)) }
+        methods.add(M(acc, name, desc, bytes, c.maxStack, c.maxLocals, hs))
     }
 
     fun bytes(): ByteArray {
@@ -215,9 +220,10 @@ class ClassBuilder(val name: String, val superName: String = "java/lang/Object",
         o.u2(ms.size)
         for ((m, n, d) in ms) {
             o.u2(m.acc); o.u2(n); o.u2(d); o.u2(1)
-            o.u2(codeIdx); o.u4(12 + m.code.size)
+            o.u2(codeIdx); o.u4(12 + m.code.size + 8 * m.handlers.size)
             o.u2(m.maxStack); o.u2(m.maxLocals); o.u4(m.code.size); o.bytes(m.code)
-            o.u2(0); o.u2(0) // exception table, attributes
+            o.u2(m.handlers.size); for (h in m.handlers) h.forEach { o.u2(it) }
+            o.u2(0) // attributes
         }
         o.u2(0)
         return o.toBytes()

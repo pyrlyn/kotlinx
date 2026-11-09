@@ -28,6 +28,7 @@ then: opt (lto-pre-link<O3>) -> clang -O3 -flto with runtime/runtime.c + gc/<nam
 --target jvm (driver/JvmLink.kt): clang -emit-llvm of runtime.c + gc.c + runtime/jvm/libc.c, llvm-link, opt O2
   backend/jvm/LlvmIr.kt     LLVM IR text parser
   backend/jvm/JvmBackend.kt LLVM IR -> JVM bytecode (class Main; memory through Unsafe, see docs/jvm.md)
+  backend/jvm/LoopOutline.kt  outlines loops nested 2+ deep into methods (HotSpot OSR compiles nests poorly)
   backend/jvm/ClassFile.kt  class file writer (version 49: verified by type inference, no stack map frames)
   runtime/jvm/KxRt.java     libc/libm subset on the JVM; jar = launcher + Main + KxRt
 --target=js (driver/JsDriver.kt): llvm-link runtime.c IR + runtime/js/libc.c IR + program IR + Zig libgc-<gc>.bc

@@ -61,6 +61,7 @@ class Inst(val res: String?, val op: String) {
     var ty: LType = VoidT                    // result type (load/alloca/cast: the loaded/allocated/destination type)
     val ops = ArrayList<TV>()                 // operands in source order
     var pred = ""                             // icmp/fcmp predicate, atomicrmw operation
+    var samesign = false                      // icmp samesign: both operands have the same sign (ult == slt)
     val labels = ArrayList<String>()          // br targets (cond: true, false), switch default
     val cases = ArrayList<Pair<Long, String>>()
     val incoming = ArrayList<Pair<LValue, String>>()  // phi
@@ -459,7 +460,7 @@ class IrParser(src: String) {
                 i.ty = ty; i.ops.add(TV(ty, a)); i.ops.add(TV(ty, b))
             }
             "icmp", "fcmp" -> {
-                while (t.k == TK.WORD && t.s in INST_FLAGS) p++
+                while (t.k == TK.WORD && t.s in INST_FLAGS) { if (t.s == "samesign") i.samesign = true; p++ }
                 i.pred = word()
                 val ty = type(); val a = value(ty); expectP(","); val b = value(ty)
                 i.ty = if (ty.r() is VecT) err("vector compare") else IntT(1); i.ops.add(TV(ty, a)); i.ops.add(TV(ty, b))
