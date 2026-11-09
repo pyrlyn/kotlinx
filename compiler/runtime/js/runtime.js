@@ -150,7 +150,8 @@ function $strlen(p) { let e = p; while (U8[e]) e++; return e - p; }
 function $strcmp(a, b) { for (;;) { const x = U8[a++], y = U8[b++]; if (x !== y) return x - y; if (!x) return 0; } }
 function $strncmp(a, b, n) { for (; n > 0; n--) { const x = U8[a++], y = U8[b++]; if (x !== y) return x - y; if (!x) return 0; } return 0; }
 function $memcmp(a, b, n) { for (let k = 0; k < n >>> 0; k++) { const x = U8[a + k], y = U8[b + k]; if (x !== y) return x - y; } return 0; }
-// $bcmp and $memmove are functions, not aliases (var): JsBackend.usedRuntime keeps every var and what it names.
+// bcmp and memmove are functions, not aliases (var): JsBackend.usedRuntime keeps every var and what it names.
+// (No `$` names in comments: usedRuntime also scans comments, in LL2JS_PRETTY output.)
 function $bcmp(a, b, n) { return $memcmp(a, b, n); }
 // memmove semantics (overlap allowed); n is a size_t
 function $memcpy(d, s, n) { if (n >>> 0 > 16 || d > s && d < s + n) U8.copyWithin(d, s, s + n | 0); else for (let k = 0; k < n; k++) U8[d + k] = U8[s + k]; return d; }
