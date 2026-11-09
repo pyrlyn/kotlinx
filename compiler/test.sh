@@ -82,7 +82,15 @@ case "$msg" in *"line 2: unknown name 'nope'"*) echo "PASS error-message";; *) e
 printf 'fun main() {\n  if (true) {\n' > "$out/eof.kt"
 msg=$("$NKC" "$out/eof.kt" -o "$out/eof" 2>&1)
 case "$msg" in *"error: line 3:"*) echo "PASS eof-error";; *) echo "FAIL eof-error: $msg"; fail=1;; esac
-for t in js wasm jvm; do
+# --target=js: front-end errors are reported as for native; a program runs under node (when installed).
+msg=$("$NKC" --target=js "$out/bad.kt" -o "$out/x.js" 2>&1)
+case "$msg" in *"line 2: unknown name 'nope'"*) echo "PASS target-js-error";; *) echo "FAIL target-js-error: $msg"; fail=1;; esac
+if command -v node >/dev/null; then
+  printf 'fun main() {\n  val xs = ArrayList<Long>()\n  for (i in 0 until 10) xs.add(i * 3000000000L)\n  var s = 0L\n  for (x in xs) s += x\n  println("sum=$s")\n}\n' > "$out/js.kt"
+  if "$NKC" --target=js "$out/js.kt" -o "$out/js.js" 2>"$out/js.err" && [ "$(node "$out/js.js")" = "sum=135000000000" ]; then echo "PASS target-js"
+  else echo "FAIL target-js: $(head -c 300 "$out/js.err")"; fail=1; fi
+else echo "SKIP target-js (no node)"; fi
+for t in wasm jvm; do
   msg=$("$NKC" --target=$t "$out/bad.kt" -o "$out/x" 2>&1); rc=$?
   if [ $rc -ne 0 ] && [ "$msg" = "target $t is not supported yet" ]; then echo "PASS target-$t"; else echo "FAIL target-$t: rc=$rc $msg"; fail=1; fi
 done
