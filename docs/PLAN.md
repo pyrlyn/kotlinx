@@ -105,7 +105,7 @@ Rule for every step: one change -> `compiler/test.sh` green, upstream 3093/3093,
 22. Real type inference instead of local builder-inference heuristics (accumulated debt).
 23. Done: `Set` (existed), `LinkedHashMap`/ordered maps, sorting, common String functions. Left: `Regex` (needs a regex engine in the runtime), `String.format`, `indexOf(Char)` overload (overloads of extensions are not supported).
 24. Done: sealed/enum exhaustiveness; `inline`/`reified` `is T` works; `by lazy` works. Left: `by map` (needs `KProperty.name` in delegates).
-25. js/wasm/jvm targets are stubs (exit non-zero) - not planned yet.
+25. js/jvm targets are stubs (exit non-zero) - not planned yet; wasm reuses the LLVM backend (`--target=wasm`, wasm32-wasi).
 
 ### P5 - path to Ktor/Room
 26-27. Done: `docs/KTOR_ROOM.md`; `ffi/ffi_http` (socket HTTP server) and `ffi/ffi_sqlite` (SQLite DAO). Verdict: upstream Ktor/Room cannot be built yet (multi-module, expect/actual, star projections, KSP); see the doc's priority list.

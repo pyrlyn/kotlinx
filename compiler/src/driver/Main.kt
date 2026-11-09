@@ -6,7 +6,10 @@ import kotlinx.cinterop.*
 import platform.posix.*
 
 private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
-  --target <t>         native (default; LLVM, native binary), js, wasm, jvm (only native is implemented)
+  --target <t>         native (default; LLVM, native binary), wasm (same LLVM IR for wasm32-wasi, linked with
+                       ${'$'}NK_WASM_CC or `zig cc -target wasm32-wasi`; GC perceus, --alloc malloc; Zig GC archives
+                       from native/gc/zig/zig-out/wasm32-wasi/lib or ${'$'}NEWKOTLIN_GC_ZIG_WASM_LIB_DIR),
+                       js, jvm (not implemented)
   --runtime <file.c>   C runtime to link (default: ${'$'}NEWKOTLIN_RUNTIME or compiler/runtime/runtime.c)
   --emit-llvm          also keep <output>.ll
   --cc <clang>         C compiler/linker (default: ${'$'}NK_CC, Apple clang, newest mise conda:clang, else clang)
@@ -113,10 +116,10 @@ private fun findOpt(explicit: String?, cc: String): String? {
     val home = getenv("HOME")?.toKString() ?: ""
     val fixed = listOfNotNull(getenv("CONDA_PREFIX")?.toKString()?.let { "$it/bin/opt" },
         "/opt/homebrew/opt/llvm/bin/opt", "/usr/local/opt/llvm/bin/opt")
-    fixed.firstOrNull { access(it, X_OK) == 0 }?.let { return it }
-    // mise `conda:llvm-tools` (the repo's mise.toml; `mise install`), newest version first.
-    // Prefer the newest one the C compiler can read (LLVM major <= the C compiler's).
+    // Prefer one the C compiler can read (LLVM major <= the C compiler's).
     val maxMajor = majorVersion(cc)
+    fixed.firstOrNull { access(it, X_OK) == 0 && (maxMajor == null || (majorVersion(it) ?: 0) <= maxMajor) }?.let { return it }
+    // mise `conda:llvm-tools` (the repo's mise.toml; `mise install`), newest version first.
     val mise = captureAll("ls -d '$home'/.local/share/mise/installs/conda-llvm-tools/*/bin/opt 2>/dev/null | grep -v /latest/ | sort -rV")
     (mise.firstOrNull { o -> access(o, X_OK) == 0 && (maxMajor == null || (majorVersion(o) ?: 0) <= maxMajor) } ?: mise.firstOrNull { access(it, X_OK) == 0 })
         ?.let { return it }
@@ -142,15 +145,21 @@ fun compileToIr(src00: String): String {
 /** Collector used when neither --gc nor NEWKOTLIN_GC is given (and what --gc=default means). */
 const val DEFAULT_GC = "epoch"
 
+/** Collector for --target=wasm when none is given: synchronous cycle collection, no threads. */
+const val WASM_GC = "perceus"
+
+/** Install prefix of the wasm32-wasi Zig GC archives, relative to native/gc/zig (`zig build gc-libs -p ...`). */
+const val WASM_ZIG_PREFIX = "zig-out/wasm32-wasi"
+
 /** The `newkotlinc` command; see docs/usage.md for the options. */
 fun main(args: Array<String>) {
     var input: String? = null; var output: String? = null
     var runtime = getenv("NEWKOTLIN_RUNTIME")?.toKString() ?: "compiler/runtime/runtime.c"
     var target = Target.NATIVE
     if (getenv("NEWKOTLIN_NO_BORROW_FIELD_LOCALS")?.toKString()?.let { it.isNotEmpty() && it != "0" } == true) borrowFieldLocals = false
-    var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() } ?: DEFAULT_GC
-    var gcRuntime = getenv("NEWKOTLIN_GC_RUNTIME")?.toKString()?.takeIf { it.isNotEmpty() } ?: "zig"
-    var alloc = "mimalloc"; var leakCheck = false; var emitLl = false; var onlyIr = false
+    var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() }
+    var gcRuntime = getenv("NEWKOTLIN_GC_RUNTIME")?.toKString()?.takeIf { it.isNotEmpty() }
+    var alloc: String? = null; var leakCheck = false; var emitLl = false; var onlyIr = false
     var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
     val links = ArrayList<String>()
     var i = 0
@@ -179,11 +188,28 @@ fun main(args: Array<String>) {
         }
         i++
     }
+    val wasm = target == Target.WASM
+    // wasm32-wasi has no threads (epoch collects in the background).
+    if (gc == null) gc = if (wasm) WASM_GC else DEFAULT_GC
     if (gc == "default") gc = DEFAULT_GC // "default" names whatever the default collector is (epoch); old one: perceus
+    if (gcRuntime == null) gcRuntime = "zig"
+    if (alloc == null) alloc = if (wasm) "malloc" else "mimalloc"
+    if (wasm) {
+        llvmTarget = LlvmTarget.WASM32
+        val bad = when {
+            alloc == "mimalloc" -> "--target=wasm supports --alloc malloc or pool"
+            gc == DEFAULT_GC -> "--target=wasm has no threads for the $gc collector; use --gc perceus, incremental or rc"
+            links.isNotEmpty() -> "--target=wasm does not support --link"
+            else -> null
+        }
+        if (bad != null) { fprintf(stderr, "%s\n", bad); exit(2); return }
+    }
     if (gcRuntime != "zig" && gcRuntime != "c") {
         fprintf(stderr, "--gc-runtime must be zig or c (got %s)\n", gcRuntime); exit(2); return
     }
-    val cc = ccArg ?: findCc()
+    val cc = ccArg ?: if (wasm) (getenv("NK_WASM_CC")?.toKString() ?: "zig cc -target wasm32-wasi") else findCc()
+    // A compiler command with arguments (`zig cc ...`): its LLVM version picks the opt below.
+    if (' ' in cc) majorCache[cc] = capture("$cc --version 2>/dev/null | grep -oE 'clang version [0-9]+' | head -1")?.substringAfterLast(' ')?.toIntOrNull()
     if (!target.implemented) { fprintf(stderr, "target %s is not supported yet\n", target.flag); exit(1); return }
     if (input == null || output == null) { fprintf(stderr, "%s\n", USAGE); exit(2); return }
     // A GC whose caps file lists "deferred" needs deferred-RC code generation (see NativeBackend.deferredRc).
@@ -199,8 +225,9 @@ fun main(args: Array<String>) {
     // GC: caps/metadata and C sources under <gcDir>; Zig static libs under <zigLibDir>/libgc-<name>.a.
     // Only the collector backend is zig|c; runtime.c is always the shared KotlinX runtime.
     val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/c")
-    val zigLibDir = getenv("NEWKOTLIN_GC_ZIG_LIB_DIR")?.toKString()
-        ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/zig/zig-out/lib")
+    // wasm archives live under their own prefix so they never replace the host ones in zig-out/lib.
+    val zigLibDir = getenv(if (wasm) "NEWKOTLIN_GC_ZIG_WASM_LIB_DIR" else "NEWKOTLIN_GC_ZIG_LIB_DIR")?.toKString()
+        ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/zig/" + (if (wasm) WASM_ZIG_PREFIX else "zig-out") + "/lib")
     if (gc.isEmpty() || '/' in gc) {
         fprintf(stderr, "unknown --gc %s\n", gc); exit(2); return
     }
@@ -222,12 +249,15 @@ fun main(args: Array<String>) {
         if (access(lib, F_OK) != 0) {
             fprintf(stderr, "error: Zig GC archive missing: %s\n" +
                 "Direct newkotlinc.kexe does not rebuild libs. Use bin/newkotlinc (runs zig build gc-libs), or\n" +
-                "cd native/gc/zig && zig build gc-libs  (Zig 0.17.1), or set NEWKOTLIN_GC_ZIG_LIB_DIR, or --gc-runtime=c\n", lib)
+                "cd native/gc/zig && zig build gc-libs%s  (Zig 0.17.1), or set %s, or --gc-runtime=c\n", lib,
+                if (wasm) " -Dtarget=wasm32-wasi -p $WASM_ZIG_PREFIX" else "",
+                if (wasm) "NEWKOTLIN_GC_ZIG_WASM_LIB_DIR" else "NEWKOTLIN_GC_ZIG_LIB_DIR")
             exit(1); return
         }
         // libgc is LLVM machine code: Clang LTO cannot inspect a Zig archive.
-        // Keep native code opaque and optimize the generated program only.
-        if ("-flto" in cflags) cflags = cflags.replace("-flto", "")
+        // Keep native code opaque and optimize the generated program only. wasm-ld (lld) links LTO bitcode
+        // with a machine-code archive, so wasm keeps -flto for the program and runtime.c.
+        if (!wasm && "-flto" in cflags) cflags = cflags.replace("-flto", "")
         "'$lib'"
     }
     val ll = "$output.ll"
@@ -268,7 +298,10 @@ fun main(args: Array<String>) {
         val pipeline = if ("-flto" in cflags) "lto-pre-link<O3>" else "default<O3>"
         run1("'$opt' -passes='$pipeline' -S '$ll' -o '$linkLl'")
     }
-    val cmd = "$cc $cflags$def -Wno-override-module -I'$gcDir' $gcFlags '$linkLl' '$runtime' $gcObj$link${links.joinToString("") { " '$it'" }} -o '$output'"
+    // wasm: deep recursion lives on the engine stack; the linear-memory shadow stack holds only address-taken
+    // locals. 8 MiB matches the native default; -s drops the names section.
+    val wasmLd = if (wasm) " -s -Wl,-z,stack-size=8388608" else ""
+    val cmd = "$cc $cflags$def$wasmLd -Wno-override-module -I'$gcDir' $gcFlags '$linkLl' '$runtime' $gcObj$link${links.joinToString("") { " '$it'" }} -o '$output'"
     val rc = system(cmd)
     cleanup()
     if (rc != 0) { fprintf(stderr, "clang failed (%d): %s\n", rc, cmd); exit(1) }
