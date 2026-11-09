@@ -13,3 +13,6 @@ and rotations in loops, Long values, and booleans and doubles live across branch
 
 `acyclic_fields.kt` covers constant-offset addresses (`constGep` in `JsGen.kt`): fields written in one block and
 read in others, nested objects, Long and Double fields.
+
+`acyclic_control.kt` covers the label peephole (`open`/`close` in `JsGen.kt`): labeled break and continue in
+nested loops, when chains, early returns, do-while.
