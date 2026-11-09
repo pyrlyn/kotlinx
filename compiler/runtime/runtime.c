@@ -263,7 +263,17 @@ void rt_print_char(int32_t c) { char b[4]; int n = utf8(b, c); fwrite(b, 1, (siz
 // ---- StringBuilder (reference counted; also used for templates) ----------
 // Strings are char* with an 8-byte refcount just before the chars (literals: immortal, 2^62).
 
-typedef struct { int64_t rc; char *buf; size_t len, cap; } SB;
+/* Reference counts and lengths of the runtime collections. --target=js (RT_JS) has no 64-bit integers: an int64_t
+ * field is two words there, and every count or length update a carry chain. Kotlin sizes are Int and RT_SIZE_CHECK
+ * keeps allocations under 2 GB, so 32 bits are enough; the count stays the first word, where NativeBackend's
+ * rt_retain (32-bit header count on js) increments it. Other targets keep int64_t. */
+#ifdef RT_JS
+typedef int32_t rt_cnt;
+#else
+typedef int64_t rt_cnt;
+#endif
+
+typedef struct { rt_cnt rc; char *buf; size_t len, cap; } SB;
 
 /* The buffer keeps 8 spare bytes in front, so rt_sb_done can hand it over as a string without copying. */
 SB *rt_sb_new(void) { SB *s = malloc(sizeof *s); s->rc = 1; s->cap = 32; s->len = 0; s->buf = (char *)malloc(s->cap + 8) + 8; s->buf[0] = 0; LK(LK_SB, 1); return s; }
@@ -346,7 +356,7 @@ typedef struct { void *owner; void **more; int32_t n, cap; } Holders;
  * with rt_gc_free_later, and every change the collector could see logs the owner as modified
  * (rt_gc_write_barrier), as a field store would. `ctrav`: the collector took over the element references of
  * the dead object it traversed the list from. */
-typedef struct { int64_t rc; int64_t len, cap; int64_t *data; release_fn rel; Holders h; int32_t gc, ctrav; } List;
+typedef struct { rt_cnt rc; rt_cnt len, cap; int64_t *data; release_fn rel; Holders h; int32_t gc, ctrav; } List;
 #define LD(x) __atomic_load_n(&(x), __ATOMIC_RELAXED)
 #define LDA(x) __atomic_load_n(&(x), __ATOMIC_ACQUIRE)
 #define ST(x, v) __atomic_store_n(&(x), (v), __ATOMIC_RELAXED)
@@ -403,7 +413,7 @@ __attribute__((noinline, cold, noreturn)) static void bounds_fail(List *l, int64
     js_list_oob(i, l->len);
 #else
     fflush(stdout);
-    fprintf(stderr, "Exception in thread \"main\" java.lang.IndexOutOfBoundsException: Index %" PRId64 " out of bounds for length %" PRId64 "\n", i, l->len);
+    fprintf(stderr, "Exception in thread \"main\" java.lang.IndexOutOfBoundsException: Index %" PRId64 " out of bounds for length %" PRId64 "\n", i, (int64_t)l->len);
     exit(1);
 #endif
 }
@@ -527,8 +537,8 @@ void rt_oob(int64_t i, int64_t len) {
  * Entries live in dense arrays keys/vals/used (n entries, room for dcap; a removed entry keeps its place with
  * used = 0 until the next rehash compacts them). idx is an open-addressing table of cap slots holding an entry
  * index, EMPTY or TOMB. */
-typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; release_fn vrel;
-                 int64_t n, dcap, tombs; int64_t *idx; Holders h; int32_t gc, ctrav; } Map;
+typedef struct { rt_cnt rc; rt_cnt size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; release_fn vrel;
+                 rt_cnt n, dcap, tombs; int64_t *idx; Holders h; int32_t gc, ctrav; } Map;
 // Reference values (`vrel` set): the map owns one reference per value; overwrites and the map release drop it.
 // `h`, `gc`, `ctrav`: as for List. The concurrent collector reads n, used and vals, never
 // keys or idx: an entry's value is stored before its used flag and the flag before n (release), so a collector
