@@ -6,7 +6,8 @@
 #   zig build gc-libs
 # so collector source changes rebuild into zig-out/lib/libgc-*.a (Zig cache = incremental).
 # --gc-runtime=c skips Zig. Direct newkotlinc.kexe does not build libs (see native/gc/README.md).
-# --target=js runs `zig build gc-bc` instead (LLVM bitcode of the collector, default incremental).
+# --target=js runs `zig build gc-bc -Dtarget=wasm32-wasi` instead (wasm32 LLVM bitcode of the collector, default
+# incremental, into zig-out/wasm32-wasi/lib).
 root="$(cd "$(dirname "$0")/.." && pwd)"
 exe="$root/compiler/build/newkotlinc.kexe"
 [ -x "$exe" ] || "$root/compiler/build.sh" >&2 || exit 1
@@ -76,6 +77,8 @@ ensure_zig_gc_libs() {
   local step=gc-libs
   if [ "$TARGET_CLI" = "js" ]; then step=gc-bc; fi
   local -a zargs=(build "$step")
+  # js: wasm32 bitcode under the wasm32-wasi prefix (next to --target=wasm's archives; see WASM_ZIG_PREFIX in Main.kt).
+  if [ "$TARGET_CLI" = "js" ]; then zargs+=(-Dtarget=wasm32-wasi -p zig-out/wasm32-wasi); fi
   case " $* " in *" --leak-check "*) zargs+=(-Dleakcheck=true) ;; esac
   case " $* " in *" --alloc pool"*|*" --alloc=pool "*) zargs+=(-Dpool=true) ;; esac
   case " $* " in *" --alloc malloc"*|*" --alloc=malloc "*) zargs+=(-Dplain-malloc=true) ;; esac

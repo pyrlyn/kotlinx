@@ -35,10 +35,10 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `NEWKOTLIN_GC_DIR` | Caps / `kxgc.h` / C `gc.c` tree (default: `native/gc/c`). |
 | `NEWKOTLIN_GC_RUNTIME` | `zig` (default) or `c` — collector backend language. |
 | `NEWKOTLIN_GC_ZIG_LIB_DIR` | Directory with `libgc-<name>.a` (default: `native/gc/zig/zig-out/lib`). |
-| `NEWKOTLIN_GC_ZIG_WASM_LIB_DIR` | Same for `--target=wasm` (default: `native/gc/zig/zig-out/wasm32-wasi/lib`). |
+| `NEWKOTLIN_GC_ZIG_WASM_LIB_DIR` | Same for `--target=wasm` and the `libgc-<name>.bc` of `--target=js` (default: `native/gc/zig/zig-out/wasm32-wasi/lib`). |
 | `NEWKOTLIN_MIMALLOC_DIR` | Where to find `libmimalloc`. |
 | `NK_CC`, `NK_OPT` | Default C compiler and `opt`. |
-| `NK_WASM_CC` | C compiler and linker for `--target=wasm` (default: `zig cc -target wasm32-wasi`). |
+| `NK_WASM_CC` | C compiler and linker for `--target=wasm`, C compiler for `--target=js` (default: `zig cc -target wasm32-wasi`). |
 
 ## Wasm target
 

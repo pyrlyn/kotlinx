@@ -3,10 +3,9 @@ package newkotlin
 /*
  * LLVM IR (LlModule) -> JavaScript.
  *
- * Memory model: one ArrayBuffer with typed-array views (I8 U8 I16 U16 I32 F32 F64). The IR keeps the 64-bit
- * data layout it was compiled with (pointers occupy 8 bytes in memory), but addresses are JS int32 values below
- * 2 GB: a pointer is stored as its low word plus a zero high word, and pointer-sized integer arithmetic only
- * uses the low word.
+ * Memory model: one ArrayBuffer with typed-array views (I8 U8 I16 U16 I32 F32 F64). The IR has wasm32's data
+ * layout (driver/JsDriver.kt): a pointer, size_t or long is 4 bytes in memory and one int32 value, an address
+ * below 2 GB.
  *
  * Values: every SSA value is a list of JS scalars ("parts"): i1..i32 and ptr one int32 (i8/i16 kept sign-extended,
  * i1 as a boolean or 0/1), i64 two int32 parts (low, high), float/double one number, structs the concatenation of
@@ -27,17 +26,17 @@ private fun isWide(t: LTy) = t is LInt && t.bits > 32 && t.bits != 64 && t.bits 
 
 class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, private val runtimeNames: Set<String> = emptySet(),
             private val compact: Boolean = true) {
-    // ---- layout (LP64, "e-m:o-i64:64-i128:128-n32:64-S128") -------------------------------------------
+    // ---- layout (wasm32, "e-m:e-p:32:32-i64:64-i128:128-n32-S128") ---------------------------------------
     fun sizeOf(t: LTy): Long = when (t) {
         is LInt -> when { t.bits <= 8 -> 1; t.bits <= 16 -> 2; t.bits <= 32 -> 4; t.bits <= 64 -> 8; else -> 16 }
-        LPtr -> 8; LFloat -> 4; LDouble -> 8
+        LPtr -> 4; LFloat -> 4; LDouble -> 8
         is LArr -> t.n * sizeOf(t.elem)
         is LStruct -> { var o = 0L; for (f in t.fields) { if (!t.packed) o = alignUp(o, alignOf(f)); o += sizeOf(f) }; if (t.packed) o else alignUp(o, alignOf(t)) }
         else -> throw CompileError("JS backend: no size for $t")
     }
     fun alignOf(t: LTy): Long = when (t) {
         is LInt -> minOf(sizeOf(t), 16)
-        LPtr, LDouble -> 8; LFloat -> 4
+        LDouble -> 8; LPtr, LFloat -> 4
         is LArr -> alignOf(t.elem)
         is LStruct -> if (t.packed) 1 else t.fields.maxOfOrNull { alignOf(it) } ?: 1
         else -> 1
@@ -145,7 +144,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             }
             t == LDouble -> put(off, (v as VFloat).v.toRawBits(), 8)
             t == LFloat -> put(off, (v as VFloat).v.toFloat().toRawBits().toLong(), 4)
-            t == LPtr -> put(off, constInt(v), 8)
+            t == LPtr -> put(off, constInt(v), 4)
             t is LInt -> put(off, constInt(v), sizeOf(t).toInt())
             else -> throw CompileError("JS backend: initializer of type $t")
         }
@@ -360,7 +359,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                         else { emit("_st(${w(a)},${es[0]},4)"); emit("_st($p+${off + 4},${es[1]},4)") }
                     else -> throw CompileError("JS backend: store i${t.bits}")
                 }
-                LPtr -> if (align >= 4 || align == 0) { st("I32", 2, es[0]); emit("I32[$p+${off + 4}>>2]=0") } else { emit("_st(${w(a)},${es[0]},4)"); emit("_st($p+${off + 4},0,4)") }
+                LPtr -> if (align >= 4 || align == 0) st("I32", 2, es[0]) else emit("_st(${w(a)},${es[0]},4)")
                 LFloat -> if (align >= 4 || align == 0) st("F32", 2, es[0]) else emit("_stf(${w(a)},${es[0]})")
                 LDouble -> if (align >= 8 || align == 0) st("F64", 3, es[0]) else emit("_std(${w(a)},${es[0]})")
                 is LStruct -> { var k0 = 0; t.fields.forEachIndexed { k, ft -> val n = parts(ft).size; store(ft, p, off + fieldOffset(t, k), minOf(align, alignOf(ft).toInt()), es.subList(k0, k0 + n)); k0 += n } }
@@ -416,7 +415,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             val dynamic = blocks.any { b -> b.insts.any { (it.op == "alloca" && !allocaOff.containsKey(it.res)) || (it.op == "call" && (it.callee as? VGlobal)?.name?.startsWith("llvm.stack") == true) } }
             if (frame > 0 || dynamic) fp = newVar()
             // Stack depth probes (runtime.c's bounded release compares llvm.stacksave / frameaddress with rt_rel_limit):
-            // JS frames do not move S, so such functions count their nesting in D and _fa() reports S-(D<<7).
+            // JS frames do not move S, so such functions count their nesting in D and _fa() reports S-(D<<12).
             val callees = blocks.flatMap { b -> b.insts.mapNotNull { (it.callee as? VGlobal)?.name } }.toSet()
             depthProbe = callees.any { it.startsWith("llvm.frameaddress") } ||
                 (callees.any { it.startsWith("llvm.stacksave") } && callees.none { it.startsWith("llvm.stackrestore") })
@@ -480,7 +479,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                 }
                 "store" -> {
                     val vt = i.ops[0].first; val es = ex(i.ops[0].second, vt); val p = op1(i, 1)
-                    store(vt, if (es.size > 1 || vt == LPtr) simple(p) else p, 0, i.align, es)
+                    store(vt, if (es.size > 1) simple(p) else p, 0, i.align, es)
                 }
                 "extractvalue" -> {
                     val at = i.ops[0].first; val es = ex(i.ops[0].second, at)

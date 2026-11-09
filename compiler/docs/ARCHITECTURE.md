@@ -25,7 +25,8 @@ then: opt (lto-pre-link<O3>) -> clang -O3 -flto with runtime/runtime.c + gc/<nam
                           (LIBC_SIGS, NativeBackend.libcCall), the entry symbol and pointer-size offsets; linked by
                           `zig cc -target wasm32-wasi` with the perceus collector (no threads; Zig archive built for
                           wasm32-wasi into native/gc/zig/zig-out/wasm32-wasi/lib) and wasi-libc malloc
---target=js (driver/JsDriver.kt): llvm-link runtime.c IR + runtime/js/libc.c IR + program IR + Zig libgc-<gc>.bc
+--target=js (driver/JsDriver.kt): all for wasm32 (LlvmTarget.JS32; runtime.c and runtime/js/libc.c by
+  `zig cc -target wasm32-wasi`): llvm-link runtime.c IR + libc.c IR + program IR + Zig wasm32 libgc-<gc>.bc
   -> opt (internalize, scalarizer, O3, no vectorizing) -> backend/js: LlParser.kt (LLVM IR text) -> JsGen.kt
   (one JS function per LLVM function, structured control flow, i64 as two int32 words) -> JsBackend.kt
   (runtime/js/runtime.js, only the parts used, + code + data segment) = one .js file for node

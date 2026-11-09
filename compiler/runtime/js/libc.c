@@ -1,38 +1,41 @@
-// libc subset for newkotlinc --target=js, compiled to LLVM IR and translated to JavaScript together with the
-// program, compiler/runtime/runtime.c and the GC. The rest of libc (stdio, strings, time, exit) lives in
-// compiler/runtime/js/runtime.js. Memory comes from js_sbrk (the end of the JS ArrayBuffer heap).
+// libc subset for newkotlinc --target=js, compiled to wasm32 LLVM IR (wasi-libc headers; driver/JsDriver.kt) and
+// translated to JavaScript together with the program, compiler/runtime/runtime.c and the GC. The rest of libc (stdio,
+// strings, time, exit) lives in compiler/runtime/js/runtime.js. Memory comes from js_sbrk (the end of the JS
+// ArrayBuffer heap).
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 extern char *js_sbrk(size_t n);
 
 // FILE* handles understood by runtime.js: 1 stdout, 2 stderr, 3 stdin; fopen returns >= 4.
-#ifdef __APPLE__
-FILE *__stdinp = (FILE *)3, *__stdoutp = (FILE *)1, *__stderrp = (FILE *)2;
-#else
-FILE *stdin = (FILE *)3, *stdout = (FILE *)1, *stderr = (FILE *)2;
-#endif
+FILE *const stdin = (FILE *)3, *const stdout = (FILE *)1, *const stderr = (FILE *)2;
+
+// wasi-libc's clock ids are addresses (CLOCK_MONOTONIC is &_CLOCK_MONOTONIC); runtime.js ignores the id.
+struct __clockid { int id; };
+const struct __clockid _CLOCK_MONOTONIC = {1};
 
 // ---- allocator ---------------------------------------------------------------------------------------------
-// Chunks are multiples of 16 bytes with an 8-byte size header before a 16-byte aligned payload.
+// Chunks are multiples of 16 bytes: a size_t header (the chunk size) right before a 16-byte aligned payload.
 // Small chunks (<= SMALL_MAX) are carved from 1 MB arenas and recycled through exact-size free lists;
 // large chunks come straight from js_sbrk and are recycled through power-of-two bins (first fit).
 #define SMALL_MAX 4096
 #define ARENA (1u << 20)
+#define HDR sizeof(size_t)
 static void *free_small[SMALL_MAX / 16 + 1];
-static void *free_large[48];
+static void *free_large[32];
 static char *cur, *lim;
 
-static inline size_t chunk_of(size_t n) { return (n + 8 + 15) & ~(size_t)15; }
-static inline size_t *hdr(void *p) { return (size_t *)((char *)p - 8); }
-static inline int log2_floor(size_t c) { return 63 - __builtin_clzll(c); }
+static inline size_t chunk_of(size_t n) { return (n + HDR + 15) & ~(size_t)15; }
+static inline size_t *hdr(void *p) { return (size_t *)p - 1; }
+static inline int log2_floor(size_t c) { return 31 - __builtin_clz(c); }
 
 static void *alloc_large(size_t c) {
     int b = log2_floor(c);
-    for (int k = b; k < 48 && k <= b + 1; k++) {
+    for (int k = b; k < 32 && k <= b + 1; k++) {
         void **prev = &free_large[k];
         for (void *p = *prev; p; prev = (void **)p, p = *prev) {
             if (*hdr(p) >= c) { *prev = *(void **)p; return p; }
@@ -51,7 +54,7 @@ static void *kx_alloc(size_t n) {
     void **l = &free_small[c >> 4];
     void *p = *l;
     if (p) { *l = *(void **)p; return p; }
-    if (!cur || cur - 8 + c > lim) {
+    if (!cur || cur - HDR + c > lim) {
         char *b = js_sbrk(ARENA);
         if (!b) return NULL;
         if (b == lim && cur) lim = b + ARENA; // contiguous: extend the arena
@@ -87,7 +90,7 @@ void *realloc(void *p, size_t n) {
     if (chunk_of(n) <= c) return p;
     void *q = kx_alloc(n);
     if (!q) return NULL;
-    __builtin_memcpy(q, p, c - 8);
+    __builtin_memcpy(q, p, c - HDR);
     free(p);
     return q;
 }
