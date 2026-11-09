@@ -1,6 +1,6 @@
 #!/bin/bash
 # Size regression tests for --target=wasm: module size budgets, libc code that must stay out of every module and
-# functions that must stay out of line (size-budget.txt), plus the KX_GC_STATS=1 report line. Needs Zig 0.17.1 and node. Exits 1 on any failure.
+# functions that must stay out of line or small (size-budget.txt), plus the KX_GC_STATS=1 report line. Needs Zig 0.17.1 and node. Exits 1 on any failure.
 cd "$(dirname "$0")/../../.."
 root=$PWD; d=compiler/tests/wasm
 NKC=${NKC:-$root/compiler/build/newkotlinc.kexe}
@@ -16,6 +16,12 @@ while read -r kind a b c; do
     keep) # a function that must stay out of line (a name-section build of the source)
       if ! NK_WASM_CC="$root/$d/cc-names.sh" "$NKC" --target=wasm "$b" -o "$out/keep-$a.wasm" 2>"$out/keep-$a.err"; then echo "FAIL keep $a: compile: $(grep -v unused "$out/keep-$a.err" | head -3)"; fail=1; continue; fi
       if python3 "$d/funcs.py" "$out/keep-$a.wasm" | awk '{print $2}' | grep -qE "$c"; then echo "PASS keep $a: $c"; else echo "FAIL keep $a: no function matches $c (inlined?)"; fail=1; fi ;;
+    maxfunc) # maxfunc <label> <source> <regex> <bytes>: the matching function's code (name-section build) stays small
+      re=${c%% *}; max=${c#* }
+      if ! NK_WASM_CC="$root/$d/cc-names.sh" "$NKC" --target=wasm "$b" -o "$out/maxfunc-$a.wasm" 2>"$out/maxfunc-$a.err"; then echo "FAIL maxfunc $a: compile: $(grep -v unused "$out/maxfunc-$a.err" | head -3)"; fail=1; continue; fi
+      n=$(python3 "$d/funcs.py" "$out/maxfunc-$a.wasm" | RE="$re" awk '$2 ~ ENVIRON["RE"] {print $1; exit}')
+      if [ -z "$n" ]; then echo "FAIL maxfunc $a: no function matches $re"; fail=1
+      elif [ "$n" -le "$max" ]; then echo "PASS maxfunc $a: $re $n <= $max bytes"; else echo "FAIL maxfunc $a: $re $n > $max bytes"; fail=1; fi ;;
   esac
 done < "$d/size-budget.txt"
 if ! NK_WASM_CC="$root/$d/cc-names.sh" "$NKC" --target=wasm "$d/size/hello.kt" -o "$out/names.wasm" 2>"$out/names.err"; then

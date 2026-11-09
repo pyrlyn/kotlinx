@@ -14,3 +14,7 @@ forbid ^strto[dfl]
 # stays a call so V8 optimizes the callee (wasmKeepHotCalls, compiler/src/backend/native/WasmHotCalls.kt).
 keep nbody bench/cases/nbody/kotlin/Main.kt ^k\.advance$
 keep cycles bench/cases/cycles/kotlin/Main.kt ^k\.walk$
+# maxfunc <label> <source> <regex> <bytes>: code size of a function (name section kept) must stay <= bytes. V8 inlines
+# small wasm callees into hot program functions; with the slab refill inlined, rt_alloc was 202 bytes and trees ran
+# 101 ms under node instead of 90 (Pool.refill, native/gc/zig/src/common/regions.zig).
+maxfunc trees bench/cases/trees/kotlin/Main.kt ^perceus\.rt_alloc$ 180
