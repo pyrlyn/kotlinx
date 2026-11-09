@@ -10,3 +10,6 @@ output and the linked collector: `cyclic_*.kt` must link compact, `acyclic_*.kt`
 
 `acyclic_locals.kt` covers JsGen variable reuse (`allocateLocals` in `compiler/src/backend/js/JsGen.kt`): phi swaps
 and rotations in loops, Long values, and booleans and doubles live across branches.
+
+`acyclic_fields.kt` covers constant-offset addresses (`constGep` in `JsGen.kt`): fields written in one block and
+read in others, nested objects, Long and Double fields.

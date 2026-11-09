@@ -226,7 +226,8 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
         val defs = HashMap<String, LlInst>()
         val vals = HashMap<String, List<String>>()   // SSA local -> part expressions (var names or inlined code)
         val inlineSet = HashSet<String>()
-        val lazyHi = HashSet<String>()   // i64 loads whose high word is re-read at each use (see analyze)
+        val lazyHi = HashSet<String>()
+        val constGep = LinkedHashSet<String>()   // constant-offset addresses, inlined into all users (see analyze)   // i64 loads whose high word is re-read at each use (see analyze)
         val paramTypes = HashMap<String, LTy>()
         var fp: String? = null
         var depthProbe = false
@@ -334,16 +335,29 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             if (p.endsWith("|0") && sumOnly(p.dropLast(2))) return p.dropLast(2)
             return if (sumOnly(p)) p else "($p)"
         }
+        /**
+         * p + off as an address (p already an addrTerm): a trailing constant of p takes off in, so a load at a
+         * constant-offset address (see constGep) reads `I32[p+20>>2]`, not `I32[p+16+4>>2]`.
+         */
+        fun at(p: String, off: Long): String {
+            if (off == 0L) return p
+            val m = Regex("^(.*[\\w$)\\]])([+-]\\d+)$").find(p)
+            if (m != null && sumOnly(p)) {
+                val c = m.groupValues[2].toLong() + off
+                if (c in Int.MIN_VALUE..Int.MAX_VALUE) return m.groupValues[1] + (if (c == 0L) "" else if (c > 0) "+$c" else "$c")
+            }
+            return "$p+$off"
+        }
         fun loadExpr(t: LTy, p0: String, off: Long, align: Int): List<String> {
             val p = addrTerm(p0)
-            val a = if (off == 0L) p else "$p+$off"
+            val a = at(p, off)
             return when (t) {
                 is LInt -> when {
                     t.bits == 1 -> listOf("U8[$a]")
                     t.bits <= 8 -> listOf("I8[$a]")
                     t.bits <= 16 -> listOf(if (align >= 2 || align == 0) "I16[$a>>1]" else "_ld(${w(a)},2)")
                     t.bits <= 32 -> listOf(if (align >= 4 || align == 0) "I32[$a>>2]" else "_ld(${w(a)},4)")
-                    t.bits == 64 -> if (align >= 4 || align == 0) listOf("I32[$a>>2]", "I32[$p+${off + 4}>>2]") else listOf("_ld(${w(a)},4)", "_ld($p+${off + 4},4)")
+                    t.bits == 64 -> if (align >= 4 || align == 0) listOf("I32[$a>>2]", "I32[${at(p, off + 4)}>>2]") else listOf("_ld(${w(a)},4)", "_ld(${at(p, off + 4)},4)")
                     else -> throw CompileError("JS backend: load i${t.bits}")
                 }
                 LPtr -> listOf(if (align >= 4 || align == 0) "I32[$a>>2]" else "_ld(${w(a)},4)")
@@ -357,15 +371,15 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
 
         fun store(t: LTy, p0: String, off: Long, align: Int, es: List<String>) {
             val p = addrTerm(p0)
-            val a = if (off == 0L) p else "$p+$off"
+            val a = at(p, off)
             fun st(heap: String, sh: Int, e: String) = emit(if (sh == 0) "$heap[$a]=$e" else "$heap[$a>>$sh]=$e")
             when (t) {
                 is LInt -> when {
                     t.bits <= 8 -> st("I8", 0, es[0])
                     t.bits <= 16 -> if (align >= 2 || align == 0) st("I16", 1, es[0]) else emit("_st(${w(a)},${es[0]},2)")
                     t.bits <= 32 -> if (align >= 4 || align == 0) st("I32", 2, es[0]) else emit("_st(${w(a)},${es[0]},4)")
-                    t.bits == 64 -> if (align >= 4 || align == 0) { st("I32", 2, es[0]); emit("I32[$p+${off + 4}>>2]=${es[1]}") }
-                        else { emit("_st(${w(a)},${es[0]},4)"); emit("_st($p+${off + 4},${es[1]},4)") }
+                    t.bits == 64 -> if (align >= 4 || align == 0) { st("I32", 2, es[0]); emit("I32[${at(p, off + 4)}>>2]=${es[1]}") }
+                        else { emit("_st(${w(a)},${es[0]},4)"); emit("_st(${at(p, off + 4)},${es[1]},4)") }
                     else -> throw CompileError("JS backend: store i${t.bits}")
                 }
                 LPtr -> if (align >= 4 || align == 0) st("I32", 2, es[0]) else emit("_st(${w(a)},${es[0]},4)")
@@ -418,6 +432,27 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                     inlineSet.add(r); evalAt[ii] = at
                 }
             }
+            // Constant-offset addresses (getelementptr with constant indices from a variable or another such
+            // address) are inlined into every user: loads and stores fold the offset into the heap index
+            // (`I32[p+20>>2]`) instead of reading a variable set to `p+16|0`. With more than two uses, only if all
+            // of them are load or store addresses (elsewhere the inlined `p+16|0` is longer than a variable).
+            // vals for them are set up front (gen), since a use in another block may be generated first.
+            fun addrUse(ub: Int, ui: Int, r: String): Boolean { val u = blocks[ub].insts[ui]
+                return u.op == "load" && (u.ops[0].second as? VLocal)?.name == r ||
+                    u.op == "store" && (u.ops[1].second as? VLocal)?.name == r && (u.ops[0].second as? VLocal)?.name != r }
+            var grew = true
+            while (grew) { grew = false
+                for (b in blocks) for (i in b.insts) {
+                    val r = i.res ?: continue
+                    if (i.op != "getelementptr" || r in noInline || useCount[r] == null || r in constGep) continue
+                    val base = i.ops[0].second as? VLocal ?: continue
+                    if (i.ops.drop(1).any { it.second is VLocal }) continue
+                    if (base.name in inlineSet && base.name !in constGep || base.name in lazyHi) continue
+                    val us = users[r]!!
+                    if (us.size > 2 && !us.all { (ub, ui) -> addrUse(ub, ui, r) }) continue
+                    constGep.add(r); inlineSet.add(r); grew = true
+                }
+            }
             // An i64 load (a Kotlin array length) used by icmps in its block and by calls at the start of a block
             // only it branches to (the rt_oob report) keeps only its low word in a variable: each use re-reads the
             // high word from memory, so a bounds check usually decided by the low words never loads it.
@@ -427,7 +462,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                 val r = i.res ?: continue
                 if (i.op != "load" || !isI64(i.ty) || r in inlineSet || r in noInline || useCount[r] == null || i.align in 1..3) continue
                 val p = i.ops[0].second
-                if (!(p is VGlobal || p is VLocal && p.name !in inlineSet)) continue
+                if (!(p is VGlobal || p is VLocal && (p.name !in inlineSet || p.name in constGep))) continue
                 fun clean(blk: Int, from: Int, to: Int) = (from until to).none { sideEffect(blocks[blk].insts[it]) }
                 if (users[r]!!.all { (ub, ui) ->
                         if (ub == bi) ui > ii && b.insts[ui].op == "icmp" && clean(bi, ii + 1, evalAts[bi][ui])
@@ -1184,6 +1219,12 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             // every used, non-inlined result gets its variable up front (the dispatch fallback may emit a use first)
             val reuse = allocateLocals(ps)
             for (b in blocks) for (i in b.insts) { val r = i.res ?: continue; if (useCount[r] != null && r !in inlineSet && r !in lazyHi) defineVars(i) }
+            fun gepVal(r: String) {
+                if (r in vals) return
+                val i = defs[r]!!; (i.ops[0].second as VLocal).name.let { if (it in constGep) gepVal(it) }
+                vals[r] = listOf(gep(i))
+            }
+            for (r in constGep) gepVal(r)
             for (b in blocks) for (i in b.insts) if (i.res in lazyHi) {
                 val lo = if (reuse) vals[i.res!!]!![0] else newVar()
                 vals[i.res!!] = listOf(lo, loadExpr(i.srcTy, op1(i, 0), 0, i.align)[1])
