@@ -5,8 +5,11 @@ package newkotlin
 import kotlinx.cinterop.*
 import platform.posix.*
 
-/** Collector for --target=js when none is given: epoch needs a background thread, which JS does not have. */
-const val JS_DEFAULT_GC = "incremental"
+/**
+ * Collector for --target=js when none is given: compact (plain RC + a small synchronous cycle collector, written
+ * for the JS cost model). epoch needs a background thread, which JS does not have.
+ */
+const val JS_DEFAULT_GC = "compact"
 
 /** Oldest LLVM whose opt/llvm-link read the Zig 0.17.1 collector bitcode (LLVM 22). */
 private const val JS_MIN_LLVM = 22
@@ -22,7 +25,7 @@ private const val JS_MIN_LLVM = 22
 internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gcDir: String, gcFlags: String, zigLibDir: String,
                      cc: String, optPath: String?, emitLl: Boolean) {
     fun fail(msg: String): Nothing { fprintf(stderr, "error: %s\n", msg); exit(1); throw IllegalStateException() }
-    if (gc == "epoch") fail("--target=js: the epoch collector needs a background thread; use --gc incremental (default for js), perceus or rc")
+    if (gc == "epoch") fail("--target=js: the epoch collector needs a background thread; use --gc compact (default for js), perceus, incremental or rc")
     val gcBc = "$zigLibDir/libgc-$gc.bc"
     if (access(gcBc, F_OK) != 0)
         fail("Zig GC bitcode missing: $gcBc\nbin/newkotlinc builds it; or run `zig build gc-bc -Dgc=$gc -Dtarget=wasm32-wasi -p $WASM_ZIG_PREFIX` " +

@@ -25,8 +25,9 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --gc <name>          collector name (also --gc=<name>; default: ${'$'}NEWKOTLIN_GC or epoch):
                        epoch (deferred RC + background cycle collection; alias "default"),
                        perceus (RC + synchronous cycle collector), incremental (budgeted
-                       cycle steps), rc (RC only, cycles leak). Caps/metadata from native/gc/c/<name>/.
-                       --target=js: incremental by default; epoch is not available (no threads).
+                       cycle steps), compact (RC + small synchronous cycle collector, made for
+                       --target=js), rc (RC only, cycles leak). Caps/metadata from native/gc/c/<name>/.
+                       --target=js: compact by default; epoch is not available (no threads).
   --gc-runtime <zig|c> collector implementation language (also --gc-runtime=; default:
                        ${'$'}NEWKOTLIN_GC_RUNTIME or zig). zig links native/gc/zig/zig-out/lib/libgc-<name>.a
                        (experimental Zig port); c links native/gc/c/<name>/gc.c. Only the collector
@@ -106,7 +107,7 @@ fun main(args: Array<String>) {
     // js: the program, runtime.c and the collector are compiled for wasm32 (4-byte pointers and size_t).
     val wasm32 = wasm || target == Target.JS
     if (target == Target.JS) llvmTarget = LlvmTarget.JS32
-    // wasm32-wasi has no threads (epoch collects in the background); js uses the incremental collector.
+    // wasm32-wasi has no threads (epoch collects in the background); js uses the compact collector.
     if (gc == null) gc = if (wasm) WASM_GC else if (target == Target.JS) JS_DEFAULT_GC else DEFAULT_GC
     if (gc == "default") gc = DEFAULT_GC // "default" names whatever the default collector is (epoch); old one: perceus
     if (gcRuntime == null) gcRuntime = "zig"

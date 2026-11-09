@@ -22,7 +22,7 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `--no-opt` | Skip the `opt` step. |
 | `--leak-check` | Count live runtime objects and report at exit; the program exits 3 on a leak. |
 | `--alloc <a>` | `mimalloc` (default), `malloc` or `pool`. |
-| `--gc <name>`, `--gc=<name>` | Collector: `epoch` / `perceus` / `incremental` / `rc` (default `$NEWKOTLIN_GC` or `epoch`; `incremental` for `--target=js`, which has no threads for `epoch`). Caps from `native/gc/c/<name>/`. |
+| `--gc <name>`, `--gc=<name>` | Collector: `epoch` / `perceus` / `incremental` / `compact` / `rc` (default `$NEWKOTLIN_GC` or `epoch`; `compact` for `--target=js`, which has no threads for `epoch`). Caps from `native/gc/c/<name>/`; `compact` exists only in Zig (`--gc-runtime=zig`). |
 | `--gc-runtime <zig\|c>` | Collector backend (default `$NEWKOTLIN_GC_RUNTIME` or `zig`). `zig` links `libgc-<name>.a`; `c` compiles `native/gc/c/<name>/gc.c`. Shared `runtime.c` always. |
 | `-h`, `--help` | Print the usage text. |
 

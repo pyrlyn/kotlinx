@@ -16,7 +16,7 @@ KotlinX vendors GC sources under `native/gc/` (no `compiler/gc` git submodule).
 - Do not use mise 0.17.0 or 0.18.0-dev for the native port.
 
 ```sh
-cd native/gc/zig && zig build gc-libs          # libgc-{epoch,perceus,incremental,rc}.a
+cd native/gc/zig && zig build gc-libs          # libgc-{epoch,perceus,incremental,compact,rc}.a
 cd native/gc && zig build smoke                # Debug/ReleaseFast via -Doptimize=
 bin/newkotlinc Main.kt -o main                 # default --gc-runtime=zig
 bin/newkotlinc --gc-runtime=c Main.kt -o main  # C collector .c sources
@@ -34,10 +34,11 @@ bin/newkotlinc --gc-runtime=c Main.kt -o main  # C collector .c sources
 
 ## What changes for programs
 
-Only the **collector backend** is Zig or C. `compiler/runtime/runtime.c` is always linked.
+Only the **collector backend** is Zig or C. `compiler/runtime/runtime.c` is always linked. `compact` (the
+`--target=js` default) is KotlinX-local and exists only in Zig: `native/gc/c/compact/` holds just its caps.
 Zig port parity is incomplete vs C (see `zig/docs/zig-port.md`); defaulting to Zig is experimental on this branch.
 
 ## Archive freshness (`libgc-*.a`)
 
-- **`bin/newkotlinc`** (Zig backend): always runs `zig build gc-libs` (Zig **0.17.1**) before the compiler so changed collector sources rebuild incrementally. Pass `-Dgc=<name>` when `--gc` / `--gc=<name>` selects one collector; otherwise all four. `--gc-runtime=c` skips Zig entirely.
+- **`bin/newkotlinc`** (Zig backend): always runs `zig build gc-libs` (Zig **0.17.1**) before the compiler so changed collector sources rebuild incrementally. Pass `-Dgc=<name>` when `--gc` / `--gc=<name>` selects one collector; otherwise all of them. `--gc-runtime=c` skips Zig entirely.
 - **Direct `compiler/build/newkotlinc.kexe`**: does **not** invoke Zig. It links `$NEWKOTLIN_GC_ZIG_LIB_DIR/libgc-<name>.a` if present, otherwise errors with build instructions. There is no silent use of a missing archive, but a **stale** archive is possible if you edit Zig sources and call the `.kexe` without rebuilding — run `cd native/gc/zig && zig build gc-libs` (or use `bin/newkotlinc`) first.

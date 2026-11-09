@@ -9,7 +9,7 @@
 //!   zig build gc-libs                # static libs for KotlinX (runtime_host; link with runtime.c)
 const std = @import("std");
 
-const all_gcs = [_][]const u8{ "rc", "perceus", "incremental", "epoch" };
+const all_gcs = [_][]const u8{ "rc", "perceus", "incremental", "epoch", "compact" };
 
 pub fn configureCollector(b: *std.Build, lib: *std.Build.Step.Compile, with_leakcheck: bool) void {
     const options = b.addOptions();
@@ -120,7 +120,8 @@ pub fn build(b: *std.Build) void {
         const suite = b.addExecutable(.{
             .name = b.fmt("gc-test-{s}", .{g}),
             .root_module = b.createModule(.{
-                .root_source_file = b.path("tests/native/suite.zig"),
+                // compact keeps no statistics, which the shared suite checks: it has its own tests.
+                .root_source_file = b.path(if (std.mem.eql(u8, g, "compact")) "tests/native/compact.zig" else "tests/native/suite.zig"),
                 .target = target,
                 .optimize = optimize,
                 .link_libc = true,

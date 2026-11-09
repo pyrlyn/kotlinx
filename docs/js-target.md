@@ -21,8 +21,9 @@ collector as the native target, so programs behave the same (same output, same c
 3. `llvm-link` the runtime, libc, program and the Zig collector's wasm32 bitcode
    `native/gc/zig/zig-out/wasm32-wasi/lib/libgc-<gc>.bc` (`zig build gc-bc -Dgc=<gc> -Dtarget=wasm32-wasi
    -p zig-out/wasm32-wasi` in `native/gc/zig`; `bin/newkotlinc` builds it; `$NEWKOTLIN_GC_ZIG_WASM_LIB_DIR` overrides
-   the directory). The bitcode is ReleaseSmall (about 12% less JavaScript); the collector's hot helpers
-   (`PtrStack.push`, the trial-deletion claims) are `inline fn`, so it runs as fast as ReleaseFast.
+   the directory). The bitcode is ReleaseSmall (about 12% less JavaScript); the hot helpers
+   of `perceus` and `incremental` (`PtrStack.push`, the trial-deletion claims) are `inline fn`, so they run as fast as
+   ReleaseFast.
 4. `opt -passes='internalize,scalarizer<load-store>,default<O3>'` with only `main` exported, vectorizers off and no
    loop unrolling (`main` runs once, so its loops reach optimized code through on-stack replacement, which V8 does
    for each unrolled copy separately; the copies also cost size).
@@ -74,7 +75,9 @@ collector as the native target, so programs behave the same (same output, same c
   enough (it usually pins the native target's opt to the C compiler's LLVM), then the usual search
   ([toolchain.md](toolchain.md)). `llvm-link` is taken from the same directory as `opt`.
 - `zig cc` (or `$NK_WASM_CC`, or `--cc`) compiling for wasm32-wasi; another target is rejected.
-- Collector: `incremental` by default; `perceus` and `rc` also work. `epoch` needs a background thread and is rejected.
+- Collector: `compact` by default (`native/gc/zig/src/compact.zig`: reference counting plus a small synchronous cycle
+  collector, written for this target's size and speed); `incremental`, `perceus` and `rc` also work. `epoch` needs a
+  background thread and is rejected.
 - Not supported: `--leak-check`, `--link`. Threads do not exist; `runBlocking`/coroutines run on the single-threaded
   scheduler as on native.
 - Tested on macOS (arm64, node 26). Linux is untested.
