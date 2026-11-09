@@ -37,7 +37,7 @@ internal fun capture(cmd: String): String? {
 }
 
 /** Major LLVM version from `<tool> --version` ("LLVM version 23.1.4", "clang version 21.0.0"), or null. */
-private val majorCache = HashMap<String, Int?>()
+internal val majorCache = HashMap<String, Int?>()
 
 /** Memoized; mise install paths (".../conda-llvm-tools/21.1.8/bin/opt") give it without running the tool (~0.15 s each). */
 internal fun majorVersion(tool: String): Int? = majorCache.getOrPut(tool) {
@@ -92,9 +92,9 @@ internal fun findOpt(explicit: String?, maxMajor: Int?, minMajor: Int = 0): Stri
     val home = getenv("HOME")?.toKString() ?: ""
     val fixed = listOfNotNull(getenv("CONDA_PREFIX")?.toKString()?.let { "$it/bin/opt" },
         "/opt/homebrew/opt/llvm/bin/opt", "/usr/local/opt/llvm/bin/opt")
-    fixed.firstOrNull { ok(it) }?.let { return it }
+    // Prefer one the C compiler can read (LLVM major <= the C compiler's).
+    fixed.firstOrNull { ok(it) && (maxMajor == null || (majorVersion(it) ?: 0) <= maxMajor) }?.let { return it }
     // mise `conda:llvm-tools` (the repo's mise.toml; `mise install`), newest version first.
-    // Prefer the newest one the C compiler can read (LLVM major <= the C compiler's).
     val mise = captureAll("ls -d '$home'/.local/share/mise/installs/conda-llvm-tools/*/bin/opt 2>/dev/null | grep -v /latest/ | sort -rV")
     (mise.firstOrNull { o -> ok(o) && (maxMajor == null || (majorVersion(o) ?: 0) <= maxMajor) } ?: mise.firstOrNull { ok(it) })
         ?.let { return it }

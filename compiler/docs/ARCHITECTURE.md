@@ -21,6 +21,10 @@ src/driver/Main.kt        compileToIr(src) = compileGenerics(withAny(src, withPr
   backend/native/NativeBackend.kt  type checking + LLVM IR text emission (one big class)
   frontend/Uses.kt        last-use analysis for Perceus RC (drop after last use, moves)
 then: opt (lto-pre-link<O3>) -> clang -O3 -flto with runtime/runtime.c + gc/<name>/gc.c (+ mimalloc)
+--target=wasm: same pipeline; backend/native/LlvmTarget.kt switches triple/data layout, libc size_t/long types
+                          (LIBC_SIGS, NativeBackend.libcCall), the entry symbol and pointer-size offsets; linked by
+                          `zig cc -target wasm32-wasi` with the perceus collector (no threads; Zig archive built for
+                          wasm32-wasi into native/gc/zig/zig-out/wasm32-wasi/lib) and wasi-libc malloc
 --target=js (driver/JsDriver.kt): llvm-link runtime.c IR + runtime/js/libc.c IR + program IR + Zig libgc-<gc>.bc
   -> opt (internalize, scalarizer, O3, no vectorizing) -> backend/js: LlParser.kt (LLVM IR text) -> JsGen.kt
   (one JS function per LLVM function, structured control flow, i64 as two int32 words) -> JsBackend.kt

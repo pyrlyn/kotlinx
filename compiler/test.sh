@@ -92,7 +92,7 @@ if command -v node >/dev/null; then
   elif grep -qE "LLVM opt [0-9]+\+|Zig GC bitcode missing" "$out/js.err"; then echo "SKIP target-js ($(head -1 "$out/js.err"))"
   else echo "FAIL target-js: $(head -c 300 "$out/js.err")"; fail=1; fi
 else echo "SKIP target-js (no node)"; fi
-for t in wasm jvm; do
+for t in jvm; do
   msg=$("$NKC" --target=$t "$out/bad.kt" -o "$out/x" 2>&1); rc=$?
   if [ $rc -ne 0 ] && [ "$msg" = "target $t is not supported yet" ]; then echo "PASS target-$t"; else echo "FAIL target-$t: rc=$rc $msg"; fail=1; fi
 done

@@ -4,7 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef __wasi__
 #include <sys/resource.h>
+#endif
 #include <time.h>
 #include <unistd.h>
 
@@ -37,7 +39,11 @@ void rt_leak_obj(int64_t d) { LK(LK_OBJ, d); }
 #define LK(k, d) ((void)0)
 #endif
 
+#ifdef __wasi__ /* --target=wasm (wasm32-wasi): no CLOCK_UPTIME_RAW */
+int64_t rt_nanos(void) { struct timespec t; clock_gettime(CLOCK_MONOTONIC, &t); return (int64_t)t.tv_sec * 1000000000 + t.tv_nsec; }
+#else
 int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW); }
+#endif
 
 // ---- bounded release ---------------------------------------------------------
 // Below rt_rel_limit on the C stack @relz.C leaves its object here instead of nesting another frame. The
@@ -54,9 +60,11 @@ static size_t rel_drain_room;
 static PtrStack rel_pending;
 
 __attribute__((constructor)) static void rel_limit_init(void) {
-    struct rlimit r;
     size_t room = REL_STACK;
+#ifndef __wasi__ /* wasm: the linker sets the shadow stack size (newkotlinc links -z stack-size) */
+    struct rlimit r;
     if (getrlimit(RLIMIT_STACK, &r) == 0 && r.rlim_cur / 2 < room) room = r.rlim_cur / 2;
+#endif
     rt_rel_limit = (char *)__builtin_frame_address(0) - room;
     rel_drain_room = room / 8; /* limit + drain must fit a small stack too */
 }
