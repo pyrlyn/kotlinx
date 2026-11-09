@@ -11,6 +11,8 @@ pub const caps = .{ .cycles = true, .precise = true, .asan = true, .deferred = f
 const TD = td_mod.TrialDeletion(true);
 var td = TD{};
 var cc_roots = obj.PtrStack{};
+/// The previous collection's root buffer, kept so the next one does not regrow cc_roots from 256 slots.
+var cc_spare = obj.PtrStack{};
 var cc_running: bool = false;
 var gc_stats = kx.Stats{};
 
@@ -103,7 +105,8 @@ fn collectCycles() void {
     cc_running = true;
     const start = host.rt_nanos();
     var roots = cc_roots;
-    cc_roots = .{};
+    cc_roots = cc_spare;
+    cc_spare = .{};
     td.traced = 0;
     td.activate();
     roots.len = markRoots(&roots);
@@ -115,7 +118,8 @@ fn collectCycles() void {
         td.collectWhite(roots.at(i).?);
     }
     const reclaimed = freeGarbage();
-    roots.deinit();
+    roots.len = 0;
+    if (cc_spare.cap == 0) cc_spare = roots else roots.deinit();
     td.adaptThreshold(reclaimed);
     gc_stats.collections += 1;
     gc_stats.reclaimed += @intCast(reclaimed);
@@ -166,6 +170,11 @@ pub export fn rt_gc_free_later(p: ?*anyopaque) void {
 /// For the traversal test: pending work-stack capacity in bytes.
 pub fn debugWorkBytes() usize {
     return td.work.cap * @sizeOf(?*anyopaque);
+}
+
+/// For the root-buffer test: capacity of the pending possible-root buffer.
+pub fn debugRootsCap() usize {
+    return cc_roots.cap;
 }
 
 pub fn debugRefCount(p: *anyopaque) u64 {
