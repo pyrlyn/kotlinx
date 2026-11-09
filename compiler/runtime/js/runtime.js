@@ -312,7 +312,7 @@ function _kfmt(x, f) {
     const T = x.toExponential(100), t = T.replace(/^-|\.|0*e.*/g, "");
     for (let p = 0; ; p++) {
       s = t.length === p + 2 && t[p + 1] === "5" && t[p] % 2 === 0 ? (x < 0 ? "-" : "") + t[0] + "." + t.slice(1, p + 1) + "e" + T.split("e")[1] : x.toExponential(p);
-      if ((f ? f(s) : +s) === x) break;
+      if (p === 16 || (f ? f(s) : +s) === x) break; // fmt_fp stops at 17 digits too (x may not be a float)
     }
   }
   const e = s.indexOf("e"), n = +s.slice(e + 1), d = s.slice(0, e).replace(/^-|\./g, "").replace(/(.)0+$/, "$1"), g = x < 0 ? "-" : "";
