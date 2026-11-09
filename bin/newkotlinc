@@ -44,6 +44,8 @@ parse_gc_cli() {
     esac
   done
   if [ "$GC_NAME_CLI" = "default" ]; then GC_NAME_CLI="epoch"; fi
+  WASM_CLI=""
+  case " $* " in *" --target=wasm "*|*" --target wasm "*) WASM_CLI=1 ;; esac
 }
 
 ensure_zig_gc_libs() {
@@ -68,6 +70,12 @@ ensure_zig_gc_libs() {
   case " $* " in *" --leak-check "*) zargs+=(-Dleakcheck=true) ;; esac
   case " $* " in *" --alloc pool"*|*" --alloc=pool "*) zargs+=(-Dpool=true) ;; esac
   case " $* " in *" --alloc malloc"*|*" --alloc=malloc "*) zargs+=(-Dplain-malloc=true) ;; esac
+  if [ -n "$WASM_CLI" ]; then
+    # wasm32-wasi: own install prefix (see WASM_ZIG_PREFIX in Main.kt); defaults --gc perceus, --alloc malloc.
+    zargs+=(-Dtarget=wasm32-wasi -p zig-out/wasm32-wasi)
+    : "${GC_NAME_CLI:=perceus}"
+    case " $* " in *" --alloc pool"*|*" --alloc=pool "*|*" --alloc malloc"*|*" --alloc=malloc "*) ;; *) zargs+=(-Dplain-malloc=true) ;; esac
+  fi
   case "$GC_NAME_CLI" in
     epoch|perceus|incremental|rc) zargs+=(-Dgc="$GC_NAME_CLI") ;;
   esac
@@ -75,6 +83,9 @@ ensure_zig_gc_libs() {
   ( cd "$root/native/gc/zig" && "$zigbin" "${zargs[@]}" ) || return 1
 }
 ensure_zig_gc_libs "$@" || exit 1
+# `bin/newkotlinc --gc-libs-only [options]`: build the archives the options select, compile nothing
+# (used by scripts that then run newkotlinc.kexe many times in parallel).
+[ "${1:-}" = "--gc-libs-only" ] && exit 0
 
 # Use the opt pinned by the repo mise.toml (a mise shim outside the repo has no version set).
 if [ -z "${NK_OPT:-}" ] && command -v mise >/dev/null; then

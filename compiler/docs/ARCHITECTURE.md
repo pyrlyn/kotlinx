@@ -21,6 +21,10 @@ src/driver/Main.kt        compileToIr(src) = compileGenerics(withAny(src, withPr
   backend/native/NativeBackend.kt  type checking + LLVM IR text emission (one big class)
   frontend/Uses.kt        last-use analysis for Perceus RC (drop after last use, moves)
 then: opt (lto-pre-link<O3>) -> clang -O3 -flto with runtime/runtime.c + gc/<name>/gc.c (+ mimalloc)
+--target=wasm: same pipeline; backend/native/LlvmTarget.kt switches triple/data layout, libc size_t/long types
+                          (LIBC_SIGS, NativeBackend.libcCall), the entry symbol and pointer-size offsets; linked by
+                          `zig cc -target wasm32-wasi` with the perceus collector (no threads; Zig archive built for
+                          wasm32-wasi into native/gc/zig/zig-out/wasm32-wasi/lib) and wasi-libc malloc
 --target jvm (driver/JvmLink.kt): clang -emit-llvm of runtime.c + gc.c + runtime/jvm/libc.c, llvm-link, opt O2
   backend/jvm/LlvmIr.kt     LLVM IR text parser
   backend/jvm/JvmBackend.kt LLVM IR -> JVM bytecode (class Main; memory through Unsafe, see docs/jvm.md)

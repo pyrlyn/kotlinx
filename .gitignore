@@ -20,3 +20,4 @@ compiler/build/
 native/gc/**/zig-out/
 native/gc/**/.zig-cache/
 /bench/jvm/out/
+bench/wasm/out/

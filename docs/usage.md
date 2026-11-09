@@ -12,7 +12,7 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | Option | Meaning |
 | --- | --- |
 | `-o <output>` | Output binary (or IR file with `-S`). Required. |
-| `--target <t>`, `--target=<t>` | `native` (default) or `jvm` (an executable jar, see [jvm.md](jvm.md)). `js` and `wasm` are accepted but not implemented yet. |
+| `--target <t>`, `--target=<t>` | `native` (default); `wasm`: the same LLVM IR for wasm32-wasi, linked into a `.wasm` module (see [Wasm target](#wasm-target)); `jvm`: an executable jar (see [jvm.md](jvm.md)). `js` is accepted but not implemented yet. |
 | `--runtime <file.c>` | C runtime to link. Default: `$NEWKOTLIN_RUNTIME`, else `compiler/runtime/runtime.c`. |
 | `--emit-llvm` | Also keep `<output>.ll`. |
 | `-S` | Write only the LLVM IR to `<output>`; nothing is compiled or linked. |
@@ -35,8 +35,35 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `NEWKOTLIN_GC_DIR` | Caps / `kxgc.h` / C `gc.c` tree (default: `native/gc/c`). |
 | `NEWKOTLIN_GC_RUNTIME` | `zig` (default) or `c` — collector backend language. |
 | `NEWKOTLIN_GC_ZIG_LIB_DIR` | Directory with `libgc-<name>.a` (default: `native/gc/zig/zig-out/lib`). |
+| `NEWKOTLIN_GC_ZIG_WASM_LIB_DIR` | Same for `--target=wasm` (default: `native/gc/zig/zig-out/wasm32-wasi/lib`). |
 | `NEWKOTLIN_MIMALLOC_DIR` | Where to find `libmimalloc`. |
 | `NK_CC`, `NK_OPT` | Default C compiler and `opt`. |
+| `NK_WASM_CC` | C compiler and linker for `--target=wasm` (default: `zig cc -target wasm32-wasi`). |
+
+## Wasm target
+
+`--target=wasm` reuses the whole native pipeline: the frontend, `NativeBackend` (with `LlvmTarget.WASM32`:
+wasm32 triple and data layout, 32-bit `size_t`/`long` for libc calls, entry `__main_argc_argv`), `opt`,
+`runtime.c` and a pyrlyn/gc collector. Objects live in linear memory and are managed by the collector, not by the
+engine's GC. Defaults and limits:
+
+- `--gc perceus` (synchronous cycle collection; `incremental` and `rc` also work; `epoch` needs threads),
+  `--alloc malloc` (wasi-libc) or `pool`; no `--link`.
+- `--gc-runtime=zig` (default) links the Zig collectors built for wasm32-wasi:
+  `native/gc/zig/zig-out/wasm32-wasi/lib/libgc-<name>.a` (or `$NEWKOTLIN_GC_ZIG_WASM_LIB_DIR`), a separate prefix
+  so the host archives in `zig-out/lib` stay intact. `bin/newkotlinc --target=wasm` rebuilds them like the host
+  ones; `bin/newkotlinc --gc-libs-only --target=wasm [--gc ...] [--alloc ...]` only builds them. Direct
+  `newkotlinc.kexe` needs them built first. `--gc-runtime=c` compiles `native/gc/c/<name>/gc.c` instead.
+- Linker: `zig cc -target wasm32-wasi` (clang 21 with wasi-libc and wasm-ld), so `opt` must be LLVM 21 or older;
+  links with `-s -Wl,-z,stack-size=8388608`.
+- Run with any WASI preview1 host, e.g. `node bench/wasm/run.mjs main.wasm` (preopens the current directory).
+
+Golden tests on wasm: `compiler/tests/wasm/run.sh` (233 of 234 pass; `coroutine_cps_core` fails because
+`kxCoStart` does not keep its function value alive, a use-after-free that also crashes native builds with
+`--alloc malloc --gc=perceus`).
+
+Benchmarks against JetBrains Kotlin/Wasm: `bench/wasm/build.sh && bench/wasm/run.py` (results in
+`bench/results/wasm/table.md`).
 
 ## Exit codes
 
