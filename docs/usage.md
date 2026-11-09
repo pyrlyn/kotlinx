@@ -59,6 +59,9 @@ engine's GC. Defaults and limits:
 - Linker: `zig cc -target wasm32-wasi` (clang 21 with wasi-libc and wasm-ld), so `opt` must be LLVM 21 or older;
   links with `-s -Wl,-z,stack-size=8388608`.
 - Run with any WASI preview1 host, e.g. `node bench/wasm/run.mjs main.wasm` (preopens the current directory).
+- Calls in the loops of `main` to functions that loop (directly or through their callees) are not inlined into
+  `main` (`WasmHotCalls.kt`): V8 has no on-stack replacement for wasm, so code inlined into `main`, which runs
+  once, would stay baseline (Liftoff) code; a call gets optimized after a few calls (nbody 136 -> 52 ms).
 - No printf, qsort or strtod in the runtime: numbers are formatted by `compiler/runtime/kxfmt.h` (shortest
   round-trip digits with exact big-number arithmetic, the same text as the former `snprintf`/`strtod` loop;
   `compiler/tests/runtime/run.sh` compares the two), so a module is about 12-17 KB instead of 42-46 KB.

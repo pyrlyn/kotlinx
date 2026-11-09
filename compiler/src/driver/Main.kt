@@ -209,7 +209,7 @@ fun main(args: Array<String>) {
         return
     }
     val ll = "$output.ll"
-    writeFile(ll, ir)
+    writeFile(ll, if (wasm) wasmKeepHotCalls(ir) else ir)
     val def = (if (alloc == "pool") " -DRT_POOL" else "") + (if (alloc == "malloc") " -DRT_PLAIN_MALLOC" else "") + (if (leakCheck) " -DRT_LEAKCHECK" else "")
     val link = if (alloc == "mimalloc") {
         val dir = findMimalloc() ?: run {

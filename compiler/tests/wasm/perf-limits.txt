@@ -5,3 +5,6 @@
 # --alloc pool (wasm default) against wasi-libc malloc: 0.50x on bigheap, 0.82x on alloc (Apple M3 Max, node 26).
 pool-bigheap bigheap default malloc 0.75
 pool-alloc alloc default malloc 1.00
+# Tier-up: nbody's advance, called from a loop of main, must run as optimized code. Default node (Liftoff, then
+# TurboFan on a later call) against --no-liftoff: 0.79x with the call kept out of main, 1.72x when it was inlined.
+tierup-nbody nbody default default:--no-liftoff 1.20
