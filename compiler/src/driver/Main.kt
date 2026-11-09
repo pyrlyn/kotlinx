@@ -9,7 +9,8 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --target <t>         native (default; LLVM, native binary), js (JavaScript for node, via LLVM IR), wasm (same
                        LLVM IR for wasm32-wasi, linked with ${'$'}NK_WASM_CC or `zig cc -target wasm32-wasi`; GC
                        perceus, --alloc malloc; Zig GC archives from native/gc/zig/zig-out/wasm32-wasi/lib or
-                       ${'$'}NEWKOTLIN_GC_ZIG_WASM_LIB_DIR), jvm (not implemented)
+                       ${'$'}NEWKOTLIN_GC_ZIG_WASM_LIB_DIR), jvm (executable jar; LLVM IR translated to JVM
+                       bytecode, needs java 21+; GC perceus, --gc-runtime c, --alloc pool)
   --runtime <file.c>   C runtime to link (default: ${'$'}NEWKOTLIN_RUNTIME or compiler/runtime/runtime.c)
   --emit-llvm          also keep <output>.ll
   --cc <clang>         C compiler/linker (default: ${'$'}NK_CC, Apple clang, newest mise conda:clang, else clang)
@@ -71,6 +72,7 @@ fun main(args: Array<String>) {
     if (getenv("NEWKOTLIN_NO_BORROW_FIELD_LOCALS")?.toKString()?.let { it.isNotEmpty() && it != "0" } == true) borrowFieldLocals = false
     var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() }
     var gcRuntime = getenv("NEWKOTLIN_GC_RUNTIME")?.toKString()?.takeIf { it.isNotEmpty() }
+    var gcRuntimeSet = false // --gc-runtime given on the command line (bin/newkotlinc always exports NEWKOTLIN_GC_RUNTIME)
     var alloc: String? = null; var leakCheck = false; var emitLl = false; var onlyIr = false
     var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
     val links = ArrayList<String>()
@@ -81,7 +83,7 @@ fun main(args: Array<String>) {
             "--target" -> target = Target.parse(args[++i]) ?: run { fprintf(stderr, "unknown target: %s\n", args[i]); exit(2); return }
             "--runtime" -> runtime = args[++i]
             "--gc" -> gc = args[++i]
-            "--gc-runtime" -> gcRuntime = args[++i]
+            "--gc-runtime" -> { gcRuntime = args[++i]; gcRuntimeSet = true }
             "--emit-llvm" -> emitLl = true
             "--leak-check" -> leakCheck = true
             "--alloc" -> alloc = args[++i].also { if (it != "mimalloc" && it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be mimalloc, malloc or pool\n"); exit(2) } }
@@ -93,7 +95,7 @@ fun main(args: Array<String>) {
             "-S" -> onlyIr = true
             "-h", "--help" -> { println(USAGE); return }
             else -> if (a.startsWith("--gc=")) gc = a.substringAfter('=')
-            else if (a.startsWith("--gc-runtime=")) gcRuntime = a.substringAfter('=')
+            else if (a.startsWith("--gc-runtime=")) { gcRuntime = a.substringAfter('='); gcRuntimeSet = true }
             else if (a.startsWith("--link=")) links.add(a.substringAfter('='))
             else if (a.startsWith("--target=")) target = Target.parse(a.substringAfter('=')) ?: run { fprintf(stderr, "unknown target: %s\n", a); exit(2); return }
             else if (input == null && !a.startsWith("-")) input = a else { fprintf(stderr, "unknown argument: %s\n%s\n", a, USAGE); exit(2) }
@@ -101,6 +103,14 @@ fun main(args: Array<String>) {
         i++
     }
     val wasm = target == Target.WASM
+    if (target == Target.JVM) {
+        // The collector is translated with the program: C sources only, and no collector threads (epoch has one).
+        if (gcRuntimeSet && gcRuntime != "c") { fprintf(stderr, "--target jvm needs --gc-runtime c\n"); exit(2); return }
+        gcRuntime = "c"
+        if (gc == null) gc = "perceus"
+        if (alloc == null) alloc = "pool"
+        if (alloc == "mimalloc") { fprintf(stderr, "--target jvm supports --alloc pool or malloc\n"); exit(2); return }
+    }
     // wasm32-wasi has no threads (epoch collects in the background); js uses the incremental collector.
     if (gc == null) gc = if (wasm) WASM_GC else if (target == Target.JS) JS_DEFAULT_GC else DEFAULT_GC
     if (gc == "default") gc = DEFAULT_GC // "default" names whatever the default collector is (epoch); old one: perceus
@@ -177,6 +187,13 @@ fun main(args: Array<String>) {
         // with a machine-code archive, so wasm keeps -flto for the program and runtime.c.
         if (!wasm && "-flto" in cflags) cflags = cflags.replace("-flto", "")
         "'$lib'"
+    }
+    val def0 = (if (alloc == "pool") " -DRT_POOL" else "") + (if (alloc == "malloc") " -DRT_PLAIN_MALLOC" else "") + (if (leakCheck) " -DRT_LEAKCHECK" else "")
+    if (target == Target.JVM) {
+        val opt = findOpt(optPath, majorVersion(cc)) ?: run { fprintf(stderr, "error: LLVM opt not found (--opt <path> or NK_OPT); the jvm target needs it\n"); exit(1); return }
+        try { linkJvm(ir, output, runtime, gcObj.trim('\''), "$def0 -I'$gcDir' $gcFlags", links, cc, opt, emitLl) }
+        catch (e: CompileError) { fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1) }
+        return
     }
     val ll = "$output.ll"
     writeFile(ll, ir)

@@ -51,6 +51,8 @@ parse_gc_cli() {
   done
   if [ "$GC_NAME_CLI" = "default" ]; then GC_NAME_CLI="epoch"; fi
   if [ "$TARGET_CLI" = "js" ] && [ -z "$GC_NAME_CLI" ]; then GC_NAME_CLI="${NEWKOTLIN_GC:-incremental}"; fi
+  # the jvm target translates the C collector with the program
+  if [ "$TARGET_CLI" = "jvm" ]; then GC_RUNTIME_CLI=c; fi
   WASM_CLI=""
   case " $* " in *" --target=wasm "*|*" --target wasm "*) WASM_CLI=1 ;; esac
 }
