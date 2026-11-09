@@ -750,7 +750,9 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             if (i.res == null || useCount[i.res] == null) return
             val (r, rh) = defineVars(i)
             when (i.op) {
-                "add" -> { emit("$r=${w(x)}+${w(y)}|0"); emit("$rh=${w(xh)}${if (yh == "0") "" else "+" + w(yh)}+(($r>>>0)<(${w(x)}>>>0))|0") }
+                "add" -> { emit("$r=${w(x)}+${w(y)}|0")
+                    val hs = listOf(xh, yh).filter { it != "0" }.joinToString("") { w(it) + "+" }
+                    emit("$rh=$hs(($r>>>0)<(${w(x)}>>>0))|0") }
                 "sub" -> { emit("$r=${w(x)}-${w(y)}|0"); emit("$rh=${w(xh)}${if (yh == "0") "" else "-" + w(yh)}-((${w(x)}>>>0)<(${w(y)}>>>0))|0") }
                 "and", "or", "xor" -> { val o = mapOf("and" to "&", "or" to "|", "xor" to "^")[i.op]; emit("$r=${w(x)}$o${w(y)}"); emit("$rh=${w(xh)}$o${w(yh)}") }
                 "mul" -> {
@@ -991,6 +993,22 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             return true
         }
 
+        // Labels: a jump that is the last statement of its own block or loop body is dropped (control falls through
+        // or loops anyway), then a label nothing jumps to (and a block's braces) is dropped.
+        val labelUses = HashMap<String, Int>()
+        fun jump(kw: String, l: String) { labelUses[l] = (labelUses[l] ?: 0) + 1; emit("$kw $l") }
+        /** Opens `l:head{`, returns its position in sb for close. */
+        fun open(l: String, head: String): Int { val at = sb.length; sb.append("$l:$head{\n"); return at }
+        fun close(l: String, at: Int) {
+            val tail = (if (l[0] == 'L') "continue " else "break ") + l + ";\n"
+            if (sb.endsWith(tail)) { sb.setLength(sb.length - tail.length); labelUses[l] = labelUses[l]!! - 1 }
+            if ((labelUses[l] ?: 0) == 0) {
+                if (l[0] == 'B') { sb.deleteRange(at, at + l.length + 3); return }   // `Bn:{\n`, and no `}`
+                sb.deleteRange(at, at + l.length + 1)                                // `Ln:`
+            }
+            sb.append("}\n")
+        }
+
         fun doTree(x: Int, ctx: List<Ctx>) {
             val ms = (domKids[x] ?: emptyList<Int>()).filter { merge[it] }.sortedByDescending { rpo[it] }
             if (loopHeader[x]) { val mem = loopMem[x]!!; val (ins, outs) = ms.partition { mem[it] }; loopThen(x, outs, ins, ctx) }
@@ -999,24 +1017,24 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
 
         /** Loop x wrapped in labeled blocks for its exits outs (each one's code follows its block), merges ins inside. */
         fun loopThen(x: Int, outs: List<Int>, ins: List<Int>, ctx: List<Ctx>) {
-            if (outs.isEmpty()) { sb.append("L$x:for(;;){\n"); nodeWithin(x, ins, listOf<Ctx>(Ctx.Loop(x)) + ctx); sb.append("}\n"); return }
+            if (outs.isEmpty()) { val at = open("L$x", "for(;;)"); nodeWithin(x, ins, listOf<Ctx>(Ctx.Loop(x)) + ctx); close("L$x", at); return }
             val y = outs[0]
-            sb.append("B$y:{\n"); loopThen(x, outs.drop(1), ins, listOf<Ctx>(Ctx.Blk(y)) + ctx); sb.append("}\n")
+            val at = open("B$y", ""); loopThen(x, outs.drop(1), ins, listOf<Ctx>(Ctx.Blk(y)) + ctx); close("B$y", at)
             doTree(y, ctx)
         }
 
         fun nodeWithin(x: Int, ys: List<Int>, ctx: List<Ctx>) {
             if (ys.isEmpty()) { codeFor(x, ctx); return }
             val y = ys[0]
-            sb.append("B$y:{\n"); nodeWithin(x, ys.drop(1), listOf<Ctx>(Ctx.Blk(y)) + ctx); sb.append("}\n")
+            val at = open("B$y", ""); nodeWithin(x, ys.drop(1), listOf<Ctx>(Ctx.Blk(y)) + ctx); close("B$y", at)
             doTree(y, ctx)
         }
 
         fun doBranch(from: Int, to: Int, ctx: List<Ctx>) {
             phiCopies(from, to)
             when {
-                rpo[to] <= rpo[from] -> emit("continue L$to")
-                merge[to] -> emit("break B$to")
+                rpo[to] <= rpo[from] -> jump("continue", "L$to")
+                merge[to] -> jump("break", "B$to")
                 else -> doTree(to, ctx)
             }
         }
