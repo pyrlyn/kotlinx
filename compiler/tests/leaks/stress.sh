@@ -8,8 +8,8 @@
 set -u
 cd "$(dirname "$0")/../../.."
 NKC=${NKC:-compiler/build/newkotlinc.kexe}
-. compiler/tests/leaks/at_exit.sh
 n=${1:-dlist}; runs=${2:-50}; export KX_GC_THREADS=${KX_GC_THREADS:-4}
+. compiler/tests/leaks/leaks_at_exit.sh
 out=compiler/build/leak-stress; mkdir -p "$out"; fail=0
 "$NKC" --gc=epoch --alloc malloc "compiler/tests/leaks/$n.kt" -o "$out/$n" 2>/dev/null || { echo "FAIL compile"; exit 1; }
 "$NKC" --gc=epoch --leak-check "compiler/tests/leaks/$n.kt" -o "$out/$n.lc" 2>/dev/null || { echo "FAIL compile lc"; exit 1; }

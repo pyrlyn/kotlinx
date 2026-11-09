@@ -86,6 +86,11 @@ void rt_rel_defer(void *obj) {
     rt_rel_draining = 0;
 }
 
+#ifdef RT_LEAN_EXIT
+/* --target=js: no KX_GC_STATS report and no final collection at exit (nothing can observe either). */
+void rt_gc_note_pause(int64_t pause_ns) { (void)pause_ns; }
+void rt_exit_flush(void) { fflush(stdout); }
+#else
 /* Every collector pause, kept only to report percentiles at exit (KX_GC_STATS=1). */
 static int64_t *gc_pauses; static size_t gc_pauses_len, gc_pauses_cap;
 void rt_gc_note_pause(int64_t pause_ns) {
@@ -116,6 +121,7 @@ void rt_exit_flush(void) {
                 (qsort(gc_pauses, gc_pauses_len, sizeof *gc_pauses, cmp_i64), gc_pause_pct(0.50)), gc_pause_pct(0.99));
     }
 }
+#endif
 
 #ifdef RT_LEAKCHECK
 int rt_leakcheck = 1;

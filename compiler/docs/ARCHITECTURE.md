@@ -30,6 +30,10 @@ then: opt (lto-pre-link<O3>) -> clang -O3 -flto with runtime/runtime.c + gc/<nam
   backend/jvm/JvmBackend.kt LLVM IR -> JVM bytecode (class Main; memory through Unsafe, see docs/jvm.md)
   backend/jvm/ClassFile.kt  class file writer (version 49: verified by type inference, no stack map frames)
   runtime/jvm/KxRt.java     libc/libm subset on the JVM; jar = launcher + Main + KxRt
+--target=js (driver/JsDriver.kt): llvm-link runtime.c IR + runtime/js/libc.c IR + program IR + Zig libgc-<gc>.bc
+  -> opt (internalize, scalarizer, O3, no vectorizing) -> backend/js: LlParser.kt (LLVM IR text) -> JsGen.kt
+  (one JS function per LLVM function, structured control flow, i64 as two int32 words) -> JsBackend.kt
+  (runtime/js/runtime.js, only the parts used, + code + data segment) = one .js file for node
 ```
 
 There is no separate typed IR: the parser produces an AST, desugars it into a smaller AST, and the backend type-checks

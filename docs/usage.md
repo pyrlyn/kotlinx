@@ -12,7 +12,7 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | Option | Meaning |
 | --- | --- |
 | `-o <output>` | Output binary (or IR file with `-S`). Required. |
-| `--target <t>`, `--target=<t>` | `native` (default); `wasm`: the same LLVM IR for wasm32-wasi, linked into a `.wasm` module (see [Wasm target](#wasm-target)); `jvm`: an executable jar (see [jvm.md](jvm.md)). `js` is accepted but not implemented yet. |
+| `--target <t>`, `--target=<t>` | `native` (default); `wasm`: the same LLVM IR for wasm32-wasi, linked into a `.wasm` module (see [Wasm target](#wasm-target)); `js`: one JavaScript file for node (see [js-target.md](js-target.md)); `jvm`: an executable jar (see [jvm.md](jvm.md)). |
 | `--runtime <file.c>` | C runtime to link. Default: `$NEWKOTLIN_RUNTIME`, else `compiler/runtime/runtime.c`. |
 | `--emit-llvm` | Also keep `<output>.ll`. |
 | `-S` | Write only the LLVM IR to `<output>`; nothing is compiled or linked. |
@@ -22,7 +22,7 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `--no-opt` | Skip the `opt` step. |
 | `--leak-check` | Count live runtime objects and report at exit; the program exits 3 on a leak. |
 | `--alloc <a>` | `mimalloc` (default), `malloc` or `pool`. |
-| `--gc <name>`, `--gc=<name>` | Collector: `epoch` / `perceus` / `incremental` / `rc` (default `$NEWKOTLIN_GC` or `epoch`). Caps from `native/gc/c/<name>/`. |
+| `--gc <name>`, `--gc=<name>` | Collector: `epoch` / `perceus` / `incremental` / `rc` (default `$NEWKOTLIN_GC` or `epoch`; `incremental` for `--target=js`, which has no threads for `epoch`). Caps from `native/gc/c/<name>/`. |
 | `--gc-runtime <zig\|c>` | Collector backend (default `$NEWKOTLIN_GC_RUNTIME` or `zig`). `zig` links `libgc-<name>.a`; `c` compiles `native/gc/c/<name>/gc.c`. Shared `runtime.c` always. |
 | `-h`, `--help` | Print the usage text. |
 
