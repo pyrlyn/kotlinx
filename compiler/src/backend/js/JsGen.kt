@@ -760,7 +760,8 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                     fun small(e: String, h: String) = h == "0" && e.toLongOrNull()?.let { it in 1 until (1L shl 21) } == true
                     val (v, vh, c) = if (small(y, yh)) Triple(x, xh, y) else if (small(x, xh)) Triple(y, yh, x) else Triple("", "", "")
                     if (c.isEmpty()) { emit("$r=_mul($x,$xh,$y,$yh)"); emit("$rh=H") }
-                    else { val sv = simple(v); emit("$rh=Math.imul(${w(vh)},$c)+((${w(sv)}>>>0)*$c/4294967296|0)|0"); emit("$r=Math.imul($sv,$c)") }
+                    else { val sv = simple(v); val carry = "(${w(sv)}>>>0)*$c/4294967296|0"
+                        emit(if (vh == "0") "$rh=$carry" else "$rh=Math.imul(${w(vh)},$c)+($carry)|0"); emit("$r=Math.imul($sv,$c)") }
                 }
                 "sdiv", "udiv", "srem", "urem" -> { emit("$r=_${i.op}($x,$xh,$y,$yh)"); emit("$rh=H") }
                 "shl", "lshr", "ashr" -> {
