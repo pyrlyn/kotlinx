@@ -118,6 +118,8 @@ fun main(args: Array<String>) {
     val wasm32 = wasm || target == Target.JS
     if (target == Target.JS) llvmTarget = LlvmTarget.JS32
     // wasm32-wasi has no threads (epoch collects in the background); js uses the compact collector.
+    // js without --gc / NEWKOTLIN_GC: compact, or rc when the program allocates no possibly cyclic object (below).
+    val jsAutoGc = gc == null && target == Target.JS
     if (gc == null) gc = if (wasm) WASM_GC else if (target == Target.JS) JS_DEFAULT_GC else DEFAULT_GC
     if (gc == "default") gc = DEFAULT_GC // "default" names whatever the default collector is (epoch); old one: perceus
     if (gcRuntime == null) gcRuntime = "zig"
@@ -150,6 +152,8 @@ fun main(args: Array<String>) {
         fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1); return
     }
     if (onlyIr) { writeFile(output, ir); return }
+    // Same IR for compact and rc (neither defers RC); only the linked collector differs.
+    if (jsAutoGc && !allocatesCyclic(ir)) gc = JS_ACYCLIC_GC
     // GC: caps/metadata and C sources under <gcDir>; Zig static libs under <zigLibDir>/libgc-<name>.a.
     // Only the collector backend is zig|c; runtime.c is always the shared KotlinX runtime.
     val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/c")

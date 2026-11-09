@@ -110,6 +110,19 @@ if command -v node >/dev/null; then
   elif grep -qE "LLVM opt [0-9]+\+|Zig GC bitcode missing" "$out/js.err"; then echo "SKIP target-js ($(head -1 "$out/js.err"))"
   else echo "FAIL target-js: $(head -c 300 "$out/js.err")"; fail=1; fi
 else echo "SKIP target-js (no node)"; fi
+# --target=js picks compact for programs that allocate possibly cyclic objects, else rc (compiler/tests/js_gc).
+if command -v node >/dev/null && [ -s "$out/js.js" ]; then
+  for t in compiler/tests/js_gc/*.kt; do
+    n=$(basename "$t" .kt); want=rc; case "$n" in cyclic_*) want=compact;; esac
+    if ! LL2JS_PRETTY=1 "$NKC" --target=js "$t" -o "$out/jsgc_$n.js" 2>"$out/jsgc_$n.err"; then
+      if grep -q "Zig GC bitcode missing" "$out/jsgc_$n.err"; then echo "SKIP js-gc $n ($(head -1 "$out/jsgc_$n.err"))"
+      else echo "FAIL js-gc $n: $(head -c 300 "$out/jsgc_$n.err")"; fail=1; fi; continue
+    fi
+    got=rc; grep -q '\$compact\$' "$out/jsgc_$n.js" && got=compact
+    if [ "$got" = "$want" ] && [ "$(node "$out/jsgc_$n.js")" = "$(cat "${t%.kt}.out")" ]; then echo "PASS js-gc $n ($got)"
+    else echo "FAIL js-gc $n: collector $got (want $want) or wrong output"; fail=1; fi
+  done
+else echo "SKIP js-gc (no node or target-js skipped)"; fi
 # Leak tests (own tests, compiler/tests/leaks): runtime live-object count, ASan, macOS leaks.
 NKC="$NKC" compiler/tests/leaks/run.sh || fail=1
 # GC tests:
