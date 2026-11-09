@@ -10,3 +10,7 @@ forbid ^sort\.pdq\.
 forbid printf|^pop_arg$|^fmt_fp$
 forbid tf3$|tf2$|tfsi$|sitf$|f128|frexpl
 forbid ^strto[dfl]
+# keep <label> <source> <regex>: a function of the module (name section kept) must match: a call in a loop of main
+# stays a call so V8 optimizes the callee (wasmKeepHotCalls, compiler/src/backend/native/WasmHotCalls.kt).
+keep nbody bench/cases/nbody/kotlin/Main.kt ^k\.advance$
+keep cycles bench/cases/cycles/kotlin/Main.kt ^k\.walk$
