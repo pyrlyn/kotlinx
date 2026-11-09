@@ -603,10 +603,19 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // purple + buffered test), so every call site inlines it. The rare cases go out of line:
         // count zero -> @relz.C (release fields, free), cyclic count non-zero and not yet buffered ->
         // rt_cc_possible_root. Header word layout: low 32 bits count, bits 32-33 color, bit 34 buffered (runtime.c).
+        // js ([rc32]): the same operations on the two 32-bit halves.
         f.append("define internal void @rel.${c.name}(ptr %p) alwaysinline {\nentry:\n")
         f.append("  %isnull = icmp eq ptr %p, null\n  br i1 %isnull, label %done, label %dec\n")
         if (cyc && deferredRc) {
             f.append("dec:\n  call void @rt_gc_log_dec(ptr %p)\n  br label %done\n")
+        } else if (cyc && rc32()) {
+            // The count is stored first (a zero one is published before the children are released); the flags word
+            // gets color 3 (purple) when the object is buffered, else rt_cc_possible_root takes it.
+            f.append("dec:\n  %c = load i32, ptr %p\n  %c1 = sub i32 %c, 1\n  store i32 %c1, ptr %p\n  %z = icmp eq i32 %c1, 0\n  br i1 %z, label %zero, label %keep\n")
+            f.append("keep:\n  %fp = getelementptr i8, ptr %p, i32 4\n  %fl = load i32, ptr %fp\n  %buf = and i32 %fl, 4\n  %isbuf = icmp ne i32 %buf, 0\n  br i1 %isbuf, label %purple, label %root\n")
+            f.append("purple:\n  %fl2 = or i32 %fl, 3\n  store i32 %fl2, ptr %fp\n  br label %done\n")
+            f.append("root:\n  call void @rt_cc_possible_root(ptr %p)\n  br label %done\n")
+            f.append("zero:\n  call void @relz.${c.name}(ptr %p)\n  br label %done\n")
         } else if (cyc) {
             f.append("dec:\n  %c = load i64, ptr %p\n  %c1 = sub i64 %c, 1\n  %cnt = and i64 %c1, 4294967295\n  %z = icmp eq i64 %cnt, 0\n  br i1 %z, label %zero, label %keep\n")
             f.append("keep:\n  %c2 = or i64 %c1, 12884901888\n  store i64 %c2, ptr %p\n  %buf = and i64 %c1, 17179869184\n  %isbuf = icmp ne i64 %buf, 0\n  br i1 %isbuf, label %done, label %root\n")
@@ -614,8 +623,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // Publish the zero count before releasing children (a release may run the collector).
             f.append("zero:\n  store i64 %c1, ptr %p\n  call void @relz.${c.name}(ptr %p)\n  br label %done\n")
         } else {
-            f.append("dec:\n  %c = load i64, ptr %p\n  %c1 = sub i64 %c, 1\n  %z = icmp eq i64 %c1, 0\n  br i1 %z, label %zero, label %keep\n")
-            f.append("keep:\n  store i64 %c1, ptr %p\n  br label %done\n")
+            f.append("dec:\n  %c = load ${cntTy()}, ptr %p\n  %c1 = sub ${cntTy()} %c, 1\n  %z = icmp eq ${cntTy()} %c1, 0\n  br i1 %z, label %zero, label %keep\n")
+            f.append("keep:\n  store ${cntTy()} %c1, ptr %p\n  br label %done\n")
             f.append("zero:\n  call void @relz.${c.name}(ptr %p)\n  br label %done\n")
         }
         f.append("done:\n  ret void\n}\n\n")
@@ -634,7 +643,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n")
         relfFields(c)
         // Inline rt_cc_dead: a buffered object is colored black and left to the collector; otherwise freed here.
-        if (cyc) f.append("  %d = load i64, ptr %p\n  %dbuf = and i64 %d, 17179869184\n  %dead = icmp ne i64 %dbuf, 0\n  br i1 %dead, label %blk, label %fr\n" +
+        if (cyc && rc32()) f.append("  %dp = getelementptr i8, ptr %p, i32 4\n  %d = load i32, ptr %dp\n  %dbuf = and i32 %d, 4\n  %dead = icmp ne i32 %dbuf, 0\n  br i1 %dead, label %blk, label %fr\n" +
+            "blk:\n  %d2 = and i32 %d, -4\n  store i32 %d2, ptr %dp\n  ret void\n" +
+            "fr:\n  call void @rt_free_trace(ptr %p, i64 %sz)\n  ret void\n}\n\n")
+        else if (cyc) f.append("  %d = load i64, ptr %p\n  %dbuf = and i64 %d, 17179869184\n  %dead = icmp ne i64 %dbuf, 0\n  br i1 %dead, label %blk, label %fr\n" +
             "blk:\n  %d2 = and i64 %d, -12884901889\n  store i64 %d2, ptr %p\n  ret void\n" +
             "fr:\n  call void @rt_free_trace(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         else f.append("  call void @rt_free(ptr %p, i64 %sz)\n  ret void\n}\n\n")
@@ -3074,8 +3086,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val chk = label("reuse.chk")
                 condBr(isnull, lf, chk)
                 startBlock(chk)
-                val rc = emitT("load i64, ptr $old")
-                condBr(emitT("icmp eq i64 $rc, 1"), lr, ld)
+                // A cyclic object must also have no color or buffered bit; an acyclic one has no flags (count only).
+                val ct = if ((tok.t as Ty.Cls).name in cyclic) "i64" else cntTy()
+                val rc = emitT("load $ct, ptr $old")
+                condBr(emitT("icmp eq $ct $rc, 1"), lr, ld)
                 startBlock(lr)
                 emit("call void @relf.${(tok.t as Ty.Cls).name}(ptr $old)")
                 br(lj)
@@ -5370,6 +5384,17 @@ private fun tbaaMeta(): String = buildString {
     }
 }
 
+/**
+ * --target=js ([LlvmTarget.JS32]): reference counting works on the 32-bit halves of the i64 header word, which
+ * JavaScript then handles as one int32 each instead of a pair: the count is the low word (offset 0), the flags of a
+ * traced object the high word (offset 4: color bits 0-1, buffered bit 2). The memory layout is the same, so runtime.c
+ * and the collectors still read the whole word; a count never carries into the flags.
+ */
+private fun rc32() = llvmTarget == LlvmTarget.JS32
+
+/** LLVM type of a retain / release on the header's count: the whole word, or its low word for [rc32]. */
+private fun cntTy() = if (rc32()) "i32" else "i64"
+
 /** Target header and the declarations whose types depend on the target's C ABI ([LlvmTarget], [LIBC_SIGS]). */
 private fun targetPrelude(): String = "\n" + llvmTarget.header() +
     "declare ${llvmTarget.cSize} @llvm.coro.size.${llvmTarget.cSize}()\n" +
@@ -5527,9 +5552,9 @@ log:
   call void @rt_gc_log_inc(ptr %p)
   br label %done
 inc:
-  %c = load i64, ptr %p
-  %c1 = add i64 %c, 1
-  store i64 %c1, ptr %p
+  %c = load ${cntTy()}, ptr %p
+  %c1 = add ${cntTy()} %c, 1
+  store ${cntTy()} %c1, ptr %p
   br label %done
 done:
   ret void
@@ -5540,9 +5565,9 @@ entry:
   %isnull = icmp eq ptr %p, null
   br i1 %isnull, label %done, label %inc
 inc:
-  %c = load i64, ptr %p
-  %c1 = add i64 %c, 1
-  store i64 %c1, ptr %p
+  %c = load ${cntTy()}, ptr %p
+  %c1 = add ${cntTy()} %c, 1
+  store ${cntTy()} %c1, ptr %p
   br label %done
 done:
   ret void

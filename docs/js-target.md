@@ -8,7 +8,9 @@ collector as the native target, so programs behave the same (same output, same c
 ## Pipeline (`compiler/src/driver/JsDriver.kt`)
 
 1. Program IR from `compileToIr`, as for native, but for `LlvmTarget.JS32`: wasm32's data layout and C ABI, so a
-   pointer, `size_t` or `long` is one 4-byte int32 in JavaScript instead of two words.
+   pointer, `size_t` or `long` is one 4-byte int32 in JavaScript instead of two words. The inlined retain/release
+   paths work on the halves of the 64-bit object header (the count at offset 0, a traced object's color and
+   buffered bits at offset 4), one int32 operation each; the layout is the native one.
 2. `zig cc -target wasm32-wasi -S -emit-llvm -O2 -g0 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC
    -DRT_LEAN_EXIT` (or `$NK_WASM_CC`) on `compiler/runtime/runtime.c` and `compiler/runtime/js/libc.c` (wasi-libc
    headers; malloc/free on one growable heap, qsort, the stdio handles). `RT_LEAN_EXIT` drops the `KX_GC_STATS`
