@@ -42,7 +42,8 @@ collector as the native target, so programs behave the same (same output, same c
 - Compact by default: defined functions get short names (`$a`, `$b`, ...), function bodies have no line breaks, and
   `runtime.js` loses its comments and indentation. Locals are declared once per function (`let a,b,...;`, no
   initializers), and SSA values with disjoint live ranges share one variable of the same JS type (`allocateLocals`
-  in `JsGen.kt`): fewer, recurring names, so gzip matches inlined copies of the same code. `JsBackend.translate(compact = false)` (`LL2JS_PRETTY=1` in the environment of `newkotlinc`) keeps
+  in `JsGen.kt`): fewer, recurring names, so gzip matches inlined copies of the same code. Constant-offset addresses (a field of an object in a variable) are
+  inlined into every load and store and folded into the heap index (`I32[p+20>>2]`). `JsBackend.translate(compact = false)` (`LL2JS_PRETTY=1` in the environment of `newkotlinc`) keeps
   LLVM names and one statement per line, for profiling.
 - The data segment holds initialized globals only: zero-initialized globals are laid out last (like `.bss`) and the
   trailing zeros are not emitted (the heap starts zeroed).
