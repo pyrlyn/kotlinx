@@ -3,10 +3,12 @@
 // compiler/runtime/runtime.c and the GC call. Generated code follows; it ends with a call to _start.
 // JsBackend wraps runtime, code and start call in one function, so these top-level `var`s are closure
 // variables (no global object properties, no `let` hole checks).
-// Conventions (see compiler/src/backend/js/JsGen.kt): an i64 is two int32 arguments (low, high); a function
-// returning an i64 returns the low word and leaves the high word in H.
+// Conventions (see compiler/src/backend/js/JsGen.kt): the IR is wasm32's, so a pointer, size_t or long is one int32;
+// an i64 is two int32 arguments (low, high); a function returning an i64 returns the low word and leaves the high
+// word in H.
 var buf, I8, U8, I16, U16, I32, F32, F64, S = 0, D = 0, BRK = 0, H = 0, H1 = 0, H2 = 0, H3 = 0, H4 = 0, H5 = 0, H6 = 0, H7 = 0;
-var STACK = 1 << 22, MAXMEM = 2147418112;
+// STACK exceeds runtime.c's 4 MB release room (REL_STACK), so the limit it derives from _fa() stays positive.
+var STACK = 1 << 23, MAXMEM = 2147418112;
 var _fs = typeof process !== "undefined" && process.getBuiltinModule ? process.getBuiltinModule("fs") : null;
 
 function _views() {
@@ -21,14 +23,15 @@ function _grow(min) {
   _views();
   return true;
 }
-function $js_sbrk(n, nh) {
+function $js_sbrk(n) {
   const p = BRK, e = BRK + (n >>> 0) + 15 & -16;
-  if (nh || e > MAXMEM || e < 0 || (e > buf.byteLength && !_grow(e))) return 0;
+  if (e > MAXMEM || e < 0 || (e > buf.byteLength && !_grow(e))) return 0;
   BRK = e;
   return p;
 }
 function _U() { throw new Error("unreachable code reached"); }
-function _fa() { return S - (D << 7) | 0; }
+// Frame address for runtime.c's release depth limit: 4 KB per probed frame, so its 4 MB room is 1024 nested releases.
+function _fa() { return S - (D << 12) | 0; }
 
 // ---- unaligned memory -----------------------------------------------------------------------------------
 function _ld(p, n) { let v = 0; for (let k = n - 1; k >= 0; k--) v = v << 8 | U8[p + k]; return n === 2 ? v << 16 >> 16 : v | 0; }
@@ -140,41 +143,47 @@ function _umulo(a, ah, b, bh) { const p = BigInt.asUintN(64, _big(a, ah)) * BigI
 // bytes as Latin-1
 function _cstr(p) { let e = p; while (U8[e]) e++; let s = ""; for (let k = p; k < e; k += 8192) s += String.fromCharCode.apply(null, U8.subarray(k, Math.min(e, k + 8192))); return s; }
 // Strings handed to C (argv, getenv) live in memory from js_sbrk: the C allocator may be internalized away.
-function _newcstr(s) { const b = new TextEncoder().encode(s); const p = $js_sbrk(b.length + 1, 0); U8.set(b, p); U8[p + b.length] = 0; return p; }
-function $strlen(p) { H = 0; return U8.indexOf(0, p) - p; }
+function _newcstr(s) { const b = new TextEncoder().encode(s); const p = $js_sbrk(b.length + 1); U8.set(b, p); U8[p + b.length] = 0; return p; }
+// TypedArray indexOf, copyWithin and fill are C++ builtins, slow to enter: strlen loops (C strings are short),
+// memcpy and memset loop up to 16 bytes.
+function $strlen(p) { let e = p; while (U8[e]) e++; return e - p; }
 function $strcmp(a, b) { for (;;) { const x = U8[a++], y = U8[b++]; if (x !== y) return x - y; if (!x) return 0; } }
 function $strncmp(a, b, n) { for (; n > 0; n--) { const x = U8[a++], y = U8[b++]; if (x !== y) return x - y; if (!x) return 0; } return 0; }
 function $memcmp(a, b, n) { for (let k = 0; k < n >>> 0; k++) { const x = U8[a + k], y = U8[b + k]; if (x !== y) return x - y; } return 0; }
-var $bcmp = $memcmp;
-function $memcpy(d, s, n) { U8.copyWithin(d, s, s + (n >>> 0)); return d; }
-var $memmove = $memcpy;
-function $memset(d, v, n) { U8.fill(v, d, d + (n >>> 0)); return d; }
+// bcmp and memmove are functions, not aliases (var): JsBackend.usedRuntime keeps every var and what it names.
+// (No `$` names in comments: usedRuntime also scans comments, in LL2JS_PRETTY output.)
+function $bcmp(a, b, n) { return $memcmp(a, b, n); }
+// memmove semantics (overlap allowed); n is a size_t
+function $memcpy(d, s, n) { if (n >>> 0 > 16 || d > s && d < s + n) U8.copyWithin(d, s, s + n | 0); else for (let k = 0; k < n; k++) U8[d + k] = U8[s + k]; return d; }
+function $memset(d, v, n) { if (n >>> 0 > 16) U8.fill(v, d, d + n | 0); else for (let k = 0; k < n; k++) U8[d + k] = v; return d; }
+function $memmove(d, s, n) { return $memcpy(d, s, n); }
 function $memchr(p, c, n) { const k = U8.subarray(p, p + (n >>> 0)).indexOf(c & 255); return k < 0 ? 0 : p + k; }
 function $strchr(p, c) { c &= 255; for (;; p++) { const x = U8[p]; if (x === c) return p; if (!x) return 0; } }
 function $atoi(p) { return parseInt(_cstr(p), 10) | 0; }
 function _strtod(p, endp) {
   const s = _cstr(p), m = /^[ \t\n\r\f\v]*([+-]?(?:inf(?:inity)?|nan|(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?))/i.exec(s);
-  if (endp) { I32[endp >> 2] = m ? p + m[0].length : p; I32[endp + 4 >> 2] = 0; }
+  if (endp) I32[endp >> 2] = m ? p + m[0].length : p;
   if (!m) return 0;
   const t = m[1].toLowerCase().replace(/^([+-]?)inf(inity)?$/, "$1Infinity");
   return t.endsWith("nan") ? NaN : Number(t);
 }
 function $strtod(p, e) { return _strtod(p, e); }
 function $strtof(p, e) { return Math.fround(_strtod(p, e)); }
-var _env = new Map();
+// The strings are cached in $getenv.m, so a program that does not call getenv carries no cache.
 function $getenv(p) {
-  const k = _cstr(p); if (_env.has(k)) return _env.get(k);
+  const k = _cstr(p), m = $getenv.m || ($getenv.m = new Map()); if (m.has(k)) return m.get(k);
   const v = typeof process !== "undefined" ? process.env[k] : undefined, r = v === undefined ? 0 : _newcstr(v);
-  _env.set(k, r); return r;
+  m.set(k, r); return r;
 }
-function $getrlimit(r, p) { I32[p >> 2] = 262144; I32[p + 4 >> 2] = 0; I32[p + 8 >> 2] = 262144; I32[p + 12 >> 2] = 0; return 0; }
 var _t0 = typeof process !== "undefined" && process.hrtime ? null : performance.now();
 function _nanos() {
   if (_t0 === null) { const t = process.hrtime.bigint(); H = Number(t >> 32n) | 0; return Number(t & 0xffffffffn) | 0; }
   const ns = Math.round((performance.now() - _t0) * 1e6); H = Math.floor(ns / 4294967296) | 0; return ns | 0;
 }
-function $clock_gettime_nsec_np(c) { return _nanos(); }
-function $clock_gettime(c, p) { const lo = _nanos(), ns = (H >>> 0) * 4294967296 + (lo >>> 0); const s = Math.floor(ns / 1e9); I32[p >> 2] = s; I32[p + 4 >> 2] = 0; I32[p + 8 >> 2] = ns - s * 1e9; I32[p + 12 >> 2] = 0; return 0; }
+// struct timespec { int64_t tv_sec; long tv_nsec; }
+function $clock_gettime(c, p) { const lo = _nanos(), ns = (H >>> 0) * 4294967296 + (lo >>> 0); const s = Math.floor(ns / 1e9); I32[p >> 2] = s; I32[p + 4 >> 2] = 0; I32[p + 8 >> 2] = ns - s * 1e9; return 0; }
+// runtime.c's rt_nanos (System.nanoTime) under RT_JS
+function $rt_nanos() { return _nanos(); }
 
 // ---- stdio -------------------------------------------------------------------------------------------------------
 var _ob = new Uint8Array(65536), _on = 0;
@@ -202,35 +211,35 @@ function _putbytes(f, p, n) {
 }
 function $fputs(s, f) { return _putbytes(f, s, U8.indexOf(0, s) - s) >= 0 ? 0 : -1; }
 function $puts(s) { $fputs(s, 1); _put(1, "\n"); return 0; }
-function $fwrite(p, size, sh, n, nh, f) { const t = (size >>> 0) * (n >>> 0); _putbytes(f, p, t); H = 0; return n; }
+function $fwrite(p, size, n, f) { _putbytes(f, p, (size >>> 0) * (n >>> 0)); return n; }
 function $putchar(c) { _put(1, String.fromCharCode(c & 255)); return c; }
 function $fputc(c, f) { _put(f, String.fromCharCode(c & 255)); return c; }
-var $putc = $fputc;
+function $putc(c, f) { return $fputc(c, f); }
 function $fflush(f) { _flush(); return 0; }
 function $printf(fmt, ...a) { return _put(1, _format(fmt, a)); }
 function $fprintf(f, fmt, ...a) { return _put(f, _format(fmt, a)); }
-function $snprintf(p, n, nh, fmt, ...a) {
-  const s = _format(fmt, a), max = nh ? 2147483647 : n >>> 0;
+function $snprintf(p, n, fmt, ...a) {
+  const s = _format(fmt, a), max = n >>> 0;
   if (max > 0) { const k = Math.min(s.length, max - 1); for (let i = 0; i < k; i++) U8[p + i] = s.charCodeAt(i); U8[p + k] = 0; }
   return s.length;
 }
-function $sprintf(p, fmt, ...a) { return $snprintf(p, 0x7fffffff, 0, fmt, ...a); }
+function $sprintf(p, fmt, ...a) { return $snprintf(p, 0x7fffffff, fmt, ...a); }
 function $fopen(path, mode) {
   if (!_fs) return 0;
   try { const m = _cstr(mode).replace("b", ""); const fd = _fs.openSync(_cstr(path), m); const id = _fid++; _files.set(id, { fd, pos: 0 }); return id; } catch (e) { return 0; }
 }
 function $fclose(f) { const h = _files.get(f); if (h) { _fs.closeSync(h.fd); _files.delete(f); } return 0; }
-function $fread(p, size, sh, n, nh, f) {
-  const h = _files.get(f); H = 0; if (!h) return 0;
+function $fread(p, size, n, f) {
+  const h = _files.get(f); if (!h) return 0;
   const want = (size >>> 0) * (n >>> 0); let got = 0;
   while (got < want) { const r = _fs.readSync(h.fd, U8, p + got, want - got, h.pos); if (r <= 0) break; got += r; h.pos += r; }
   return Math.floor(got / (size >>> 0)) | 0;
 }
-function $fseek(f, off, offh, whence) { const h = _files.get(f); if (!h) return -1; const o = offh * 4294967296 + (off >>> 0); h.pos = whence === 0 ? o : whence === 1 ? h.pos + o : _fs.fstatSync(h.fd).size + o; return 0; }
-function $ftell(f) { const h = _files.get(f); H = 0; return h ? h.pos | 0 : -1; }
+function $fseek(f, off, whence) { const h = _files.get(f); if (!h) return -1; h.pos = whence === 0 ? off : whence === 1 ? h.pos + off : _fs.fstatSync(h.fd).size + off; return 0; }
+function $ftell(f) { const h = _files.get(f); return h ? h.pos | 0 : -1; }
 function $fgetc(f) { const h = _files.get(f); if (!h) return -1; const b = new Uint8Array(1); if (_fs.readSync(h.fd, b, 0, 1, h.pos) !== 1) return -1; h.pos++; return b[0]; }
 
-// printf-style formatting; integer conversions with l/ll/z/j/t/q take an i64 (two arguments).
+// printf-style formatting; integer conversions with ll/j/q take an i64 (two arguments), l/z/t one int32 (wasm32).
 function _format(fp, a) {
   const f = _cstr(fp); let out = "", ai = 0;
   for (let i = 0; i < f.length; i++) {
@@ -242,7 +251,7 @@ function _format(fp, a) {
     if (f[i + 1] === ".") { i++; if (f[i + 1] === "*") { i++; prec = a[ai++]; } else { let p = ""; while (/\d/.test(f[i + 1])) p += f[++i]; prec = p ? +p : 0; } }
     while ("hlLqjzt".includes(f[i + 1])) len += f[++i];
     const c = f[++i];
-    const wide = /l|q|j|z|t/.test(len);
+    const wide = len === "ll" || len === "j" || len === "q";
     let s;
     switch (c) {
       case "%": out += "%"; continue;
@@ -297,26 +306,88 @@ function _ffmt(x, c, p, flags) {
 function _exp(x, p) { const s = x.toExponential(Math.min(p, 100)); const [m, e] = s.split("e"); const n = +e; return m + "e" + (n < 0 ? "-" : "+") + String(Math.abs(n)).padStart(2, "0"); }
 function _fixed(x, p) { if (x < 1e21) return x.toFixed(Math.min(p, 100)); const i = BigInt(x).toString(); return p > 0 ? i + "." + "0".repeat(p) : i; }
 
+// ---- runtime.c under RT_JS: number text and uncaught-exception messages without printf ----------------------------
+// decimal text of the i64 (a, ah); u: unsigned
+function _i64s(a, ah, u) {
+  if (u ? (ah >>> 0) < 2097152 : ah >= -2097152 && ah < 2097152) return "" + (ah * 4294967296 + (a >>> 0));
+  return "" + (u ? BigInt.asUintN(64, _big(a, ah)) : _big(a, ah));
+}
+// Kotlin's Double/Float toString as runtime.c's fmt_fp writes it: the fewest digits (correctly rounded, ties to even)
+// that read back as x (f: the float reader for a float, else 0); plain for 1e-3 <= |x| < 1e7, else D.DDDE<exp>.
+// toExponential() gives those digits for a double, except a power of two (its lower neighbour is nearer than its
+// upper one); a power of two and a float take fmt_fp's loop over the precision p. toExponential(p) rounds ties up,
+// so an exact tie (the exact digits t are p + 2 long and end in 5) is rounded to even here.
+function _kfmt(x, f) {
+  if (x !== x) return "NaN";
+  if (x === 0) return 1 / x < 0 ? "-0.0" : "0.0";
+  if (x === 1 / 0 || x === -1 / 0) return x < 0 ? "-Infinity" : "Infinity";
+  let s = x.toExponential();
+  _cd[0] = x;
+  if (f || !_ci[0] && !(_ci[1] & 1048575)) {
+    const T = x.toExponential(100), t = T.replace(/^-|\.|0*e.*/g, "");
+    for (let p = 0; ; p++) {
+      s = t.length === p + 2 && t[p + 1] === "5" && t[p] % 2 === 0 ? (x < 0 ? "-" : "") + t[0] + "." + t.slice(1, p + 1) + "e" + T.split("e")[1] : x.toExponential(p);
+      if (p === 16 || (f ? f(s) : +s) === x) break; // fmt_fp stops at 17 digits too (x may not be a float)
+    }
+  }
+  const e = s.indexOf("e"), n = +s.slice(e + 1), d = s.slice(0, e).replace(/^-|\./g, "").replace(/(.)0+$/, "$1"), g = x < 0 ? "-" : "";
+  if (Math.abs(x) < 1e-3 || Math.abs(x) >= 1e7) return g + d[0] + "." + (d.slice(1) || "0") + "E" + n;
+  return g + (n < 0 ? "0." + "0".repeat(-n - 1) + d : d.slice(0, n + 1).padEnd(n + 1, "0") + "." + (d.slice(n + 1) || "0"));
+}
+// The float nearest the decimal s = [-]D[.DDD]e<exp> (C's strtof, ties to even). Math.fround(+s) rounds twice, which
+// goes wrong only when +s is exactly the midpoint between two floats r and o: then s is compared with it exactly.
+function _strtof(s) {
+  const v = +s, r = Math.fround(v), o = 2 * v - r;
+  if (r === v || !isFinite(r) || Math.fround(o) !== o) return r;
+  // |s| = d * 10^k and |v| = m * 2^z (a midpoint is a normal double)
+  _cd[0] = Math.abs(v);
+  const [, a, b, e] = /^-?(\d)\.?(\d*)e([-+]\d+)$/.exec(s), k = +e - b.length, z = (_ci[1] >>> 20) - 1075;
+  let d = BigInt(a + b), m = BigInt(_ci[1] & 1048575 | 1048576) << 32n | BigInt(_ci[0] >>> 0);
+  if (k > 0) d *= 10n ** BigInt(k); else m *= 10n ** BigInt(-k);
+  if (z > 0) m <<= BigInt(z); else d <<= BigInt(-z);
+  return d === m || (d > m) === (Math.abs(r) > Math.abs(o)) ? r : o;
+}
+// s (char codes 0..255) and a NUL at p; returns s.length
+function _wstr(p, s) { for (let k = 0; k < s.length; k++) U8[p + k] = s.charCodeAt(k); U8[p + s.length] = 0; return s.length; }
+function $js_i64_str(p, a, ah, u) { return _wstr(p, _i64s(a, ah, u)); }
+function $js_f64_str(p, x) { return _wstr(p, _kfmt(x, 0)); }
+function $js_f32_str(p, x) { return _wstr(p, _kfmt(x, _strtof)); }
+function $rt_print_i64(a, ah) { _put(1, _i64s(a, ah, 0)); }
+function $rt_print_u64(a, ah) { _put(1, _i64s(a, ah, 1)); }
+function $rt_print_f64(x) { _put(1, _kfmt(x, 0)); }
+function $rt_print_f32(x) { _put(1, _kfmt(x, _strtof)); }
+// an uncaught exception: stdout flushed, the message on stderr, exit status 1
+function _die(s) { _put(2, "Exception in thread \"main\" " + s + "\n"); $exit(1); }
+function $rt_throw(c, m) { _die(_cstr(c) + (m ? ": " + _cstr(m) : "")); }
+function $rt_panic(m) { _die("java.lang.IllegalStateException: " + _cstr(m)); }
+function $rt_bad_step(a, ah) { _die("java.lang.IllegalArgumentException: Step must be positive, was: " + _i64s(a, ah, 0) + "."); }
+function $rt_oob(a, ah, n, nh) { _die("kotlin.ArrayIndexOutOfBoundsException: Index " + _i64s(a, ah, 0) + " out of bounds for length " + _i64s(n, nh, 0)); }
+function $js_list_oob(a, ah, n, nh) { _die("java.lang.IndexOutOfBoundsException: Index " + _i64s(a, ah, 0) + " out of bounds for length " + _i64s(n, nh, 0)); }
+function $js_sb_len_oob(a, ah) { _die("java.lang.IndexOutOfBoundsException: length " + _i64s(a, ah, 0)); }
+function $js_map_no_key(s, a, ah) { _die("java.lang.NullPointerException: key " + (s ? _cstr(a) : _i64s(a, ah, 0)) + " not in map"); }
+
 // ---- process -------------------------------------------------------------------------------------------------------
 class _Exit { constructor(c) { this.code = c; } }
 function $exit(c) { _flush(); throw new _Exit(c); }
-var $_exit = $exit;
+function $_exit(c) { $exit(c); }
 function $abort() { _flush(); throw new Error("abort()"); }
 function $atexit(f) { return 0; }
 
 function _b64(s) { const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
 function _start(data, dataStart, dataEnd, ctors, main) {
   const top = dataEnd + STACK + 15 & -16;
-  buf = new ArrayBuffer(Math.max(1 << 24, top + (1 << 22) + 65535 & -65536)); _views();
+  // 32 MB to start (pages are committed as they are touched): every _grow replaces the views, which throws away
+  // V8's optimized code that embeds them, so the heap behind the 8 MB stack starts with room to spare.
+  buf = new ArrayBuffer(Math.max(1 << 25, top + (1 << 22) + 65535 & -65536)); _views();
   U8.set(_b64(data), dataStart);
   S = top; BRK = top;
   let code = 0;
   try {
     for (const c of ctors) c();
     const args = typeof process !== "undefined" ? process.argv.slice(2) : [];
-    const argv = $js_sbrk(8 * (args.length + 2), 0); U8.fill(0, argv, argv + 8 * (args.length + 2));
+    const argv = $js_sbrk(4 * (args.length + 2)); U8.fill(0, argv, argv + 4 * (args.length + 2));
     I32[argv >> 2] = _newcstr("main");
-    args.forEach((s, k) => { I32[argv + 8 * (k + 1) >> 2] = _newcstr(s); });
+    args.forEach((s, k) => { I32[(argv >> 2) + k + 1] = _newcstr(s); });
     code = main(args.length + 1, argv);
     _flush();
   } catch (e) {

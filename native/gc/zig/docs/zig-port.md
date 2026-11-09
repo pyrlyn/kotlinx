@@ -14,7 +14,9 @@ src/runtime_host.zig         KotlinX adapter; runtime callbacks stay in runtime.
 src/lib/host_util.zig        shared allocator / environment / RSS helpers for both hosts
 src/common/{object,regions,trial_deletion}.zig
 src/{rc,perceus,incremental,epoch}.zig
+src/compact.zig              KotlinX-local collector (no C original; --target=js default)
 tests/native/suite.zig       gc_unit + api_test + traversal + one_pass
+tests/native/compact.zig     compact's own regression (it keeps no statistics)
 bench/native/ops.zig         port of bench/ops/ops.c
 build.zig                    zig build test / zig build bench
 scripts/macos/               local Mac C + Zig 0.17.1 commands

@@ -105,7 +105,8 @@ case "$msg" in *"line 2: unknown name 'nope'"*) echo "PASS target-js-error";; *)
 if command -v node >/dev/null; then
   printf 'fun main() {\n  val xs = ArrayList<Long>()\n  for (i in 0 until 10) xs.add(i * 3000000000L)\n  var s = 0L\n  for (x in xs) s += x\n  println("sum=$s")\n}\n' > "$out/js.kt"
   if "$NKC" --target=js "$out/js.kt" -o "$out/js.js" 2>"$out/js.err" && [ "$(node "$out/js.js")" = "sum=135000000000" ]; then echo "PASS target-js"
-  # js needs LLVM opt 22+ and the collector bitcode (`zig build gc-bc`); without them (e.g. CI's LLVM 18) skip.
+  # js needs LLVM opt 22+ and the wasm32 collector bitcode (`zig build gc-bc -Dtarget=wasm32-wasi`); without them
+  # (e.g. CI's LLVM 18) skip.
   elif grep -qE "LLVM opt [0-9]+\+|Zig GC bitcode missing" "$out/js.err"; then echo "SKIP target-js ($(head -1 "$out/js.err"))"
   else echo "FAIL target-js: $(head -c 300 "$out/js.err")"; fail=1; fi
 else echo "SKIP target-js (no node)"; fi
