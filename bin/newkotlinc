@@ -6,7 +6,7 @@
 #   zig build gc-libs
 # so collector source changes rebuild into zig-out/lib/libgc-*.a (Zig cache = incremental).
 # --gc-runtime=c skips Zig. Direct newkotlinc.kexe does not build libs (see native/gc/README.md).
-# --target=js runs `zig build gc-bc` instead (LLVM bitcode of the collector, default incremental).
+# --target=js runs `zig build gc-bc` instead (LLVM bitcode of the collector, default compact).
 root="$(cd "$(dirname "$0")/.." && pwd)"
 exe="$root/compiler/build/newkotlinc.kexe"
 [ -x "$exe" ] || "$root/compiler/build.sh" >&2 || exit 1
@@ -50,7 +50,7 @@ parse_gc_cli() {
     esac
   done
   if [ "$GC_NAME_CLI" = "default" ]; then GC_NAME_CLI="epoch"; fi
-  if [ "$TARGET_CLI" = "js" ] && [ -z "$GC_NAME_CLI" ]; then GC_NAME_CLI="${NEWKOTLIN_GC:-incremental}"; fi
+  if [ "$TARGET_CLI" = "js" ] && [ -z "$GC_NAME_CLI" ]; then GC_NAME_CLI="${NEWKOTLIN_GC:-compact}"; fi
   WASM_CLI=""
   case " $* " in *" --target=wasm "*|*" --target wasm "*) WASM_CLI=1 ;; esac
 }
@@ -86,7 +86,7 @@ ensure_zig_gc_libs() {
     case " $* " in *" --alloc pool"*|*" --alloc=pool "*|*" --alloc malloc"*|*" --alloc=malloc "*) ;; *) zargs+=(-Dplain-malloc=true) ;; esac
   fi
   case "$GC_NAME_CLI" in
-    epoch|perceus|incremental|rc) zargs+=(-Dgc="$GC_NAME_CLI") ;;
+    epoch|perceus|incremental|compact|rc) zargs+=(-Dgc="$GC_NAME_CLI") ;;
   esac
   echo "zig build $step${GC_NAME_CLI:+ -Dgc=$GC_NAME_CLI} (Zig $ver; incremental)…" >&2
   ( cd "$root/native/gc/zig" && "$zigbin" "${zargs[@]}" ) || return 1

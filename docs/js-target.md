@@ -15,8 +15,8 @@ collector as the native target, so programs behave the same (same output, same c
    opt keeps loop counters in `i32`.
 3. `llvm-link` the runtime, libc, program and the Zig collector's bitcode `libgc-<gc>.bc`
    (`zig build gc-bc` in `native/gc/zig`; `bin/newkotlinc` builds it). The bitcode is ReleaseSmall (about 12% less
-   JavaScript); the collector's hot helpers (`PtrStack.push`, the trial-deletion claims) are `inline fn`, so it runs
-   as fast as ReleaseFast.
+   JavaScript); the hot helpers of `perceus` and `incremental` (`PtrStack.push`, the trial-deletion claims) are
+   `inline fn`, so they run as fast as ReleaseFast.
 4. `opt -passes='internalize,scalarizer<load-store>,default<O3>'` with only `main` exported and vectorizers off.
 5. `compiler/src/backend/js`: `LlParser.kt` reads the IR text, `JsGen.kt` emits one JS function per LLVM function,
    `JsBackend.kt` prepends the parts of `compiler/runtime/js/runtime.js` the code uses and appends the data
@@ -59,7 +59,9 @@ collector as the native target, so programs behave the same (same output, same c
 - LLVM `opt` and `llvm-link` 22 or newer (they read the Zig 0.17.1 bitcode). `--opt`, then `$NK_OPT` if it is new
   enough (it usually pins the native target's opt to the C compiler's LLVM), then the usual search
   ([toolchain.md](toolchain.md)). `llvm-link` is taken from the same directory as `opt`.
-- Collector: `incremental` by default; `perceus` and `rc` also work. `epoch` needs a background thread and is rejected.
+- Collector: `compact` by default (`native/gc/zig/src/compact.zig`: reference counting plus a small synchronous cycle
+  collector, written for this target's size and speed); `incremental`, `perceus` and `rc` also work. `epoch` needs a
+  background thread and is rejected.
 - Not supported: `--leak-check`, `--link`. Threads do not exist; `runBlocking`/coroutines run on the single-threaded
   scheduler as on native.
 - Tested on macOS (arm64, node 26). Linux is untested.
