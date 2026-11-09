@@ -54,8 +54,9 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
         .replace(Regex("""%[\w.]+ = call i1 @llvm\.coro\.end\("""), "call void @llvm.coro.end("))
     // -O2 without vectorization (JS has no SIMD) and without debug info (zig cc emits it by default);
     // RT_PLAIN_MALLOC: libc.c's allocator, not mimalloc; RT_LEAN_EXIT: no GC statistics and no final collection;
-    // RT_SIZE_CHECK: arrays of 2 GB or more fail (OutOfMemoryError) instead of wrapping around the 32-bit size_t.
-    val cflags = "-S -emit-llvm -O2 -g0 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC -DRT_LEAN_EXIT -DRT_SIZE_CHECK -I'$gcDir' $gcFlags"
+    // RT_SIZE_CHECK: arrays of 2 GB or more fail (OutOfMemoryError) instead of wrapping around the 32-bit size_t;
+    // RT_JS: number text, exception messages and rt_nanos come from runtime.js (no printf), no getrlimit.
+    val cflags = "-S -emit-llvm -O2 -g0 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC -DRT_LEAN_EXIT -DRT_SIZE_CHECK -DRT_JS -I'$gcDir' $gcFlags"
     run("$cc $cflags '$runtime' -o '$rtLl'")
     val rtIr = readFile(rtLl)
     // The program IR is wasm32's (LlvmTarget.JS32); runtime.c built for another target (--cc) would link into a

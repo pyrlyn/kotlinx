@@ -12,11 +12,13 @@ collector as the native target, so programs behave the same (same output, same c
    paths work on the halves of the 64-bit object header (the count at offset 0, a traced object's color and
    buffered bits at offset 4), one int32 operation each; the layout is the native one.
 2. `zig cc -target wasm32-wasi -S -emit-llvm -O2 -g0 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC
-   -DRT_LEAN_EXIT -DRT_SIZE_CHECK` (or `$NK_WASM_CC`) on `compiler/runtime/runtime.c` and
+   -DRT_LEAN_EXIT -DRT_SIZE_CHECK -DRT_JS` (or `$NK_WASM_CC`) on `compiler/runtime/runtime.c` and
    `compiler/runtime/js/libc.c` (wasi-libc headers; malloc/free on one growable heap, qsort, the stdio handles).
    `RT_LEAN_EXIT` drops the `KX_GC_STATS` report and the final collection at exit, so a program that never collects
    does not carry the cycle collector. `RT_SIZE_CHECK` makes an array of 2 GB or more an `OutOfMemoryError`
-   instead of a byte size that wraps around the 32-bit `size_t` to a small allocation.
+   instead of a byte size that wraps around the 32-bit `size_t` to a small allocation. `RT_JS` takes number text
+   (`Long`, `Double`, `Float`), the uncaught-exception messages and `rt_nanos` from `runtime.js` (no `printf` in the
+   program) and bounds the release recursion by a fixed stack budget instead of `getrlimit`.
    The runtime's datalayout gets native integer width `n32` only, so opt keeps loop counters in `i32`.
 3. `llvm-link` the runtime, libc, program and the Zig collector's wasm32 bitcode
    `native/gc/zig/zig-out/wasm32-wasi/lib/libgc-<gc>.bc` (`zig build gc-bc -Dgc=<gc> -Dtarget=wasm32-wasi
@@ -66,8 +68,10 @@ collector as the native target, so programs behave the same (same output, same c
   loop ends. Irreducible control flow falls back to a dispatch loop (with a warning).
 - Single-use, same-block, side-effect-free values are inlined into their use; everything else is a `let`.
 - `frameaddress` / `stacksave` (the bounded release in `runtime.c`) use a depth counter `D`: 4 KB per level, so
-  runtime.c's 4 MB wasi release room is 1024 nested releases.
-- libc lives in `runtime.js` (stdio with buffered stdout, `printf` formatting, strings, `strtod`, time, exit).
+  runtime.c's 4 MB release room (`REL_JS`, as `REL_STACK` on wasi) is 1024 nested releases.
+- libc lives in `runtime.js` (stdio with buffered stdout, `printf` formatting, strings, `strtod`, time, exit), with the
+  `RT_JS` parts of `runtime.c`: Kotlin's number text in JavaScript (`toExponential` with `fmt_fp`'s shortest
+  round-trip digits, ties to even) and the exception messages.
 
 ## Requirements and limits
 

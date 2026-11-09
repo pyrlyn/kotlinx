@@ -39,7 +39,17 @@ void rt_leak_obj(int64_t d) { LK(LK_OBJ, d); }
 #define LK(k, d) ((void)0)
 #endif
 
-#ifdef __wasi__ /* --target=wasm (wasm32-wasi): no CLOCK_UPTIME_RAW */
+#ifdef RT_JS
+/* --target=js (-DRT_JS): rt_nanos, number printing and the exception messages (rt_throw, rt_panic, rt_bad_step,
+ * rt_oob) are defined in compiler/runtime/js/runtime.js with JS number formatting, so programs carry no printf.
+ * runtime.c calls these runtime.js functions: */
+int js_i64_str(char *buf, int64_t v, int is_unsigned); /* decimal digits and a NUL into buf (<= 21 bytes); returns the count */
+int js_f64_str(char *buf, double d); /* fmt_fp's text of d and a NUL into buf (<= 25 bytes); returns the count */
+int js_f32_str(char *buf, float d);  /* the same for a float */
+__attribute__((noreturn)) void js_list_oob(int64_t i, int64_t len);
+__attribute__((noreturn)) void js_sb_len_oob(int64_t n);
+__attribute__((noreturn)) void js_map_no_key(int skeys, int64_t k);
+#elif defined(__wasi__) /* --target=wasm (wasm32-wasi): no CLOCK_UPTIME_RAW */
 int64_t rt_nanos(void) { struct timespec t; clock_gettime(CLOCK_MONOTONIC, &t); return (int64_t)t.tv_sec * 1000000000 + t.tv_nsec; }
 #else
 int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW); }
@@ -56,10 +66,21 @@ int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
 char *rt_rel_limit;
 int rt_rel_draining;
 _Thread_local int rt_trav_mode;
+#ifdef RT_JS
+/* js: the frame address is runtime.js's count of 4 KB per active frame that takes it (the @relz.C chain), so
+ * 4 MB (as on wasi) allows 1024 nested releases, which node's default stack (about 1 MB) holds; the drain allows
+ * 128 more. No getrlimit. */
+#define REL_JS (4 * 1024 * 1024)
+static const size_t rel_drain_room = REL_JS / 8;
+#else
 static size_t rel_drain_room;
+#endif
 static PtrStack rel_pending;
 
 __attribute__((constructor)) static void rel_limit_init(void) {
+#ifdef RT_JS
+    rt_rel_limit = (char *)__builtin_frame_address(0) - REL_JS;
+#else
     size_t room = REL_STACK;
 #ifndef __wasi__ /* wasm: the linker sets the shadow stack size (newkotlinc links -z stack-size) */
     struct rlimit r;
@@ -67,6 +88,7 @@ __attribute__((constructor)) static void rel_limit_init(void) {
 #endif
     rt_rel_limit = (char *)__builtin_frame_address(0) - room;
     rel_drain_room = room / 8; /* limit + drain must fit a small stack too */
+#endif
 }
 
 void rt_rel_defer(void *obj) {
@@ -89,7 +111,11 @@ void rt_rel_defer(void *obj) {
 #ifdef RT_LEAN_EXIT
 /* --target=js: no KX_GC_STATS report and no final collection at exit (nothing can observe either). */
 void rt_gc_note_pause(int64_t pause_ns) { (void)pause_ns; }
+#ifdef RT_JS
+void rt_exit_flush(void) {} /* runtime.js flushes stdout after main and in exit() */
+#else
 void rt_exit_flush(void) { fflush(stdout); }
+#endif
 #else
 /* Every collector pause, kept only to report percentiles at exit (KX_GC_STATS=1). */
 static int64_t *gc_pauses; static size_t gc_pauses_len, gc_pauses_cap;
@@ -128,6 +154,7 @@ int rt_leakcheck = 1;
 #else
 int rt_leakcheck = 0;
 #endif
+#ifndef RT_JS
 void rt_throw(const char *cls, const char *msg) {
     fflush(stdout);
     if (msg) fprintf(stderr, "Exception in thread \"main\" %s: %s\n", cls, msg);
@@ -144,9 +171,11 @@ void rt_panic(const char *msg) {
     fprintf(stderr, "Exception in thread \"main\" java.lang.IllegalStateException: %s\n", msg);
     exit(1);
 }
+#endif
 
 // ---- printing -------------------------------------------------------------
 
+#ifndef RT_JS
 /* Kotlin-style Double formatting: shortest round-trip digits; plain notation for 1e-3 <= |d| < 1e7,
    otherwise computerized scientific notation (e.g. 3.3358775E8, 1.0E-4), always with a '.'. */
 static void fmt_fp(char *buf, size_t n, double d, int f32) {
@@ -184,13 +213,16 @@ static void fmt_fp(char *buf, size_t n, double d, int f32) {
     }
 #undef PUT
 }
+#endif
 
 void rt_print_str(const char *s) { fputs(s ? s : "null", stdout); }
+#ifndef RT_JS
 void rt_print_i64(int64_t v) { printf("%" PRId64, v); }
 static void fmt_double(char *buf, size_t n, double d) { fmt_fp(buf, n, d, 0); }
 void rt_print_f64(double d) { char b[64]; fmt_double(b, sizeof b, d); fputs(b, stdout); }
 void rt_print_f32(float d) { char b[64]; fmt_fp(b, sizeof b, d, 1); fputs(b, stdout); }
 void rt_print_u64(uint64_t v) { printf("%" PRIu64, v); }
+#endif
 /* Kotlin String.hashCode over the UTF-16 code units of a UTF-8 string. */
 int32_t rt_str_hash(const char *s) {
     uint32_t h = 0;
@@ -235,12 +267,22 @@ typedef struct { int64_t rc; char *buf; size_t len, cap; } SB;
 
 /* The buffer keeps 8 spare bytes in front, so rt_sb_done can hand it over as a string without copying. */
 SB *rt_sb_new(void) { SB *s = malloc(sizeof *s); s->rc = 1; s->cap = 32; s->len = 0; s->buf = (char *)malloc(s->cap + 8) + 8; s->buf[0] = 0; LK(LK_SB, 1); return s; }
+#ifdef RT_JS
+/* One out-of-line growth path instead of a copy (with 64-bit size arithmetic) in every append. */
+__attribute__((noinline)) static void sb_grow(SB *s, size_t n) { while (s->len + n + 1 > s->cap) s->cap *= 2; s->buf = (char *)realloc(s->buf - 8, s->cap + 8) + 8; }
+static inline void sb_reserve(SB *s, size_t n) { if (s->len + n + 1 > s->cap) sb_grow(s, n); }
+#else
 static inline void sb_reserve(SB *s, size_t n) {
     if (s->len + n + 1 > s->cap) { while (s->len + n + 1 > s->cap) s->cap *= 2; s->buf = (char *)realloc(s->buf - 8, s->cap + 8) + 8; }
 }
+#endif
 static void sb_bytes(SB *s, const char *x, size_t n) { sb_reserve(s, n); memcpy(s->buf + s->len, x, n); s->len += n; s->buf[s->len] = 0; }
 void rt_sb_str(SB *s, const char *x) { if (!x) x = "null"; sb_bytes(s, x, strlen(x)); }
 void rt_sb_char(SB *s, int32_t c) { char b[4]; sb_bytes(s, b, (size_t)utf8(b, c)); }
+#ifdef RT_JS
+void rt_sb_i64(SB *s, int64_t v) { sb_reserve(s, 21); s->len += (size_t)js_i64_str(s->buf + s->len, v, 0); }
+void rt_sb_u64(SB *s, uint64_t v) { sb_reserve(s, 21); s->len += (size_t)js_i64_str(s->buf + s->len, (int64_t)v, 1); }
+#else
 void rt_sb_i64(SB *s, int64_t v) {
     char b[24]; int i = 24; uint64_t u = v < 0 ? 0 - (uint64_t)v : (uint64_t)v;
     do { b[--i] = (char)('0' + u % 10); u /= 10; } while (u);
@@ -248,6 +290,7 @@ void rt_sb_i64(SB *s, int64_t v) {
     sb_bytes(s, b + i, (size_t)(24 - i));
 }
 void rt_sb_u64(SB *s, uint64_t v) { char b[24]; int i = 24; do { b[--i] = (char)('0' + v % 10); v /= 10; } while (v); sb_bytes(s, b + i, (size_t)(24 - i)); }
+#endif
 static char *str_alloc(size_t len) {
     int64_t *h = malloc(8 + len + 1);
     if (!h) rt_panic("OutOfMemoryError");
@@ -266,14 +309,23 @@ void rt_str_release(char *p) {
 int64_t rt_sb_len(SB *s) { return (int64_t)s->len; }
 /* StringBuilder.setLength: truncates, or pads with '\0' (Kotlin pads with \u0000). */
 void rt_sb_set_length(SB *s, int64_t n) {
+#ifdef RT_JS
+    if (n < 0) js_sb_len_oob(n);
+#else
     if (n < 0) { fflush(stdout); fprintf(stderr, "Exception in thread \"main\" java.lang.IndexOutOfBoundsException: length %" PRId64 "\n", n); exit(1); }
+#endif
     if ((size_t)n <= s->len) { s->len = (size_t)n; if (s->buf) s->buf[s->len] = 0; return; }
     char z = 0;
     while (s->len < (size_t)n) sb_bytes(s, &z, 1);
 }
 void rt_sb_release(SB *s) { if (!s || --s->rc > 0) return; LK(LK_SB, -1); free(s->buf - 8); free(s); }
+#ifdef RT_JS
+void rt_sb_f64(SB *s, double d) { sb_reserve(s, 25); s->len += (size_t)js_f64_str(s->buf + s->len, d); }
+void rt_sb_f32(SB *s, float d) { sb_reserve(s, 25); s->len += (size_t)js_f32_str(s->buf + s->len, d); }
+#else
 void rt_sb_f64(SB *s, double d) { char b[64]; fmt_double(b, sizeof b, d); rt_sb_str(s, b); }
 void rt_sb_f32(SB *s, float d) { char b[64]; fmt_fp(b, sizeof b, d, 1); rt_sb_str(s, b); }
+#endif
 void rt_sb_bool(SB *s, _Bool v) { rt_sb_str(s, v ? "true" : "false"); }
 char *rt_sb_done(SB *s) { char *r = s->buf; ((int64_t *)r)[-1] = 1; LK(LK_SB, -1); LK(LK_STR, 1); free(s); return r; }
 
@@ -347,9 +399,13 @@ void rt_list_add(List *l, int64_t v) {
 }
 /* Out-of-line, cold error path of the bounds check: keeps the hot accessors below tiny. */
 __attribute__((noinline, cold, noreturn)) static void bounds_fail(List *l, int64_t i) {
+#ifdef RT_JS
+    js_list_oob(i, l->len);
+#else
     fflush(stdout);
     fprintf(stderr, "Exception in thread \"main\" java.lang.IndexOutOfBoundsException: Index %" PRId64 " out of bounds for length %" PRId64 "\n", i, l->len);
     exit(1);
+#endif
 }
 static inline void bounds(List *l, int64_t i) {
     /* One unsigned compare covers i < 0 and i >= len. */
@@ -456,11 +512,13 @@ void rt_arr_release(void *a) {
     if (--*h == 0) { LK(LK_ARR, -1); rt_gc_mem_free(h); }
 }
 
+#ifndef RT_JS
 void rt_oob(int64_t i, int64_t len) {
     fflush(stdout);
     fprintf(stderr, "Exception in thread \"main\" kotlin.ArrayIndexOutOfBoundsException: Index %" PRId64 " out of bounds for length %" PRId64 "\n", i, len);
     exit(1);
 }
+#endif
 
 // ---- HashMap<primitive|String, primitive>: open addressing, linear probing --------
 // String keys (`skeys`): the slot holds the string pointer (retained by the map), hashed and compared by content.
@@ -564,10 +622,14 @@ int64_t rt_map_get_or(Map *m, int64_t k, int64_t d) { int64_t s = map_slot(m, k)
 int64_t rt_map_get(Map *m, int64_t k) {
     int64_t s = map_slot(m, k);
     if (s < 0) {
+#ifdef RT_JS
+        js_map_no_key(m->skeys, k);
+#else
         fflush(stdout);
         if (m->skeys) fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %s not in map\n", (const char *)(intptr_t)k);
         else fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %" PRId64 " not in map\n", k);
         exit(1);
+#endif
     }
     return m->vals[m->idx[s]];
 }

@@ -248,7 +248,15 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
             d.isNaN() -> "NaN"; d == Double.POSITIVE_INFINITY -> "Infinity"; d == Double.NEGATIVE_INFINITY -> "-Infinity"
             d == 0.0 && 1.0 / d < 0 -> "-0"
             d == kotlin.math.floor(d) && kotlin.math.abs(d) < 1e15 -> d.toLong().toString()
-            else -> d.toString()
+            // Kotlin/Native's Double.toString does not always read back as d (e.g. 2^-25, 2^-1017 or some integers
+            // above 1e17); then d is written exactly as m * 2^e (-1074 <= e <= 971, so 2**e is exact in JS).
+            else -> d.toString().takeIf { it.toDouble() == d } ?: run {
+                val b = d.toRawBits(); val be = ((b ushr 52) and 0x7ff).toInt()
+                var m = if (be == 0) b and 0xfffffffffffffL else b and 0xfffffffffffffL or (1L shl 52)
+                var e = if (be == 0) -1074 else be - 1075
+                while (m and 1L == 0L) { m = m shr 1; e++ }
+                "(" + (if (b < 0) "-" else "") + m + "*2**" + e + ")"
+            }
         }
 
         /** JS expressions for each part of value v of type t. */
