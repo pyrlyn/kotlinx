@@ -66,9 +66,13 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
     run("$cc $cflags '$libc' -o '$libcLl'")
     // The C runtime first: its target datalayout (the program IR has only a triple) becomes the module's.
     run("'$link' -suppress-warnings '$rtLl' '$libcLl' '$ll' '$gcBc' -o '$linked'")
+    // No loop unrolling: V8 tiers up and on-stack-replaces every copy of an unrolled loop separately (main runs once,
+    // its loops reach optimized code through OSR), and the copies cost bundle size.
     run("'$opt' -passes='internalize,scalarizer<load-store>,default<O3>' --internalize-public-api-list=main " +
-        "-vectorize-loops=false -vectorize-slp=false -S '$linked' -o '$optLl'")
-    val js = try { JsBackend.translate(readFile(optLl), readFile(runtimeJs)) { fprintf(stderr, "warning: %s\n", it) } }
+        "-vectorize-loops=false -vectorize-slp=false -disable-loop-unrolling -S '$linked' -o '$optLl'")
+    // LL2JS_PRETTY=1: LLVM names and one statement per line, for reading and profiling the output.
+    val compact = getenv("LL2JS_PRETTY")?.toKString().isNullOrEmpty()
+    val js = try { JsBackend.translate(readFile(optLl), readFile(runtimeJs), compact) { fprintf(stderr, "warning: %s\n", it) } }
         catch (e: CompileError) { cleanup(); fail(e.message ?: "JS backend failed") }
     writeFile(output, js)
     cleanup()

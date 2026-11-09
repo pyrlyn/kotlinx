@@ -144,14 +144,18 @@ function _umulo(a, ah, b, bh) { const p = BigInt.asUintN(64, _big(a, ah)) * BigI
 function _cstr(p) { let e = p; while (U8[e]) e++; let s = ""; for (let k = p; k < e; k += 8192) s += String.fromCharCode.apply(null, U8.subarray(k, Math.min(e, k + 8192))); return s; }
 // Strings handed to C (argv, getenv) live in memory from js_sbrk: the C allocator may be internalized away.
 function _newcstr(s) { const b = new TextEncoder().encode(s); const p = $js_sbrk(b.length + 1); U8.set(b, p); U8[p + b.length] = 0; return p; }
-function $strlen(p) { return U8.indexOf(0, p) - p; }
+// TypedArray indexOf, copyWithin and fill are C++ builtins, slow to enter: strlen loops (C strings are short),
+// memcpy and memset loop up to 16 bytes.
+function $strlen(p) { let e = p; while (U8[e]) e++; return e - p; }
 function $strcmp(a, b) { for (;;) { const x = U8[a++], y = U8[b++]; if (x !== y) return x - y; if (!x) return 0; } }
 function $strncmp(a, b, n) { for (; n > 0; n--) { const x = U8[a++], y = U8[b++]; if (x !== y) return x - y; if (!x) return 0; } return 0; }
 function $memcmp(a, b, n) { for (let k = 0; k < n >>> 0; k++) { const x = U8[a + k], y = U8[b + k]; if (x !== y) return x - y; } return 0; }
-var $bcmp = $memcmp;
-function $memcpy(d, s, n) { U8.copyWithin(d, s, s + (n >>> 0)); return d; }
-var $memmove = $memcpy;
-function $memset(d, v, n) { U8.fill(v, d, d + (n >>> 0)); return d; }
+// $bcmp and $memmove are functions, not aliases (var): JsBackend.usedRuntime keeps every var and what it names.
+function $bcmp(a, b, n) { return $memcmp(a, b, n); }
+// memmove semantics (overlap allowed); n is a size_t
+function $memcpy(d, s, n) { if (n >>> 0 > 16 || d > s && d < s + n) U8.copyWithin(d, s, s + n | 0); else for (let k = 0; k < n; k++) U8[d + k] = U8[s + k]; return d; }
+function $memset(d, v, n) { if (n >>> 0 > 16) U8.fill(v, d, d + n | 0); else for (let k = 0; k < n; k++) U8[d + k] = v; return d; }
+function $memmove(d, s, n) { return $memcpy(d, s, n); }
 function $memchr(p, c, n) { const k = U8.subarray(p, p + (n >>> 0)).indexOf(c & 255); return k < 0 ? 0 : p + k; }
 function $strchr(p, c) { c &= 255; for (;; p++) { const x = U8[p]; if (x === c) return p; if (!x) return 0; } }
 function $atoi(p) { return parseInt(_cstr(p), 10) | 0; }

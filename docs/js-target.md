@@ -23,7 +23,9 @@ collector as the native target, so programs behave the same (same output, same c
    -p zig-out/wasm32-wasi` in `native/gc/zig`; `bin/newkotlinc` builds it; `$NEWKOTLIN_GC_ZIG_WASM_LIB_DIR` overrides
    the directory). The bitcode is ReleaseSmall (about 12% less JavaScript); the collector's hot helpers
    (`PtrStack.push`, the trial-deletion claims) are `inline fn`, so it runs as fast as ReleaseFast.
-4. `opt -passes='internalize,scalarizer<load-store>,default<O3>'` with only `main` exported and vectorizers off.
+4. `opt -passes='internalize,scalarizer<load-store>,default<O3>'` with only `main` exported, vectorizers off and no
+   loop unrolling (`main` runs once, so its loops reach optimized code through on-stack replacement, which V8 does
+   for each unrolled copy separately; the copies also cost size).
 5. `compiler/src/backend/js`: `LlParser.kt` reads the IR text, `JsGen.kt` emits one JS function per LLVM function,
    `JsBackend.kt` prepends the parts of `compiler/runtime/js/runtime.js` the code uses and appends the data
    segment (base64) and the start call.
@@ -36,8 +38,8 @@ collector as the native target, so programs behave the same (same output, same c
   `JsBackend.usedRuntime` keeps only the `runtime.js` functions the translated code (and `_start`) reaches.
 - Compact by default: defined functions get short names (`$a`, `$b`, ...), function bodies have no line breaks, and
   `runtime.js` loses its comments and indentation. Locals are declared once per function (`let a,b,...;`, no
-  initializers). `JsBackend.translate(compact = false)` keeps LLVM names and one statement per line, for
-  profiling.
+  initializers). `JsBackend.translate(compact = false)` (`LL2JS_PRETTY=1` in the environment of `newkotlinc`) keeps
+  LLVM names and one statement per line, for profiling.
 - The data segment holds initialized globals only: zero-initialized globals are laid out last (like `.bss`) and the
   trailing zeros are not emitted (the heap starts zeroed).
 - A minifier (`bun build --minify`, esbuild, terser) still saves 20-25% (it renames the remaining locals).
@@ -50,9 +52,13 @@ collector as the native target, so programs behave the same (same output, same c
   and so drops V8's optimized code that embeds them.
 - `i64` is a pair of int32 words (extra parts are returned through `H`, `H1`, ...); helpers in `runtime.js`
   do `mul`/`div`/shifts. Results whose high word is always 0 (zext from 32 bits, masks) carry a literal `0`, and
-  compares against such values become one 32-bit compare. Other odd widths (`i65`, `i128`, ...) are `BigInt`.
+  compares against such values become one 32-bit compare. An `i64` load used only by compares in its block (and by
+  the `rt_oob` call of a failed one) keeps only its low word in a variable and re-reads the high word at each use,
+  after the low-word test: a Kotlin array bounds check against the reloaded `i64` length then usually reads one
+  word. Other odd widths (`i65`, `i128`, ...) are `BigInt`.
 - `memcpy`/`memmove`/`memset` of a small constant length become inline loads and stores (all loads first, so
-  overlapping `memmove` is correct); longer ones use `copyWithin`/`fill`. 64-bit `udiv`/`urem` whose operands fit
+  overlapping `memmove` is correct); others call `runtime.js` `memcpy`/`memset`, which loop up to 16 bytes and use
+  `copyWithin`/`fill` (C++ builtins, slow to enter) above. 64-bit `udiv`/`urem` whose operands fit
   in 32 bits take a fast path in `runtime.js`.
 - Control flow is structured with Ramsey's algorithm ("Beyond Relooper", labeled blocks and loops). Loop exits
   are placed after their loop, so V8's on-stack-replaced code for an inner loop is not deoptimized each time the
