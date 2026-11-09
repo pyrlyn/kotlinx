@@ -440,6 +440,11 @@ void rt_list_release_owned(List *l, void *obj) {
 
 void *rt_arr_new(int64_t n, int64_t elem) {
     if (n < 0) rt_panic("NegativeArraySizeException");
+#ifdef RT_SIZE_CHECK
+    /* --target=js: the heap is below 2 GB, and a byte size beyond 32-bit size_t (or near it: libc.c rounds chunk
+     * sizes up) would wrap around to a small allocation. */
+    if ((uint64_t)n > (SIZE_MAX / 2 - 16) / (uint64_t)elem) rt_panic("OutOfMemoryError");
+#endif
     int64_t *p = rt_gc_mem_calloc(16 + (size_t)n * (size_t)elem); /* { rc, length, elements } */
     if (!p) rt_panic("OutOfMemoryError");
     p[0] = 1; p[1] = n; LK(LK_ARR, 1);

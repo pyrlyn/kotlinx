@@ -12,9 +12,11 @@ collector as the native target, so programs behave the same (same output, same c
    paths work on the halves of the 64-bit object header (the count at offset 0, a traced object's color and
    buffered bits at offset 4), one int32 operation each; the layout is the native one.
 2. `zig cc -target wasm32-wasi -S -emit-llvm -O2 -g0 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC
-   -DRT_LEAN_EXIT` (or `$NK_WASM_CC`) on `compiler/runtime/runtime.c` and `compiler/runtime/js/libc.c` (wasi-libc
-   headers; malloc/free on one growable heap, qsort, the stdio handles). `RT_LEAN_EXIT` drops the `KX_GC_STATS`
-   report and the final collection at exit, so a program that never collects does not carry the cycle collector.
+   -DRT_LEAN_EXIT -DRT_SIZE_CHECK` (or `$NK_WASM_CC`) on `compiler/runtime/runtime.c` and
+   `compiler/runtime/js/libc.c` (wasi-libc headers; malloc/free on one growable heap, qsort, the stdio handles).
+   `RT_LEAN_EXIT` drops the `KX_GC_STATS` report and the final collection at exit, so a program that never collects
+   does not carry the cycle collector. `RT_SIZE_CHECK` makes an array of 2 GB or more an `OutOfMemoryError`
+   instead of a byte size that wraps around the 32-bit `size_t` to a small allocation.
    The runtime's datalayout gets native integer width `n32` only, so opt keeps loop counters in `i32`.
 3. `llvm-link` the runtime, libc, program and the Zig collector's wasm32 bitcode
    `native/gc/zig/zig-out/wasm32-wasi/lib/libgc-<gc>.bc` (`zig build gc-bc -Dgc=<gc> -Dtarget=wasm32-wasi
@@ -65,6 +67,7 @@ collector as the native target, so programs behave the same (same output, same c
 - LLVM `opt` and `llvm-link` 22 or newer (they read the Zig 0.17.1 bitcode). `--opt`, then `$NK_OPT` if it is new
   enough (it usually pins the native target's opt to the C compiler's LLVM), then the usual search
   ([toolchain.md](toolchain.md)). `llvm-link` is taken from the same directory as `opt`.
+- `zig cc` (or `$NK_WASM_CC`, or `--cc`) compiling for wasm32-wasi; another target is rejected.
 - Collector: `incremental` by default; `perceus` and `rc` also work. `epoch` needs a background thread and is rejected.
 - Not supported: `--leak-check`, `--link`. Threads do not exist; `runBlocking`/coroutines run on the single-threaded
   scheduler as on native.

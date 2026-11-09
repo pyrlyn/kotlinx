@@ -50,12 +50,19 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
     writeFile(ll, ir.replace("declare i1 @llvm.coro.end(", "declare void @llvm.coro.end(")
         .replace(Regex("""%[\w.]+ = call i1 @llvm\.coro\.end\("""), "call void @llvm.coro.end("))
     // -O2 without vectorization (JS has no SIMD) and without debug info (zig cc emits it by default);
-    // RT_PLAIN_MALLOC: libc.c's allocator, not mimalloc; RT_LEAN_EXIT: no GC statistics and no final collection.
-    val cflags = "-S -emit-llvm -O2 -g0 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC -DRT_LEAN_EXIT -I'$gcDir' $gcFlags"
+    // RT_PLAIN_MALLOC: libc.c's allocator, not mimalloc; RT_LEAN_EXIT: no GC statistics and no final collection;
+    // RT_SIZE_CHECK: arrays of 2 GB or more fail (OutOfMemoryError) instead of wrapping around the 32-bit size_t.
+    val cflags = "-S -emit-llvm -O2 -g0 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC -DRT_LEAN_EXIT -DRT_SIZE_CHECK -I'$gcDir' $gcFlags"
     run("$cc $cflags '$runtime' -o '$rtLl'")
+    val rtIr = readFile(rtLl)
+    // The program IR is wasm32's (LlvmTarget.JS32); runtime.c built for another target (--cc) would link into a
+    // mismatched layout without an error.
+    if (!Regex("""(?m)^target triple = "wasm32-""").containsMatchIn(rtIr)) {
+        cleanup(); fail("--target=js needs a C compiler for wasm32-wasi (default `zig cc -target wasm32-wasi`, or \$NK_WASM_CC); `$cc` is not")
+    }
     // Native integer widths 32 only (not n32:64): opt then keeps loop counters in i32 instead of widening them
     // to i64, which JS has to emulate with two words.
-    writeFile(rtLl, readFile(rtLl).replaceFirst(Regex("""(?m)^(target datalayout = "[^"]*)-n32:64-"""), "$1-n32-"))
+    writeFile(rtLl, rtIr.replaceFirst(Regex("""(?m)^(target datalayout = "[^"]*)-n32:64-"""), "$1-n32-"))
     run("$cc $cflags '$libc' -o '$libcLl'")
     // The C runtime first: its target datalayout (the program IR has only a triple) becomes the module's.
     run("'$link' -suppress-warnings '$rtLl' '$libcLl' '$ll' '$gcBc' -o '$linked'")
