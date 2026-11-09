@@ -45,6 +45,8 @@ collector as the native target, so programs behave the same (same output, same c
   in `JsGen.kt`): fewer, recurring names, so gzip matches inlined copies of the same code. Constant-offset addresses (a field of an object in a variable) are
   inlined into every load and store and folded into the heap index (`I32[p+20>>2]`). `JsBackend.translate(compact = false)` (`LL2JS_PRETTY=1` in the environment of `newkotlinc`) keeps
   LLVM names and one statement per line, for profiling.
+- `--minify` runs esbuild or bun (`NK_MINIFIER`, else whichever is on `PATH`) over the output: about 21% smaller
+  raw and about 14% smaller gzipped on the bench cases (mostly runtime.js locals and expression rewrites).
 - The data segment holds initialized globals only: zero-initialized globals are laid out last (like `.bss`) and the
   trailing zeros are not emitted (the heap starts zeroed).
 - A minifier (`bun build --minify`, esbuild, terser) still saves 20-25% (it renames the remaining locals).
