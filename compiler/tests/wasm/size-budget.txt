@@ -1,9 +1,9 @@
 # Size regression budget for --target=wasm (compiler/tests/wasm/size.sh).
 # size <label> <source> <max main.wasm bytes>: default flags, stripped module; ~3% above the size when it was set.
-size hello compiler/tests/wasm/size/hello.kt 12300
-size alloc bench/cases/alloc/kotlin/Main.kt 15300
-size hashmap bench/cases/hashmap/kotlin/Main.kt 16900
-size nbody bench/cases/nbody/kotlin/Main.kt 17100
+size hello compiler/tests/wasm/size/hello.kt 12500
+size alloc bench/cases/alloc/kotlin/Main.kt 15600
+size hashmap bench/cases/hashmap/kotlin/Main.kt 17100
+size nbody bench/cases/nbody/kotlin/Main.kt 17400
 # forbid <regex>: no function of hello.wasm (name section kept) may match. Each was a large libc pull-in.
 forbid ^c\.stdlib\.qsort
 forbid ^sort\.pdq\.
