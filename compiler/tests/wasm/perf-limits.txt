@@ -4,4 +4,5 @@
 # the ratio measured when each check was added is in the comment above it.
 # --alloc pool (wasm default) against wasi-libc malloc: 0.50x on bigheap, 0.82x on alloc (Apple M3 Max, node 26).
 pool-bigheap bigheap default malloc 0.75
-pool-alloc alloc default malloc 1.00
+# pool-alloc: 0.79-1.03x on the hosted macos-15 runner, so its limit only catches a large regression.
+pool-alloc alloc default malloc 1.20

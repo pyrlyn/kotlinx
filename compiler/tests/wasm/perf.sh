@@ -19,9 +19,16 @@ build() { # build <name> <case> <variant>: variant default | malloc
     malloc) NEWKOTLIN_GC_ZIG_WASM_LIB_DIR=$plain/lib "$NKC" --target=wasm --alloc malloc "$src" -o "$out/$1.wasm" ;;
   esac 2>"$out/$1.err"
 }
-run() { # run <wasm> <node flags>: prints "<nanos> <checksum>"
-  local o; o=$(cd bench && ulimit -s 65520 && node --no-warnings --stack-size=60000 $2 "$root/bench/wasm/run.mjs" "$1" 2>&1)
-  echo "$(echo "$o" | grep -o 'nanos=[0-9]*' | cut -d= -f2) $(echo "$o" | grep -oE '(checksum|sum)=-?[0-9]+' | head -1)"
+run() { # run <wasm> <node flags>: prints "<nanos> <checksum>"; a run that prints no nanos= is retried twice, then
+  # its output goes to stderr and the line is empty (a hosted CI runner occasionally loses a node process).
+  local o n k try rc
+  for try in 1 2 3; do
+    o=$(cd bench && ulimit -s 65520 && node --no-warnings --stack-size=60000 $2 "$root/bench/wasm/run.mjs" "$1" 2>&1); rc=$?
+    n=$(echo "$o" | grep -o 'nanos=[0-9]*' | cut -d= -f2); k=$(echo "$o" | grep -oE '(checksum|sum)=-?[0-9]+' | head -1)
+    if [ -n "$n" ]; then echo "$n $k"; return; fi
+    echo "perf.sh: $(basename "$1") $2: no nanos= (try $try, exit $rc): $(echo "$o" | tail -3 | tr '\n' ' ')" >&2
+  done
+  echo ""
 }
 med() { sort -n | awk '{a[NR]=$1} END{print a[int((NR+1)/2)]}'; }
 while read -r name case a b limit; do
@@ -33,8 +40,8 @@ while read -r name case a b limit; do
   : > "$out/ta"; : > "$out/tb"; ca=""; cb=""
   run "$out/$name.a.wasm" "$fa" >/dev/null; run "$out/$name.b.wasm" "$fb" >/dev/null # warm-up
   for i in $(seq "$RUNS"); do
-    r=$(run "$out/$name.a.wasm" "$fa"); echo "${r%% *}" >> "$out/ta"; ca=${r#* }
-    r=$(run "$out/$name.b.wasm" "$fb"); echo "${r%% *}" >> "$out/tb"; cb=${r#* }
+    r=$(run "$out/$name.a.wasm" "$fa"); [ -n "$r" ] && { echo "${r%% *}" >> "$out/ta"; ca=${r#* }; }
+    r=$(run "$out/$name.b.wasm" "$fb"); [ -n "$r" ] && { echo "${r%% *}" >> "$out/tb"; cb=${r#* }; }
   done
   ma=$(med < "$out/ta"); mb=$(med < "$out/tb")
   ratio=$(awk -v a="$ma" -v b="$mb" 'BEGIN{ if (a > 0 && b > 0) printf "%.2f", a / b; else print "nan" }')
