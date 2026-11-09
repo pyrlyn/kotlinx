@@ -2,7 +2,7 @@
 
 ```bash
 bin/newkotlinc --target jvm hello.kt -o hello
-./hello                      # or: java -XX:-DontCompileHugeMethods -jar hello
+./hello                      # or: java <the launcher's JVM options> -jar hello
 ```
 
 The output is one self-contained executable jar: a `#!/bin/sh` launcher line followed by the jar (class `Main`, the
@@ -26,8 +26,25 @@ The jvm target reuses the native pipeline up to LLVM IR and translates the optim
      example the closed form of `n*(n-1)/2`. A `trunc` back to 64 bits or fewer evaluates their expression tree on
      (lo, hi) pairs of longs, using the `KxRt.w*` helpers. Any other use of a wide value is a compile error.
    - libc and libm calls go to static methods of `runtime/jvm/KxRt.java`: malloc, stdio, strtod, time and math.
-     `KxRt` is compiled once with `javac` and cached in `compiler/build/jvm-runtime`.
-4. `jar` packs the classes. The manifest exports `jdk.internal.misc` to the program.
+     `KxRt` is compiled once with `javac` and cached in `compiler/build/jvm-runtime`. `memcpy` and `memset` of a
+     small constant size are inlined as word loads and stores.
+   - Loops nested two or more deep are outlined into methods of their own (`LoopOutline.kt`). The values a loop
+     uses come in as parameters. The values it defines and the code after it uses come back as the return value,
+     or through private static fields. The reason is HotSpot's on-stack replacement: a long-running loop is
+     compiled with its header as the entry. In a nest, that header is an inner one, so the outer loops become
+     irreducible and C2 optimizes them poorly. An outlined loop instead gets an ordinary compilation, entered from
+     its first instruction.
+   - A bounds check, i.e. a branch to `rt_oob(index, length)` on an unsigned compare, becomes
+     `jdk.internal.util.Preconditions.checkIndex`. C2 intrinsifies it and removes it from counted loops (range
+     check elimination), which it does not do for an explicit compare. A failed check throws `KxRt.Oob`.
+     `Main.run`, the program thread's entry, catches it and calls `rt_oob`, which prints the same message as native
+     and exits.
+4. `jar` packs the classes. The manifest exports `jdk.internal.misc` (Unsafe) and `jdk.internal.util`
+   (Preconditions) to the program.
+5. The launcher runs `java -XX:-DontCompileHugeMethods` (translated functions can be large), plus
+   `-XX:CompileCommand=CompileThresholdScaling,Main::*,0.05`. That compiles the program's methods after 1/20 of the
+   usual invocation and loop counts: short programs otherwise spend most of their time in the interpreter and in
+   C1 code.
 
 Defaults differ from native:
 
@@ -36,7 +53,7 @@ Defaults differ from native:
 - `--alloc pool`: malloc is KxRt's size-class allocator.
 
 `--link` accepts C sources only, because they have to go through LLVM IR too. `--emit-llvm` keeps `<out>.ll` (the
-linked module) and `<out>.opt.ll` (the module the backend translates).
+program's IR), `<out>.linked.bc` (the linked module) and `<out>.opt.ll` (the module the backend translates).
 
 The tool versions must match. `opt` and `llvm-link` must not be newer than `clang`, since the IR from a newer LLVM
 uses a different `llvm.coro.end` signature. `bin/newkotlinc` takes `opt` from `mise.toml` (LLVM 21).

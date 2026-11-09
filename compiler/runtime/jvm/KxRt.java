@@ -66,6 +66,19 @@ public final class KxRt {
         }
     }
 
+    /**
+     * Failed Kotlin bounds check. The translator turns `if (i <u len) ... else rt_oob(i, len)` into
+     * jdk.internal.util.Preconditions.checkIndex(i, len, OOB), which the JIT compiles to an intrinsic range check
+     * (eliminated or hoisted out of loops); on failure this factory records the operands, and Main.run() catches the
+     * exception and calls the program's rt_oob with them (same message and exit status as the native target).
+     */
+    public static final class Oob extends RuntimeException implements java.util.function.BiFunction<String, java.util.List<Number>, Oob> {
+        Oob() { super(null, null, false, false); }
+        public Oob apply(String check, java.util.List<Number> args) { oobIndex = args.get(0).longValue(); oobLength = args.get(1).longValue(); return this; }
+    }
+    public static final Oob OOB = new Oob();
+    public static long oobIndex, oobLength;
+
     public static RuntimeException unreachable() { flushAll(); return new IllegalStateException("unreachable code reached"); }
     public static RuntimeException trap() { flushAll(); return new IllegalStateException("trap"); }
     public static RuntimeException badCall(long fn) { flushAll(); return new IllegalStateException("bad indirect call to function id " + fn); }
@@ -143,9 +156,25 @@ public final class KxRt {
 
     // ------------------------------------------------------------------ memory and strings
 
-    public static long memcpy(long d, long s, long n) { U.copyMemory(s, d, n); return d; }
-    public static long memmove(long d, long s, long n) { U.copyMemory(s, d, n); return d; }
-    public static long memset(long d, int c, long n) { U.setMemory(d, n, (byte) c); return d; }
+    /* Small sizes stay in Java (word loop): Unsafe.copyMemory/setMemory are VM calls with a fixed cost per use. */
+    public static long memcpy(long d, long s, long n) { if (n <= 64) copySmall(d, s, n); else U.copyMemory(s, d, n); return d; }
+    public static long memmove(long d, long s, long n) {
+        if (n <= 64 && (d <= s || d >= s + n)) copySmall(d, s, n); // a forward copy is overlap-safe when d <= s
+        else U.copyMemory(s, d, n); // conjoint: handles overlap
+        return d;
+    }
+    private static void copySmall(long d, long s, long n) {
+        long i = 0;
+        for (; i + 8 <= n; i += 8) U.putLong(d + i, U.getLong(s + i));
+        for (; i < n; i++) U.putByte(d + i, U.getByte(s + i));
+    }
+    public static long memset(long d, int c, long n) {
+        if (n > 64) { U.setMemory(d, n, (byte) c); return d; }
+        long p = (c & 0xFFL) * 0x0101010101010101L, i = 0;
+        for (; i + 8 <= n; i += 8) U.putLong(d + i, p);
+        for (; i < n; i++) U.putByte(d + i, (byte) c);
+        return d;
+    }
     public static int memcmp(long a, long b, long n) {
         for (long i = 0; i < n; i++) { int x = U.getByte(a + i) & 0xFF, y = U.getByte(b + i) & 0xFF; if (x != y) return x - y; }
         return 0;
