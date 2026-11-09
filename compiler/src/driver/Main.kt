@@ -8,7 +8,7 @@ import platform.posix.*
 private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --target <t>         native (default; LLVM, native binary), js (JavaScript for node, via wasm32 LLVM IR; Zig GC
                        bitcode from the wasm32-wasi lib directory below), wasm (same LLVM IR for wasm32-wasi,
-                       linked with ${'$'}NK_WASM_CC or `zig cc -target wasm32-wasi`; GC perceus, --alloc malloc; Zig GC
+                       linked with ${'$'}NK_WASM_CC or `zig cc -target wasm32-wasi`; GC perceus, --alloc pool; Zig GC
                        archives from native/gc/zig/zig-out/wasm32-wasi/lib or ${'$'}NEWKOTLIN_GC_ZIG_WASM_LIB_DIR),
                        jvm (executable jar; LLVM IR translated to JVM
                        bytecode, needs java 21+; GC perceus, --gc-runtime c, --alloc pool)
@@ -125,11 +125,12 @@ fun main(args: Array<String>) {
     if (gc == null) gc = if (wasm) WASM_GC else if (target == Target.JS) JS_DEFAULT_GC else DEFAULT_GC
     if (gc == "default") gc = DEFAULT_GC // "default" names whatever the default collector is (epoch); old one: perceus
     if (gcRuntime == null) gcRuntime = "zig"
-    if (alloc == null) alloc = if (wasm) "malloc" else "mimalloc"
+    // wasm: the size-class pool, not wasi-libc malloc, which was up to 2x slower on allocation-heavy programs.
+    if (alloc == null) alloc = if (wasm) "pool" else "mimalloc"
     if (wasm) {
         llvmTarget = LlvmTarget.WASM32
         val bad = when {
-            alloc == "mimalloc" -> "--target=wasm supports --alloc malloc or pool"
+            alloc == "mimalloc" -> "--target=wasm supports --alloc pool or malloc"
             gc == DEFAULT_GC -> "--target=wasm has no threads for the $gc collector; use --gc perceus, incremental or rc"
             links.isNotEmpty() -> "--target=wasm does not support --link"
             else -> null

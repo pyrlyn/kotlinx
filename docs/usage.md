@@ -49,7 +49,8 @@ wasm32 triple and data layout, 32-bit `size_t`/`long` for libc calls, entry `__m
 engine's GC. Defaults and limits:
 
 - `--gc perceus` (synchronous cycle collection; `incremental` and `rc` also work; `epoch` needs threads),
-  `--alloc malloc` (wasi-libc) or `pool`; no `--link`.
+  `--alloc pool` (default: size-class free lists on 64 KB slabs for objects; 1.2-2x faster than wasi-libc malloc
+  on allocation-heavy programs, bigheap 399 -> 200 ms) or `malloc` (wasi-libc); no `--link`.
 - `--gc-runtime=zig` (default) links the Zig collectors built for wasm32-wasi:
   `native/gc/zig/zig-out/wasm32-wasi/lib/libgc-<name>.a` (or `$NEWKOTLIN_GC_ZIG_WASM_LIB_DIR`), a separate prefix
   so the host archives in `zig-out/lib` stay intact. `bin/newkotlinc --target=wasm` rebuilds them like the host
@@ -66,7 +67,8 @@ Golden tests on wasm: `compiler/tests/wasm/run.sh` (233 of 234 pass; `coroutine_
 `kxCoStart` does not keep its function value alive, a use-after-free that also crashes native builds with
 `--alloc malloc --gc=perceus`; listed in `compiler/tests/wasm/known-failures.txt`, reported as XFAIL).
 Module size: `compiler/tests/wasm/size.sh` checks the budgets and forbidden libc functions in
-`compiler/tests/wasm/size-budget.txt`. CI runs both.
+`compiler/tests/wasm/size-budget.txt`. Performance: `compiler/tests/wasm/perf.sh` compares two builds or engine
+settings of a benchmark under node and checks the ratio against `compiler/tests/wasm/perf-limits.txt`. CI runs all three.
 
 Benchmarks against JetBrains Kotlin/Wasm: `bench/wasm/build.sh && bench/wasm/run.py` (results in
 `bench/results/wasm/table.md`).
