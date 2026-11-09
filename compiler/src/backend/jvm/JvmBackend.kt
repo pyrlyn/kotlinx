@@ -137,9 +137,31 @@ class JvmBackend(private val ir: String, private val className: String, private 
                     else -> err("negated address constant")
                 }
             }
+            "icmp" -> Sym(null, if (icmpConst(v.pred!!, v.args[0], v.args[1])) 1 else 0)
             else -> err("unsupported constant expression ${v.op}")
         }
         else -> err("unsupported constant $v")
+    }
+
+    /**
+     * Folds an `icmp` constant expression. All globals live in one block, so two addresses in it compare like their
+     * offsets, and an address in it differs from every constant (null, a function id).
+     */
+    private fun icmpConst(pred: String, a: TV, b: TV): Boolean {
+        val x = sym(a); val y = sym(b)
+        val cmp = when {
+            x.global != null && y.global != null -> (gOff[x.global]!! + x.add).compareTo(gOff[y.global]!! + y.add)
+            x.global != null || y.global != null ->
+                if (pred == "eq" || pred == "ne") return pred == "ne" else err("ordered comparison of an address with a constant")
+            pred[0] == 'u' -> { val n = bits(a.t); val m = if (n >= 64) -1L else (1L shl n) - 1; (x.add and m).toULong().compareTo((y.add and m).toULong()) }
+            else -> { val n = bits(a.t); truncTo(x.add, n).compareTo(truncTo(y.add, n)) }
+        }
+        return when (pred) {
+            "eq" -> cmp == 0; "ne" -> cmp != 0
+            "ult", "slt" -> cmp < 0; "ule", "sle" -> cmp <= 0
+            "ugt", "sgt" -> cmp > 0; "uge", "sge" -> cmp >= 0
+            else -> err("unknown icmp predicate $pred")
+        }
     }
 
     private fun truncTo(v: Long, bits: Int) = if (bits >= 64) v else (v shl (64 - bits)) shr (64 - bits)

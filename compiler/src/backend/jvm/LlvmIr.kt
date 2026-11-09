@@ -47,7 +47,8 @@ class CFloat(val v: Double) : LValue() { override fun toString() = "$v" }
 object CZero : LValue() { override fun toString() = "zero" }
 class CAgg(val elems: List<TV>) : LValue()                    // struct / array / vector constant
 class CBytes(val bytes: ByteArray) : LValue()                  // c"..."
-class CExpr(val op: String, val args: List<TV>, val to: LType? = null, val srcElem: LType? = null) : LValue() {
+/** A constant expression; [pred] is the predicate of an `icmp`. */
+class CExpr(val op: String, val args: List<TV>, val to: LType? = null, val srcElem: LType? = null, val pred: String? = null) : LValue() {
     override fun toString() = "$op(${args.joinToString()})"
 }
 
@@ -327,6 +328,12 @@ class IrParser(src: String) {
                     p++; while (t.k == TK.WORD && t.s in INST_FLAGS) p++
                     expectP("("); val a = typedValue(); expectP(","); val b = typedValue(); expectP(")")
                     CExpr(w, listOf(a, b))
+                }
+                // LLVM 18 and older (removed in 19), e.g. the addresses of two globals compared
+                "icmp" -> {
+                    p++; val pred = word()
+                    expectP("("); val a = typedValue(); expectP(","); val b = typedValue(); expectP(")")
+                    CExpr(w, listOf(a, b), pred = pred)
                 }
                 else -> err("unsupported constant '$w'")
             }
