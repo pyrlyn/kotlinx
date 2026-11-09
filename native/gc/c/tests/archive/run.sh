@@ -13,7 +13,10 @@ cd "$(dirname "$0")/../../../../.."
 export NEWKOTLIN_GC_RUNTIME=c
 NKC=${NKC:-compiler/build/newkotlinc.kexe}
 [ -x "$NKC" ] || compiler/build.sh >/dev/null
-CC=${NK_CC:-$( [ -x /usr/bin/clang ] && echo /usr/bin/clang || echo clang )}
+. compiler/tests/toolchain.sh
+kx_require_free_space || exit 1
+kx_wrap_toolchain || exit 1
+CC=$NK_CC
 gcs=${GCS:-$(for d in native/gc/c/*/gc.c; do basename "$(dirname "$d")"; done)}
 out=compiler/build/gc-tmp; rm -rf "$out"; mkdir -p "$out"; fail=0
 for g in $gcs; do
@@ -123,4 +126,5 @@ fi
 # Selecting an unknown implementation is a compile error.
 if "$NKC" --gc=nope native/gc/c/tests/kt/reuse.kt -o "$out/nope" 2>/dev/null; then echo "FAIL gc-unknown"; fail=1; else echo "PASS gc-unknown"; fi
 rm -rf "$out"
+kx_report_retries
 [ $fail -eq 0 ] && echo "GC ALL PASSED" || { echo "GC FAILED"; exit 1; }

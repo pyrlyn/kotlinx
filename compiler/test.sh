@@ -5,9 +5,13 @@ set -u
 cd "$(dirname "$0")/.."
 NKC=${NKC:-compiler/build/newkotlinc.kexe}
 [ -x "$NKC" ] || compiler/build.sh >/dev/null
+. compiler/tests/toolchain.sh
+kx_require_free_space || exit 1
+kx_wrap_toolchain || exit 1
 [ -f bench/data/words.txt ] || python3 bench/gen_data.py >/dev/null
 out=compiler/build/test-tmp; rm -rf "$out"; mkdir -p "$out"; fail=0
 check() { if [ "$2" = "$3" ]; then echo "PASS $1"; else echo "FAIL $1: expected '$3', got '$2'"; fail=1; fi; }
+compiler/tests/toolchain-retry-test.sh || fail=1
 # Golden tests run with --leak-check: the report lines are filtered from the output, and a program that ends normally
 # must exit 0 (exit 3 = live objects at exit). Programs that end with an uncaught exception are exempt from the leak
 # gate (unwinding to the top leaves the exception and its frames' objects live by design).
@@ -145,4 +149,5 @@ else
   ( cd native/gc/c/tests/zig && zig build mt ) || fail=1
 fi
 rm -rf "$out"
+kx_report_retries
 [ $fail = 0 ] && echo "ALL PASSED" || { echo "SOME FAILED"; exit 1; }
