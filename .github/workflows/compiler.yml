@@ -2,10 +2,10 @@
 name: compiler
 on:
   pull_request:
-    paths: ["compiler/**", "native/gc/**", "bench/gc", "bin/newkotlinc", ".github/workflows/compiler.yml"]
+    paths: ["compiler/**", "native/gc/**", "bench/gc", "bench/wasm/**", "bin/newkotlinc", ".github/workflows/compiler.yml"]
   push:
     branches: [main]
-    paths: ["compiler/**", "native/gc/**", "bench/gc", "bin/newkotlinc", ".github/workflows/compiler.yml"]
+    paths: ["compiler/**", "native/gc/**", "bench/gc", "bench/wasm/**", "bin/newkotlinc", ".github/workflows/compiler.yml"]
 concurrency:
   group: compiler-${{ github.ref }}
   cancel-in-progress: true
@@ -47,6 +47,9 @@ jobs:
         run: NEWKOTLIN_KN_FLAGS=-opt compiler/build.sh
       - name: compiler/test.sh
         run: compiler/test.sh
+      # --target=wasm: golden tests under node's WASI and the module size budget (compiler/tests/wasm).
+      - name: Wasm golden and size tests
+        run: compiler/tests/wasm/run.sh && compiler/tests/wasm/size.sh
       - name: Upstream tests
         run: python3 compiler/tests/upstream/run.py --nkc compiler/build/newkotlinc.kexe --jobs 3
       - name: Upstream tests under --leak-check (report only)

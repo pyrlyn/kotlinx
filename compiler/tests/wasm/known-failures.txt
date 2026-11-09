@@ -1,0 +1,4 @@
+# Golden tests that are known to fail on --target=wasm (compiler/tests/wasm/run.sh reports them as XFAIL).
+# coroutine_cps_core: kxCoStart does not retain its function value, a use-after-free that also crashes the native
+# build with --alloc malloc --gc=perceus (docs/usage.md, Wasm target).
+coroutine_cps_core

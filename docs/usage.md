@@ -61,7 +61,9 @@ engine's GC. Defaults and limits:
 
 Golden tests on wasm: `compiler/tests/wasm/run.sh` (233 of 234 pass; `coroutine_cps_core` fails because
 `kxCoStart` does not keep its function value alive, a use-after-free that also crashes native builds with
-`--alloc malloc --gc=perceus`).
+`--alloc malloc --gc=perceus`; listed in `compiler/tests/wasm/known-failures.txt`, reported as XFAIL).
+Module size: `compiler/tests/wasm/size.sh` checks the budgets and forbidden libc functions in
+`compiler/tests/wasm/size-budget.txt`. CI runs both.
 
 Benchmarks against JetBrains Kotlin/Wasm: `bench/wasm/build.sh && bench/wasm/run.py` (results in
 `bench/results/wasm/table.md`).
