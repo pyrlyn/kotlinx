@@ -65,7 +65,9 @@ static void *kx_alloc(size_t n) {
 
 void *malloc(size_t n) { return kx_alloc(n); }
 
-void free(void *p) {
+// free and realloc stay out of line: inlined, their 64-bit size arithmetic was copied into every release function,
+// map update and string append (the JIT still inlines the hot calls).
+__attribute__((noinline)) void free(void *p) {
     if (!p) return;
     size_t c = *hdr(p);
     void **l = c <= SMALL_MAX ? &free_small[c >> 4] : &free_large[log2_floor(c)];
@@ -81,7 +83,7 @@ void *calloc(size_t n, size_t m) {
     return p;
 }
 
-void *realloc(void *p, size_t n) {
+__attribute__((noinline)) void *realloc(void *p, size_t n) {
     if (!p) return kx_alloc(n);
     size_t c = *hdr(p);
     if (chunk_of(n) <= c) return p;

@@ -48,7 +48,7 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
         .replace(Regex("""%[\w.]+ = call i1 @llvm\.coro\.end\("""), "call void @llvm.coro.end("))
     // -O2 without vectorization (JS has no SIMD); RT_PLAIN_MALLOC: libc.c's allocator, not mimalloc;
     // RT_LEAN_EXIT: no GC statistics and no final collection.
-    val cflags = "-S -emit-llvm -O2 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC -DRT_LEAN_EXIT -I'$gcDir' $gcFlags"
+    val cflags = "-S -emit-llvm -O2 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC -DRT_LEAN_EXIT -DRT_JS -I'$gcDir' $gcFlags"
     run("$cc $cflags '$runtime' -o '$rtLl'")
     // Native integer widths 32 only (not n32:64): opt then keeps loop counters in i32 instead of widening them
     // to i64, which JS has to emulate with two words.

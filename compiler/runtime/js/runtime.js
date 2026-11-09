@@ -145,9 +145,9 @@ function $strlen(p) { H = 0; return U8.indexOf(0, p) - p; }
 function $strcmp(a, b) { for (;;) { const x = U8[a++], y = U8[b++]; if (x !== y) return x - y; if (!x) return 0; } }
 function $strncmp(a, b, n) { for (; n > 0; n--) { const x = U8[a++], y = U8[b++]; if (x !== y) return x - y; if (!x) return 0; } return 0; }
 function $memcmp(a, b, n) { for (let k = 0; k < n >>> 0; k++) { const x = U8[a + k], y = U8[b + k]; if (x !== y) return x - y; } return 0; }
-var $bcmp = $memcmp;
+function $bcmp(a, b, n) { return $memcmp(a, b, n); }
 function $memcpy(d, s, n) { U8.copyWithin(d, s, s + (n >>> 0)); return d; }
-var $memmove = $memcpy;
+function $memmove(d, s, n) { return $memcpy(d, s, n); }
 function $memset(d, v, n) { U8.fill(v, d, d + (n >>> 0)); return d; }
 function $memchr(p, c, n) { const k = U8.subarray(p, p + (n >>> 0)).indexOf(c & 255); return k < 0 ? 0 : p + k; }
 function $strchr(p, c) { c &= 255; for (;; p++) { const x = U8[p]; if (x === c) return p; if (!x) return 0; } }
@@ -161,20 +161,14 @@ function _strtod(p, endp) {
 }
 function $strtod(p, e) { return _strtod(p, e); }
 function $strtof(p, e) { return Math.fround(_strtod(p, e)); }
-var _env = new Map();
+// The strings are cached in $getenv.m, so a program that does not call getenv carries no cache.
 function $getenv(p) {
-  const k = _cstr(p); if (_env.has(k)) return _env.get(k);
+  const k = _cstr(p), m = $getenv.m || ($getenv.m = new Map()); if (m.has(k)) return m.get(k);
   const v = typeof process !== "undefined" ? process.env[k] : undefined, r = v === undefined ? 0 : _newcstr(v);
-  _env.set(k, r); return r;
+  m.set(k, r); return r;
 }
-function $getrlimit(r, p) { I32[p >> 2] = 262144; I32[p + 4 >> 2] = 0; I32[p + 8 >> 2] = 262144; I32[p + 12 >> 2] = 0; return 0; }
-var _t0 = typeof process !== "undefined" && process.hrtime ? null : performance.now();
-function _nanos() {
-  if (_t0 === null) { const t = process.hrtime.bigint(); H = Number(t >> 32n) | 0; return Number(t & 0xffffffffn) | 0; }
-  const ns = Math.round((performance.now() - _t0) * 1e6); H = Math.floor(ns / 4294967296) | 0; return ns | 0;
-}
-function $clock_gettime_nsec_np(c) { return _nanos(); }
-function $clock_gettime(c, p) { const lo = _nanos(), ns = (H >>> 0) * 4294967296 + (lo >>> 0); const s = Math.floor(ns / 1e9); I32[p >> 2] = s; I32[p + 4 >> 2] = 0; I32[p + 8 >> 2] = ns - s * 1e9; I32[p + 12 >> 2] = 0; return 0; }
+// runtime.c's rt_nanos (System.nanoTime): nanoseconds since the program started
+function $rt_nanos() { const t = Math.round(performance.now() * 1e6); H = t / 4294967296 | 0; return t | 0; }
 
 // ---- stdio -------------------------------------------------------------------------------------------------------
 var _ob = new Uint8Array(65536), _on = 0;
@@ -205,7 +199,7 @@ function $puts(s) { $fputs(s, 1); _put(1, "\n"); return 0; }
 function $fwrite(p, size, sh, n, nh, f) { const t = (size >>> 0) * (n >>> 0); _putbytes(f, p, t); H = 0; return n; }
 function $putchar(c) { _put(1, String.fromCharCode(c & 255)); return c; }
 function $fputc(c, f) { _put(f, String.fromCharCode(c & 255)); return c; }
-var $putc = $fputc;
+function $putc(c, f) { return $fputc(c, f); }
 function $fflush(f) { _flush(); return 0; }
 function $printf(fmt, ...a) { return _put(1, _format(fmt, a)); }
 function $fprintf(f, fmt, ...a) { return _put(f, _format(fmt, a)); }
@@ -297,10 +291,70 @@ function _ffmt(x, c, p, flags) {
 function _exp(x, p) { const s = x.toExponential(Math.min(p, 100)); const [m, e] = s.split("e"); const n = +e; return m + "e" + (n < 0 ? "-" : "+") + String(Math.abs(n)).padStart(2, "0"); }
 function _fixed(x, p) { if (x < 1e21) return x.toFixed(Math.min(p, 100)); const i = BigInt(x).toString(); return p > 0 ? i + "." + "0".repeat(p) : i; }
 
+// ---- runtime.c under RT_JS: number text and uncaught-exception messages without printf ----------------------------
+// decimal text of the i64 (a, ah); u: unsigned
+function _i64s(a, ah, u) {
+  if (u ? (ah >>> 0) < 2097152 : ah >= -2097152 && ah < 2097152) return "" + (ah * 4294967296 + (a >>> 0));
+  return "" + (u ? BigInt.asUintN(64, _big(a, ah)) : _big(a, ah));
+}
+// Kotlin's Double/Float toString as runtime.c's fmt_fp writes it: the fewest digits (correctly rounded, ties to even)
+// that read back as x (f: the float reader for a float, else 0); plain for 1e-3 <= |x| < 1e7, else D.DDDE<exp>.
+// toExponential() gives those digits for a double, except a power of two (its lower neighbour is nearer than its
+// upper one); a power of two and a float take fmt_fp's loop over the precision p. toExponential(p) rounds ties up,
+// so an exact tie (the exact digits t are p + 2 long and end in 5) is rounded to even here.
+function _kfmt(x, f) {
+  if (x !== x) return "NaN";
+  if (x === 0) return 1 / x < 0 ? "-0.0" : "0.0";
+  if (x === 1 / 0 || x === -1 / 0) return x < 0 ? "-Infinity" : "Infinity";
+  let s = x.toExponential();
+  _cd[0] = x;
+  if (f || !_ci[0] && !(_ci[1] & 1048575)) {
+    const T = x.toExponential(100), t = T.replace(/^-|\.|0*e.*/g, "");
+    for (let p = 0; ; p++) {
+      s = t.length === p + 2 && t[p + 1] === "5" && t[p] % 2 === 0 ? (x < 0 ? "-" : "") + t[0] + "." + t.slice(1, p + 1) + "e" + T.split("e")[1] : x.toExponential(p);
+      if ((f ? f(s) : +s) === x) break;
+    }
+  }
+  const e = s.indexOf("e"), n = +s.slice(e + 1), d = s.slice(0, e).replace(/^-|\./g, "").replace(/(.)0+$/, "$1"), g = x < 0 ? "-" : "";
+  if (Math.abs(x) < 1e-3 || Math.abs(x) >= 1e7) return g + d[0] + "." + (d.slice(1) || "0") + "E" + n;
+  return g + (n < 0 ? "0." + "0".repeat(-n - 1) + d : d.slice(0, n + 1).padEnd(n + 1, "0") + "." + (d.slice(n + 1) || "0"));
+}
+// The float nearest the decimal s = [-]D[.DDD]e<exp> (C's strtof, ties to even). Math.fround(+s) rounds twice, which
+// goes wrong only when +s is exactly the midpoint between two floats r and o: then s is compared with it exactly.
+function _strtof(s) {
+  const v = +s, r = Math.fround(v), o = 2 * v - r;
+  if (r === v || !isFinite(r) || Math.fround(o) !== o) return r;
+  // |s| = d * 10^k and |v| = m * 2^z (a midpoint is a normal double)
+  _cd[0] = Math.abs(v);
+  const [, a, b, e] = /^-?(\d)\.?(\d*)e([-+]\d+)$/.exec(s), k = +e - b.length, z = (_ci[1] >>> 20) - 1075;
+  let d = BigInt(a + b), m = BigInt(_ci[1] & 1048575 | 1048576) << 32n | BigInt(_ci[0] >>> 0);
+  if (k > 0) d *= 10n ** BigInt(k); else m *= 10n ** BigInt(-k);
+  if (z > 0) m <<= BigInt(z); else d <<= BigInt(-z);
+  return d === m || (d > m) === (Math.abs(r) > Math.abs(o)) ? r : o;
+}
+// s (char codes 0..255) and a NUL at p; returns s.length
+function _wstr(p, s) { for (let k = 0; k < s.length; k++) U8[p + k] = s.charCodeAt(k); U8[p + s.length] = 0; return s.length; }
+function $js_i64_str(p, a, ah, u) { return _wstr(p, _i64s(a, ah, u)); }
+function $js_f64_str(p, x) { return _wstr(p, _kfmt(x, 0)); }
+function $js_f32_str(p, x) { return _wstr(p, _kfmt(x, _strtof)); }
+function $rt_print_i64(a, ah) { _put(1, _i64s(a, ah, 0)); }
+function $rt_print_u64(a, ah) { _put(1, _i64s(a, ah, 1)); }
+function $rt_print_f64(x) { _put(1, _kfmt(x, 0)); }
+function $rt_print_f32(x) { _put(1, _kfmt(x, _strtof)); }
+// an uncaught exception: stdout flushed, the message on stderr, exit status 1
+function _die(s) { _put(2, "Exception in thread \"main\" " + s + "\n"); $exit(1); }
+function $rt_throw(c, m) { _die(_cstr(c) + (m ? ": " + _cstr(m) : "")); }
+function $rt_panic(m) { _die("java.lang.IllegalStateException: " + _cstr(m)); }
+function $rt_bad_step(a, ah) { _die("java.lang.IllegalArgumentException: Step must be positive, was: " + _i64s(a, ah, 0) + "."); }
+function $rt_oob(a, ah, n, nh) { _die("kotlin.ArrayIndexOutOfBoundsException: Index " + _i64s(a, ah, 0) + " out of bounds for length " + _i64s(n, nh, 0)); }
+function $js_list_oob(a, ah, n, nh) { _die("java.lang.IndexOutOfBoundsException: Index " + _i64s(a, ah, 0) + " out of bounds for length " + _i64s(n, nh, 0)); }
+function $js_sb_len_oob(a, ah) { _die("java.lang.IndexOutOfBoundsException: length " + _i64s(a, ah, 0)); }
+function $js_map_no_key(s, a, ah) { _die("java.lang.NullPointerException: key " + (s ? _cstr(a) : _i64s(a, ah, 0)) + " not in map"); }
+
 // ---- process -------------------------------------------------------------------------------------------------------
 class _Exit { constructor(c) { this.code = c; } }
 function $exit(c) { _flush(); throw new _Exit(c); }
-var $_exit = $exit;
+function $_exit(c) { $exit(c); }
 function $abort() { _flush(); throw new Error("abort()"); }
 function $atexit(f) { return 0; }
 

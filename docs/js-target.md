@@ -8,11 +8,13 @@ collector as the native target, so programs behave the same (same output, same c
 ## Pipeline (`compiler/src/driver/JsDriver.kt`)
 
 1. Program IR from `compileToIr`, as for native.
-2. `clang -S -emit-llvm -O2 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC -DRT_LEAN_EXIT` on
+2. `clang -S -emit-llvm -O2 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC -DRT_LEAN_EXIT -DRT_JS` on
    `compiler/runtime/runtime.c` and `compiler/runtime/js/libc.c` (malloc/free on one growable heap, qsort, the stdio
    handles). `RT_LEAN_EXIT` drops the `KX_GC_STATS` report and the final collection at exit, so a program that never
-   collects does not carry the cycle collector. The runtime's datalayout gets native integer width `n32` only, so
-   opt keeps loop counters in `i32`.
+   collects does not carry the cycle collector. `RT_JS` takes number text (`Long`, `Double`, `Float`), the
+   uncaught-exception messages and `rt_nanos` from `runtime.js` (no `printf` in the program) and bounds the release
+   recursion by a fixed stack budget instead of `getrlimit`. The runtime's datalayout gets native integer width `n32`
+   only, so opt keeps loop counters in `i32`.
 3. `llvm-link` the runtime, libc, program and the Zig collector's bitcode `libgc-<gc>.bc`
    (`zig build gc-bc` in `native/gc/zig`; `bin/newkotlinc` builds it). The bitcode is ReleaseSmall (about 12% less
    JavaScript); the collector's hot helpers (`PtrStack.push`, the trial-deletion claims) are `inline fn`, so it runs
@@ -52,7 +54,9 @@ collector as the native target, so programs behave the same (same output, same c
   loop ends. Irreducible control flow falls back to a dispatch loop (with a warning).
 - Single-use, same-block, side-effect-free values are inlined into their use; everything else is a `let`.
 - `frameaddress` / `stacksave` (the bounded release in `runtime.c`) use a depth counter `D`.
-- libc lives in `runtime.js` (stdio with buffered stdout, `printf` formatting, strings, `strtod`, time, exit).
+- libc lives in `runtime.js` (stdio with buffered stdout, `printf` formatting, strings, `strtod`, exit), with the
+  `RT_JS` parts of `runtime.c`: Kotlin's number text in JavaScript (`toExponential` with `fmt_fp`'s shortest
+  round-trip digits, ties to even) and the exception messages.
 
 ## Requirements and limits
 
