@@ -4,6 +4,7 @@ set -u
 cd "$(dirname "$0")/../.."
 w=compiler/tests/toolchain-retry.sh; d=$(mktemp -d "${TMPDIR:-/tmp}/kx-tr.XXXXXX"); fail=0
 trap 'rm -rf "$d"' EXIT
+export KX_TOOL_RETRY_LOG="$d/log"  # keep these fake crashes out of the suite's own retry log
 ok() { echo "PASS toolchain-retry $1"; }
 bad() { echo "FAIL toolchain-retry $1"; fail=1; }
 # Aborts (SIGABRT) on the first call, then succeeds.
@@ -21,9 +22,9 @@ T
 printf '#!/bin/bash\necho n >> %q/calls; echo "a.kt:1: error: unresolved name" >&2; exit 1\n' "$d" > "$d/compile-error"
 printf '#!/bin/bash\necho n >> %q/calls2; kill -SEGV $$\n' "$d" > "$d/always-crash"
 chmod +x "$d"/*
-o=$(KX_TOOL_RETRY_LOG="$d/log" "$w" "$d/crash-once" 2>"$d/e"); rc=$?
+o=$("$w" "$d/crash-once" 2>"$d/e"); rc=$?
 [ $rc = 0 ] && [ "$o" = out ] && grep -q '^warn$' "$d/e" && grep -q 'crashed (signal 6), attempt 1/3' "$d/log" && ok crash || bad "crash (rc=$rc)"
-o=$(KX_TOOL_RETRY_LOG="$d/log" "$w" "$d/enospc-once" 2>/dev/null); rc=$?
+o=$("$w" "$d/enospc-once" 2>/dev/null); rc=$?
 [ $rc = 0 ] && [ "$o" = out ] && grep -q 'No space left on device' "$d/log" && ok enospc || bad "enospc (rc=$rc)"
 "$w" "$d/compile-error" 2>"$d/e"; rc=$?
 [ $rc = 1 ] && [ "$(wc -l < "$d/calls" | tr -d ' ')" = 1 ] && grep -q 'unresolved name' "$d/e" && ! grep -q toolchain-retry "$d/e" \
