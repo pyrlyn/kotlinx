@@ -359,6 +359,27 @@ fn traversal(count: usize) void {
     if (count == 4096) check(gc.debugWorkBytes() <= gc.debugInitialCap() * @sizeOf(?*anyopaque), "work cap bounded");
 }
 
+/// perceus keeps the previous collection's root buffer: the next one must not regrow it from 256 slots.
+fn rootBufferReuse() void {
+    if (!@hasDecl(gc, "debugRootsCap")) return;
+    const N = 2000;
+    var live: [N]*Node = undefined;
+    for (&live) |*n| {
+        n.* = nodeNew();
+        n.*.hdr += 1;
+        gc.rt_cc_possible_root(n.*);
+    }
+    gc.rt_gc_collect();
+    for (live) |n| check(gc.debugRefCount(n) == 1 and !gc.debugIsBuffered(n), "live roots restored");
+    gc.rt_cc_possible_root(live[0]);
+    check(gc.debugRootsCap() >= N, "root buffer reused");
+    gc.rt_gc_collect();
+    for (live) |n| {
+        n.hdr -= 1;
+        gc.rt_free_trace(n, @sizeOf(Node));
+    }
+}
+
 fn onePass() void {
     if (!std.mem.eql(u8, std.mem.span(gc.rt_gc_name()), "incremental")) return;
     if (@hasDecl(gc, "debugSetBudgetUs")) gc.debugSetBudgetUs(0);
@@ -429,6 +450,7 @@ pub fn main() u8 {
         apiTrialDeletion();
         if (std.mem.eql(u8, gname, "perceus") or std.mem.eql(u8, gname, "incremental")) {
             traversal(4096);
+            rootBufferReuse();
         }
         if (std.mem.eql(u8, gname, "incremental")) onePass();
     }
