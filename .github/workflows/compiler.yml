@@ -50,6 +50,9 @@ jobs:
       # --target=wasm: golden tests under node's WASI and the module size budget (compiler/tests/wasm).
       - name: Wasm golden and size tests
         run: compiler/tests/wasm/run.sh && compiler/tests/wasm/size.sh
+      # runtime.c's number formatting (kxfmt.h) against libc's snprintf/strtod.
+      - name: Runtime unit tests
+        run: compiler/tests/runtime/run.sh
       - name: Upstream tests
         run: python3 compiler/tests/upstream/run.py --nkc compiler/build/newkotlinc.kexe --jobs 3
       - name: Upstream tests under --leak-check (report only)

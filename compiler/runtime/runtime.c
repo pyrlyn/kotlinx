@@ -15,6 +15,15 @@
 #error "compiler/gc (pyrlyn/gc) has an incompatible kxgc.h; update the submodule pin: git submodule update --init"
 #endif
 #include "common/object.inc"
+#ifndef RT_JS
+/* Numbers are formatted without printf (kxfmt.h): printf_core and, on wasm32, long double soft-float were 17 KB of
+ * every wasm module. Only --leak-check's report still uses fprintf. */
+#include "kxfmt.h"
+static void err_s(const char *s) { fputs(s ? s : "(null)", stderr); }
+static void err_i64(int64_t v) { char b[24]; kx_i64_dec(b, v); fputs(b, stderr); }
+/* An uncaught exception: stdout flushed, then "Exception in thread "main" " and the message on stderr. */
+static void err_begin(void) { fflush(stdout); fputs("Exception in thread \"main\" ", stderr); }
+#endif
 
 // ---- leak check (newkotlinc --leak-check => -DRT_LEAKCHECK) ----------------
 // Counts live runtime objects per kind; at exit prints a report to stderr and exits with 3
@@ -189,19 +198,17 @@ int rt_leakcheck = 0;
 #endif
 #ifndef RT_JS
 void rt_throw(const char *cls, const char *msg) {
-    fflush(stdout);
-    if (msg) fprintf(stderr, "Exception in thread \"main\" %s: %s\n", cls, msg);
-    else fprintf(stderr, "Exception in thread \"main\" %s\n", cls);
+    err_begin(); err_s(cls);
+    if (msg) { fputs(": ", stderr); err_s(msg); }
+    fputc('\n', stderr);
     exit(1);
 }
 void rt_bad_step(int64_t step) {
-    fflush(stdout);
-    fprintf(stderr, "Exception in thread \"main\" java.lang.IllegalArgumentException: Step must be positive, was: %" PRId64 ".\n", step);
+    err_begin(); err_s("java.lang.IllegalArgumentException: Step must be positive, was: "); err_i64(step); err_s(".\n");
     exit(1);
 }
 void rt_panic(const char *msg) {
-    fflush(stdout);
-    fprintf(stderr, "Exception in thread \"main\" java.lang.IllegalStateException: %s\n", msg);
+    err_begin(); err_s("java.lang.IllegalStateException: "); err_s(msg); fputc('\n', stderr);
     exit(1);
 }
 #endif
@@ -209,52 +216,18 @@ void rt_panic(const char *msg) {
 // ---- printing -------------------------------------------------------------
 
 #ifndef RT_JS
-/* Kotlin-style Double formatting: shortest round-trip digits; plain notation for 1e-3 <= |d| < 1e7,
-   otherwise computerized scientific notation (e.g. 3.3358775E8, 1.0E-4), always with a '.'. */
-static void fmt_fp(char *buf, size_t n, double d, int f32) {
-    if (d != d) { snprintf(buf, n, "NaN"); return; }
-    if (d == 1.0 / 0.0) { snprintf(buf, n, "Infinity"); return; }
-    if (d == -1.0 / 0.0) { snprintf(buf, n, "-Infinity"); return; }
-    if (d == 0) { snprintf(buf, n, (1.0 / d < 0) ? "-0.0" : "0.0"); return; }
-    char e[40];
-    for (int p = 0; p <= 16; p++) { snprintf(e, sizeof e, "%.*e", p, d); if (f32 ? (double)strtof(e, NULL) == d : strtod(e, NULL) == d) break; }
-    /* e = [-]D[.DDD]e[+-]XX */
-    char digits[24]; int nd = 0, neg = 0; const char *q = e;
-    if (*q == '-') { neg = 1; q++; }
-    for (; *q && *q != 'e'; q++) if (*q != '.') digits[nd++] = *q;
-    int exp = atoi(q + 1);
-    while (nd > 1 && digits[nd - 1] == '0') nd--;
-    digits[nd] = 0;
-    char *o = buf; size_t left = n;
-#define PUT(...) do { int w = snprintf(o, left, __VA_ARGS__); o += w; left -= (size_t)w; } while (0)
-    if (neg) PUT("-");
-    double a = d < 0 ? -d : d;
-    if (a >= 1e-3 && a < 1e7) {
-        if (exp >= 0) {
-            for (int i = 0; i <= exp; i++) PUT("%c", i < nd ? digits[i] : '0');
-            PUT(".");
-            if (nd > exp + 1) PUT("%s", digits + exp + 1); else PUT("0");
-        } else {
-            PUT("0.");
-            for (int i = 0; i < -exp - 1; i++) PUT("0");
-            PUT("%s", digits);
-        }
-    } else {
-        PUT("%c.", digits[0]);
-        if (nd > 1) PUT("%s", digits + 1); else PUT("0");
-        PUT("E%d", exp);
-    }
-#undef PUT
-}
+/* Kotlin-style Double formatting (kxfmt.h): shortest round-trip digits; plain notation for 1e-3 <= |d| < 1e7,
+   otherwise computerized scientific notation (e.g. 3.3358775E8, 1.0E-4), always with a '.'. buf: >= 26 bytes. */
+static void fmt_fp(char *buf, size_t n, double d, int f32) { (void)n; kx_fmt_fp(buf, d, f32); }
 #endif
 
 void rt_print_str(const char *s) { fputs(s ? s : "null", stdout); }
 #ifndef RT_JS
-void rt_print_i64(int64_t v) { printf("%" PRId64, v); }
+void rt_print_i64(int64_t v) { char b[24]; kx_i64_dec(b, v); fputs(b, stdout); }
 static void fmt_double(char *buf, size_t n, double d) { fmt_fp(buf, n, d, 0); }
 void rt_print_f64(double d) { char b[64]; fmt_double(b, sizeof b, d); fputs(b, stdout); }
 void rt_print_f32(float d) { char b[64]; fmt_fp(b, sizeof b, d, 1); fputs(b, stdout); }
-void rt_print_u64(uint64_t v) { printf("%" PRIu64, v); }
+void rt_print_u64(uint64_t v) { char b[24]; kx_u64_dec(b, v); fputs(b, stdout); }
 #endif
 /* Kotlin String.hashCode over the UTF-16 code units of a UTF-8 string. */
 int32_t rt_str_hash(const char *s) {
@@ -355,7 +328,7 @@ void rt_sb_set_length(SB *s, int64_t n) {
 #ifdef RT_JS
     if (n < 0) js_sb_len_oob(n);
 #else
-    if (n < 0) { fflush(stdout); fprintf(stderr, "Exception in thread \"main\" java.lang.IndexOutOfBoundsException: length %" PRId64 "\n", n); exit(1); }
+    if (n < 0) { err_begin(); err_s("java.lang.IndexOutOfBoundsException: length "); err_i64(n); fputc('\n', stderr); exit(1); }
 #endif
     if ((size_t)n <= s->len) { s->len = (size_t)n; if (s->buf) s->buf[s->len] = 0; return; }
     char z = 0;
@@ -445,8 +418,7 @@ __attribute__((noinline, cold, noreturn)) static void bounds_fail(List *l, int64
 #ifdef RT_JS
     js_list_oob(i, l->len);
 #else
-    fflush(stdout);
-    fprintf(stderr, "Exception in thread \"main\" java.lang.IndexOutOfBoundsException: Index %" PRId64 " out of bounds for length %" PRId64 "\n", i, (int64_t)l->len);
+    err_begin(); err_s("java.lang.IndexOutOfBoundsException: Index "); err_i64(i); err_s(" out of bounds for length "); err_i64((int64_t)l->len); fputc('\n', stderr);
     exit(1);
 #endif
 }
@@ -557,8 +529,7 @@ void rt_arr_release(void *a) {
 
 #ifndef RT_JS
 void rt_oob(int64_t i, int64_t len) {
-    fflush(stdout);
-    fprintf(stderr, "Exception in thread \"main\" kotlin.ArrayIndexOutOfBoundsException: Index %" PRId64 " out of bounds for length %" PRId64 "\n", i, len);
+    err_begin(); err_s("kotlin.ArrayIndexOutOfBoundsException: Index "); err_i64(i); err_s(" out of bounds for length "); err_i64(len); fputc('\n', stderr);
     exit(1);
 }
 #endif
@@ -668,9 +639,9 @@ int64_t rt_map_get(Map *m, int64_t k) {
 #ifdef RT_JS
         js_map_no_key(m->skeys, k);
 #else
-        fflush(stdout);
-        if (m->skeys) fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %s not in map\n", (const char *)(intptr_t)k);
-        else fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %" PRId64 " not in map\n", k);
+        err_begin(); err_s("java.lang.NullPointerException: key ");
+        if (m->skeys) err_s((const char *)(intptr_t)k); else err_i64(k);
+        err_s(" not in map\n");
         exit(1);
 #endif
     }
