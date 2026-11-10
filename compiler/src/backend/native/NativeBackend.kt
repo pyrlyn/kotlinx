@@ -591,7 +591,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // class has no trav/relo hooks: less code for the JS output.
         val hooks = !rc32() || c.name in cyclic
         val vt = listOf("ptr @rel.${c.name}", if (hooks) "ptr @trav.${c.name}" else "ptr null", if (hooks) "ptr @relo.${c.name}" else "ptr null", "ptr @free.${c.name}",
-            "ptr ${if (c.name in cyclic) "inttoptr (i64 1 to ptr)" else "null"}") +
+            "ptr ${if (c.name in cyclic) cyclicSlot(c) else "null"}") +
             slots.map { m ->
                 val base = m.removeSuffix(NARROW)
                 when {
@@ -674,6 +674,26 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         f.append("define internal void @free.${c.name}(ptr %p) {\nentry:\n")
         f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n  call void ${if (cyc) "@rt_free_trace" else "@rt_free"}(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         funcs.append(f)
+    }
+
+    /**
+     * The is-cyclic vtable slot of cyclic class [c]. Non-null marks the class cyclic. Native and wasm: when every traced
+     * field is a plain class/interface reference (no traced list or map), it points to @lay.C = { i32 n, i32 object
+     * size, i32 relo needed (0/1), [n x i32] byte offsets of those fields }: trial deletion
+     * (native/gc/zig/src/common/trial_deletion.zig) reads the children itself instead of calling @trav.C with a visitor
+     * (two indirect calls per object and child), and perceus frees garbage without @relo.C / @free.C calls.
+     * Otherwise, and on --target=js (size), it is 1 and the collector calls @trav.C.
+     */
+    private fun cyclicSlot(c: ClassInfo): String {
+        if (rc32() || c.fields.any { (_, t) -> tracedList(t) }) return "inttoptr (i64 1 to ptr)"
+        val offs = c.fields.mapIndexedNotNull { i, (_, t) ->
+            if (isTraced(t)) "i32 ptrtoint (ptr getelementptr (${c.llType}, ptr null, i32 0, i32 ${i + 2}) to i32)" else null
+        }
+        // Same fields as @relo.C releases (genClass).
+        val relo = c.fields.any { (_, t) -> ownedColl(t) != null || (!isTraced(t) && releaseFn(t) != null) }
+        val size = "i32 ptrtoint (ptr getelementptr (${c.llType}, ptr null, i32 1) to i32)"
+        globals.append("@lay.${c.name} = internal constant { i32, i32, i32, [${offs.size} x i32] } { i32 ${offs.size}, $size, i32 ${if (relo) 1 else 0}, [${offs.size} x i32] [${offs.joinToString(", ")}] }, align 4\n")
+        return "@lay.${c.name}"
     }
 
     /** Before a dying cyclic object (%p) releases collection field value [v]: it no longer holds it. */

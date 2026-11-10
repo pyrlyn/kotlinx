@@ -88,12 +88,16 @@ fn freeGarbage() usize {
     var i: usize = 0;
     while (i < td.garbage.len) : (i += 1) {
         const g = td.garbage.at(i).?;
+        if (td_mod.layout(g)) |lay| {
+            if (lay[2] == 0) continue; // @relo.C would release nothing
+        }
         if (obj.vtab(g).relo) |relo| relo(g);
     }
     i = 0;
     while (i < td.garbage.len) : (i += 1) {
         const g = td.garbage.at(i).?;
-        if (obj.vtab(g).freemem) |f| f(g);
+        // @free.C is rt_free_trace(g, size): with the layout's size the pool free is inlined here.
+        if (td_mod.layout(g)) |lay| freeTrace(g, lay[1]) else if (obj.vtab(g).freemem) |f| f(g);
     }
     const freed = td.garbage.len;
     td.garbage.len = 0;
@@ -109,13 +113,21 @@ fn collectCycles() void {
     cc_spare = .{};
     td.traced = 0;
     td.activate();
+    td.record = true;
     roots.len = markRoots(&roots);
     var i: usize = 0;
-    while (i < roots.len) : (i += 1) td.scan(roots.at(i).?);
-    i = 0;
-    while (i < roots.len) : (i += 1) {
-        obj.clearBuffered(roots.at(i).?);
-        td.collectWhite(roots.at(i).?);
+    if (td_mod.GRAY_RECORD_MAX == null or td.record) {
+        // Every gray object is in td.gray: scan and collect walk that list instead of re-tracing from the roots.
+        td.scanGray();
+        while (i < roots.len) : (i += 1) obj.clearBuffered(roots.at(i).?);
+        td.collectGray();
+    } else {
+        while (i < roots.len) : (i += 1) td.scan(roots.at(i).?);
+        i = 0;
+        while (i < roots.len) : (i += 1) {
+            obj.clearBuffered(roots.at(i).?);
+            td.collectWhite(roots.at(i).?);
+        }
     }
     const reclaimed = freeGarbage();
     roots.len = 0;
@@ -186,6 +198,8 @@ pub fn debugColor(p: *anyopaque) u2 {
 pub fn debugIsBuffered(p: *anyopaque) bool {
     return obj.isBuffered(p);
 }
+/// For the gray-record test: entries markGray records before it falls back to tracing from the roots.
+pub const debugGrayRecordMax = td_mod.GRAY_RECORD_MAX.?;
 pub fn debugInitialCap() usize {
     return obj.PTR_STACK_INITIAL_CAPACITY;
 }

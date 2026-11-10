@@ -9,3 +9,8 @@ pool-alloc alloc default malloc 1.20
 # Tier-up: nbody's advance, called from a loop of main, must run as optimized code. Default node (Liftoff, then
 # TurboFan on a later call) against --no-liftoff: 0.79x with the call kept out of main, 1.72x when it was inlined.
 tierup-nbody nbody default default:--no-liftoff 1.20
+# Cycle collection cost: perceus (default) against --gc rc, which never collects cycles (and runs slower from the
+# leaked memory). Trial deletion over class layouts and the recorded gray set (native/gc/zig/src/common/
+# trial_deletion.zig): cycles 0.83x -> 0.50x, bigheap 0.92x -> 0.67x.
+cc-cycles cycles default rc 0.70
+cc-bigheap bigheap default rc 0.82

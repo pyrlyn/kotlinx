@@ -331,7 +331,9 @@ fn traversal(count: usize) void {
     nodes[count - 1].hdr += 1;
     gc.rt_cc_possible_root(nodes[0]);
     gc.rt_gc_collect();
-    check(!@as(bool, node_freed != 0 or node_released != 0) and node_visits == 3 * count - 1, "live ring restored");
+    // perceus records the gray set (markGray + scanBlack); incremental re-traces from the root (markGray, scan, scanBlack).
+    const rec = @hasDecl(gc, "debugGrayRecordMax");
+    check(!@as(bool, node_freed != 0 or node_released != 0) and node_visits == (if (rec) 2 * count else 3 * count - 1), "live ring restored");
     i = 0;
     while (i < count) : (i += 1) {
         check(gc.debugRefCount(nodes[i]) == FANOUT + @as(u64, if (i == count - 1) 1 else 0), "ring count");
@@ -340,7 +342,7 @@ fn traversal(count: usize) void {
     nodes[count - 1].hdr -= 1;
     gc.rt_cc_possible_root(nodes[0]);
     gc.rt_gc_collect();
-    check(node_freed == count and node_released == count and node_visits == 6 * count - 1, "garbage ring");
+    check(node_freed == count and node_released == count and node_visits == (if (rec) 4 * count else 6 * count - 1), "garbage ring");
     const a = nodeNew();
     const b = nodeNew();
     const c = nodeNew();
@@ -378,6 +380,84 @@ fn rootBufferReuse() void {
         n.hdr -= 1;
         gc.rt_free_trace(n, @sizeOf(Node));
     }
+}
+
+/// Classes whose traced fields are plain references carry a layout instead of the cyclic marker
+/// (NativeBackend.kt cyclicSlot): trial deletion reads the fields, perceus frees garbage without relo/freemem
+/// when the layout says relo releases nothing. Also covers the gray record (scanGray/collectGray) including a
+/// garbage -> live edge, and the fallback to root tracing when the gray set outgrows debugGrayRecordMax.
+const LNode = extern struct { hdr: u64, vt: *kx.VTab, a: ?*LNode, b: ?*LNode };
+const Layout = extern struct { n: u32, size: u32, relo: u32, offs: [2]u32 };
+var lnode_layout: Layout = .{ .n = 2, .size = @sizeOf(LNode), .relo = 0, .offs = .{ @offsetOf(LNode, "a"), @offsetOf(LNode, "b") } };
+var lnode_hooks: usize = 0;
+fn lnodeTrav(_: ?*anyopaque, _: ?kx.VisitFn) callconv(.c) void {
+    lnode_hooks += 1;
+}
+fn lnodeHook(_: ?*anyopaque) callconv(.c) void {
+    lnode_hooks += 1;
+}
+var lnode_vt: kx.VTab = .{ .rel = null, .trav = lnodeTrav, .relo = lnodeHook, .freemem = lnodeHook, .cyclic = &lnode_layout };
+fn lnodeNew() *LNode {
+    const n: *LNode = @ptrCast(@alignCast(gc.rt_alloc_trace(@sizeOf(LNode)).?));
+    n.* = .{ .hdr = 0, .vt = &lnode_vt, .a = null, .b = null };
+    return n;
+}
+fn lnodeRing(count: usize) []*LNode {
+    const ring = std.heap.page_allocator.alloc(*LNode, count) catch @panic("oom");
+    for (ring) |*n| n.* = lnodeNew();
+    for (ring, 0..) |n, i| {
+        n.a = ring[(i + 1) % count];
+        ring[(i + 1) % count].hdr += 1;
+    }
+    return ring;
+}
+fn reclaimedSoFar() i64 {
+    var st: kx.Stats = undefined;
+    gc.rt_gc_stats(&st);
+    return st.reclaimed;
+}
+fn layoutCollect() void {
+    if (!@hasDecl(gc, "debugGrayRecordMax")) return;
+    lnode_hooks = 0;
+    // garbage cycle x <-> y with an edge to a live ring member: the live ring keeps its count minus x's reference.
+    const live = lnodeRing(8);
+    defer std.heap.page_allocator.free(live);
+    live[0].hdr += 1;
+    const x = lnodeNew();
+    const y = lnodeNew();
+    x.a = y;
+    y.hdr += 1;
+    y.a = x;
+    x.hdr += 1;
+    x.b = live[3];
+    live[3].hdr += 1;
+    const before = reclaimedSoFar();
+    gc.rt_cc_possible_root(x);
+    gc.rt_cc_possible_root(live[3]);
+    gc.rt_gc_collect();
+    check(reclaimedSoFar() - before == 2, "layout garbage cycle reclaimed");
+    check(gc.debugRefCount(live[3]) == 1 and gc.debugRefCount(live[0]) == 2, "garbage -> live edge dropped");
+    for (live) |n| check(gc.debugColor(n) == 0 and !gc.debugIsBuffered(n), "live ring black");
+    // past the record limit: same result through root tracing.
+    for ([_]usize{ 1000, gc.debugGrayRecordMax + 7 }) |count| {
+        const big = lnodeRing(count);
+        defer std.heap.page_allocator.free(big);
+        big[count / 2].hdr += 1;
+        gc.rt_cc_possible_root(big[0]);
+        gc.rt_gc_collect();
+        var ok = true;
+        for (big) |n| ok = ok and gc.debugColor(n) == 0 and gc.debugRefCount(n) == @as(u64, if (n == big[count / 2]) 2 else 1);
+        check(ok, "big live ring restored");
+        big[count / 2].hdr -= 1;
+        const b0 = reclaimedSoFar();
+        gc.rt_cc_possible_root(big[0]);
+        gc.rt_gc_collect();
+        check(reclaimedSoFar() - b0 == @as(i64, @intCast(count)), "big garbage ring reclaimed");
+    }
+    live[0].hdr -= 1;
+    gc.rt_cc_possible_root(live[0]);
+    gc.rt_gc_collect();
+    check(lnode_hooks == 0, "layout: no trav/relo/freemem calls");
 }
 
 fn onePass() void {
@@ -451,6 +531,7 @@ pub fn main() u8 {
         if (std.mem.eql(u8, gname, "perceus") or std.mem.eql(u8, gname, "incremental")) {
             traversal(4096);
             rootBufferReuse();
+            layoutCollect();
         }
         if (std.mem.eql(u8, gname, "incremental")) onePass();
     }
