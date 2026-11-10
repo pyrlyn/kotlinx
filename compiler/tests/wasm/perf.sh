@@ -9,14 +9,16 @@ NKC=${NKC:-$root/compiler/build/newkotlinc.kexe}
 export NEWKOTLIN_RUNTIME=${NEWKOTLIN_RUNTIME:-$root/compiler/runtime/runtime.c}
 RUNS=${RUNS:-5}; out=$(mktemp -d); [ -n "${KEEP:-}" ] || trap 'rm -rf "$out"' EXIT; fail=0
 "$root/bin/newkotlinc" --gc-libs-only --target=wasm >/dev/null 2>&1 || exit 1
+"$root/bin/newkotlinc" --gc-libs-only --target=wasm --gc rc >/dev/null 2>&1 || exit 1
 # The old default (--alloc malloc) needs its own archive: a separate prefix keeps zig-out/wasm32-wasi intact.
 plain=$out/plain
 ( cd native/gc/zig && "${ZIG:-zig}" build gc-libs -Dgc=perceus -Dtarget=wasm32-wasi -Dplain-malloc=true -p "$plain" ) >/dev/null 2>&1 || { echo "FAIL perf: zig build (plain malloc)"; exit 1; }
-build() { # build <name> <case> <variant>: variant default | malloc
+build() { # build <name> <case> <variant>: variant default | malloc | rc (--gc rc: no cycle collection)
   local src=bench/cases/$2/kotlin/Main.kt
   case "$3" in
     default) "$NKC" --target=wasm "$src" -o "$out/$1.wasm" ;;
     malloc) NEWKOTLIN_GC_ZIG_WASM_LIB_DIR=$plain/lib "$NKC" --target=wasm --alloc malloc "$src" -o "$out/$1.wasm" ;;
+    rc) "$NKC" --target=wasm --gc rc "$src" -o "$out/$1.wasm" ;;
   esac 2>"$out/$1.err"
 }
 run() { # run <wasm> <node flags>: prints "<nanos> <checksum>"; a run that prints no nanos= is retried twice, then
