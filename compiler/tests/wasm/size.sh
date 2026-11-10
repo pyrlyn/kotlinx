@@ -1,6 +1,6 @@
 #!/bin/bash
-# Size regression tests for --target=wasm: module size budgets and libc code that must stay out of every module
-# (size-budget.txt), plus the KX_GC_STATS=1 report line. Needs Zig 0.17.1 and node. Exits 1 on any failure.
+# Size regression tests for --target=wasm: module size budgets, libc code that must stay out of every module and
+# functions that must stay out of line (size-budget.txt), plus the KX_GC_STATS=1 report line. Needs Zig 0.17.1 and node. Exits 1 on any failure.
 cd "$(dirname "$0")/../../.."
 root=$PWD; d=compiler/tests/wasm
 NKC=${NKC:-$root/compiler/build/newkotlinc.kexe}
@@ -13,6 +13,9 @@ while read -r kind a b c; do
       if ! "$NKC" --target=wasm "$b" -o "$out/$a.wasm" 2>"$out/$a.err"; then echo "FAIL size $a: compile: $(grep -v unused "$out/$a.err" | head -3)"; fail=1; continue; fi
       n=$(wc -c < "$out/$a.wasm" | tr -d ' ')
       if [ "$n" -le "$c" ]; then echo "PASS size $a: $n <= $c bytes"; else echo "FAIL size $a: $n > $c bytes"; fail=1; fi ;;
+    keep) # a function that must stay out of line (a name-section build of the source)
+      if ! NK_WASM_CC="$root/$d/cc-names.sh" "$NKC" --target=wasm "$b" -o "$out/keep-$a.wasm" 2>"$out/keep-$a.err"; then echo "FAIL keep $a: compile: $(grep -v unused "$out/keep-$a.err" | head -3)"; fail=1; continue; fi
+      if python3 "$d/funcs.py" "$out/keep-$a.wasm" | awk '{print $2}' | grep -qE "$c"; then echo "PASS keep $a: $c"; else echo "FAIL keep $a: no function matches $c (inlined?)"; fail=1; fi ;;
   esac
 done < "$d/size-budget.txt"
 if ! NK_WASM_CC="$root/$d/cc-names.sh" "$NKC" --target=wasm "$d/size/hello.kt" -o "$out/names.wasm" 2>"$out/names.err"; then
