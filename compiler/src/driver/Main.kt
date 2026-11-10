@@ -245,6 +245,7 @@ fun main(args: Array<String>) {
         // (a standalone default<O3> before LTO optimizes twice and was up to 2x slower on closures/dispatch/matmul).
         val pipeline = if ("-flto" in cflags) "lto-pre-link<O3>" else "default<O3>"
         run1("'$opt' -passes='$pipeline' -S '$ll' -o '$linkLl'")
+        if (wasm) outlineWasmLoops(opt, linkLl, output, tmps)?.let { linkLl = it }
     }
     // wasm: deep recursion lives on the engine stack; the linear-memory shadow stack holds only address-taken
     // locals. 8 MiB matches the native default; -s drops the names section.
@@ -253,4 +254,21 @@ fun main(args: Array<String>) {
     val rc = system(cmd)
     cleanup()
     if (rc != 0) { fprintf(stderr, "clang failed (%d): %s\n", rc, cmd); exit(1) }
+}
+
+/**
+ * wasm: outlines the inner loops of the run-once entry ([wasmOutlineLoopBlocks]) from the optimized program [ll];
+ * returns the new IR file, or null when there is nothing to outline or a step fails (the program stays as it was).
+ */
+private fun outlineWasmLoops(opt: String, ll: String, output: String, tmps: MutableList<String>): String? {
+    val named = "$output.named.ll"; val blocks = "$output.blocks"; val out = "$output.outlined.ll"
+    tmps.add(named); tmps.add(blocks); tmps.add(out)
+    val info = captureAll("'$opt' -passes='instnamer,print<loops>' -S '$ll' -o '$named' 2>&1")
+    val lines = wasmOutlineLoopBlocks(info)
+    if (lines.isEmpty()) return null
+    writeFile(blocks, lines.joinToString("\n", postfix = "\n"))
+    val before = definedFunctions(readFile(named))
+    if (system("'$opt' -passes=extract-blocks -extract-blocks-file='$blocks' -S '$named' -o '$out' 2>/dev/null") != 0) return null
+    writeFile(out, wasmMarkOutlined(readFile(out), before) ?: return null)
+    return out
 }
