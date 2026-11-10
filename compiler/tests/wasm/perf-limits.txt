@@ -14,3 +14,7 @@ tierup-nbody nbody default default:--no-liftoff 1.20
 # trial_deletion.zig): cycles 0.83x -> 0.50x, bigheap 0.92x -> 0.67x.
 cc-cycles cycles default rc 0.70
 cc-bigheap bigheap default rc 0.82
+# Tier-up of loops written in main: dispatch's inner loop, outlined from main's loop (WasmLoopOutline.kt), against
+# --no-liftoff: 4.9x when it ran inside main (baseline code), 0.47x outlined; matmul 3.3x -> 1.02x.
+tierup-dispatch dispatch default default:--no-liftoff 1.30
+tierup-matmul matmul default default:--no-liftoff 1.30
