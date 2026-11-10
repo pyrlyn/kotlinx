@@ -128,12 +128,39 @@ void rt_gc_note_pause(int64_t pause_ns) {
     }
     gc_pauses[gc_pauses_len++] = pause_ns;
 }
-static int cmp_i64(const void *a, const void *b) { int64_t x = *(const int64_t *)a, y = *(const int64_t *)b; return (x > y) - (x < y); }
-/* Nearest-rank percentile in ms; 0 with no pauses. */
-static double gc_pause_pct(double q) {
+/* The report sorts the pauses with its own heapsort and formats its numbers itself: libc's qsort and printf would
+ * be linked into every program for a line printed only with KX_GC_STATS=1 (13 KB and 17 KB of a 44 KB wasm module). */
+static void gc_sift(int64_t *a, size_t i, size_t n) {
+    for (;;) {
+        size_t c = 2 * i + 1;
+        if (c >= n) return;
+        if (c + 1 < n && a[c + 1] > a[c]) c++;
+        if (a[i] >= a[c]) return;
+        int64_t t = a[i]; a[i] = a[c]; a[c] = t; i = c;
+    }
+}
+static void gc_sort(int64_t *a, size_t n) {
+    for (size_t i = n / 2; i-- > 0;) gc_sift(a, i, n);
+    for (size_t e = n; e-- > 1;) { int64_t t = a[0]; a[0] = a[e]; a[e] = t; gc_sift(a, 0, e); }
+}
+/* Nearest-rank percentile of the sorted pauses in ns; 0 with no pauses. */
+static int64_t gc_pause_pct(double q) {
     if (!gc_pauses_len) return 0;
     size_t i = (size_t)(q * gc_pauses_len + 0.999999); if (i < 1) i = 1; if (i > gc_pauses_len) i = gc_pauses_len;
-    return gc_pauses[i - 1] / 1e6;
+    return gc_pauses[i - 1];
+}
+static void gc_put_u64(uint64_t v, int width) { /* decimal, zero-padded to width digits */
+    char b[24]; int i = 23; b[i] = 0;
+    do { b[--i] = (char)('0' + v % 10); v /= 10; } while (v || 23 - i < width);
+    fputs(b + i, stderr);
+}
+static void gc_put_i64(int64_t v) { if (v < 0) { fputc('-', stderr); gc_put_u64(0 - (uint64_t)v, 1); } else gc_put_u64((uint64_t)v, 1); }
+/* ns as milliseconds with 3 decimals (printf's %.3f of ns / 1e6, rounded half to even on the microsecond). */
+static void gc_put_ms(int64_t ns) {
+    if (ns < 0) { fputc('-', stderr); ns = -ns; }
+    uint64_t us = (uint64_t)ns / 1000, r = (uint64_t)ns % 1000;
+    if (r > 500 || (r == 500 && (us & 1))) us++;
+    gc_put_u64(us / 1000, 1); fputc('.', stderr); gc_put_u64(us % 1000, 3);
 }
 
 /* At exit: final collection; KX_GC_STATS=1 prints the GC's statistics to stderr (bench/gc/micro.sh). */
@@ -142,9 +169,15 @@ void rt_exit_flush(void) {
     const char *e = getenv("KX_GC_STATS");
     if (e && *e && *e != '0') {
         KxGcStats st; rt_gc_stats(&st);
-        fprintf(stderr, "gc-stats: gc=%s collections=%lld reclaimed=%lld pause_total=%.3f pause_max=%.3f pause_p50=%.3f pause_p99=%.3f\n",
-                rt_gc_name(), (long long)st.collections, (long long)st.reclaimed, st.pause_ns_total / 1e6, st.pause_ns_max / 1e6,
-                (qsort(gc_pauses, gc_pauses_len, sizeof *gc_pauses, cmp_i64), gc_pause_pct(0.50)), gc_pause_pct(0.99));
+        gc_sort(gc_pauses, gc_pauses_len);
+        fputs("gc-stats: gc=", stderr); fputs(rt_gc_name(), stderr);
+        fputs(" collections=", stderr); gc_put_i64(st.collections);
+        fputs(" reclaimed=", stderr); gc_put_i64(st.reclaimed);
+        fputs(" pause_total=", stderr); gc_put_ms(st.pause_ns_total);
+        fputs(" pause_max=", stderr); gc_put_ms(st.pause_ns_max);
+        fputs(" pause_p50=", stderr); gc_put_ms(gc_pause_pct(0.50));
+        fputs(" pause_p99=", stderr); gc_put_ms(gc_pause_pct(0.99));
+        fputc('\n', stderr);
     }
 }
 #endif
