@@ -16,7 +16,7 @@ jobs:
     env:
       KN_VERSION: "2.4.21"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # Native Zig GC port / gc-libs need 0.17.1. Legacy native/gc/c/tests/zig was written for 0.16.x.
       # GC is vendored under native/gc/ (path deps); no compiler/gc git submodule.
       - uses: mlugg/setup-zig@v2
