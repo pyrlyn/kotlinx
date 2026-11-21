@@ -65,7 +65,7 @@ fun compileGenerics(p00: Program): String {
             val sa = IfaceSuperArgs.map[d.name] ?: return@map d
             InterfaceD(d.name, d.methods, d.line, d.typeParams, d.supers.map { s -> sa[s]?.let { ensure(s, it) } ?: s })
         }
-        val prog = Program(p0.funs, cls, plainIfaces + ifaceInst.values + extraIfaces.values, p0.globals)
+        val prog = Program(p0.funs, cls, plainIfaces + ifaceInst.values + extraIfaces.values, p0.globals, p0.companions)
         try {
             return NativeBackend(prog, generic, origin, genericIfaces).generate()
         } catch (n: NeedClass) {
@@ -252,7 +252,7 @@ private fun rewriteStatics(p: Program): Program {
             }
         }).cls(c, c.name, keepTypeParams = true)
     }
-    return Program(p.funs.map { sub.fn(it) }, classes, p.ifaces, p.globals.map { sub.s(it) as VarS })
+    return Program(p.funs.map { sub.fn(it) }, classes, p.ifaces, p.globals.map { sub.s(it) as VarS }, comps)
 }
 
 /** Substitutes type parameters by concrete type references throughout a class declaration ([rw]: optional expression rewrite). */

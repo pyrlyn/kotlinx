@@ -59,7 +59,7 @@ gradle pitest -Dkx.pit.classes='newkotlin.Lexer*' -Dkx.pit.threads=2 -Dkx.pit.mu
 gradle pitest -Dkx.skip=name1,name2           # leave out golden tests that fail on the current main
 ```
 
-Needs JDK 21 and `/usr/bin/clang` (or `NK_CC`). Dependencies: Kotlin JVM plugin, JUnit 5,
+Needs JDK 21 and `/usr/bin/clang` (or `NK_CC`). Dependencies: Kotlin JVM plugin, JUnit 6,
 `info.solidsoft.pitest` (dev/test only, nothing ships).
 
 ### PIT results 2026-11-03 (`jvm/pit-batches.sh`, ≤40 mutants per class)
