@@ -1,0 +1,18 @@
+# i19 working tree 2026-11-21 20:55 EET load: { 31.28 41.61 40.31 }
+sum 4.655
+alloc 95.687
+bigheap 140.427
+closures 121.725
+cycles 228.362
+dispatch 123.295
+file 58.658
+free 64.171
+hashmap 163.739
+lru 927.336
+matmul 21.457
+nbody 84.277
+recursion 7.108
+refpass 175.874
+sort 69.357
+strings 43.072
+trees 133.512

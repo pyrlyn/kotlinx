@@ -5,6 +5,9 @@ class TypeRef(val name: String, val args: List<TypeRef>, val nullable: Boolean) 
     override fun toString() = name + (if (args.isEmpty()) "" else args.joinToString(",", "<", ">")) + (if (nullable) "?" else "")
 }
 
+/** Pseudo type `$GetterType<g>`: the inferred return type of getter `g` (setters of untyped delegated `var`s). */
+const val GETTER_TYPE = "\$GetterType"
+
 /** An expression node; [line] is its source line, for errors. */
 sealed class E { var line = 0 }
 class IntL(val v: Long, val long: Boolean, val unsigned: Boolean = false) : E()
@@ -93,7 +96,10 @@ class Param(val name: String, val type: TypeRef, val default: E? = null, /** `va
 class FunD(val name: String, val params: List<Param>, val ret: TypeRef?, val body: Block?, val exprBody: E?, val line: Int,
            val typeParams: List<String> = emptyList(),
            /** Extension receiver type (`fun Recv.name(...)`); resolved away by [Parser.program]. */
-           val recv: TypeRef? = null)
+           val recv: TypeRef? = null) {
+    /** Whether a call with [n] explicit arguments fits (context parameters are never passed explicitly). */
+    fun takesArgs(n: Int) = params.filter { !it.ctx }.let { ps -> ps.any { it.vararg } || n in ps.count { it.default == null }..ps.size }
+}
 /** `type == null` (inferred) only for body properties, which have `init`. */
 class FieldD(val name: String, val type: TypeRef?, val isVar: Boolean, val init: E? = null, val lateinit: Boolean = false)
 /**
