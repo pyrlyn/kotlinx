@@ -7,13 +7,13 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| PASS | 3442 |
+| PASS | 3482 |
 | N/A | 2984 |
-| UNSUPPORTED | 2030 |
+| UNSUPPORTED | 1990 |
 | MISCOMPILE | 17 |
 | COMPILER_CRASH | 2 |
 
-Kept in tree (re-runnable with `run.py`): 3442
+Kept in tree (re-runnable with `run.py`): 3482
 
 ## Unsupported features (roadmap, by test count)
 
