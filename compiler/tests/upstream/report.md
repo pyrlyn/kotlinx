@@ -7,56 +7,58 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
+| PASS | 3274 |
 | N/A | 2984 |
-| UNSUPPORTED | 2779 |
-| PASS | 2712 |
+| UNSUPPORTED | 2199 |
+| MISCOMPILE | 16 |
+| COMPILER_CRASH | 2 |
 
-Kept in tree (re-runnable with `run.py`): 2712
+Kept in tree (re-runnable with `run.py`): 3274
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 250 |
-| interfaces | 213 |
-| generics | 191 |
-| lambdas / function types / references | 146 |
-| operator/infix functions | 125 |
-| property accessors / delegation | 86 |
-| type inference / mismatch | 85 |
-| objects / companion objects | 68 |
-| class bodies / constructors | 62 |
-| type inference (expression bodies) | 47 |
-| inheritance (open/abstract/sealed) | 41 |
-| nullable types | 38 |
-| destructuring declarations | 30 |
-| other syntax (at ':') | 28 |
-| annotations | 27 |
+| strings / templates | 221 |
+| generics | 148 |
+| interfaces | 145 |
+| type inference / mismatch | 94 |
+| operator/infix functions | 87 |
+| property accessors / delegation | 74 |
+| lambdas / function types / references | 65 |
+| class bodies / constructors | 59 |
+| objects / companion objects | 51 |
+| inheritance (open/abstract/sealed) | 43 |
+| nullable types | 30 |
+| annotations | 29 |
 | inline/value classes | 24 |
-| other syntax (at ',') | 23 |
-| other: unknown type T | 20 |
-| other: unknown type Number | 19 |
-| other: unknown type * | 18 |
-| unknown x (stdlib API / unsupported decl) | 17 |
-| other syntax (at '.') | 16 |
-| other: unknown type Nothing | 16 |
-| when expressions | 15 |
-| other: local classes that capture local variables are not supported | 15 |
-| other syntax (at 'suspend') | 14 |
-| unknown Result (stdlib API / unsupported decl) | 14 |
-| enum classes | 13 |
-| local / extension functions | 13 |
-| other syntax (at '<eof>') | 13 |
-| other: unsupported call | 13 |
+| other: unknown type * | 23 |
+| other syntax (at ':') | 23 |
+| other syntax (at '.') | 18 |
+| other: local classes that capture local variables are not supported | 18 |
+| unknown x (stdlib API / unsupported decl) | 18 |
+| local / extension functions | 17 |
+| other syntax (at '<eof>') | 16 |
+| unknown ok (stdlib API / unsupported decl) | 14 |
+| other syntax (at 'val') | 13 |
+| default arguments | 13 |
 | other syntax (at 'var') | 13 |
-| other syntax (at 'val') | 12 |
-| other: unknown type R | 12 |
-| other syntax (at '(') | 11 |
-| unknown Int (stdlib API / unsupported decl) | 11 |
-| default arguments | 11 |
+| other: unknown type T | 11 |
+| other: unsupported call | 11 |
+| other: local declarations are only supported in function bodies | 11 |
+| unknown context (stdlib API / unsupported decl) | 11 |
 | unknown A (stdlib API / unsupported decl) | 10 |
+| enum classes | 10 |
 | stdlib: kotlin.test asserts | 10 |
-| types: UIntArray | 10 |
+| varargs | 10 |
+| other: override of 'foo' in C changes its signature | 10 |
+| modifiers (private/const/lateinit/...) | 10 |
+| other syntax (at 'inner') | 10 |
+| other: unknown method IntRange.map() | 9 |
+| unknown contract (stdlib API / unsupported decl) | 9 |
+| loops / labels | 8 |
+| unknown foo (stdlib API / unsupported decl) | 8 |
+| exceptions | 8 |
 
 ## N/A reasons
 
@@ -93,3 +95,21 @@ Minimal repros in `bugs/`:
 
 Affected upstream tests:
 
+- MISCOMPILE `box/box/boxing/kt84727.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: NullPointerException\n'
+- MISCOMPILE `box/box/boxing/kt84727_if.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: NullPointerException\n'
+- MISCOMPILE `box/box/boxing/kt84727_inline.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: NullPointerException\n'
+- MISCOMPILE `box/box/boxingOptimization/kt19767_2.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.NullPointerException: key  not in map\n'
+- MISCOMPILE `box/box/boxingOptimization/kt5588.kt` — exit=0 stdout='fail\n' stderr=''
+- MISCOMPILE `box/box/callableReference/equality/overloadedFunctionEquality.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: Any and Any should be equal\n'
+- MISCOMPILE `box/box/classDelegation/hiddenDelegateAndLateinitVar.kt` — exit=0 stdout='Fail\n' stderr=''
+- MISCOMPILE `box/box/controlStructures/forInCharSequenceWithIndex/forInCharSeqWithIndexStops.kt` — exit=0 stdout="fail: '0:a;1:b;2:c;3:d;'\n" stderr=''
+- COMPILER_CRASH `box/box/coroutines/infiniteLoopInNextMeaningful.kt` — compile timeout: LLVM 18 opt (lto-pre-link<O3>, the CI toolchain) does not terminate on this IR; passes with LLVM 21+
+- MISCOMPILE `box/box/delegatedProperty/provideDelegate/localCaptured.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: Expected <O;tdf(O);K;tdf(K);OK;get(
+- MISCOMPILE `box/box/extensionFunctions/kt606.kt` — exit=0 stdout='OKFAIL\n' stderr=''
+- COMPILER_CRASH `box/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt` — /Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/GitHub/listepo/apps/kotlinx/.rtok/
+- MISCOMPILE `box/box/inference/noCoercionToUnitWithEqualityConstraintForNullableReturnType.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.Exception: fail, result is not null: kotlin.Unit\n'
+- MISCOMPILE `box/box/jdk/hashMap.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.NullPointerException: key eeeee not in map\n'
+- MISCOMPILE `box/box/suspendConversion/suspendConversionNullableArgumentStaysNull.kt` — exit=0 stdout='fail: null argument arrived non-null\n' stderr=''
+- MISCOMPILE `box/box/unit/closureReturnsNullableUnit.kt` — exit=0 stdout='Fail 1\n' stderr=''
+- MISCOMPILE `box/box/unit/nullableUnit.kt` — exit=0 stdout='Fail 1\n' stderr=''
+- MISCOMPILE `box/box/unit/nullableUnitInWhen3.kt` — exit=0 stdout='Fail\n' stderr=''
