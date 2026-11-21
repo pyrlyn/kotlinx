@@ -7,13 +7,13 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| PASS | 3275 |
+| PASS | 3274 |
 | N/A | 2984 |
 | UNSUPPORTED | 2199 |
 | MISCOMPILE | 16 |
-| COMPILER_CRASH | 1 |
+| COMPILER_CRASH | 2 |
 
-Kept in tree (re-runnable with `run.py`): 3275
+Kept in tree (re-runnable with `run.py`): 3274
 
 ## Unsupported features (roadmap, by test count)
 
@@ -103,6 +103,7 @@ Affected upstream tests:
 - MISCOMPILE `box/box/callableReference/equality/overloadedFunctionEquality.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: Any and Any should be equal\n'
 - MISCOMPILE `box/box/classDelegation/hiddenDelegateAndLateinitVar.kt` — exit=0 stdout='Fail\n' stderr=''
 - MISCOMPILE `box/box/controlStructures/forInCharSequenceWithIndex/forInCharSeqWithIndexStops.kt` — exit=0 stdout="fail: '0:a;1:b;2:c;3:d;'\n" stderr=''
+- COMPILER_CRASH `box/box/coroutines/infiniteLoopInNextMeaningful.kt` — compile timeout: LLVM 18 opt (lto-pre-link<O3>, the CI toolchain) does not terminate on this IR; passes with LLVM 21+
 - MISCOMPILE `box/box/delegatedProperty/provideDelegate/localCaptured.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.IllegalStateException: Expected <O;tdf(O);K;tdf(K);OK;get(
 - MISCOMPILE `box/box/extensionFunctions/kt606.kt` — exit=0 stdout='OKFAIL\n' stderr=''
 - COMPILER_CRASH `box/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt` — /Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/GitHub/listepo/apps/kotlinx/.rtok/
