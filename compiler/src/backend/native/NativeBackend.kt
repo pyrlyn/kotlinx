@@ -1392,6 +1392,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     }
                 }
                 val tg = s.target
+                // `a += b` on a class with `plusAssign` (member or extension) and no `plus`: `a.plusAssign(b)`.
+                OP_FUNS[s.op.dropLast(1)]?.takeIf { s.op != "=" }?.let { base ->
+                    val tt = probeType(tg)
+                    fun has(n: String) = tt != null && (hasMember(tt, n) || hasMext(n, tt) || extFuns[n]?.any { extMatches(tt, it.params[0].type, it.typeParams) } == true)
+                    if ((tt is Ty.Cls || tt is Ty.Iface) && has(base + "Assign") && !has(base)) {
+                        releaseIfOwned(genExpr(CallE(MemberE(tg, base + "Assign", false).also { it.line = s.line }, emptyList(), listOf(s.value), null).also { it.line = s.line }))
+                        return
+                    }
+                }
                 fun pure(x: E) = (x is NameE && lookup(x.n) != null) || x is IntL || (x is NameE && x.n == "this")
                 if (s.op != "=" && tg is IndexE && !(pure(tg.recv) && pure(tg.idx))) {
                     // `a()[i()] += v`: receiver and index are evaluated once.
@@ -2863,6 +2872,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun genNamedCall(n: String, e00: CallE): Val {
         // A member of the implicit receiver wins over a top-level function with context parameters.
         if (lookup(n) == null && extRecvHas(n, true)) return method(genExpr(NameE("\$this_ext").also { it.line = line }), n, e00)
+        // Another member extension applicable to the extension receiver: `fun T.a() = b()` calls `this.b()` (`fun T.b()`).
+        if (lookup(n) == null) lookup("\$this_ext")?.let { l -> if (hasMext(n, l.t)) return method(genExpr(NameE("\$this_ext").also { it.line = line }), n, e00) }
         if (lookup(n) == null && n in funDecls && n !in LiftedLocals.names && e00 !in ctxFilled) lookup("this")?.let { l ->
             val rt = l.t
             if (rt is Ty.Cls && n in classes.getValue(rt.name).methods) return method(genExpr(NameE("this").also { it.line = line }), n, e00)
@@ -3135,7 +3146,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         genericFuns[n]?.let { return genGenericCall(it, e) }
         if (n !in sigs) {
-            // Extension (or member) call on the implicit receiver.
+            // Extension (or member) call on the implicit receiver: in a member extension the extension receiver comes
+            // before the dispatch receiver (`fun String.loud() = uppercase()`), unless a lambda rebound `this`.
+            if (lookup("\$this_ext") != null && owner?.let { o -> lookup("this")?.t.let { it == null || it == Ty.Cls(o.name) } } == true) {
+                val onExt = CallE(MemberE(NameE("\$this_ext").also { it.line = line }, n, false).also { it.line = line }, e.typeArgs, e.args, e.lambda).also { it.line = line }
+                if (probeType(onExt) != null) return genExpr(onExt)
+            }
             if (lookup("this") != null) return method(genExpr(NameE("this").also { it.line = line }), n, e)
             owner?.let { o -> if (extFuns[n] != null) return method(Val("%this", Ty.Cls(o.name)), n, e) }
         }
@@ -3787,6 +3803,17 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return false
     }
 
+    /** The companion object (of class [cls] or a class it is nested in) declaring a member extension [m] applicable to [t]. */
+    private fun companionMext(cls: String, m: String, t: Ty): String? {
+        var c = cls
+        while (true) {
+            prog.companions[c]?.first?.takeIf { it != cls }?.let { cn ->
+                if (classes[cn]?.methods?.get("mext\$$m")?.let { extMatches(t, it.params[0].type, it.typeParams) } == true && !hasMember(t, m)) return cn
+            }
+            c = NestedClasses.outer[c] ?: return null
+        }
+    }
+
     private fun hasMember(t: Ty, n: String): Boolean = when (t) {
         is Ty.Cls -> classes.getValue(t.name).let { n in it.methods || it.index(n) >= 0 }
         is Ty.Iface -> ifaces[t.name]?.methods?.containsKey(n) == true
@@ -4167,13 +4194,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (n == "collectReferenceFieldValues" && e0.args.isEmpty() && e0.lambda == null) return collectRefFields(r)
         // Member extension of the enclosing class (dispatch receiver `this`).
         owner?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, it.typeParams) && !hasMember(t, n) }?.let {
-            if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
             return withTemps(listOf(r)) { (x) -> callMethod(Val("%this", Ty.Cls(o.name)), o, "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
+        } }
+        // Member extension of the companion object of the enclosing class or of a class it is nested in (an implicit receiver).
+        owner?.let { o -> companionMext(o.name, n, t)?.let { cn ->
+            return withTemps(listOf(r)) { (x) -> method(genExpr(NameE(cn).also { it.line = line }), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
         } }
         // Member extension of an implicit receiver (`with(obj) { x.ext() }`, a lambda with receiver).
         lookup("this")?.let { l -> val rt = l.t
             if (rt is Ty.Cls && rt.name != owner?.name) classes[rt.name]?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, it.typeParams) && !hasMember(t, n) }?.let {
-                if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
                 return withTemps(listOf(r)) { (x) -> method(genExpr(NameE("this").also { it.line = line }), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
             } }
             if (rt is Ty.Iface && ifaces[rt.name]?.methods?.get("mext\$$n")?.params?.firstOrNull() == t && !hasMember(t, n))
@@ -4558,9 +4587,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         fun memberParams(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? = memberParams0(t, name)
             ?: extFuns[name]?.filter { it.params.isNotEmpty() && extMatches(t, it.params[0].type, it.typeParams) }?.takeIf { it.isNotEmpty() }?.let { fs ->
-                val f = fs.singleOrNull()?.takeIf { it.typeParams.isEmpty() } ?: fail("reference to overloaded or generic extension $name is not supported")
+                fun mentions(r: TypeRef, tps: List<String>): Boolean = r.name in tps || r.args.any { mentions(it, tps) }
+                // A generic extension whose type parameters occur only in the receiver: the lambda's call `recv.f(..)`
+                // infers them from the receiver (`List<T>.first()`); others would need the expected type.
+                val f = fs.singleOrNull()?.takeIf { g -> g.params.drop(1).none { mentions(it.type, g.typeParams) } }
+                    ?: fail("reference to overloaded or generic extension $name is not supported")
                 f.params.drop(1).map { it.type } to false }
-            ?: extFuns["\$prop\$$name"]?.firstOrNull { it.typeParams.isEmpty() && it.params.size == 1 && extMatches(t, it.params[0].type, emptyList()) }?.let { emptyList<TypeRef>() to true }
+            ?: extFuns["\$prop\$$name"]?.firstOrNull { it.params.size == 1 && extMatches(t, it.params[0].type, it.typeParams) }?.let { emptyList<TypeRef>() to true }
             ?: builtinMember(t, name)?.also { if (name == "get") builtinGet = true }
         if (recv == null) {
             funDecls[n]?.let { f ->
@@ -4995,6 +5028,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // Operator overloading: `a + b` -> a.plus(b); `a < b` -> a.compareTo(b) < 0. `==` stays identity.
             OP_FUNS[e.op]?.let { return method(a, it, opCall(it, e.r)) }
             if (e.op in setOf("<", ">", "<=", ">=")) return compare(e.op, method(a, "compareTo", opCall("compareTo", e.r)), Val("0", Ty.I32))
+        }
+        // A nullable primitive has no built-in arithmetic, so an operator extension on it (`Int?.plus`) is the only candidate.
+        if (a.t is Ty.NBox) OP_FUNS[e.op]?.let { n ->
+            if (extFuns[n]?.any { it.params[0].type.nullable && extMatches(a.t, it.params[0].type, it.typeParams) } == true) return method(a, n, opCall(n, e.r))
         }
         // `operator fun String?.plus` applies to nullable receivers, whose nullability is not tracked here.
         if (e.op == "+" && a.t == Ty.Str && extFuns["plus"]?.any { it.params[0].type.name == "String" && it.params[0].type.nullable } == true)

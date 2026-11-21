@@ -30,6 +30,9 @@ object RecvLocalClasses {
 
 object LiftedLocals { val names = HashSet<String>(); var usesRef = false }
 
+/** Nested class -> the class it is declared in (both hoisted to top level): companions of outer classes are implicit receivers. */
+object NestedClasses { val outer = HashMap<String, String>() }
+
 private var argTmp = 0
 
 private fun isOpTok(x: Tok, vararg ss: String) = x.k == K.OP && x.s in ss
@@ -497,8 +500,6 @@ class Parser(toks: List<Tok>) {
         for (i in globals.indices) { val g = globals[i]; if (g.type != null && isLit(g.init)) globals[i] = VarS(g.name, g.isVar, g.type, lit(g.type, g.init)).also { it.line = g.line } }
     }
 
-    /** Type parameters of the interface whose body is being parsed. */
-    private var memberTps: List<String> = emptyList()
     /** Top-level `fun interface` declarations by name. */
     private val funIfaces = LinkedHashMap<String, InterfaceD>()
     /** The single abstract method of each fun interface (possibly inherited, with super type arguments substituted). */
@@ -758,7 +759,7 @@ class Parser(toks: List<Tok>) {
         return extProperty0().map { g -> FunD(g.name, ctx + g.params, g.ret, g.body, g.exprBody, g.line, g.typeParams, g.recv) }
     }
 
-    private fun extProperty0(): List<FunD> {
+    private fun extProperty0(abstractOk: Boolean = false): List<FunD> {
         val isVar = next().s == "var"
         val tps = typeParams()
         val rt = type()
@@ -766,16 +767,19 @@ class Parser(toks: List<Tok>) {
             else if (rt.args.isEmpty() && rt.name.contains('.')) TypeRef(rt.name.substringBeforeLast('.'), emptyList(), false) to rt.name.substringAfterLast('.')
             else fail("expected extension property")
         val ty = if (isOp(":")) { next(); type() } else null
-        return extAccessors(name, ty, tps, recv, isVar)
+        return extAccessors(name, ty, tps, recv, isVar, abstractOk)
     }
 
-    /** Getter and (for `var`) setter of an extension property, in either order, each optionally with a visibility modifier. */
-    private fun extAccessors(name: String, ty: TypeRef?, tps: List<String>, recv: TypeRef, isVar: Boolean): List<FunD> {
+    /**
+     * Getter and (for `var`) setter of an extension property, in either order, each optionally with a visibility or `inline`
+     * modifier. Without accessors and [abstractOk] (an interface or `abstract` member) they are abstract.
+     */
+    private fun extAccessors(name: String, ty: TypeRef?, tps: List<String>, recv: TypeRef, isVar: Boolean, abstractOk: Boolean = false): List<FunD> {
         var get: FunD? = null; var set: FunD? = null
         while (true) {
             val at = p
             while (t[p].k == K.NL) p++
-            while (peek().k == K.ID && peek().s in setOf("private", "protected", "internal", "public") && t[p + 1].k == K.ID && t[p + 1].s in setOf("get", "set")) p++
+            while (peek().k == K.ID && peek().s in setOf("private", "protected", "internal", "public", "inline") && t[p + 1].k == K.ID && t[p + 1].s in setOf("get", "set")) p++
             if (get == null && isId("get") && t[p + 1].k == K.OP && t[p + 1].s == "(") { get = getter("\$prop\$$name", ty, tps, recv); continue }
             if (set == null && isVar && isId("set") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
                 val line = next().line; next()
@@ -787,18 +791,26 @@ class Parser(toks: List<Tok>) {
             }
             p = at; break
         }
+        if (get == null && set == null && abstractOk) {
+            val line = peek().line
+            val pt = ty ?: fail("abstract extension properties need a type")
+            return listOfNotNull(FunD("\$prop\$$name", emptyList(), pt, null, null, line, tps, recv),
+                if (isVar) FunD("\$set\$$name", listOf(Param("v", pt)), TypeRef("Unit", emptyList(), false), null, null, line, tps, recv) else null)
+        }
         if (get == null) fail("extension properties need a getter")
         if (isVar && set == null) fail("extension var properties need a setter")
         return listOfNotNull(get, set)
     }
 
     /** Member extension `fun R.f(...)`: method `mext$f($this_ext: R, ...)`; `this` is the extension receiver. */
-    private fun memberExt(f: FunD, memberTps: Collection<String>): FunD {
-        val recv = f.recv!!
+    private fun memberExt(f: FunD): FunD {
         if (curClass == null && curObject == null && curIface == null) fail("member extension functions are only supported in classes, objects and interfaces")
-        // Unqualified calls would bind to the dispatch receiver before the extension receiver.
-        if (recv.name in memberTps) fail("member extensions on a type parameter are not supported")
-        val sub = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n == "this") NameE("\$this_ext").also { it.line = x.line } else null })
+        return asMemberExt(f)
+    }
+
+    private fun asMemberExt(f: FunD): FunD {
+        val recv = f.recv!!
+        val sub = Subst(emptyMap(), rw = { x -> if (x is NameE && (x.n == "this" || x.n == "this@${f.name}")) NameE("\$this_ext").also { it.line = x.line } else null })
         return FunD("mext\$${f.name}", listOf(Param("\$this_ext", recv)) + f.params, f.ret, f.body?.let { sub.block(it) },
             f.exprBody?.let { sub.e(it) }, f.line, f.typeParams, recv)
     }
@@ -1032,7 +1044,7 @@ class Parser(toks: List<Tok>) {
                 if (isPrivate && curIface != null && isId("fun") && t[p + 1].k == K.ID) privateIfaceFuns.getOrPut(curIface!!) { HashSet() }.add(t[p + 1].s)
                 // Member extension property `val R.x: T get() = ...` (optionally `var` with a setter): member extensions `$prop$x` / `$set$x`.
                 if ((isId("val") || isId("var")) && t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "?.")) {
-                    for (f in extProperty0()) ms.add(memberExt(f, memberTps))
+                    for (f in extProperty0(props == null || isAbstract)) ms.add(memberExt(f))
                     continue
                 }
                 if (props != null && inits != null && (isId("val") || isId("var"))) {
@@ -1113,7 +1125,7 @@ class Parser(toks: List<Tok>) {
                 if (f.recv != null) {
                     // Operator member extensions are lowered like other member extensions; operator syntax resolves them in the backend.
                     // `componentN` member extensions are called by destructuring as `d.componentN()` (an ordinary call).
-                    ms.add(memberExt(f, memberTps))
+                    ms.add(memberExt(f))
                     continue
                 }
                 ms.add(f)
@@ -1352,7 +1364,7 @@ class Parser(toks: List<Tok>) {
         if (outer == null) fail("nested declarations are only supported in classes", t[save])
         val name = if (d is ClassD) d.name else (d as InterfaceD).name
         if (name in nestedIn) fail("two nested classes named $name are not supported", t[save])
-        nestedIn[name] = outer
+        nestedIn[name] = outer; NestedClasses.outer[name] = outer
         if (inner) innerOf[name] = outer
         if (d is ClassD) hoisted.add(d) else hoistedIfaces.add(d as InterfaceD)
         return true
@@ -1443,6 +1455,10 @@ class Parser(toks: List<Tok>) {
                 c.enumEntries?.map { (n, a) -> n to a.map { sub.e(it) } }, c.isValue, c.superTypeArgs)
         }
     }
+    /** Receivers with operator extensions in the Kotlin library (`String?.plus`, `Collection.plus`, ...). */
+    private val LIB_OP_RECEIVERS = setOf("Any", "String", "CharSequence", "Iterable", "Collection", "List", "MutableList", "Set", "MutableSet",
+        "Map", "MutableMap", "Array", "Sequence", "MutableCollection", "Comparable")
+    private val PRIMITIVE_NAMES = setOf("Int", "Long", "Short", "Byte", "Char", "Boolean", "Double", "Float", "UInt", "ULong", "UShort", "UByte")
     private val OPERATOR_NAMES = setOf("plus", "minus", "times", "div", "rem", "mod", "rangeTo", "rangeUntil", "compareTo", "equals",
         "contains", "get", "set", "invoke", "inc", "dec", "not", "unaryMinus", "unaryPlus", "plusAssign", "minusAssign",
         "timesAssign", "divAssign", "remAssign", "iterator", "hasNext", "next", "getValue", "setValue", "provideDelegate")
@@ -1537,6 +1553,8 @@ class Parser(toks: List<Tok>) {
         if (!sawLocal) return
         val taken = HashSet<String>()
         funs.forEach { taken.add(it.name) }; classes.forEach { taken.add(it.name) }; ifaces.forEach { taken.add(it.name) }
+        // Extension operators by `name|receiver`: a lifted local operator extension must not clash with one of them.
+        val extOps = funs.mapNotNullTo(HashSet()) { g -> g.recv?.let { "${g.name}|${it.name}" } }
         fun fresh(n: String, extra: Set<String> = emptySet()): String {
             if (n !in taken && n !in extra) { taken.add(n); LiftedLocals.names.add(n); return n }
             while (true) { val m = "$n\$l${localN++}"; if (m !in taken && m !in extra) { taken.add(m); LiftedLocals.names.add(m); return m } }
@@ -1672,12 +1690,29 @@ class Parser(toks: List<Tok>) {
                 val ownerNames = owner?.let { o -> o.methods.map { it.name } + newMethods.map { it.name } }?.toSet() ?: emptySet()
                 for (d in decls) when (d) {
                     is FunD -> {
-                        // Operator resolution against built-in operators is not scoped: a local `Int?.plus` would
-                        // change every `+` in the program.
-                        if (d.recv != null && d.name in OPERATOR_NAMES)
-                            throw CompileError("line ${d.line}: local operator extension functions are not supported")
                         val caps = usedNames(d) - localsOf(d) - d.name
-                        if (caps.none { it in outer }) {
+                        // A non-capturing local operator extension is lifted under its own name (operator syntax finds it
+                        // by name) and so is visible program-wide. That only changes code outside its scope where Kotlin
+                        // would pick another extension (members always win), so receivers with library operator
+                        // extensions, type parameters and clashes with other extension operators are refused.
+                        if (d.recv != null && d.name in OPERATOR_NAMES) {
+                            val r = d.recv!!
+                            // Function types erase nullable primitives (`(Int?) -> Int` takes an Int), so an `Int?` operator
+                            // next to lambdas could miss its operands and fall back to the built-in operator: refused.
+                            var lambdas = false
+                            if (r.nullable && r.name in PRIMITIVE_NAMES) Subst(emptyMap(), rw = { x -> if (x is LambdaE || (x is CallE && x.lambda != null)) lambdas = true; null }).fn(f)
+                            val why = when {
+                                caps.any { it in outer } -> "capturing local variables"
+                                r.name in d.typeParams || r.name in f.typeParams -> "on a type parameter"
+                                r.name in LIB_OP_RECEIVERS -> "on a receiver with library operator extensions"
+                                lambdas -> "on a nullable primitive next to lambdas"
+                                !extOps.add("${d.name}|${r.name}") || d.name in ownerNames || "mext\$${d.name}" in ownerNames -> "clashing with another declaration"
+                                else -> null
+                            }
+                            if (why != null) throw CompileError("line ${d.line}: local operator extension functions $why are not supported")
+                            taken.add(d.name); LiftedLocals.names.add(d.name)
+                            rename[d.name] = d.name
+                        } else if (caps.none { it in outer }) {
                             rename[d.name] = fresh(d.name, ownerNames)
                             // A non-generic local function of a generic function that mentions its type parameters
                             // is lifted generic over them; calls pass them as type arguments.
@@ -1819,7 +1854,8 @@ class Parser(toks: List<Tok>) {
                         val g = copyFun(sub.fn(d), d, rename.getValue(d.name)).let { g0 ->
                             genFunTps[d.name]?.let { tps -> FunD(g0.name, g0.params, g0.ret, g0.body, g0.exprBody, g0.line, tps, g0.recv) } ?: g0 }.let { g1 ->
                             capFun[d.name]?.let { cs -> FunD(g1.name, cs.map { (c, t) -> Param(c, t) } + g1.params, g1.ret, g1.body, g1.exprBody, g1.line, g1.typeParams, g1.recv) } ?: g1 }
-                        if (owner != null) newMethods.add(lift(g, owner, newMethods)) else funs.add(lift(g, null, newMethods))
+                        // In a method, a local extension is a member extension of the class (its body may use `this@C`).
+                        if (owner != null) newMethods.add(lift(if (g.recv != null) asMemberExt(g) else g, owner, newMethods)) else funs.add(lift(g, null, newMethods))
                     }
                     is ClassD -> classes.add(copyClass(sub, d, rename[d.name] ?: d.name).let { c0 ->
                         val c = genTps[d.name]?.let { tps -> ClassD(c0.name, c0.fields, c0.supers, c0.methods, c0.line, c0.ctorParams, c0.inits, c0.superArgs, tps, c0.enumEntries, c0.isValue, c0.superTypeArgs) } ?: c0
@@ -1998,8 +2034,8 @@ class Parser(toks: List<Tok>) {
             ifaceSupers[name] = ss
         }
         whereClause(tps)
-        val savedIface = curIface; curIface = name; val savedTps = memberTps; memberTps = tps
-        val ms0 = try { if (isOp("{")) members() else emptyList() } finally { curIface = savedIface; memberTps = savedTps }
+        val savedIface = curIface; curIface = name
+        val ms0 = try { if (isOp("{")) members() else emptyList() } finally { curIface = savedIface }
         val ms = inferIfaceRets(name, renamePrivate(name, ms0))
         val defs = ms.filter { it.body != null || it.exprBody != null }
         if (defs.isNotEmpty() && tps.isNotEmpty()) genericIfaceTps[name] = tps
