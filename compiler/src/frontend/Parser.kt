@@ -1117,7 +1117,13 @@ class Parser(toks: List<Tok>) {
                     val constOwner = curClass ?: curObject
                     if (isConst && constOwner != null) ConstFields.names.add("$constOwner.$n")
                     if (isConst && constOwner != null && (f.init is IntL || f.init is BoolL || f.init is CharL || f.init is DblL || (f.init is StrL && (f.init as StrL).parts.all { it is String })))
-                        { constVals["$constOwner.$n"] = f.init!!; if ('$' in constOwner) constVals["${constOwner.substringBefore('$')}.$n"] = f.init!! }
+                        {
+                            constVals["$constOwner.$n"] = f.init!!; if ('$' in constOwner) constVals["${constOwner.substringBefore('$')}.$n"] = f.init!!
+                            // A compile-time constant has its value before any initializer runs (`val x = foo()`,
+                            // `fun foo() = y` with `y` declared later): it is stored first.
+                            inits.remove(f)
+                            inits.add(inits.indexOfFirst { !(it is FieldD && "$constOwner.${it.name}" in constVals) }.let { if (it < 0) inits.size else it }, f)
+                        }
                     continue
                 }
                 if (props == null && (isId("val") || isId("var"))) {
