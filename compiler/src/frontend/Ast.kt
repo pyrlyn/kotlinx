@@ -73,6 +73,12 @@ class Block(val stmts: List<S>, val params: List<String> = emptyList(), val para
 /** `Owner.name` of every `const val` member (declared in a class or object body), for `isPermanent()`. */
 object ConstFields { val names = HashSet<String>() }
 
+/**
+ * Type arguments written on a type-name receiver of a callable reference (`Array<String>::firstElement`), by the
+ * receiver's NameE (references resolve by the type name; the arguments pick the instance, e.g. `ArrayList<String>`).
+ */
+object RefTypeArgs { val map = HashMap<NameE, List<TypeRef>>() }
+
 /** Names of top-level `external fun` declarations: implemented in C, linked via `--link`, called through the C ABI. */
 object Externs { val names = HashSet<String>() }
 /**

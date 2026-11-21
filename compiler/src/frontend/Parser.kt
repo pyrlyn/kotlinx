@@ -4,6 +4,8 @@ private val ASSIGN_OPS = setOf("=", "+=", "-=", "*=", "/=", "%=")
 private val IN_OPS = setOf("in", "!in")
 private val INFIX_FUNS = setOf("and", "or", "xor", "shl", "shr", "ushr", "until", "downTo", "step")
 private val GENERIC_CALLS = setOf("ArrayList", "mutableListOf", "arrayListOf", "listOf", "HashMap", "hashMapOf", "mutableMapOf")
+private val CALL_AFTER_TYPE_ARGS = setOf("(", "{")
+private val REF_AFTER_TYPE_ARGS = setOf("::")
 private val LAMBDA_METHODS = setOf("usePinned", "map", "filter", "forEach", "sumOf", "count")
 
 /** Names after which `{` does not start a trailing lambda. */
@@ -242,8 +244,10 @@ class Parser(toks: List<Tok>) {
         props.forEachIndexed { i, p ->
             // Double properties compare like Double.equals (bits: NaN == NaN, 0.0 != -0.0).
             fun bits(e: E): E = if (p.type.name == "Double" || p.type.name == "Float") CallE(MemberE(e, "\$bits", false).also { it.line = l }, emptyList(), emptyList(), null).also { it.line = l } else e
-            // `Array<T>` is a list here: its `==` would compare contents, so data-class equality uses identity as in Kotlin.
-            val one = BinE(if (p.type.name == "Array") "===" else "==", bits(nm(p.name)), bits(MemberE(nm("other"), p.name, false).also { it.line = l })).also { it.line = l }
+            // Arrays compare by identity in Kotlin's data-class equality (`Array<T>` is a list here, whose `==` would
+            // compare contents). Short/UByte/UShort arrays share the representation of the arrays they widen to.
+            val arr = p.type.name == "Array" || p.type.name in ANY_BOXED_ARRAYS || p.type.name in setOf("ShortArray", "UByteArray", "UShortArray")
+            val one = BinE(if (arr) "===" else "==", bits(nm(p.name)), bits(MemberE(nm("other"), p.name, false).also { it.line = l })).also { it.line = l }
             eq = if (i == 0) one else BinE("&&", eq, one).also { it.line = l }
         }
         ms.add(FunD("\$equals", listOf(Param("other", self)), TypeRef("Boolean", emptyList(), false), null, eq, l))
@@ -3152,7 +3156,10 @@ class Parser(toks: List<Tok>) {
                         while (!isOp(">")) { ta.add(type()); if (isOp(",")) next() }
                         next()
                         CallE(NameE(tk.s).also { it.line = tk.line }, ta, args(), null)
-                    } else explicitTypeArgs()?.let { ta ->
+                    } else explicitTypeArgs(REF_AFTER_TYPE_ARGS)?.let { ta ->
+                        // `Array<String>::firstElement`: the type arguments ride along in RefTypeArgs.
+                        NameE(tk.s).also { RefTypeArgs.map[it] = ta }
+                    } ?: explicitTypeArgs()?.let { ta ->
                         // `f<T>(args) { lambda }` or `f<T> { lambda }`
                         val a = if (isOp("(")) args() else emptyList()
                         val lam = if (!noBraceCall && t[p].k == K.OP && t[p].s == "{") block(lambda = true) else null
@@ -3179,7 +3186,7 @@ class Parser(toks: List<Tok>) {
     }
 
     /** `f<Int, String>(...)`: speculatively parses explicit type arguments before a call; backtracks otherwise. */
-    private fun explicitTypeArgs(): List<TypeRef>? {
+    private fun explicitTypeArgs(after: Set<String> = CALL_AFTER_TYPE_ARGS): List<TypeRef>? {
         if (!(t[p].k == K.OP && t[p].s == "<" && t[p + 1].k == K.ID)) return null
         val save = p
         try {
@@ -3187,7 +3194,7 @@ class Parser(toks: List<Tok>) {
             val ta = ArrayList<TypeRef>()
             while (!isOp(">")) { ta.add(type()); if (isOp(",")) next() else if (!isOp(">")) { p = save; return null } }
             next()
-            if (t[p].k == K.OP && (t[p].s == "(" || t[p].s == "{")) return ta
+            if (t[p].k == K.OP && t[p].s in after) return ta
         } catch (_: CompileError) {}
         p = save
         return null

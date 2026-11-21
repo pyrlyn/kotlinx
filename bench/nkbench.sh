@@ -15,8 +15,11 @@ if [ -n "$ref" ]; then
   # path does not depend on the current directory. The directory name is the resolved short SHA.
   sha=$(git rev-parse --verify --quiet "$ref^{commit}") || { echo "nkbench: unknown git ref: $ref" >&2; exit 2; }
   d=../compiler/build/nk-ref-$(git rev-parse --short "$sha"); rm -rf "$d"; mkdir -p "$d"
-  git -C "$(git rev-parse --show-toplevel)" archive "$sha" compiler | tar -x -C "$d"
+  # The compiler finds the collectors at runtime/../../native/gc, and their Zig archives are build output (not in
+  # git), so the ref's native/gc and the launcher that builds those archives come along with compiler/.
+  git -C "$(git rev-parse --show-toplevel)" archive "$sha" compiler native/gc bin | tar -x -C "$d"
   (cd "$d/compiler" && ./build.sh >/dev/null 2>&1) || { echo "nkbench: building the compiler at $ref failed" >&2; exit 1; }
+  "$d/bin/newkotlinc" --gc-libs-only ${NKFLAGS:-} >/dev/null 2>&1 || { echo "nkbench: building the GC libraries at $ref failed" >&2; exit 1; }
   NKC=$d/compiler/build/newkotlinc.kexe; RT=$d/compiler/runtime/runtime.c
 else
   [ -x ../compiler/build/newkotlinc.kexe ] || ../compiler/build.sh >/dev/null

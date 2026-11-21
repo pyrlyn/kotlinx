@@ -49,6 +49,9 @@ private val EXCEPTIONS = listOf("AssertionError", "Error", "Exception", "Runtime
     "UninitializedPropertyAccessException")
     .associateWith { "java.lang.$it" } + mapOf("NoSuchElementException" to "java.util.NoSuchElementException")
 /** Binary operators that call an `operator fun` on class/interface operands. */
+/** `intArrayOf` -> `IntArray`: the constructor of the array a primitive `...ArrayOf` builds. */
+private val ARRAY_OF_CTOR = listOf("Int", "Long", "Double", "Float", "Byte", "Boolean", "Char", "UInt", "ULong", "Short", "UByte", "UShort")
+    .associate { it.replaceFirstChar(Char::lowercaseChar).let { l -> if (it.startsWith("U")) "u" + it.drop(1).lowercase() else l } + "ArrayOf" to it + "Array" }
 private val OP_FUNS = mapOf("+" to "plus", "-" to "minus", "*" to "times", "/" to "div", "%" to "rem")
 
 /** Native target: typed LLVM IR generation (linked by clang with runtime/runtime.c). */
@@ -2366,7 +2369,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** Calls `<prefix>{str,i64,f64,bool}(<lead> value)` for printing / string building. */
     private fun appendVal(prefix: String, lead: String, v: Val, checked: Boolean = false) {
-        if (!checked && v.v != "null" && (v.t is Ty.Cls || v.t is Ty.ListTy || v.t is Ty.NBox || (v.t is Ty.Iface && !isAny(v.t)))) {
+        if (!checked && v.v != "null" && (v.t is Ty.Cls || v.t is Ty.ListTy || v.t is Ty.Arr || v.t is Ty.NBox || (v.t is Ty.Iface && !isAny(v.t)))) {
             // A nullable object prints as "null".
             val ln = label("ts.null"); val lv = label("ts.val"); val le = label("ts.end")
             condBr(emitT("icmp eq ptr ${v.v}, null"), ln, lv)
@@ -2395,8 +2398,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val sv = callIface(Val(v.v, v.t), ifaces.getValue(v.t.name), "toString", CallE(NameE("toString"), emptyList(), emptyList(), null))
                 appendVal(prefix, lead, coerce(sv, Ty.Str))
             }
-            v.t is Ty.ListTy -> {
-                // "[a, b, c]"
+            // "[a, b, c]"; primitive arrays print their contents too, like `Array<T>` (a list here) does.
+            v.t is Ty.ListTy || v.t is Ty.Arr -> {
                 emit("call void @${prefix}str($lead ptr ${cstr("[")})")
                 val idx = "%l.ts.${tmpN++}"
                 allocas.append("  $idx = alloca i64\n")
@@ -2404,15 +2407,22 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val lc = label("lts.cond"); val lb = label("lts.body"); val ls = label("lts.sep"); val lv = label("lts.val"); val le = label("lts.end")
                 startBlock(lc)
                 val i = emitT("load i64, ptr $idx")
-                condBr(emitT("icmp slt i64 $i, ${emitT("call i64 @rt_list_size(ptr ${v.v})")}"), lb, le)
+                val n = if (v.t is Ty.Arr) emitT("load i64, ptr ${v.v}") else emitT("call i64 @rt_list_size(ptr ${v.v})")
+                condBr(emitT("icmp slt i64 $i, $n"), lb, le)
                 startBlock(lb)
                 condBr(emitT("icmp eq i64 $i, 0"), lv, ls)
                 startBlock(ls)
                 emit("call void @${prefix}str($lead ptr ${cstr(", ")})")
                 br(lv)
                 startBlock(lv)
-                val et = v.t.elem
-                appendVal(prefix, lead, Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${v.v}, i64 $i)"), et), et))
+                if (v.t is Ty.Arr) {
+                    val et = v.t.elem
+                    val ep = emitT("getelementptr ${et.llvm}, ptr ${emitT("getelementptr i8, ptr ${v.v}, i64 8")}, i64 $i")
+                    appendVal(prefix, lead, Val(emitT("load ${et.llvm}, ptr $ep"), et))
+                } else {
+                    val et = (v.t as Ty.ListTy).elem
+                    appendVal(prefix, lead, Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${v.v}, i64 $i)"), et), et))
+                }
                 emit("store i64 ${emitT("add i64 $i, 1")}, ptr $idx")
                 br(lc)
                 startBlock(le)
@@ -2823,9 +2833,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val x = (items[0] as UnE).e
                 return if (probeType(x) is Ty.Arr) CallE(MemberE(x, "toList", false).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line } else x
             }
-            if (items.any { it is UnE && it.op == "*" }) fail("spread mixed with other vararg arguments is not supported")
             // A generic element type (`vararg xs: T`) is inferred from the items.
             val known = try { resolve(elemT); true } catch (x: CompileError) { false }
+            if (items.any(::isSpread)) return spreadBlock(items, if (known) listOf(elemT) else emptyList(), line) { NameE(it).also { x -> x.line = line } }
             // `f<String>()` with `vararg xs: T`: the element type is the explicit type argument.
             if (!known && items.isEmpty()) {
                 val tps = (e.callee as? NameE)?.let { funDecls[it.n] }?.typeParams.orEmpty()
@@ -3053,8 +3063,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             "IntArray", "LongArray", "DoubleArray", "FloatArray", "ByteArray", "BooleanArray", "CharArray", "UIntArray", "ULongArray", "ShortArray", "UByteArray", "UShortArray" -> {
                 val et = when (n) { "ShortArray" -> Ty.I32; "UByteArray", "UShortArray" -> Ty.U32; "ByteArray" -> Ty.I8; "IntArray" -> Ty.I32; "LongArray" -> Ty.I64; "FloatArray" -> Ty.F32; "BooleanArray" -> Ty.I1; "CharArray" -> Ty.Char; "UIntArray" -> Ty.U32; "ULongArray" -> Ty.U64; else -> Ty.F64 }
-                if (e.args.size != 1) fail("$n(${e.args.size} arguments) is not supported")
-                if (e.lambda != null) return initLoop(e.args.single(), e.lambda, et, { sz, t -> Val(emitT("call ptr @rt_arr_new(i64 ${checkArrSize(coerce(sz, Ty.I64)).v}, i64 ${t.size})"), Ty.Arr(t), true) }) { c, i, v ->
+                initByValue(e)?.let { return genExpr(it) }
+                val lam = initLambda(e)
+                if (e.args.size != (if (lam != null && e.lambda == null) 2 else 1)) fail("$n(${e.args.size} arguments) is not supported")
+                if (lam != null) return initLoop(e.args[0], lam, et, { sz, t -> Val(emitT("call ptr @rt_arr_new(i64 ${checkArrSize(coerce(sz, Ty.I64)).v}, i64 ${t.size})"), Ty.Arr(t), true) }) { c, i, v ->
                     emit("store ${et.llvm} ${coerce(v, et).v}, ptr ${emitT("getelementptr ${et.llvm}, ptr ${emitT("getelementptr i8, ptr ${c.v}, i64 8")}, i32 $i")}")
                 }
                 val size = checkArrSize(coerce(genExpr(e.args.single()), Ty.I64))
@@ -3161,13 +3173,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val body = Block(e.lambda.stmts + ExprS(thr).also { it.line = line })
                 return genTry(TryE(body, listOf(Catch(v, t, Block(listOf(ExprS(NameE(v).also { it.line = line }).also { it.line = line })))), null), true)
             }
-            "Array" -> if (e.lambda != null && e.args.size == 1) {
+            "Array" -> if ((e.lambda != null && e.args.size == 1) || (e.lambda == null && e.args.size == 2)) {
+                initByValue(e)?.let { return genExpr(it) }
                 val et = e.typeArgs.singleOrNull()?.let { resolve(it) }
-                return initLoop(e.args[0], e.lambda, et, { _, t -> Val(emitT("call ptr @rt_list_new(ptr ${releaseFn(t) ?: "null"})"), Ty.ListTy(t), true) }) { c, _, v ->
+                return initLoop(e.args[0], initLambda(e)!!, et, { _, t -> Val(emitT("call ptr @rt_list_new(ptr ${releaseFn(t) ?: "null"})"), Ty.ListTy(t), true) }) { c, _, v ->
                     emit("call void @rt_list_add(ptr ${c.v}, i64 ${toSlot(consume(v))})")
                 }
             }
             "intArrayOf", "longArrayOf", "doubleArrayOf", "floatArrayOf", "byteArrayOf", "booleanArrayOf", "charArrayOf", "uintArrayOf", "ulongArrayOf", "shortArrayOf", "ubyteArrayOf", "ushortArrayOf" -> {
+                if (e.args.any(::isSpread)) return genExpr(spreadBlock(e.args, emptyList(), line) { v ->
+                    // `intArrayOf(1, *xs)` -> `IntArray(l.size) { l[it] }` over the collected list.
+                    fun <T : E> T.l(): T = also { it.line = line }
+                    val get = IndexE(NameE(v).l(), NameE("it").l()).l()
+                    CallE(NameE(ARRAY_OF_CTOR.getValue(n)).l(), emptyList(), listOf(MemberE(NameE(v).l(), "size", false).l()),
+                        Block(listOf(ExprS(get).also { it.line = line }))).l()
+                })
                 val et = when (n) { "shortArrayOf" -> Ty.I32; "ubyteArrayOf", "ushortArrayOf" -> Ty.U32; "intArrayOf" -> Ty.I32; "longArrayOf" -> Ty.I64; "doubleArrayOf" -> Ty.F64; "floatArrayOf" -> Ty.F32; "booleanArrayOf" -> Ty.I1; "charArrayOf" -> Ty.Char; "uintArrayOf" -> Ty.U32; "ulongArrayOf" -> Ty.U64; else -> Ty.I8 }
                 val a = emitT("call ptr @rt_arr_new(i64 ${e.args.size}, i64 ${et.size})")
                 val data = emitT("getelementptr i8, ptr $a, i64 8")
@@ -3176,6 +3196,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             "ArrayList", "mutableListOf", "arrayListOf", "listOf", "arrayOf", "sequenceOf" -> {
                 // `ArrayList<T>(capacity)`: the capacity is only a hint (evaluated for its effects, then dropped).
+                if (n != "ArrayList" && e.args.any(::isSpread)) return genExpr(spreadBlock(e.args, e.typeArgs, line) { NameE(it).also { x -> x.line = line } })
                 val capOnly = n == "ArrayList" && e.args.size == 1 && e.args[0] !is NamedE && e.typeArgs.isNotEmpty() && probeType(e.args[0])?.isInt == true
                 if (capOnly) releaseIfOwned(genExpr(e.args[0]))
                 else if (n == "ArrayList" && e.args.isNotEmpty()) fail("ArrayList(collection) is not supported")
@@ -4093,6 +4114,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Instances of one generic class with different type arguments are distinct monomorphized classes.
         if (v.t is Ty.Cls && target is Ty.Cls && v.t != target && '$' in v.t.name && v.t.name.substringBefore('$') == target.name.substringBefore('$'))
             fail("unchecked cast between instances of generic class ${e.type.name} is not supported")
+        // `xs as Array<Any?>` with `xs: Array<Int>` (an unchecked erasing cast that Kotlin code relies on): list
+        // elements are stored in their own representation (an Int unboxed, an Any? boxed), so the list cannot be
+        // reinterpreted and the runtime check would always fail. Other list casts keep that check, which only fails
+        // when it runs.
+        if (v.t is Ty.ListTy && target is Ty.ListTy && isAny(target.elem) && !statically(v.t, target))
+            fail("unchecked cast from ${v.t} to $target is not supported")
         // `null as Int` (also `null as T` in an instance with T = Int): always a NullPointerException, as in Kotlin.
         if (v.v == "null" && target.llvm != "ptr") {
             if (excMode) throwNew("NullPointerException", Val("null", Ty.Str))
@@ -4267,6 +4294,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             t == Ty.F32 -> return Val(emitT("select i1 ${emitT("fcmp uno float ${r.v}, ${r.v}")}, i32 2143289344, i32 ${emitT("bitcast float ${r.v} to i32")}"), Ty.I32)
             t == Ty.I64 || t == Ty.U64 -> { val x = emitT("xor i64 ${r.v}, ${emitT("lshr i64 ${r.v}, 32")}"); return Val(emitT("trunc i64 $x to i32"), Ty.I32) }
             t == Ty.Char || t.isInt -> return Val(coerce(Val(r.v, if (t == Ty.Char) Ty.I32 else t), Ty.I32).v, Ty.I32)
+            // Arrays hash by identity, as in Kotlin (`contentHashCode()` is the structural one).
+            t is Ty.Arr -> { val v = Val(emitT("trunc i64 ${emitT("ptrtoint ptr ${r.v} to i64")} to i32"), Ty.I32); releaseIfOwned(r); return v }
         }
         if (t is Ty.ListTy && n == "hashCode" && e.args.isEmpty()) {
             // 31 * h + element hash over the elements, starting from 1 (null elements hash to 0).
@@ -4446,7 +4475,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val i = if (t == Ty.Char) Val(r.v, Ty.I32) else if (t.isFp) fpToInt(r, Ty.I32) else coerce(r, Ty.I32)
                 Val(emitT("sext i16 ${emitT("trunc i32 ${i.v} to i16")} to i32"), Ty.I32)
             }
-            t.isNum && n in setOf("toInt", "toUInt", "toLong", "toULong", "toByte", "toDouble", "toFloat", "toString") -> {
+            (t.isNum && n in setOf("toInt", "toUInt", "toLong", "toULong", "toByte", "toDouble", "toFloat", "toString")) ||
+                // `Int?.toString()` too: appendVal prints a null NBox as "null".
+                ((t == Ty.Char || t == Ty.I1 || t is Ty.ListTy || t is Ty.Arr || t is Ty.NBox) && n == "toString" && e.args.isEmpty()) -> {
                 if (n == "toString") { val sb = emitT("call ptr @rt_sb_new()"); appendVal("rt_sb_", "ptr $sb, ", r); return Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str, true) }
                 val target = when (n) { "toInt" -> Ty.I32; "toUInt" -> Ty.U32; "toLong" -> Ty.I64; "toULong" -> Ty.U64; "toByte" -> Ty.I8; "toFloat" -> Ty.F32; else -> Ty.F64 }
                 when {
@@ -4832,7 +4863,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // An anonymous `fun R.(...)` that captures locals is a local holding a lambda (receiver first): `R::$afN` is that value.
         if (recv is NameE && n.startsWith("\$af")) lookup(n)?.let { l -> if (fnSig(l.t) != null) return asRecvFn(genExpr(NameE(n).also { it.line = line })) }
         // Unbound reference through a type name.
-        val typeName = (recv as? NameE)?.n?.takeIf { lookup(it) == null && "\$get\$$it" !in sigs && (it in classes || it in ifaces || it in BUILTIN_REF_TYPES) && !(it == "this") }
+        val recvTa = (recv as? NameE)?.let { RefTypeArgs.map[it] }.orEmpty()
+        val typeName = (recv as? NameE)?.n?.takeIf { lookup(it) == null && "\$get\$$it" !in sigs && (it in classes || it in ifaces || it in BUILTIN_REF_TYPES || recvTa.isNotEmpty()) && !(it == "this") }
         if (typeName != null) {
             // `R::$afN` of `context(c: C) fun R.()`: the context values come first, as in `context(C) R.() -> T`,
             // and are passed by name so the call does not look them up in scope.
@@ -4846,11 +4878,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 fnSig(g.t)!!.let { sg -> CtxRecvFnTypes.add(TypeRef("\$Fn", (sg.params + sg.ret).map { tyRef(it) }, false), ctx.size) }
                 return g
             }
-            val t = resolve(TypeRef(typeName, emptyList(), false))
+            val tr = TypeRef(typeName, recvTa, false)
+            val t = resolve(tr)
             val (ps, isProp) = memberParams(t, n, false) ?: fail("unknown member $typeName::$n")
-            val g = lam(listOf(TypeRef(typeName, emptyList(), false)) + ps) { xs -> callOn(xs[0], n, xs.drop(1), isProp) }
+            val g = lam(listOf(tr) + ps) { xs -> callOn(xs[0], n, xs.drop(1), isProp) }
             if (!isProp) return if (n.startsWith("\$af")) asRecvFn(g) else g
-            val st = if (fieldIsVar(t, n)) setLam(listOf(TypeRef(typeName, emptyList(), false), tyRef(fnSig(g.t)!!.ret))) { xs -> MemberE(xs[0], n, false).also { it.line = line } } else null
+            val st = if (fieldIsVar(t, n)) setLam(listOf(tr, tyRef(fnSig(g.t)!!.ret))) { xs -> MemberE(xs[0], n, false).also { it.line = line } } else null
             return propRef(g, st, n)
         }
         // Bound reference: the receiver is evaluated once and captured.
@@ -5041,12 +5074,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Function types do not track nullable primitives (`(B?) -> Int?` is `(B) -> Int`): a null result (from a
         // safe call or a null literal in the body) would be unboxed and fail at run time.
         if (rt is Ty.NBox && mayYieldNull(lamBodyT)) fail("lambdas returning a nullable ${rt.inner} are not supported")
-        val name = mangle((if (susp) "\$LamS" else "\$Lam") + LamIds.id(b0), (caps.map { it.second } + ptys + rt + usedTps.map { tenv.getValue(it) }).map { tyRef(it) })
+        // A captured `Int?` stays nullable in its field ([tyRef] drops nullability, which would unbox a captured null).
+        fun capRef(t: Ty) = if (t is Ty.NBox) tyRef(t.inner).let { TypeRef(it.name, it.args, true) } else tyRef(t)
+        val name = mangle((if (susp) "\$LamS" else "\$Lam") + LamIds.id(b0), caps.map { capRef(it.second) } + (ptys + rt + usedTps.map { tenv.getValue(it) }).map { tyRef(it) })
         if (name !in classes) {
             // Implicit parameters are also context values (a lambda of a `context(A) () -> R` type).
             val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i]), ctx = declared.isEmpty() && !asRecvFn) }, tyRef(rt), null,
                 WhenE(null, listOf(null to body1)).also { it.line = line }, line)
-            throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line))
+            throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, capRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line))
         }
         val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "\$self" else if (n == "\$recv" || n == "\$thisCap") "this" else n).also { it.line = line } }, null))
         return Val(v.v, fnT, v.owned)
@@ -5304,6 +5339,45 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * `Array(n) { i -> init }` / `IntArray(n) { ... }`: creates the container with [mk] (element type [hint] or the
      * init block's type, probed with rollback), then runs the block inline for each index and stores with [put].
      */
+    private fun isSpread(x: E) = x is UnE && x.op == "*"
+
+    /**
+     * `listOf(*a, x, *b)` / `intArrayOf(*xs)` / a vararg mixing spreads and items: `{ val l = ...; l.add(x); l.addAll(b.toList()); <end(l)> }`.
+     * The list is fresh and built in source order; spread arrays and lists are copied in, as Kotlin copies them.
+     * Without [typeArgs] the element type comes from the first item.
+     */
+    private fun spreadBlock(items: List<E>, typeArgs: List<TypeRef>, l: Int, end: (String) -> E): E {
+        fun <T : E> T.l(): T = also { it.line = l }
+        fun call(r: E?, n: String, ta: List<TypeRef>, a: List<E>) = CallE((if (r == null) NameE(n) else MemberE(r, n, false)).l(), ta, a, null).l()
+        fun part(x: E): E = if (isSpread(x)) call((x as UnE).e, "toList", emptyList(), emptyList()) else call(null, "arrayListOf", typeArgs, listOf(x))
+        val v = "\$spr${tmpN++}"
+        val first = if (typeArgs.isNotEmpty() || items.isEmpty()) call(null, "arrayListOf", typeArgs, emptyList()) else part(items[0])
+        val rest = if (typeArgs.isNotEmpty()) items else items.drop(1)
+        val ss = listOf(VarS(v, false, null, first)) +
+            rest.map { x -> ExprS(if (isSpread(x)) call(NameE(v).l(), "addAll", emptyList(), listOf(part(x))) else call(NameE(v).l(), "add", emptyList(), listOf(x))) } +
+            ExprS(end(v))
+        ss.forEach { it.line = l }
+        return WhenE(null, listOf(null to Block(ss))).l()
+    }
+
+    /**
+     * `CharArray(n, ::f)` / `Array(n, { ... })`: the initializer passed as the second argument instead of a trailing
+     * lambda. A lambda literal is inlined like a trailing one ([initLambda]). Any other function value becomes
+     * `{ val n = size; val f = value; CharArray(n) { f(it) } }`: evaluated once, in source order (a bound reference's
+     * receiver must not be re-evaluated per element), in a block of its own so code-generation probes leave no locals.
+     */
+    private fun initByValue(e: CallE): E? {
+        val f = e.args.getOrNull(1)?.takeIf { e.args.size == 2 && e.lambda == null && it !is LambdaE } ?: return null
+        fun <T : E> T.l(): T = also { it.line = e.line }
+        val sz = "\$isz${tmpN++}"; val fn = "\$ifn${tmpN++}"
+        val call = CallE(NameE(fn).l(), emptyList(), listOf(NameE("it").l()), null).l()
+        val arr = CallE(e.callee, e.typeArgs, listOf(NameE(sz).l()), Block(listOf(ExprS(call).also { it.line = e.line }))).l()
+        val stmts = listOf(VarS(sz, false, null, e.args[0]), VarS(fn, false, null, f), ExprS(arr)).onEach { it.line = e.line }
+        return WhenE(null, listOf(null to Block(stmts))).l()
+    }
+
+    private fun initLambda(e: CallE): Block? = e.lambda ?: (e.args.getOrNull(1) as? LambdaE)?.takeIf { e.args.size == 2 }?.body
+
     private fun initLoop(sizeE: E, lam: Block, hint: Ty?, mk: (Val, Ty) -> Val, put: (Val, String, Val) -> Unit): Val {
         val n = coerce(genExpr(sizeE), Ty.I32)
         val pn = lam.params.firstOrNull() ?: "it"
