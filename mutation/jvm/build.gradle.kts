@@ -1,6 +1,6 @@
 import java.math.BigDecimal
 // JVM build of the KotlinX compiler sources for mutation testing with PIT.
-// The compiler ships as Kotlin/Native, but everything except compiler/src/driver/Main.kt (posix I/O, clang driver)
+// The compiler ships as Kotlin/Native, but everything except compiler/src/driver (posix I/O, clang/JS/JVM drivers)
 // is plain common Kotlin, so it is compiled here for the JVM straight from ../../compiler/src (nothing copied or changed).
 // Tests: GoldenTest runs the existing golden suite (compiler/tests/*.kt -> *.out) in-process: compileToIr on the JVM,
 // then clang + run, exactly like compiler/test.sh. See ../README.md.
@@ -14,7 +14,7 @@ repositories { mavenCentral() }
 kotlin { jvmToolchain(21) }
 
 sourceSets {
-    main { kotlin { setSrcDirs(listOf("../../compiler/src")); exclude("driver/Main.kt") } }
+    main { kotlin { setSrcDirs(listOf("../../compiler/src")); exclude("driver/**") } }
 }
 
 dependencies {
