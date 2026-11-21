@@ -47,6 +47,9 @@ fun compileGenerics(p00: Program): String {
             // Super-interfaces of the instance (generic ones instantiated with the substituted arguments).
             ifaceInst[m] = InterfaceD(m, i0.methods, i0.line, emptyList(), d.supers.map { s -> IfaceSuperArgs.map[n]?.get(s)?.let { ensure(s, it.map { a -> sub.ty(a) }) } ?: s })
         } }
+        // A function type as a super-interface (Parser.fnSuperDecl): the interface the backend's fnTy would create.
+        if ((n == "\$Fn" || n == "\$FnS") && m !in extraIfaces && p0.ifaces.none { it.name == m })
+            extraIfaces[m] = InterfaceD(m, listOf(FunD("invoke", args.dropLast(1).mapIndexed { i, a -> Param("p$i", a) }, args.last(), null, null, 0)), 0)
         return m
     }
     // Function supertypes (`$Fn` / `$FnR`) keep their type arguments: the backend resolves them (NativeBackend.classSupers).

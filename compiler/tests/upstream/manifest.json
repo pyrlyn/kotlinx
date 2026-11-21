@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 17,
   "N/A": 2984,
-  "PASS": 3482,
-  "UNSUPPORTED": 1990
+  "PASS": 3497,
+  "UNSUPPORTED": 1975
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -1440,9 +1440,8 @@
    "upstream": "compiler/testData/codegen/box/binaryOp/kt44402.kt"
   },
   "box/box/binaryOp/kt6747_identityEquals.kt": {
-   "category": "other: identity comparison of Test and Any is not supported",
-   "detail": "identity comparison of Test and Any is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/binaryOp/kt6747_identityEquals.kt"
   },
   "box/box/binaryOp/overflowChar.kt": {
@@ -4117,8 +4116,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt49526.kt"
   },
   "box/box/callableReference/kt49526_sam.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "strings / templates",
+   "detail": "unknown method I1.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt49526_sam.kt"
   },
@@ -12589,14 +12588,13 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateWithPrivateSet.kt"
   },
   "box/box/delegatedProperty/delegatedByExtensionMemberProperty.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $PRef$$Fn$$FnR$String$String.getValue()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedByExtensionMemberProperty.kt"
   },
   "box/box/delegatedProperty/delegatedByExtensionProperty.kt": {
-   "category": "unknown this (stdlib API / unsupported decl)",
-   "detail": "unknown name 'this'",
+   "category": "strings / templates",
+   "detail": "unknown method String.b()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedByExtensionProperty.kt"
   },
@@ -13236,9 +13234,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationToIntersectionType3.kt"
   },
   "box/box/delegation/delegationToSAMInterface.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected F, found $Fn$Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationToSAMInterface.kt"
   },
   "box/box/delegation/delegationToVar.kt": {
@@ -16112,8 +16109,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/equality/lambdaRuntimeConversion.kt"
   },
   "box/box/funInterface/equality/localFunctionReferences.kt": {
-   "category": "interfaces",
-   "detail": "type mismatch: expected FunInterface, found $Fn$Unit",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found ArrayList<Int>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/equality/localFunctionReferences.kt"
   },
@@ -16123,9 +16120,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/equality/simpleLambdas.kt"
   },
   "box/box/funInterface/funConversionInVararg.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected MyRunnable, found $Fn$Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/funConversionInVararg.kt"
   },
   "box/box/funInterface/funInterfaceCallInLambda.kt": {
@@ -16139,9 +16135,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceInheritance.kt"
   },
   "box/box/funInterface/funInterfaceTypealias.kt": {
-   "category": "unknown KRunnableAlias (stdlib API / unsupported decl)",
-   "detail": "unknown function 'KRunnableAlias'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/funInterfaceTypealias.kt"
   },
   "box/box/funInterface/funInterfaceWithReceiver.kt": {
@@ -16199,9 +16194,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/kt46512_indyFunInterfaceOverCallableReference.kt"
   },
   "box/box/funInterface/kt46908_functionSupertype.kt": {
-   "category": "other: identity comparison of $anon0 and Any is not supported",
-   "detail": "identity comparison of $anon0 and Any is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/kt46908_functionSupertype.kt"
   },
   "box/box/funInterface/kt49384.kt": {
@@ -16275,9 +16269,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/nonTrivialProjectionInSuperType.kt"
   },
   "box/box/funInterface/nullableSam.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected KRunnable, found $Fn$Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/nullableSam.kt"
   },
   "box/box/funInterface/partialSam.kt": {
@@ -16286,21 +16279,18 @@
    "upstream": "compiler/testData/codegen/box/funInterface/partialSam.kt"
   },
   "box/box/funInterface/primitiveConversions.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/primitiveConversions.kt"
   },
   "box/box/funInterface/receiverEvaluatedOnce.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected KRunnable, found $Fn$Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/receiverEvaluatedOnce.kt"
   },
   "box/box/funInterface/samConstructorExplicitInvocation.kt": {
-   "category": "unknown G (stdlib API / unsupported decl)",
-   "detail": "unknown function 'G'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/funInterface/samConstructorExplicitInvocation.kt"
   },
   "box/box/funInterface/samConversionToGenericInterfaceInGenericFun.kt": {
@@ -16687,7 +16677,7 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeInCompanionObjectWithFunctionalArgument.kt"
   },
   "box/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt": {
-   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/GitHub/listepo/apps/kotlinx/.rtok/worktrees/kotlinx-i21/compiler/build/upstream-tmp/nkupb81llreo/t.ll:219:143: error: use of undefined value '@m.TestClass.invoke'\n@vt.TestClass = internal constant [6 x ptr] [ptr @rel.TestClass, ptr @trav.TestClass, ptr @relo.TestClass, ptr @free.TestClass, ptr null, ptr @m.TestCl",
+   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/GitHub/listepo/apps/kotlinx/.rtok/worktrees/kotlinx-i18/compiler/build/upstream-tmp/nkup02xxg9no/t.ll:219:143: error: use of undefined value '@m.TestClass.invoke'\n@vt.TestClass = internal constant [6 x ptr] [ptr @rel.TestClass, ptr @trav.TestClass, ptr @relo.TestClass, ptr @free.TestClass, ptr null, ptr @m.TestCl",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt"
   },
@@ -35235,39 +35225,35 @@
    "upstream": "compiler/testData/codegen/box/sam/constructors/sameWrapperClass2.kt"
   },
   "box/box/sam/constructors/suspendSamConstructorAdaptation.kt": {
-   "category": "interfaces",
-   "detail": "type mismatch: expected FunInterface, found $Fn$Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/sam/constructors/suspendSamConstructorAdaptation.kt"
   },
   "box/box/sam/funInterfaceExtendsSuspendFunction.kt": {
-   "category": "interfaces",
-   "detail": "fun interfaces with super-interfaces are not supported (at 'Foo')",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of FooImpl; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/funInterfaceExtendsSuspendFunction.kt"
   },
   "box/box/sam/funInterfaceExtendsSuspendFunction2.kt": {
-   "category": "interfaces",
-   "detail": "fun interfaces with super-interfaces are not supported (at 'Foo')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/sam/funInterfaceExtendsSuspendFunction2.kt"
   },
   "box/box/sam/inProjectedSam.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Element, found $Fn$Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/sam/inProjectedSam.kt"
   },
   "box/box/sam/kt51821.kt": {
-   "category": "unknown it (stdlib API / unsupported decl)",
-   "detail": "unknown name 'it'",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found ArrayList<String>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/kt51821.kt"
   },
   "box/box/sam/kt56188.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected Supplier$String, found $Fn$String",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/sam/kt56188.kt"
   },
   "box/box/sam/kt59858.kt": {
@@ -35301,8 +35287,8 @@
    "upstream": "compiler/testData/codegen/box/sam/samWithAbstractToString3.kt"
   },
   "box/box/sam/samWithNullableUpperBound.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected Int, found CPointer",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/sam/samWithNullableUpperBound.kt"
   },
@@ -36600,9 +36586,8 @@
    "upstream": "compiler/testData/codegen/box/suspendConversion/basicSuspendConversionForCallableReference.kt"
   },
   "box/box/suspendConversion/chainedFunSuspendConversionForSimpleExpression.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected SuspendRunnable, found $Fn$Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/suspendConversion/chainedFunSuspendConversionForSimpleExpression.kt"
   },
   "box/box/suspendConversion/conversionOfInterfaceInheritingFunctionN.kt": {
@@ -36672,8 +36657,8 @@
    "upstream": "compiler/testData/codegen/box/suspendConversion/suspendConversionOnVarargElements.kt"
   },
   "box/box/suspendConversion/suspendConversionWithFunInterfaces.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected SuspendRunnable, found $Fn$Unit",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected $FnS$Unit, found $Fn$String$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/suspendConversion/suspendConversionWithFunInterfaces.kt"
   },
@@ -37877,7 +37862,7 @@
   },
   "box/box/unitConversion/unitConversionWithKotlinSam.kt": {
    "category": "strings / templates",
-   "detail": "type mismatch: expected KRunnable, found $Fn$String",
+   "detail": "type mismatch: expected $Fn$Unit, found $Fn$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unitConversion/unitConversionWithKotlinSam.kt"
   },

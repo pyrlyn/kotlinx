@@ -7,58 +7,58 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| PASS | 3482 |
+| PASS | 3497 |
 | N/A | 2984 |
-| UNSUPPORTED | 1990 |
+| UNSUPPORTED | 1975 |
 | MISCOMPILE | 17 |
 | COMPILER_CRASH | 2 |
 
-Kept in tree (re-runnable with `run.py`): 3482
+Kept in tree (re-runnable with `run.py`): 3497
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 211 |
-| interfaces | 146 |
-| generics | 140 |
-| type inference / mismatch | 96 |
-| operator/infix functions | 82 |
-| lambdas / function types / references | 63 |
-| class bodies / constructors | 59 |
+| strings / templates | 217 |
+| interfaces | 142 |
+| generics | 141 |
+| type inference / mismatch | 88 |
+| operator/infix functions | 81 |
+| class bodies / constructors | 64 |
+| lambdas / function types / references | 53 |
 | objects / companion objects | 50 |
 | inheritance (open/abstract/sealed) | 45 |
 | annotations | 34 |
-| nullable types | 30 |
-| property accessors / delegation | 25 |
+| nullable types | 31 |
 | other: unknown type * | 23 |
 | other syntax (at ':') | 23 |
-| other syntax (at '.') | 18 |
+| property accessors / delegation | 22 |
 | other: local classes that capture local variables are not supported | 18 |
 | unknown x (stdlib API / unsupported decl) | 18 |
 | inline/value classes | 17 |
 | other syntax (at '<eof>') | 16 |
-| local / extension functions | 14 |
-| unknown ok (stdlib API / unsupported decl) | 14 |
-| other syntax (at 'val') | 13 |
+| unknown ok (stdlib API / unsupported decl) | 15 |
 | default arguments | 13 |
 | other syntax (at 'var') | 13 |
-| other: unknown type T | 11 |
-| other: unsupported call | 11 |
+| unknown A (stdlib API / unsupported decl) | 11 |
 | other: local declarations are only supported in function bodies | 11 |
 | unknown context (stdlib API / unsupported decl) | 11 |
-| unknown A (stdlib API / unsupported decl) | 10 |
 | enum classes | 10 |
 | stdlib: kotlin.test asserts | 10 |
 | varargs | 10 |
 | other: override of 'foo' in C changes its signature | 10 |
 | modifiers (private/const/lateinit/...) | 10 |
+| other syntax (at '.') | 10 |
 | other syntax (at 'inner') | 10 |
 | exceptions | 10 |
 | other: unknown method IntRange.map() | 9 |
 | unknown contract (stdlib API / unsupported decl) | 9 |
 | loops / labels | 8 |
 | other: unknown method Double.isNaN() | 8 |
+| other: Unit cannot be used as Any | 7 |
+| other: override of 'foo' in B changes its signature | 7 |
+| other: unknown type T | 7 |
+| local / extension functions | 7 |
 
 ## N/A reasons
 
