@@ -4306,7 +4306,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 Val(emitT("sext i16 ${emitT("trunc i32 ${i.v} to i16")} to i32"), Ty.I32)
             }
             (t.isNum && n in setOf("toInt", "toUInt", "toLong", "toULong", "toByte", "toDouble", "toFloat", "toString")) ||
-                ((t == Ty.Char || t == Ty.I1 || t is Ty.ListTy || t is Ty.Arr) && n == "toString" && e.args.isEmpty()) -> {
+                // `Int?.toString()` too: appendVal prints a null NBox as "null".
+                ((t == Ty.Char || t == Ty.I1 || t is Ty.ListTy || t is Ty.Arr || t is Ty.NBox) && n == "toString" && e.args.isEmpty()) -> {
                 if (n == "toString") { val sb = emitT("call ptr @rt_sb_new()"); appendVal("rt_sb_", "ptr $sb, ", r); return Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str, true) }
                 val target = when (n) { "toInt" -> Ty.I32; "toUInt" -> Ty.U32; "toLong" -> Ty.I64; "toULong" -> Ty.U64; "toByte" -> Ty.I8; "toFloat" -> Ty.F32; else -> Ty.F64 }
                 when {
@@ -4838,12 +4839,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Function types do not track nullable primitives (`(B?) -> Int?` is `(B) -> Int`): a null result (from a
         // safe call or a null literal in the body) would be unboxed and fail at run time.
         if (rt is Ty.NBox && mayYieldNull(lamBodyT)) fail("lambdas returning a nullable ${rt.inner} are not supported")
-        val name = mangle((if (susp) "\$LamS" else "\$Lam") + LamIds.id(b0), (caps.map { it.second } + ptys + rt + usedTps.map { tenv.getValue(it) }).map { tyRef(it) })
+        // A captured `Int?` stays nullable in its field ([tyRef] drops nullability, which would unbox a captured null).
+        fun capRef(t: Ty) = if (t is Ty.NBox) tyRef(t.inner).let { TypeRef(it.name, it.args, true) } else tyRef(t)
+        val name = mangle((if (susp) "\$LamS" else "\$Lam") + LamIds.id(b0), caps.map { capRef(it.second) } + (ptys + rt + usedTps.map { tenv.getValue(it) }).map { tyRef(it) })
         if (name !in classes) {
             // Implicit parameters are also context values (a lambda of a `context(A) () -> R` type).
             val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i]), ctx = declared.isEmpty() && !asRecvFn) }, tyRef(rt), null,
                 WhenE(null, listOf(null to body1)).also { it.line = line }, line)
-            throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, tyRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line))
+            throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, capRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line))
         }
         val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "\$self" else if (n == "\$recv" || n == "\$thisCap") "this" else n).also { it.line = line } }, null))
         return Val(v.v, fnT, v.owned)
