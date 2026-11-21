@@ -46,8 +46,9 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   (`scoped { emit(key) }`); `r.f(x)` counts as a use of a local function value `f` in last-use analysis.
 - Locals without an initializer (`val x: T` assigned later): a variable starting at the type's zero value;
   definite assignment is not checked.
-- Referential equality `===` / `!==`: pointer identity for class/interface/array/collection values and against null,
-  value equality for primitives; strings and boxed `Any` values are refused (interning/box caching differ).
+- Referential equality `===` / `!==`: pointer identity for class/interface/array/collection values, of an object
+  against an `Any` value and against null, value equality for primitives; strings and two `Any` values are refused
+  (interning/box caching differ).
 - Class literals `T::class` / `e::class` with `simpleName`, `qualifiedName`, `==` and `toString` for primitives, String,
   standard types and final user classes (static runtime class only; no `KClass<*>` types or full reflection).
 - Multi-field value classes (`+FullValueClasses`): compiled like data classes (boxed, structural equals/hashCode/

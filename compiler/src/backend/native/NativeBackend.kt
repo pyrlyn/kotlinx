@@ -5286,7 +5286,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val a = genExpr(e.l); val b = genExpr(e.r)
         fun refOk(t: Ty) = (t is Ty.Cls && !t.name.startsWith("AnyBox")) || (t is Ty.Iface && !isAny(t)) || t is Ty.Arr || t is Ty.ListTy || t is Ty.MapTy
         if (a.t.llvm != "ptr" && b.t.llvm != "ptr") return compare(eq, a, b)
-        if (!refOk(a.t) || !refOk(b.t)) fail("identity comparison of ${a.t} and ${b.t} is not supported")
+        // An object against `Any`: objects are viewed as Any as is, so the pointers compare (a boxed primitive never
+        // is that object). Two `Any`s stay refused: boxes of equal primitives are distinct here.
+        fun objOk(t: Ty, o: Ty) = refOk(t) || (isAny(t) && (o is Ty.Cls || o is Ty.Iface) && refOk(o))
+        if (!objOk(a.t, b.t) || !objOk(b.t, a.t)) fail("identity comparison of ${a.t} and ${b.t} is not supported")
         val r = Val(emitT("icmp ${if (eq == "==") "eq" else "ne"} ptr ${a.v}, ${b.v}"), Ty.I1)
         releaseIfOwned(a); releaseIfOwned(b)
         return r
