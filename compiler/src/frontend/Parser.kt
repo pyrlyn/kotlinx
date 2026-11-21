@@ -187,10 +187,14 @@ class Parser(toks: List<Tok>) {
     private var pendingDecls = ArrayList<S>()
     /** Anonymous-object classes outside function bodies (property initializers): top-level classes. */
     private val topAnon = ArrayList<ClassD>()
+    /** Anonymous functions outside function bodies (top-level property initializers): top-level functions. */
+    private val topAnonFuns = ArrayList<FunD>()
     private var bodyLevel = 0
     private var anonN = 0
     /** Name given to the anonymous function being parsed (`fun(x: Int) = ...`, `fun String.(y: String) = ...`). */
     private var anonFun: String? = null
+    // Label of the anonymous function being parsed (`l@ fun () { return@l 1 }`): its labeled return is a plain return.
+    private var anonLabel: String? = null
     private fun fname(): String = anonFun?.takeIf { isOp("(") } ?: ident()
 
     /** Data class: generated toString, componentN, hashCode and `$equals` (structural `==`) over the constructor properties. */
@@ -281,6 +285,20 @@ class Parser(toks: List<Tok>) {
         else FunD("\$set\$$n", listOf(Param(pn, ty)), unit, block(), null, line)
     }
 
+    /** A function whose expression body follows (after `=`); declarations the expression needs (anonymous objects and functions) go first. */
+    private fun exprBodyFun(name: String, params: List<Param>, ret: TypeRef?, line: Int, typeParams: List<String>, recv: TypeRef?): FunD {
+        val outerDecls = pendingDecls; pendingDecls = ArrayList(); bodyLevel++
+        val (e, ds) = try { expr() to pendingDecls } finally { pendingDecls = outerDecls; bodyLevel-- }
+        if (ds.isEmpty()) return FunD(name, params, ret, null, e, line, typeParams, recv)
+        // `= object : T { }`: the anonymous class is declared in a block body; the function returns T.
+        val anon = (ds.last() as? LocalDeclS)?.d as? ClassD
+        val r = ret ?: if (anon != null && e is CallE && (e.callee as? NameE)?.n == anon.name) TypeRef(anon.supers.firstOrNull() ?: anon.name, anon.superTypeArgs[anon.supers.firstOrNull()] ?: emptyList(), false) else null
+        // No declared return type and the body is more than the object itself (`(object : A {}) as A`): keep an
+        // expression body (a block-valued `when`) so the return type is inferred from the whole expression.
+        return if (r == null) FunD(name, params, null, null, WhenE(null, listOf(null to Block(ds + ExprS(e).also { it.line = line }))).also { it.line = line }, line, typeParams, recv)
+        else FunD(name, params, r, Block(ds + RetS(e).also { it.line = line }), null, line, typeParams, recv)
+    }
+
     private fun getter(fname: String, ty: TypeRef?, typeParams: List<String>, recv: TypeRef?): FunD? {
         val save = p
         while (t[p].k == K.NL) p++
@@ -288,7 +306,7 @@ class Parser(toks: List<Tok>) {
         val line = next().line
         expectOp("("); expectOp(")")
         val rt = if (isOp(":")) { next(); type() } else ty
-        return if (isOp("=")) { next(); skipNLOnly(); FunD(fname, emptyList(), rt, null, expr(), line, typeParams, recv) }
+        return if (isOp("=")) { next(); skipNLOnly(); exprBodyFun(fname, emptyList(), rt, line, typeParams, recv) }
         else FunD(fname, emptyList(), rt, block(), null, line, typeParams, recv)
     }
 
@@ -799,7 +817,7 @@ class Parser(toks: List<Tok>) {
             val at = p
             while (t[p].k == K.NL) p++
             while (peek().k == K.ID && peek().s in setOf("private", "protected", "internal", "public", "inline") && t[p + 1].k == K.ID && t[p + 1].s in setOf("get", "set")) p++
-            if (get == null && isId("get") && t[p + 1].k == K.OP && t[p + 1].s == "(") { get = getter("\$prop\$$name", ty, tps, recv); continue }
+            if (get == null && isId("get") && t[p + 1].k == K.OP && t[p + 1].s == "(") { get = getter("\$prop\$$name", ty, tps, recv)?.let { labelThis(it, name) }; continue }
             if (set == null && isVar && isId("set") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
                 val line = next().line; next()
                 val pn = ident(); if (isOp(":")) { next(); type() }
@@ -896,7 +914,7 @@ class Parser(toks: List<Tok>) {
                 tk.k == K.ID && tk.s == "data" && t[p + 1].k == K.ID && t[p + 1].s == "class" -> { p++; classes.add(dataClass(classDecl())) }
                 tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "operator", "infix", "tailrec", "const", "open", "final", "abstract", "sealed", "suspend") -> p++
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && topProperty(funs) -> { pendingGlobal?.let { globals.add(it) }; pendingGlobal = null }
-                tk.k == K.ID && (tk.s == "val" || tk.s == "var") && (t[p + 1].k == K.OP && t[p + 1].s == "<" ||
+                tk.k == K.ID && (tk.s == "val" || tk.s == "var") && (t[p + 1].k == K.OP && (t[p + 1].s == "<" || t[p + 1].s == "(") ||
                     t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> {
                     val line = tk.line
                     funs.addAll(extProperty())
@@ -924,11 +942,12 @@ class Parser(toks: List<Tok>) {
         classes.addAll(companions); funs.addAll(ctorFactories)
         classes.addAll(hoisted); ifaces.addAll(hoistedIfaces)
         classes.addAll(topAnon); topAnon.clear()
+        funs.addAll(topAnonFuns); topAnonFuns.clear()
         collLiterals(funs, classes, globals)
         samLower(funs, classes, ifaces, globals)
         rejectUnmodeled(funs, classes, ifaces)
         rewriteCtxProps(funs, classes, ifaces, globals)
-        liftLocals(funs, classes, ifaces)
+        liftLocals(funs, classes, ifaces, globals.map { it.name })
         resolveNested(funs, classes, ifaces, globals)
         resolveExtensions(funs, classes)
         flattenIfaces(classes, ifaces)
@@ -1000,6 +1019,7 @@ class Parser(toks: List<Tok>) {
         next()
         var superArgs: List<E>? = null
         while (true) {
+            if (fnSuper(supers)) { if (isOp(",")) { next(); continue } else break }
             val sn = ident()
             superTypeArgs(sn)
             if (isId("by")) {
@@ -1621,9 +1641,10 @@ class Parser(toks: List<Tok>) {
      * - local classes, objects and interfaces become top-level declarations (renamed when the name is taken); they must
      *   not capture local variables.
      */
-    private fun liftLocals(funs: MutableList<FunD>, classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>) {
+    private fun liftLocals(funs: MutableList<FunD>, classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>, globalNames: List<String>) {
         if (!sawLocal) return
-        val taken = HashSet<String>()
+        // A lifted function keeping a top-level property's name would shadow that property everywhere else.
+        val taken = HashSet(globalNames)
         funs.forEach { taken.add(it.name) }; classes.forEach { taken.add(it.name) }; ifaces.forEach { taken.add(it.name) }
         // Extension operators by `name|receiver`: a lifted local operator extension must not clash with one of them.
         val extOps = funs.mapNotNullTo(HashSet()) { g -> g.recv?.let { "${g.name}|${it.name}" } }
@@ -1753,6 +1774,8 @@ class Parser(toks: List<Tok>) {
                     continue
                 }
                 val rename = HashMap<String, String>()
+                // Lifted local functions renamed away from a top-level property of the same name.
+                val propClash = HashMap<String, FunD>()
                 val types = HashMap<String, TypeRef>()
                 val asLambda = HashSet<FunD>()
                 val capCls = HashMap<String, List<Pair<String, TypeRef>>>()
@@ -1763,6 +1786,11 @@ class Parser(toks: List<Tok>) {
                 for (d in decls) when (d) {
                     is FunD -> {
                         val caps = usedNames(d) - localsOf(d) - d.name
+                        // An anonymous function stays a closure when lifting would break its `::$afN` reference: as a
+                        // method a `fun R.()` becomes an extension member of the class, which `R::$afN` cannot name, and
+                        // over the enclosing type parameters it becomes generic, which references cannot instantiate.
+                        val anonClosure = d.name.startsWith("\$af") &&
+                            ((owner != null && d.recv != null) || (f.typeParams.isNotEmpty() && mentionsTypeParams(d, f.typeParams)))
                         // A non-capturing local operator extension is lifted under its own name (operator syntax finds it
                         // by name) and so is visible program-wide. That only changes code outside its scope where Kotlin
                         // would pick another extension (members always win), so receivers with library operator
@@ -1784,8 +1812,9 @@ class Parser(toks: List<Tok>) {
                             if (why != null) throw CompileError("line ${d.line}: local operator extension functions $why are not supported")
                             taken.add(d.name); LiftedLocals.names.add(d.name)
                             rename[d.name] = d.name
-                        } else if (caps.none { it in outer }) {
+                        } else if (caps.none { it in outer } && !anonClosure) {
                             rename[d.name] = fresh(d.name, ownerNames)
+                            if (d.name in globalNames) propClash[d.name] = d
                             // A non-generic local function of a generic function that mentions its type parameters
                             // is lifted generic over them; calls pass them as type arguments.
                             if (f.typeParams.isNotEmpty() && d.typeParams.isEmpty() && mentionsTypeParams(d, f.typeParams)) genFunTps[d.name] = f.typeParams
@@ -1888,6 +1917,9 @@ class Parser(toks: List<Tok>) {
                             CallE(NameE(rename[x.callee.n] ?: x.callee.n).also { it.line = x.callee.line }, x.typeArgs.map { sub.ty(it) },
                                 capCls.getValue(x.callee.n).map { (c, _) -> NameE(c).also { it.line = x.line } } + x.args.map { sub.e(it) },
                                 x.lambda?.let { sub.block(it) }).also { it.line = x.line }
+                        // A call the local function cannot take goes to the top-level property's `invoke`.
+                        x is CallE && x.callee is NameE && propClash[x.callee.n]?.takesArgs(x.args.size + (if (x.lambda != null) 1 else 0)) == false ->
+                            CallE(x.callee, x.typeArgs.map { sub.ty(it) }, x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line }
                         x is NameE && x.n in rename -> NameE(rename.getValue(x.n)).also { it.line = x.line }
                         x is UnE && x.op.startsWith("::") && x.e is NullL && x.op.drop(2) in rename -> UnE("::" + rename.getValue(x.op.drop(2)), x.e).also { it.line = x.line }
                         else -> null
@@ -1988,6 +2020,38 @@ class Parser(toks: List<Tok>) {
         superTA[sn] = xs
     }
     private fun takeSuperArgs(): Map<String, List<TypeRef>> = HashMap(superTA).also { superTA.clear() }
+
+    /** Index just after the bracket group opening at token [i0] (`(`...`)`, `<`...`>`). */
+    private fun afterGroup(i0: Int, open: String, close: String): Int {
+        var i = i0; var d = 0
+        do { if (t[i].k == K.OP && t[i].s == open) d++; if (t[i].k == K.OP && t[i].s == close) d--; i++ } while (d > 0 && t[i].k != K.EOF)
+        return i
+    }
+
+    /** Does a function type start here (`(A) -> R`, `R.(A) -> X`, `context(C) ...`), rather than a class or interface name? */
+    private fun fnTypeAhead(): Boolean {
+        if (isOp("(") || isId("suspend") || isId("context") && t[p + 1].k == K.OP && t[p + 1].s == "(") return true
+        var i = p
+        if (t[i].k != K.ID) return false
+        i++
+        while (t[i].k == K.OP && t[i].s == "." && t[i + 1].k == K.ID) i += 2
+        if (t[i].k == K.OP && t[i].s == "<") i = afterGroup(i, "<", ">")
+        if (t[i].k == K.OP && t[i].s == "?") i++
+        return t[i].k == K.OP && t[i].s == "." && t[i + 1].k == K.OP && t[i + 1].s == "("
+    }
+
+    /**
+     * A function type as a supertype (`class A : Int.() -> String`): kept as the supertype `$Fn` / `$FnR` with the
+     * type's arguments, which the backend resolves to the function interface (NativeBackend.classSupers).
+     */
+    private fun fnSuper(supers: MutableList<String>): Boolean {
+        if (!fnTypeAhead()) return false
+        val ft = type()
+        if (!isFnSuper(ft.name) || ft.nullable) fail("only function types are supported as function supertypes")
+        if (ft.name in supers) fail("a class cannot implement two function types of the same kind")
+        supers.add(ft.name); superTA[ft.name] = ft.args
+        return true
+    }
 
     /** Private methods declared in each interface (by name). */
     private val privateIfaceFuns = HashMap<String, MutableSet<String>>()
@@ -2094,11 +2158,14 @@ class Parser(toks: List<Tok>) {
         val line = next().line
         val name = ident()
         val tps = typeParams()
+        var fnInvoke: FunD? = null
         if (isOp(":")) {
             next()
             val ss = ArrayList<String>()
             while (true) {
                 val st = type()
+                // A function supertype (`interface I : (String) -> String`) contributes its abstract `invoke`.
+                if (isFnSuper(st.name)) { fnInvoke = FunD("invoke", st.args.dropLast(1).mapIndexed { i, a -> Param("p$i", a) }, st.args.last(), null, null, line); if (isOp(",")) { next(); continue } else break }
                 if (st.args.isNotEmpty()) ifaceSuperRefs.getOrPut(name) { HashMap() }[st.name] = st.args
                 ss.add(st.name)
                 if (isOp(",")) next() else break
@@ -2108,7 +2175,7 @@ class Parser(toks: List<Tok>) {
         whereClause(tps)
         val savedIface = curIface; curIface = name
         val ms0 = try { if (isOp("{")) members() else emptyList() } finally { curIface = savedIface }
-        val ms = inferIfaceRets(name, renamePrivate(name, ms0))
+        val ms = inferIfaceRets(name, renamePrivate(name, ms0)).let { m -> if (fnInvoke == null || m.any { it.name == "invoke" }) m else m + fnInvoke }
         val defs = ms.filter { it.body != null || it.exprBody != null }
         if (defs.isNotEmpty() && tps.isNotEmpty()) genericIfaceTps[name] = tps
         if (defs.any { it.ret == null && it.body == null }) fail("default interface methods need an explicit return type")
@@ -2206,7 +2273,7 @@ class Parser(toks: List<Tok>) {
         val name = if (parenRecv != null) parenRecv else if (isOp(".") || isOp("<") || isOp("?") || isOp("?.")) {
             p = save
             val rt = type()
-            if (isOp("?.")) { next(); recv = TypeRef(rt.name, rt.args, true); ident() }
+            if (isOp("?.")) { next(); recv = TypeRef(rt.name, rt.args, true); fname() }
             else if (isOp(".")) { next(); recv = rt; fname() }
             else if (rt.args.isEmpty() && rt.name.contains('.')) { recv = TypeRef(rt.name.substringBeforeLast('.'), emptyList(), false); rt.name.substringAfterLast('.') }
             else fail("expected '('")
@@ -2231,27 +2298,32 @@ class Parser(toks: List<Tok>) {
         whereClause(typeParams)
         // A block body may start on the next line (`fun f(): String\n{ ... }`).
         if (peek().k == K.NL) { val save2 = p; skipNLOnly(); if (!isOp("{")) p = save2 }
-        return if (isOp("=")) {
-            next(); skipNLOnly()
-            val outerDecls = pendingDecls; pendingDecls = ArrayList(); bodyLevel++
-            val (e, ds) = try { expr() to pendingDecls } finally { pendingDecls = outerDecls; bodyLevel-- }
-            if (ds.isEmpty()) FunD(name, params, ret, null, e, line, typeParams, recv)
-            else {
-                // `= object : T { }`: the anonymous class is declared in a block body; the function returns T.
-                val anon = (ds.last() as LocalDeclS).d as? ClassD
-                val r = ret ?: if (anon != null && e is CallE && (e.callee as? NameE)?.n == anon.name) TypeRef(anon.supers.firstOrNull() ?: anon.name, anon.superTypeArgs[anon.supers.firstOrNull()] ?: emptyList(), false) else null
-                // No declared return type and the body is more than the object itself (`(object : A {}) as A`): keep an
-                // expression body (a block-valued `when`) so the return type is inferred from the whole expression.
-                if (r == null) FunD(name, params, null, null, WhenE(null, listOf(null to Block(ds + ExprS(e).also { it.line = line }))).also { it.line = line }, line, typeParams, recv)
-                else FunD(name, params, r, Block(ds + RetS(e).also { it.line = line }), null, line, typeParams, recv)
-            }
-        }
+        return labelThis(if (isOp("=")) { next(); skipNLOnly(); exprBodyFun(name, params, ret, line, typeParams, recv) }
         else if (isOp("{")) {
             val outer = localDelegs; localDelegs = HashSet()
             val b = try { block().let { if (localDelegs.isEmpty()) it else delegLocals(it, localDelegs) } } finally { localDelegs = outer }
             FunD(name, params, ret, b, null, line, typeParams, recv)
         }
-        else FunD(name, params, ret, null, null, line, typeParams, recv) // abstract (interface) member
+        else FunD(name, params, ret, null, null, line, typeParams, recv), name) // abstract (interface) member
+    }
+
+    /**
+     * `this@label` in extension function or property [label]: its receiver, read through a `val $this$label = this`
+     * declared first, so receiver lambdas and anonymous functions inside capture it like any local.
+     */
+    private fun labelThis(f: FunD, label: String): FunD {
+        if (f.recv == null) return f
+        val n = "\$this\$$label"; var hit = false
+        var sub: Subst? = null
+        fun inner(g: FunD) = FunD(g.name, g.params, g.ret, g.body?.let { sub!!.block(it) }, g.exprBody?.let { sub!!.e(it) }, g.line, g.typeParams, g.recv)
+        // Local functions (anonymous functions in the body) see the label too.
+        sub = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n == "this@$label") { hit = true; NameE(n).also { it.line = x.line } } else null },
+            srw = { st -> if (st is LocalDeclS && st.d is FunD) LocalDeclS(inner(st.d as FunD)).also { it.line = st.line } else null })
+        val b = f.body?.let { sub.block(it) }; val eb = f.exprBody?.let { sub.e(it) }
+        if (!hit) return f
+        val decl = VarS(n, false, null, NameE("this").also { it.line = f.line }).also { it.line = f.line }
+        return if (b != null) FunD(f.name, f.params, f.ret, Block(listOf(decl) + b.stmts), null, f.line, f.typeParams, f.recv)
+        else FunD(f.name, f.params, f.ret, null, WhenE(null, listOf(null to Block(listOf(decl, ExprS(eb!!).also { it.line = f.line })))).also { it.line = f.line }, f.line, f.typeParams, f.recv)
     }
 
     /** Delegated local variables (`val x by d`) of the function body being parsed. */
@@ -2466,10 +2538,12 @@ class Parser(toks: List<Tok>) {
         if (isOp("(")) {
             // Function type `(A, B) -> R` (TypeRef "$Fn" with args = params + return), or a parenthesized type.
             next()
-            val ps = nested(1) { val xs = ArrayList<TypeRef>(); while (!isOp(")")) { if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == ":") { p += 2 }; xs.add(type()); if (isOp(",")) next() }; xs }
+            val ps = fnTypeParams()
             expectOp(")")
             val fn = if (isOp("->")) { next(); TypeRef("\$Fn", ps + type(), false) } else ps.singleOrNull() ?: fail("expected '->'")
-            return if (isOp("?")) { next(); TypeRef(fn.name, fn.args, true) } else fn
+            val t0 = if (isOp("?")) { next(); TypeRef(fn.name, fn.args, true) } else fn
+            // A parenthesized receiver: `(String).() -> R`.
+            return if (fn !== ps.singleOrNull()) t0 else recvFnType(t0)
         }
         var name = ident()
         while (isOp(".") && t[p + 1].k == K.ID) { next(); name += "." + ident() }
@@ -2489,14 +2563,22 @@ class Parser(toks: List<Tok>) {
             ?: genericAliases[name]?.takeIf { it.first.size == args.size }?.let { (tps, rhs) ->
                 val a = Subst(tps.zip(args).toMap()).ty(rhs); TypeRef(a.name, a.args, a.nullable || nullable) }
             ?: TypeRef(name, args, nullable)
-        // Function type with receiver `R.(A) -> X`: TypeRef "$FnR" with args = receiver + params + return.
-        if (isOp(".") && t[p + 1].k == K.OP && t[p + 1].s == "(") {
-            next(); next()
-            val ps = nested(1) { val xs = ArrayList<TypeRef>(); while (!isOp(")")) { if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == ":") { p += 2 }; xs.add(type()); if (isOp(",")) next() }; xs }
-            expectOp(")"); expectOp("->")
-            return TypeRef("\$FnR", listOf(base) + ps + type(), false)
-        }
-        return base
+        return recvFnType(base)
+    }
+
+    /** Parameter types of a function type up to its `)`; parameter names (`(x: Int) -> R`) are dropped. */
+    private fun fnTypeParams(): List<TypeRef> = nested(1) { val xs = ArrayList<TypeRef>(); while (!isOp(")")) { if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == ":") { p += 2 }; xs.add(type()); if (isOp(",")) next() }; xs }
+
+    /** Function type with receiver `R.(A) -> X` after its receiver [base]: TypeRef "$FnR" with args = receiver + params + return. */
+    private fun recvFnType(base: TypeRef): TypeRef {
+        if (!(isOp(".") && t[p + 1].k == K.OP && t[p + 1].s == "(")) return base
+        // Without `->` after the parentheses it is the receiver of an anonymous function (`fun Any?.() = this`).
+        val i = afterGroup(p + 1, "(", ")")
+        if (!(t[i].k == K.OP && t[i].s == "->")) return base
+        next(); next()
+        val ps = fnTypeParams()
+        expectOp(")"); expectOp("->")
+        return TypeRef("\$FnR", listOf(base) + ps + type(), false)
     }
 
     /** Non-generic `typealias N = T`, collected before parsing so aliases may be used before their declaration. */
@@ -2758,6 +2840,7 @@ class Parser(toks: List<Tok>) {
             }
             isId("return") -> {
                 next()
+                if (anonLabel != null && isOp("@") && t[p + 1].k == K.ID && t[p + 1].s == anonLabel) p += 2
                 val tk = t[p]
                 if (tk.k == K.NL || tk.k == K.EOF || (tk.k == K.OP && (tk.s == "}" || tk.s == ";"))) RetS(null) else RetS(expr())
             }
@@ -2966,6 +3049,9 @@ class Parser(toks: List<Tok>) {
     }
 
     private fun primary(): E {
+        // `context(c: C) fun R.() = ...`: an anonymous function with context parameters (function() takes them).
+        if (isContextDecl()) { contextDecl(); if (!isId("fun")) fail("expected an anonymous function after 'context(...)'") }
+        val label = if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == "@" && t[p + 2].k == K.ID && t[p + 2].s == "fun") ident().also { next() } else null
         if (isOp("::")) {
             // `::name`: a reference without receiver (NullL stands for "none").
             val l = next().line
@@ -2983,12 +3069,13 @@ class Parser(toks: List<Tok>) {
             K.ID -> when (tk.s) {
                 "object" -> if (isOp(":") || isOp("{")) anonObject(tk.line) else fail("unexpected 'object'", tk)
                 // Anonymous function: declared as a local function before the statement, used as `::name`.
-                "fun" -> if (bodyLevel > 0 && (isOp("(") || peek().k == K.ID)) {
+                // Outside bodies (top-level property initializers) nothing can be captured, so it is a top-level function.
+                "fun" -> if (isOp("(") || peek().k == K.ID) {
                     p--
                     val n = "\$af${anonN++}"
-                    val sv = anonFun; anonFun = n
-                    val fd = try { function() } finally { anonFun = sv }
-                    pendingDecls.add(LocalDeclS(fd).also { it.line = tk.line }); sawLocal = true
+                    val sv = anonFun; val svl = anonLabel; anonFun = n; anonLabel = label
+                    val fd = try { function() } finally { anonFun = sv; anonLabel = svl }
+                    if (bodyLevel > 0) { pendingDecls.add(LocalDeclS(fd).also { it.line = tk.line }); sawLocal = true } else topAnonFuns.add(fd)
                     UnE("::" + n, if (fd.recv != null) NameE(fd.recv!!.name).also { it.line = tk.line } else NullL()).also { it.line = tk.line }
                 } else fail("unexpected 'fun'", tk)
                 "true" -> BoolL(true)

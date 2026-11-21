@@ -57,6 +57,12 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   gets a boxing bridge `@br.C.m` in the interface slot; class-typed virtual calls use the `m#narrow` slot.
 - Lambdas with receiver: typed parameters (`{ x: Int -> }`), builder inference from unqualified receiver properties
   (`scoped { emit(key) }`); `r.f(x)` counts as a use of a local function value `f` in last-use analysis.
+- Function types with receiver (`T.() -> R`): as supertypes of classes, objects and interfaces (`class C : String.() -> Int`);
+  anonymous extension functions (`fun Int.() = this + 1`, also with `context(...)`, labels and a nullable receiver);
+  extension properties on function types (`val (Int.() -> T).p`); `a?.f(1)` and `c.p(1)` for function-typed locals,
+  getters and extension properties; references `A::foo`, `Outer::Inner`, `f::p` assigned to receiver types; implicit
+  receivers (`with(c) { ... }`) supply context arguments. Not yet: generic member extension properties on function types,
+  generic inner classes in references, invoking an object directly (`O(1)` for `operator fun invoke`).
 - Locals without an initializer (`val x: T` assigned later): a variable starting at the type's zero value;
   definite assignment is not checked.
 - Referential equality `===` / `!==`: pointer identity for class/interface/array/collection values and against null,
@@ -96,7 +102,7 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   cycle collector with an adaptive root threshold. Leak tests (`compiler/tests/leaks`) check live count = 0, ASan and macOS `leaks`.
 - Tests: `compiler/test.sh` (golden `compiler/tests/*.kt|.out`, benchmark checksums, leak tests);
   upstream Kotlin tests in `compiler/tests/upstream` (unmodified, JetBrains/kotlin @ 19c36e1), 8475 candidates
-  (`manifest.json`): PASS 3396, MISCOMPILE 17, COMPILER_CRASH 2, UNSUPPORTED 2076, N/A 2984 (passing ones are kept and
+  (`manifest.json`): PASS 3442, MISCOMPILE 17, COMPILER_CRASH 2, UNSUPPORTED 2030, N/A 2984 (passing ones are kept and
   re-runnable with `run.py`; `run.py --leak-check` also fails a passing test that leaks); reference tests the compiler
   does not fully pass yet: `compiler/tests/reference/fetch.py` (list in `compiler/tests/reference/list.txt`); `import.py --no-fetch` re-scans all candidates and keeps the newly passing ones.
 
