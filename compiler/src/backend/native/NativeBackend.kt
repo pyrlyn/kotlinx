@@ -2672,6 +2672,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (fnSig(f.t) != null) return invokeFn(f, e)
         // `x(args)` on a value whose class declares `operator fun invoke`.
         if (f.t is Ty.Cls && classes[f.t.name]?.methods?.containsKey("invoke") == true) return method(f, "invoke", e)
+        // ... or whose interface has one (`interface Foo : () -> Int`, `operator fun invoke` in an interface).
+        if (f.t is Ty.Iface && ifaces[f.t.name]?.methods?.containsKey("invoke") == true) return method(f, "invoke", e)
         fail("unsupported call")
     }
 

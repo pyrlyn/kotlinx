@@ -510,13 +510,18 @@ class Parser(toks: List<Tok>) {
      * `I { ... }` / `I(f)` construct it; a lambda passed where a parameter of a top-level function, constructor or
      * (uniquely named) method has type `I` is wrapped the same way (SAM conversion).
      */
+    /** The function type a SAM method takes: an extension method (`fun Int.accept(s: String)`, lowered with the
+     *  receiver first) takes `Int.(String) -> R`; a suspend one a suspend function type. */
+    private fun samFnName(m: FunD) = (if (m.recv != null) "\$FnR" else "\$Fn") + (if (SuspendFuns.isSuspend(m)) "S" else "")
+
     private fun samLower(funs: MutableList<FunD>, classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>, globals: MutableList<VarS>) {
         if (funIfaces.isEmpty()) return
         for ((n, d) in funIfaces) {
             // The single abstract method may be inherited from (non-generic) super-interfaces; a default in the
             // interface or any super-interface implements a method.
             val supers = ifaceSupers[n].orEmpty()
-            val superDs = supers.map { sn -> ifaces.firstOrNull { it.name == sn } ?: funIfaces[sn] ?: fail("fun interfaces with super-interfaces are not supported", Tok(K.ID, n, d.line)) }
+            val superDs = supers.map { sn -> ifaces.firstOrNull { it.name == sn } ?: funIfaces[sn] ?: fnSuperDecl(sn, ifaceSuperRefs[n]?.get(sn)?.size, d.line)
+                ?: fail("fun interfaces with super-interfaces are not supported", Tok(K.ID, n, d.line)) }
             // A generic super-interface (`fun interface C : G<Char>`) contributes its methods with the type arguments substituted.
             val superMs = superDs.flatMap { sd ->
                 if (sd.typeParams.isEmpty()) sd.methods else {
@@ -532,8 +537,9 @@ class Parser(toks: List<Tok>) {
             samMethods[n] = m
             if (m.typeParams.isNotEmpty() || m.name.startsWith("\$")) fail("this fun interface method is not supported", Tok(K.ID, n, d.line))
             val ret = m.ret ?: TypeRef("Unit", emptyList(), false)
-            // An extension method (`fun Int.accept(s: String)`, lowered with the receiver first) takes `Int.(String) -> R`.
-            val fnT = TypeRef(if (m.recv != null) "\$FnR" else "\$Fn", m.params.map { it.type } + ret, false)
+            val fnT = TypeRef(samFnName(m), m.params.map { it.type } + ret, false)
+            // The wrapper's method is declared on the interface's line: suspend-ness is looked up by line.
+            if (SuspendFuns.isSuspend(m)) SuspendFuns.add(d.line, m.name)
             val body = CallE(NameE("f\$").also { it.line = d.line }, emptyList(), m.params.map { NameE(it.name).also { e -> e.line = d.line } }, null).also { it.line = d.line }
             val tas = d.typeParams.map { TypeRef(it, emptyList(), false) }
             classes.add(ClassD("$n\$Sam", listOf(FieldD("f\$", fnT, false)), listOf(n), listOf(FunD(m.name, m.params, ret, null, body, d.line)), d.line,
@@ -554,7 +560,7 @@ class Parser(toks: List<Tok>) {
             val d = funIfaces.getValue(t.name)
             val m = samMethods.getValue(t.name)
             val sub = Subst(d.typeParams.zip(t.args).toMap())
-            return TypeRef(if (m.recv != null) "\$FnR" else "\$Fn", m.params.map { sub.ty(it.type) } + sub.ty(m.ret ?: TypeRef("Unit", emptyList(), false)), t.nullable)
+            return TypeRef(samFnName(m), m.params.map { sub.ty(it.type) } + sub.ty(m.ret ?: TypeRef("Unit", emptyList(), false)), t.nullable)
         }
         // A generic fun interface needs its type arguments from the context (`I<String> { }` or the parameter type).
         fun sam(t: TypeRef?) = t != null && t.name in funIfaces && t.args.size == funIfaces[t.name]!!.typeParams.size
@@ -1149,15 +1155,31 @@ class Parser(toks: List<Tok>) {
     /** Interface -> type arguments of its directly declared generic super-interfaces. */
     private val ifaceSuperRefs = HashMap<String, HashMap<String, List<TypeRef>>>()
 
+    /**
+     * A function type as a super-interface (`interface Foo : () -> Int`, `fun interface G<P> : suspend (P) -> Unit`):
+     * a generic interface named like the type (`$Fn`/`$FnS`) with one `invoke`, whose type arguments are the
+     * parameter and return types; Generics points the instance at the backend's function interface (`$Fn$Int`).
+     * [line] is the declaring interface's: a suspend `invoke` is registered there (SuspendFuns keys by line).
+     */
+    private fun fnSuperDecl(s: String, arity: Int?, line: Int): InterfaceD? {
+        if ((s != "\$Fn" && s != "\$FnS") || arity == null || arity < 1) return null
+        val tps = (1 until arity).map { "\$P$it" } + "\$R"
+        if (s == "\$FnS") SuspendFuns.add(line, "invoke")
+        val ps = (1 until arity).map { Param("p$it", TypeRef("\$P$it", emptyList(), false)) }
+        return InterfaceD(s, listOf(FunD("invoke", ps, TypeRef("\$R", emptyList(), false), null, null, line)), line, tps)
+    }
+
     private fun flattenIfaces(classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>) {
         if (ifaceSupers.isEmpty()) return
         val byName = ifaces.associateBy { it.name }
+        // Function-type supers have no declaration: synthesized per arity (the declaring interface's type arguments).
+        fun decl(s: String, args: List<TypeRef>?, line: Int): InterfaceD? = byName[s] ?: fnSuperDecl(s, args?.size, line)
         /** Type arguments of every generic ancestor of [n], in terms of [n]'s own type parameters. */
         val ancArgs = HashMap<String, HashMap<String, List<TypeRef>>>()
         fun anc(n: String, seen: MutableSet<String> = LinkedHashSet(), sub: Map<String, TypeRef> = emptyMap(), top: String = n): Set<String> {
             for (s in ifaceSupers[n].orEmpty()) {
-                val sd = byName[s] ?: fail("unknown interface $s")
                 val args = ifaceSuperRefs[n]?.get(s)?.map { Subst(sub).ty(it) }
+                val sd = decl(s, args, byName[n]?.line ?: 0) ?: fail("unknown interface $s")
                 if (sd.typeParams.isNotEmpty() && args == null) fail("generic interface $s needs type arguments in $top")
                 if (args != null) {
                     if (args.size != sd.typeParams.size) fail("wrong number of type arguments for $s")
@@ -1177,7 +1199,7 @@ class Parser(toks: List<Tok>) {
             val ms = ArrayList(d.methods)
             val defs = ArrayList(ifaceDefaults[d.name].orEmpty())
             for (s in a) {
-                val sd = byName.getValue(s)
+                val sd = decl(s, ancArgs[d.name]?.get(s), d.line)!!
                 val sub = ancArgs[d.name]?.get(s)?.let { Subst(sd.typeParams.zip(it).toMap()) }
                 for (m in sd.methods) if (ms.none { it.name == m.name }) ms.add(sub?.fn(m) ?: m)
                 if (s in genericIfaceTps) fail("default methods inherited from a generic super-interface are not supported")
