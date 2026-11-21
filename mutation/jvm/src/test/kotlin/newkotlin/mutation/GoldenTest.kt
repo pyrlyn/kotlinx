@@ -1,10 +1,6 @@
 package newkotlin.mutation
 
-import newkotlin.compileGenerics
-import newkotlin.withAny
-import newkotlin.withPrelude
-import newkotlin.Parser
-import newkotlin.Lexer
+import newkotlin.compileToIr
 import newkotlin.deferredRc
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.fail
@@ -44,16 +40,13 @@ class GoldenTest {
         }
     }
 
-    private fun compileToIr(src: String): String =
-        compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program())))
-
     private fun runNative(name: String, ir: String): String {
         val dir = File(work, "${ProcessHandle.current().pid()}-${Thread.currentThread().id}").also { it.mkdirs() }
         val ll = File(dir, "$name.ll").also { it.writeText(ir) }
         val exe = File(dir, name)
         val cc = System.getenv("NK_CC") ?: "/usr/bin/clang"
-        val build = ProcessBuilder(cc, "-O1", "-DRT_PLAIN_MALLOC", "-Wno-override-module", "-w", "-I", "$root/compiler/gc",
-            ll.path, "$root/compiler/runtime/runtime.c", "$root/compiler/gc/perceus/gc.c", "-o", exe.path)
+        val build = ProcessBuilder(cc, "-O1", "-DRT_PLAIN_MALLOC", "-Wno-override-module", "-w", "-I", "$root/native/gc/c",
+            ll.path, "$root/compiler/runtime/runtime.c", "$root/native/gc/c/perceus/gc.c", "-o", exe.path)
             .redirectErrorStream(true).start()
         val bout = build.inputStream.bufferedReader().readText()
         if (!build.waitFor(120, TimeUnit.SECONDS) || build.exitValue() != 0) fail<Unit>("$name: clang failed: ${bout.take(2000)}")
