@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 17,
   "N/A": 2984,
-  "PASS": 3495,
-  "UNSUPPORTED": 1977
+  "PASS": 3497,
+  "UNSUPPORTED": 1975
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -12588,14 +12588,13 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateWithPrivateSet.kt"
   },
   "box/box/delegatedProperty/delegatedByExtensionMemberProperty.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method $PRef$$Fn$$FnR$String$String.getValue()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedByExtensionMemberProperty.kt"
   },
   "box/box/delegatedProperty/delegatedByExtensionProperty.kt": {
-   "category": "unknown this (stdlib API / unsupported decl)",
-   "detail": "unknown name 'this'",
+   "category": "strings / templates",
+   "detail": "unknown method String.b()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedByExtensionProperty.kt"
   },
@@ -13235,9 +13234,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/delegationToIntersectionType3.kt"
   },
   "box/box/delegation/delegationToSAMInterface.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected F, found $Fn$Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/delegationToSAMInterface.kt"
   },
   "box/box/delegation/delegationToVar.kt": {
@@ -16679,7 +16677,7 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeInCompanionObjectWithFunctionalArgument.kt"
   },
   "box/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt": {
-   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/GitHub/listepo/apps/kotlinx/.rtok/worktrees/kotlinx-i21/compiler/build/upstream-tmp/nkupb81llreo/t.ll:219:143: error: use of undefined value '@m.TestClass.invoke'\n@vt.TestClass = internal constant [6 x ptr] [ptr @rel.TestClass, ptr @trav.TestClass, ptr @relo.TestClass, ptr @free.TestClass, ptr null, ptr @m.TestCl",
+   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/GitHub/listepo/apps/kotlinx/.rtok/worktrees/kotlinx-i18/compiler/build/upstream-tmp/nkup02xxg9no/t.ll:219:143: error: use of undefined value '@m.TestClass.invoke'\n@vt.TestClass = internal constant [6 x ptr] [ptr @rel.TestClass, ptr @trav.TestClass, ptr @relo.TestClass, ptr @free.TestClass, ptr null, ptr @m.TestCl",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt"
   },
