@@ -12,9 +12,10 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | Option | Meaning |
 | --- | --- |
 | `-o <output>` | Output binary (or IR file with `-S`). Required. |
-| `--target <t>`, `--target=<t>` | `native` (default) or `wasm`: the same LLVM IR for wasm32-wasi, linked into a `.wasm` module (see [Wasm target](#wasm-target)). `js` and `jvm` are accepted but not implemented yet. |
+| `--target <t>`, `--target=<t>` | `native` (default); `wasm`: the same LLVM IR for wasm32-wasi, linked into a `.wasm` module (see [Wasm target](#wasm-target)); `js`: one JavaScript file for node (see [js-target.md](js-target.md)); `jvm`: an executable jar (see [jvm.md](jvm.md)). |
 | `--runtime <file.c>` | C runtime to link. Default: `$NEWKOTLIN_RUNTIME`, else `compiler/runtime/runtime.c`. |
 | `--emit-llvm` | Also keep `<output>.ll`. |
+| `--minify` | `--target=js`: minify the output with esbuild or bun, whichever is on `PATH` (or `NK_MINIFIER`, a path to one of them). |
 | `-S` | Write only the LLVM IR to `<output>`; nothing is compiled or linked. |
 | `--cc <clang>` | C compiler and linker. Default: `$NK_CC`, Apple clang at `/usr/bin/clang`, the newest mise `conda:clang`, else `clang`. |
 | `--cflags "<flags>"` | Optimization flags for clang. Default: `-O3 -flto`. |
@@ -22,7 +23,7 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `--no-opt` | Skip the `opt` step. |
 | `--leak-check` | Count live runtime objects and report at exit; the program exits 3 on a leak. |
 | `--alloc <a>` | `mimalloc` (default), `malloc` or `pool`. |
-| `--gc <name>`, `--gc=<name>` | Collector: `epoch` / `perceus` / `incremental` / `rc` (default `$NEWKOTLIN_GC` or `epoch`). Caps from `native/gc/c/<name>/`. |
+| `--gc <name>`, `--gc=<name>` | Collector: `epoch` / `perceus` / `incremental` / `compact` / `rc` (default `$NEWKOTLIN_GC` or `epoch`; for `--target=js`: `rc` when the program allocates no possibly cyclic object, else `compact`; js has no threads for `epoch`). Caps from `native/gc/c/<name>/`; `compact` exists only in Zig (`--gc-runtime=zig`). |
 | `--gc-runtime <zig\|c>` | Collector backend (default `$NEWKOTLIN_GC_RUNTIME` or `zig`). `zig` links `libgc-<name>.a`; `c` compiles `native/gc/c/<name>/gc.c`. Shared `runtime.c` always. |
 | `-h`, `--help` | Print the usage text. |
 
@@ -35,10 +36,10 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `NEWKOTLIN_GC_DIR` | Caps / `kxgc.h` / C `gc.c` tree (default: `native/gc/c`). |
 | `NEWKOTLIN_GC_RUNTIME` | `zig` (default) or `c` — collector backend language. |
 | `NEWKOTLIN_GC_ZIG_LIB_DIR` | Directory with `libgc-<name>.a` (default: `native/gc/zig/zig-out/lib`). |
-| `NEWKOTLIN_GC_ZIG_WASM_LIB_DIR` | Same for `--target=wasm` (default: `native/gc/zig/zig-out/wasm32-wasi/lib`). |
+| `NEWKOTLIN_GC_ZIG_WASM_LIB_DIR` | Same for `--target=wasm` and the `libgc-<name>.bc` of `--target=js` (default: `native/gc/zig/zig-out/wasm32-wasi/lib`). |
 | `NEWKOTLIN_MIMALLOC_DIR` | Where to find `libmimalloc`. |
 | `NK_CC`, `NK_OPT` | Default C compiler and `opt`. |
-| `NK_WASM_CC` | C compiler and linker for `--target=wasm` (default: `zig cc -target wasm32-wasi`). |
+| `NK_WASM_CC` | C compiler and linker for `--target=wasm`, C compiler for `--target=js` (default: `zig cc -target wasm32-wasi`). |
 
 ## Wasm target
 
@@ -48,7 +49,8 @@ wasm32 triple and data layout, 32-bit `size_t`/`long` for libc calls, entry `__m
 engine's GC. Defaults and limits:
 
 - `--gc perceus` (synchronous cycle collection; `incremental` and `rc` also work; `epoch` needs threads),
-  `--alloc malloc` (wasi-libc) or `pool`; no `--link`.
+  `--alloc pool` (default: size-class free lists on 64 KB slabs for objects; 1.2-2x faster than wasi-libc malloc
+  on allocation-heavy programs, bigheap 399 -> 200 ms) or `malloc` (wasi-libc); no `--link`.
 - `--gc-runtime=zig` (default) links the Zig collectors built for wasm32-wasi:
   `native/gc/zig/zig-out/wasm32-wasi/lib/libgc-<name>.a` (or `$NEWKOTLIN_GC_ZIG_WASM_LIB_DIR`), a separate prefix
   so the host archives in `zig-out/lib` stay intact. `bin/newkotlinc --target=wasm` rebuilds them like the host
@@ -57,10 +59,19 @@ engine's GC. Defaults and limits:
 - Linker: `zig cc -target wasm32-wasi` (clang 21 with wasi-libc and wasm-ld), so `opt` must be LLVM 21 or older;
   links with `-s -Wl,-z,stack-size=8388608`.
 - Run with any WASI preview1 host, e.g. `node bench/wasm/run.mjs main.wasm` (preopens the current directory).
+- Calls in the loops of `main` to functions that loop (directly or through their callees) are not inlined into
+  `main` (`WasmHotCalls.kt`): V8 has no on-stack replacement for wasm, so code inlined into `main`, which runs
+  once, would stay baseline (Liftoff) code; a call gets optimized after a few calls (nbody 136 -> 52 ms).
+- No printf, qsort or strtod in the runtime: numbers are formatted by `compiler/runtime/kxfmt.h` (shortest
+  round-trip digits with exact big-number arithmetic, the same text as the former `snprintf`/`strtod` loop;
+  `compiler/tests/runtime/run.sh` compares the two), so a module is about 12-17 KB instead of 42-46 KB.
 
 Golden tests on wasm: `compiler/tests/wasm/run.sh` (233 of 234 pass; `coroutine_cps_core` fails because
 `kxCoStart` does not keep its function value alive, a use-after-free that also crashes native builds with
-`--alloc malloc --gc=perceus`).
+`--alloc malloc --gc=perceus`; listed in `compiler/tests/wasm/known-failures.txt`, reported as XFAIL).
+Module size: `compiler/tests/wasm/size.sh` checks the budgets and forbidden libc functions in
+`compiler/tests/wasm/size-budget.txt`. Performance: `compiler/tests/wasm/perf.sh` compares two builds or engine
+settings of a benchmark under node and checks the ratio against `compiler/tests/wasm/perf-limits.txt`. CI runs all three.
 
 Benchmarks against JetBrains Kotlin/Wasm: `bench/wasm/build.sh && bench/wasm/run.py` (results in
 `bench/results/wasm/table.md`).

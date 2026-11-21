@@ -29,7 +29,9 @@ typedef struct {
     void (*trav)(void *, kx_visit_fn);  /* call visit on every reference field (may be NULL children) */
     void (*relo)(void *);               /* release fields the collector does not trace (acyclic, lists...) */
     void (*freemem)(void *);            /* return the object's memory; fields must already be released */
-    void *cyclic;                       /* non-NULL iff the class is possibly cyclic (traced) */
+    void *cyclic;                       /* non-NULL iff the class is possibly cyclic (traced): (void *)1, or a
+                                           layout { u32 n, size, relo; u32 offsets[n] } of its only traced
+                                           fields that the Zig trial deletion reads instead of calling trav */
 } KxVTab;
 
 /* Header word bits (see layout above). Color values: compiler/gc/common/object.inc. */

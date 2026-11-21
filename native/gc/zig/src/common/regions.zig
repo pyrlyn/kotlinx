@@ -36,10 +36,19 @@ const Pool = struct {
             return p;
         }
         const bytes = cls << RT_SIZE_CLASS_SHIFT;
-        if (self.ptr + bytes > self.end) { // tail of the old slab is abandoned (as in C)
-            self.ptr = @intFromPtr(host.malloc(RT_SLAB_BYTES));
-            self.end = self.ptr + RT_SLAB_BYTES;
-        }
+        if (self.ptr + bytes > self.end) return self.refill(bytes);
+        const p: *anyopaque = @ptrFromInt(self.ptr);
+        self.ptr += bytes;
+        return p;
+    }
+
+    /// Slow path of alloc, once per 64 KB slab. Out of line so that alloc, inlined into the exported
+    /// rt_alloc/rt_alloc_trace, stays small: V8 inlines small wasm callees into the program's functions.
+    noinline fn refill(self: *Pool, bytes: usize) *anyopaque {
+        @branchHint(.cold);
+        // The tail of the old slab is abandoned (as in C).
+        self.ptr = @intFromPtr(host.malloc(RT_SLAB_BYTES));
+        self.end = self.ptr + RT_SLAB_BYTES;
         const p: *anyopaque = @ptrFromInt(self.ptr);
         self.ptr += bytes;
         return p;

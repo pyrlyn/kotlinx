@@ -6,12 +6,15 @@ import kotlinx.cinterop.*
 import platform.posix.*
 
 private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
-  --target <t>         native (default; LLVM, native binary), wasm (same LLVM IR for wasm32-wasi, linked with
-                       ${'$'}NK_WASM_CC or `zig cc -target wasm32-wasi`; GC perceus, --alloc malloc; Zig GC archives
-                       from native/gc/zig/zig-out/wasm32-wasi/lib or ${'$'}NEWKOTLIN_GC_ZIG_WASM_LIB_DIR),
-                       js, jvm (not implemented)
+  --target <t>         native (default; LLVM, native binary), js (JavaScript for node, via wasm32 LLVM IR; Zig GC
+                       bitcode from the wasm32-wasi lib directory below), wasm (same LLVM IR for wasm32-wasi,
+                       linked with ${'$'}NK_WASM_CC or `zig cc -target wasm32-wasi`; GC perceus, --alloc pool; Zig GC
+                       archives from native/gc/zig/zig-out/wasm32-wasi/lib or ${'$'}NEWKOTLIN_GC_ZIG_WASM_LIB_DIR),
+                       jvm (executable jar; LLVM IR translated to JVM
+                       bytecode, needs java 21+; GC perceus, --gc-runtime c, --alloc pool)
   --runtime <file.c>   C runtime to link (default: ${'$'}NEWKOTLIN_RUNTIME or compiler/runtime/runtime.c)
   --emit-llvm          also keep <output>.ll
+  --minify             --target=js: minify the output with esbuild or bun (whichever is on PATH; NK_MINIFIER)
   --cc <clang>         C compiler/linker (default: ${'$'}NK_CC, Apple clang, newest mise conda:clang, else clang)
   --cflags "<flags>"   optimization flags for clang (default: -O3 -flto)
   --opt <path>         LLVM opt run on the IR before linking (lto-pre-link<O3> with -flto, else default<O3>);
@@ -24,7 +27,9 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
   --gc <name>          collector name (also --gc=<name>; default: ${'$'}NEWKOTLIN_GC or epoch):
                        epoch (deferred RC + background cycle collection; alias "default"),
                        perceus (RC + synchronous cycle collector), incremental (budgeted
-                       cycle steps), rc (RC only, cycles leak). Caps/metadata from native/gc/c/<name>/.
+                       cycle steps), compact (RC + small synchronous cycle collector, made for
+                       --target=js), rc (RC only, cycles leak). Caps/metadata from native/gc/c/<name>/.
+                       --target=js: compact by default; epoch is not available (no threads).
   --gc-runtime <zig|c> collector implementation language (also --gc-runtime=; default:
                        ${'$'}NEWKOTLIN_GC_RUNTIME or zig). zig links native/gc/zig/zig-out/lib/libgc-<name>.a
                        (experimental Zig port); c links native/gc/c/<name>/gc.c. Only the collector
@@ -33,99 +38,10 @@ private const val USAGE = """usage: newkotlinc <input.kt> -o <output> [options]
                        linker flag; repeatable (also --link=<arg>)
   -S                   only write LLVM IR to <output>"""
 
-private fun readFile(path: String): String {
-    val f = fopen(path, "rb") ?: throw CompileError("cannot open $path")
-    try {
-        fseek(f, 0, SEEK_END); val n = ftell(f).toInt(); fseek(f, 0, SEEK_SET)
-        val buf = ByteArray(n)
-        if (n > 0) buf.usePinned { fread(it.addressOf(0), 1u, n.toULong(), f) }
-        return buf.decodeToString()
-    } finally { fclose(f) }
-}
-
-private fun writeFile(path: String, text: String) {
-    val f = fopen(path, "wb") ?: throw CompileError("cannot write $path")
-    val b = text.encodeToByteArray()
-    if (b.isNotEmpty()) b.usePinned { fwrite(it.addressOf(0), 1u, b.size.toULong(), f) }
-    fclose(f)
-}
-
 private fun hasLib(dir: String): Boolean =
     listOf("dylib", "so", "a").any { access("$dir/libmimalloc.$it", F_OK) == 0 }
 
 private fun pkgConfigLibdir(): String? = capture("pkg-config --variable=libdir mimalloc 2>/dev/null")
-
-/** First line of a shell command's stdout, or null. */
-private fun capture(cmd: String): String? {
-    val p = popen(cmd, "r") ?: return null
-    val out = StringBuilder()
-    memScoped {
-        val buf = allocArray<ByteVar>(512)
-        while (fgets(buf, 512, p) != null) out.append(buf.toKString())
-    }
-    pclose(p)
-    return out.toString().trim().lineSequence().firstOrNull()?.trim()?.ifEmpty { null }
-}
-
-/** LLVM `opt`: --opt <path>, ${'$'}NK_OPT, `opt` on PATH, `xcrun --find opt`, then common install locations. */
-/** Major LLVM version from `<tool> --version` ("LLVM version 23.1.4", "clang version 21.0.0"), or null. */
-private val majorCache = HashMap<String, Int?>()
-
-/** Memoized; mise install paths (".../conda-llvm-tools/21.1.8/bin/opt") give it without running the tool (~0.15 s each). */
-private fun majorVersion(tool: String): Int? = majorCache.getOrPut(tool) {
-    Regex("/mise/installs/conda-(?:llvm-tools|clang)/(\\d+)[^/]*/bin/").find(tool)?.let { return@getOrPut it.groupValues[1].toInt() }
-    majorVersionRun(tool)
-}
-
-private fun majorVersionRun(tool: String): Int? {
-    val out = capture("'$tool' --version 2>/dev/null | grep -oE '(LLVM|clang) version [0-9]+' | head -1") ?: return null
-    return out.substringAfterLast(' ').toIntOrNull()
-}
-
-/** All stdout lines of a shell command. */
-private fun captureAll(cmd: String): List<String> {
-    val p = popen(cmd, "r") ?: return emptyList()
-    val out = StringBuilder()
-    memScoped { val buf = allocArray<ByteVar>(512); while (fgets(buf, 512, p) != null) out.append(buf.toKString()) }
-    pclose(p)
-    return out.lines().map { it.trim() }.filter { it.isNotEmpty() }
-}
-
-/**
- * C compiler/linker when --cc is absent: ${'$'}NK_CC, then Apple clang (/usr/bin/clang, macOS), then the newest
- * mise `conda:clang`, else `clang`. Apple clang's LTO measured faster than conda clang 23 (matmul 10 vs 16 ms,
- * refpass 130 vs 148 ms) and its link step about 2x faster; findOpt then picks an opt its LLVM can read.
- */
-private fun findCc(): String {
-    getenv("NK_CC")?.toKString()?.let { return it }
-    if (access("/usr/bin/clang", X_OK) == 0) capture("/usr/bin/clang --version 2>/dev/null")?.let { v ->
-        if (v.startsWith("Apple")) { majorCache["/usr/bin/clang"] = Regex("version (\\d+)").find(v)?.groupValues?.get(1)?.toIntOrNull(); return "/usr/bin/clang" }
-    }
-    val home = getenv("HOME")?.toKString() ?: ""
-    return captureAll("ls -d '$home'/.local/share/mise/installs/conda-clang/*/bin/clang 2>/dev/null | grep -v /latest/ | sort -rV")
-        .firstOrNull { access(it, X_OK) == 0 } ?: "clang"
-}
-
-private fun findOpt(explicit: String?, cc: String): String? {
-    (explicit ?: getenv("NK_OPT")?.toKString())?.let { return if (access(it, X_OK) == 0) it else null }
-    // mise shims (also returned by xcrun, which searches PATH) cost ~0.4 s per call and pick the version by the
-    // current directory; skip them and use the mise installs below.
-    capture("command -v opt 2>/dev/null")?.let { if ("/mise/shims/" !in it && access(it, X_OK) == 0) return it }
-    capture("xcrun --find opt 2>/dev/null")?.let { if ("/mise/shims/" !in it && access(it, X_OK) == 0) return it }
-    // Common LLVM install locations: conda env, Homebrew llvm (unversioned, then newest llvm@N), mise.
-    val home = getenv("HOME")?.toKString() ?: ""
-    val fixed = listOfNotNull(getenv("CONDA_PREFIX")?.toKString()?.let { "$it/bin/opt" },
-        "/opt/homebrew/opt/llvm/bin/opt", "/usr/local/opt/llvm/bin/opt")
-    // Prefer one the C compiler can read (LLVM major <= the C compiler's).
-    val maxMajor = majorVersion(cc)
-    fixed.firstOrNull { access(it, X_OK) == 0 && (maxMajor == null || (majorVersion(it) ?: 0) <= maxMajor) }?.let { return it }
-    // mise `conda:llvm-tools` (the repo's mise.toml; `mise install`), newest version first.
-    val mise = captureAll("ls -d '$home'/.local/share/mise/installs/conda-llvm-tools/*/bin/opt 2>/dev/null | grep -v /latest/ | sort -rV")
-    (mise.firstOrNull { o -> access(o, X_OK) == 0 && (maxMajor == null || (majorVersion(o) ?: 0) <= maxMajor) } ?: mise.firstOrNull { access(it, X_OK) == 0 })
-        ?.let { return it }
-    val globs = "/opt/homebrew/opt/llvm@*/bin/opt /usr/local/opt/llvm@*/bin/opt '$home'/.local/share/mise/installs/llvm/*/bin/opt"
-    return capture("ls -d $globs 2>/dev/null | sort -V | tail -1")?.takeIf { access(it, X_OK) == 0 }
-}
 
 /** Directory with libmimalloc: ${'$'}NEWKOTLIN_MIMALLOC_DIR, pkg-config, then Homebrew/system paths. */
 private fun findMimalloc(): String? {
@@ -135,20 +51,14 @@ private fun findMimalloc(): String? {
         .firstOrNull { hasLib(it) }
 }
 
-/** Source text to LLVM IR: lex, parse, merge the prelude and `Any` support, then generate code. */
-/** `suspend fun main()`: renamed and run by a generated `fun main() = runBlocking { ... }` (same line numbers). */
-private val SUSPEND_MAIN = Regex("""(?m)^suspend\s+fun\s+main\s*\(\s*\)""")
-fun compileToIr(src00: String): String {
-    val src0 = if (SUSPEND_MAIN.containsMatchIn(src00)) SUSPEND_MAIN.replace(src00, "suspend fun kxSuspendMain()") + "\nfun main() = runBlocking { kxSuspendMain() }\n" else src00
-    val src = withSerializable(src0); return compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program()))) }
-
 /** Collector used when neither --gc nor NEWKOTLIN_GC is given (and what --gc=default means). */
 const val DEFAULT_GC = "epoch"
 
 /** Collector for --target=wasm when none is given: synchronous cycle collection, no threads. */
 const val WASM_GC = "perceus"
 
-/** Install prefix of the wasm32-wasi Zig GC archives, relative to native/gc/zig (`zig build gc-libs -p ...`). */
+/** Install prefix of the wasm32-wasi Zig GC archives and bitcode, relative to native/gc/zig (`zig build gc-libs -p ...`,
+ *  `zig build gc-bc -p ...` for --target=js). */
 const val WASM_ZIG_PREFIX = "zig-out/wasm32-wasi"
 
 /** The `newkotlinc` command; see docs/usage.md for the options. */
@@ -159,7 +69,8 @@ fun main(args: Array<String>) {
     if (getenv("NEWKOTLIN_NO_BORROW_FIELD_LOCALS")?.toKString()?.let { it.isNotEmpty() && it != "0" } == true) borrowFieldLocals = false
     var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() }
     var gcRuntime = getenv("NEWKOTLIN_GC_RUNTIME")?.toKString()?.takeIf { it.isNotEmpty() }
-    var alloc: String? = null; var leakCheck = false; var emitLl = false; var onlyIr = false
+    var gcRuntimeSet = false // --gc-runtime given on the command line (bin/newkotlinc always exports NEWKOTLIN_GC_RUNTIME)
+    var alloc: String? = null; var leakCheck = false; var emitLl = false; var onlyIr = false; var minify = false
     var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
     val links = ArrayList<String>()
     var i = 0
@@ -169,8 +80,9 @@ fun main(args: Array<String>) {
             "--target" -> target = Target.parse(args[++i]) ?: run { fprintf(stderr, "unknown target: %s\n", args[i]); exit(2); return }
             "--runtime" -> runtime = args[++i]
             "--gc" -> gc = args[++i]
-            "--gc-runtime" -> gcRuntime = args[++i]
+            "--gc-runtime" -> { gcRuntime = args[++i]; gcRuntimeSet = true }
             "--emit-llvm" -> emitLl = true
+            "--minify" -> minify = true
             "--leak-check" -> leakCheck = true
             "--alloc" -> alloc = args[++i].also { if (it != "mimalloc" && it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be mimalloc, malloc or pool\n"); exit(2) } }
             "--cc" -> ccArg = args[++i]
@@ -181,7 +93,7 @@ fun main(args: Array<String>) {
             "-S" -> onlyIr = true
             "-h", "--help" -> { println(USAGE); return }
             else -> if (a.startsWith("--gc=")) gc = a.substringAfter('=')
-            else if (a.startsWith("--gc-runtime=")) gcRuntime = a.substringAfter('=')
+            else if (a.startsWith("--gc-runtime=")) { gcRuntime = a.substringAfter('='); gcRuntimeSet = true }
             else if (a.startsWith("--link=")) links.add(a.substringAfter('='))
             else if (a.startsWith("--target=")) target = Target.parse(a.substringAfter('=')) ?: run { fprintf(stderr, "unknown target: %s\n", a); exit(2); return }
             else if (input == null && !a.startsWith("-")) input = a else { fprintf(stderr, "unknown argument: %s\n%s\n", a, USAGE); exit(2) }
@@ -189,15 +101,29 @@ fun main(args: Array<String>) {
         i++
     }
     val wasm = target == Target.WASM
-    // wasm32-wasi has no threads (epoch collects in the background).
-    if (gc == null) gc = if (wasm) WASM_GC else DEFAULT_GC
+    if (target == Target.JVM) {
+        // The collector is translated with the program: C sources only, and no collector threads (epoch has one).
+        if (gcRuntimeSet && gcRuntime != "c") { fprintf(stderr, "--target jvm needs --gc-runtime c\n"); exit(2); return }
+        gcRuntime = "c"
+        if (gc == null) gc = "perceus"
+        if (alloc == null) alloc = "pool"
+        if (alloc == "mimalloc") { fprintf(stderr, "--target jvm supports --alloc pool or malloc\n"); exit(2); return }
+    }
+    // js: the program, runtime.c and the collector are compiled for wasm32 (4-byte pointers and size_t).
+    val wasm32 = wasm || target == Target.JS
+    if (target == Target.JS) llvmTarget = LlvmTarget.JS32
+    // wasm32-wasi has no threads (epoch collects in the background); js uses the compact collector.
+    // js without --gc / NEWKOTLIN_GC: compact, or rc when the program allocates no possibly cyclic object (below).
+    val jsAutoGc = gc == null && target == Target.JS
+    if (gc == null) gc = if (wasm) WASM_GC else if (target == Target.JS) JS_DEFAULT_GC else DEFAULT_GC
     if (gc == "default") gc = DEFAULT_GC // "default" names whatever the default collector is (epoch); old one: perceus
     if (gcRuntime == null) gcRuntime = "zig"
-    if (alloc == null) alloc = if (wasm) "malloc" else "mimalloc"
+    // wasm: the size-class pool, not wasi-libc malloc, which was up to 2x slower on allocation-heavy programs.
+    if (alloc == null) alloc = if (wasm) "pool" else "mimalloc"
     if (wasm) {
         llvmTarget = LlvmTarget.WASM32
         val bad = when {
-            alloc == "mimalloc" -> "--target=wasm supports --alloc malloc or pool"
+            alloc == "mimalloc" -> "--target=wasm supports --alloc pool or malloc"
             gc == DEFAULT_GC -> "--target=wasm has no threads for the $gc collector; use --gc perceus, incremental or rc"
             links.isNotEmpty() -> "--target=wasm does not support --link"
             else -> null
@@ -207,7 +133,7 @@ fun main(args: Array<String>) {
     if (gcRuntime != "zig" && gcRuntime != "c") {
         fprintf(stderr, "--gc-runtime must be zig or c (got %s)\n", gcRuntime); exit(2); return
     }
-    val cc = ccArg ?: if (wasm) (getenv("NK_WASM_CC")?.toKString() ?: "zig cc -target wasm32-wasi") else findCc()
+    val cc = ccArg ?: if (wasm32) (getenv("NK_WASM_CC")?.toKString() ?: "zig cc -target wasm32-wasi") else findCc()
     // A compiler command with arguments (`zig cc ...`): its LLVM version picks the opt below.
     if (' ' in cc) majorCache[cc] = capture("$cc --version 2>/dev/null | grep -oE 'clang version [0-9]+' | head -1")?.substringAfterLast(' ')?.toIntOrNull()
     if (!target.implemented) { fprintf(stderr, "target %s is not supported yet\n", target.flag); exit(1); return }
@@ -222,12 +148,14 @@ fun main(args: Array<String>) {
         fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1); return
     }
     if (onlyIr) { writeFile(output, ir); return }
+    // Same IR for compact and rc (neither defers RC); only the linked collector differs.
+    if (jsAutoGc && !allocatesCyclic(ir)) gc = JS_ACYCLIC_GC
     // GC: caps/metadata and C sources under <gcDir>; Zig static libs under <zigLibDir>/libgc-<name>.a.
     // Only the collector backend is zig|c; runtime.c is always the shared KotlinX runtime.
     val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/c")
-    // wasm archives live under their own prefix so they never replace the host ones in zig-out/lib.
-    val zigLibDir = getenv(if (wasm) "NEWKOTLIN_GC_ZIG_WASM_LIB_DIR" else "NEWKOTLIN_GC_ZIG_LIB_DIR")?.toKString()
-        ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/zig/" + (if (wasm) WASM_ZIG_PREFIX else "zig-out") + "/lib")
+    // wasm32 archives (wasm) and bitcode (js) live under their own prefix so they never replace the host ones in zig-out/lib.
+    val zigLibDir = getenv(if (wasm32) "NEWKOTLIN_GC_ZIG_WASM_LIB_DIR" else "NEWKOTLIN_GC_ZIG_LIB_DIR")?.toKString()
+        ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/zig/" + (if (wasm32) WASM_ZIG_PREFIX else "zig-out") + "/lib")
     if (gc.isEmpty() || '/' in gc) {
         fprintf(stderr, "unknown --gc %s\n", gc); exit(2); return
     }
@@ -238,6 +166,12 @@ fun main(args: Array<String>) {
     val gcFlags = if (access("$gcDir/$gc/config.sh", F_OK) == 0) {
         capture("sh '$gcDir/$gc/config.sh'") ?: run { fprintf(stderr, "error: %s/%s/config.sh failed\n", gcDir, gc); exit(1); return }
     } else ""
+    if (target == Target.JS) {
+        if (gcRuntime != "zig") { fprintf(stderr, "--target=js links the Zig collector (--gc-runtime=zig)\n"); exit(2); return }
+        if (leakCheck || links.isNotEmpty()) { fprintf(stderr, "--target=js does not support --leak-check or --link\n"); exit(2); return }
+        buildJs(ir, output, runtime, gc, gcDir, gcFlags, zigLibDir, cc, optPath, emitLl, minify)
+        return
+    }
     val gcObj = if (gcRuntime == "c") {
         val gcSrc = "$gcDir/$gc/gc.c"
         if (access(gcSrc, F_OK) != 0) {
@@ -260,8 +194,15 @@ fun main(args: Array<String>) {
         if (!wasm && "-flto" in cflags) cflags = cflags.replace("-flto", "")
         "'$lib'"
     }
+    val def0 = (if (alloc == "pool") " -DRT_POOL" else "") + (if (alloc == "malloc") " -DRT_PLAIN_MALLOC" else "") + (if (leakCheck) " -DRT_LEAKCHECK" else "")
+    if (target == Target.JVM) {
+        val opt = findOpt(optPath, majorVersion(cc)) ?: run { fprintf(stderr, "error: LLVM opt not found (--opt <path> or NK_OPT); the jvm target needs it\n"); exit(1); return }
+        try { linkJvm(ir, output, runtime, gcObj.trim('\''), "$def0 -I'$gcDir' $gcFlags", links, cc, opt, emitLl) }
+        catch (e: CompileError) { fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1) }
+        return
+    }
     val ll = "$output.ll"
-    writeFile(ll, ir)
+    writeFile(ll, if (wasm) wasmKeepHotCalls(ir) else ir)
     val def = (if (alloc == "pool") " -DRT_POOL" else "") + (if (alloc == "malloc") " -DRT_PLAIN_MALLOC" else "") + (if (leakCheck) " -DRT_LEAKCHECK" else "")
     val link = if (alloc == "mimalloc") {
         val dir = findMimalloc() ?: run {
@@ -276,7 +217,7 @@ fun main(args: Array<String>) {
     val tmps = ArrayList<String>()
     fun cleanup() { if (!emitLl) { remove(ll); tmps.forEach { remove(it) } } }
     if (!noOpt) {
-        val opt = findOpt(optPath, cc) ?: run {
+        val opt = findOpt(optPath, majorVersion(cc)) ?: run {
             cleanup()
             fprintf(stderr, "error: LLVM opt not found (or not executable). Pass --opt <path>, set NK_OPT, put opt on PATH, " +
                 "install LLVM (e.g. brew install llvm, or mise install in the repo), or use --no-opt\n")
@@ -297,6 +238,7 @@ fun main(args: Array<String>) {
         // (a standalone default<O3> before LTO optimizes twice and was up to 2x slower on closures/dispatch/matmul).
         val pipeline = if ("-flto" in cflags) "lto-pre-link<O3>" else "default<O3>"
         run1("'$opt' -passes='$pipeline' -S '$ll' -o '$linkLl'")
+        if (wasm) outlineWasmLoops(opt, linkLl, output, tmps)?.let { linkLl = it }
     }
     // wasm: deep recursion lives on the engine stack; the linear-memory shadow stack holds only address-taken
     // locals. 8 MiB matches the native default; -s drops the names section.
@@ -305,4 +247,21 @@ fun main(args: Array<String>) {
     val rc = system(cmd)
     cleanup()
     if (rc != 0) { fprintf(stderr, "clang failed (%d): %s\n", rc, cmd); exit(1) }
+}
+
+/**
+ * wasm: outlines the inner loops of the run-once entry ([wasmOutlineLoopBlocks]) from the optimized program [ll];
+ * returns the new IR file, or null when there is nothing to outline or a step fails (the program stays as it was).
+ */
+private fun outlineWasmLoops(opt: String, ll: String, output: String, tmps: MutableList<String>): String? {
+    val named = "$output.named.ll"; val blocks = "$output.blocks"; val out = "$output.outlined.ll"
+    tmps.add(named); tmps.add(blocks); tmps.add(out)
+    val info = captureAll("'$opt' -passes='instnamer,print<loops>' -S '$ll' -o '$named' 2>&1")
+    val lines = wasmOutlineLoopBlocks(info)
+    if (lines.isEmpty()) return null
+    writeFile(blocks, lines.joinToString("\n", postfix = "\n"))
+    val before = definedFunctions(readFile(named))
+    if (system("'$opt' -passes=extract-blocks -extract-blocks-file='$blocks' -S '$named' -o '$out' 2>/dev/null") != 0) return null
+    writeFile(out, wasmMarkOutlined(readFile(out), before) ?: return null)
+    return out
 }

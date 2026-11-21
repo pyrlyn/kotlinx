@@ -586,8 +586,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun genClass(c: ClassInfo) {
         globals.append("${c.llType} = type { i64, ptr${c.fields.joinToString("") { ", " + it.second.llvm }} }\n")
         // vtable: [release, trace children, release untraced fields, free memory, is-cyclic, interface methods...]
-        val vt = listOf("ptr @rel.${c.name}", "ptr @trav.${c.name}", "ptr @relo.${c.name}", "ptr @free.${c.name}",
-            "ptr ${if (c.name in cyclic) "inttoptr (i64 1 to ptr)" else "null"}") +
+        // --target=js: every collector there (compact, incremental, perceus) traces and relo-releases cyclic objects
+        // only (candidates come from rel.C of a cyclic class, children are filtered by is-cyclic), so an acyclic
+        // class has no trav/relo hooks: less code for the JS output.
+        val hooks = !rc32() || c.name in cyclic
+        val vt = listOf("ptr @rel.${c.name}", if (hooks) "ptr @trav.${c.name}" else "ptr null", if (hooks) "ptr @relo.${c.name}" else "ptr null", "ptr @free.${c.name}",
+            "ptr ${if (c.name in cyclic) cyclicSlot(c) else "null"}") +
             slots.map { m ->
                 val base = m.removeSuffix(NARROW)
                 when {
@@ -603,10 +607,19 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // purple + buffered test), so every call site inlines it. The rare cases go out of line:
         // count zero -> @relz.C (release fields, free), cyclic count non-zero and not yet buffered ->
         // rt_cc_possible_root. Header word layout: low 32 bits count, bits 32-33 color, bit 34 buffered (runtime.c).
+        // js ([rc32]): the same operations on the two 32-bit halves.
         f.append("define internal void @rel.${c.name}(ptr %p) alwaysinline {\nentry:\n")
         f.append("  %isnull = icmp eq ptr %p, null\n  br i1 %isnull, label %done, label %dec\n")
         if (cyc && deferredRc) {
             f.append("dec:\n  call void @rt_gc_log_dec(ptr %p)\n  br label %done\n")
+        } else if (cyc && rc32()) {
+            // The count is stored first (a zero one is published before the children are released); the flags word
+            // gets color 3 (purple) when the object is buffered, else rt_cc_possible_root takes it.
+            f.append("dec:\n  %c = load i32, ptr %p\n  %c1 = sub i32 %c, 1\n  store i32 %c1, ptr %p\n  %z = icmp eq i32 %c1, 0\n  br i1 %z, label %zero, label %keep\n")
+            f.append("keep:\n  %fp = getelementptr i8, ptr %p, i32 4\n  %fl = load i32, ptr %fp\n  %buf = and i32 %fl, 4\n  %isbuf = icmp ne i32 %buf, 0\n  br i1 %isbuf, label %purple, label %root\n")
+            f.append("purple:\n  %fl2 = or i32 %fl, 3\n  store i32 %fl2, ptr %fp\n  br label %done\n")
+            f.append("root:\n  call void @rt_cc_possible_root(ptr %p)\n  br label %done\n")
+            f.append("zero:\n  call void @relz.${c.name}(ptr %p)\n  br label %done\n")
         } else if (cyc) {
             f.append("dec:\n  %c = load i64, ptr %p\n  %c1 = sub i64 %c, 1\n  %cnt = and i64 %c1, 4294967295\n  %z = icmp eq i64 %cnt, 0\n  br i1 %z, label %zero, label %keep\n")
             f.append("keep:\n  %c2 = or i64 %c1, 12884901888\n  store i64 %c2, ptr %p\n  %buf = and i64 %c1, 17179869184\n  %isbuf = icmp ne i64 %buf, 0\n  br i1 %isbuf, label %done, label %root\n")
@@ -614,8 +627,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // Publish the zero count before releasing children (a release may run the collector).
             f.append("zero:\n  store i64 %c1, ptr %p\n  call void @relz.${c.name}(ptr %p)\n  br label %done\n")
         } else {
-            f.append("dec:\n  %c = load i64, ptr %p\n  %c1 = sub i64 %c, 1\n  %z = icmp eq i64 %c1, 0\n  br i1 %z, label %zero, label %keep\n")
-            f.append("keep:\n  store i64 %c1, ptr %p\n  br label %done\n")
+            f.append("dec:\n  %c = load ${cntTy()}, ptr %p\n  %c1 = sub ${cntTy()} %c, 1\n  %z = icmp eq ${cntTy()} %c1, 0\n  br i1 %z, label %zero, label %keep\n")
+            f.append("keep:\n  store ${cntTy()} %c1, ptr %p\n  br label %done\n")
             f.append("zero:\n  call void @relz.${c.name}(ptr %p)\n  br label %done\n")
         }
         f.append("done:\n  ret void\n}\n\n")
@@ -634,27 +647,53 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n")
         relfFields(c)
         // Inline rt_cc_dead: a buffered object is colored black and left to the collector; otherwise freed here.
-        if (cyc) f.append("  %d = load i64, ptr %p\n  %dbuf = and i64 %d, 17179869184\n  %dead = icmp ne i64 %dbuf, 0\n  br i1 %dead, label %blk, label %fr\n" +
+        if (cyc && rc32()) f.append("  %dp = getelementptr i8, ptr %p, i32 4\n  %d = load i32, ptr %dp\n  %dbuf = and i32 %d, 4\n  %dead = icmp ne i32 %dbuf, 0\n  br i1 %dead, label %blk, label %fr\n" +
+            "blk:\n  %d2 = and i32 %d, -4\n  store i32 %d2, ptr %dp\n  ret void\n" +
+            "fr:\n  call void @rt_free_trace(ptr %p, i64 %sz)\n  ret void\n}\n\n")
+        else if (cyc) f.append("  %d = load i64, ptr %p\n  %dbuf = and i64 %d, 17179869184\n  %dead = icmp ne i64 %dbuf, 0\n  br i1 %dead, label %blk, label %fr\n" +
             "blk:\n  %d2 = and i64 %d, -12884901889\n  store i64 %d2, ptr %p\n  ret void\n" +
             "fr:\n  call void @rt_free_trace(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         else f.append("  call void @rt_free(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         // Collector hooks: trace class/interface children; release other reference fields; free memory only.
-        f.append("define internal void @trav.${c.name}(ptr %p, ptr %fn) {\nentry:\n")
-        c.fields.forEachIndexed { i, (_, t) ->
-            if (isTraced(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ${if (deferredRc && cyc) "atomic ptr, ptr %f$i acquire, align 8" else "ptr, ptr %f$i"}\n  call void %fn(ptr %v$i)\n")
-            else if (tracedList(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n" + (ownedColl(t)?.let { k ->
-                "  %v$i = load ${if (cyc) "atomic ptr, ptr %f$i acquire, align 8" else "ptr, ptr %f$i"}\n  call void @rt_${k}_trav_owned(ptr %v$i, ptr %p, ptr %fn)\n" }
-                ?: "  %v$i = load ptr, ptr %f$i\n  call void @rt_${if (t is Ty.MapTy) "map" else "list"}_trav(ptr %v$i, ptr %fn)\n"))
+        if (hooks) {
+            f.append("define internal void @trav.${c.name}(ptr %p, ptr %fn) {\nentry:\n")
+            c.fields.forEachIndexed { i, (_, t) ->
+                if (isTraced(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ${if (deferredRc && cyc) "atomic ptr, ptr %f$i acquire, align 8" else "ptr, ptr %f$i"}\n  call void %fn(ptr %v$i)\n")
+                else if (tracedList(t)) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n" + (ownedColl(t)?.let { k ->
+                    "  %v$i = load ${if (cyc) "atomic ptr, ptr %f$i acquire, align 8" else "ptr, ptr %f$i"}\n  call void @rt_${k}_trav_owned(ptr %v$i, ptr %p, ptr %fn)\n" }
+                    ?: "  %v$i = load ptr, ptr %f$i\n  call void @rt_${if (t is Ty.MapTy) "map" else "list"}_trav(ptr %v$i, ptr %fn)\n"))
+            }
+            f.append("  ret void\n}\n\ndefine internal void @relo.${c.name}(ptr %p) {\nentry:\n")
+            c.fields.forEachIndexed { i, (_, t) ->
+                val ok = ownedColl(t)
+                if (ok != null) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void @rt_${ok}_release_owned(ptr %v$i, ptr %p)\n")
+                else if (!isTraced(t)) (if (tracedList(t)) (if (t is Ty.MapTy) "@rt_map_release_untraced" else "@rt_list_release_untraced") else releaseFn(t))?.let { fn -> f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n${disown(c, t, "%v$i")}  call void $fn(ptr %v$i)\n") }
+            }
+            f.append("  ret void\n}\n\n")
         }
-        f.append("  ret void\n}\n\ndefine internal void @relo.${c.name}(ptr %p) {\nentry:\n")
-        c.fields.forEachIndexed { i, (_, t) ->
-            val ok = ownedColl(t)
-            if (ok != null) f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n  call void @rt_${ok}_release_owned(ptr %v$i, ptr %p)\n")
-            else if (!isTraced(t)) (if (tracedList(t)) (if (t is Ty.MapTy) "@rt_map_release_untraced" else "@rt_list_release_untraced") else releaseFn(t))?.let { fn -> f.append("  %f$i = getelementptr ${c.llType}, ptr %p, i32 0, i32 ${i + 2}\n  %v$i = load ptr, ptr %f$i\n${disown(c, t, "%v$i")}  call void $fn(ptr %v$i)\n") }
-        }
-        f.append("  ret void\n}\n\ndefine internal void @free.${c.name}(ptr %p) {\nentry:\n")
+        f.append("define internal void @free.${c.name}(ptr %p) {\nentry:\n")
         f.append("  %szp = getelementptr ${c.llType}, ptr null, i32 1\n  %sz = ptrtoint ptr %szp to i64\n  call void ${if (cyc) "@rt_free_trace" else "@rt_free"}(ptr %p, i64 %sz)\n  ret void\n}\n\n")
         funcs.append(f)
+    }
+
+    /**
+     * The is-cyclic vtable slot of cyclic class [c]. Non-null marks the class cyclic. Native and wasm: when every traced
+     * field is a plain class/interface reference (no traced list or map), it points to @lay.C = { i32 n, i32 object
+     * size, i32 relo needed (0/1), [n x i32] byte offsets of those fields }: trial deletion
+     * (native/gc/zig/src/common/trial_deletion.zig) reads the children itself instead of calling @trav.C with a visitor
+     * (two indirect calls per object and child), and perceus frees garbage without @relo.C / @free.C calls.
+     * Otherwise, and on --target=js (size), it is 1 and the collector calls @trav.C.
+     */
+    private fun cyclicSlot(c: ClassInfo): String {
+        if (rc32() || c.fields.any { (_, t) -> tracedList(t) }) return "inttoptr (i64 1 to ptr)"
+        val offs = c.fields.mapIndexedNotNull { i, (_, t) ->
+            if (isTraced(t)) "i32 ptrtoint (ptr getelementptr (${c.llType}, ptr null, i32 0, i32 ${i + 2}) to i32)" else null
+        }
+        // Same fields as @relo.C releases (genClass).
+        val relo = c.fields.any { (_, t) -> ownedColl(t) != null || (!isTraced(t) && releaseFn(t) != null) }
+        val size = "i32 ptrtoint (ptr getelementptr (${c.llType}, ptr null, i32 1) to i32)"
+        globals.append("@lay.${c.name} = internal constant { i32, i32, i32, [${offs.size} x i32] } { i32 ${offs.size}, $size, i32 ${if (relo) 1 else 0}, [${offs.size} x i32] [${offs.joinToString(", ")}] }, align 4\n")
+        return "@lay.${c.name}"
     }
 
     /** Before a dying cyclic object (%p) releases collection field value [v]: it no longer holds it. */
@@ -1353,6 +1392,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     }
                 }
                 val tg = s.target
+                // `a += b` on a class with `plusAssign` (member or extension) and no `plus`: `a.plusAssign(b)`.
+                OP_FUNS[s.op.dropLast(1)]?.takeIf { s.op != "=" }?.let { base ->
+                    val tt = probeType(tg)
+                    fun has(n: String) = tt != null && (hasMember(tt, n) || hasMext(n, tt) || extFuns[n]?.any { extMatches(tt, it.params[0].type, it.typeParams) } == true)
+                    if ((tt is Ty.Cls || tt is Ty.Iface) && has(base + "Assign") && !has(base)) {
+                        releaseIfOwned(genExpr(CallE(MemberE(tg, base + "Assign", false).also { it.line = s.line }, emptyList(), listOf(s.value), null).also { it.line = s.line }))
+                        return
+                    }
+                }
                 fun pure(x: E) = (x is NameE && lookup(x.n) != null) || x is IntL || (x is NameE && x.n == "this")
                 if (s.op != "=" && tg is IndexE && !(pure(tg.recv) && pure(tg.idx))) {
                     // `a()[i()] += v`: receiver and index are evaluated once.
@@ -2824,6 +2872,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun genNamedCall(n: String, e00: CallE): Val {
         // A member of the implicit receiver wins over a top-level function with context parameters.
         if (lookup(n) == null && extRecvHas(n, true)) return method(genExpr(NameE("\$this_ext").also { it.line = line }), n, e00)
+        // Another member extension applicable to the extension receiver: `fun T.a() = b()` calls `this.b()` (`fun T.b()`).
+        if (lookup(n) == null) lookup("\$this_ext")?.let { l -> if (hasMext(n, l.t)) return method(genExpr(NameE("\$this_ext").also { it.line = line }), n, e00) }
         if (lookup(n) == null && n in funDecls && n !in LiftedLocals.names && e00 !in ctxFilled) lookup("this")?.let { l ->
             val rt = l.t
             if (rt is Ty.Cls && n in classes.getValue(rt.name).methods) return method(genExpr(NameE("this").also { it.line = line }), n, e00)
@@ -3074,8 +3124,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val chk = label("reuse.chk")
                 condBr(isnull, lf, chk)
                 startBlock(chk)
-                val rc = emitT("load i64, ptr $old")
-                condBr(emitT("icmp eq i64 $rc, 1"), lr, ld)
+                // A cyclic object must also have no color or buffered bit; an acyclic one has no flags (count only).
+                val ct = if ((tok.t as Ty.Cls).name in cyclic) "i64" else cntTy()
+                val rc = emitT("load $ct, ptr $old")
+                condBr(emitT("icmp eq $ct $rc, 1"), lr, ld)
                 startBlock(lr)
                 emit("call void @relf.${(tok.t as Ty.Cls).name}(ptr $old)")
                 br(lj)
@@ -3094,7 +3146,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         genericFuns[n]?.let { return genGenericCall(it, e) }
         if (n !in sigs) {
-            // Extension (or member) call on the implicit receiver.
+            // Extension (or member) call on the implicit receiver: in a member extension the extension receiver comes
+            // before the dispatch receiver (`fun String.loud() = uppercase()`), unless a lambda rebound `this`.
+            if (lookup("\$this_ext") != null && owner?.let { o -> lookup("this")?.t.let { it == null || it == Ty.Cls(o.name) } } == true) {
+                val onExt = CallE(MemberE(NameE("\$this_ext").also { it.line = line }, n, false).also { it.line = line }, e.typeArgs, e.args, e.lambda).also { it.line = line }
+                if (probeType(onExt) != null) return genExpr(onExt)
+            }
             if (lookup("this") != null) return method(genExpr(NameE("this").also { it.line = line }), n, e)
             owner?.let { o -> if (extFuns[n] != null) return method(Val("%this", Ty.Cls(o.name)), n, e) }
         }
@@ -3746,6 +3803,17 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return false
     }
 
+    /** The companion object (of class [cls] or a class it is nested in) declaring a member extension [m] applicable to [t]. */
+    private fun companionMext(cls: String, m: String, t: Ty): String? {
+        var c = cls
+        while (true) {
+            prog.companions[c]?.first?.takeIf { it != cls }?.let { cn ->
+                if (classes[cn]?.methods?.get("mext\$$m")?.let { extMatches(t, it.params[0].type, it.typeParams) } == true && !hasMember(t, m)) return cn
+            }
+            c = NestedClasses.outer[c] ?: return null
+        }
+    }
+
     private fun hasMember(t: Ty, n: String): Boolean = when (t) {
         is Ty.Cls -> classes.getValue(t.name).let { n in it.methods || it.index(n) >= 0 }
         is Ty.Iface -> ifaces[t.name]?.methods?.containsKey(n) == true
@@ -4126,13 +4194,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (n == "collectReferenceFieldValues" && e0.args.isEmpty() && e0.lambda == null) return collectRefFields(r)
         // Member extension of the enclosing class (dispatch receiver `this`).
         owner?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, it.typeParams) && !hasMember(t, n) }?.let {
-            if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
             return withTemps(listOf(r)) { (x) -> callMethod(Val("%this", Ty.Cls(o.name)), o, "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
+        } }
+        // Member extension of the companion object of the enclosing class or of a class it is nested in (an implicit receiver).
+        owner?.let { o -> companionMext(o.name, n, t)?.let { cn ->
+            return withTemps(listOf(r)) { (x) -> method(genExpr(NameE(cn).also { it.line = line }), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
         } }
         // Member extension of an implicit receiver (`with(obj) { x.ext() }`, a lambda with receiver).
         lookup("this")?.let { l -> val rt = l.t
             if (rt is Ty.Cls && rt.name != owner?.name) classes[rt.name]?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, it.typeParams) && !hasMember(t, n) }?.let {
-                if (e0.args.any { a -> a is NamedE }) fail("named arguments in member extension calls are not supported")
                 return withTemps(listOf(r)) { (x) -> method(genExpr(NameE("this").also { it.line = line }), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
             } }
             if (rt is Ty.Iface && ifaces[rt.name]?.methods?.get("mext\$$n")?.params?.firstOrNull() == t && !hasMember(t, n))
@@ -4517,9 +4587,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         fun memberParams(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? = memberParams0(t, name)
             ?: extFuns[name]?.filter { it.params.isNotEmpty() && extMatches(t, it.params[0].type, it.typeParams) }?.takeIf { it.isNotEmpty() }?.let { fs ->
-                val f = fs.singleOrNull()?.takeIf { it.typeParams.isEmpty() } ?: fail("reference to overloaded or generic extension $name is not supported")
+                fun mentions(r: TypeRef, tps: List<String>): Boolean = r.name in tps || r.args.any { mentions(it, tps) }
+                // A generic extension whose type parameters occur only in the receiver: the lambda's call `recv.f(..)`
+                // infers them from the receiver (`List<T>.first()`); others would need the expected type.
+                val f = fs.singleOrNull()?.takeIf { g -> g.params.drop(1).none { mentions(it.type, g.typeParams) } }
+                    ?: fail("reference to overloaded or generic extension $name is not supported")
                 f.params.drop(1).map { it.type } to false }
-            ?: extFuns["\$prop\$$name"]?.firstOrNull { it.typeParams.isEmpty() && it.params.size == 1 && extMatches(t, it.params[0].type, emptyList()) }?.let { emptyList<TypeRef>() to true }
+            ?: extFuns["\$prop\$$name"]?.firstOrNull { it.params.size == 1 && extMatches(t, it.params[0].type, it.typeParams) }?.let { emptyList<TypeRef>() to true }
             ?: builtinMember(t, name)?.also { if (name == "get") builtinGet = true }
         if (recv == null) {
             funDecls[n]?.let { f ->
@@ -4955,6 +5029,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             OP_FUNS[e.op]?.let { return method(a, it, opCall(it, e.r)) }
             if (e.op in setOf("<", ">", "<=", ">=")) return compare(e.op, method(a, "compareTo", opCall("compareTo", e.r)), Val("0", Ty.I32))
         }
+        // A nullable primitive has no built-in arithmetic, so an operator extension on it (`Int?.plus`) is the only candidate.
+        if (a.t is Ty.NBox) OP_FUNS[e.op]?.let { n ->
+            if (extFuns[n]?.any { it.params[0].type.nullable && extMatches(a.t, it.params[0].type, it.typeParams) } == true) return method(a, n, opCall(n, e.r))
+        }
         // `operator fun String?.plus` applies to nullable receivers, whose nullability is not tracked here.
         if (e.op == "+" && a.t == Ty.Str && extFuns["plus"]?.any { it.params[0].type.name == "String" && it.params[0].type.nullable } == true)
             fail("operator extension 'plus' on String? is not supported")
@@ -5370,6 +5448,17 @@ private fun tbaaMeta(): String = buildString {
     }
 }
 
+/**
+ * --target=js ([LlvmTarget.JS32]): reference counting works on the 32-bit halves of the i64 header word, which
+ * JavaScript then handles as one int32 each instead of a pair: the count is the low word (offset 0), the flags of a
+ * traced object the high word (offset 4: color bits 0-1, buffered bit 2). The memory layout is the same, so runtime.c
+ * and the collectors still read the whole word; a count never carries into the flags.
+ */
+private fun rc32() = llvmTarget == LlvmTarget.JS32
+
+/** LLVM type of a retain / release on the header's count: the whole word, or its low word for [rc32]. */
+private fun cntTy() = if (rc32()) "i32" else "i64"
+
 /** Target header and the declarations whose types depend on the target's C ABI ([LlvmTarget], [LIBC_SIGS]). */
 private fun targetPrelude(): String = "\n" + llvmTarget.header() +
     "declare ${llvmTarget.cSize} @llvm.coro.size.${llvmTarget.cSize}()\n" +
@@ -5527,9 +5616,9 @@ log:
   call void @rt_gc_log_inc(ptr %p)
   br label %done
 inc:
-  %c = load i64, ptr %p
-  %c1 = add i64 %c, 1
-  store i64 %c1, ptr %p
+  %c = load ${cntTy()}, ptr %p
+  %c1 = add ${cntTy()} %c, 1
+  store ${cntTy()} %c1, ptr %p
   br label %done
 done:
   ret void
@@ -5540,9 +5629,9 @@ entry:
   %isnull = icmp eq ptr %p, null
   br i1 %isnull, label %done, label %inc
 inc:
-  %c = load i64, ptr %p
-  %c1 = add i64 %c, 1
-  store i64 %c1, ptr %p
+  %c = load ${cntTy()}, ptr %p
+  %c1 = add ${cntTy()} %c, 1
+  store ${cntTy()} %c1, ptr %p
   br label %done
 done:
   ret void

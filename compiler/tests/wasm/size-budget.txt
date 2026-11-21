@@ -1,0 +1,24 @@
+# Size regression budget for --target=wasm (compiler/tests/wasm/size.sh).
+# size <label> <source> <max main.wasm bytes>: default flags, stripped module; ~3% above the size when it was set.
+# Raised by ~700 bytes for trial deletion over class layouts and the recorded gray set (cycles 1.7x faster).
+size hello compiler/tests/wasm/size/hello.kt 13200
+size alloc bench/cases/alloc/kotlin/Main.kt 16500
+size hashmap bench/cases/hashmap/kotlin/Main.kt 17850
+size nbody bench/cases/nbody/kotlin/Main.kt 18300
+# forbid <regex>: no function of hello.wasm (name section kept) may match. Each was a large libc pull-in.
+forbid ^c\.stdlib\.qsort
+forbid ^sort\.pdq\.
+forbid printf|^pop_arg$|^fmt_fp$
+forbid tf3$|tf2$|tfsi$|sitf$|f128|frexpl
+forbid ^strto[dfl]
+# keep <label> <source> <regex>: a function of the module (name section kept) must match: a call in a loop of main
+# stays a call so V8 optimizes the callee (wasmKeepHotCalls, compiler/src/backend/native/WasmHotCalls.kt).
+keep nbody bench/cases/nbody/kotlin/Main.kt ^k\.advance$
+keep cycles bench/cases/cycles/kotlin/Main.kt ^k\.walk$
+# An inner loop of main's loops runs as its own function (compiler/src/backend/native/WasmLoopOutline.kt), so V8
+# optimizes it; inlined into main it ran as baseline code (dispatch 4.9x slower than node --no-liftoff).
+keep dispatch bench/cases/dispatch/kotlin/Main.kt ^__main_argc_argv\..+
+# maxfunc <label> <source> <regex> <bytes>: code size of a function (name section kept) must stay <= bytes. V8 inlines
+# small wasm callees into hot program functions; with the slab refill inlined, rt_alloc was 202 bytes and trees ran
+# 101 ms under node instead of 90 (Pool.refill, native/gc/zig/src/common/regions.zig).
+maxfunc trees bench/cases/trees/kotlin/Main.kt ^perceus\.rt_alloc$ 180

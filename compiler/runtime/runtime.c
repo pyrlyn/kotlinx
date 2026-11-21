@@ -15,6 +15,15 @@
 #error "compiler/gc (pyrlyn/gc) has an incompatible kxgc.h; update the submodule pin: git submodule update --init"
 #endif
 #include "common/object.inc"
+#ifndef RT_JS
+/* Numbers are formatted without printf (kxfmt.h): printf_core and, on wasm32, long double soft-float were 17 KB of
+ * every wasm module. Only --leak-check's report still uses fprintf. */
+#include "kxfmt.h"
+static void err_s(const char *s) { fputs(s ? s : "(null)", stderr); }
+static void err_i64(int64_t v) { char b[24]; kx_i64_dec(b, v); fputs(b, stderr); }
+/* An uncaught exception: stdout flushed, then "Exception in thread "main" " and the message on stderr. */
+static void err_begin(void) { fflush(stdout); fputs("Exception in thread \"main\" ", stderr); }
+#endif
 
 // ---- leak check (newkotlinc --leak-check => -DRT_LEAKCHECK) ----------------
 // Counts live runtime objects per kind; at exit prints a report to stderr and exits with 3
@@ -39,7 +48,17 @@ void rt_leak_obj(int64_t d) { LK(LK_OBJ, d); }
 #define LK(k, d) ((void)0)
 #endif
 
-#ifdef __wasi__ /* --target=wasm (wasm32-wasi): no CLOCK_UPTIME_RAW */
+#ifdef RT_JS
+/* --target=js (-DRT_JS): rt_nanos, number printing and the exception messages (rt_throw, rt_panic, rt_bad_step,
+ * rt_oob) are defined in compiler/runtime/js/runtime.js with JS number formatting, so programs carry no printf.
+ * runtime.c calls these runtime.js functions: */
+int js_i64_str(char *buf, int64_t v, int is_unsigned); /* decimal digits and a NUL into buf (<= 21 bytes); returns the count */
+int js_f64_str(char *buf, double d); /* fmt_fp's text of d and a NUL into buf (<= 25 bytes); returns the count */
+int js_f32_str(char *buf, float d);  /* the same for a float */
+__attribute__((noreturn)) void js_list_oob(int64_t i, int64_t len);
+__attribute__((noreturn)) void js_sb_len_oob(int64_t n);
+__attribute__((noreturn)) void js_map_no_key(int skeys, int64_t k);
+#elif defined(__wasi__) /* --target=wasm (wasm32-wasi): no CLOCK_UPTIME_RAW */
 int64_t rt_nanos(void) { struct timespec t; clock_gettime(CLOCK_MONOTONIC, &t); return (int64_t)t.tv_sec * 1000000000 + t.tv_nsec; }
 #else
 int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW); }
@@ -56,10 +75,21 @@ int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
 char *rt_rel_limit;
 int rt_rel_draining;
 _Thread_local int rt_trav_mode;
+#ifdef RT_JS
+/* js: the frame address is runtime.js's count of 4 KB per active frame that takes it (the @relz.C chain), so
+ * 4 MB (as on wasi) allows 1024 nested releases, which node's default stack (about 1 MB) holds; the drain allows
+ * 128 more. No getrlimit. */
+#define REL_JS (4 * 1024 * 1024)
+static const size_t rel_drain_room = REL_JS / 8;
+#else
 static size_t rel_drain_room;
+#endif
 static PtrStack rel_pending;
 
 __attribute__((constructor)) static void rel_limit_init(void) {
+#ifdef RT_JS
+    rt_rel_limit = (char *)__builtin_frame_address(0) - REL_JS;
+#else
     size_t room = REL_STACK;
 #ifndef __wasi__ /* wasm: the linker sets the shadow stack size (newkotlinc links -z stack-size) */
     struct rlimit r;
@@ -67,6 +97,7 @@ __attribute__((constructor)) static void rel_limit_init(void) {
 #endif
     rt_rel_limit = (char *)__builtin_frame_address(0) - room;
     rel_drain_room = room / 8; /* limit + drain must fit a small stack too */
+#endif
 }
 
 void rt_rel_defer(void *obj) {
@@ -86,6 +117,15 @@ void rt_rel_defer(void *obj) {
     rt_rel_draining = 0;
 }
 
+#ifdef RT_LEAN_EXIT
+/* --target=js: no KX_GC_STATS report and no final collection at exit (nothing can observe either). */
+void rt_gc_note_pause(int64_t pause_ns) { (void)pause_ns; }
+#ifdef RT_JS
+void rt_exit_flush(void) {} /* runtime.js flushes stdout after main and in exit() */
+#else
+void rt_exit_flush(void) { fflush(stdout); }
+#endif
+#else
 /* Every collector pause, kept only to report percentiles at exit (KX_GC_STATS=1). */
 static int64_t *gc_pauses; static size_t gc_pauses_len, gc_pauses_cap;
 void rt_gc_note_pause(int64_t pause_ns) {
@@ -97,12 +137,39 @@ void rt_gc_note_pause(int64_t pause_ns) {
     }
     gc_pauses[gc_pauses_len++] = pause_ns;
 }
-static int cmp_i64(const void *a, const void *b) { int64_t x = *(const int64_t *)a, y = *(const int64_t *)b; return (x > y) - (x < y); }
-/* Nearest-rank percentile in ms; 0 with no pauses. */
-static double gc_pause_pct(double q) {
+/* The report sorts the pauses with its own heapsort and formats its numbers itself: libc's qsort and printf would
+ * be linked into every program for a line printed only with KX_GC_STATS=1 (13 KB and 17 KB of a 44 KB wasm module). */
+static void gc_sift(int64_t *a, size_t i, size_t n) {
+    for (;;) {
+        size_t c = 2 * i + 1;
+        if (c >= n) return;
+        if (c + 1 < n && a[c + 1] > a[c]) c++;
+        if (a[i] >= a[c]) return;
+        int64_t t = a[i]; a[i] = a[c]; a[c] = t; i = c;
+    }
+}
+static void gc_sort(int64_t *a, size_t n) {
+    for (size_t i = n / 2; i-- > 0;) gc_sift(a, i, n);
+    for (size_t e = n; e-- > 1;) { int64_t t = a[0]; a[0] = a[e]; a[e] = t; gc_sift(a, 0, e); }
+}
+/* Nearest-rank percentile of the sorted pauses in ns; 0 with no pauses. */
+static int64_t gc_pause_pct(double q) {
     if (!gc_pauses_len) return 0;
     size_t i = (size_t)(q * gc_pauses_len + 0.999999); if (i < 1) i = 1; if (i > gc_pauses_len) i = gc_pauses_len;
-    return gc_pauses[i - 1] / 1e6;
+    return gc_pauses[i - 1];
+}
+static void gc_put_u64(uint64_t v, int width) { /* decimal, zero-padded to width digits */
+    char b[24]; int i = 23; b[i] = 0;
+    do { b[--i] = (char)('0' + v % 10); v /= 10; } while (v || 23 - i < width);
+    fputs(b + i, stderr);
+}
+static void gc_put_i64(int64_t v) { if (v < 0) { fputc('-', stderr); gc_put_u64(0 - (uint64_t)v, 1); } else gc_put_u64((uint64_t)v, 1); }
+/* ns as milliseconds with 3 decimals (printf's %.3f of ns / 1e6, rounded half to even on the microsecond). */
+static void gc_put_ms(int64_t ns) {
+    if (ns < 0) { fputc('-', stderr); ns = -ns; }
+    uint64_t us = (uint64_t)ns / 1000, r = (uint64_t)ns % 1000;
+    if (r > 500 || (r == 500 && (us & 1))) us++;
+    gc_put_u64(us / 1000, 1); fputc('.', stderr); gc_put_u64(us % 1000, 3);
 }
 
 /* At exit: final collection; KX_GC_STATS=1 prints the GC's statistics to stderr (bench/gc/micro.sh). */
@@ -111,80 +178,57 @@ void rt_exit_flush(void) {
     const char *e = getenv("KX_GC_STATS");
     if (e && *e && *e != '0') {
         KxGcStats st; rt_gc_stats(&st);
-        fprintf(stderr, "gc-stats: gc=%s collections=%lld reclaimed=%lld pause_total=%.3f pause_max=%.3f pause_p50=%.3f pause_p99=%.3f\n",
-                rt_gc_name(), (long long)st.collections, (long long)st.reclaimed, st.pause_ns_total / 1e6, st.pause_ns_max / 1e6,
-                (qsort(gc_pauses, gc_pauses_len, sizeof *gc_pauses, cmp_i64), gc_pause_pct(0.50)), gc_pause_pct(0.99));
+        gc_sort(gc_pauses, gc_pauses_len);
+        fputs("gc-stats: gc=", stderr); fputs(rt_gc_name(), stderr);
+        fputs(" collections=", stderr); gc_put_i64(st.collections);
+        fputs(" reclaimed=", stderr); gc_put_i64(st.reclaimed);
+        fputs(" pause_total=", stderr); gc_put_ms(st.pause_ns_total);
+        fputs(" pause_max=", stderr); gc_put_ms(st.pause_ns_max);
+        fputs(" pause_p50=", stderr); gc_put_ms(gc_pause_pct(0.50));
+        fputs(" pause_p99=", stderr); gc_put_ms(gc_pause_pct(0.99));
+        fputc('\n', stderr);
     }
 }
+#endif
 
 #ifdef RT_LEAKCHECK
 int rt_leakcheck = 1;
 #else
 int rt_leakcheck = 0;
 #endif
+#ifndef RT_JS
 void rt_throw(const char *cls, const char *msg) {
-    fflush(stdout);
-    if (msg) fprintf(stderr, "Exception in thread \"main\" %s: %s\n", cls, msg);
-    else fprintf(stderr, "Exception in thread \"main\" %s\n", cls);
+    err_begin(); err_s(cls);
+    if (msg) { fputs(": ", stderr); err_s(msg); }
+    fputc('\n', stderr);
     exit(1);
 }
 void rt_bad_step(int64_t step) {
-    fflush(stdout);
-    fprintf(stderr, "Exception in thread \"main\" java.lang.IllegalArgumentException: Step must be positive, was: %" PRId64 ".\n", step);
+    err_begin(); err_s("java.lang.IllegalArgumentException: Step must be positive, was: "); err_i64(step); err_s(".\n");
     exit(1);
 }
 void rt_panic(const char *msg) {
-    fflush(stdout);
-    fprintf(stderr, "Exception in thread \"main\" java.lang.IllegalStateException: %s\n", msg);
+    err_begin(); err_s("java.lang.IllegalStateException: "); err_s(msg); fputc('\n', stderr);
     exit(1);
 }
+#endif
 
 // ---- printing -------------------------------------------------------------
 
-/* Kotlin-style Double formatting: shortest round-trip digits; plain notation for 1e-3 <= |d| < 1e7,
-   otherwise computerized scientific notation (e.g. 3.3358775E8, 1.0E-4), always with a '.'. */
-static void fmt_fp(char *buf, size_t n, double d, int f32) {
-    if (d != d) { snprintf(buf, n, "NaN"); return; }
-    if (d == 1.0 / 0.0) { snprintf(buf, n, "Infinity"); return; }
-    if (d == -1.0 / 0.0) { snprintf(buf, n, "-Infinity"); return; }
-    if (d == 0) { snprintf(buf, n, (1.0 / d < 0) ? "-0.0" : "0.0"); return; }
-    char e[40];
-    for (int p = 0; p <= 16; p++) { snprintf(e, sizeof e, "%.*e", p, d); if (f32 ? (double)strtof(e, NULL) == d : strtod(e, NULL) == d) break; }
-    /* e = [-]D[.DDD]e[+-]XX */
-    char digits[24]; int nd = 0, neg = 0; const char *q = e;
-    if (*q == '-') { neg = 1; q++; }
-    for (; *q && *q != 'e'; q++) if (*q != '.') digits[nd++] = *q;
-    int exp = atoi(q + 1);
-    while (nd > 1 && digits[nd - 1] == '0') nd--;
-    digits[nd] = 0;
-    char *o = buf; size_t left = n;
-#define PUT(...) do { int w = snprintf(o, left, __VA_ARGS__); o += w; left -= (size_t)w; } while (0)
-    if (neg) PUT("-");
-    double a = d < 0 ? -d : d;
-    if (a >= 1e-3 && a < 1e7) {
-        if (exp >= 0) {
-            for (int i = 0; i <= exp; i++) PUT("%c", i < nd ? digits[i] : '0');
-            PUT(".");
-            if (nd > exp + 1) PUT("%s", digits + exp + 1); else PUT("0");
-        } else {
-            PUT("0.");
-            for (int i = 0; i < -exp - 1; i++) PUT("0");
-            PUT("%s", digits);
-        }
-    } else {
-        PUT("%c.", digits[0]);
-        if (nd > 1) PUT("%s", digits + 1); else PUT("0");
-        PUT("E%d", exp);
-    }
-#undef PUT
-}
+#ifndef RT_JS
+/* Kotlin-style Double formatting (kxfmt.h): shortest round-trip digits; plain notation for 1e-3 <= |d| < 1e7,
+   otherwise computerized scientific notation (e.g. 3.3358775E8, 1.0E-4), always with a '.'. buf: >= 26 bytes. */
+static void fmt_fp(char *buf, size_t n, double d, int f32) { (void)n; kx_fmt_fp(buf, d, f32); }
+#endif
 
 void rt_print_str(const char *s) { fputs(s ? s : "null", stdout); }
-void rt_print_i64(int64_t v) { printf("%" PRId64, v); }
+#ifndef RT_JS
+void rt_print_i64(int64_t v) { char b[24]; kx_i64_dec(b, v); fputs(b, stdout); }
 static void fmt_double(char *buf, size_t n, double d) { fmt_fp(buf, n, d, 0); }
 void rt_print_f64(double d) { char b[64]; fmt_double(b, sizeof b, d); fputs(b, stdout); }
 void rt_print_f32(float d) { char b[64]; fmt_fp(b, sizeof b, d, 1); fputs(b, stdout); }
-void rt_print_u64(uint64_t v) { printf("%" PRIu64, v); }
+void rt_print_u64(uint64_t v) { char b[24]; kx_u64_dec(b, v); fputs(b, stdout); }
+#endif
 /* Kotlin String.hashCode over the UTF-16 code units of a UTF-8 string. */
 int32_t rt_str_hash(const char *s) {
     uint32_t h = 0;
@@ -225,16 +269,36 @@ void rt_print_char(int32_t c) { char b[4]; int n = utf8(b, c); fwrite(b, 1, (siz
 // ---- StringBuilder (reference counted; also used for templates) ----------
 // Strings are char* with an 8-byte refcount just before the chars (literals: immortal, 2^62).
 
-typedef struct { int64_t rc; char *buf; size_t len, cap; } SB;
+/* Reference counts and lengths of the runtime collections. --target=js (RT_JS) has no 64-bit integers: an int64_t
+ * field is two words there, and every count or length update a carry chain. Kotlin sizes are Int and RT_SIZE_CHECK
+ * keeps allocations under 2 GB, so 32 bits are enough; the count stays the first word, where NativeBackend's
+ * rt_retain (32-bit header count on js) increments it. Other targets keep int64_t. */
+#ifdef RT_JS
+typedef int32_t rt_cnt;
+#else
+typedef int64_t rt_cnt;
+#endif
+
+typedef struct { rt_cnt rc; char *buf; size_t len, cap; } SB;
 
 /* The buffer keeps 8 spare bytes in front, so rt_sb_done can hand it over as a string without copying. */
 SB *rt_sb_new(void) { SB *s = malloc(sizeof *s); s->rc = 1; s->cap = 32; s->len = 0; s->buf = (char *)malloc(s->cap + 8) + 8; s->buf[0] = 0; LK(LK_SB, 1); return s; }
+#ifdef RT_JS
+/* One out-of-line growth path instead of a copy (with 64-bit size arithmetic) in every append. */
+__attribute__((noinline)) static void sb_grow(SB *s, size_t n) { while (s->len + n + 1 > s->cap) s->cap *= 2; s->buf = (char *)realloc(s->buf - 8, s->cap + 8) + 8; }
+static inline void sb_reserve(SB *s, size_t n) { if (s->len + n + 1 > s->cap) sb_grow(s, n); }
+#else
 static inline void sb_reserve(SB *s, size_t n) {
     if (s->len + n + 1 > s->cap) { while (s->len + n + 1 > s->cap) s->cap *= 2; s->buf = (char *)realloc(s->buf - 8, s->cap + 8) + 8; }
 }
+#endif
 static void sb_bytes(SB *s, const char *x, size_t n) { sb_reserve(s, n); memcpy(s->buf + s->len, x, n); s->len += n; s->buf[s->len] = 0; }
 void rt_sb_str(SB *s, const char *x) { if (!x) x = "null"; sb_bytes(s, x, strlen(x)); }
 void rt_sb_char(SB *s, int32_t c) { char b[4]; sb_bytes(s, b, (size_t)utf8(b, c)); }
+#ifdef RT_JS
+void rt_sb_i64(SB *s, int64_t v) { sb_reserve(s, 21); s->len += (size_t)js_i64_str(s->buf + s->len, v, 0); }
+void rt_sb_u64(SB *s, uint64_t v) { sb_reserve(s, 21); s->len += (size_t)js_i64_str(s->buf + s->len, (int64_t)v, 1); }
+#else
 void rt_sb_i64(SB *s, int64_t v) {
     char b[24]; int i = 24; uint64_t u = v < 0 ? 0 - (uint64_t)v : (uint64_t)v;
     do { b[--i] = (char)('0' + u % 10); u /= 10; } while (u);
@@ -242,6 +306,7 @@ void rt_sb_i64(SB *s, int64_t v) {
     sb_bytes(s, b + i, (size_t)(24 - i));
 }
 void rt_sb_u64(SB *s, uint64_t v) { char b[24]; int i = 24; do { b[--i] = (char)('0' + v % 10); v /= 10; } while (v); sb_bytes(s, b + i, (size_t)(24 - i)); }
+#endif
 static char *str_alloc(size_t len) {
     int64_t *h = malloc(8 + len + 1);
     if (!h) rt_panic("OutOfMemoryError");
@@ -260,14 +325,23 @@ void rt_str_release(char *p) {
 int64_t rt_sb_len(SB *s) { return (int64_t)s->len; }
 /* StringBuilder.setLength: truncates, or pads with '\0' (Kotlin pads with \u0000). */
 void rt_sb_set_length(SB *s, int64_t n) {
-    if (n < 0) { fflush(stdout); fprintf(stderr, "Exception in thread \"main\" java.lang.IndexOutOfBoundsException: length %" PRId64 "\n", n); exit(1); }
+#ifdef RT_JS
+    if (n < 0) js_sb_len_oob(n);
+#else
+    if (n < 0) { err_begin(); err_s("java.lang.IndexOutOfBoundsException: length "); err_i64(n); fputc('\n', stderr); exit(1); }
+#endif
     if ((size_t)n <= s->len) { s->len = (size_t)n; if (s->buf) s->buf[s->len] = 0; return; }
     char z = 0;
     while (s->len < (size_t)n) sb_bytes(s, &z, 1);
 }
 void rt_sb_release(SB *s) { if (!s || --s->rc > 0) return; LK(LK_SB, -1); free(s->buf - 8); free(s); }
+#ifdef RT_JS
+void rt_sb_f64(SB *s, double d) { sb_reserve(s, 25); s->len += (size_t)js_f64_str(s->buf + s->len, d); }
+void rt_sb_f32(SB *s, float d) { sb_reserve(s, 25); s->len += (size_t)js_f32_str(s->buf + s->len, d); }
+#else
 void rt_sb_f64(SB *s, double d) { char b[64]; fmt_double(b, sizeof b, d); rt_sb_str(s, b); }
 void rt_sb_f32(SB *s, float d) { char b[64]; fmt_fp(b, sizeof b, d, 1); rt_sb_str(s, b); }
+#endif
 void rt_sb_bool(SB *s, _Bool v) { rt_sb_str(s, v ? "true" : "false"); }
 char *rt_sb_done(SB *s) { char *r = s->buf; ((int64_t *)r)[-1] = 1; LK(LK_SB, -1); LK(LK_STR, 1); free(s); return r; }
 
@@ -288,7 +362,7 @@ typedef struct { void *owner; void **more; int32_t n, cap; } Holders;
  * with rt_gc_free_later, and every change the collector could see logs the owner as modified
  * (rt_gc_write_barrier), as a field store would. `ctrav`: the collector took over the element references of
  * the dead object it traversed the list from. */
-typedef struct { int64_t rc; int64_t len, cap; int64_t *data; release_fn rel; Holders h; int32_t gc, ctrav; } List;
+typedef struct { rt_cnt rc; rt_cnt len, cap; int64_t *data; release_fn rel; Holders h; int32_t gc, ctrav; } List;
 #define LD(x) __atomic_load_n(&(x), __ATOMIC_RELAXED)
 #define LDA(x) __atomic_load_n(&(x), __ATOMIC_ACQUIRE)
 #define ST(x, v) __atomic_store_n(&(x), (v), __ATOMIC_RELAXED)
@@ -341,9 +415,12 @@ void rt_list_add(List *l, int64_t v) {
 }
 /* Out-of-line, cold error path of the bounds check: keeps the hot accessors below tiny. */
 __attribute__((noinline, cold, noreturn)) static void bounds_fail(List *l, int64_t i) {
-    fflush(stdout);
-    fprintf(stderr, "Exception in thread \"main\" java.lang.IndexOutOfBoundsException: Index %" PRId64 " out of bounds for length %" PRId64 "\n", i, l->len);
+#ifdef RT_JS
+    js_list_oob(i, l->len);
+#else
+    err_begin(); err_s("java.lang.IndexOutOfBoundsException: Index "); err_i64(i); err_s(" out of bounds for length "); err_i64((int64_t)l->len); fputc('\n', stderr);
     exit(1);
+#endif
 }
 static inline void bounds(List *l, int64_t i) {
     /* One unsigned compare covers i < 0 and i >= len. */
@@ -434,6 +511,11 @@ void rt_list_release_owned(List *l, void *obj) {
 
 void *rt_arr_new(int64_t n, int64_t elem) {
     if (n < 0) rt_panic("NegativeArraySizeException");
+#ifdef RT_SIZE_CHECK
+    /* --target=js: the heap is below 2 GB, and a byte size beyond 32-bit size_t (or near it: libc.c rounds chunk
+     * sizes up) would wrap around to a small allocation. */
+    if ((uint64_t)n > (SIZE_MAX / 2 - 16) / (uint64_t)elem) rt_panic("OutOfMemoryError");
+#endif
     int64_t *p = rt_gc_mem_calloc(16 + (size_t)n * (size_t)elem); /* { rc, length, elements } */
     if (!p) rt_panic("OutOfMemoryError");
     p[0] = 1; p[1] = n; LK(LK_ARR, 1);
@@ -445,11 +527,12 @@ void rt_arr_release(void *a) {
     if (--*h == 0) { LK(LK_ARR, -1); rt_gc_mem_free(h); }
 }
 
+#ifndef RT_JS
 void rt_oob(int64_t i, int64_t len) {
-    fflush(stdout);
-    fprintf(stderr, "Exception in thread \"main\" kotlin.ArrayIndexOutOfBoundsException: Index %" PRId64 " out of bounds for length %" PRId64 "\n", i, len);
+    err_begin(); err_s("kotlin.ArrayIndexOutOfBoundsException: Index "); err_i64(i); err_s(" out of bounds for length "); err_i64(len); fputc('\n', stderr);
     exit(1);
 }
+#endif
 
 // ---- HashMap<primitive|String, primitive>: open addressing, linear probing --------
 // String keys (`skeys`): the slot holds the string pointer (retained by the map), hashed and compared by content.
@@ -458,8 +541,8 @@ void rt_oob(int64_t i, int64_t len) {
  * Entries live in dense arrays keys/vals/used (n entries, room for dcap; a removed entry keeps its place with
  * used = 0 until the next rehash compacts them). idx is an open-addressing table of cap slots holding an entry
  * index, EMPTY or TOMB. */
-typedef struct { int64_t rc; int64_t size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; release_fn vrel;
-                 int64_t n, dcap, tombs; int64_t *idx; Holders h; int32_t gc, ctrav; } Map;
+typedef struct { rt_cnt rc; rt_cnt size, cap; int64_t *keys, *vals; uint8_t *used; int32_t skeys; release_fn vrel;
+                 rt_cnt n, dcap, tombs; int64_t *idx; Holders h; int32_t gc, ctrav; } Map;
 // Reference values (`vrel` set): the map owns one reference per value; overwrites and the map release drop it.
 // `h`, `gc`, `ctrav`: as for List. The concurrent collector reads n, used and vals, never
 // keys or idx: an entry's value is stored before its used flag and the flag before n (release), so a collector
@@ -553,10 +636,14 @@ int64_t rt_map_get_or(Map *m, int64_t k, int64_t d) { int64_t s = map_slot(m, k)
 int64_t rt_map_get(Map *m, int64_t k) {
     int64_t s = map_slot(m, k);
     if (s < 0) {
-        fflush(stdout);
-        if (m->skeys) fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %s not in map\n", (const char *)(intptr_t)k);
-        else fprintf(stderr, "Exception in thread \"main\" java.lang.NullPointerException: key %" PRId64 " not in map\n", k);
+#ifdef RT_JS
+        js_map_no_key(m->skeys, k);
+#else
+        err_begin(); err_s("java.lang.NullPointerException: key ");
+        if (m->skeys) err_s((const char *)(intptr_t)k); else err_i64(k);
+        err_s(" not in map\n");
         exit(1);
+#endif
     }
     return m->vals[m->idx[s]];
 }

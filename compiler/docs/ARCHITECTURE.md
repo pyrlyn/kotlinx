@@ -25,6 +25,17 @@ then: opt (lto-pre-link<O3>) -> clang -O3 -flto with runtime/runtime.c + gc/<nam
                           (LIBC_SIGS, NativeBackend.libcCall), the entry symbol and pointer-size offsets; linked by
                           `zig cc -target wasm32-wasi` with the perceus collector (no threads; Zig archive built for
                           wasm32-wasi into native/gc/zig/zig-out/wasm32-wasi/lib) and wasi-libc malloc
+--target jvm (driver/JvmLink.kt): clang -emit-llvm of runtime.c + gc.c + runtime/jvm/libc.c, llvm-link, opt O2
+  backend/jvm/LlvmIr.kt     LLVM IR text parser
+  backend/jvm/JvmBackend.kt LLVM IR -> JVM bytecode (class Main; memory through Unsafe, see docs/jvm.md)
+  backend/jvm/LoopOutline.kt  outlines loops nested 2+ deep into methods (HotSpot OSR compiles nests poorly)
+  backend/jvm/ClassFile.kt  class file writer (version 49: verified by type inference, no stack map frames)
+  runtime/jvm/KxRt.java     libc/libm subset on the JVM; jar = launcher + Main + KxRt
+--target=js (driver/JsDriver.kt): all for wasm32 (LlvmTarget.JS32; runtime.c and runtime/js/libc.c by
+  `zig cc -target wasm32-wasi`): llvm-link runtime.c IR + libc.c IR + program IR + Zig wasm32 libgc-<gc>.bc
+  -> opt (internalize, scalarizer, O3, no vectorizing) -> backend/js: LlParser.kt (LLVM IR text) -> JsGen.kt
+  (one JS function per LLVM function, structured control flow, i64 as two int32 words) -> JsBackend.kt
+  (runtime/js/runtime.js, only the parts used, + code + data segment) = one .js file for node
 ```
 
 There is no separate typed IR: the parser produces an AST, desugars it into a smaller AST, and the backend type-checks
@@ -49,7 +60,7 @@ while emitting IR.
 | nested classes | parsed in class bodies, hoisted to top level with mangled names (`hoisted`, `resolveNested`; outer access through `outer$`) |
 | local declarations | `Parser.localDecl` -> `LocalDeclS`; `liftLocals` hoists non-capturing local functions (top level, or a method of the enclosing class) and local classes/objects/interfaces, and turns capturing local functions into lambda `val`s |
 | objects / companions | `objectDecl`; lazy singletons via generated `$init$N` / `$get$N` and globals `$o$N` (end of `program()`) |
-| extensions | `function()` reads `Recv.` receivers; `resolveExtensions` turns them into functions/methods; member extensions -> `mext$f` |
+| extensions | `function()` reads `Recv.` receivers; `resolveExtensions` turns them into functions/methods; member extensions -> `mext$f` (`memberExt`; `$this_ext` is the extension receiver, tried before the dispatch receiver in `genNamedCall`; companion ones found by `companionMext` through `NestedClasses`); local operator extensions are lifted by `liftLocals` under their own name |
 | property accessors | `getter` / `accessors` -> hidden `$prop$x` methods |
 | enums | `classDecl(isEnum = true)`, `enumGlobals`, statics rewritten by `rewriteStatics` (Generics.kt) |
 | data classes | `Parser.dataClass` generates equals/hashCode/toString/componentN/copy as AST |

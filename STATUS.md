@@ -19,13 +19,25 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
 ## KotlinX compiler (`compiler/`)
 - Pipeline: `src/frontend/Lexer.kt` -> `Parser.kt` (AST in `Ast.kt`, types in `Types.kt`) -> `Uses.kt` (last-use analysis for
   Perceus) -> `src/backend/native/NativeBackend.kt` (type checking + LLVM IR) -> `clang -O3 -flto` with `runtime/runtime.c`.
-  Entry point `src/driver/Main.kt`; `--target=native` is the default; `--target=wasm` emits the same IR for wasm32-wasi (`backend/native/LlvmTarget.kt`, see `docs/usage.md`); js/jvm stubs exit non-zero; vs JetBrains Kotlin/Wasm: `bench/results/wasm/README.md`.
+  Entry point `src/driver/Main.kt`; `--target=native` is the default. `--target=wasm` emits the same IR for wasm32-wasi (`backend/native/LlvmTarget.kt`, see `docs/usage.md`); vs JetBrains Kotlin/Wasm: `bench/results/wasm/README.md`. `--target=js` links the program IR, runtime.c, `runtime/js/libc.c` and the Zig GC bitcode, runs opt once and translates the LLVM IR to JavaScript (`src/backend/js`, `src/driver/JsDriver.kt`; docs/js-target.md).
+  `--target=jvm` translates the optimized LLVM IR to JVM bytecode (`src/backend/jvm`, `src/driver/JvmLink.kt`, docs/jvm.md).
 - Language subset: top-level functions, top-level properties (`val`/`var`/`const val`), classes with primary-constructor
   fields and methods, interfaces with virtual dispatch, val/var, if/when expressions, while, for over ranges/arrays/lists/strings,
   unlabeled `break`/`continue`, lambdas as trailing blocks for built-ins, ArrayList/HashMap/StringBuilder/arrays, string
   templates, nullable references and nullable primitives (`Int?`, boxed) with `?.` `?:` `!!`, Int/Long/unsigned/Float/Double/Boolean/Char/String.
-- Extension properties: top-level `val`/`var` with getter and setter (extension functions `$prop$x` / `$set$x`) and
-  member extension properties in class/object/interface bodies (member extensions `mext$$prop$x` / `mext$$set$x`).
+- Extension properties: top-level `val`/`var` with getter and setter (extension functions `$prop$x` / `$set$x`, also
+  generic `val <T> T.x` and `inline get()`) and member extension properties in class/object/interface bodies (member
+  extensions `mext$$prop$x` / `mext$$set$x`; abstract without accessors in interfaces and `abstract` members).
+- Member extensions: on a type parameter of the class/interface (`fun T.next(): T`, resolved after monomorphization),
+  `this@f` for the extension receiver, named arguments, unqualified calls resolved on the extension receiver before the
+  dispatch receiver (`fun String.loud() = uppercase()`), member extensions of the companion object of the enclosing (or
+  outer) class; local extensions in methods become member extensions. Bound references to generic
+  extensions whose type parameters occur only in the receiver (`list::second`). `a += b` calls `plusAssign` (member or
+  extension) when there is no `plus`; operator extensions on nullable primitives (`Int?.minus`) apply to `Int?` operands.
+- Local operator extensions (`operator fun Box.get(i: Int)` in a function body) are lifted under their own name and are
+  visible program-wide; refused when they capture locals, have a type-parameter or library-operator receiver (`String`,
+  collections), clash with another extension operator, or have a nullable primitive receiver next to lambdas (function
+  types erase `Int?` parameters to `Int`).
 - `where` clauses on generic functions, classes and interfaces: the first bound of each type parameter acts like an
   inline bound (generic code is monomorphized, further intersection bounds only constrain callers).
 - Bridges: an override whose return representation differs from the interface method (`Int`/`String` for `Any`)
@@ -71,7 +83,7 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   cycle collector with an adaptive root threshold. Leak tests (`compiler/tests/leaks`) check live count = 0, ASan and macOS `leaks`.
 - Tests: `compiler/test.sh` (golden `compiler/tests/*.kt|.out`, benchmark checksums, leak tests);
   upstream Kotlin tests in `compiler/tests/upstream` (unmodified, JetBrains/kotlin @ 19c36e1), 8475 candidates
-  (`manifest.json`): PASS 3093, MISCOMPILE 0, COMPILER_CRASH 0, UNSUPPORTED 2398, N/A 2984 (passing ones are kept and
+  (`manifest.json`): PASS 3305, MISCOMPILE 17, COMPILER_CRASH 2, UNSUPPORTED 2167, N/A 2984 (passing ones are kept and
   re-runnable with `run.py`; `run.py --leak-check` also fails a passing test that leaks); reference tests the compiler
   does not fully pass yet: `compiler/tests/reference/fetch.py` (list in `compiler/tests/reference/list.txt`); `import.py --no-fetch` re-scans all candidates and keeps the newly passing ones.
 
@@ -89,10 +101,11 @@ Then copy the NewKotlin rows into `bench/table.md`.
 
 ## Status 2026-10-29
 - Cases: sum, alloc, recursion, file, strings, hashmap, sort, nbody, matmul, dispatch, closures, trees, free, refpass, cycles, lru, bigheap (Rust/Zig/Kotlin; Kotlin built by Kotlin Native and KotlinX compiler).
-- KotlinX compiler: frontend (`compiler/src/frontend`) + compile-time backends (`compiler/src/backend/{native,js,wasm,jvm}`); `--target=native` default; `--target=wasm` reuses the native backend (see the pipeline note above); js/jvm exit non-zero with "target <x> is not supported yet".
+- KotlinX compiler: frontend (`compiler/src/frontend`) + compile-time backends (`compiler/src/backend/{native,js,wasm,jvm}`); `--target=native` default; `--target=wasm` reuses the native backend (see the pipeline note above); `--target=js` implemented (LLVM IR -> JS, docs/js-target.md); `--target=jvm` implemented (all golden tests and bench checksums pass; bench/jvm/run.sh).
 - Allocation: mimalloc default (`--alloc mimalloc`, found via `$NEWKOTLIN_MIMALLOC_DIR`, pkg-config or Homebrew; `brew install mimalloc`; clear error if missing), `--alloc malloc` (system) and `--alloc pool` optional. Leak tests: leak-count on the default build; ASan and macOS `leaks` on `--alloc malloc` builds. Benchmarks: see README.md.
-- Memory manager: `native/gc/c` behind `kxgc.h`, selected with `newkotlinc --gc=epoch|perceus|incremental|rc`
-  (default = epoch, `--gc=default` is an alias; perceus = RC + cycle collector, the pre-epoch default). Tests: `native/gc/c/tests/zig` (`zig build ported`/`zig build gc`; legacy shell suite in `native/gc/c/tests/archive`); benchmarks: `bench/gc`.
+- Memory manager: `native/gc/c` behind `kxgc.h`, selected with `newkotlinc --gc=epoch|perceus|incremental|compact|rc`
+  (default = epoch, `--gc=default` is an alias; perceus = RC + cycle collector, the pre-epoch default; compact =
+  RC + small synchronous cycle collector, Zig only, the `--target=js` default). Tests: `native/gc/c/tests/zig` (`zig build ported`/`zig build gc`; legacy shell suite in `native/gc/c/tests/archive`); benchmarks: `bench/gc`.
 - **GC runtime backend (local `local/gc-extract-regression`):** default `--gc-runtime=zig` links `native/gc/zig/zig-out/lib/libgc-<name>.a` (experimental Zig port @cf79057 + `runtime_host`); `--gc-runtime=c` compiles `native/gc/c/<name>/gc.c`. Shared `compiler/runtime/runtime.c` always. Zig port parity incomplete vs C (see `native/gc/zig/docs/zig-port.md`).
 
 - Resume: `cd bench && ./build.sh && ./round.sh && RESULTS=results/round ./summarize.sh`; `compiler/test.sh` for compiler tests; `compiler/tests/upstream/run.py` for upstream tests.
@@ -101,7 +114,7 @@ Then copy the NewKotlin rows into `bench/table.md`.
 
 In-progress items are marked as such; numbers are only those already committed or in open PRs.
 
-- **GC (C):** all collectors are C (`native/gc/c/{perceus,incremental,epoch,rc}/gc.c`, shared `common/*.inc`, API `kxgc.h`). Vendored under [`native/gc/`](native/gc/README.md) (C `@6acde64`, Zig `@cf79057`); git submodule removed.
+- **GC (C):** all collectors but `compact` (Zig only, `native/gc/zig/src/compact.zig`) are C (`native/gc/c/{perceus,incremental,epoch,rc}/gc.c`, shared `common/*.inc`, API `kxgc.h`). Vendored under [`native/gc/`](native/gc/README.md) (C `@6acde64`, Zig `@cf79057`); git submodule removed.
 - **Epoch collector:** #147 (short adaptive logs) is merged: `cyclic_garbage` peak RSS 22.6 -> 4.1 MiB.
   `epoch` is the default collector (Polar Quest, #161); the old default is now `perceus`.
   GC benchmark re-run: #148 (open). Faster GC benchmark runs (build cache, parallel builds, opt-in skip of slow
