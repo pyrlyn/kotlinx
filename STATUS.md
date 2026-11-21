@@ -25,8 +25,19 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   fields and methods, interfaces with virtual dispatch, val/var, if/when expressions, while, for over ranges/arrays/lists/strings,
   unlabeled `break`/`continue`, lambdas as trailing blocks for built-ins, ArrayList/HashMap/StringBuilder/arrays, string
   templates, nullable references and nullable primitives (`Int?`, boxed) with `?.` `?:` `!!`, Int/Long/unsigned/Float/Double/Boolean/Char/String.
-- Extension properties: top-level `val`/`var` with getter and setter (extension functions `$prop$x` / `$set$x`) and
-  member extension properties in class/object/interface bodies (member extensions `mext$$prop$x` / `mext$$set$x`).
+- Extension properties: top-level `val`/`var` with getter and setter (extension functions `$prop$x` / `$set$x`, also
+  generic `val <T> T.x` and `inline get()`) and member extension properties in class/object/interface bodies (member
+  extensions `mext$$prop$x` / `mext$$set$x`; abstract without accessors in interfaces and `abstract` members).
+- Member extensions: on a type parameter of the class/interface (`fun T.next(): T`, resolved after monomorphization),
+  `this@f` for the extension receiver, named arguments, unqualified calls resolved on the extension receiver before the
+  dispatch receiver (`fun String.loud() = uppercase()`), member extensions of the companion object of the enclosing (or
+  outer) class; local extensions in methods become member extensions. Bound references to generic
+  extensions whose type parameters occur only in the receiver (`list::second`). `a += b` calls `plusAssign` (member or
+  extension) when there is no `plus`; operator extensions on nullable primitives (`Int?.minus`) apply to `Int?` operands.
+- Local operator extensions (`operator fun Box.get(i: Int)` in a function body) are lifted under their own name and are
+  visible program-wide; refused when they capture locals, have a type-parameter or library-operator receiver (`String`,
+  collections), clash with another extension operator, or have a nullable primitive receiver next to lambdas (function
+  types erase `Int?` parameters to `Int`).
 - `where` clauses on generic functions, classes and interfaces: the first bound of each type parameter acts like an
   inline bound (generic code is monomorphized, further intersection bounds only constrain callers).
 - Bridges: an override whose return representation differs from the interface method (`Int`/`String` for `Any`)
@@ -72,7 +83,7 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   cycle collector with an adaptive root threshold. Leak tests (`compiler/tests/leaks`) check live count = 0, ASan and macOS `leaks`.
 - Tests: `compiler/test.sh` (golden `compiler/tests/*.kt|.out`, benchmark checksums, leak tests);
   upstream Kotlin tests in `compiler/tests/upstream` (unmodified, JetBrains/kotlin @ 19c36e1), 8475 candidates
-  (`manifest.json`): PASS 3093, MISCOMPILE 0, COMPILER_CRASH 0, UNSUPPORTED 2398, N/A 2984 (passing ones are kept and
+  (`manifest.json`): PASS 3305, MISCOMPILE 17, COMPILER_CRASH 2, UNSUPPORTED 2167, N/A 2984 (passing ones are kept and
   re-runnable with `run.py`; `run.py --leak-check` also fails a passing test that leaks); reference tests the compiler
   does not fully pass yet: `compiler/tests/reference/fetch.py` (list in `compiler/tests/reference/list.txt`); `import.py --no-fetch` re-scans all candidates and keeps the newly passing ones.
 
