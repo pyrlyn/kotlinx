@@ -559,7 +559,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val c = classes.getValue(cn)
         val impl = c.impl.getValue(m)
         val ms = methodSigs.getValue("$impl.$m")
-        allocas = StringBuilder(); body = StringBuilder(); tmpN = 0; lblN = 0; cur = "entry"; term = false
+        allocas = StringBuilder(); body = StringBuilder(); tmpN = 0; refVals.clear(); lblN = 0; cur = "entry"; term = false
         scopes.clear(); retTy = sup.ret
         scopes.add(Scope())
         val ps = sup.params.mapIndexed { i, t -> "${t.llvm} %a$i" }
@@ -718,7 +718,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (cls != null && f.body == null && f.exprBody == null) fail("abstract method ${f.name} in class ${cls.name}")
         val sig = instSig ?: if (cls != null) methodSigs.getValue("${cls.name}.${f.name}") else sigs.getValue(f.name)
         owner = cls; tryStack.clear(); finStack.clear()
-        allocas = StringBuilder(); body = StringBuilder(); tmpN = 0; lblN = 0; cur = "entry"; term = false
+        allocas = StringBuilder(); body = StringBuilder(); tmpN = 0; refVals.clear(); lblN = 0; cur = "entry"; term = false
         scopes.clear(); retTy = sig.ret; line = f.line; inCoroutine = sig.suspend
         scopes.add(Scope())
         val params = ArrayList<String>()
@@ -880,7 +880,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private val seenGlobals = HashSet<String>()
     private fun genGlobals() {
         owner = null; tryStack.clear()
-        allocas = StringBuilder(); body = StringBuilder(); tmpN = 0; lblN = 0; cur = "entry"; term = false
+        allocas = StringBuilder(); body = StringBuilder(); tmpN = 0; refVals.clear(); lblN = 0; cur = "entry"; term = false
         scopes.clear(); retTy = Ty.Unit
         scopes.add(Scope())
         for (g in prog.globals) {
@@ -920,7 +920,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun beginBody(cls: ClassInfo?, ret: Ty) {
         tryStack.clear(); finStack.clear()
         owner = cls
-        allocas = StringBuilder(); body = StringBuilder(); tmpN = 0; lblN = 0; cur = "entry"; term = false
+        allocas = StringBuilder(); body = StringBuilder(); tmpN = 0; refVals.clear(); lblN = 0; cur = "entry"; term = false
         scopes.clear(); retTy = ret
         scopes.add(Scope())
     }
@@ -4610,6 +4610,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * `x::m` (bound: receiver evaluated once): lowered to an equivalent lambda with typed parameters.
      */
 
+    /** Temporaries holding callable references; the names restart with every function (`tmpN`), and so does the set. */
     private val refVals = HashSet<String>()
 
     private fun genRef(node: UnE, recv: E?, n: String): Val = genRef0(node, recv, n).also { refVals.add(it.v) }
