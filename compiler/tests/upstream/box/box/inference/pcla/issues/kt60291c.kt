@@ -1,0 +1,24 @@
+// ISSUE: KT-60291
+
+fun box(): String {
+    when ("") {
+        "true" -> build { setTypeVariable(TargetType()) }
+        "false" -> build {}
+        else -> Buildee()
+    }
+    return "OK"
+}
+
+
+
+
+class TargetType
+
+class Buildee<TV> {
+    fun setTypeVariable(value: TV) { storage = value }
+    private var storage: TV = TargetType() as TV
+}
+
+fun <PTV> build(instructions: Buildee<PTV>.() -> Unit): Buildee<PTV> {
+    return Buildee<PTV>().apply(instructions)
+}
