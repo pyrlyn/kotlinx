@@ -5,6 +5,9 @@ class TypeRef(val name: String, val args: List<TypeRef>, val nullable: Boolean) 
     override fun toString() = name + (if (args.isEmpty()) "" else args.joinToString(",", "<", ">")) + (if (nullable) "?" else "")
 }
 
+/** Pseudo type `$GetterType<g>`: the inferred return type of getter `g` (setters of untyped delegated `var`s). */
+const val GETTER_TYPE = "\$GetterType"
+
 /** An expression node; [line] is its source line, for errors. */
 sealed class E { var line = 0 }
 class IntL(val v: Long, val long: Boolean, val unsigned: Boolean = false) : E()

@@ -64,6 +64,7 @@ while emitting IR.
 | objects / companions | `objectDecl`; lazy singletons via generated `$init$N` / `$get$N` and globals `$o$N` (end of `program()`) |
 | extensions | `function()` reads `Recv.` receivers; `resolveExtensions` turns them into functions/methods; member extensions -> `mext$f` (`memberExt`; `$this_ext` is the extension receiver, tried before the dispatch receiver in `genNamedCall`; companion ones found by `companionMext` through `NestedClasses`); local operator extensions are lifted by `liftLocals` under their own name |
 | property accessors | `getter` / `accessors` -> hidden `$prop$x` methods |
+| delegation `by` | class delegation: `Parser.superList` adds a hidden field `$by$I`, `implementIfaceProps` the forwarders; delegated properties: `Parser.delegated` (field/global `$dg$x` = `d.$provideDelegate(thisRef, null)`, accessors call `getValue`/`setValue`); the backend resolves `$provideDelegate` and property-reference `getValue`/`setValue` in `method`, and types an untyped delegated `var`'s setter from its getter (`GETTER_TYPE` in `inferReturnTypes`) |
 | enums | `classDecl(isEnum = true)`, `enumGlobals`, statics rewritten by `rewriteStatics` (Generics.kt) |
 | data classes | `Parser.dataClass` generates equals/hashCode/toString/componentN/copy as AST |
 | generics | classes/interfaces monomorphized in `compileGenerics` (`Box<Int>` -> `Box$Int`, `Subst`); generic functions per call in `genGenericCall`; instances discovered via `NeedInstance` / `NeedClass` / `NeedIface` exceptions that restart codegen |
