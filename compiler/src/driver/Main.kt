@@ -51,13 +51,6 @@ private fun findMimalloc(): String? {
         .firstOrNull { hasLib(it) }
 }
 
-/** Source text to LLVM IR: lex, parse, merge the prelude and `Any` support, then generate code. */
-/** `suspend fun main()`: renamed and run by a generated `fun main() = runBlocking { ... }` (same line numbers). */
-private val SUSPEND_MAIN = Regex("""(?m)^suspend\s+fun\s+main\s*\(\s*\)""")
-fun compileToIr(src00: String): String {
-    val src0 = if (SUSPEND_MAIN.containsMatchIn(src00)) SUSPEND_MAIN.replace(src00, "suspend fun kxSuspendMain()") + "\nfun main() = runBlocking { kxSuspendMain() }\n" else src00
-    val src = withSerializable(src0); return compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program()))) }
-
 /** Collector used when neither --gc nor NEWKOTLIN_GC is given (and what --gc=default means). */
 const val DEFAULT_GC = "epoch"
 
