@@ -21,6 +21,8 @@ private class ClassInfo(val name: String, val fields: List<Pair<String, Ty>>, va
                         val ancestors: List<String> = emptyList(), val impl: Map<String, String> = methods.keys.associateWith { name }) {
     val llType = "%C.$name"
     fun index(f: String) = fields.indexOfFirst { it.first == f }
+    /** Whether an unqualified [n] names a field, method or property of this class. */
+    fun has(n: String) = index(n) >= 0 || n in methods || "\$prop\$$n" in methods
 }
 private class IfaceInfo(val name: String, val methods: Map<String, FunSig>)
 
@@ -386,7 +388,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         for (c in classOrder) {
             line = c.line
             val bi = c.superClass?.let { s -> if (s !in classDecls) fail("unknown superclass $s"); classes.getValue(s) }
-            for (sup in c.supers.drop(if (bi != null) 1 else 0)) if (sup !in ifaces) fail("unknown interface $sup")
+            val supers = classSupers(c)
+            for (sup in supers.drop(if (bi != null) 1 else 0)) if (sup !in ifaces) fail("unknown interface $sup")
             val fields = ArrayList(bi?.fields ?: emptyList())
             for (f in c.fields) {
                 if (fields.any { it.first == f.name }) fail("property '${f.name}' of ${c.name} hides an inherited property")
@@ -395,7 +398,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val methods = HashMap(bi?.methods ?: emptyMap()); val impl = HashMap(bi?.impl ?: emptyMap())
             c.methods.groupBy { it.name }.values.firstOrNull { ms -> ms.map { m -> m.params.map { it.type.name } }.distinct().size > 1 }?.let { fail("overloads are not supported: ${c.name}.${it[0].name}") }
             for (m in c.methods) { methods[m.name] = m; if (m.body != null || m.exprBody != null) impl[m.name] = c.name else impl.remove(m.name) }
-            classes[c.name] = ClassInfo(c.name, fields, (c.supers + (bi?.supers ?: emptyList())).distinct(), methods,
+            classes[c.name] = ClassInfo(c.name, fields, (supers + (bi?.supers ?: emptyList())).distinct(), methods,
                 if (bi != null) listOf(bi.name) + bi.ancestors else emptyList(), impl)
         }
         for (c in classes.values) for (a in c.ancestors) poly.add(a)
@@ -883,7 +886,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         for (g in prog.globals) {
             line = g.line
             if (!seenGlobals.add(g.name)) fail("duplicate top-level property '${g.name}'")
-            val v0 = genArg(g.init)
+            // The declared type is the expected type (`val f: Any.() -> Unit = {}` types the lambda).
+            val v0 = if (g.type != null) argFor(g.init, resolve(g.type), true) else genArg(g.init)
             if (v0.t == Ty.Nothing) fail("top-level property '${g.name}' never completes")
             val t = g.type?.let { resolve(it) } ?: v0.t
             if (t == Ty.Unit || t == Ty.Args) fail("cannot store $t in top-level property '${g.name}'")
@@ -2635,20 +2639,35 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val m = callee
             val l = lookup(m.n)
             // (also a plain function type: an anonymous `fun R.(...)` is typed without its receiver here)
-            if (l != null && fnSig(l.t)?.params?.size == allArgs(e).size + 1 && probeType(m.recv)?.let { rt -> !hasMemberNamed(rt, m.n) } == true)
+            if (l != null && fnSig(l.t)?.params?.size == allArgs(e).size + 1 && probeType(m.recv)?.let { rt -> !hasMemberNamed(rt, m.n) } == true) {
+                refuseValueVsExt(m.n, probeType(m.recv))
                 return invokeFn(genExpr(NameE(m.n).also { it.line = m.line }), CallE(NameE(m.n).also { it.line = m.line }, e.typeArgs, listOf(m.recv) + e.args, e.lambda).also { it.line = e.line })
+            }
         }
-        if (callee is NameE && lookup(callee.n)?.let { fnSig(it.t) } != null) {
-            val ft = lookup(callee.n)!!.t
-            // `fn()` for `fn: R.() -> X` inside a scope with an implicit receiver: `this` is the first argument.
-            if (isRecvFn(ft) && fnSig(ft)!!.params.size == allArgs(e).size + 1 && lookup("this") != null)
+        // A function that takes these arguments wins over a top-level property of function type with the same name
+        // (`fun b(a: String)` next to `val b: (String) -> String`); context parameters are not passed explicitly.
+        val funShadows = callee is NameE && lookup(callee.n).let { it != null && it === globalVars[callee.n] } &&
+            funDecls[callee.n]?.takesArgs(allArgs(e).size) == true
+        // A value captured by a lambda is a field of its closure (capturedFnType); a method of that name wins over it.
+        val calleeFt = (callee as? NameE)?.takeIf { !funShadows }?.let { c -> lookup(c.n)?.t ?: capturedFnType(c.n)?.takeIf { c.n !in owner!!.methods } }
+        if (callee is NameE && calleeFt != null && fnSig(calleeFt) != null) {
+            val ft = calleeFt
+            // `fn()` for `fn: R.() -> X` (or `context(C) R.() -> X`, whose context invokeFn fills) inside a scope with an
+            // implicit receiver: `this` is the first argument.
+            val k = recvCtxCount(ft)
+            if ((isRecvFn(ft) || k > 0) && fnSig(ft)!!.params.size == allArgs(e).size + k + 1 && lookup("this") != null) {
+                refuseValueVsExt(callee.n, lookup("this")?.t)
                 return invokeFn(genExpr(callee), CallE(callee, e.typeArgs, listOf(NameE("this").also { it.line = line }) + e.args, e.lambda).also { it.line = e.line })
+            }
             return invokeFn(genExpr(callee), e)
         }
-        // `x.fn(args)` for a local `fn: R.(A) -> X`: invoke with `x` as the receiver argument.
-        if (callee is MemberE && !callee.safe && (lookup(callee.n)?.t ?: capturedFnType(callee.n))?.let { isRecvFn(it) } == true && probeType(callee.recv)?.let { hasMemberNamed(it, callee.n) } != true)
-            return invokeFn(genExpr(NameE(callee.n).also { it.line = line }), CallE(NameE(callee.n), e.typeArgs, listOf(callee.recv) + e.args, e.lambda).also { it.line = e.line })
-        if (callee is NameE && (lookup(callee.n) == null || (callee.n in classes && scopes.none { callee.n in it.vars }))) return genNamedCall(callee.n, e)
+        // `x.fn(args)` / `x?.fn(args)` for a local `fn: R.(A) -> X` or `fn: context(C) R.(A) -> X`: invoke with `x` as the receiver argument.
+        if (callee is MemberE && (lookup(callee.n)?.t ?: capturedFnType(callee.n))?.let { isRecvFn(it) || recvCtxCount(it) > 0 } == true && probeType(callee.recv)?.let { hasMemberNamed(it, callee.n) } != true) {
+            refuseValueVsExt(callee.n, probeType(callee.recv))
+            fun call(recv: E) = invokeFn(genExpr(NameE(callee.n).also { it.line = line }), CallE(NameE(callee.n), e.typeArgs, listOf(recv) + e.args, e.lambda).also { it.line = e.line })
+            return if (!callee.safe) call(callee.recv) else safe(callee.recv) { r -> withTemps(listOf(r)) { (x) -> call(x) } }
+        }
+        if (callee is NameE && (funShadows || lookup(callee.n) == null || (callee.n in classes && scopes.none { callee.n in it.vars }))) return genNamedCall(callee.n, e)
         if (callee is MemberE) {
             if (callee.safe) return safe(callee.recv) { r -> method(r, callee.n, e) }
             // `x!!.f()`: a member of the non-null type wins over an extension on the nullable type (`fun Long?.inv()`).
@@ -2661,8 +2680,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         val f = genExpr(callee)
         if (fnSig(f.t) != null) return invokeFn(f, e)
-        // `x(args)` on a value whose class declares `operator fun invoke`.
-        if (f.t is Ty.Cls && classes[f.t.name]?.methods?.containsKey("invoke") == true) return method(f, "invoke", e)
+        // `x(args)` on a value whose class or interface declares `operator fun invoke` (or inherits it from a function type).
+        if (hasMemberNamed(f.t, "invoke")) return method(f, "invoke", e)
         fail("unsupported call")
     }
 
@@ -2842,9 +2861,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** The innermost implicit value (receiver, context parameter, `this` of the class) of type [t]. */
     private fun ctxArg(t: Ty): E {
+        var thisSeen = false
         for (i in scopes.indices.reversed()) {
             val vs = scopes[i].vars.entries.filter { it.key.startsWith("\$ctx\$") && fits(it.value.t, t) }
             if (vs.isNotEmpty()) return NameE(vs.maxBy { it.key.drop(6).toIntOrNull() ?: -1 }.key).also { it.line = line }
+            // An implicit receiver (`with(c) { ... }`, an extension's `this`) can be named only while no inner `this` shadows it.
+            val th = scopes[i].vars["this"] ?: continue
+            if (!thisSeen && fits(th.t, t)) return NameE("this").also { it.line = line }
+            thisSeen = true
         }
         owner?.let { o -> if (fits(Ty.Cls(o.name), t)) return NameE("this").also { it.line = line } }
         fail("no context argument of type $t in scope")
@@ -2855,7 +2879,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (ps == null || ps.none { it.ctx } || e in ctxFilled) return null
         val named = e.args.any { it is NamedE }
         val args = ArrayList(e.args)
-        if (named) { for (p in ps) if (p.ctx) args.add(0, NamedE(p.name, ctxArg(tenvFor(p.type)))) }
+        if (named) { for (p in ps) if (p.ctx && args.none { (it as? NamedE)?.name == p.name }) args.add(0, NamedE(p.name, ctxArg(tenvFor(p.type)))) }
         else ps.forEachIndexed { i, p -> if (p.ctx) args.add(minOf(i, args.size), ctxArg(tenvFor(p.type))) }
         return CallE(e.callee, e.typeArgs, args, e.lambda).also { it.line = e.line; ctxFilled.add(it) }
     }
@@ -3766,7 +3790,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             is Ty.Iface -> recv.name == t.name || instOrigin[t.name]?.first == recv.name ||
                 // Extension on a function type (`fun (suspend () -> T).startCoroutine`).
-                (recv.name.startsWith("\$Fn") && t.name.startsWith(recv.name + "$") && fnSig(t)?.let { it.params.size + 1 == recv.args.size } == true)
+                // `(Int.() -> T).p` also takes a plain `(Int) -> T` value: the two are twins (twinFn) at run time.
+                (recv.name.startsWith("\$Fn") && (t.name.startsWith(recv.name + "$") || setOf(recv.name, "$" + t.name.drop(1).substringBefore("$")) == setOf("\$Fn", "\$FnR")) &&
+                    fnSig(t)?.let { it.params.size + 1 == recv.args.size } == true)
             else -> recv.args.isEmpty() && (try { resolve(recv) } catch (_: CompileError) { null }) == t
         }
     }
@@ -3777,6 +3803,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val c = classes[t.name] ?: return false
         return if (call) n in c.methods else c.index(n) >= 0 || "\$prop\$$n" in c.methods
     }
+    /**
+     * A function value [n] called on a receiver of type [t] while an extension function [n] applies to it too: Kotlin
+     * picks one by scope level (KT-37592), which is not modeled, so the call is refused rather than maybe miscompiled.
+     */
+    private fun refuseValueVsExt(n: String, t: Ty?) {
+        if (t != null && (hasMext(n, t) || extFuns[n]?.any { it.params.isNotEmpty() && extMatches(t, it.params[0].type, it.typeParams) } == true))
+            fail("a function value and an extension function both named '$n' are not supported")
+    }
+
     /** A member extension `mext$m` applicable to [t] exists on the enclosing class or the implicit receiver `this`. */
     private fun hasMext(m: String, t: Ty): Boolean {
         val k = "mext\$$m"
@@ -4219,6 +4254,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (!hasMember(t, n)) extFuns[n]?.firstOrNull { extMatches(t, it.params[0].type, it.typeParams) && !(nn && it.params[0].type.nullable && t.llvm != "ptr") }?.let { f ->
             return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
         }
+        // `x.p(args)` for a property `p` of function type with a getter (a class getter or an extension property): invoke its value.
+        if ((t is Ty.Cls && classes.getValue(t.name).methods.let { "\$prop\$$n" in it && n !in it }) ||
+            (!hasMember(t, n) && extFuns["\$prop\$$n"]?.any { it.params.size == 1 && extMatches(t, it.params[0].type, it.typeParams) } == true)) {
+            return withTemps(listOf(r)) { (x) ->
+                val pe = MemberE(x, n, false).also { it.line = line }
+                val f = genExpr(pe)
+                if (fnSig(f.t) == null) fail("unknown method ${t}.$n()")
+                invokeFn(f, CallE(pe, e0.typeArgs, e0.args, e0.lambda).also { it.line = line })
+            }
+        }
         dataMethod(r, n, e0)?.let { return it }
         if (t is Ty.ListTy && n in setOf("map", "filter", "forEach", "sumOf", "count") && e0.lambda == null && e0.args.size == 1 && e0.args[0] !is NamedE) {
             // A function value or callable reference argument becomes an inline lambda `{ f(it) }`.
@@ -4375,7 +4420,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** An argument with a known parameter type: lambdas get their parameter/return types from a function type. */
     private fun argFor(a: E, t: Ty, own: Boolean = false): Val =
-        adaptedRef(a, t) ?: if (a is LambdaE) fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t), susp = t is Ty.Iface && isSuspFnName(t.name)) } else withExpected(a, t) { if (own) genArg(a) else genExpr(a) }
+        adaptedRef(a, t) ?: if (a is LambdaE) fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t), susp = t is Ty.Iface && isSuspFnName(t.name)) } else withExpected(a, t) {
+            if (a is UnE && a.op.startsWith("::")) refExpected = fnSig(t)
+            try { if (own) genArg(a) else genExpr(a) } finally { refExpected = null }
+        }
 
     /**
      * Adapted reference `::f` passed where a function type is expected whose shape differs from `f`'s: defaults and
@@ -4430,6 +4478,20 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** The type of the enclosing class's field [n] (a closure's captured value inside its `invoke`), if any. */
     private fun capturedFnType(n: String): Ty? = owner?.fields?.firstOrNull { it.first == n }?.second
+
+    /**
+     * Supertypes of [c] with function types (`class A : Int.() -> String`, kept by the parser as `$Fn` / `$FnR` with
+     * type arguments) resolved to their interfaces; a class implements the twin too, like a closure ([twinFn]).
+     */
+    private fun classSupers(c: ClassD): List<String> = c.supers.flatMap { s ->
+        val args = c.superTypeArgs[s]
+        if (!isFnSuper(s) || args == null) listOf(s)
+        else {
+            val ft = resolve(TypeRef(s, args, false)) as Ty.Iface
+            val sig = fnSig(ft) ?: fail("unknown function type $ft")
+            listOfNotNull(ft.name, twinFn(sig.params, sig.ret, s == "\$FnR")?.name)
+        }
+    }
 
     private fun isRecvFn(t: Ty) = t is Ty.Iface && t.name.startsWith("\$FnR")
 
@@ -4523,7 +4585,17 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun genRef(node: UnE, recv: E?, n: String): Val = genRef0(node, recv, n).also { refVals.add(it.v) }
 
+    /** An anonymous `fun R.(A) -> X` (a reference `R::$afN`) has the receiver function type: the closure implements both twins. */
+    private fun asRecvFn(v: Val): Val = fnSig(v.t)?.takeIf { !isRecvFn(v.t) && it.params.isNotEmpty() }?.let { s -> Val(v.v, fnTy(s.params, s.ret, receiver = true), v.owned) } ?: v
+
+    /** The expected function type of the callable reference being generated ([argFor]): it types a reference to a generic member. */
+    private var refExpected: FunSig? = null
+
     private fun genRef0(node: UnE, recv: E?, n: String): Val {
+        val exp = refExpected; refExpected = null
+        /** Parameter types of a generic member [name] taken from the expected type ([bound]: the receiver is not a parameter). */
+        fun expParams(name: String, bound: Boolean): List<TypeRef> =
+            exp?.params?.let { if (bound) it else it.drop(1) }?.map { tyRef(it) } ?: fail("reference to generic method $name is not supported")
         // The synthesized lambda is cached per reference node so repeated (dry-run) generation reuses one closure class.
         var builtinGet = false
         fun setLam(params: List<TypeRef>, target: (List<E>) -> E): Val {
@@ -4547,20 +4619,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (name == "get" && args.size == 1 && builtinGet) IndexE(r, args[0]).also { it.line = line }
             else if (isProp) MemberE(r, name, false).also { it.line = line }
             else CallE(MemberE(r, name, false).also { it.line = line }, emptyList(), args, null).also { it.line = line }
-        fun memberParams0(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? = when (t) {
+        fun memberParams0(t: Ty, name: String, bound: Boolean): Pair<List<TypeRef>, Boolean>? = when (t) {
             is Ty.Cls -> classes.getValue(t.name).let { ci ->
-                ci.methods[name]?.let { m -> if (m.typeParams.isNotEmpty()) fail("reference to generic method $name is not supported"); m.params.map { it.type } to false }
+                ci.methods[name]?.let { m -> (if (m.typeParams.isNotEmpty()) expParams(name, bound) else m.params.map { it.type }) to false }
                     ?: if (ci.index(name) >= 0 || "\$prop\$$name" in ci.methods) emptyList<TypeRef>() to true else null
             }
             is Ty.Iface -> ifaceDecls[t.name]?.methods?.firstOrNull { it.name == name }?.let { m -> m.params.map { it.type } to false }
                 ?: ifaceDecls[t.name]?.methods?.firstOrNull { it.name == "\$prop\$$name" }?.let { emptyList<TypeRef>() to true }
             else -> null
         }
-        fun memberParams(t: Ty, name: String): Pair<List<TypeRef>, Boolean>? = memberParams0(t, name)
+        fun memberParams(t: Ty, name: String, bound: Boolean): Pair<List<TypeRef>, Boolean>? = memberParams0(t, name, bound)
             ?: extFuns[name]?.filter { it.params.isNotEmpty() && extMatches(t, it.params[0].type, it.typeParams) }?.takeIf { it.isNotEmpty() }?.let { fs ->
-                val f = fs.singleOrNull()?.takeIf { it.typeParams.isEmpty() } ?: fail("reference to overloaded or generic extension $name is not supported")
-                f.params.drop(1).map { it.type } to false }
-            ?: extFuns["\$prop\$$name"]?.firstOrNull { it.typeParams.isEmpty() && it.params.size == 1 && extMatches(t, it.params[0].type, emptyList()) }?.let { emptyList<TypeRef>() to true }
+                val f = fs.singleOrNull() ?: fail("reference to overloaded extension $name is not supported")
+                (if (f.typeParams.isNotEmpty()) (if (exp != null) expParams(name, bound) else fail("reference to overloaded or generic extension $name is not supported")) else f.params.drop(1).map { it.type }) to false }
+            // A generic extension property needs no instantiation here: the reference's getter call resolves it.
+            ?: extFuns["\$prop\$$name"]?.firstOrNull { it.params.size == 1 && extMatches(t, it.params[0].type, it.typeParams) }?.let { emptyList<TypeRef>() to true }
             ?: builtinMember(t, name)?.also { if (name == "get") builtinGet = true }
         if (recv == null) {
             funDecls[n]?.let { f ->
@@ -4573,7 +4646,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             owner?.let { o -> if (n in o.methods || o.index(n) >= 0) return genRef(node, NameE("this").also { it.line = line }, n) }
             // Top-level property `::x`: a getter function value.
             // A local function that captures locals is a local holding a lambda: `::f` is that value.
-            lookup(n)?.let { l -> if (fnSig(l.t) != null) return genExpr(NameE(n).also { it.line = line }) }
+            // (A top-level property of function type is not one: `::f.get()` reads the property.)
+            lookup(n)?.takeIf { it !== globalVars[n] }?.let { l -> if (fnSig(l.t) != null) return genExpr(NameE(n).also { it.line = line }) }
             if (n in globalVars || prog.globals.any { it.name == n } || "\$get\$$n" in sigs) {
                 val g = lam(emptyList()) { NameE(n).also { it.line = line } }
                 val isVar = prog.globals.firstOrNull { it.name == n }?.isVar == true || "\$set\$$n" in sigs
@@ -4582,19 +4656,33 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             fail("unsupported callable reference ::$n")
         }
+        // An anonymous `fun R.(...)` that captures locals is a local holding a lambda (receiver first): `R::$afN` is that value.
+        if (recv is NameE && n.startsWith("\$af")) lookup(n)?.let { l -> if (fnSig(l.t) != null) return asRecvFn(genExpr(NameE(n).also { it.line = line })) }
         // Unbound reference through a type name.
         val typeName = (recv as? NameE)?.n?.takeIf { lookup(it) == null && "\$get\$$it" !in sigs && (it in classes || it in ifaces || it in BUILTIN_REF_TYPES) && !(it == "this") }
         if (typeName != null) {
+            // `R::$afN` of `context(c: C) fun R.()`: the context values come first, as in `context(C) R.() -> T`,
+            // and are passed by name so the call does not look them up in scope.
+            if (n.startsWith("\$af")) extFuns[n]?.singleOrNull()?.takeIf { f -> f.params.any { it.ctx } }?.let { f ->
+                val (ctx, rest) = f.params.drop(1).partition { it.ctx }
+                val g = lam(ctx.map { it.type } + f.params[0].type + rest.map { it.type }) { xs ->
+                    val args = (ctx + rest).zip(xs.take(ctx.size) + xs.drop(ctx.size + 1)) { p, x -> NamedE(p.name, x).also { it.line = line } }
+                    CallE(MemberE(xs[ctx.size], n, false).also { it.line = line }, emptyList(), args, null).also { it.line = line }
+                }
+                // Its inferred type is `context(C) R.() -> T`, so calls through it fill the context from scope.
+                fnSig(g.t)!!.let { sg -> CtxRecvFnTypes.add(TypeRef("\$Fn", (sg.params + sg.ret).map { tyRef(it) }, false), ctx.size) }
+                return g
+            }
             val t = resolve(TypeRef(typeName, emptyList(), false))
-            val (ps, isProp) = memberParams(t, n) ?: fail("unknown member $typeName::$n")
+            val (ps, isProp) = memberParams(t, n, false) ?: fail("unknown member $typeName::$n")
             val g = lam(listOf(TypeRef(typeName, emptyList(), false)) + ps) { xs -> callOn(xs[0], n, xs.drop(1), isProp) }
-            if (!isProp) return g
+            if (!isProp) return if (n.startsWith("\$af")) asRecvFn(g) else g
             val st = if (fieldIsVar(t, n)) setLam(listOf(TypeRef(typeName, emptyList(), false), tyRef(fnSig(g.t)!!.ret))) { xs -> MemberE(xs[0], n, false).also { it.line = line } } else null
             return propRef(g, st, n)
         }
         // Bound reference: the receiver is evaluated once and captured.
         val r = genExpr(recv)
-        val (ps, isProp) = memberParams(r.t, n) ?: fail("unsupported callable reference ${r.t}::$n")
+        val (ps, isProp) = memberParams(r.t, n, true) ?: fail("unsupported callable reference ${r.t}::$n")
         scopes.add(Scope())
         val l = declare("\$refRecv", r.t, false, r.owned && r.t.isRef)
         emit("store ${r.t.llvm} ${r.v}, ptr ${l.slot}")
@@ -4669,6 +4757,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun genLambda(e: LambdaE, ps: List<Ty>?, ret: Ty?, receiver: Boolean = false, asRecvFn: Boolean = false, susp: Boolean = false): Val {
         val b0 = e.body
         val declared = b0.params
+        // The parser's unbound inner-constructor reference (`Outer::Inner`) names its receiver `rp$o`: it is a plain
+        // lambda with the receiver first, which is what a receiver function type's value is at run time.
+        if (receiver && ps != null && declared.size == ps.size && declared.firstOrNull() == "rp\$o")
+            return genLambda(e, ps, ret, false, asRecvFn = true, susp = susp)
         if (receiver) {
             // Lambda with receiver: the first parameter is `this` (implicit receiver of unqualified calls).
             if (ps == null || ps.isEmpty()) fail("lambda with receiver needs a known receiver type")
@@ -4723,14 +4815,17 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (l.t == Ty.Args || l.t == Ty.Pinned) fail("cannot capture '$n' in a lambda")
                 caps.add(n to l.t); continue
             }
-            if (o != null && (n == "this" || n == "\$self" || o.index(n) >= 0 || n in o.methods || "\$prop\$$n" in o.methods)) outer = true
+            if (ownRc?.has(n) == true) continue
+            if (o != null && (n == "this" || n == "\$self" || o.has(n))) outer = true
         }
         val capNames = caps.map { it.first }.toSet()
         val lamBody0 = if (!outer) b0 else b0.rewritten ?: run {
             val oc = o!!
+            // A receiver lambda's own `this` and its receiver's members are not the enclosing object's.
             Subst(emptyMap(), { x ->
                 when {
-                    x is NameE && (x.n == "this" || x.n == "\$self") -> NameE("\$outer")
+                    x is NameE && ownRc?.has(x.n) == true -> null
+                    x is NameE && ((x.n == "this" && "this" !in pnames) || x.n == "\$self") -> NameE("\$outer")
                     x is NameE && x.n !in pnames && x.n !in capNames && (oc.index(x.n) >= 0 || "\$prop\$${x.n}" in oc.methods) -> MemberE(NameE("\$outer"), x.n, false)
                     x is NameE && x.n !in pnames && x.n !in capNames && x.n in oc.methods -> MemberE(NameE("\$outer"), x.n, false)
                     else -> null

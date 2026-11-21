@@ -93,7 +93,10 @@ class Param(val name: String, val type: TypeRef, val default: E? = null, /** `va
 class FunD(val name: String, val params: List<Param>, val ret: TypeRef?, val body: Block?, val exprBody: E?, val line: Int,
            val typeParams: List<String> = emptyList(),
            /** Extension receiver type (`fun Recv.name(...)`); resolved away by [Parser.program]. */
-           val recv: TypeRef? = null)
+           val recv: TypeRef? = null) {
+    /** Whether a call with [n] explicit arguments fits (context parameters are never passed explicitly). */
+    fun takesArgs(n: Int) = params.filter { !it.ctx }.let { ps -> ps.any { it.vararg } || n in ps.count { it.default == null }..ps.size }
+}
 /** `type == null` (inferred) only for body properties, which have `init`. */
 class FieldD(val name: String, val type: TypeRef?, val isVar: Boolean, val init: E? = null, val lateinit: Boolean = false)
 /**
