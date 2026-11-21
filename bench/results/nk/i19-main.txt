@@ -1,0 +1,18 @@
+# i19-main origin/main 367b644 2026-11-21 20:54 EET load: { 28.18 42.90 40.65 }
+sum 5.318
+alloc 98.226
+bigheap 149.989
+closures 131.256
+cycles 268.177
+dispatch 125.624
+file 64.21
+free 67.772
+hashmap 172.446
+lru 963.408
+matmul 21.334
+nbody 87.353
+recursion 7.177
+refpass 170.211
+sort 70.567
+strings 44.689
+trees 139.166
