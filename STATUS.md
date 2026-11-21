@@ -38,6 +38,15 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   visible program-wide; refused when they capture locals, have a type-parameter or library-operator receiver (`String`,
   collections), clash with another extension operator, or have a nullable primitive receiver next to lambdas (function
   types erase `Int?` parameters to `Int`).
+- Delegation with `by`. Class delegation `I by expr` in classes, objects, companion objects and object expressions
+  (a hidden field `$by$I` plus forwarders; in an object expression the delegate is evaluated outside the object, so
+  `super.f()` there is the enclosing class's; a value class delegating to its own property uses that property; a
+  delegated member hides a superclass implementation, only the class's own members win).
+  Delegated properties `val`/`var x by d` (members, top level, locals, extension and member extension properties):
+  untyped `var`s, `provideDelegate`, `lazy` (typed by the property), property references (`by ::x`, `by a::x`,
+  `by A::x`) and extension `getValue`/`setValue` operators (also on `Any`, for primitive and String delegates).
+  No `KProperty` metadata: the property argument is `null`; `Delegates.*`, map delegates and delegation to
+  non-interface types (`CharSequence`, `Map`, type aliases) are unsupported.
 - `where` clauses on generic functions, classes and interfaces: the first bound of each type parameter acts like an
   inline bound (generic code is monomorphized, further intersection bounds only constrain callers).
 - Bridges: an override whose return representation differs from the interface method (`Int`/`String` for `Any`)
@@ -83,7 +92,7 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   cycle collector with an adaptive root threshold. Leak tests (`compiler/tests/leaks`) check live count = 0, ASan and macOS `leaks`.
 - Tests: `compiler/test.sh` (golden `compiler/tests/*.kt|.out`, benchmark checksums, leak tests);
   upstream Kotlin tests in `compiler/tests/upstream` (unmodified, JetBrains/kotlin @ 19c36e1), 8475 candidates
-  (`manifest.json`): PASS 3305, MISCOMPILE 17, COMPILER_CRASH 2, UNSUPPORTED 2167, N/A 2984 (passing ones are kept and
+  (`manifest.json`): PASS 3382, MISCOMPILE 17, COMPILER_CRASH 2, UNSUPPORTED 2090, N/A 2984 (passing ones are kept and
   re-runnable with `run.py`; `run.py --leak-check` also fails a passing test that leaks); reference tests the compiler
   does not fully pass yet: `compiler/tests/reference/fetch.py` (list in `compiler/tests/reference/list.txt`); `import.py --no-fetch` re-scans all candidates and keeps the newly passing ones.
 
