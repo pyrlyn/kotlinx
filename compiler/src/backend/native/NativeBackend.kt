@@ -1515,13 +1515,27 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun onceRecv(target: E, f: (E) -> Val): Val =
         if (target is MemberE && (target.recv !is NameE || isTopGetter(target.recv as NameE)) && !target.safe)
             withTemps(listOf(genExpr(target.recv))) { (x) -> f(MemberE(x, target.n, false).also { it.line = target.line }) }
-        else f(target)
+        // `a[i, j]++`: the receiver and every index are evaluated once, then read by `get` and written by `set`.
+        else if (multiIndexGet(target)) {
+            val g = target as CallE
+            withTemps(listOf(genExpr((g.callee as MemberE).recv)) + g.args.map { genExpr(it) }) { xs ->
+                f(CallE(MemberE(xs[0], "get", false).also { it.line = g.line }, emptyList(), xs.drop(1), null).also { it.line = g.line })
+            }
+        } else f(target)
+
+    /** A multi-argument index read `a.get(i, j)` (the parser's form of `a[i, j]`), assignable through `set`. */
+    private fun multiIndexGet(e: E) = e is CallE && e.args.size > 1 && e.lambda == null && (e.callee as? MemberE)?.let { it.n == "get" && !it.safe } == true
 
     /** A name read through a top-level property getter (may have side effects, so it is evaluated once). */
     private fun isTopGetter(n: NameE) = lookup(n.n) == null && "\$get\$${n.n}" in funDecls &&
         !(owner != null && (owner!!.index(n.n) >= 0 || "\$prop\$${n.n}" in owner!!.methods))
 
     private fun assign(target: E, value: E) {
+        if (multiIndexGet(target)) {
+            val g = target as CallE
+            releaseIfOwned(genExpr(CallE(MemberE((g.callee as MemberE).recv, "set", false).also { it.line = g.line }, emptyList(), g.args + value, null).also { it.line = g.line }))
+            return
+        }
         when (target) {
             is NameE -> {
                 val l = lookup(target.n)
@@ -1688,7 +1702,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     private fun genFor(s: ForS) {
-        val it = s.iter
+        val it0 = s.iter
+        // `for (x in C(0)..C(2))` with a user `rangeTo`: iterate over the object it returns.
+        val it = if (it0 is BinE && it0.op == ".." && probeType(it0.l).let { t -> (t is Ty.Cls || t is Ty.Iface) && progKind(t) == null })
+            CallE(MemberE(it0.l, "rangeTo", false).also { x -> x.line = it0.line }, emptyList(), listOf(it0.r), null).also { x -> x.line = it0.line }
+        else it0
         // `for (x in c)` over a class with `operator fun iterator()` (hasNext/next): a while loop over the iterator.
         if (!(it is BinE && it.op in setOf("..", "until", "downTo", "step"))) {
             val pt = probeType(it)
@@ -1860,9 +1878,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     // The getter runs once for the old value; prefix forms read the property again for the result.
                     withTemps(listOf(old)) { (x) ->
                         val savedIv = incViaExt; incViaExt = custom
-                        try { assign(tg, (if (custom) CallE(MemberE(x, mname, false).also { it.line = e.line }, emptyList(), emptyList(), null)
-                            else BinE(if (op == "++") "+" else "-", x, IntL(1, false)).also { it.line = e.line }.let { b -> if (w16) CallE(MemberE(b, "toShort", false).also { it.line = e.line }, emptyList(), emptyList(), null) else b }).also { it.line = e.line }) } finally { incViaExt = savedIv }
-                        genExpr(if (pre) tg else x)
+                        val nv = (if (custom) CallE(MemberE(x, mname, false).also { it.line = e.line }, emptyList(), emptyList(), null)
+                            else BinE(if (op == "++") "+" else "-", x, IntL(1, false)).also { it.line = e.line }.let { b -> if (w16) CallE(MemberE(b, "toShort", false).also { it.line = e.line }, emptyList(), emptyList(), null) else b }).also { it.line = e.line }
+                        // `++a[i, j]` yields the value passed to `set`; calling `get` again would repeat its side effects.
+                        if (pre && multiIndexGet(tg)) try { withTemps(listOf(genExpr(nv))) { (y) -> assign(tg, y); genExpr(y) } } finally { incViaExt = savedIv }
+                        else {
+                            try { assign(tg, nv) } finally { incViaExt = savedIv }
+                            genExpr(if (pre) tg else x)
+                        }
                     }
                 }
             }
@@ -2786,7 +2809,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return CallE(NameE("arrayListOf").also { it.line = line }, if (known) listOf(elemT) else emptyList(), items, null).also { it.line = line }
         }
         val nv = named.firstOrNull { it.name == params[vi].name }
-        val newPos = if (nv != null) pos else if (pos.size <= vi) (if (params[vi].default != null) pos else pos + pack(emptyList())) else pos.take(vi) + pack(pos.drop(vi))
+        // `operator fun set(vararg i: K, value: V)` from `a[i, j] = v`: the value is the last positional argument.
+        val n = (e.callee as? MemberE)?.n ?: (e.callee as? NameE)?.n
+        val tail = if (n == "set" && nv == null && vi == params.size - 2 && named.none { it.name == params.last().name } && pos.size > vi) pos.takeLast(1) else emptyList()
+        val pos0 = pos.dropLast(tail.size)
+        val newPos = (if (nv != null) pos0 else if (pos0.size <= vi) (if (params[vi].default != null) pos0 else pos0 + pack(emptyList())) else pos0.take(vi) + pack(pos0.drop(vi))) + tail
         val newNamed = named.map { if (it === nv) NamedE(it.name, pack(listOf(it.e))).also { x -> x.line = it.line } else it }
         return CallE(e.callee, e.typeArgs, newPos + newNamed, e.lambda).also { it.line = e.line }
     }
@@ -5332,7 +5359,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** `a..b`, `a until b`, `a downTo b`, `p step n` as values: progression objects from the prelude. */
     private fun rangeValue(e: BinE): Val {
-        val a = genExpr(e.l); val b = genExpr(e.r)
+        val a = genExpr(e.l)
+        // `C(0)..C(2)` on a class: its `operator fun rangeTo` (member or extension), not a prelude progression.
+        if (e.op == ".." && (a.t is Ty.Cls || a.t is Ty.Iface) && progKind(a.t) == null) return method(a, "rangeTo", opCall("rangeTo", e.r))
+        val b = genExpr(e.r)
         val k = if (e.op == "step") progKind(a.t) ?: fail("step on ${a.t}") else rangeKind(a.t, b.t)
         val fn = "kt_" + mapOf(".." to "rangeTo", "until" to "until", "downTo" to "downTo", "step" to "step").getValue(e.op) + k
         return withTemps(listOf(a, b)) { (x, y) -> genNamedCall(fn, CallE(NameE(fn), emptyList(), listOf(x, y), null)) }

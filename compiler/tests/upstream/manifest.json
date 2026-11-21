@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 17,
   "N/A": 2984,
-  "PASS": 3428,
-  "UNSUPPORTED": 2044
+  "PASS": 3442,
+  "UNSUPPORTED": 2030
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -233,8 +233,8 @@
    "upstream": "compiler/testData/codegen/box/annotations/instances/unsignedAndBooleanArrays.kt"
   },
   "box/box/annotations/instances/varargInAnnotationParameterInstantiation.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "expected ':' (at 'val')",
+   "category": "unknown KotlinAnn (stdlib API / unsupported decl)",
+   "detail": "unknown function 'KotlinAnn'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/instances/varargInAnnotationParameterInstantiation.kt"
   },
@@ -267,14 +267,14 @@
    "upstream": "compiler/testData/codegen/box/annotations/platformDependent.kt"
   },
   "box/box/annotations/recursiveAnnotationWithVarargAndDefaultValue.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "expected ':' (at 'val')",
+   "category": "unknown Ann (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Ann'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/recursiveAnnotationWithVarargAndDefaultValue.kt"
   },
   "box/box/annotations/recursiveAnnotationWithVarargAndWithoutDefaultValue.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "expected ':' (at 'val')",
+   "category": "unknown Ann (stdlib API / unsupported decl)",
+   "detail": "unknown function 'Ann'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/annotations/recursiveAnnotationWithVarargAndWithoutDefaultValue.kt"
   },
@@ -291,15 +291,13 @@
    "upstream": "compiler/testData/codegen/box/annotations/selfReferentialAnnotation.kt"
   },
   "box/box/annotations/spreadOperatorInAnnotationArguments.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "expected ':' (at 'val')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/annotations/spreadOperatorInAnnotationArguments.kt"
   },
   "box/box/annotations/spreadOperatorInArrayOf.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "expected ':' (at 'val')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/annotations/spreadOperatorInArrayOf.kt"
   },
   "box/box/annotations/typeAnnotations/checkingNotincorporatedInputTypes.kt": {
@@ -2842,8 +2840,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableCallSites.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableReferencedFunctions.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "expected ':' (at 'val')",
+   "category": "nullable types",
+   "detail": "unexpected operator (at '?:')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariableReferencedFunctions.kt"
   },
@@ -2884,8 +2882,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorToExtensionWithTypeParam.kt"
   },
   "box/box/callableReference/adaptedReferences/innerConstructorWithVararg.kt": {
-   "category": "other syntax (at 'v')",
-   "detail": "expected ':' (at 'v')",
+   "category": "lambdas / function types / references",
+   "detail": "lambda expects 1 parameters, has 2",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorWithVararg.kt"
   },
@@ -4102,8 +4100,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/kt21092a.kt"
   },
   "box/box/callableReference/kt37604.kt": {
-   "category": "other syntax (at 'x')",
-   "detail": "expected ':' (at 'x')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected $Fn$Unit, found $Fn$C",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/kt37604.kt"
   },
@@ -13943,8 +13941,8 @@
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/constructorWithDefaultArguments.kt"
   },
   "box/box/enum/defaultCtor/constructorWithVararg.kt": {
-   "category": "other syntax (at 'xs')",
-   "detail": "expected ':' (at 'xs')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Test expects 3 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/constructorWithVararg.kt"
   },
@@ -13955,8 +13953,8 @@
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/entryClassConstructorWithDefaultArguments.kt"
   },
   "box/box/enum/defaultCtor/entryClassConstructorWithVarargs.kt": {
-   "category": "other syntax (at 'xs')",
-   "detail": "expected ':' (at 'xs')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Test__OK expects 3 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/defaultCtor/entryClassConstructorWithVarargs.kt"
   },
@@ -14430,8 +14428,8 @@
    "upstream": "compiler/testData/codegen/box/enum/values.kt"
   },
   "box/box/enum/varargParam.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "expected ':' (at 'val')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Piece expects 3 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/enum/varargParam.kt"
   },
@@ -17327,21 +17325,18 @@
    "upstream": "compiler/testData/codegen/box/increment/augmentedAssignmentWithComplexRhs.kt"
   },
   "box/box/increment/classNaryGetSet.kt": {
-   "category": "other syntax (at '++')",
-   "detail": "expected end of statement (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/classNaryGetSet.kt"
   },
   "box/box/increment/classVarargGetSet.kt": {
-   "category": "other syntax (at '++')",
-   "detail": "expected end of statement (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/classVarargGetSet.kt"
   },
   "box/box/increment/classVarargGetSetEvaluationOrder.kt": {
-   "category": "other syntax (at '++')",
-   "detail": "expected end of statement (at '++')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/increment/classVarargGetSetEvaluationOrder.kt"
   },
   "box/box/increment/classWithGetSet.kt": {
@@ -18642,8 +18637,8 @@
    "upstream": "compiler/testData/codegen/box/inference/unsafeVarianceCodegen.kt"
   },
   "box/box/inference/varargInConstructor.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "expected ':' (at 'val')",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected String, found $Fn$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inference/varargInConstructor.kt"
   },
@@ -21976,8 +21971,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/innerClassConstructorGeneric.kt"
   },
   "box/box/inlineClasses/hiddenConstructor/kt28855.kt": {
-   "category": "other syntax (at 'ys')",
-   "detail": "expected ':' (at 'ys')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected ArrayList<UInt>, found UInt",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/hiddenConstructor/kt28855.kt"
   },
@@ -24536,8 +24531,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsClassDefaultArgument.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsClassVararg.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "expected ':' (at 'val')",
+   "category": "class bodies / constructors",
+   "detail": "constructor SomeClass expects 3 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsClassVararg.kt"
   },
@@ -24554,8 +24549,8 @@
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInnerDefaultArgument.kt"
   },
   "box/box/innerNested/superConstructorCall/objectExtendsInnerOfLocalVarargAndDefault.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "expected ':' (at 'val')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/innerNested/superConstructorCall/objectExtendsInnerOfLocalVarargAndDefault.kt"
   },
@@ -25833,9 +25828,8 @@
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/withIndex.kt"
   },
   "box/box/lower/forLoopsLowering/withIndexUInt.kt": {
-   "category": "other: unknown method UIntRange.withIndex()",
-   "detail": "unknown method UIntRange.withIndex()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lower/forLoopsLowering/withIndexUInt.kt"
   },
   "box/box/lower/localDelegatedProperty.kt": {
@@ -25927,9 +25921,8 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/SimpleVarsExtensions.kt"
   },
   "box/box/multiDecl/UnderscoreNames.kt": {
-   "category": "unknown _ (stdlib API / unsupported decl)",
-   "detail": "unknown name '_'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/UnderscoreNames.kt"
   },
   "box/box/multiDecl/ValCapturedInFunctionLiteral.kt": {
@@ -26014,39 +26007,33 @@
    "upstream": "compiler/testData/codegen/box/multiDecl/forIterator/longIterator/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclFor.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found C",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclFor.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentExtensions.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found C",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentExtensions.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentMemberExtensions.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found C",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentMemberExtensions.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found C",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForComponentMemberExtensionsInExtensionFunction.kt"
   },
   "box/box/multiDecl/forRange/MultiDeclForValCaptured.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found C",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForValCaptured.kt"
   },
   "box/box/multiDecl/forRange/UnderscoreNames.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Int, found C",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/multiDecl/forRange/UnderscoreNames.kt"
   },
   "box/box/multiDecl/forRange/UnderscoreNamesDontCallComponent.kt": {
@@ -29153,8 +29140,8 @@
    "upstream": "compiler/testData/codegen/box/privateConstructors/withLinkedObjects.kt"
   },
   "box/box/privateConstructors/withVarargs.kt": {
-   "category": "other syntax (at 'i')",
-   "detail": "expected ':' (at 'i')",
+   "category": "class bodies / constructors",
+   "detail": "constructor Outer expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/privateConstructors/withVarargs.kt"
   },
@@ -36587,20 +36574,20 @@
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt18356.kt"
   },
   "box/box/super/superConstructor/kt18356_2.kt": {
-   "category": "other syntax (at 'ints')",
-   "detail": "expected ':' (at 'ints')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superConstructor/kt18356_2.kt"
   },
   "box/box/super/superConstructor/objectExtendsInner.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "expected ':' (at 'val')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superConstructor/objectExtendsInner.kt"
   },
   "box/box/super/superConstructor/objectExtendsLocalInner.kt": {
-   "category": "other syntax (at 'val')",
-   "detail": "expected ':' (at 'val')",
+   "category": "operator/infix functions",
+   "detail": "unexpected operator (at '=')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/superConstructor/objectExtendsLocalInner.kt"
   },
@@ -38194,9 +38181,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/emptyVarArg.kt"
   },
   "box/box/vararg/evaluationOrder.kt": {
-   "category": "other: set expects 2 arguments",
-   "detail": "set expects 2 arguments",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/vararg/evaluationOrder.kt"
   },
   "box/box/vararg/inlineClassArraysAsNamedArgumentInVararg.kt": {

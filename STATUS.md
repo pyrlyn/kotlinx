@@ -25,6 +25,10 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   fields and methods, interfaces with virtual dispatch, val/var, if/when expressions, while, for over ranges/arrays/lists/strings,
   unlabeled `break`/`continue`, lambdas as trailing blocks for built-ins, ArrayList/HashMap/StringBuilder/arrays, string
   templates, nullable references and nullable primitives (`Int?`, boxed) with `?.` `?:` `!!`, Int/Long/unsigned/Float/Double/Boolean/Char/String.
+- Destructuring: `val (a, b)`, position-based `val [a, b]` / `[val a, var b]`, in `for` headers (also over a user
+  `rangeTo` whose result has `iterator()`) and lambda parameters; `componentN` members or extensions, `_` skipped.
+  Multi-argument indexing `a[i, j]` (get/set, compound assignment, `++`/`--` as statements and expressions, vararg
+  `get`/`set`). Vararg primary-constructor properties; collection literals as parameter defaults (`xs: List<T> = []`).
 - Extension properties: top-level `val`/`var` with getter and setter (extension functions `$prop$x` / `$set$x`, also
   generic `val <T> T.x` and `inline get()`) and member extension properties in class/object/interface bodies (member
   extensions `mext$$prop$x` / `mext$$set$x`; abstract without accessors in interfaces and `abstract` members).
@@ -98,7 +102,7 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   cycle collector with an adaptive root threshold. Leak tests (`compiler/tests/leaks`) check live count = 0, ASan and macOS `leaks`.
 - Tests: `compiler/test.sh` (golden `compiler/tests/*.kt|.out`, benchmark checksums, leak tests);
   upstream Kotlin tests in `compiler/tests/upstream` (unmodified, JetBrains/kotlin @ 19c36e1), 8475 candidates
-  (`manifest.json`): PASS 3428, MISCOMPILE 17, COMPILER_CRASH 2, UNSUPPORTED 2044, N/A 2984 (passing ones are kept and
+  (`manifest.json`): PASS 3442, MISCOMPILE 17, COMPILER_CRASH 2, UNSUPPORTED 2030, N/A 2984 (passing ones are kept and
   re-runnable with `run.py`; `run.py --leak-check` also fails a passing test that leaks); reference tests the compiler
   does not fully pass yet: `compiler/tests/reference/fetch.py` (list in `compiler/tests/reference/list.txt`); `import.py --no-fetch` re-scans all candidates and keeps the newly passing ones.
 
