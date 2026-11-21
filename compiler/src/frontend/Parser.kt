@@ -498,14 +498,16 @@ class Parser(toks: List<Tok>) {
                 else -> null
             }
         })
+        // A parameter's declared type is the target of a literal default value (`xs: List<Int> = []`, `vararg xs: T = []`).
+        fun param(q: Param) = if (isLit(q.default)) Param(q.name, q.type, lit(q.type, q.default!!), q.vararg, q.ctx) else q
         fun fn(f: FunD): FunD { val sr = ret; ret = f.ret; try {
             val g = sub.fn(f)
-            return FunD(g.name, g.params, g.ret, g.body, f.exprBody?.let { lit(f.ret, it) }, g.line, g.typeParams, f.recv)
+            return FunD(g.name, g.params.map { param(it) }, g.ret, g.body, f.exprBody?.let { lit(f.ret, it) }, g.line, g.typeParams, f.recv)
         } finally { ret = sr } }
         for (i in funs.indices) funs[i] = fn(funs[i])
         for (i in classes.indices) { val c = classes[i]
             val fm = c.fields.associateWith { fd -> if (isLit(fd.init) && fd.type != null) FieldD(fd.name, fd.type, fd.isVar, lit(fd.type, fd.init!!), fd.lateinit) else fd }
-            classes[i] = ClassD(c.name, c.fields.map { fm.getValue(it) }, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams,
+            classes[i] = ClassD(c.name, c.fields.map { fm.getValue(it) }, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams.map { param(it) },
                 c.inits.map { if (it is FieldD) fm[it] ?: it else it }, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs) }
         for (i in globals.indices) { val g = globals[i]; if (g.type != null && isLit(g.init)) globals[i] = VarS(g.name, g.isVar, g.type, lit(g.type, g.init)).also { it.line = g.line } }
     }
@@ -2369,10 +2371,12 @@ class Parser(toks: List<Tok>) {
             next()
             nested(1) {
                 while (!isOp(")")) {
-                    while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) p++
+                    var va = false
+                    while (peek().k == K.ID && (peek().s in MEMBER_MODS || peek().s == "vararg") && t[p + 1].k == K.ID) { if (peek().s == "vararg") va = true; p++ }
                     val kw = if (isId("val") || isId("var")) next().s else null
-                    val n = ident(); expectOp(":"); val ty = type()
-                    ctorParams.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); defaultArg() } else null))
+                    // `vararg val xs: T` is a list property, packed at call sites as for functions.
+                    val n = ident(); expectOp(":"); val ty0 = type(); val ty = if (va) TypeRef("List", listOf(ty0), false) else ty0
+                    ctorParams.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); defaultArg() } else null, va))
                     if (kw != null) fields.add(FieldD(n, ty, kw == "var"))
                     if (isOp(",")) next()
                 }
@@ -2762,7 +2766,7 @@ class Parser(toks: List<Tok>) {
                 val tk = t[p]
                 when {
                     tk.k == K.OP && tk.s in ASSIGN_OPS -> { p++; skipNLOnly(); val v = expr(); if (e is CallE && e in multiIdx) multiIndexAssign(e, tk.s, v) else AssignS(e, tk.s, v) }
-                    tk.k == K.OP && (tk.s == "++" || tk.s == "--") -> { p++; if (e is CallE && e in multiIdx) multiIndexAssign(e, tk.s[0] + "=", IntL(1, false).also { it.line = tk.line }) else IncS(e, tk.s) }
+                    tk.k == K.OP && (tk.s == "++" || tk.s == "--") -> { p++; IncS(e, tk.s) }
                     else -> ExprS(e)
                 }
             }
@@ -2823,7 +2827,7 @@ class Parser(toks: List<Tok>) {
         if (t[p].k == K.OP && (t[p].s == "++" || t[p].s == "--")) {
             val tk = next()
             val e = prefix()
-            if (e !is NameE && e !is MemberE && e !is IndexE) fail("${tk.s} needs an assignable operand", tk)
+            if (e !is NameE && e !is MemberE && e !is IndexE && e !in multiIdx) fail("${tk.s} needs an assignable operand", tk)
             return PostIncE(e, "pre" + tk.s).also { it.line = tk.line }
         }
         val tk = peek()
@@ -2952,7 +2956,7 @@ class Parser(toks: List<Tok>) {
                 // Callable reference `recv::name`: UnE("::name", recv).
                 // Class literal `T::class` / `e::class`: UnE("#class", e) (resolved by the backend to a KClass).
                 "::" -> { p++; if (isId("class")) { next(); UnE("#class", e) } else UnE("::" + ident(), e) }
-                "++", "--" -> if (e is NameE || e is MemberE || e is IndexE) { p++; PostIncE(e, tk.s) } else break
+                "++", "--" -> if (e is NameE || e is MemberE || e is IndexE || e in multiIdx) { p++; PostIncE(e, tk.s) } else break
                 "{" -> if (!noBraceCall && (e is MemberE || (e is NameE && e.n !in NO_TRAILING))) CallE(e, emptyList(), emptyList(), block(lambda = true)) else break
                 else -> break
             }
