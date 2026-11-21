@@ -33,6 +33,12 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   gets a boxing bridge `@br.C.m` in the interface slot; class-typed virtual calls use the `m#narrow` slot.
 - Lambdas with receiver: typed parameters (`{ x: Int -> }`), builder inference from unqualified receiver properties
   (`scoped { emit(key) }`); `r.f(x)` counts as a use of a local function value `f` in last-use analysis.
+- Function types with receiver (`T.() -> R`): as supertypes of classes, objects and interfaces (`class C : String.() -> Int`);
+  anonymous extension functions (`fun Int.() = this + 1`, also with `context(...)`, labels and a nullable receiver);
+  extension properties on function types (`val (Int.() -> T).p`); `a?.f(1)` and `c.p(1)` for function-typed locals,
+  getters and extension properties; references `A::foo`, `Outer::Inner`, `f::p` assigned to receiver types; implicit
+  receivers (`with(c) { ... }`) supply context arguments. Not yet: generic member extension properties on function types,
+  generic inner classes in references, invoking an object directly (`O(1)` for `operator fun invoke`).
 - Locals without an initializer (`val x: T` assigned later): a variable starting at the type's zero value;
   definite assignment is not checked.
 - Referential equality `===` / `!==`: pointer identity for class/interface/array/collection values and against null,
