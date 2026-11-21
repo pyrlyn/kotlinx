@@ -1274,9 +1274,9 @@ class Parser(toks: List<Tok>) {
      * [line] is the declaring interface's: a suspend `invoke` is registered there (SuspendFuns keys by line).
      */
     private fun fnSuperDecl(s: String, arity: Int?, line: Int): InterfaceD? {
-        if ((s != "\$Fn" && s != "\$FnS") || arity == null || arity < 1) return null
+        if (s !in setOf("\$Fn", "\$FnS", "\$FnR", "\$FnRS") || arity == null || arity < 1) return null
         val tps = (1 until arity).map { "\$P$it" } + "\$R"
-        if (s == "\$FnS") SuspendFuns.add(line, "invoke")
+        if (s == "\$FnS" || s == "\$FnRS") SuspendFuns.add(line, "invoke")
         val ps = (1 until arity).map { Param("p$it", TypeRef("\$P$it", emptyList(), false)) }
         return InterfaceD(s, listOf(FunD("invoke", ps, TypeRef("\$R", emptyList(), false), null, null, line)), line, tps)
     }
@@ -2212,8 +2212,11 @@ class Parser(toks: List<Tok>) {
             val ss = ArrayList<String>()
             while (true) {
                 val st = type()
-                // A function supertype (`interface I : (String) -> String`) contributes its abstract `invoke`.
-                if (isFnSuper(st.name)) { fnInvoke = FunD("invoke", st.args.dropLast(1).mapIndexed { i, a -> Param("p$i", a) }, st.args.last(), null, null, line); if (isOp(",")) { next(); continue } else break }
+                // A function supertype (`interface I : (String) -> String`) contributes its abstract `invoke`,
+                // and is still recorded as a super so an implementing class is a function value (`invokeIt(c)`).
+                if (isFnSuper(st.name)) {
+                    fnInvoke = FunD("invoke", st.args.dropLast(1).mapIndexed { i, a -> Param("p$i", a) }, st.args.last(), null, null, line)
+                }
                 if (st.args.isNotEmpty()) ifaceSuperRefs.getOrPut(name) { HashMap() }[st.name] = st.args
                 ss.add(st.name)
                 if (isOp(",")) next() else break
