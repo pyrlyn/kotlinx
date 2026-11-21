@@ -27,6 +27,15 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   templates, nullable references and nullable primitives (`Int?`, boxed) with `?.` `?:` `!!`, Int/Long/unsigned/Float/Double/Boolean/Char/String.
 - Extension properties: top-level `val`/`var` with getter and setter (extension functions `$prop$x` / `$set$x`) and
   member extension properties in class/object/interface bodies (member extensions `mext$$prop$x` / `mext$$set$x`).
+- Delegation with `by`. Class delegation `I by expr` in classes, objects, companion objects and object expressions
+  (a hidden field `$by$I` plus forwarders; in an object expression the delegate is evaluated outside the object, so
+  `super.f()` there is the enclosing class's; a value class delegating to its own property uses that property; a
+  delegated member hides a superclass implementation, only the class's own members win).
+  Delegated properties `val`/`var x by d` (members, top level, locals, extension and member extension properties):
+  untyped `var`s, `provideDelegate`, `lazy` (typed by the property), property references (`by ::x`, `by a::x`,
+  `by A::x`) and extension `getValue`/`setValue` operators (also on `Any`, for primitive and String delegates).
+  No `KProperty` metadata: the property argument is `null`; `Delegates.*`, map delegates and delegation to
+  non-interface types (`CharSequence`, `Map`, type aliases) are unsupported.
 - `where` clauses on generic functions, classes and interfaces: the first bound of each type parameter acts like an
   inline bound (generic code is monomorphized, further intersection bounds only constrain callers).
 - Bridges: an override whose return representation differs from the interface method (`Int`/`String` for `Any`)
