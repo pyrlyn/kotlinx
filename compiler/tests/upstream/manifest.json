@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 17,
   "N/A": 2984,
-  "PASS": 3410,
-  "UNSUPPORTED": 2062
+  "PASS": 3457,
+  "UNSUPPORTED": 2015
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -2705,8 +2705,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextFunctionAdaptedReferences.kt"
   },
   "box/box/callableReference/adaptedReferences/contextFunctionAnonymous.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "strings / templates",
+   "detail": "no context argument of type String in scope",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/contextFunctionAnonymous.kt"
   },
@@ -2772,9 +2772,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionFunctionAdaptedReferences.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionFunctionAnonymous.kt": {
-   "category": "local / extension functions",
-   "detail": "unexpected 'fun' (at 'fun')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionFunctionAnonymous.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionFunctionWithNestedReceiver.kt": {
@@ -2806,15 +2805,13 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyToFun.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousContextFun.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousContextFun.kt"
   },
   "box/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousExtensionFun.kt": {
-   "category": "local / extension functions",
-   "detail": "unexpected 'fun' (at 'fun')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/extensionPropertyWithAnonymousExtensionFun.kt"
   },
   "box/box/callableReference/adaptedReferences/genericVarargArrayAgainstTypeVariable.kt": {
@@ -2873,9 +2870,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/inlineVarargInts.kt"
   },
   "box/box/callableReference/adaptedReferences/innerConstructorToExtensionFun.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda expects 0 parameters, has 1",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/innerConstructorToExtensionFun.kt"
   },
   "box/box/callableReference/adaptedReferences/innerConstructorToExtensionWithTypeParam.kt": {
@@ -3117,8 +3113,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargFromBaseClass.kt"
   },
   "box/box/callableReference/adaptedReferences/varargOverloads.kt": {
-   "category": "other: unsupported callable reference ::foo",
-   "detail": "unsupported callable reference ::foo",
+   "category": "other: cannot choose an overload of ::foo for $Fn$IntArray$Int",
+   "detail": "cannot choose an overload of ::foo for $Fn$IntArray$Int",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/adaptedReferences/varargOverloads.kt"
   },
@@ -3354,8 +3350,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/objectReceiver.kt"
   },
   "box/box/callableReference/bound/primitiveReceiver.kt": {
-   "category": "generics",
-   "detail": "reference to overloaded or generic extension foo is not supported",
+   "category": "local / extension functions",
+   "detail": "reference to overloaded extension foo is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/primitiveReceiver.kt"
   },
@@ -3638,9 +3634,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/coercionToUnit.kt"
   },
   "box/box/callableReference/function/constructorFromInnerClass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambda expects 0 parameters, has 1",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/constructorFromInnerClass.kt"
   },
   "box/box/callableReference/function/constructorFromInnerClassWithTypeParam.kt": {
@@ -3708,9 +3703,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFromTopLevelUnitOneStringArg.kt"
   },
   "box/box/callableReference/function/extensionFunctionAsASuperTypePassToSAMInterface.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "unexpected top-level token (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionFunctionAsASuperTypePassToSAMInterface.kt"
   },
   "box/box/callableReference/function/extensionFunctionInSAMInterface.kt": {
@@ -3751,9 +3745,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionWithNestedFunction.kt"
   },
   "box/box/callableReference/function/extensionWithTypeParam.kt": {
-   "category": "generics",
-   "detail": "reference to generic method foo is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/extensionWithTypeParam.kt"
   },
   "box/box/callableReference/function/genericCallableReferenceArgumentsNonJVM.kt": {
@@ -3976,9 +3969,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/nullableExtension.kt"
   },
   "box/box/callableReference/function/overloadedFun.kt": {
-   "category": "other: unsupported callable reference ::foo",
-   "detail": "unsupported callable reference ::foo",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/overloadedFun.kt"
   },
   "box/box/callableReference/function/overloadedFunVsVal.kt": {
@@ -4220,9 +4212,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyPassedToDelegatedSam.kt"
   },
   "box/box/callableReference/property/extensionPropertyReferenceWithExplicitType.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected identifier (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyReferenceWithExplicitType.kt"
   },
   "box/box/callableReference/property/extensionPropertyReferenceWithTypeParameter.kt": {
@@ -4232,9 +4223,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyReferenceWithTypeParameter.kt"
   },
   "box/box/callableReference/property/extensionPropertyWithExtensionReceiver.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected identifier (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyWithExtensionReceiver.kt"
   },
   "box/box/callableReference/property/extensionPropertyWithExtensionType.kt": {
@@ -5146,9 +5136,8 @@
    "upstream": "compiler/testData/codegen/box/classes/kt1157.kt"
   },
   "box/box/classes/kt1247.kt": {
-   "category": "other: unknown method Int.b()",
-   "detail": "unknown method Int.b()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/classes/kt1247.kt"
   },
   "box/box/classes/kt1345.kt": {
@@ -5564,9 +5553,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureExtensionReceiver.kt"
   },
   "box/box/closures/captureExtensionReceiverX2.kt": {
-   "category": "other: unknown property this@f",
-   "detail": "unknown property this@f",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/closures/captureExtensionReceiverX2.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/constructorParameterAndLocalCapturedInLambdaInLocalClass.kt": {
@@ -5649,8 +5637,8 @@
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedAsImplicitThisInBoundReference.kt"
   },
   "box/box/closures/captureInSuperConstructorCall/outerCapturedInFunctionLiteral.kt": {
-   "category": "local / extension functions",
-   "detail": "unexpected 'fun' (at 'fun')",
+   "category": "unknown ok (stdlib API / unsupported decl)",
+   "detail": "unknown name 'ok'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/closures/captureInSuperConstructorCall/outerCapturedInFunctionLiteral.kt"
   },
@@ -7299,14 +7287,14 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/contextResolveDependingOnCallSite.kt"
   },
   "box/box/contextParameters/contextualAnonymousFunAsAnExpression.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: $af0 expects 2 arguments",
+   "detail": "$af0 expects 2 arguments",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualAnonymousFunAsAnExpression.kt"
   },
   "box/box/contextParameters/contextualAnonymousFunction.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "strings / templates",
+   "detail": "no context argument of type String in scope",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/contextualAnonymousFunction.kt"
   },
@@ -7363,8 +7351,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/dispatchExtensionAndContextReceiverResolve.kt"
   },
   "box/box/contextParameters/evaluationOrder.kt": {
-   "category": "other: no context argument of type Int in scope",
-   "detail": "no context argument of type Int in scope",
+   "category": "other: parameter 'c' passed twice",
+   "detail": "parameter 'c' passed twice",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/evaluationOrder.kt"
   },
@@ -7407,15 +7395,14 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/inlineContextualReceiverLambda.kt"
   },
   "box/box/contextParameters/invokeMultipleContextParametersOfSameType.kt": {
-   "category": "operator/infix functions",
-   "detail": "unexpected operator (at ':')",
+   "category": "other: no context argument of type Scope in scope",
+   "detail": "no context argument of type Scope in scope",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/invokeMultipleContextParametersOfSameType.kt"
   },
   "box/box/contextParameters/invokeOnTypeWithContext.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $Fn$String$String, found $Fn$String",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/invokeOnTypeWithContext.kt"
   },
   "box/box/contextParameters/kt51277.kt": {
@@ -7531,9 +7518,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/receiversOrder.kt"
   },
   "box/box/contextParameters/sameArgForContextAndExtension.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected a function type after 'context(...)' (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/sameArgForContextAndExtension.kt"
   },
   "box/box/contextParameters/sameExtensionContextAndDispatchReceiver.kt": {
@@ -7601,8 +7587,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/suspendContextualWithExtension.kt"
   },
   "box/box/contextParameters/typealiasOnTypeWithContext.kt": {
-   "category": "other: unknown type T",
-   "detail": "unknown type T",
+   "category": "lambdas / function types / references",
+   "detail": "lambda expects 2 parameters, has 1",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/contextParameters/typealiasOnTypeWithContext.kt"
   },
@@ -7627,9 +7613,8 @@
    "upstream": "compiler/testData/codegen/box/contextParameters/withExtensionReceiverAndThis.kt"
   },
   "box/box/contextParameters/withExtensionReceiverInSupertype.kt": {
-   "category": "other syntax (at 'C')",
-   "detail": "unexpected top-level token (at 'C')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/contextParameters/withExtensionReceiverInSupertype.kt"
   },
   "box/box/contextParameters/withExtensionReceiverInType.kt": {
@@ -9584,7 +9569,7 @@
   },
   "box/box/coroutines/featureIntersection/suspendFunctionAsSupertypeIsCheckWithArity.kt": {
    "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '->')",
+   "detail": "only function types are supported as function supertypes (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/featureIntersection/suspendFunctionAsSupertypeIsCheckWithArity.kt"
   },
@@ -10590,7 +10575,7 @@
   },
   "box/box/coroutines/intrinsicSemantics/startCoroutineWithCallerContinuation.kt": {
    "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '->')",
+   "detail": "only function types are supported as function supertypes (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/intrinsicSemantics/startCoroutineWithCallerContinuation.kt"
   },
@@ -11230,19 +11215,19 @@
   },
   "box/box/coroutines/suspendFunctionAsSupertype.kt": {
    "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '->')",
+   "detail": "only function types are supported as function supertypes (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/suspendFunctionAsSupertype.kt"
   },
   "box/box/coroutines/suspendFunctionAsSupertypeCall.kt": {
    "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '->')",
+   "detail": "only function types are supported as function supertypes (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/suspendFunctionAsSupertypeCall.kt"
   },
   "box/box/coroutines/suspendFunctionAsSupertypeWithInlinedFunInKlib.kt": {
    "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '->')",
+   "detail": "only function types are supported as function supertypes (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/coroutines/suspendFunctionAsSupertypeWithInlinedFunInKlib.kt"
   },
@@ -12621,14 +12606,13 @@
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegateWithPrivateSet.kt"
   },
   "box/box/delegatedProperty/delegatedByExtensionMemberProperty.kt": {
-   "category": "other: unknown method A.b()",
-   "detail": "unknown method A.b()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedByExtensionMemberProperty.kt"
   },
   "box/box/delegatedProperty/delegatedByExtensionProperty.kt": {
-   "category": "unknown this (stdlib API / unsupported decl)",
-   "detail": "unknown name 'this'",
+   "category": "strings / templates",
+   "detail": "unknown method String.b()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegatedProperty/delegatedByExtensionProperty.kt"
   },
@@ -13300,8 +13284,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/hiddenSuperOverrideIn1.0.kt"
   },
   "box/box/delegation/ifWithCallableReferenceInLazy.kt": {
-   "category": "other: unknown method Test.test_1()",
-   "detail": "unknown method Test.test_1()",
+   "category": "strings / templates",
+   "detail": "cannot convert $Fn$Int to string",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/delegation/ifWithCallableReferenceInLazy.kt"
   },
@@ -13345,9 +13329,8 @@
    "upstream": "compiler/testData/codegen/box/delegation/viaTypeAlias.kt"
   },
   "box/box/delegation/withDefaultParameters.kt": {
-   "category": "other: unsupported call",
-   "detail": "unsupported call",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/delegation/withDefaultParameters.kt"
   },
   "box/box/delegation/withDefaultsMultipleFilesOrder.kt": {
@@ -14311,9 +14294,8 @@
    "upstream": "compiler/testData/codegen/box/enum/kt7257_notInline.kt"
   },
   "box/box/enum/kt9711.kt": {
-   "category": "other: unknown method X.value()",
-   "detail": "unknown method X.value()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/enum/kt9711.kt"
   },
   "box/box/enum/kt9711_2.kt": {
@@ -14952,15 +14934,13 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAndSpreadOperator.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAsASupertypeOfValueClass.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "unexpected top-level token (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsASupertypeOfValueClass.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAsATypeLocal.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected end of statement (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsATypeLocal.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAsAnExpression.kt": {
@@ -14974,15 +14954,13 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsAnExpressionWithNestedType.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAsAnonymous.kt": {
-   "category": "local / extension functions",
-   "detail": "unexpected 'fun' (at 'fun')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsAnonymous.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAsSupertype.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "unexpected top-level token (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/extensionFunctionAsSupertype.kt"
   },
   "box/box/extensionFunctions/extensionFunctionAsType.kt": {
@@ -15142,8 +15120,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3285.kt"
   },
   "box/box/extensionFunctions/kt3298.kt": {
-   "category": "other: unsupported call",
-   "detail": "unsupported call",
+   "category": "strings / templates",
+   "detail": "unknown method String.unaryPlus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3298.kt"
   },
@@ -15158,8 +15136,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt3969.kt"
   },
   "box/box/extensionFunctions/kt4228.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected $FnR$Any$Unit, found $Fn$Unit",
+   "category": "unknown A (stdlib API / unsupported decl)",
+   "detail": "unknown name 'A'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt4228.kt"
   },
@@ -15170,8 +15148,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt475.kt"
   },
   "box/box/extensionFunctions/kt5467.kt": {
-   "category": "other: unknown property Long.this@foo",
-   "detail": "unknown property Long.this@foo",
+   "category": "other: unknown method Long.baz()",
+   "detail": "unknown method Long.baz()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/kt5467.kt"
   },
@@ -15197,9 +15175,8 @@
    "upstream": "compiler/testData/codegen/box/extensionFunctions/nested2.kt"
   },
   "box/box/extensionFunctions/nestedExtensionFunctionAsASupertype.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "unexpected top-level token (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionFunctions/nestedExtensionFunctionAsASupertype.kt"
   },
   "box/box/extensionFunctions/shared.kt": {
@@ -15282,33 +15259,29 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyInSAMInterface.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithAnonymoesExtensionWithALabel.kt": {
-   "category": "other: unknown method A.a()",
-   "detail": "unknown method A.a()",
+   "category": "other: no field this@fun1 in A",
+   "detail": "no field this@fun1 in A",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithAnonymoesExtensionWithALabel.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithAnonymousExtensionFun.kt": {
-   "category": "local / extension functions",
-   "detail": "unexpected 'fun' (at 'fun')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithAnonymousExtensionFun.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithAnonymousExtensionFunWithTypeParam.kt": {
-   "category": "local / extension functions",
-   "detail": "unexpected 'fun' (at 'fun')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithAnonymousExtensionFunWithTypeParam.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithExtensionAsReceiver.kt": {
-   "category": "other syntax (at '.')",
-   "detail": "expected identifier (at '.')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithExtensionAsReceiver.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithExtensionNestedType.kt": {
-   "category": "other: unknown method A.x()",
-   "detail": "unknown method A.x()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/extensionPropertyWithExtensionNestedType.kt"
   },
   "box/box/extensionProperties/extensionPropertyWithInline.kt": {
@@ -15388,9 +15361,8 @@
    "upstream": "compiler/testData/codegen/box/extensionProperties/nonAbstractInInterface.kt"
   },
   "box/box/extensionProperties/propertyWithExtensionNestedType.kt": {
-   "category": "strings / templates",
-   "detail": "type mismatch: expected $FnR$A$$FnR$A$String$String, found $Fn$$FnR$A$String$String",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/extensionProperties/propertyWithExtensionNestedType.kt"
   },
   "box/box/extensionProperties/topLevel.kt": {
@@ -16212,7 +16184,7 @@
   },
   "box/box/funInterface/intersectionTypeToFunInterfaceConversion.kt": {
    "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "detail": "a class cannot implement two function types of the same kind (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/intersectionTypeToFunInterfaceConversion.kt"
   },
@@ -16292,14 +16264,14 @@
    "upstream": "compiler/testData/codegen/box/funInterface/multimodule.kt"
   },
   "box/box/funInterface/noConversionForSubtype.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "strings / templates",
+   "detail": "unknown method SimpleRibCoroutineWorker.toString()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/noConversionForSubtype.kt"
   },
   "box/box/funInterface/noConversionForSubtypeGeneric.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "generics",
+   "detail": "cannot infer type parameter F of FooWorker; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/noConversionForSubtypeGeneric.kt"
   },
@@ -16345,8 +16317,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/samConversionToGenericInterfaceInGenericFun.kt"
   },
   "box/box/funInterface/subtypeOfFunctionalTypeToFunInterfaceConversion.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected KRunnable, found OK",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/subtypeOfFunctionalTypeToFunInterfaceConversion.kt"
   },
@@ -16597,9 +16569,8 @@
    "upstream": "compiler/testData/codegen/box/functions/bigArity/nestedBigArityFunCalls.kt"
   },
   "box/box/functions/bigArity/subclass.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/bigArity/subclass.kt"
   },
   "box/box/functions/coerceVoidToArray.kt": {
@@ -16676,14 +16647,13 @@
    "upstream": "compiler/testData/codegen/box/functions/fakeDescriptorWithSeveralOverridenOne.kt"
   },
   "box/box/functions/functionExpression/functionExpression.kt": {
-   "category": "local / extension functions",
-   "detail": "unexpected 'fun' (at 'fun')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/functionExpression/functionExpression.kt"
   },
   "box/box/functions/functionExpression/functionExpressionWithThisReference.kt": {
-   "category": "local / extension functions",
-   "detail": "unexpected 'fun' (at 'fun')",
+   "category": "unknown this (stdlib API / unsupported decl)",
+   "detail": "unknown name 'this'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/functions/functionExpression/functionExpressionWithThisReference.kt"
   },
@@ -16725,7 +16695,7 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeInCompanionObjectWithFunctionalArgument.kt"
   },
   "box/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt": {
-   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/GitHub/listepo/apps/kotlinx/.rtok/worktrees/kotlinx-i18/compiler/build/upstream-tmp/nkupydwymcjw/t.ll:219:143: error: use of undefined value '@m.TestClass.invoke'\n@vt.TestClass = internal constant [6 x ptr] [ptr @rel.TestClass, ptr @trav.TestClass, ptr @relo.TestClass, ptr @free.TestClass, ptr null, ptr @m.TestCl",
+   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/GitHub/listepo/apps/kotlinx/.rtok/worktrees/kotlinx-i18/compiler/build/upstream-tmp/nkup02xxg9no/t.ll:219:143: error: use of undefined value '@m.TestClass.invoke'\n@vt.TestClass = internal constant [6 x ptr] [ptr @rel.TestClass, ptr @trav.TestClass, ptr @relo.TestClass, ptr @free.TestClass, ptr null, ptr @m.TestCl",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt"
   },
@@ -16987,9 +16957,8 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4119_2.kt"
   },
   "box/box/functions/localFunctions/kt4514.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.vf()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/kt4514.kt"
   },
   "box/box/functions/localFunctions/kt4783.kt": {
@@ -17076,9 +17045,8 @@
    "upstream": "compiler/testData/codegen/box/functions/localFunctions/parameterAsDefaultValue.kt"
   },
   "box/box/functions/localReturnInsideFunctionExpression.kt": {
-   "category": "unknown l (stdlib API / unsupported decl)",
-   "detail": "unknown name 'l'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/functions/localReturnInsideFunctionExpression.kt"
   },
   "box/box/functions/mutualInline.kt": {
@@ -17731,9 +17699,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt44241.kt"
   },
   "box/box/inference/pcla/issues/kt45083.kt": {
-   "category": "other: invoke expects 1 arguments",
-   "detail": "invoke expects 1 arguments",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt45083.kt"
   },
   "box/box/inference/pcla/issues/kt47052.kt": {
@@ -17853,9 +17820,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53109.kt"
   },
   "box/box/inference/pcla/issues/kt53422a.kt": {
-   "category": "other: invoke expects 2 arguments",
-   "detail": "invoke expects 2 arguments",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/issues/kt53422a.kt"
   },
   "box/box/inference/pcla/issues/kt53422b.kt": {
@@ -18296,9 +18262,8 @@
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/FunctionWithParameterToUnit.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/FunctionWithReceiverToUnit.kt": {
-   "category": "type inference / mismatch",
-   "detail": "type mismatch: expected Buildee$$FnR$UserKlass$Unit, found Buildee$$Fn$UserKlass$Unit",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/FunctionWithReceiverToUnit.kt"
   },
   "box/box/inference/pcla/oneParameter/oneTypeVariable/oneTypeInfoOrigin/targetTypes/GenericLocalClass.kt": {
@@ -19405,9 +19370,8 @@
    "upstream": "compiler/testData/codegen/box/inline/localInlineFunctionReference.kt"
   },
   "box/box/inline/localObjectReturnedFromWhen.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inline/localObjectReturnedFromWhen.kt"
   },
   "box/box/inline/loopWithInlinableCondition.kt": {
@@ -22816,9 +22780,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt45084Generic.kt"
   },
   "box/box/inlineClasses/kt45991.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "cannot infer the type of lambda parameter 'res'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt45991.kt"
   },
   "box/box/inlineClasses/kt46554.kt": {
@@ -24767,15 +24730,14 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/trimMarginWithBlankString.kt"
   },
   "box/box/invokedynamic/extensionFunInvoke.kt": {
-   "category": "other: invoke expects 1 arguments",
-   "detail": "invoke expects 1 arguments",
+   "category": "local / extension functions",
+   "detail": "a function value and an extension function both named 'foo' are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/invokedynamic/extensionFunInvoke.kt"
   },
   "box/box/invokedynamic/lambdas/kt52875.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/invokedynamic/lambdas/kt52875.kt"
   },
   "box/box/ir/anonymousClassLeak.kt": {
@@ -25181,20 +25143,18 @@
    "upstream": "compiler/testData/codegen/box/labels/nestedLabelsInlinedClashingAtFunctionsWithClosure.kt"
   },
   "box/box/labels/propertyAccessor.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unknown property Int.this@getter",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessor.kt"
   },
   "box/box/labels/propertyAccessorFunctionLiteral.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unknown property Int.this@getter",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessorFunctionLiteral.kt"
   },
   "box/box/labels/propertyAccessorInnerExtensionFun.kt": {
    "category": "property accessors / delegation",
-   "detail": "unknown property Int.this@getter",
+   "detail": "unknown property Int.this@setter",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessorInnerExtensionFun.kt"
   },
@@ -25205,9 +25165,8 @@
    "upstream": "compiler/testData/codegen/box/labels/propertyAccessorObject.kt"
   },
   "box/box/labels/propertyInClassAccessor.kt": {
-   "category": "property accessors / delegation",
-   "detail": "unknown name 'this@innerGetter'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/labels/propertyInClassAccessor.kt"
   },
   "box/box/labels/siblingLabelsInlined.kt": {
@@ -25316,9 +25275,8 @@
    "upstream": "compiler/testData/codegen/box/lambda/lambda_kt49360_wrapBlock.kt"
   },
   "box/box/lambda/lambda_kt78666.kt": {
-   "category": "other: unsupported call",
-   "detail": "unsupported call",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/lambda/lambda_kt78666.kt"
   },
   "box/box/lambda/lambda_kt80285.kt": {
@@ -28782,8 +28740,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt1055.kt"
   },
   "box/box/primitiveTypes/kt1093.kt": {
-   "category": "unknown it (stdlib API / unsupported decl)",
-   "detail": "unknown name 'it'",
+   "category": "other: equality of function values is not supported",
+   "detail": "equality of function values is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt1093.kt"
   },
@@ -29542,9 +29500,8 @@
    "upstream": "compiler/testData/codegen/box/properties/kt1714_minimal.kt"
   },
   "box/box/properties/kt1892.kt": {
-   "category": "other: unknown method Int.ext()",
-   "detail": "unknown method Int.ext()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/properties/kt1892.kt"
   },
   "box/box/properties/kt2331.kt": {
@@ -34458,8 +34415,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/dataClassInInlineFunctionWithTypeParameters.kt"
   },
   "box/box/regressions/dataClassInRegularFunctionWithTypeParameters.kt": {
-   "category": "unknown S (stdlib API / unsupported decl)",
-   "detail": "unknown name 'S'",
+   "category": "generics",
+   "detail": "cannot infer type parameter S of Accumulator; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/regressions/dataClassInRegularFunctionWithTypeParameters.kt"
   },
@@ -35189,9 +35146,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/kt247.kt"
   },
   "box/box/safeCall/kt3430.kt": {
-   "category": "other: unknown method Int.b()",
-   "detail": "unknown method Int.b()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/safeCall/kt3430.kt"
   },
   "box/box/safeCall/kt4733.kt": {
@@ -35252,9 +35208,8 @@
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallNotEqPrimitive.kt"
   },
   "box/box/safeCall/safeCallOnLong.kt": {
-   "category": "other: unknown method Long.b()",
-   "detail": "unknown method Long.b()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/safeCall/safeCallOnLong.kt"
   },
   "box/box/safeCall/safeCallWithElvisFolding.kt": {
@@ -35847,9 +35802,8 @@
    "upstream": "compiler/testData/codegen/box/smartCasts/kt72391.kt"
   },
   "box/box/smartCasts/lambdaArgumentWithoutType.kt": {
-   "category": "other: unsupported call",
-   "detail": "unsupported call",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/smartCasts/lambdaArgumentWithoutType.kt"
   },
   "box/box/smartCasts/multipleSmartCast.kt": {
@@ -36491,8 +36445,8 @@
    "upstream": "compiler/testData/codegen/box/super/innerClassLabeledSuperProperty2.kt"
   },
   "box/box/super/innerClassQualifiedFunctionCall.kt": {
-   "category": "local / extension functions",
-   "detail": "unexpected 'fun' (at 'fun')",
+   "category": "interfaces",
+   "detail": "only member functions are supported in class/interface bodies (at '@')",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/super/innerClassQualifiedFunctionCall.kt"
   },
@@ -37711,9 +37665,8 @@
    "upstream": "compiler/testData/codegen/box/typealias/privateInKlib.kt"
   },
   "box/box/typealias/simple.kt": {
-   "category": "unknown it (stdlib API / unsupported decl)",
-   "detail": "unknown name 'it'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/typealias/simple.kt"
   },
   "box/box/typealias/typeAliasAsBareType.kt": {
@@ -37939,8 +37892,8 @@
    "upstream": "compiler/testData/codegen/box/unitConversion/basicUnitConversion.kt"
   },
   "box/box/unitConversion/unitConversionForSubtype.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected $Fn$Unit, found $anon0",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unitConversion/unitConversionForSubtype.kt"
   },
@@ -37951,8 +37904,8 @@
    "upstream": "compiler/testData/codegen/box/unitConversion/unitConversionWithKotlinSam.kt"
   },
   "box/box/unitConversion/unitConversionWithSamSubtype.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "expected identifier (at '(')",
+   "category": "type inference / mismatch",
+   "detail": "type mismatch: expected KRunnable, found $anon0",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unitConversion/unitConversionWithSamSubtype.kt"
   },
@@ -43306,7 +43259,7 @@
   },
   "native/native.tests/codegen/coroutines/inheritance.kt": {
    "category": "lambdas / function types / references",
-   "detail": "unexpected top-level token (at '->')",
+   "detail": "only function types are supported as function supertypes (at '{')",
    "status": "UNSUPPORTED",
    "upstream": "native/native.tests/testData/codegen/coroutines/inheritance.kt"
   },
