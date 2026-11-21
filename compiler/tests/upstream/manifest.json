@@ -4,8 +4,8 @@
   "COMPILER_CRASH": 2,
   "MISCOMPILE": 17,
   "N/A": 2984,
-  "PASS": 3305,
-  "UNSUPPORTED": 2167
+  "PASS": 3345,
+  "UNSUPPORTED": 2127
  },
  "excluded_js_only": 73,
  "excluded_jvm_only": 277,
@@ -772,9 +772,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt4118.kt"
   },
   "box/box/arrays/kt42932.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.indexOfAny()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/kt42932.kt"
   },
   "box/box/arrays/kt4348.kt": {
@@ -811,9 +810,8 @@
    "upstream": "compiler/testData/codegen/box/arrays/kt594.kt"
   },
   "box/box/arrays/kt7009.kt": {
-   "category": "strings / templates",
-   "detail": "cannot convert DoubleArray to string",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/arrays/kt7009.kt"
   },
   "box/box/arrays/kt7288.kt": {
@@ -1103,15 +1101,13 @@
    "upstream": "compiler/testData/codegen/box/basics/null_check.kt"
   },
   "box/box/basics/safe_cast.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Boolean.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/safe_cast.kt"
   },
   "box/box/basics/spread_operator_0.kt": {
-   "category": "other: unknown unary *",
-   "detail": "unknown unary *",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/basics/spread_operator_0.kt"
   },
   "box/box/basics/statements0.kt": {
@@ -1525,9 +1521,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing15.kt"
   },
   "box/box/boxing/boxing2.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Boolean.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxing/boxing2.kt"
   },
   "box/box/boxing/boxing3.kt": {
@@ -1564,9 +1559,8 @@
    "upstream": "compiler/testData/codegen/box/boxing/boxing8.kt"
   },
   "box/box/boxing/boxing9.kt": {
-   "category": "varargs",
-   "detail": "spread mixed with other vararg arguments is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxing/boxing9.kt"
   },
   "box/box/boxing/kt53100_casts.kt": {
@@ -1632,9 +1626,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/explicitEqualsOnDouble.kt"
   },
   "box/box/boxingOptimization/fold.kt": {
-   "category": "other: unknown method LongArray.fold()",
-   "detail": "unknown method LongArray.fold()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/fold.kt"
   },
   "box/box/boxingOptimization/foldRange.kt": {
@@ -1794,8 +1787,8 @@
    "upstream": "compiler/testData/codegen/box/boxingOptimization/taintedValuesBox.kt"
   },
   "box/box/boxingOptimization/unsafeRemoving.kt": {
-   "category": "lambdas / function types / references",
-   "detail": "lambdas returning a nullable Int are not supported",
+   "category": "other: identity comparison of Int? and Int? is not supported",
+   "detail": "identity comparison of Int? and Int? is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/boxingOptimization/unsafeRemoving.kt"
   },
@@ -1846,8 +1839,8 @@
    "upstream": "compiler/testData/codegen/box/branching/when6.kt"
   },
   "box/box/branching/when7.kt": {
-   "category": "unknown emptyArray (stdlib API / unsupported decl)",
-   "detail": "unknown function 'emptyArray'",
+   "category": "generics",
+   "detail": "cannot infer type parameter T of emptyArray; pass it explicitly",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/branching/when7.kt"
   },
@@ -3148,9 +3141,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/arrayConstructor.kt"
   },
   "box/box/callableReference/arrayConstructorArgument.kt": {
-   "category": "other: CharArray(2 arguments) is not supported",
-   "detail": "CharArray(2 arguments) is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/arrayConstructorArgument.kt"
   },
   "box/box/callableReference/arrayOf.kt": {
@@ -3176,9 +3168,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/bound/array.kt"
   },
   "box/box/callableReference/bound/arrayConstructorArgument.kt": {
-   "category": "other: CharArray(2 arguments) is not supported",
-   "detail": "CharArray(2 arguments) is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/bound/arrayConstructorArgument.kt"
   },
   "box/box/callableReference/bound/arrayGetIntrinsic.kt": {
@@ -3421,8 +3412,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/callableReferenceOfObjectMethod.kt"
   },
   "box/box/callableReference/callableReferenceOnObjectTypealias.kt": {
-   "category": "unknown OnSomeObject (stdlib API / unsupported decl)",
-   "detail": "unknown name 'OnSomeObject'",
+   "category": "other: unknown type OnSomeObject<Any>",
+   "detail": "unknown type OnSomeObject<Any>",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/callableReferenceOnObjectTypealias.kt"
   },
@@ -3782,9 +3773,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/genericCallableReferencesWithOverload.kt"
   },
   "box/box/callableReference/function/genericMember.kt": {
-   "category": "unknown A (stdlib API / unsupported decl)",
-   "detail": "unknown name 'A'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/genericMember.kt"
   },
   "box/box/callableReference/function/genericWithDependentType.kt": {
@@ -3894,9 +3884,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/extensionWithClosure.kt"
   },
   "box/box/callableReference/function/local/genericMember.kt": {
-   "category": "unknown Id (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Id'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/function/local/genericMember.kt"
   },
   "box/box/callableReference/function/local/localClassMember.kt": {
@@ -4230,8 +4219,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyReferenceWithExplicitType.kt"
   },
   "box/box/callableReference/property/extensionPropertyReferenceWithTypeParameter.kt": {
-   "category": "unknown List (stdlib API / unsupported decl)",
-   "detail": "unknown name 'List'",
+   "category": "strings / templates",
+   "detail": "unsupported callable reference $Fn$ArrayList$String$$$String::baz",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyReferenceWithTypeParameter.kt"
   },
@@ -4248,9 +4237,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyWithExtensionType.kt"
   },
   "box/box/callableReference/property/extensionToArray.kt": {
-   "category": "unknown Array (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Array'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionToArray.kt"
   },
   "box/box/callableReference/property/inEnum.kt": {
@@ -4279,9 +4267,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/kClassInstanceIsInitializedFirst.kt"
   },
   "box/box/callableReference/property/kt12044.kt": {
-   "category": "class bodies / constructors",
-   "detail": "constructor Pair expects 2 arguments",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/callableReference/property/kt12044.kt"
   },
   "box/box/callableReference/property/kt12982_protectedPropertyReference.kt": {
@@ -8118,9 +8105,8 @@
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayOfObjectArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayOfPrimArrayWithIndex.kt": {
-   "category": "strings / templates",
-   "detail": "cannot convert IntArray to string",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/controlStructures/forInArrayWithIndex/forInArrayOfPrimArrayWithIndex.kt"
   },
   "box/box/controlStructures/forInArrayWithIndex/forInArrayWithIndexBreakAndContinue.kt": {
@@ -11590,9 +11576,8 @@
    "upstream": "compiler/testData/codegen/box/cycles/cycle_for.kt"
   },
   "box/box/dataClasses/arrayParams.kt": {
-   "category": "strings / templates",
-   "detail": "cannot convert IntArray to string",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/arrayParams.kt"
   },
   "box/box/dataClasses/changingVarParam.kt": {
@@ -11679,9 +11664,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/genericarray.kt"
   },
   "box/box/dataClasses/equals/intarray.kt": {
-   "category": "strings / templates",
-   "detail": "cannot convert IntArray to string",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/equals/intarray.kt"
   },
   "box/box/dataClasses/equals/null.kt": {
@@ -11824,9 +11808,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/alreadyDeclared.kt"
   },
   "box/box/dataClasses/toString/arrayParams.kt": {
-   "category": "strings / templates",
-   "detail": "cannot convert IntArray to string",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/arrayParams.kt"
   },
   "box/box/dataClasses/toString/changingVarParam.kt": {
@@ -11845,9 +11828,8 @@
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/mixedParams.kt"
   },
   "box/box/dataClasses/toString/primitiveArrays.kt": {
-   "category": "strings / templates",
-   "detail": "cannot convert BooleanArray to string",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/dataClasses/toString/primitiveArrays.kt"
   },
   "box/box/dataClasses/toString/unitComponent.kt": {
@@ -16287,8 +16269,8 @@
    "upstream": "compiler/testData/codegen/box/funInterface/kt45444_privateFunInterface.kt"
   },
   "box/box/funInterface/kt46512_indyFunInterfaceOverCallableReference.kt": {
-   "category": "unknown Comparable (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Comparable'",
+   "category": "nullable types",
+   "detail": "unknown function 'nullsFirst'",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/funInterface/kt46512_indyFunInterfaceOverCallableReference.kt"
   },
@@ -16785,7 +16767,7 @@
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeInCompanionObjectWithFunctionalArgument.kt"
   },
   "box/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt": {
-   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/GitHub/listepo/apps/kotlinx/.rtok/worktrees/kotlinx-i17/compiler/build/upstream-tmp/nkupnf3oabqk/t.ll:219:143: error: use of undefined value '@m.TestClass.invoke'\n@vt.TestClass = internal constant [6 x ptr] [ptr @rel.TestClass, ptr @trav.TestClass, ptr @relo.TestClass, ptr @free.TestClass, ptr null, ptr @m.TestCl",
+   "detail": "/Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/GitHub/listepo/apps/kotlinx/.rtok/worktrees/kotlinx-i20/compiler/build/upstream-tmp/nkupix_5j0cg/t.ll:219:143: error: use of undefined value '@m.TestClass.invoke'\n@vt.TestClass = internal constant [6 x ptr] [ptr @rel.TestClass, ptr @trav.TestClass, ptr @relo.TestClass, ptr @free.TestClass, ptr null, ptr @m.TestCl",
    "status": "COMPILER_CRASH",
    "upstream": "compiler/testData/codegen/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt"
   },
@@ -20082,15 +20064,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToInterfaceGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToPrimitive.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Char.toString()",
+   "category": "operator/infix functions",
+   "detail": "operator on non-numeric types Char, Char",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToPrimitive.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToPrimitiveGeneric.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Char.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideErasedToPrimitiveGeneric.kt"
   },
   "box/box/inlineClasses/boxReturnValueOnOverride/covariantOverrideListVsMutableList.kt": {
@@ -20362,14 +20343,14 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxReturnValueOnOverride/unrelatedGenericsGeneric.kt"
   },
   "box/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSet.kt": {
-   "category": "other: unknown unary *",
-   "detail": "unknown unary *",
+   "category": "other: unknown method UInt.asInt()",
+   "detail": "unknown method UInt.asInt()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSet.kt"
   },
   "box/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSetGeneric.kt": {
-   "category": "other: unknown unary *",
-   "detail": "unknown unary *",
+   "category": "other: unknown method UInt.asInt()",
+   "detail": "unknown method UInt.asInt()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/boxUnboxInlineClassesWithOperatorsGetSetGeneric.kt"
   },
@@ -20448,9 +20429,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingNullable.kt"
   },
   "box/box/inlineClasses/callableRefClassMergingPrimitives.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Boolean.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableRefClassMergingPrimitives.kt"
   },
   "box/box/inlineClasses/callableReferences/boundInlineClassExtensionFun.kt": {
@@ -20539,9 +20519,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionFun.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionFunGeneric.kt": {
-   "category": "unknown Z (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Z'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionVal.kt": {
@@ -20550,9 +20529,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassExtensionValGeneric.kt": {
-   "category": "unknown Z (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Z'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassExtensionValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassInternalPrimaryVal.kt": {
@@ -20561,9 +20539,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassInternalPrimaryVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassInternalPrimaryValGeneric.kt": {
-   "category": "unknown Z (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Z'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassInternalPrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberFun.kt": {
@@ -20572,9 +20549,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberFun.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberFunGeneric.kt": {
-   "category": "unknown Z (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Z'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberFunGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberVal.kt": {
@@ -20583,9 +20559,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassMemberValGeneric.kt": {
-   "category": "unknown Z (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Z'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassMemberValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrimaryConstructor.kt": {
@@ -20605,9 +20580,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrimaryVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrimaryValGeneric.kt": {
-   "category": "unknown Z (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Z'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrivatePrimaryVal.kt": {
@@ -20616,9 +20590,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrivatePrimaryVal.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassPrivatePrimaryValGeneric.kt": {
-   "category": "unknown Z (stdlib API / unsupported decl)",
-   "detail": "unknown name 'Z'",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/callableReferences/inlineClassPrivatePrimaryValGeneric.kt"
   },
   "box/box/inlineClasses/callableReferences/inlineClassTypeBoundMemberVar.kt": {
@@ -22721,9 +22694,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27096_referenceGeneric.kt"
   },
   "box/box/inlineClasses/kt27113.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.toCharArray()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27113.kt"
   },
   "box/box/inlineClasses/kt27113a.kt": {
@@ -22779,9 +22751,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt27706Generic.kt"
   },
   "box/box/inlineClasses/kt28405.kt": {
-   "category": "strings / templates",
-   "detail": "cannot convert UIntArray to string",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/kt28405.kt"
   },
   "box/box/inlineClasses/kt28585.kt": {
@@ -23074,15 +23045,13 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/passInlineClassAsVarargGeneric.kt"
   },
   "box/box/inlineClasses/passInlineClassWithSpreadOperatorToVarargs.kt": {
-   "category": "varargs",
-   "detail": "spread mixed with other vararg arguments is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/passInlineClassWithSpreadOperatorToVarargs.kt"
   },
   "box/box/inlineClasses/passInlineClassWithSpreadOperatorToVarargsGeneric.kt": {
-   "category": "varargs",
-   "detail": "spread mixed with other vararg arguments is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/inlineClasses/passInlineClassWithSpreadOperatorToVarargsGeneric.kt"
   },
   "box/box/inlineClasses/privateConstructorFunInterfaceMultiModule.kt": {
@@ -23585,8 +23554,8 @@
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/funInterface/stringGeneric.kt"
   },
   "box/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<Any>.toString()",
+   "category": "other: unchecked cast from ArrayList<Int> to ArrayList<Any> is not ",
+   "detail": "unchecked cast from ArrayList<Int> to ArrayList<Any> is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/inlineClasses/unboxGenericParameter/genericArrayInlineClassCast.kt"
   },
@@ -24761,8 +24730,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/kt10131.kt"
   },
   "box/box/intrinsics/kt10131a.kt": {
-   "category": "other: unknown method CharArray.fold()",
-   "detail": "unknown method CharArray.fold()",
+   "category": "strings / templates",
+   "detail": "type mismatch: expected $Fn$String$Char$String, found $Fn$String$String$String",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/kt10131a.kt"
   },
@@ -24838,8 +24807,8 @@
    "upstream": "compiler/testData/codegen/box/intrinsics/throwableParamOrder.kt"
   },
   "box/box/intrinsics/tostring.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Boolean.toString()",
+   "category": "other: unknown method Char.toChar()",
+   "detail": "unknown method Char.toChar()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/intrinsics/tostring.kt"
   },
@@ -25095,9 +25064,8 @@
    "upstream": "compiler/testData/codegen/box/jdk/kt1397.kt"
   },
   "box/box/jdk/noStringToCharArray.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method String.toCharArray()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/jdk/noStringToCharArray.kt"
   },
   "box/box/jsAstOptimizations/inlineEmptyFunction.kt": {
@@ -25570,9 +25538,8 @@
    "upstream": "compiler/testData/codegen/box/lazyCodegen/when.kt"
   },
   "box/box/literals/listof1.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/literals/listof1.kt"
   },
   "box/box/literals/strdedup1.kt": {
@@ -29061,8 +29028,8 @@
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt753.kt"
   },
   "box/box/primitiveTypes/kt756.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Int?.toString()",
+   "category": "other: unknown method Int.unaryPlus()",
+   "detail": "unknown method Int.unaryPlus()",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/primitiveTypes/kt756.kt"
   },
@@ -34027,9 +33994,8 @@
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt36953_continue.kt"
   },
   "box/box/ranges/unsigned/kt67383.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<Int>.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/ranges/unsigned/kt67383.kt"
   },
   "box/box/ranges/unsigned/literal/emptyDownto.kt": {
@@ -34775,9 +34741,8 @@
    "upstream": "compiler/testData/codegen/box/regressions/kt47279.kt"
   },
   "box/box/regressions/kt5056.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/regressions/kt5056.kt"
   },
   "box/box/regressions/kt51927.kt": {
@@ -37053,15 +37018,13 @@
    "upstream": "compiler/testData/codegen/box/syntheticAccessors/superCallFromMultipleSubclasses.kt"
   },
   "box/box/toArray/kt3177-toTypedArray.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method ArrayList<String>.toTypedArray()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/toArray/kt3177-toTypedArray.kt"
   },
   "box/box/toArray/returnToTypedArray.kt": {
-   "category": "other: unknown method ArrayList<Int>.toTypedArray()",
-   "detail": "unknown method ArrayList<Int>.toTypedArray()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/toArray/returnToTypedArray.kt"
   },
   "box/box/topLevelInitializtion/concurrent.kt": {
@@ -38018,8 +37981,8 @@
    "upstream": "compiler/testData/codegen/box/unit/nullableUnitInWhen3.kt"
   },
   "box/box/unit/sillyThings.kt": {
-   "category": "varargs",
-   "detail": "spread mixed with other vararg arguments is not supported",
+   "category": "other: lists of Unit are not supported",
+   "detail": "lists of Unit are not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/unit/sillyThings.kt"
   },
@@ -38193,9 +38156,8 @@
    "upstream": "compiler/testData/codegen/box/unsignedTypes/literalEqualsNullableUnsigned.kt"
   },
   "box/box/unsignedTypes/nullableSmartcastUnsignedArray.kt": {
-   "category": "strings / templates",
-   "detail": "cannot convert UIntArray to string",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/unsignedTypes/nullableSmartcastUnsignedArray.kt"
   },
   "box/box/unsignedTypes/nullableUnsignedEqualsLiteral.kt": {
@@ -38357,9 +38319,8 @@
    "upstream": "compiler/testData/codegen/box/vararg/kt581.kt"
   },
   "box/box/vararg/kt6192.kt": {
-   "category": "varargs",
-   "detail": "spread mixed with other vararg arguments is not supported",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/vararg/kt6192.kt"
   },
   "box/box/vararg/kt796_797.kt": {
@@ -38571,9 +38532,8 @@
    "upstream": "compiler/testData/codegen/box/versionOverloads/multiplatformExpectDefaults.kt"
   },
   "box/box/versionOverloads/multipleContextParameters.kt": {
-   "category": "strings / templates",
-   "detail": "unknown method Char.toString()",
-   "status": "UNSUPPORTED",
+   "detail": "box",
+   "status": "PASS",
    "upstream": "compiler/testData/codegen/box/versionOverloads/multipleContextParameters.kt"
   },
   "box/box/versionOverloads/nameCollision.kt": {
