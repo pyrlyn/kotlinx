@@ -1507,7 +1507,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val ct = r.t as? Ty.Cls ?: fail("cannot assign to ${r.t}.${target.n}")
                 val ci = classes.getValue(ct.name)
                 val sm = "\$set\$${target.n}"
-                if (ci.index(target.n) < 0 && sm in ci.methods) {
+                if (sm in ci.methods && accessorWins(ci, sm, target.n)) {
                     releaseIfOwned(callMethod(r, ci, sm, CallE(NameE(sm), emptyList(), listOf(value), null).also { it.line = line })); releaseIfOwned(r); return
                 }
                 val idx = ci.index(target.n).takeIf { it >= 0 } ?: fail("no field ${target.n} in ${ct.name}")
@@ -2362,11 +2362,23 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private val lateinitFields by lazy { prog.classes.flatMap { c -> c.fields.filter { it.lateinit }.map { "${c.name}.${it.name}" } }.toSet() }
 
+    /**
+     * Accessor [m] of class [ci] is used for property [n] instead of the field: when there is no field, or when the
+     * accessor is implemented below the class that declares the field (`class E : B(), I by d` where `I.x` forwards
+     * to `d` and hides B's stored `x`). Inside that accessor itself the field is read (generated `get() = x`).
+     */
+    private fun accessorWins(ci: ClassInfo, m: String, n: String): Boolean {
+        if (ci.index(n) < 0) return true
+        val o = ci.impl[m] ?: return false
+        if (curFunKey.startsWith("$o.$m.")) return false
+        return classDecls[o]?.superClass?.let { classes[it]?.index(n) } ?: -1 >= 0
+    }
+
     private fun property(r: Val, n: String): Val {
         // Property getters (`val x: T get() = ...`) of classes and extension properties: `$prop$x` functions.
         val pm = "\$prop\$$n"
         (r.t as? Ty.Cls)?.let { t -> val ci = classes.getValue(t.name)
-            if (ci.index(n) < 0 && pm in ci.methods) { val v = callMethod(r, ci, pm, CallE(NameE(pm), emptyList(), emptyList(), null)); releaseIfOwned(r); return v }
+            if (pm in ci.methods && accessorWins(ci, pm, n)) { val v = callMethod(r, ci, pm, CallE(NameE(pm), emptyList(), emptyList(), null)); releaseIfOwned(r); return v }
         }
         (r.t as? Ty.Iface)?.let { t -> ifaces[t.name]?.takeIf { pm in it.methods }?.let { ii -> val v = callIface(r, ii, pm, CallE(NameE(pm), emptyList(), emptyList(), null).also { it.line = line }); releaseIfOwned(r); return v } }
         if (!hasMember(r.t, n) && hasMext(pm, r.t)) return method(r, pm, CallE(NameE(pm), emptyList(), emptyList(), null).also { it.line = line })
