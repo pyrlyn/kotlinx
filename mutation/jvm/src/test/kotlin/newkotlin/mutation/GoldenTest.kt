@@ -52,8 +52,8 @@ class GoldenTest {
         val ll = File(dir, "$name.ll").also { it.writeText(ir) }
         val exe = File(dir, name)
         val cc = System.getenv("NK_CC") ?: "/usr/bin/clang"
-        val build = ProcessBuilder(cc, "-O1", "-DRT_PLAIN_MALLOC", "-Wno-override-module", "-w", "-I", "$root/compiler/gc",
-            ll.path, "$root/compiler/runtime/runtime.c", "$root/compiler/gc/perceus/gc.c", "-o", exe.path)
+        val build = ProcessBuilder(cc, "-O1", "-DRT_PLAIN_MALLOC", "-Wno-override-module", "-w", "-I", "$root/native/gc/c",
+            ll.path, "$root/compiler/runtime/runtime.c", "$root/native/gc/c/perceus/gc.c", "-o", exe.path)
             .redirectErrorStream(true).start()
         val bout = build.inputStream.bufferedReader().readText()
         if (!build.waitFor(120, TimeUnit.SECONDS) || build.exitValue() != 0) fail<Unit>("$name: clang failed: ${bout.take(2000)}")
