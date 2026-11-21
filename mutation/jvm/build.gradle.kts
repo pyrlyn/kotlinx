@@ -18,7 +18,7 @@ sourceSets {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.13.4"))
+    testImplementation(platform("org.junit:junit-bom:6.1.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
@@ -35,7 +35,7 @@ tasks.test {
 }
 
 pitest {
-    pitestVersion.set("1.30.1")
+    pitestVersion.set("1.30.2")
     junit5PluginVersion.set("1.2.3")
     targetClasses.set(listOf("newkotlin.*"))
     targetTests.set(listOf("newkotlin.mutation.*"))
