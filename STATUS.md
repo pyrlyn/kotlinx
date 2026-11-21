@@ -49,6 +49,13 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
 - Referential equality `===` / `!==`: pointer identity for class/interface/array/collection values, of an object
   against an `Any` value and against null, value equality for primitives; strings and two `Any` values are refused
   (interning/box caching differ).
+- Fun interfaces (`Parser.samLower`): `fun interface I` gets a wrapper class `I$Sam` around a function value; SAM
+  constructors (`I { }`, `I(f)`, `::I`, also through typealiases and with type arguments read from typed lambda
+  parameters), lambdas passed to fun-interface parameters, and function values that are not literals (references,
+  variables, nullable values, values of interfaces extending a function type; `NativeBackend.samConvert`). A fun
+  interface may extend function types (`fun interface F : () -> Int`, `fun interface G<P> : suspend (P) -> Unit`):
+  the function interface (`$Fn$Int`) becomes its super. Converted callable references are refused as `Any` like the
+  references themselves (Kotlin compares them structurally).
 - Class literals `T::class` / `e::class` with `simpleName`, `qualifiedName`, `==` and `toString` for primitives, String,
   standard types and final user classes (static runtime class only; no `KClass<*>` types or full reflection).
 - Multi-field value classes (`+FullValueClasses`): compiled like data classes (boxed, structural equals/hashCode/

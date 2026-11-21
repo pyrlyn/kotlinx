@@ -66,6 +66,7 @@ while emitting IR.
 | data classes | `Parser.dataClass` generates equals/hashCode/toString/componentN/copy as AST |
 | generics | classes/interfaces monomorphized in `compileGenerics` (`Box<Int>` -> `Box$Int`, `Subst`); generic functions per call in `genGenericCall`; instances discovered via `NeedInstance` / `NeedClass` / `NeedIface` exceptions that restart codegen |
 | lambdas / closures | `NativeBackend.genLambda`: free vars from `Uses`, captured values become fields of a generated class `$LamN` implementing `$Fn...`; captured `var`s are boxed into `$Ref<T>` by `boxCapturedVars` |
+| fun interfaces / SAM | `Parser.samLower`: wrapper class `I$Sam` holding the function value; lambda literals wrapped in the parser, other function values in `NativeBackend.samConvert` (from `coerce`), lambdas whose parameter type is only known per receiver typed by `samSig`; function-type supers via `Parser.fnSuperDecl` + `Generics.ensure` |
 | callable refs `::f` | `genRef` / `genRef0` (UnE "::") |
 | calls | `genCall` -> `genNamedCall` (functions, constructors, built-ins) / `method` (receiver calls) / `invokeFn` (function values); default and named args `normalize`, varargs `packVararg` |
 | type checks | `isCheck`, `genAs`, smart casts `smartCasts` / `applyCasts` |
