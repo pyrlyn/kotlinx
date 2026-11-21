@@ -293,6 +293,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (v.t == t) return v
         if (isFnTwin(v.t, t)) return Val(v.v, t, v.owned)
         if (isSuspendConversion(v.t, t)) return suspendConvert(v, t as Ty.Iface)
+        samConvert(v, t)?.let { return it }
         // Unreachable value (after `throw`): keep the slot well-typed.
         if (v.t == Ty.Nothing) return if (t.llvm == "void") v else Val("undef", t)
         // A Unit value stored as a type argument's `Unit$V` placeholder.
@@ -332,6 +333,33 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             fs.params.indices.all { i -> fs.params[i] == ts.params[i] || (ts.params[i].llvm == "ptr" && fs.params[i].llvm == "ptr" && fits(ts.params[i], fs.params[i])) })
             return Val(v.v, t, v.owned)
         fail("type mismatch: expected $t, found ${v.t}")
+    }
+
+    /**
+     * SAM conversion of a function value that is not a lambda literal (a reference, a variable, a call result): the
+     * parser wraps only literals, so the value is wrapped here in the fun interface's `I$Sam` class (Parser.samLower).
+     * A null function value stays null (`(() -> Unit)?` to `KRunnable?`).
+     */
+    private fun samConvert(v: Val, t: Ty): Val? {
+        // Also a value of an interface extending a function type (`fun interface Foo2<P> : suspend (P) -> Unit`).
+        val fnLike = fnSig(v.t) != null || (v.t is Ty.Iface && ifaceDecls[v.t.name]?.supers?.let { ss -> t.toString() !in ss && ss.any { it.startsWith("\$Fn") } } == true)
+        if (t !is Ty.Iface || fnSig(t) != null || !fnLike) return null
+        val (base, args) = instOrigin[t.name] ?: (t.name to emptyList())
+        val sam = "$base\$Sam"
+        if (sam !in classes && sam !in genericClasses) return null
+        if (v.v == "null") return Val("null", t)
+        val ref = v.v in refVals
+        return withTemps(listOf(v)) { xs ->
+            val x = genExpr(xs[0])
+            val ln = label("sam.null"); val lw = label("sam.wrap"); val le = label("sam.end")
+            condBr(emitT("icmp eq ptr ${x.v}, null"), ln, lw)
+            startBlock(ln); br(le)
+            startBlock(lw)
+            val r = coerce(genExpr(CallE(NameE(sam).also { it.line = line }, args, listOf(xs[0]), null).also { it.line = line }), t)
+            val from = cur; br(le)
+            startBlock(le)
+            Val(emitT("phi ptr [ null, %$ln ], [ ${r.v}, %$from ]"), t, r.owned)
+        }.also { if (ref) refVals.add(it.v) }  // a converted reference compares like the reference: refused as Any
     }
 
     private fun toSlot(v: Val): String = when (v.t.llvm) {
@@ -4406,7 +4434,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** An argument with a known parameter type: lambdas get their parameter/return types from a function type. */
     private fun argFor(a: E, t: Ty, own: Boolean = false): Val =
-        adaptedRef(a, t) ?: if (a is LambdaE) fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t), susp = t is Ty.Iface && isSuspFnName(t.name)) } else withExpected(a, t) { if (own) genArg(a) else genExpr(a) }
+        adaptedRef(a, t) ?: if (a is LambdaE) (samSig(t)?.let { (s, recv) -> genLambda(a, s.params, s.ret, recv, susp = s.suspend) }
+            ?: fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t), susp = t is Ty.Iface && isSuspFnName(t.name)) }) else withExpected(a, t) { if (own) genArg(a) else genExpr(a) }
+
+    /**
+     * The single abstract method of fun interface [t] (an instance `I$Int` too), when a lambda the parser left
+     * unwrapped is passed there (a parameter typed by the receiver's type arguments, `fun with(b: Consumer<T>)`):
+     * the lambda is typed by it, then [samConvert] wraps it. Second: an extension method (a receiver lambda).
+     */
+    private fun samSig(t: Ty): Pair<FunSig, Boolean>? {
+        if (t !is Ty.Iface || fnSig(t) != null) return null
+        val base = instOrigin[t.name]?.first ?: t.name
+        val c = classDecls["$base\$Sam"] ?: genericClasses["$base\$Sam"] ?: return null
+        val m = c.methods.singleOrNull() ?: return null
+        return (ifaces[t.name]?.methods?.get(m.name) ?: return null) to (c.fields.single().type?.name?.startsWith("\$FnR") == true)
+    }
 
     /**
      * Adapted reference `::f` passed where a function type is expected whose shape differs from `f`'s: defaults and
