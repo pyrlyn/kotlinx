@@ -1,10 +1,6 @@
 package newkotlin.mutation
 
-import newkotlin.compileGenerics
-import newkotlin.withAny
-import newkotlin.withPrelude
-import newkotlin.Parser
-import newkotlin.Lexer
+import newkotlin.compileToIr
 import newkotlin.deferredRc
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.fail
@@ -43,9 +39,6 @@ class GoldenTest {
             baselineFile.writeText(baseline.entries.sortedBy { it.key }.joinToString("") { "${it.key} ${it.value}\n" })
         }
     }
-
-    private fun compileToIr(src: String): String =
-        compileGenerics(withAny(src, withPrelude(src, Parser(Lexer(src).lex()).program())))
 
     private fun runNative(name: String, ir: String): String {
         val dir = File(work, "${ProcessHandle.current().pid()}-${Thread.currentThread().id}").also { it.mkdirs() }
