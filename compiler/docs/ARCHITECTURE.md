@@ -60,7 +60,7 @@ while emitting IR.
 | nested classes | parsed in class bodies, hoisted to top level with mangled names (`hoisted`, `resolveNested`; outer access through `outer$`) |
 | local declarations | `Parser.localDecl` -> `LocalDeclS`; `liftLocals` hoists non-capturing local functions (top level, or a method of the enclosing class) and local classes/objects/interfaces, and turns capturing local functions into lambda `val`s |
 | objects / companions | `objectDecl`; lazy singletons via generated `$init$N` / `$get$N` and globals `$o$N` (end of `program()`) |
-| extensions | `function()` reads `Recv.` receivers; `resolveExtensions` turns them into functions/methods; member extensions -> `mext$f` |
+| extensions | `function()` reads `Recv.` receivers; `resolveExtensions` turns them into functions/methods; member extensions -> `mext$f` (`memberExt`; `$this_ext` is the extension receiver, tried before the dispatch receiver in `genNamedCall`; companion ones found by `companionMext` through `NestedClasses`); local operator extensions are lifted by `liftLocals` under their own name |
 | property accessors | `getter` / `accessors` -> hidden `$prop$x` methods |
 | delegation `by` | class delegation: `Parser.superList` adds a hidden field `$by$I`, `implementIfaceProps` the forwarders; delegated properties: `Parser.delegated` (field/global `$dg$x` = `d.$provideDelegate(thisRef, null)`, accessors call `getValue`/`setValue`); the backend resolves `$provideDelegate` and property-reference `getValue`/`setValue` in `method`, and types an untyped delegated `var`'s setter from its getter (`GETTER_TYPE` in `inferReturnTypes`) |
 | enums | `classDecl(isEnum = true)`, `enumGlobals`, statics rewritten by `rewriteStatics` (Generics.kt) |

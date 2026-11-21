@@ -7,38 +7,38 @@ Sources: compiler/testData/codegen/box, compiler/testData/codegen/boxInline, nat
 
 | status | tests |
 |---|---|
-| PASS | 3351 |
+| PASS | 3382 |
 | N/A | 2984 |
-| UNSUPPORTED | 2122 |
-| MISCOMPILE | 16 |
+| UNSUPPORTED | 2090 |
+| MISCOMPILE | 17 |
 | COMPILER_CRASH | 2 |
 
-Kept in tree (re-runnable with `run.py`): 3351
+Kept in tree (re-runnable with `run.py`): 3382
 
 ## Unsupported features (roadmap, by test count)
 
 | feature | tests |
 |---|---|
-| strings / templates | 214 |
-| generics | 148 |
-| interfaces | 145 |
+| strings / templates | 211 |
+| interfaces | 146 |
+| generics | 140 |
 | type inference / mismatch | 96 |
-| operator/infix functions | 87 |
-| lambdas / function types / references | 62 |
+| operator/infix functions | 82 |
+| lambdas / function types / references | 63 |
 | class bodies / constructors | 59 |
 | objects / companion objects | 50 |
 | inheritance (open/abstract/sealed) | 45 |
 | annotations | 34 |
-| property accessors / delegation | 30 |
 | nullable types | 30 |
+| property accessors / delegation | 25 |
 | other: unknown type * | 23 |
 | other syntax (at ':') | 23 |
 | other syntax (at '.') | 18 |
 | other: local classes that capture local variables are not supported | 18 |
 | unknown x (stdlib API / unsupported decl) | 18 |
-| local / extension functions | 17 |
 | inline/value classes | 17 |
 | other syntax (at '<eof>') | 16 |
+| local / extension functions | 14 |
 | unknown ok (stdlib API / unsupported decl) | 14 |
 | other syntax (at 'val') | 13 |
 | default arguments | 13 |
@@ -103,6 +103,7 @@ Affected upstream tests:
 - MISCOMPILE `box/box/callableReference/equality/overloadedFunctionEquality.kt` — exit=1 stdout='' stderr='Exception in thread "main" java.lang.AssertionError: Any and Any should be equal\n'
 - MISCOMPILE `box/box/companionBlocksAndExtensions/initializersExtensions.kt` — exit=0 stdout='FAIL: initialized=true\n' stderr=''
 - MISCOMPILE `box/box/controlStructures/forInCharSequenceWithIndex/forInCharSeqWithIndexStops.kt` — exit=0 stdout="fail: '0:a;1:b;2:c;3:d;'\n" stderr=''
+- MISCOMPILE `box/box/controlStructures/kt513.kt` — exit=0 stdout='[1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nOK\n' stde
 - COMPILER_CRASH `box/box/coroutines/infiniteLoopInNextMeaningful.kt` — compile timeout: LLVM 18 opt (lto-pre-link<O3>, the CI toolchain) does not terminate on this IR; passes with LLVM 21+
 - MISCOMPILE `box/box/extensionFunctions/kt606.kt` — exit=0 stdout='OKFAIL\n' stderr=''
 - COMPILER_CRASH `box/box/functions/invoke/implicitInvokeWithFunctionLiteralArgument.kt` — /Users/listepo/.local/share/mise/installs/conda-llvm-tools/21/bin/opt: /Users/listepo/GitHub/listepo/apps/kotlinx/.rtok/
