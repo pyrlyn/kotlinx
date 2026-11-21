@@ -337,22 +337,32 @@ class Parser(toks: List<Tok>) {
      * Delegated property `val x: T by d` (no `KProperty` metadata): a hidden field `$dg$x = d`, the getter
      * `d.getValue(thisRef, null)` and for `var` the setter `d.setValue(thisRef, null, v)`.
      */
-    private fun delegated(n: String, ty: TypeRef?, isVar: Boolean, thisRef: E, gname: String, sname: String): Pair<FieldD, List<FunD>> {
+    private fun delegated(n: String, ty: TypeRef?, isVar: Boolean, thisRef: E, gname: String, sname: String, dn: String = "\$dg\$$n",
+                          provideRef: E = thisRef): Pair<FieldD, List<FunD>> {
         val line = next().line; skipNLOnly()
-        if (ty == null && isVar) fail("delegated var properties need an explicit type")
-        val dn = "\$dg\$$n"
-        val d = dropLazyMode(expr())
+        val d = provided(typedLazy(dropLazyMode(expr()), ty), provideRef)
         fun call(m: String, extra: List<E>) = CallE(MemberE(NameE(dn).also { it.line = line }, m, false).also { it.line = line }, emptyList(), listOf(thisRef, NullL()) + extra, null).also { it.line = line }
         // `by lazy { }` (the prelude's Lazy): read its `value`.
         val g = FunD(gname, emptyList(), ty, null, if (isLazyCall(d)) MemberE(NameE(dn).also { it.line = line }, "value", false).also { it.line = line } else call("getValue", emptyList()), line)
-        val s = if (isVar) FunD(sname, listOf(Param("v\$", ty!!)), TypeRef("Unit", emptyList(), false),
-            Block(listOf(ExprS(call("setValue", listOf(NameE("v\$")))).also { it.line = line })), null, line) else null
+        val s = if (!isVar) null else if (ty != null) FunD(sname, listOf(Param("v\$", ty)), TypeRef("Unit", emptyList(), false),
+            Block(listOf(ExprS(call("setValue", listOf(NameE("v\$")))).also { it.line = line })), null, line)
+            // Without a declared type the setter takes the getter's inferred type (resolved by inferReturnTypes).
+            else FunD(sname, listOf(Param("v\$", TypeRef(GETTER_TYPE, listOf(TypeRef(gname, emptyList(), false)), false))), null, null, call("setValue", listOf(NameE("v\$"))), line)
         // Without a declared type the getter's type is inferred from `getValue`.
         return FieldD(dn, null, false, d) to listOfNotNull(g, s)
     }
+    /**
+     * A property delegate expression [d] as `d.$provideDelegate(thisRef, null)`: the backend calls `provideDelegate`
+     * when the delegate's type has that operator and otherwise yields `d` itself.
+     */
+    private fun provided(d: E, thisRef: E): E = if (isLazyCall(d)) d
+        else CallE(MemberE(d, "\$provideDelegate", false).also { it.line = d.line }, emptyList(), listOf(thisRef, NullL()), null).also { it.line = d.line }
     /** `lazy(LazyThreadSafetyMode.X) { }` -> `lazy { }` (single-threaded, the mode does not matter). */
     private fun dropLazyMode(d: E): E = if (isLazyCall(d) && d is CallE && d.lambda != null && d.args.size == 1 && (d.args[0] as? MemberE)?.recv.let { it is NameE && it.n == "LazyThreadSafetyMode" })
         CallE(d.callee, d.typeArgs, emptyList(), d.lambda).also { it.line = d.line } else d
+    /** `val x: T by lazy { }`: the declared type is lazy's type argument (`lazy { null }` alone cannot be typed). */
+    private fun typedLazy(d: E, ty: TypeRef?): E = if (ty != null && isLazyCall(d) && d is CallE && d.typeArgs.isEmpty())
+        CallE(d.callee, listOf(ty), d.args, d.lambda).also { it.line = d.line } else d
     private fun isLazyCall(d: E) = d is CallE && (d.callee as? NameE)?.n == "lazy"
     /** Delegated locals initialized with `lazy { }`. */
     private var lazyLocals = HashSet<String>()
@@ -771,6 +781,13 @@ class Parser(toks: List<Tok>) {
 
     /** Getter and (for `var`) setter of an extension property, in either order, each optionally with a visibility modifier. */
     private fun extAccessors(name: String, ty: TypeRef?, tps: List<String>, recv: TypeRef, isVar: Boolean): List<FunD> {
+        if (isId("by")) {
+            // One delegate for all receivers (left in [extDeleg] for the caller to store); `thisRef` is the receiver.
+            if (ty == null && isVar) fail("delegated extension var properties need an explicit type")
+            val (df, acc) = delegated(name, ty, isVar, NameE("this"), "\$prop\$$name", "\$set\$$name", "\$dg\$${recv.name.replace('.', '_')}\$$name", NullL())
+            extDeleg = df
+            return acc.map { FunD(it.name, it.params, it.ret, it.body, it.exprBody, it.line, tps, recv) }
+        }
         var get: FunD? = null; var set: FunD? = null
         while (true) {
             val at = p
@@ -791,6 +808,9 @@ class Parser(toks: List<Tok>) {
         if (isVar && set == null) fail("extension var properties need a setter")
         return listOfNotNull(get, set)
     }
+
+    /** The delegate of the delegated extension property just parsed: a global at top level, a field in a class. */
+    private var extDeleg: FieldD? = null
 
     /** Member extension `fun R.f(...)`: method `mext$f($this_ext: R, ...)`; `this` is the extension receiver. */
     private fun memberExt(f: FunD, memberTps: Collection<String>): FunD {
@@ -863,7 +883,11 @@ class Parser(toks: List<Tok>) {
                 tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "operator", "infix", "tailrec", "const", "open", "final", "abstract", "sealed", "suspend") -> p++
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && topProperty(funs) -> { pendingGlobal?.let { globals.add(it) }; pendingGlobal = null }
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && (t[p + 1].k == K.OP && t[p + 1].s == "<" ||
-                    t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> funs.addAll(extProperty())
+                    t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> {
+                    val line = tk.line
+                    funs.addAll(extProperty())
+                    extDeleg?.let { globals.add(VarS(it.name, false, null, it.init!!).also { g -> g.line = line }) }; extDeleg = null
+                }
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> { noCtx(); globals.add(stmt() as VarS); if (pendingStmts.isNotEmpty()) fail("top-level destructuring declarations are not supported", tk) }
                 tk.k == K.ID && tk.s == "fun" && t[p + 1].k == K.ID && t[p + 1].s == "interface" -> { p++; ifaces.add(interfaceDecl().also { funIfaces[it.name] = it }) }
                 // `external fun f(x: Int): Int` (no body): a C function of the same name (FFI, see Externs).
@@ -1066,6 +1090,7 @@ class Parser(toks: List<Tok>) {
                 // Member extension property `val R.x: T get() = ...` (optionally `var` with a setter): member extensions `$prop$x` / `$set$x`.
                 if ((isId("val") || isId("var")) && t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "?.")) {
                     for (f in extProperty0()) ms.add(memberExt(f, memberTps))
+                    extDeleg?.let { if (props == null || inits == null) fail("delegated extension properties are not supported here"); props.add(it); inits.add(it) }; extDeleg = null
                     continue
                 }
                 if (props != null && inits != null && (isId("val") || isId("var"))) {
@@ -2640,7 +2665,7 @@ class Parser(toks: List<Tok>) {
                 if (isId("by")) {
                     next(); skipNLOnly()
                     localDelegs.add(name)
-                    val d = dropLazyMode(expr()); if (isLazyCall(d)) lazyLocals.add(name) else lazyLocals.remove(name)
+                    val d = provided(typedLazy(dropLazyMode(expr()), ty), NullL()); if (isLazyCall(d)) lazyLocals.add(name) else lazyLocals.remove(name)
                     return VarS("\$dg\$$name", false, null, d).also { it.line = line }
                 }
                 // `val x: T` without an initializer (assigned later, definite assignment is not checked): a variable
