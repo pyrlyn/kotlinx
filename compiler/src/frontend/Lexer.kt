@@ -49,7 +49,9 @@ class Lexer(private val src: String, private var line: Int = 1) {
                     // Backtick identifier: characters outside [A-Za-z0-9_$] are escaped so the name stays a valid symbol.
                     val e = src.indexOf('`', i + 1)
                     val raw = src.substring(i + 1, e)
-                    val name = raw.map { ch -> if (ch.isLetterOrDigit() || ch == '_' || ch == '$') ch.toString() else "_x${ch.code.toString(16)}_" }.joinToString("")
+                    // `_` alone is a placeholder (skipped destructuring entry, unused parameter); `` `_` `` is a real name.
+                    val name = if (raw == "_") "_x5f_"
+                        else raw.map { ch -> if (ch.isLetterOrDigit() || ch == '_' || ch == '$') ch.toString() else "_x${ch.code.toString(16)}_" }.joinToString("")
                     out.add(Tok(K.ID, if (name[0].isDigit()) "_$name" else name, line))
                     i = e + 1
                 }
@@ -190,9 +192,8 @@ class Lexer(private val src: String, private var line: Int = 1) {
                     parts.add(TemplateCode(src.substring(i + 2, j - 1), line))
                     i = j
                 }
-                c == '$' && i + 1 < src.length && (src[i + 1].isLetter() || src[i + 1] == '_') -> {
-                    var j = i + 1
-                    while (j < src.length && (src[j].isLetterOrDigit() || src[j] == '_')) j++
+                c == '$' && nameTemplateEnd() > 0 -> {
+                    val j = nameTemplateEnd()
                     if (sb.isNotEmpty()) { parts.add(sb.toString()); sb.clear() }
                     parts.add(TemplateCode(src.substring(i + 1, j), line))
                     i = j
@@ -225,9 +226,8 @@ class Lexer(private val src: String, private var line: Int = 1) {
                     parts.add(TemplateCode(src.substring(i + 2, j - 1), line))
                     i = j
                 }
-                c == '$' && i + 1 < src.length && (src[i + 1].isLetter() || src[i + 1] == '_') -> {
-                    var j = i + 1
-                    while (j < src.length && (src[j].isLetterOrDigit() || src[j] == '_')) j++
+                c == '$' && nameTemplateEnd() > 0 -> {
+                    val j = nameTemplateEnd()
                     if (sb.isNotEmpty()) { parts.add(sb.toString()); sb.clear() }
                     parts.add(TemplateCode(src.substring(i + 1, j), line))
                     i = j
@@ -238,5 +238,16 @@ class Lexer(private val src: String, private var line: Int = 1) {
         }
         if (sb.isNotEmpty() || parts.isEmpty()) parts.add(sb.toString())
         out.add(Tok(K.STR, "\"...\"", line, parts = parts))
+    }
+
+    /** End of the name in a `$name` / `$`name`` template at [i], or -1 when `$` is literal text. */
+    private fun nameTemplateEnd(): Int {
+        if (i + 1 >= src.length) return -1
+        val c = src[i + 1]
+        if (c == '`') return src.indexOf('`', i + 2).let { e -> if (e > i + 2 && '\n' !in src.substring(i + 2, e)) e + 1 else -1 }
+        if (!(c.isLetter() || c == '_')) return -1
+        var j = i + 1
+        while (j < src.length && (src[j].isLetterOrDigit() || src[j] == '_')) j++
+        return j
     }
 }

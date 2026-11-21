@@ -340,22 +340,32 @@ class Parser(toks: List<Tok>) {
      * Delegated property `val x: T by d` (no `KProperty` metadata): a hidden field `$dg$x = d`, the getter
      * `d.getValue(thisRef, null)` and for `var` the setter `d.setValue(thisRef, null, v)`.
      */
-    private fun delegated(n: String, ty: TypeRef?, isVar: Boolean, thisRef: E, gname: String, sname: String): Pair<FieldD, List<FunD>> {
+    private fun delegated(n: String, ty: TypeRef?, isVar: Boolean, thisRef: E, gname: String, sname: String, dn: String = "\$dg\$$n",
+                          provideRef: E = thisRef): Pair<FieldD, List<FunD>> {
         val line = next().line; skipNLOnly()
-        if (ty == null && isVar) fail("delegated var properties need an explicit type")
-        val dn = "\$dg\$$n"
-        val d = dropLazyMode(expr())
+        val d = provided(typedLazy(dropLazyMode(expr()), ty), provideRef)
         fun call(m: String, extra: List<E>) = CallE(MemberE(NameE(dn).also { it.line = line }, m, false).also { it.line = line }, emptyList(), listOf(thisRef, NullL()) + extra, null).also { it.line = line }
         // `by lazy { }` (the prelude's Lazy): read its `value`.
         val g = FunD(gname, emptyList(), ty, null, if (isLazyCall(d)) MemberE(NameE(dn).also { it.line = line }, "value", false).also { it.line = line } else call("getValue", emptyList()), line)
-        val s = if (isVar) FunD(sname, listOf(Param("v\$", ty!!)), TypeRef("Unit", emptyList(), false),
-            Block(listOf(ExprS(call("setValue", listOf(NameE("v\$")))).also { it.line = line })), null, line) else null
+        val s = if (!isVar) null else if (ty != null) FunD(sname, listOf(Param("v\$", ty)), TypeRef("Unit", emptyList(), false),
+            Block(listOf(ExprS(call("setValue", listOf(NameE("v\$")))).also { it.line = line })), null, line)
+            // Without a declared type the setter takes the getter's inferred type (resolved by inferReturnTypes).
+            else FunD(sname, listOf(Param("v\$", TypeRef(GETTER_TYPE, listOf(TypeRef(gname, emptyList(), false)), false))), null, null, call("setValue", listOf(NameE("v\$"))), line)
         // Without a declared type the getter's type is inferred from `getValue`.
         return FieldD(dn, null, false, d) to listOfNotNull(g, s)
     }
+    /**
+     * A property delegate expression [d] as `d.$provideDelegate(thisRef, null)`: the backend calls `provideDelegate`
+     * when the delegate's type has that operator and otherwise yields `d` itself.
+     */
+    private fun provided(d: E, thisRef: E): E = if (isLazyCall(d)) d
+        else CallE(MemberE(d, "\$provideDelegate", false).also { it.line = d.line }, emptyList(), listOf(thisRef, NullL()), null).also { it.line = d.line }
     /** `lazy(LazyThreadSafetyMode.X) { }` -> `lazy { }` (single-threaded, the mode does not matter). */
     private fun dropLazyMode(d: E): E = if (isLazyCall(d) && d is CallE && d.lambda != null && d.args.size == 1 && (d.args[0] as? MemberE)?.recv.let { it is NameE && it.n == "LazyThreadSafetyMode" })
         CallE(d.callee, d.typeArgs, emptyList(), d.lambda).also { it.line = d.line } else d
+    /** `val x: T by lazy { }`: the declared type is lazy's type argument (`lazy { null }` alone cannot be typed). */
+    private fun typedLazy(d: E, ty: TypeRef?): E = if (ty != null && isLazyCall(d) && d is CallE && d.typeArgs.isEmpty())
+        CallE(d.callee, listOf(ty), d.args, d.lambda).also { it.line = d.line } else d
     private fun isLazyCall(d: E) = d is CallE && (d.callee as? NameE)?.n == "lazy"
     /** Delegated locals initialized with `lazy { }`. */
     private var lazyLocals = HashSet<String>()
@@ -488,14 +498,16 @@ class Parser(toks: List<Tok>) {
                 else -> null
             }
         })
+        // A parameter's declared type is the target of a literal default value (`xs: List<Int> = []`, `vararg xs: T = []`).
+        fun param(q: Param) = if (isLit(q.default)) Param(q.name, q.type, lit(q.type, q.default!!), q.vararg, q.ctx) else q
         fun fn(f: FunD): FunD { val sr = ret; ret = f.ret; try {
             val g = sub.fn(f)
-            return FunD(g.name, g.params, g.ret, g.body, f.exprBody?.let { lit(f.ret, it) }, g.line, g.typeParams, f.recv)
+            return FunD(g.name, g.params.map { param(it) }, g.ret, g.body, f.exprBody?.let { lit(f.ret, it) }, g.line, g.typeParams, f.recv)
         } finally { ret = sr } }
         for (i in funs.indices) funs[i] = fn(funs[i])
         for (i in classes.indices) { val c = classes[i]
             val fm = c.fields.associateWith { fd -> if (isLit(fd.init) && fd.type != null) FieldD(fd.name, fd.type, fd.isVar, lit(fd.type, fd.init!!), fd.lateinit) else fd }
-            classes[i] = ClassD(c.name, c.fields.map { fm.getValue(it) }, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams,
+            classes[i] = ClassD(c.name, c.fields.map { fm.getValue(it) }, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams.map { param(it) },
                 c.inits.map { if (it is FieldD) fm[it] ?: it else it }, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs) }
         for (i in globals.indices) { val g = globals[i]; if (g.type != null && isLit(g.init)) globals[i] = VarS(g.name, g.isVar, g.type, lit(g.type, g.init)).also { it.line = g.line } }
     }
@@ -807,6 +819,13 @@ class Parser(toks: List<Tok>) {
      * modifier. Without accessors and [abstractOk] (an interface or `abstract` member) they are abstract.
      */
     private fun extAccessors(name: String, ty: TypeRef?, tps: List<String>, recv: TypeRef, isVar: Boolean, abstractOk: Boolean = false): List<FunD> {
+        if (isId("by")) {
+            // One delegate for all receivers (left in [extDeleg] for the caller to store); `thisRef` is the receiver.
+            if (ty == null && isVar) fail("delegated extension var properties need an explicit type")
+            val (df, acc) = delegated(name, ty, isVar, NameE("this"), "\$prop\$$name", "\$set\$$name", "\$dg\$${recv.name.replace('.', '_')}\$$name", NullL())
+            extDeleg = df
+            return acc.map { FunD(it.name, it.params, it.ret, it.body, it.exprBody, it.line, tps, recv) }
+        }
         var get: FunD? = null; var set: FunD? = null
         while (true) {
             val at = p
@@ -833,6 +852,9 @@ class Parser(toks: List<Tok>) {
         if (isVar && set == null) fail("extension var properties need a setter")
         return listOfNotNull(get, set)
     }
+
+    /** The delegate of the delegated extension property just parsed: a global at top level, a field in a class. */
+    private var extDeleg: FieldD? = null
 
     /** Member extension `fun R.f(...)`: method `mext$f($this_ext: R, ...)`; `this` is the extension receiver. */
     private fun memberExt(f: FunD): FunD {
@@ -888,7 +910,7 @@ class Parser(toks: List<Tok>) {
                 tk.k == K.ID && (tk.s == "import" || tk.s == "package") -> skipLine()
                 tk.k == K.ID && (tk.s == "value" || tk.s == "inline") && t[p + 1].k == K.ID && t[p + 1].s == "class" -> {
                     p++
-                    val c = classDecl()
+                    val c = byOwnProperty(classDecl())
                     // Multi-field value class (`+FullValueClasses`): no identity, structural equals/hashCode/toString,
                     // so it is compiled like a data class (boxed; the flattened representation is an optimization).
                     valueDecls.add(c)
@@ -907,7 +929,11 @@ class Parser(toks: List<Tok>) {
                 tk.k == K.ID && tk.s in setOf("private", "internal", "public", "inline", "data", "operator", "infix", "tailrec", "const", "open", "final", "abstract", "sealed", "suspend") -> p++
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && topProperty(funs) -> { pendingGlobal?.let { globals.add(it) }; pendingGlobal = null }
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") && (t[p + 1].k == K.OP && t[p + 1].s == "<" ||
-                    t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> funs.addAll(extProperty())
+                    t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "<")) -> {
+                    val line = tk.line
+                    funs.addAll(extProperty())
+                    extDeleg?.let { globals.add(VarS(it.name, false, null, it.init!!).also { g -> g.line = line }) }; extDeleg = null
+                }
                 tk.k == K.ID && (tk.s == "val" || tk.s == "var") -> { noCtx(); globals.add(stmt() as VarS); if (pendingStmts.isNotEmpty()) fail("top-level destructuring declarations are not supported", tk) }
                 tk.k == K.ID && tk.s == "fun" && t[p + 1].k == K.ID && t[p + 1].s == "interface" -> { p++; ifaces.add(interfaceDecl().also { funIfaces[it.name] = it }) }
                 // `external fun f(x: Int): Int` (no body): a C function of the same name (FFI, see Externs).
@@ -957,6 +983,10 @@ class Parser(toks: List<Tok>) {
             funs.add(FunD("\$get\$$n", emptyList(), TypeRef(n, emptyList(), false), Block(listOf(ExprS(CallE(NameE("\$init\$$n"), emptyList(), emptyList(), null)), RetS(slot))), null, 0))
         }
         // Object slots come first: a top-level property initializer may already access an object.
+        // Members a companion gets from its interfaces (`companion object : I by x` forwarders, defaults) exist only now.
+        for ((k, v) in companionOf.entries.toList()) classes.firstOrNull { it.name == v.first }?.let { c ->
+            companionOf[k] = v.first to (v.second + c.methods.flatMap { listOf(it.name, it.name.removePrefix("\$prop\$").removePrefix("\$set\$")) })
+        }
         return Program(funs, classes, ifaces, objGlobals + enumGlobals(classes) + globals, companionOf)
     }
 
@@ -976,22 +1006,9 @@ class Parser(toks: List<Tok>) {
 
     private fun objectDecl(name: String): ClassD {
         val line = t[p - 1].line
-        val supers = ArrayList<String>(); var superArgs: List<E>? = null
-        if (isOp(":")) {
-            next()
-            while (true) {
-                val sn = ident(); superTypeArgs(sn)
-                if (isOp("(")) {
-                    if (superArgs != null) fail("only one superclass is allowed")
-                    next()
-                    superArgs = nested(1) { val xs = ArrayList<E>(); while (!isOp(")")) { xs.add(expr()); if (isOp(",")) next() }; xs }
-                    expectOp(")")
-                    supers.add(0, sn)
-                } else supers.add(sn)
-                if (isOp(",")) next() else break
-            }
-        }
+        val supers = ArrayList<String>()
         val fields = ArrayList<FieldD>(); val inits = ArrayList<Any>()
+        val superArgs = superList(supers, fields, inits)
         val sta = takeSuperArgs()
         val saved = curClass; curClass = null
         val savedNestOwner = nestOwner; nestOwner = name
@@ -1005,36 +1022,78 @@ class Parser(toks: List<Tok>) {
         return ClassD(name, fields.map { remap.getValue(it) }, supers, ms, line, emptyList(), inits2, superArgs, superTypeArgs = sta)
     }
 
+    /**
+     * The supertype list after `:` (if any) into [supers], the superclass first; returns the superclass constructor
+     * arguments. Class delegation `I by expr` becomes a hidden field `$by$I` holding the delegate (added to [fields] and
+     * [inits]); implementIfaceProps adds the forwarders.
+     */
+    private fun superList(supers: MutableList<String>, fields: MutableList<FieldD>, inits: MutableList<Any>): List<E>? {
+        if (!isOp(":")) return null
+        next()
+        var superArgs: List<E>? = null
+        while (true) {
+            val sn = ident()
+            superTypeArgs(sn)
+            if (isId("by")) {
+                next()
+                // `{` after the delegate starts the class body, not a trailing lambda.
+                noBraceCall = true
+                val de = try { expr() } finally { noBraceCall = false }
+                val f = FieldD("\$by\$$sn", TypeRef(sn, superTA[sn].orEmpty(), false), false, de)
+                fields.add(f); inits.add(f)
+                supers.add(sn)
+            } else if (isOp("(")) {
+                if (superArgs != null) fail("only one superclass is allowed")
+                next()
+                superArgs = nested(1) { val xs = ArrayList<E>(); while (!isOp(")")) { xs.add(expr()); if (isOp(",")) next() }; xs }
+                expectOp(")")
+                supers.add(0, sn)
+            } else supers.add(sn)
+            if (isOp(",")) next() else break
+        }
+        return superArgs
+    }
+
+    /** Value class -> interfaces delegated to one of its own `val` properties (`I by i`), with that property. */
+    private val byOwnProp = HashMap<String, HashMap<String, String>>()
+
+    /**
+     * `value class IC(val i: I) : I by i`: the delegate is the class's own (only) property, so no hidden `$by$I` field
+     * is added (a value class has exactly one field); the forwarders call the property.
+     */
+    private fun byOwnProperty(c: ClassD): ClassD {
+        val alias = c.fields.filter { f -> f.name.startsWith("\$by\$") && (f.init as? NameE)?.n.let { n -> c.fields.any { it.name == n && !it.isVar } } }
+        if (alias.isEmpty()) return c
+        for (f in alias) byOwnProp.getOrPut(c.name) { HashMap() }[f.name.removePrefix("\$by\$")] = (f.init as NameE).n
+        return ClassD(c.name, c.fields - alias.toSet(), c.supers, c.methods, c.line, c.ctorParams, c.inits.filter { it !in alias }, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
+    }
+
     /** `object : Supers { body }` as an expression: a fresh local class, instantiated in place. */
     private fun anonObject(line: Int): E {
         val name = "\$anon${anonN++}"
-        val supers = ArrayList<String>(); var superArgs: List<E>? = null
-        if (isOp(":")) {
-            next()
-            while (true) {
-                val sn = ident(); superTypeArgs(sn)
-                if (isOp("(")) {
-                    if (superArgs != null) fail("only one superclass is allowed")
-                    next()
-                    superArgs = nested(1) { val xs = ArrayList<E>(); while (!isOp(")")) { xs.add(expr()); if (isOp(",")) next() }; xs }
-                    expectOp(")")
-                    supers.add(0, sn)
-                } else supers.add(sn)
-                if (isOp(",")) next() else break
-            }
+        val supers = ArrayList<String>()
+        val fields = ArrayList<FieldD>(); val inits = ArrayList<Any>()
+        val superArgs = superList(supers, fields, inits)
+        // Delegates are evaluated where the object is created (`super.f()` and `this` there are the outer ones): they
+        // are passed as constructor arguments.
+        val byArgs = ArrayList<E>(); val ctorParams = ArrayList<Param>()
+        for ((i, f) in fields.withIndex()) {
+            val pn = "\$bya${f.name}"
+            byArgs.add(f.init!!); ctorParams.add(Param(pn, f.type!!))
+            fields[i] = FieldD(f.name, f.type, false, NameE(pn).also { it.line = line })
+            inits[inits.indexOf(f)] = fields[i]
         }
         // Inside its own class body, names would resolve to the outer instance's (also private) members.
         if (curClass != null && curClass in supers) fail("anonymous objects extending their enclosing class are not supported")
-        val fields = ArrayList<FieldD>(); val inits = ArrayList<Any>()
         val sta = takeSuperArgs()
         val saved = curClass; curClass = null
         val outerDecls = pendingDecls; pendingDecls = ArrayList(); val lvl = bodyLevel; bodyLevel = 0
         val ms = try { nested(0) { if (isOp("{")) members(fields, inits) else emptyList() } } finally { curClass = saved; pendingDecls = outerDecls; bodyLevel = lvl }
-        val c0 = ClassD(name, fields, supers, ms, line, emptyList(), inits, superArgs, superTypeArgs = sta)
+        val c0 = ClassD(name, fields, supers, ms, line, ctorParams, inits, superArgs, superTypeArgs = sta)
         // Inside a lambda its body may use the lambda's receiver, like a local class (outerThis).
         val c = if (bodyLevel > 0) outerThis(c0, line) as ClassD else c0
         if (bodyLevel > 0) { pendingDecls.add(LocalDeclS(c).also { it.line = line }); sawLocal = true } else topAnon.add(c)
-        return CallE(NameE(name).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line }
+        return CallE(NameE(name).also { it.line = line }, emptyList(), byArgs, null).also { it.line = line }
     }
 
     /** Enum entry ("E$A") -> hidden subclass holding its body. */
@@ -1077,6 +1136,7 @@ class Parser(toks: List<Tok>) {
                 // Member extension property `val R.x: T get() = ...` (optionally `var` with a setter): member extensions `$prop$x` / `$set$x`.
                 if ((isId("val") || isId("var")) && t[p + 1].k == K.ID && t[p + 2].k == K.OP && (t[p + 2].s == "." || t[p + 2].s == "?.")) {
                     for (f in extProperty0(props == null || isAbstract)) ms.add(memberExt(f))
+                    extDeleg?.let { if (props == null || inits == null) fail("delegated extension properties are not supported here"); props.add(it); inits.add(it) }; extDeleg = null
                     continue
                 }
                 if (props != null && inits != null && (isId("val") || isId("var"))) {
@@ -1103,7 +1163,13 @@ class Parser(toks: List<Tok>) {
                     val constOwner = curClass ?: curObject
                     if (isConst && constOwner != null) ConstFields.names.add("$constOwner.$n")
                     if (isConst && constOwner != null && (f.init is IntL || f.init is BoolL || f.init is CharL || f.init is DblL || (f.init is StrL && (f.init as StrL).parts.all { it is String })))
-                        { constVals["$constOwner.$n"] = f.init!!; if ('$' in constOwner) constVals["${constOwner.substringBefore('$')}.$n"] = f.init!! }
+                        {
+                            constVals["$constOwner.$n"] = f.init!!; if ('$' in constOwner) constVals["${constOwner.substringBefore('$')}.$n"] = f.init!!
+                            // A compile-time constant has its value before any initializer runs (`val x = foo()`,
+                            // `fun foo() = y` with `y` declared later): it is stored first.
+                            inits.remove(f)
+                            inits.add(inits.indexOfFirst { !(it is FieldD && "$constOwner.${it.name}" in constVals) }.let { if (it < 0) inits.size else it }, f)
+                        }
                     continue
                 }
                 if (props == null && (isId("val") || isId("var"))) {
@@ -1253,7 +1319,6 @@ class Parser(toks: List<Tok>) {
         }
     }
 
-    /** Class name -> interfaces implemented by delegation (`: I by expr`). */
     /** Set while parsing a `by` delegate in a class header: `{` starts the class body, not a trailing lambda. */
     private var noBraceCall = false
     /** Interface whose body is being parsed (for its companion object). */
@@ -1268,7 +1333,6 @@ class Parser(toks: List<Tok>) {
         return x
     }
     private val headerSupers = HashMap<String, List<String>>()
-    private val byDelegs = HashMap<String, MutableList<String>>()
 
     /** Interface name -> its default method bodies. */
     private val ifaceDefaults = HashMap<String, List<FunD>>()
@@ -1327,16 +1391,24 @@ class Parser(toks: List<Tok>) {
                 val fd = ch.firstNotNullOfOrNull { x -> x.fields.firstOrNull { it.name == n } } ?: continue
                 add.add(FunD(m.name, emptyList(), fd.type ?: m.ret, null, NameE(n).also { it.line = c.line }, c.line))
             }
-            for (s in byDelegs[c.name].orEmpty()) {
+            // Found by the hidden fields: local classes may have been renamed since parsing.
+            val ownAdded = add.filter { f -> c.fields.any { it.name == f.name.removePrefix("\$prop\$").removePrefix("\$set\$") } }.map { it.name }.toSet()
+            val delegated = HashSet<String>()
+            val delegs = c.fields.filter { it.name.startsWith("\$by\$") }.map { it.name.removePrefix("\$by\$").let { s -> s to it.name } } + byOwnProp[c.name].orEmpty().toList()
+            for ((s, recvName) in delegs) {
                 val iface = ifaces.firstOrNull { it.name == s } ?: fail("only interfaces can be delegated with 'by'")
                 val targs = c.superTypeArgs[s].orEmpty()
                 val tmap = iface.typeParams.zip(targs).toMap()
                 fun st(t: TypeRef): TypeRef = tmap[t.name]?.let { r -> if (t.nullable && !r.nullable) TypeRef(r.name, r.args, true) else r }
                     ?: TypeRef(t.name, t.args.map { st(it) }, t.nullable)
                 if (iface.typeParams.isNotEmpty() && targs.size != iface.typeParams.size) fail("delegated generic interface needs type arguments")
-                val recv = NameE("\$by\$$s")
+                val recv = NameE(recvName)
                 for (m in iface.methods) {
-                    if (ch.any { x -> x.methods.any { it.name == m.name && (it.body != null || it.exprBody != null) } } || add.any { it.name == m.name }) continue
+                    // Only the class's own members win over the delegate; a superclass implementation is hidden by it
+                    // (Kotlin's DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE), including a getter added above for an
+                    // inherited field.
+                    if (c.methods.any { it.name == m.name && (it.body != null || it.exprBody != null) } || m.name in ownAdded || m.name in delegated) continue
+                    add.removeAll { it.name == m.name }; delegated.add(m.name)
                     if (m.typeParams.isNotEmpty()) fail("delegating generic interface methods is not supported")
                     val ps = m.params.map { Param(it.name, st(it.type), it.default, it.vararg, it.ctx) }
                     if (m.params.any { it.vararg }) fail("delegating vararg methods is not supported")
@@ -2347,42 +2419,20 @@ class Parser(toks: List<Tok>) {
             next()
             nested(1) {
                 while (!isOp(")")) {
-                    while (peek().k == K.ID && peek().s in MEMBER_MODS && t[p + 1].k == K.ID) p++
+                    var va = false
+                    while (peek().k == K.ID && (peek().s in MEMBER_MODS || peek().s == "vararg") && t[p + 1].k == K.ID) { if (peek().s == "vararg") va = true; p++ }
                     val kw = if (isId("val") || isId("var")) next().s else null
-                    val n = ident(); expectOp(":"); val ty = type()
-                    ctorParams.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); defaultArg() } else null))
+                    // `vararg val xs: T` is a list property, packed at call sites as for functions.
+                    val n = ident(); expectOp(":"); val ty0 = type(); val ty = if (va) TypeRef("List", listOf(ty0), false) else ty0
+                    ctorParams.add(Param(n, ty, if (isOp("=")) { next(); skipNLOnly(); defaultArg() } else null, va))
                     if (kw != null) fields.add(FieldD(n, ty, kw == "var"))
                     if (isOp(",")) next()
                 }
             }
             expectOp(")")
         }
-        val supers = ArrayList<String>(); var superArgs: List<E>? = null
-        if (isOp(":")) {
-            next()
-            while (true) {
-                val sn = ident()
-                superTypeArgs(sn)
-                if (isId("by")) {
-                    // Class delegation `I by expr`: a hidden field holding the delegate; forwarders are added later.
-                    next()
-                    noBraceCall = true
-                    val de = try { expr() } finally { noBraceCall = false }
-                    val fn = "\$by\$$sn"
-                    val f = FieldD(fn, TypeRef(sn, superTA[sn].orEmpty(), false), false, de)
-                    fields.add(f); inits.add(f)
-                    byDelegs.getOrPut(name) { ArrayList() }.add(sn)
-                    supers.add(sn)
-                } else if (isOp("(")) {
-                    if (superArgs != null) fail("only one superclass is allowed")
-                    next()
-                    superArgs = nested(1) { val xs = ArrayList<E>(); while (!isOp(")")) { xs.add(expr()); if (isOp(",")) next() }; xs }
-                    expectOp(")")
-                    supers.add(0, sn)
-                } else supers.add(sn)
-                if (isOp(",")) next() else break
-            }
-        }
+        val supers = ArrayList<String>()
+        val superArgs = superList(supers, fields, inits)
         if (isEnum && superArgs != null) fail("enum classes cannot have a superclass")
         headerSupers[name] = supers.toList()
         val savedCls = curClass; curClass = name
@@ -2709,7 +2759,7 @@ class Parser(toks: List<Tok>) {
                 if (isId("by")) {
                     next(); skipNLOnly()
                     localDelegs.add(name)
-                    val d = dropLazyMode(expr()); if (isLazyCall(d)) lazyLocals.add(name) else lazyLocals.remove(name)
+                    val d = provided(typedLazy(dropLazyMode(expr()), ty), NullL()); if (isLazyCall(d)) lazyLocals.add(name) else lazyLocals.remove(name)
                     return VarS("\$dg\$$name", false, null, d).also { it.line = line }
                 }
                 // `val x: T` without an initializer (assigned later, definite assignment is not checked): a variable
@@ -2764,7 +2814,7 @@ class Parser(toks: List<Tok>) {
                 val tk = t[p]
                 when {
                     tk.k == K.OP && tk.s in ASSIGN_OPS -> { p++; skipNLOnly(); val v = expr(); if (e is CallE && e in multiIdx) multiIndexAssign(e, tk.s, v) else AssignS(e, tk.s, v) }
-                    tk.k == K.OP && (tk.s == "++" || tk.s == "--") -> { p++; if (e is CallE && e in multiIdx) multiIndexAssign(e, tk.s[0] + "=", IntL(1, false).also { it.line = tk.line }) else IncS(e, tk.s) }
+                    tk.k == K.OP && (tk.s == "++" || tk.s == "--") -> { p++; IncS(e, tk.s) }
                     else -> ExprS(e)
                 }
             }
@@ -2825,7 +2875,7 @@ class Parser(toks: List<Tok>) {
         if (t[p].k == K.OP && (t[p].s == "++" || t[p].s == "--")) {
             val tk = next()
             val e = prefix()
-            if (e !is NameE && e !is MemberE && e !is IndexE) fail("${tk.s} needs an assignable operand", tk)
+            if (e !is NameE && e !is MemberE && e !is IndexE && e !in multiIdx) fail("${tk.s} needs an assignable operand", tk)
             return PostIncE(e, "pre" + tk.s).also { it.line = tk.line }
         }
         val tk = peek()
@@ -2954,7 +3004,7 @@ class Parser(toks: List<Tok>) {
                 // Callable reference `recv::name`: UnE("::name", recv).
                 // Class literal `T::class` / `e::class`: UnE("#class", e) (resolved by the backend to a KClass).
                 "::" -> { p++; if (isId("class")) { next(); UnE("#class", e) } else UnE("::" + ident(), e) }
-                "++", "--" -> if (e is NameE || e is MemberE || e is IndexE) { p++; PostIncE(e, tk.s) } else break
+                "++", "--" -> if (e is NameE || e is MemberE || e is IndexE || e in multiIdx) { p++; PostIncE(e, tk.s) } else break
                 "{" -> if (!noBraceCall && (e is MemberE || (e is NameE && e.n !in NO_TRAILING))) CallE(e, emptyList(), emptyList(), block(lambda = true)) else break
                 else -> break
             }

@@ -1,0 +1,5 @@
+0 2 2 get;set;get;set;
+a+b:v get;set;get;set;abv
+p+q=a+b:v
+2 OK 0
+0 3 4
