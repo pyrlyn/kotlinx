@@ -64,6 +64,8 @@ while emitting IR.
 | property accessors | `getter` / `accessors` -> hidden `$prop$x` methods |
 | enums | `classDecl(isEnum = true)`, `enumGlobals`, statics rewritten by `rewriteStatics` (Generics.kt) |
 | data classes | `Parser.dataClass` generates equals/hashCode/toString/componentN/copy as AST |
+| destructuring | `val (a, b)` / `val [a, b]` / `[val a, var b]`, `for ([i, v] in ...)` and lambda `{ [a, b] -> }` lowered in `Parser.stmt` / `block(lambda = true)` to a `$dN` temp plus `componentN` locals (`destructVar`; `_` skipped, `` `_` `` is a real name); `for` over a class `rangeTo` uses its `iterator()` (`genFor`) |
+| multi-index | `a[i, j]` parses to `a.get(i, j)` (`multiIdx`); `a[i, j] op= v` -> `multiIndexAssign`; `a[i, j]++` / `++a[i, j]` as expressions: `onceRecv` + `assign` via `multiIndexGet`; `set(vararg k, value)` takes the last argument as value (`packVararg`) |
 | generics | classes/interfaces monomorphized in `compileGenerics` (`Box<Int>` -> `Box$Int`, `Subst`); generic functions per call in `genGenericCall`; instances discovered via `NeedInstance` / `NeedClass` / `NeedIface` exceptions that restart codegen |
 | lambdas / closures | `NativeBackend.genLambda`: free vars from `Uses`, captured values become fields of a generated class `$LamN` implementing `$Fn...`; captured `var`s are boxed into `$Ref<T>` by `boxCapturedVars` |
 | callable refs `::f` | `genRef` / `genRef0` (UnE "::") |
