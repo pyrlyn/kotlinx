@@ -60,6 +60,13 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
 - Stdlib additions: `String.toInt/toLong/toIntOrNull/toLongOrNull`, `substring` (prelude), `List.sum()` of numeric
   lists, `HashMap`/`hashMapOf` with String keys (content-hashed, keys retained by the map; values stay primitive), computed
   `var` properties with `get()` and `set(v)` accessors.
+- Arrays: primitive arrays (`IntArray`, `CharArray`, `BooleanArray`, unsigned, ...) are `{ length; elements }` blocks,
+  `Array<T>` is a list. `XArray(n) { }`, `XArray(n, f)` / `Array(n, f)` with a function value (evaluated once), spreads
+  mixed with items (`listOf(*a, x)`, `intArrayOf(1, *xs)`, varargs; copied into a fresh list), `emptyArray()`,
+  `arrayOfNulls`, `toTypedArray()` (a copy), `fold`, `concatToString`/`toCharArray`, references through `Array<T>`
+  receivers (`Array<String>::first`). Arrays compare and hash by identity; a printed array shows its contents (`[1, 2]`,
+  as a data class's `toString` does; Kotlin prints `[I@hash` for a bare primitive array). Not yet: smart casts to
+  `Array<*>` from `Any`, overloads on `Array<A>` / `Array<B>` receivers, calling `main(args)` from code.
 - kotlinx subsets (`compiler/src/frontend/Kotlinx.kt`, tests `kotlinx_coroutines`, `kotlinx_serialization`):
   coroutines (`runBlocking` (also nested), `coroutineScope`, `launch`, `async`/`await`, `Job` with cancellation
   (`cancel`, `isActive`, `CancellationException` at suspension points, children cancelled with the parent), `Channel`,
@@ -83,7 +90,7 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   cycle collector with an adaptive root threshold. Leak tests (`compiler/tests/leaks`) check live count = 0, ASan and macOS `leaks`.
 - Tests: `compiler/test.sh` (golden `compiler/tests/*.kt|.out`, benchmark checksums, leak tests);
   upstream Kotlin tests in `compiler/tests/upstream` (unmodified, JetBrains/kotlin @ 19c36e1), 8475 candidates
-  (`manifest.json`): PASS 3305, MISCOMPILE 17, COMPILER_CRASH 2, UNSUPPORTED 2167, N/A 2984 (passing ones are kept and
+  (`manifest.json`): PASS 3345, MISCOMPILE 17, COMPILER_CRASH 2, UNSUPPORTED 2127, N/A 2984 (passing ones are kept and
   re-runnable with `run.py`; `run.py --leak-check` also fails a passing test that leaks); reference tests the compiler
   does not fully pass yet: `compiler/tests/reference/fetch.py` (list in `compiler/tests/reference/list.txt`); `import.py --no-fetch` re-scans all candidates and keeps the newly passing ones.
 

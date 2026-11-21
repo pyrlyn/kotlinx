@@ -65,8 +65,9 @@ while emitting IR.
 | enums | `classDecl(isEnum = true)`, `enumGlobals`, statics rewritten by `rewriteStatics` (Generics.kt) |
 | data classes | `Parser.dataClass` generates equals/hashCode/toString/componentN/copy as AST |
 | generics | classes/interfaces monomorphized in `compileGenerics` (`Box<Int>` -> `Box$Int`, `Subst`); generic functions per call in `genGenericCall`; instances discovered via `NeedInstance` / `NeedClass` / `NeedIface` exceptions that restart codegen |
-| lambdas / closures | `NativeBackend.genLambda`: free vars from `Uses`, captured values become fields of a generated class `$LamN` implementing `$Fn...`; captured `var`s are boxed into `$Ref<T>` by `boxCapturedVars` |
-| callable refs `::f` | `genRef` / `genRef0` (UnE "::") |
+| lambdas / closures | `NativeBackend.genLambda`: free vars from `Uses`, captured values become fields of a generated class `$LamN` implementing `$Fn...`; captured `var`s are boxed into `$Ref<T>` by `boxCapturedVars`; a captured `Int?` keeps a nullable field (`capRef`) |
+| callable refs `::f` | `genRef` / `genRef0` (UnE "::"); type arguments of a type-name receiver (`Array<String>::f`) in `RefTypeArgs` |
+| arrays | primitive arrays are `Ty.Arr` (`rt_arr_new`: length, then elements), `Array<T>` is `Ty.ListTy`; constructors and `xArrayOf` in `genNamedCall` (`initLoop`, `initByValue` for `XArray(n, f)`, `spreadBlock` for `*xs` mixed with items, also in `packVararg`); more API in `Prelude.kt` (`ARRAY_EXT`, `ARRAY_MORE`) |
 | calls | `genCall` -> `genNamedCall` (functions, constructors, built-ins) / `method` (receiver calls) / `invokeFn` (function values); default and named args `normalize`, varargs `packVararg` |
 | type checks | `isCheck`, `genAs`, smart casts `smartCasts` / `applyCasts` |
 | exceptions | `genTry`, `throwValue`, `unwind` (no C++ EH; status checked after calls in `afterCall`) |
