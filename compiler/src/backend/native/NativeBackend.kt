@@ -339,6 +339,17 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * placeholders and the pass's IR is discarded when any are, so one pass collects the whole worklist.
      */
     private val missing = LinkedHashMap<String, Exception>()
+    /** A function of this pass failed on a placeholder and was skipped; closure classes are not recorded after that. */
+    private var degraded = false
+
+    /**
+     * Once something is missing this pass only collects the worklist (its IR is discarded): a function that fails on
+     * a placeholder is skipped, so the remaining functions still report what they need. Every function starts from
+     * a reset emitter state ([genFun]), so nothing of the failed one leaks into the next.
+     */
+    private inline fun skipWhileCollecting(gen: () -> Unit) {
+        try { gen() } catch (e: Exception) { if (missing.isEmpty() || e is NeedBatch) throw e; degraded = true }
+    }
 
     fun generate(): String {
         val ir = try { generatePass() } catch (e: Exception) {
@@ -427,18 +438,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         for ((k, sup) in bridged) genBridge(k.substringBefore('.'), k.substringAfter('.'), sup)
         val main = sigs["main"] ?: throw CompileError("no main function")
         genGlobals()
-        for (f in prog.funs) if (f.typeParams.isEmpty()) genFun(f, null)
+        for (f in prog.funs) if (f.typeParams.isEmpty()) skipWhileCollecting { genFun(f, null) }
         // Throwable's message/cause are plain fields: an overriding getter would not be dispatched to.
         if (excMode) for (c in prog.classes) if (c.name !in PRELUDE_EXCEPTIONS && "Throwable" in classes.getValue(c.name).ancestors)
             c.methods.firstOrNull { it.name == "\$prop\$message" || it.name == "\$prop\$cause" }?.let { fail("overriding Throwable.${it.name.removePrefix("\$prop\$")} in ${c.name} is not supported") }
-        for (c in prog.classes) for (m in c.methods) if ((m.body != null || m.exprBody != null) && m.typeParams.isEmpty()) genFun(m, classes.getValue(c.name))
+        for (c in prog.classes) for (m in c.methods) if ((m.body != null || m.exprBody != null) && m.typeParams.isEmpty()) skipWhileCollecting { genFun(m, classes.getValue(c.name)) }
         for (c in prog.classes) if (c.hasCtorBody || c.name in poly) genInit(c, classes.getValue(c.name))
         for (c in prog.classes) if (c.hasCtorBody) genCtor(c, classes.getValue(c.name))
         while (pending.isNotEmpty()) {
             val sym = pending.removeAt(pending.size - 1)
             val (f, env, sig) = instances.getValue(sym)
             tenv = env; instLine = f.line; instFun = f
-            genFun(f, instCls[sym], sig, sym)
+            skipWhileCollecting { genFun(f, instCls[sym], sig, sym) }
             tenv = emptyMap(); instLine = -1; instFun = null
         }
         if (excMode) genUncaught()
@@ -1380,15 +1391,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         emit("store ${v.t.llvm} ${v.v}, ptr ${l.slot}")
     }
 
-    /**
-     * Once something is missing this pass is only collecting the worklist (its IR is discarded): a statement that
-     * fails on a placeholder is skipped so the rest of the body still reports what it needs.
-     */
     private fun genStmt(s: S) {
-        try { genStmt0(s) } catch (e: Exception) { if (missing.isEmpty() || e is NeedBatch) throw e }
-    }
-
-    private fun genStmt0(s: S) {
         line = s.line
         when (s) {
             is VarS -> {
@@ -5044,7 +5047,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 WhenE(null, listOf(WhenBranch(null, body1))).also { it.line = line }, line)
             val cd = ClassD(name, caps.map { (n, t) -> FieldD(n, capRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line)
             // Recorded, and a placeholder of the lambda's type goes on (this pass's output is discarded, see generate).
-            missing.getOrPut(name) { NeedClass(cd) }
+            if (!degraded) missing.getOrPut(name) { NeedClass(cd) }
             return Val("null", fnT, false)
         }
         val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "\$self" else if (n == "\$recv" || n == "\$thisCap") "this" else n).also { it.line = line } }, null))
