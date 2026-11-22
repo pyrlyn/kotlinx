@@ -5,7 +5,7 @@ KotlinX vendors GC sources under `native/gc/` (no `compiler/gc` git submodule).
 | Path | Role |
 |---|---|
 | `c/` | C collectors @`a65a3f6` (`kxgc.h`, `*/gc.c`, benches, legacy tests) |
-| `zig/` | Zig collectors @`a65a3f6` + KotlinX patches ([PROVENANCE](PROVENANCE.md)) + `runtime_host.zig` adapter |
+| `zig/` | Zig collectors @`2dea030` + KotlinX patches ([PROVENANCE](PROVENANCE.md)) + `runtime_host.zig` adapter |
 | `smoke/` | Scoped smokes (`kxgc_c` via `addTranslateC`, Zig `@import`) |
 | `build.zig` | Umbrella: path-dep modules + C `kxgc_c` via translate-c |
 

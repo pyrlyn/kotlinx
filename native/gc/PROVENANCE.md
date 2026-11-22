@@ -2,14 +2,15 @@
 
 In-tree path dependencies (no git submodule, no out-of-repo symlinks, no network fetch).
 
-Upstream: [pyrlyn/gc](https://github.com/pyrlyn/gc) `a65a3f66f7ece6afa73fee64510d990819961ad6` (`c.sha`, `zig.sha`).
+Upstream: [pyrlyn/gc](https://github.com/pyrlyn/gc) `2dea030e9276cbc6cd8cab603489a27146d32d88` (`zig.sha`); the C side is
+from `a65a3f66f7ece6afa73fee64510d990819961ad6` (`c.sha`), which upstream has not changed since.
 Updating: copy the upstream files below at the new commit, then re-apply the KotlinX patches listed here (a 3-way
 merge with the previous upstream commit as base keeps them).
 
 | Tree | Upstream | What is frozen |
 |---|---|---|
 | `native/gc/c/` | pyrlyn/gc `a65a3f6`: the C side of the repository, i.e. the files of the pre-Zig snapshot `6acde649` (`kxgc.h`, `*/gc.c`, `*/caps`, `*/config.sh`, `common/*.inc`, `bench/` without `bench/native/`, `docs/` without `zig-port.md`, `tests/` without `tests/native/`, `README.md`, `.gitignore`) | **Collector bodies** byte-matched. Path-adapted for KotlinX (`compiler/gc` -> `native/gc/c`, toolchain wrappers, Zig 0.17): `README.md`, `docs/extraction-plan.md`, `tests/archive/run.sh`, `tests/archive/unit/traversal.c`, `tests/zig/build.zig`, `tests/zig/src/runner.zig`. |
-| `native/gc/zig/` | pyrlyn/gc `a65a3f6`: `src/`, `tests/native/`, `bench/native/`, `build.zig`, `build.zig.zon`, `kxgc.h`, `docs/zig-port.md` | Byte-matched: `src/epoch.zig`, `src/incremental.zig`, `src/rc.zig`, `src/kxgc.zig`, `src/common/object.zig`, `bench/native/*`, `build.zig.zon`, `tests/native/README.md`. The rest carries the KotlinX patches below. Not vendored: `artifacts/`, `scripts/`, `renovate.json`. |
+| `native/gc/zig/` | pyrlyn/gc `2dea030`: `src/`, `tests/native/`, `bench/native/`, `build.zig`, `build.zig.zon`, `kxgc.h`, `docs/zig-port.md` | Byte-matched: `src/epoch.zig`, `src/incremental.zig`, `src/rc.zig`, `src/kxgc.zig`, `src/common/object.zig`, `bench/native/*`, `build.zig.zon`, `tests/native/README.md`. The rest carries the KotlinX patches below. Not vendored: `artifacts/`, `scripts/`, `renovate.json`. |
 | `native/gc/zig/src/runtime_host.zig` | KotlinX adapter (local) | Host for linking with `runtime.c` (externs; no duplicate runtime symbols). |
 | `native/gc/zig/src/compact.zig`, `native/gc/zig/tests/native/compact.zig`, `native/gc/c/compact/caps` | KotlinX (local) | `compact` collector (the `--target=js` default) and its tests; not from pyrlyn/gc. |
 | `native/gc/smoke/`, `native/gc/build.zig` | KotlinX (local) | Umbrella modules (`kxgc_c` via `addTranslateC`), smokes, docs. |

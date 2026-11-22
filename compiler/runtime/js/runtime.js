@@ -145,6 +145,11 @@ function _saddo(a, ah, b, bh) { const r = a + b | 0, rh = ah + bh + ((r >>> 0) <
 function _uaddo(a, ah, b, bh) { const r = a + b | 0, rh = ah + bh + ((r >>> 0) < (a >>> 0)) | 0; H = rh; H1 = _ult(r, rh, a, ah); return r; }
 function _ssubo(a, ah, b, bh) { const r = a - b | 0, rh = ah - bh - ((a >>> 0) < (b >>> 0)) | 0; H = rh; H1 = ((ah ^ bh) & (ah ^ rh)) < 0; return r; }
 function _usubo(a, ah, b, bh) { const r = a - b | 0, rh = ah - bh - ((a >>> 0) < (b >>> 0)) | 0; H = rh; H1 = _ult(a, ah, b, bh); return r; }
+// llvm.{s,u}{add,sub}.sat.i64 (Zig's +| and -|): the overflow helpers, clamped to the range when they overflow.
+function _sadds(a, ah, b, bh) { const r = _saddo(a, ah, b, bh); if (!H1) return r; H = ah < 0 ? -2147483648 : 2147483647; return ah < 0 ? 0 : -1; }
+function _ssubs(a, ah, b, bh) { const r = _ssubo(a, ah, b, bh); if (!H1) return r; H = ah < 0 ? -2147483648 : 2147483647; return ah < 0 ? 0 : -1; }
+function _uadds(a, ah, b, bh) { const r = _uaddo(a, ah, b, bh); if (!H1) return r; H = -1; return -1; }
+function _usubs(a, ah, b, bh) { const r = _usubo(a, ah, b, bh); if (!H1) return r; H = 0; return 0; }
 function _smulo(a, ah, b, bh) { const p = _big(a, ah) * _big(b, bh); const r = _unbig(p); H1 = BigInt.asIntN(64, p) !== p; return r; }
 function _umulo(a, ah, b, bh) { const p = BigInt.asUintN(64, _big(a, ah)) * BigInt.asUintN(64, _big(b, bh)); const r = _unbig(p); H1 = p >= 18446744073709551616n; return r; }
 
