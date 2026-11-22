@@ -10,8 +10,10 @@ set -u
 cd "$(dirname "$0")/../../.."
 NKC=${NKC:-compiler/build/newkotlinc.kexe}
 [ -x "$NKC" ] || compiler/build.sh >/dev/null
+. compiler/tests/toolchain.sh
 . compiler/tests/leaks/leaks_at_exit.sh
 out=compiler/build/leak-tmp; rm -rf "$out"; mkdir -p "$out"; fail=0
+kx_probe_asan; [ "$KX_ASAN" = 0 ] && echo "SKIP asan (all leak tests): $KX_ASAN_SKIP"
 for t in compiler/tests/leaks/*.kt; do
   n=$(basename "$t" .kt); exp=$(cat "compiler/tests/leaks/$n.out")
   if ! "$NKC" --leak-check "$t" -o "$out/$n.lc" 2>"$out/$n.err"; then echo "FAIL leak $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
@@ -34,9 +36,12 @@ for t in compiler/tests/leaks/*.kt; do
         ;;
     esac
   fi
-  "$NKC" --alloc malloc --cflags "-O1 -g -fsanitize=address -fno-omit-frame-pointer" "$t" -o "$out/$n.asan" 2>/dev/null
-  got=$("$out/$n.asan" 2>"$out/$n.asanerr"); rc=$?
-  if [ $rc -eq 0 ] && [ "$got" = "$exp" ]; then echo "PASS asan $n"; else echo "FAIL asan $n (rc=$rc)"; head -20 "$out/$n.asanerr"; fail=1; fi
+  if [ "$KX_ASAN" = 1 ]; then
+    "$NKC" --alloc malloc --cflags "$KX_ASAN_CFLAGS" "$t" -o "$out/$n.asan" 2>/dev/null
+    got=$(kx_with_timeout 300 "$out/$n.asan" 2>"$out/$n.asanerr"); rc=$?
+    if [ $rc -eq 0 ] && [ "$got" = "$exp" ]; then echo "PASS asan $n"
+    else echo "FAIL asan $n (rc=$rc$([ $rc -eq 142 ] && echo ', timed out after 300 s'))"; head -20 "$out/$n.asanerr"; fail=1; fi
+  fi
   "$NKC" --alloc malloc "$t" -o "$out/$n" 2>/dev/null
   leaks_at_exit "$out/$n.leaks" "$out/$n"; lrc=$?
   if grep -q " 0 leaks for 0 total leaked bytes" "$out/$n.leaks"; then echo "PASS leaks $n"
