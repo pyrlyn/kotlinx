@@ -8,6 +8,7 @@ NKC=${NKC:-compiler/build/newkotlinc.kexe}
 . compiler/tests/toolchain.sh
 kx_require_free_space || exit 1
 kx_wrap_toolchain || exit 1
+kx_probe_asan || exit 1
 [ -f bench/data/words.txt ] || python3 bench/gen_data.py >/dev/null
 out=compiler/build/test-tmp; rm -rf "$out"; mkdir -p "$out"; fail=0
 check() { if [ "$2" = "$3" ]; then echo "PASS $1"; else echo "FAIL $1: expected '$3', got '$2'"; fail=1; fi; }
