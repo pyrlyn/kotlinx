@@ -418,7 +418,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         for (i in prog.ifaces) ifaces[i.name] = IfaceInfo(i.name, emptyMap())
         for (i in prog.ifaces) {
             line = i.line
-            ifaces[i.name] = IfaceInfo(i.name, i.methods.associate { m -> m.name to FunSig(m.name, m.params.map { resolve(it.type) }, m.ret?.let { resolveRet(it) } ?: Ty.Unit, (m.name == "invoke" && isSuspFnName(i.name)) || SuspendFuns.isSuspend(m)) })
+            ifaces[i.name] = IfaceInfo(i.name, i.methods.associate { m -> m.name to FunSig(m.name, m.params.map { resolve(it.type) }, m.ret?.let { resolveRet(it) } ?: Ty.Unit, (m.name == "invoke" && isSuspFnName(i.name)) || m.isSuspend) })
             for (m in i.methods) if (m.name !in slots) slots.add(m.name)
         }
         for (c in classOrder) {
@@ -451,7 +451,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 }
                 if (m.ret == null && m.exprBody != null) { inferPending.add(m to c); continue }
                 val ret = m.ret?.let { resolveRet(it) } ?: Ty.Unit
-                val sig = FunSig(m.name, m.params.map { resolve(it.type) }, ret, SuspendFuns.isSuspend(m) || (m.name == "invoke" && c.name.startsWith("\$LamS")))
+                val sig = FunSig(m.name, m.params.map { resolve(it.type) }, ret, m.isSuspend || (m.name == "invoke" && c.name.startsWith("\$LamS")))
                 c.superClass?.let { s -> methodSigs["$s.${m.name}"]?.let { if (it.params != sig.params || it.ret != sig.ret) fail("override of '${m.name}' in ${c.name} changes its signature") } }
                 methodSigs["${c.name}.${m.name}"] = sig
             }
@@ -470,7 +470,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (f.ret == null && f.body == null) { inferPending.add(f to null); continue }
             val ret = f.ret?.let { resolveRet(it) } ?: Ty.Unit
             mainParams = f.name == "main"
-            sigs[f.name] = FunSig(f.name, f.params.map { resolve(it.type) }, ret, SuspendFuns.isSuspend(f))
+            sigs[f.name] = FunSig(f.name, f.params.map { resolve(it.type) }, ret, f.isSuspend)
             mainParams = false
         }
         // Explicitly typed top-level properties (incl. enum entries) are visible to class property inference.
@@ -1048,7 +1048,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (t == Ty.Unit && fieldsPending.isNotEmpty() && !allowUnit) continue
                 line = f.line
                 if (t == Ty.RawPtr || t == Ty.Args) fail("expression-bodied function '${f.name}' needs an explicit return type")
-                val sig = FunSig(f.name, params, t, SuspendFuns.isSuspend(f) || (c != null && f.name == "invoke" && c.name.startsWith("\$LamS")))
+                val sig = FunSig(f.name, params, t, f.isSuspend || (c != null && f.name == "invoke" && c.name.startsWith("\$LamS")))
                 if (c == null) sigs[f.name] = sig
                 else {
                     c.superClass?.let { s -> methodSigs["$s.${f.name}"]?.let { if (it.params != sig.params || it.ret != sig.ret) fail("override of '${f.name}' in ${c.name} changes its signature") } }
@@ -3439,7 +3439,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val saved = tenv; tenv = bound
             val sig = try {
                 val ps = f.params.map { resolve(it.type) }
-                FunSig(f.name, ps, f.ret?.let { resolveRet(it) } ?: if (f.exprBody != null) probeGenericRet(f, sym, ps, cls) else Ty.Unit, SuspendFuns.isSuspend(f))
+                FunSig(f.name, ps, f.ret?.let { resolveRet(it) } ?: if (f.exprBody != null) probeGenericRet(f, sym, ps, cls) else Ty.Unit, f.isSuspend)
             } finally { tenv = saved }
             if (cls != null) instCls[sym] = cls
             Triple(f, bound, sig).also { instances[sym] = it; pending.add(sym) }

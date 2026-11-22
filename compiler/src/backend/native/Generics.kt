@@ -17,7 +17,7 @@ fun renameOverloads(p: Program): Program {
     if (groups.isEmpty()) return p
     val renamed = HashMap<FunD, FunD>()
     for ((n, fs) in groups) {
-        val nfs = fs.mapIndexed { i, f -> FunD("$n\$ov$i", f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams, f.recv).also { renamed[f] = it } }
+        val nfs = fs.mapIndexed { i, f -> FunD("$n\$ov$i", f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams, f.recv, isSuspend = f.isSuspend).also { renamed[f] = it } }
         Overloads.map[n] = nfs
     }
     return Program(p.funs.map { renamed[it] ?: it }, p.classes, p.ifaces, p.globals, p.companions)
@@ -168,10 +168,10 @@ private fun boxCapturedVars(p: Program): Program {
     }
     fun boxE(x: E): E { val b = Block(listOf(ExprS(x))); val nb = box(b); return if (nb === b) x else (nb.stmts.single() as ExprS).e }
     fun fn(f: FunD): FunD {
-        f.exprBody?.let { x -> val nx = boxE(x); return if (nx === x) f else FunD(f.name, f.params, f.ret, f.body, nx, f.line, f.typeParams, f.recv) }
+        f.exprBody?.let { x -> val nx = boxE(x); return if (nx === x) f else FunD(f.name, f.params, f.ret, f.body, nx, f.line, f.typeParams, f.recv, isSuspend = f.isSuspend) }
         val body = f.body ?: return f
         val nb = box(body)
-        return if (nb === body) f else FunD(f.name, f.params, f.ret, nb, f.exprBody, f.line, f.typeParams, f.recv)
+        return if (nb === body) f else FunD(f.name, f.params, f.ret, nb, f.exprBody, f.line, f.typeParams, f.recv, isSuspend = f.isSuspend)
     }
     /** Property initializers and `init` blocks run in the constructor; box their captured vars too. */
     fun cls(c: ClassD): ClassD {
@@ -281,7 +281,7 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
     fun field(f: FieldD): FieldD = fieldMemo.getOrPut(f) { FieldD(f.name, f.type?.let { ty(it) }, f.isVar, f.init?.let { e(it) }, f.lateinit) }
 
     fun fn(f: FunD): FunD = FunD(f.name, f.params.map { Param(it.name, ty(it.type), it.default?.let { d -> e(d) }, it.vararg, it.ctx) }, f.ret?.let { ty(it) },
-        f.body?.let { block(it) }, f.exprBody?.let { e(it) }, f.line, f.typeParams)
+        f.body?.let { block(it) }, f.exprBody?.let { e(it) }, f.line, f.typeParams, isSuspend = f.isSuspend)
 
     fun block(b: Block): Block = Block(b.stmts.map { s(it) }, b.params, b.paramTypes.map { it?.let { t -> ty(t) } })
     fun blockN(b: Block?): Block? = b?.let { block(it) }

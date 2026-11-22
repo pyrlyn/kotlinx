@@ -290,17 +290,17 @@ class Parser(toks: List<Tok>) {
     }
 
     /** A function whose expression body follows (after `=`); declarations the expression needs (anonymous objects and functions) go first. */
-    private fun exprBodyFun(name: String, params: List<Param>, ret: TypeRef?, line: Int, typeParams: List<String>, recv: TypeRef?): FunD {
+    private fun exprBodyFun(name: String, params: List<Param>, ret: TypeRef?, line: Int, typeParams: List<String>, recv: TypeRef?, isSuspend: Boolean = false): FunD {
         val outerDecls = pendingDecls; pendingDecls = ArrayList(); bodyLevel++
         val (e, ds) = try { expr() to pendingDecls } finally { pendingDecls = outerDecls; bodyLevel-- }
-        if (ds.isEmpty()) return FunD(name, params, ret, null, e, line, typeParams, recv)
+        if (ds.isEmpty()) return FunD(name, params, ret, null, e, line, typeParams, recv, isSuspend = isSuspend)
         // `= object : T { }`: the anonymous class is declared in a block body; the function returns T.
         val anon = (ds.last() as? LocalDeclS)?.d as? ClassD
         val r = ret ?: if (anon != null && e is CallE && (e.callee as? NameE)?.n == anon.name) TypeRef(anon.supers.firstOrNull() ?: anon.name, anon.superTypeArgs[anon.supers.firstOrNull()] ?: emptyList(), false) else null
         // No declared return type and the body is more than the object itself (`(object : A {}) as A`): keep an
         // expression body (a block-valued `when`) so the return type is inferred from the whole expression.
-        return if (r == null) FunD(name, params, null, null, WhenE(null, listOf(null to Block(ds + ExprS(e).also { it.line = line }))).also { it.line = line }, line, typeParams, recv)
-        else FunD(name, params, r, Block(ds + RetS(e).also { it.line = line }), null, line, typeParams, recv)
+        return if (r == null) FunD(name, params, null, null, WhenE(null, listOf(null to Block(ds + ExprS(e).also { it.line = line }))).also { it.line = line }, line, typeParams, recv, isSuspend = isSuspend)
+        else FunD(name, params, r, Block(ds + RetS(e).also { it.line = line }), null, line, typeParams, recv, isSuspend = isSuspend)
     }
 
     private fun getter(fname: String, ty: TypeRef?, typeParams: List<String>, recv: TypeRef?): FunD? {
@@ -430,7 +430,7 @@ class Parser(toks: List<Tok>) {
         }
         if (get == null || (isVar && set == null)) { p = save; return false }
         pendingCtx = null
-        funs.add(FunD(get.name, ctx + get.params, get.ret, get.body, get.exprBody, get.line))
+        funs.add(FunD(get.name, ctx + get.params, get.ret, get.body, get.exprBody, get.line, isSuspend = get.isSuspend))
         set?.let { funs.add(it) }
         return true
     }
@@ -524,7 +524,7 @@ class Parser(toks: List<Tok>) {
         fun param(q: Param) = if (isLit(q.default)) Param(q.name, q.type, lit(q.type, q.default!!), q.vararg, q.ctx) else q
         fun fn(f: FunD): FunD { val sr = ret; ret = f.ret; try {
             val g = sub.fn(f)
-            return FunD(g.name, g.params.map { param(it) }, g.ret, g.body, f.exprBody?.let { lit(f.ret, it) }, g.line, g.typeParams, f.recv)
+            return FunD(g.name, g.params.map { param(it) }, g.ret, g.body, f.exprBody?.let { lit(f.ret, it) }, g.line, g.typeParams, f.recv, isSuspend = g.isSuspend)
         } finally { ret = sr } }
         for (i in funs.indices) funs[i] = fn(funs[i])
         for (i in classes.indices) { val c = classes[i]
@@ -546,7 +546,7 @@ class Parser(toks: List<Tok>) {
      */
     /** The function type a SAM method takes: an extension method (`fun Int.accept(s: String)`, lowered with the
      *  receiver first) takes `Int.(String) -> R`; a suspend one a suspend function type. */
-    private fun samFnName(m: FunD) = (if (m.recv != null) "\$FnR" else "\$Fn") + (if (SuspendFuns.isSuspend(m)) "S" else "")
+    private fun samFnName(m: FunD) = (if (m.recv != null) "\$FnR" else "\$Fn") + (if (m.isSuspend) "S" else "")
 
     private fun samLower(funs: MutableList<FunD>, classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>, globals: MutableList<VarS>) {
         if (funIfaces.isEmpty()) return
@@ -562,7 +562,7 @@ class Parser(toks: List<Tok>) {
                     val args = ifaceSuperRefs[n]?.get(sd.name)
                     if (args == null || args.size != sd.typeParams.size || sd.name in genericIfaceTps) fail("fun interfaces with generic super-interfaces are not supported", Tok(K.ID, n, d.line))
                     val sub = Subst(sd.typeParams.zip(args).toMap())
-                    sd.methods.map { m -> FunD(m.name, m.params.map { Param(it.name, sub.ty(it.type)) }, m.ret?.let { sub.ty(it) }, null, null, m.line, m.typeParams, m.recv?.let { sub.ty(it) }) }
+                    sd.methods.map { m -> FunD(m.name, m.params.map { Param(it.name, sub.ty(it.type)) }, m.ret?.let { sub.ty(it) }, null, null, m.line, m.typeParams, m.recv?.let { sub.ty(it) }, isSuspend = m.isSuspend) }
                 }
             }
             val defs = (listOf(n) + supers).flatMap { ifaceDefaults[it].orEmpty().map { m -> m.name } }.toSet()
@@ -572,11 +572,9 @@ class Parser(toks: List<Tok>) {
             if (m.typeParams.isNotEmpty() || m.name.startsWith("\$")) fail("this fun interface method is not supported", Tok(K.ID, n, d.line))
             val ret = m.ret ?: TypeRef("Unit", emptyList(), false)
             val fnT = TypeRef(samFnName(m), m.params.map { it.type } + ret, false)
-            // The wrapper's method is declared on the interface's line: suspend-ness is looked up by line.
-            if (SuspendFuns.isSuspend(m)) SuspendFuns.add(d.line, m.name)
             val body = CallE(NameE("f\$").also { it.line = d.line }, emptyList(), m.params.map { NameE(it.name).also { e -> e.line = d.line } }, null).also { it.line = d.line }
             val tas = d.typeParams.map { TypeRef(it, emptyList(), false) }
-            classes.add(ClassD("$n\$Sam", listOf(FieldD("f\$", fnT, false)), listOf(n), listOf(FunD(m.name, m.params, ret, null, body, d.line)), d.line,
+            classes.add(ClassD("$n\$Sam", listOf(FieldD("f\$", fnT, false)), listOf(n), listOf(FunD(m.name, m.params, ret, null, body, d.line, isSuspend = m.isSuspend)), d.line,
                 typeParams = d.typeParams, superTypeArgs = if (tas.isEmpty()) emptyMap() else mapOf(n to tas)))
         }
         // Parameter types of callables by name (methods only when the name is declared once).
@@ -651,7 +649,7 @@ class Parser(toks: List<Tok>) {
                         val fps = gf.params.mapIndexed { i, q -> if (i in tpSam) Param(q.name, samFnType(q.type), null) else q }
                         val cargs = gf.params.mapIndexed { i, q -> if (i in tpSam) wrap(q.type.name, NameE(q.name).also { it.line = gf.line }, gf.line, q.type.args) else NameE(q.name).also { it.line = gf.line } }
                         val call = CallE(NameE(cn).also { it.line = gf.line }, gf.typeParams.map { TypeRef(it, emptyList(), false) }, cargs, null).also { it.line = gf.line }
-                        funs.add(FunD(name, fps, gf.ret, null, call, gf.line, gf.typeParams))
+                        funs.add(FunD(name, fps, gf.ret, null, call, gf.line, gf.typeParams, isSuspend = gf.isSuspend))
                         name
                     }
                     return@rw CallE(NameE(on).also { it.line = callee.line }, x.typeArgs, args, lam).also { it.line = x.line }
@@ -669,7 +667,7 @@ class Parser(toks: List<Tok>) {
             CallE(if (callee is MemberE) MemberE(s.e(callee.recv), callee.n, callee.safe).also { it.line = callee.line } else callee, x.typeArgs, na2, lam2).also { it.line = x.line; it.infix = x.infix }
         })
         val s = sb
-        fun fn(f: FunD) = s.fn(f).let { g -> FunD(g.name, g.params, g.ret, g.body, g.exprBody, g.line, f.typeParams, f.recv) }
+        fun fn(f: FunD) = s.fn(f).let { g -> FunD(g.name, g.params, g.ret, g.body, g.exprBody, g.line, f.typeParams, f.recv, isSuspend = g.isSuspend) }
         for (i in funs.indices) funs[i] = fn(funs[i])
         for (i in classes.indices) { val c = classes[i]
             classes[i] = ClassD(c.name, c.fields.map { s.field(it) }, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams.map { Param(it.name, it.type, it.default?.let { d -> s.e(d) }, it.vararg, it.ctx) },
@@ -729,7 +727,7 @@ class Parser(toks: List<Tok>) {
             // `s++` / `--s` on a Short: the op gets the suffix "s16", so the backend wraps the new value at 16 bits.
             val g = Subst(emptyMap(), rw = { e -> if (e is PostIncE && (e.target as? NameE)?.n in shorts && !e.op.endsWith("s16")) PostIncE(e.target, e.op + "s16").also { it.line = e.line } else null },
                 srw = { s -> if (s is IncS && (s.target as? NameE)?.n in shorts && !s.op.endsWith("s16")) IncS(s.target, s.op + "s16").also { it.line = s.line } else null }).fn(f)
-            return FunD(g.name, g.params, g.ret, g.body, g.exprBody, g.line, f.typeParams, f.recv)
+            return FunD(g.name, g.params, g.ret, g.body, g.exprBody, g.line, f.typeParams, f.recv, isSuspend = g.isSuspend)
         }
         for (i in funs.indices) funs[i] = shortsFix(funs[i])
         for (i in classes.indices) { val c = classes[i]; val ms = c.methods.map { shortsFix(it) }
@@ -773,7 +771,7 @@ class Parser(toks: List<Tok>) {
             if (isVar) ms.add(FunD("\$cset\$$n", ctx + Param("v\$", ty), TypeRef("Unit", emptyList(), false), null, null, line))
         } else {
             if (get == null || (isVar && set == null)) fail("properties with context parameters need both accessors")
-            ms.add(FunD(get.name, ctx + get.params, get.ret, get.body, get.exprBody, get.line))
+            ms.add(FunD(get.name, ctx + get.params, get.ret, get.body, get.exprBody, get.line, isSuspend = get.isSuspend))
             set?.let { ms.add(it) }
         }
         ctxProps.add(n)
@@ -807,7 +805,7 @@ class Parser(toks: List<Tok>) {
                 ExprS(CallE(callee, emptyList(), listOf(v), null).also { it.line = s.line }).also { it.line = s.line }
             }
         })
-        fun fn(f: FunD) = sb.fn(f).let { g -> FunD(g.name, g.params, g.ret, g.body, g.exprBody, g.line, f.typeParams, f.recv) }
+        fun fn(f: FunD) = sb.fn(f).let { g -> FunD(g.name, g.params, g.ret, g.body, g.exprBody, g.line, f.typeParams, f.recv, isSuspend = g.isSuspend) }
         for (i in funs.indices) funs[i] = fn(funs[i])
         for (i in classes.indices) { val c = classes[i]
             classes[i] = ClassD(c.name, c.fields.map { sb.field(it) }, c.supers, c.methods.map { fn(it) }, c.line, c.ctorParams.map { Param(it.name, it.type, it.default?.let { d -> sb.e(d) }, it.vararg, it.ctx) },
@@ -822,7 +820,7 @@ class Parser(toks: List<Tok>) {
      */
     private fun extProperty(): List<FunD> {
         val ctx = takeCtx()
-        return extProperty0().map { g -> FunD(g.name, ctx + g.params, g.ret, g.body, g.exprBody, g.line, g.typeParams, g.recv) }
+        return extProperty0().map { g -> FunD(g.name, ctx + g.params, g.ret, g.body, g.exprBody, g.line, g.typeParams, g.recv, isSuspend = g.isSuspend) }
     }
 
     private fun extProperty0(abstractOk: Boolean = false): List<FunD> {
@@ -846,7 +844,7 @@ class Parser(toks: List<Tok>) {
             if (ty == null && isVar) fail("delegated extension var properties need an explicit type")
             val (df, acc) = delegated(name, ty, isVar, NameE("this"), "\$prop\$$name", "\$set\$$name", "\$dg\$${recv.name.replace('.', '_')}\$$name", NullL())
             extDeleg = df
-            return acc.map { FunD(it.name, it.params, it.ret, it.body, it.exprBody, it.line, tps, recv) }
+            return acc.map { FunD(it.name, it.params, it.ret, it.body, it.exprBody, it.line, tps, recv, isSuspend = it.isSuspend) }
         }
         var get: FunD? = null; var set: FunD? = null
         while (true) {
@@ -888,7 +886,7 @@ class Parser(toks: List<Tok>) {
         val recv = f.recv!!
         val sub = Subst(emptyMap(), rw = { x -> if (x is NameE && (x.n == "this" || x.n == "this@${f.name}")) NameE("\$this_ext").also { it.line = x.line } else null })
         return FunD("mext\$${f.name}", listOf(Param("\$this_ext", recv)) + f.params, f.ret, f.body?.let { sub.block(it) },
-            f.exprBody?.let { sub.e(it) }, f.line, f.typeParams, recv)
+            f.exprBody?.let { sub.e(it) }, f.line, f.typeParams, recv, isSuspend = f.isSuspend)
     }
 
     private fun resolveExtensions(funs: MutableList<FunD>, classes: MutableList<ClassD>) {
@@ -899,10 +897,10 @@ class Parser(toks: List<Tok>) {
             val cd = if (ci >= 0) classes[ci] else null
             val asMethod: FunD? = when {
                 cd == null -> null
-                cd.typeParams.isEmpty() && recv.args.isEmpty() -> FunD(f.name, f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams)
+                cd.typeParams.isEmpty() && recv.args.isEmpty() -> FunD(f.name, f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams, isSuspend = f.isSuspend)
                 cd.typeParams.size == recv.args.size && recv.args.all { it.name in f.typeParams && it.args.isEmpty() } && recv.args.map { it.name }.toSet().size == recv.args.size -> {
                     val m = recv.args.mapIndexed { i, a -> a.name to TypeRef(cd.typeParams[i], emptyList(), false) }.toMap()
-                    Subst(m).fn(FunD(f.name, f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams.filter { it !in m }))
+                    Subst(m).fn(FunD(f.name, f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams.filter { it !in m }, isSuspend = f.isSuspend))
                 }
                 else -> null
             }
@@ -911,7 +909,7 @@ class Parser(toks: List<Tok>) {
                     cd.inits, cd.superArgs, cd.typeParams, cd.enumEntries, cd.isValue, cd.superTypeArgs)
                 continue
             }
-            funs.add(FunD("ext$" + recv.name.replace('.', '_').replace("$", "") + (if (recv.name.startsWith("\$Fn")) "${recv.args.size}" else "") + "$" + f.name, listOf(Param("this", recv)) + f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams))
+            funs.add(FunD("ext$" + recv.name.replace('.', '_').replace("$", "") + (if (recv.name.startsWith("\$Fn")) "${recv.args.size}" else "") + "$" + f.name, listOf(Param("this", recv)) + f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams, isSuspend = f.isSuspend))
         }
     }
 
@@ -1275,14 +1273,13 @@ class Parser(toks: List<Tok>) {
      * A function type as a super-interface (`interface Foo : () -> Int`, `fun interface G<P> : suspend (P) -> Unit`):
      * a generic interface named like the type (`$Fn`/`$FnS`) with one `invoke`, whose type arguments are the
      * parameter and return types; Generics points the instance at the backend's function interface (`$Fn$Int`).
-     * [line] is the declaring interface's: a suspend `invoke` is registered there (SuspendFuns keys by line).
+     * [line] is the declaring interface's; `invoke` of `$FnS` / `$FnRS` is a suspend function.
      */
     private fun fnSuperDecl(s: String, arity: Int?, line: Int): InterfaceD? {
         if (s !in setOf("\$Fn", "\$FnS", "\$FnR", "\$FnRS") || arity == null || arity < 1) return null
         val tps = (1 until arity).map { "\$P$it" } + "\$R"
-        if (s == "\$FnS" || s == "\$FnRS") SuspendFuns.add(line, "invoke")
         val ps = (1 until arity).map { Param("p$it", TypeRef("\$P$it", emptyList(), false)) }
-        return InterfaceD(s, listOf(FunD("invoke", ps, TypeRef("\$R", emptyList(), false), null, null, line)), line, tps)
+        return InterfaceD(s, listOf(FunD("invoke", ps, TypeRef("\$R", emptyList(), false), null, null, line, isSuspend = s == "\$FnS" || s == "\$FnRS")), line, tps)
     }
 
     private fun flattenIfaces(classes: MutableList<ClassD>, ifaces: MutableList<InterfaceD>) {
@@ -1392,7 +1389,7 @@ class Parser(toks: List<Tok>) {
                     val targs = x.superTypeArgs[d.name].orEmpty()
                     val sub = if (d.typeParams.isNotEmpty() && targs.size == d.typeParams.size) Subst(d.typeParams.zip(targs).toMap()) else null
                     d.methods.filter { (it.name.startsWith("\$prop\$") && it.params.isEmpty() || it.name.startsWith("\$set\$") && it.params.size == 1) && it.body == null && it.exprBody == null }
-                        .map { m -> sub?.let { FunD(m.name, m.params.map { q -> Param(q.name, it.ty(q.type)) }, m.ret?.let { r -> it.ty(r) }, null, null, m.line) } ?: m }
+                        .map { m -> sub?.let { FunD(m.name, m.params.map { q -> Param(q.name, it.ty(q.type)) }, m.ret?.let { r -> it.ty(r) }, null, null, m.line, isSuspend = m.isSuspend) } ?: m }
                 }
             val add = ArrayList<FunD>()
             for (m in props) {
@@ -1439,7 +1436,7 @@ class Parser(toks: List<Tok>) {
                     val body: E = if (m.name.startsWith("\$prop\$") && m.params.isEmpty()) MemberE(recv, m.name.removePrefix("\$prop\$"), false)
                         else CallE(MemberE(recv, m.name, false), emptyList(), ps.map { NameE(it.name) }, null)
                     body.line = c.line
-                    add.add(FunD(m.name, ps, st(m.ret ?: TypeRef("Unit", emptyList(), false)), null, body, c.line))
+                    add.add(FunD(m.name, ps, st(m.ret ?: TypeRef("Unit", emptyList(), false)), null, body, c.line, isSuspend = m.isSuspend))
                 }
             }
             val chainSupers = ch.flatMap { it.supers }.distinct()
@@ -1450,7 +1447,7 @@ class Parser(toks: List<Tok>) {
                 // Only the topmost class in the chain needs the copy; subclasses inherit it.
                 val top = ch.last { x -> s in x.supers }
                 if (top !== c) continue
-                val copy = FunD(d.name, d.params, d.ret ?: TypeRef("Unit", emptyList(), false), d.body, d.exprBody, d.line, d.typeParams)
+                val copy = FunD(d.name, d.params, d.ret ?: TypeRef("Unit", emptyList(), false), d.body, d.exprBody, d.line, d.typeParams, isSuspend = d.isSuspend)
                 val gtps = genericIfaceTps[s]
                 if (gtps == null) { add.add(copy); continue }
                 val targs = top.superTypeArgs[s] ?: fail("generic interface $s needs type arguments in ${top.name}")
@@ -1704,7 +1701,7 @@ class Parser(toks: List<Tok>) {
             if (n !in taken && n !in extra) { taken.add(n); LiftedLocals.names.add(n); return n }
             while (true) { val m = "$n\$l${localN++}"; if (m !in taken && m !in extra) { taken.add(m); LiftedLocals.names.add(m); return m } }
         }
-        fun copyFun(n: FunD, o: FunD, name: String = n.name) = FunD(name, n.params, n.ret, n.body, n.exprBody, n.line, o.typeParams, o.recv)
+        fun copyFun(n: FunD, o: FunD, name: String = n.name) = FunD(name, n.params, n.ret, n.body, n.exprBody, n.line, o.typeParams, o.recv, isSuspend = n.isSuspend)
         fun copyClass(sub: Subst, c: ClassD, name: String): ClassD {
             val fm = c.fields.associateWith { f -> FieldD(f.name, f.type?.let { sub.ty(it) }, f.isVar, f.init?.let { sub.e(it) }, f.lateinit) }
             return ClassD(name, c.fields.map { fm.getValue(it) }, c.supers.map { sub.ty(TypeRef(it, emptyList(), false)).name }, c.methods.map { copyFun(sub.fn(it), it) }, c.line,
@@ -1774,7 +1771,7 @@ class Parser(toks: List<Tok>) {
             // `val $othisN = this` added for a class that turned out not to use the receiver: dropped (the lambda may
             // have no `this`).
             val g = Subst(emptyMap(), srw = { x -> if (x is VarS && x.name in RecvLocalClasses.implicitOnly && x.name !in used) ExprS(BoolL(true)).also { it.line = x.line } else null }).fn(g0)
-            return FunD(g.name, g.params, g.ret, g.body, g.exprBody, g.line, f.typeParams, f.recv)
+            return FunD(g.name, g.params, g.ret, g.body, g.exprBody, g.line, f.typeParams, f.recv, isSuspend = g.isSuspend)
         }
         fun lift(f0: FunD, owner: ClassD?, newMethods: MutableList<FunD>): FunD {
             var f = recvClasses(f0)
@@ -2008,8 +2005,8 @@ class Parser(toks: List<Tok>) {
                 for (d in decls) when (d) {
                     is FunD -> if (d !in asLambda) {
                         val g = copyFun(sub.fn(d), d, rename.getValue(d.name)).let { g0 ->
-                            genFunTps[d.name]?.let { tps -> FunD(g0.name, g0.params, g0.ret, g0.body, g0.exprBody, g0.line, tps, g0.recv) } ?: g0 }.let { g1 ->
-                            capFun[d.name]?.let { cs -> FunD(g1.name, cs.map { (c, t) -> Param(c, t) } + g1.params, g1.ret, g1.body, g1.exprBody, g1.line, g1.typeParams, g1.recv) } ?: g1 }
+                            genFunTps[d.name]?.let { tps -> FunD(g0.name, g0.params, g0.ret, g0.body, g0.exprBody, g0.line, tps, g0.recv, isSuspend = g0.isSuspend) } ?: g0 }.let { g1 ->
+                            capFun[d.name]?.let { cs -> FunD(g1.name, cs.map { (c, t) -> Param(c, t) } + g1.params, g1.ret, g1.body, g1.exprBody, g1.line, g1.typeParams, g1.recv, isSuspend = g1.isSuspend) } ?: g1 }
                         // In a method, a local extension is a member extension of the class (its body may use `this@C`).
                         if (owner != null) newMethods.add(lift(if (g.recv != null) asMemberExt(g) else g, owner, newMethods)) else funs.add(lift(g, null, newMethods))
                     }
@@ -2059,7 +2056,7 @@ class Parser(toks: List<Tok>) {
         return hit
     }
 
-    private fun keepRecv(n: FunD, o: FunD) = FunD(n.name, n.params, n.ret, n.body, n.exprBody, n.line, n.typeParams, o.recv)
+    private fun keepRecv(n: FunD, o: FunD) = FunD(n.name, n.params, n.ret, n.body, n.exprBody, n.line, n.typeParams, o.recv, isSuspend = n.isSuspend)
 
     /** Pending `<...>` type arguments of the supertypes of the class being parsed. */
     private val superTA = HashMap<String, List<TypeRef>>()
@@ -2128,7 +2125,7 @@ class Parser(toks: List<Tok>) {
                 r?.let { CallE(it.also { e -> e.line = c.line }, x.typeArgs, x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line } }
             }
         })
-        return ms.map { m -> val f = sub.fn(m); FunD(if (m.name in privs) nn(m.name) else m.name, f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams, f.recv) }
+        return ms.map { m -> val f = sub.fn(m); FunD(if (m.name in privs) nn(m.name) else m.name, f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams, f.recv, isSuspend = f.isSuspend) }
     }
 
     /** Declared or inferred return types of the methods of each interface parsed so far. */
@@ -2186,7 +2183,7 @@ class Parser(toks: List<Tok>) {
                 else {
                     params = m.params.associate { it.name to it.type }
                     val t = guess(m.exprBody)
-                    if (t == null) m else { changed = true; known[m.name] = t; FunD(m.name, m.params, t, m.body, m.exprBody, m.line, m.typeParams, m.recv) }
+                    if (t == null) m else { changed = true; known[m.name] = t; FunD(m.name, m.params, t, m.body, m.exprBody, m.line, m.typeParams, m.recv, isSuspend = m.isSuspend) }
                 }
             }
             if (!changed) return out
@@ -2238,7 +2235,7 @@ class Parser(toks: List<Tok>) {
         if (defs.isNotEmpty()) ifaceDefaults[name] = defs
         defs.forEach { defaultOwner[it] = name }
         // The interface keeps abstract signatures; implementing classes get copies of the default bodies.
-        return InterfaceD(name, ms.map { if (it in defs) FunD(it.name, it.params, it.ret ?: TypeRef("Unit", emptyList(), false), null, null, it.line, it.typeParams) else it }, line, tps)
+        return InterfaceD(name, ms.map { if (it in defs) FunD(it.name, it.params, it.ret ?: TypeRef("Unit", emptyList(), false), null, null, it.line, it.typeParams, isSuspend = it.isSuspend) else it }, line, tps)
     }
 
     /** `<T, reified U : Bound>`: type parameter names; upper bounds are parsed but not checked (monomorphization). */
@@ -2333,7 +2330,6 @@ class Parser(toks: List<Tok>) {
             else if (rt.args.isEmpty() && rt.name.contains('.')) { recv = TypeRef(rt.name.substringBeforeLast('.'), emptyList(), false); rt.name.substringAfterLast('.') }
             else fail("expected '('")
         } else { p = save; ident() }
-        if (isSusp) SuspendFuns.add(line, name)
         expectOp("(")
         val params = nested(1) {
             val ps = ArrayList<Param>(ctxPs)
@@ -2353,13 +2349,13 @@ class Parser(toks: List<Tok>) {
         whereClause(typeParams)
         // A block body may start on the next line (`fun f(): String\n{ ... }`).
         if (peek().k == K.NL) { val save2 = p; skipNLOnly(); if (!isOp("{")) p = save2 }
-        return labelThis(if (isOp("=")) { next(); skipNLOnly(); exprBodyFun(name, params, ret, line, typeParams, recv) }
+        return labelThis(if (isOp("=")) { next(); skipNLOnly(); exprBodyFun(name, params, ret, line, typeParams, recv, isSusp) }
         else if (isOp("{")) {
             val outer = localDelegs; localDelegs = HashSet()
             val b = try { block().let { if (localDelegs.isEmpty()) it else delegLocals(it, localDelegs) } } finally { localDelegs = outer }
-            FunD(name, params, ret, b, null, line, typeParams, recv)
+            FunD(name, params, ret, b, null, line, typeParams, recv, isSuspend = isSusp)
         }
-        else FunD(name, params, ret, null, null, line, typeParams, recv), name) // abstract (interface) member
+        else FunD(name, params, ret, null, null, line, typeParams, recv, isSuspend = isSusp), name) // abstract (interface) member
     }
 
     /**
@@ -2370,15 +2366,15 @@ class Parser(toks: List<Tok>) {
         if (f.recv == null) return f
         val n = "\$this\$$label"; var hit = false
         var sub: Subst? = null
-        fun inner(g: FunD) = FunD(g.name, g.params, g.ret, g.body?.let { sub!!.block(it) }, g.exprBody?.let { sub!!.e(it) }, g.line, g.typeParams, g.recv)
+        fun inner(g: FunD) = FunD(g.name, g.params, g.ret, g.body?.let { sub!!.block(it) }, g.exprBody?.let { sub!!.e(it) }, g.line, g.typeParams, g.recv, isSuspend = g.isSuspend)
         // Local functions (anonymous functions in the body) see the label too.
         sub = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n == "this@$label") { hit = true; NameE(n).also { it.line = x.line } } else null },
             srw = { st -> if (st is LocalDeclS && st.d is FunD) LocalDeclS(inner(st.d as FunD)).also { it.line = st.line } else null })
         val b = f.body?.let { sub.block(it) }; val eb = f.exprBody?.let { sub.e(it) }
         if (!hit) return f
         val decl = VarS(n, false, null, NameE("this").also { it.line = f.line }).also { it.line = f.line }
-        return if (b != null) FunD(f.name, f.params, f.ret, Block(listOf(decl) + b.stmts), null, f.line, f.typeParams, f.recv)
-        else FunD(f.name, f.params, f.ret, null, WhenE(null, listOf(null to Block(listOf(decl, ExprS(eb!!).also { it.line = f.line })))).also { it.line = f.line }, f.line, f.typeParams, f.recv)
+        return if (b != null) FunD(f.name, f.params, f.ret, Block(listOf(decl) + b.stmts), null, f.line, f.typeParams, f.recv, isSuspend = f.isSuspend)
+        else FunD(f.name, f.params, f.ret, null, WhenE(null, listOf(null to Block(listOf(decl, ExprS(eb!!).also { it.line = f.line })))).also { it.line = f.line }, f.line, f.typeParams, f.recv, isSuspend = f.isSuspend)
     }
 
     /** Delegated local variables (`val x by d`) of the function body being parsed. */
@@ -2790,10 +2786,10 @@ class Parser(toks: List<Tok>) {
         val plain = d is FunD && d.recv == null
         val sub = Subst(emptyMap(), rw = { x -> if (x is NameE && ((plain && x.n == "this") || x.n.startsWith("this@"))) { hit = true; NameE(n).also { it.line = x.line } } else null })
         val r: Any = when (d) {
-            is FunD -> FunD(d.name, d.params, d.ret, d.body?.let { sub.block(it) }, d.exprBody?.let { sub.e(it) }, d.line, d.typeParams, d.recv)
+            is FunD -> FunD(d.name, d.params, d.ret, d.body?.let { sub.block(it) }, d.exprBody?.let { sub.e(it) }, d.line, d.typeParams, d.recv, isSuspend = d.isSuspend)
             is ClassD -> { val nf = HashMap<FieldD, FieldD>(); fun fd(f: FieldD) = nf.getOrPut(f) { FieldD(f.name, f.type, f.isVar, f.init?.let { sub.e(it) }, f.lateinit) }
                 ClassD(d.name, d.fields.map { fd(it) }, d.supers, d.methods.map { m ->
-                FunD(m.name, m.params, m.ret, m.body?.let { sub.block(it) }, m.exprBody?.let { sub.e(it) }, m.line, m.typeParams, m.recv) }, d.line,
+                FunD(m.name, m.params, m.ret, m.body?.let { sub.block(it) }, m.exprBody?.let { sub.e(it) }, m.line, m.typeParams, m.recv, isSuspend = m.isSuspend) }, d.line,
                 d.ctorParams, d.inits.map { if (it is Block) sub.block(it) else if (it is FieldD) fd(it) else it }, d.superArgs?.map { sub.e(it) }, d.typeParams, d.enumEntries, d.isValue, d.superTypeArgs) }
             else -> d
         }
