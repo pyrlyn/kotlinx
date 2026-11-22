@@ -29,6 +29,15 @@ function $js_sbrk(n) {
   BRK = e;
   return p;
 }
+// wasm memory.size / memory.grow on the same break: the memory "ends" at the break rounded up to a 64 KiB page, and
+// a grow returns the first new page (its pages are contiguous with the previous grow when no js_sbrk came between).
+function _msize() { return BRK + 65535 >>> 16; }
+function _mgrow(n) {
+  const p = BRK + 65535 & -65536, e = p + (n >>> 0) * 65536;
+  if (e > MAXMEM || e < 0 || (e > buf.byteLength && !_grow(e))) return -1;
+  BRK = e;
+  return p >>> 16;
+}
 function _U() { throw new Error("unreachable code reached"); }
 // Frame address for runtime.c's release depth limit: 4 KB per probed frame, so its 4 MB room is 1024 nested releases.
 function _fa() { return S - (D << 12) | 0; }

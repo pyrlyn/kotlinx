@@ -25,6 +25,10 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   fields and methods, interfaces with virtual dispatch, val/var, if/when expressions, while, for over ranges/arrays/lists/strings,
   unlabeled `break`/`continue`, lambdas as trailing blocks for built-ins, ArrayList/HashMap/StringBuilder/arrays, string
   templates, nullable references and nullable primitives (`Int?`, boxed) with `?.` `?:` `!!`, Int/Long/unsigned/Float/Double/Boolean/Char/String.
+- Destructuring: `val (a, b)`, position-based `val [a, b]` / `[val a, var b]`, in `for` headers (also over a user
+  `rangeTo` whose result has `iterator()`) and lambda parameters; `componentN` members or extensions, `_` skipped.
+  Multi-argument indexing `a[i, j]` (get/set, compound assignment, `++`/`--` as statements and expressions, vararg
+  `get`/`set`). Vararg primary-constructor properties; collection literals as parameter defaults (`xs: List<T> = []`).
 - Extension properties: top-level `val`/`var` with getter and setter (extension functions `$prop$x` / `$set$x`, also
   generic `val <T> T.x` and `inline get()`) and member extension properties in class/object/interface bodies (member
   extensions `mext$$prop$x` / `mext$$set$x`; abstract without accessors in interfaces and `abstract` members).
@@ -38,16 +42,39 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   visible program-wide; refused when they capture locals, have a type-parameter or library-operator receiver (`String`,
   collections), clash with another extension operator, or have a nullable primitive receiver next to lambdas (function
   types erase `Int?` parameters to `Int`).
+- Delegation with `by`. Class delegation `I by expr` in classes, objects, companion objects and object expressions
+  (a hidden field `$by$I` plus forwarders; in an object expression the delegate is evaluated outside the object, so
+  `super.f()` there is the enclosing class's; a value class delegating to its own property uses that property; a
+  delegated member hides a superclass implementation, only the class's own members win).
+  Delegated properties `val`/`var x by d` (members, top level, locals, extension and member extension properties):
+  untyped `var`s, `provideDelegate`, `lazy` (typed by the property), property references (`by ::x`, `by a::x`,
+  `by A::x`) and extension `getValue`/`setValue` operators (also on `Any`, for primitive and String delegates).
+  No `KProperty` metadata: the property argument is `null`; `Delegates.*`, map delegates and delegation to
+  non-interface types (`CharSequence`, `Map`, type aliases) are unsupported.
 - `where` clauses on generic functions, classes and interfaces: the first bound of each type parameter acts like an
   inline bound (generic code is monomorphized, further intersection bounds only constrain callers).
 - Bridges: an override whose return representation differs from the interface method (`Int`/`String` for `Any`)
   gets a boxing bridge `@br.C.m` in the interface slot; class-typed virtual calls use the `m#narrow` slot.
 - Lambdas with receiver: typed parameters (`{ x: Int -> }`), builder inference from unqualified receiver properties
   (`scoped { emit(key) }`); `r.f(x)` counts as a use of a local function value `f` in last-use analysis.
+- Function types with receiver (`T.() -> R`): as supertypes of classes, objects and interfaces (`class C : String.() -> Int`);
+  anonymous extension functions (`fun Int.() = this + 1`, also with `context(...)`, labels and a nullable receiver);
+  extension properties on function types (`val (Int.() -> T).p`); `a?.f(1)` and `c.p(1)` for function-typed locals,
+  getters and extension properties; references `A::foo`, `Outer::Inner`, `f::p` assigned to receiver types; implicit
+  receivers (`with(c) { ... }`) supply context arguments. Not yet: generic member extension properties on function types,
+  generic inner classes in references, invoking an object directly (`O(1)` for `operator fun invoke`).
 - Locals without an initializer (`val x: T` assigned later): a variable starting at the type's zero value;
   definite assignment is not checked.
-- Referential equality `===` / `!==`: pointer identity for class/interface/array/collection values and against null,
-  value equality for primitives; strings and boxed `Any` values are refused (interning/box caching differ).
+- Referential equality `===` / `!==`: pointer identity for class/interface/array/collection values, of an object
+  against an `Any` value and against null, value equality for primitives; strings and two `Any` values are refused
+  (interning/box caching differ).
+- Fun interfaces (`Parser.samLower`): `fun interface I` gets a wrapper class `I$Sam` around a function value; SAM
+  constructors (`I { }`, `I(f)`, `::I`, also through typealiases and with type arguments read from typed lambda
+  parameters), lambdas passed to fun-interface parameters, and function values that are not literals (references,
+  variables, nullable values, values of interfaces extending a function type; `NativeBackend.samConvert`). A fun
+  interface may extend function types (`fun interface F : () -> Int`, `fun interface G<P> : suspend (P) -> Unit`):
+  the function interface (`$Fn$Int`) becomes its super. Converted callable references are refused as `Any` like the
+  references themselves (Kotlin compares them structurally).
 - Class literals `T::class` / `e::class` with `simpleName`, `qualifiedName`, `==` and `toString` for primitives, String,
   standard types and final user classes (static runtime class only; no `KClass<*>` types or full reflection).
 - Multi-field value classes (`+FullValueClasses`): compiled like data classes (boxed, structural equals/hashCode/
@@ -60,6 +87,13 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
 - Stdlib additions: `String.toInt/toLong/toIntOrNull/toLongOrNull`, `substring` (prelude), `List.sum()` of numeric
   lists, `HashMap`/`hashMapOf` with String keys (content-hashed, keys retained by the map; values stay primitive), computed
   `var` properties with `get()` and `set(v)` accessors.
+- Arrays: primitive arrays (`IntArray`, `CharArray`, `BooleanArray`, unsigned, ...) are `{ length; elements }` blocks,
+  `Array<T>` is a list. `XArray(n) { }`, `XArray(n, f)` / `Array(n, f)` with a function value (evaluated once), spreads
+  mixed with items (`listOf(*a, x)`, `intArrayOf(1, *xs)`, varargs; copied into a fresh list), `emptyArray()`,
+  `arrayOfNulls`, `toTypedArray()` (a copy), `fold`, `concatToString`/`toCharArray`, references through `Array<T>`
+  receivers (`Array<String>::first`). Arrays compare and hash by identity; a printed array shows its contents (`[1, 2]`,
+  as a data class's `toString` does; Kotlin prints `[I@hash` for a bare primitive array). Not yet: smart casts to
+  `Array<*>` from `Any`, overloads on `Array<A>` / `Array<B>` receivers, calling `main(args)` from code.
 - kotlinx subsets (`compiler/src/frontend/Kotlinx.kt`, tests `kotlinx_coroutines`, `kotlinx_serialization`):
   coroutines (`runBlocking` (also nested), `coroutineScope`, `launch`, `async`/`await`, `Job` with cancellation
   (`cancel`, `isActive`, `CancellationException` at suspension points, children cancelled with the parent), `Channel`,
@@ -83,7 +117,7 @@ Kernel time ns (in-process clock), peak RSS (`/usr/bin/time -l`), CPU % = (user+
   cycle collector with an adaptive root threshold. Leak tests (`compiler/tests/leaks`) check live count = 0, ASan and macOS `leaks`.
 - Tests: `compiler/test.sh` (golden `compiler/tests/*.kt|.out`, benchmark checksums, leak tests);
   upstream Kotlin tests in `compiler/tests/upstream` (unmodified, JetBrains/kotlin @ 19c36e1), 8475 candidates
-  (`manifest.json`): PASS 3305, MISCOMPILE 17, COMPILER_CRASH 2, UNSUPPORTED 2167, N/A 2984 (passing ones are kept and
+  (`manifest.json`): PASS 3497, MISCOMPILE 17, COMPILER_CRASH 2, UNSUPPORTED 1975, N/A 2984 (passing ones are kept and
   re-runnable with `run.py`; `run.py --leak-check` also fails a passing test that leaks); reference tests the compiler
   does not fully pass yet: `compiler/tests/reference/fetch.py` (list in `compiler/tests/reference/list.txt`); `import.py --no-fetch` re-scans all candidates and keeps the newly passing ones.
 
@@ -106,7 +140,7 @@ Then copy the NewKotlin rows into `bench/table.md`.
 - Memory manager: `native/gc/c` behind `kxgc.h`, selected with `newkotlinc --gc=epoch|perceus|incremental|compact|rc`
   (default = epoch, `--gc=default` is an alias; perceus = RC + cycle collector, the pre-epoch default; compact =
   RC + small synchronous cycle collector, Zig only, the `--target=js` default). Tests: `native/gc/c/tests/zig` (`zig build ported`/`zig build gc`; legacy shell suite in `native/gc/c/tests/archive`); benchmarks: `bench/gc`.
-- **GC runtime backend (local `local/gc-extract-regression`):** default `--gc-runtime=zig` links `native/gc/zig/zig-out/lib/libgc-<name>.a` (experimental Zig port @cf79057 + `runtime_host`); `--gc-runtime=c` compiles `native/gc/c/<name>/gc.c`. Shared `compiler/runtime/runtime.c` always. Zig port parity incomplete vs C (see `native/gc/zig/docs/zig-port.md`).
+- **GC runtime backend (local `local/gc-extract-regression`):** default `--gc-runtime=zig` links `native/gc/zig/zig-out/lib/libgc-<name>.a` (experimental Zig port @a65a3f6 + KotlinX patches + `runtime_host`); `--gc-runtime=c` compiles `native/gc/c/<name>/gc.c`. Shared `compiler/runtime/runtime.c` always. Zig port parity incomplete vs C (see `native/gc/zig/docs/zig-port.md`).
 
 - Resume: `cd bench && ./build.sh && ./round.sh && RESULTS=results/round ./summarize.sh`; `compiler/test.sh` for compiler tests; `compiler/tests/upstream/run.py` for upstream tests.
 
@@ -114,7 +148,7 @@ Then copy the NewKotlin rows into `bench/table.md`.
 
 In-progress items are marked as such; numbers are only those already committed or in open PRs.
 
-- **GC (C):** all collectors but `compact` (Zig only, `native/gc/zig/src/compact.zig`) are C (`native/gc/c/{perceus,incremental,epoch,rc}/gc.c`, shared `common/*.inc`, API `kxgc.h`). Vendored under [`native/gc/`](native/gc/README.md) (C `@6acde64`, Zig `@cf79057`); git submodule removed.
+- **GC (C):** all collectors but `compact` (Zig only, `native/gc/zig/src/compact.zig`) are C (`native/gc/c/{perceus,incremental,epoch,rc}/gc.c`, shared `common/*.inc`, API `kxgc.h`). Vendored under [`native/gc/`](native/gc/README.md) (C `@a65a3f6`, Zig `@a65a3f6` + KotlinX patches); git submodule removed.
 - **Epoch collector:** #147 (short adaptive logs) is merged: `cyclic_garbage` peak RSS 22.6 -> 4.1 MiB.
   `epoch` is the default collector (Polar Quest, #161); the old default is now `perceus`.
   GC benchmark re-run: #148 (open). Faster GC benchmark runs (build cache, parallel builds, opt-in skip of slow

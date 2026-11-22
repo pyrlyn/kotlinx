@@ -29,4 +29,4 @@ bin/newkotlinc /tmp/hello.kt -o /tmp/hello   # works from any directory
 - [Benchmarks](docs/benchmarks.md): running and comparing benchmarks, committed results.
 - [Architecture](compiler/docs/ARCHITECTURE.md): pipeline, key files, how to add a feature (start here to contribute).
 - [GC](native/gc/README.md), [STATUS.md](STATUS.md), [bench/table.md](bench/table.md), feature roadmap [#22](https://github.com/pyrlyn/kotlinx/issues/22).
-- GC is vendored under [`native/gc/`](native/gc/README.md) (C collectors `@6acde64`, Zig port `@cf79057`; default `--gc-runtime=zig`). No git submodule. See that README for Zig 0.17.1 vs legacy 0.16 notes.
+- GC is vendored under [`native/gc/`](native/gc/README.md) (C collectors and Zig port `@a65a3f6`, Zig with KotlinX patches; default `--gc-runtime=zig`). No git submodule. See that README for Zig 0.17.1 vs legacy 0.16 notes.

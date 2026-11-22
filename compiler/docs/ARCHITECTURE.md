@@ -49,7 +49,9 @@ while emitting IR.
 - Declarations: `FunD` (name, params, ret, body/exprBody, typeParams, `recv` for extensions), `ClassD` (fields,
   ctorParams, inits, supers, superArgs, typeParams, enumEntries, isValue, superTypeArgs), `InterfaceD`, `Program`.
 - Backend types `Ty`: primitives, `Str`, `Arr`, `ListTy`, `MapTy`, `Cls`, `Iface`, `RawPtr`. Function types are
-  interfaces named `$Fn...` (see `fnTy` / `fnSig` in NativeBackend).
+  interfaces named `$Fn...` (see `fnTy` / `fnSig` in NativeBackend). `R.(P) -> T` is `$FnR` (receiver first); every
+  closure implements both `$Fn` and `$FnR` (`twinFn`), so the two are interchangeable at run time.
+  `context(C) R.(P) -> T` is the plain `$Fn` with the context values first (Parser's `CtxRecvFnTypes`).
 
 ## Where features live (copy these patterns)
 
@@ -58,15 +60,22 @@ while emitting IR.
 | top-level decls | `Parser.program()` dispatch on the first token; unknown -> "unexpected top-level token" |
 | class bodies | `Parser.classDecl` / `classBody` / `members`; secondary ctors lowered by `lowerSecondaries` |
 | nested classes | parsed in class bodies, hoisted to top level with mangled names (`hoisted`, `resolveNested`; outer access through `outer$`) |
-| local declarations | `Parser.localDecl` -> `LocalDeclS`; `liftLocals` hoists non-capturing local functions (top level, or a method of the enclosing class) and local classes/objects/interfaces, and turns capturing local functions into lambda `val`s |
+| local declarations | `Parser.localDecl` -> `LocalDeclS`; `liftLocals` hoists non-capturing local functions (top level, or a method of the enclosing class) and local classes/objects/interfaces, and turns capturing local functions into lambda `val`s; a hoisted function is renamed away from a top-level property of its name, and calls it cannot take (`FunD.takesArgs`) stay on the property |
 | objects / companions | `objectDecl`; lazy singletons via generated `$init$N` / `$get$N` and globals `$o$N` (end of `program()`) |
 | extensions | `function()` reads `Recv.` receivers; `resolveExtensions` turns them into functions/methods; member extensions -> `mext$f` (`memberExt`; `$this_ext` is the extension receiver, tried before the dispatch receiver in `genNamedCall`; companion ones found by `companionMext` through `NestedClasses`); local operator extensions are lifted by `liftLocals` under their own name |
 | property accessors | `getter` / `accessors` -> hidden `$prop$x` methods |
+| delegation `by` | class delegation: `Parser.superList` adds a hidden field `$by$I`, `implementIfaceProps` the forwarders; delegated properties: `Parser.delegated` (field/global `$dg$x` = `d.$provideDelegate(thisRef, null)`, accessors call `getValue`/`setValue`); the backend resolves `$provideDelegate` and property-reference `getValue`/`setValue` in `method`, and types an untyped delegated `var`'s setter from its getter (`GETTER_TYPE` in `inferReturnTypes`) |
 | enums | `classDecl(isEnum = true)`, `enumGlobals`, statics rewritten by `rewriteStatics` (Generics.kt) |
 | data classes | `Parser.dataClass` generates equals/hashCode/toString/componentN/copy as AST |
+| destructuring | `val (a, b)` / `val [a, b]` / `[val a, var b]`, `for ([i, v] in ...)` and lambda `{ [a, b] -> }` lowered in `Parser.stmt` / `block(lambda = true)` to a `$dN` temp plus `componentN` locals (`destructVar`; `_` skipped, `` `_` `` is a real name); `for` over a class `rangeTo` uses its `iterator()` (`genFor`) |
+| multi-index | `a[i, j]` parses to `a.get(i, j)` (`multiIdx`); `a[i, j] op= v` -> `multiIndexAssign`; `a[i, j]++` / `++a[i, j]` as expressions: `onceRecv` + `assign` via `multiIndexGet`; `set(vararg k, value)` takes the last argument as value (`packVararg`) |
 | generics | classes/interfaces monomorphized in `compileGenerics` (`Box<Int>` -> `Box$Int`, `Subst`); generic functions per call in `genGenericCall`; instances discovered via `NeedInstance` / `NeedClass` / `NeedIface` exceptions that restart codegen |
-| lambdas / closures | `NativeBackend.genLambda`: free vars from `Uses`, captured values become fields of a generated class `$LamN` implementing `$Fn...`; captured `var`s are boxed into `$Ref<T>` by `boxCapturedVars` |
-| callable refs `::f` | `genRef` / `genRef0` (UnE "::") |
+| lambdas / closures | `NativeBackend.genLambda`: free vars from `Uses`, captured values become fields of a generated class `$LamN` implementing `$Fn...`; captured `var`s are boxed into `$Ref<T>` by `boxCapturedVars`; a captured `Int?` keeps a nullable field (`capRef`) |
+| fun interfaces / SAM | `Parser.samLower`: wrapper class `I$Sam` holding the function value; lambda literals wrapped in the parser, other function values in `NativeBackend.samConvert` (from `coerce`), lambdas whose parameter type is only known per receiver typed by `samSig`; function-type supers via `Parser.fnSuperDecl` + `Generics.ensure` |
+| callable refs `::f` | `genRef` / `genRef0` (UnE "::"); type arguments of a type-name receiver (`Array<String>::f`) in `RefTypeArgs`; generic members take their parameter types from the expected type (`refExpected`) |
+| arrays | primitive arrays are `Ty.Arr` (`rt_arr_new`: length, then elements), `Array<T>` is `Ty.ListTy`; constructors and `xArrayOf` in `genNamedCall` (`initLoop`, `initByValue` for `XArray(n, f)`, `spreadBlock` for `*xs` mixed with items, also in `packVararg`); more API in `Prelude.kt` (`ARRAY_EXT`, `ARRAY_MORE`) |
+| function-type supertypes | `class C : (Int) -> Int`, `object O : Int.() -> String`, `interface I : (String) -> String`: `Parser.fnSuper` records `$Fn`/`$FnR` with its type arguments; `classSupers` resolves them (with the twin); an interface gets an abstract `invoke` |
+| anonymous functions | `fun R.(p) = ...` in `primary()` is declared as a function `$afN` (local, or top level outside bodies) and used as `R::$afN`; with `context(...)` the reference takes the context values first; `l@ fun` labels its `return@l` |
 | calls | `genCall` -> `genNamedCall` (functions, constructors, built-ins) / `method` (receiver calls) / `invokeFn` (function values); default and named args `normalize`, varargs `packVararg` |
 | type checks | `isCheck`, `genAs`, smart casts `smartCasts` / `applyCasts` |
 | exceptions | `genTry`, `throwValue`, `unwind` (no C++ EH; status checked after calls in `afterCall`) |

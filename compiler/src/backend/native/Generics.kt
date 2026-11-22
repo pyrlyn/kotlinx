@@ -47,11 +47,15 @@ fun compileGenerics(p00: Program): String {
             // Super-interfaces of the instance (generic ones instantiated with the substituted arguments).
             ifaceInst[m] = InterfaceD(m, i0.methods, i0.line, emptyList(), d.supers.map { s -> IfaceSuperArgs.map[n]?.get(s)?.let { ensure(s, it.map { a -> sub.ty(a) }) } ?: s })
         } }
+        // A function type as a super-interface (Parser.fnSuperDecl): the interface the backend's fnTy would create.
+        if ((n == "\$Fn" || n == "\$FnS") && m !in extraIfaces && p0.ifaces.none { it.name == m })
+            extraIfaces[m] = InterfaceD(m, listOf(FunD("invoke", args.dropLast(1).mapIndexed { i, a -> Param("p$i", a) }, args.last(), null, null, 0)), 0)
         return m
     }
-    fun fixSupers(c: ClassD): ClassD = if (c.superTypeArgs.isEmpty()) c else
-        ClassD(c.name, c.fields, c.supers.map { s -> c.superTypeArgs[s]?.let { ensure(s, it) } ?: s }, c.methods, c.line, c.ctorParams,
-            c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue)
+    // Function supertypes (`$Fn` / `$FnR`) keep their type arguments: the backend resolves them (NativeBackend.classSupers).
+    fun fixSupers(c: ClassD): ClassD = if (c.superTypeArgs.keys.all { isFnSuper(it) }) c else
+        ClassD(c.name, c.fields, c.supers.map { s -> if (isFnSuper(s)) s else c.superTypeArgs[s]?.let { ensure(s, it) } ?: s }, c.methods, c.line, c.ctorParams,
+            c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs.filterKeys { isFnSuper(it) })
     while (true) {
         var cls = (p0.classes.filter { it.typeParams.isEmpty() } + extraClasses.values).map { fixSupers(it) }
         while (true) {
@@ -192,6 +196,8 @@ private fun boxCapturedVars(p: Program): Program {
     return Program(funs, classes + ref, p.ifaces, globals, p.companions)
 }
 
+/** A function type written as a supertype (`class A : Int.() -> String`), see Parser.fnSuper. */
+fun isFnSuper(s: String) = s == "\$Fn" || s == "\$FnR"
 /** `Box` + [Int, ArrayList<String>] -> `Box$Int$ArrayList$String$$`: a valid LLVM identifier, unique per argument list. */
 fun mangle(n: String, args: List<TypeRef>): String =
     n + args.joinToString("") { "$" + it.toString().replace("<", "$").replace(">", "$$").replace(",", "$").replace("?", "_N") }
