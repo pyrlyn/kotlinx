@@ -26,7 +26,7 @@ object Uses {
     }
 
     /** Synthetic name node per `r.f(...)` call (stable identity across analyses). */
-    private val recvCallName = HashMap<CallE, NameE>()
+    private val recvCallName get() = compilationContext.recvCallNames
 
     private fun block(b: Block, out: MutableList<Use>) { for (s in b.stmts) stmt(s, false, out) }
 

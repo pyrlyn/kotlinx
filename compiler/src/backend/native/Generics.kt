@@ -8,7 +8,7 @@ package newkotlin
  * Perceus RC / cycle analysis (cyclic classes, field release functions) is computed per instance.
  */
 /** Overloaded top-level functions: source name -> renamed declarations (`f$ov0`, ...), resolved per call by the backend. */
-object Overloads { val map = HashMap<String, List<FunD>>() }
+object Overloads { val map get() = compilationContext.overloads }
 
 /** Renames non-generic top-level overloads apart (`main` and extension functions are left alone). */
 fun renameOverloads(p: Program): Program {

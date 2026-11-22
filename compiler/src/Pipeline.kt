@@ -12,6 +12,12 @@ private const val SUSPEND_MAIN_NAME = "kxSuspendMain"
  * comments that merely contain `suspend fun main()` or `X.serializer()` are left alone.
  */
 fun compileToIr(src: String): String {
+    val previous = compilationContext
+    compilationContext = CompilationContext()
+    return try { compileInContext(src) } finally { compilationContext = previous }
+}
+
+private fun compileInContext(src: String): String {
     var toks = Lexer(src).lex()
     // Text whose words decide which prelude parts are merged (withPrelude / withAny scan it), with the generated code.
     var text = src

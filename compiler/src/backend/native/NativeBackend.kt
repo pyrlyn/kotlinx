@@ -6,7 +6,7 @@ class Val(val v: String, val t: Ty, val owned: Boolean = false)
 private class Local(val slot: String, val t: Ty, val isVar: Boolean)
 private class Scope { val vars = HashMap<String, Local>(); val refs = ArrayList<Local>() }
 /** Lambdas synthesized for callable references, per reference node; survives code-generation restarts. */
-private object RefLambdas { val map = HashMap<UnE, LambdaE>(); val setters = HashMap<UnE, LambdaE>() }
+private object RefLambdas { val map get() = compilationContext.refLambdas; val setters get() = compilationContext.refSetters }
 /** [suspend]: compiled as an LLVM coroutine (see genCoroutine); calls from coroutines await it. */
 private class FunSig(val name: String, val params: List<Ty>, val ret: Ty, val suspend: Boolean = false)
 private fun isSuspFnName(n: String) = n.startsWith("\$FnS$") || n.startsWith("\$FnRS$")
@@ -5999,7 +5999,7 @@ done:
 """
 
 /** Lambda-with-receiver bodies with `this` added as first parameter; kept across code-generation restarts (stable ids). */
-private object RecvCaps { val map = HashMap<Block, Block>() }
-private object ThisCaps { val map = HashMap<Block, Block>() }
-private object SuspConvLambdas { val map = HashMap<String, LambdaE>() }
-object RecvLambdas { val map = HashMap<Block, Block>() }
+private object RecvCaps { val map get() = compilationContext.recvCaps }
+private object ThisCaps { val map get() = compilationContext.thisCaps }
+private object SuspConvLambdas { val map get() = compilationContext.suspConvLambdas }
+object RecvLambdas { val map get() = compilationContext.recvLambdas }

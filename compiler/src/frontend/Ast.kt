@@ -71,20 +71,19 @@ class Block(val stmts: List<S>, val params: List<String> = emptyList(), val para
 }
 
 /** `Owner.name` of every `const val` member (declared in a class or object body), for `isPermanent()`. */
-object ConstFields { val names = HashSet<String>() }
+object ConstFields { val names get() = compilationContext.constFields }
 
 /**
  * Type arguments written on a type-name receiver of a callable reference (`Array<String>::firstElement`), by the
  * receiver's NameE (references resolve by the type name; the arguments pick the instance, e.g. `ArrayList<String>`).
  */
-object RefTypeArgs { val map = HashMap<NameE, List<TypeRef>>() }
+object RefTypeArgs { val map get() = compilationContext.refTypeArgs }
 
 /** Names of top-level `external fun` declarations: implemented in C, linked via `--link`, called through the C ABI. */
-object Externs { val names = HashSet<String>() }
+object Externs { val names get() = compilationContext.externs }
 /** Numbers lambda blocks once, so each gets a stable id. */
 object LamIds {
-    private var next = 0
-    fun id(b: Block): Int { if (b.lamId < 0) b.lamId = next++; return b.lamId }
+    fun id(b: Block): Int { if (b.lamId < 0) b.lamId = compilationContext.nextLambda++; return b.lamId }
 }
 /** `default`: default argument, evaluated at the call site (may refer to earlier parameters). */
 class Param(val name: String, val type: TypeRef, val default: E? = null, /** `vararg`: [type] is the list type. */ val vararg: Boolean = false,
@@ -125,7 +124,7 @@ class InterfaceD(val name: String, val methods: List<FunD>, val line: Int, val t
  * Type arguments of generic super-interfaces (direct and inherited) by interface name: `interface B : A<String>` ->
  * "B" -> {"A": [String]}. Generics instantiates `A$String` and points B's super at it.
  */
-object IfaceSuperArgs { val map = HashMap<String, Map<String, List<TypeRef>>>() }
+object IfaceSuperArgs { val map get() = compilationContext.ifaceSuperArgs }
 /** `globals`: top-level properties, initialized in declaration order before `main`. */
 class Program(val funs: List<FunD>, val classes: List<ClassD>, val ifaces: List<InterfaceD>, val globals: List<VarS> = emptyList(),
               /** Class name -> (companion object name, names the companion object declares, incl. its own name). */

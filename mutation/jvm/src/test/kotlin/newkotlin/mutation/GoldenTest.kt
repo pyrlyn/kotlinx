@@ -2,6 +2,7 @@ package newkotlin.mutation
 
 import newkotlin.compileToIr
 import newkotlin.deferredRc
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Assumptions.assumeTrue
@@ -50,6 +51,21 @@ class GoldenTest {
             baselineFile.parentFile.mkdirs()
             baselineFile.writeText(baseline.entries.sortedBy { it.key }.joinToString("") { "${it.key} ${it.value}\n" })
         }
+    }
+
+    @Test
+    fun compilationOrderDoesNotAffectIr() {
+        // Different class/extern/bound/receiver names at the same source lines exposed process-wide caches.
+        val sources = listOf(
+            "fun apply(f: (Int) -> Int): Int = f(2)\nfun main() { println(apply { it + 1 }) }",
+            "class Other(val x: Int)\nfun main() { val f = { x: Int -> Other(x).x }; println(f(4)) }",
+            "fun <T> id(x: T): T = x as T\nfun main() { println(id(3)) }"
+        )
+        val expected = sources.map { compileToIr(it) }
+        for (i in sources.indices.reversed()) assertEquals(expected[i], compileToIr(sources[i]), "IR depends on compilation order: $i")
+        // A failed compilation must also drop its partially populated context.
+        try { compileToIr("fun main() { missing() }") } catch (e: newkotlin.CompileError) { }
+        for (i in sources.indices) assertEquals(expected[i], compileToIr(sources[i]), "IR changed after failure: $i")
     }
 
     private fun runNative(name: String, ir: String): String {
