@@ -5,12 +5,12 @@ package newkotlin
 import kotlinx.cinterop.*
 import platform.posix.*
 
-// Host toolchain helpers shared by the native and js targets: files, shell commands, clang and LLVM opt lookup.
+// Host toolchain helpers shared by the native and js targets: files, clang and LLVM opt lookup.
 
 /**
- * POSIX shell quoting of one word: [s] in single quotes, each embedded `'` written as `'\''`. Every path or other
- * value that reaches [system] / [capture] goes through this, so spaces, quotes, `$` or `;` in it stay literal.
- * Values that are deliberately split into words (`--cc "zig cc -target ..."`, `--cflags`, config.sh output) are not.
+ * POSIX shell quoting of one word: [s] in single quotes, each embedded `'` written as `'\''`. The driver runs no
+ * shell (tools are started from argv, see Process.kt); this only makes the commands in error messages ([cmdline])
+ * safe to paste into one.
  */
 internal fun shq(s: String): String = "'" + s.replace("'", "'\\''") + "'"
 
@@ -48,18 +48,6 @@ internal fun writeFile(path: String, text: String) {
     } finally { if (!closed) fclose(f) }
 }
 
-/** First line of a shell command's stdout, or null. */
-internal fun capture(cmd: String): String? {
-    val p = popen(cmd, "r") ?: return null
-    val out = StringBuilder()
-    memScoped {
-        val buf = allocArray<ByteVar>(512)
-        while (fgets(buf, 512, p) != null) out.append(buf.toKString())
-    }
-    pclose(p)
-    return out.toString().trim().lineSequence().firstOrNull()?.trim()?.ifEmpty { null }
-}
-
 /** Major LLVM version from `<tool> --version` ("LLVM version 23.1.4", "clang version 21.0.0"), or null. */
 internal val majorCache = HashMap<String, Int?>()
 
@@ -73,15 +61,6 @@ internal fun majorVersion(tool: String): Int? = majorCache.getOrPut(tool) {
 private fun majorVersionRun(tool: String): Int? =
     execLines(toolArgv(tool) + "--version").firstNotNullOfOrNull { Regex("(?:LLVM|clang) version (\\d+)").find(it) }
         ?.groupValues?.get(1)?.toIntOrNull()
-
-/** All stdout lines of a shell command. */
-internal fun captureAll(cmd: String): List<String> {
-    val p = popen(cmd, "r") ?: return emptyList()
-    val out = StringBuilder()
-    memScoped { val buf = allocArray<ByteVar>(512); while (fgets(buf, 512, p) != null) out.append(buf.toKString()) }
-    pclose(p)
-    return out.lines().map { it.trim() }.filter { it.isNotEmpty() }
-}
 
 /**
  * C compiler/linker when --cc is absent: ${'$'}NK_CC, then Apple clang (/usr/bin/clang, macOS), then the newest
