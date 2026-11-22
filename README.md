@@ -33,6 +33,6 @@ bin/newkotlinc /tmp/hello.kt -o /tmp/hello   # works from any directory
 
 ## License
 
-KotlinX is licensed under the [Apache License, Version 2.0](LICENSE) (Copyright 2026 pyrlyn). The vendored collectors
+KotlinX is licensed under the [GNU General Public License v3.0](LICENSE) (Copyright 2026 pyrlyn). The vendored collectors
 under `native/gc/` come from [pyrlyn/gc](https://github.com/pyrlyn/gc), which does not declare a license yet; see
 [`native/gc/PROVENANCE.md`](native/gc/PROVENANCE.md#license).
