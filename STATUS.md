@@ -140,7 +140,7 @@ Then copy the NewKotlin rows into `bench/table.md`.
 - Memory manager: `native/gc/c` behind `kxgc.h`, selected with `newkotlinc --gc=epoch|perceus|incremental|compact|rc`
   (default = epoch, `--gc=default` is an alias; perceus = RC + cycle collector, the pre-epoch default; compact =
   RC + small synchronous cycle collector, Zig only, the `--target=js` default). Tests: `native/gc/c/tests/zig` (`zig build ported`/`zig build gc`; legacy shell suite in `native/gc/c/tests/archive`); benchmarks: `bench/gc`.
-- **GC runtime backend (local `local/gc-extract-regression`):** default `--gc-runtime=zig` links `native/gc/zig/zig-out/lib/libgc-<name>.a` (experimental Zig port @cf79057 + `runtime_host`); `--gc-runtime=c` compiles `native/gc/c/<name>/gc.c`. Shared `compiler/runtime/runtime.c` always. Zig port parity incomplete vs C (see `native/gc/zig/docs/zig-port.md`).
+- **GC runtime backend (local `local/gc-extract-regression`):** default `--gc-runtime=zig` links `native/gc/zig/zig-out/lib/libgc-<name>.a` (experimental Zig port @a65a3f6 + KotlinX patches + `runtime_host`); `--gc-runtime=c` compiles `native/gc/c/<name>/gc.c`. Shared `compiler/runtime/runtime.c` always. Zig port parity incomplete vs C (see `native/gc/zig/docs/zig-port.md`).
 
 - Resume: `cd bench && ./build.sh && ./round.sh && RESULTS=results/round ./summarize.sh`; `compiler/test.sh` for compiler tests; `compiler/tests/upstream/run.py` for upstream tests.
 
@@ -148,7 +148,7 @@ Then copy the NewKotlin rows into `bench/table.md`.
 
 In-progress items are marked as such; numbers are only those already committed or in open PRs.
 
-- **GC (C):** all collectors but `compact` (Zig only, `native/gc/zig/src/compact.zig`) are C (`native/gc/c/{perceus,incremental,epoch,rc}/gc.c`, shared `common/*.inc`, API `kxgc.h`). Vendored under [`native/gc/`](native/gc/README.md) (C `@6acde64`, Zig `@cf79057`); git submodule removed.
+- **GC (C):** all collectors but `compact` (Zig only, `native/gc/zig/src/compact.zig`) are C (`native/gc/c/{perceus,incremental,epoch,rc}/gc.c`, shared `common/*.inc`, API `kxgc.h`). Vendored under [`native/gc/`](native/gc/README.md) (C `@a65a3f6`, Zig `@a65a3f6` + KotlinX patches); git submodule removed.
 - **Epoch collector:** #147 (short adaptive logs) is merged: `cyclic_garbage` peak RSS 22.6 -> 4.1 MiB.
   `epoch` is the default collector (Polar Quest, #161); the old default is now `perceus`.
   GC benchmark re-run: #148 (open). Faster GC benchmark runs (build cache, parallel builds, opt-in skip of slow

@@ -839,6 +839,9 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                     name.startsWith("invariant.") || name.startsWith("sideeffect") || name.startsWith("donothing") || name.startsWith("var.annotation") -> {}
                 name.startsWith("expect") || name.startsWith("threadlocal.address") || name.startsWith("launder.invariant") ||
                     name.startsWith("strip.invariant") || name.startsWith("ssa.copy") -> setResultCall(i, a.subList(0, parts(t).size))
+                // The Zig collectors' page pool takes whole 64 KiB wasm pages (regions.zig newChunk on wasm32).
+                name.startsWith("wasm.memory.grow") -> res("_mgrow(${a[1]})")
+                name.startsWith("wasm.memory.size") -> res("_msize()")
                 name.startsWith("frameaddress") -> res("_fa()")
                 name.startsWith("stacksave") -> res(if (depthProbe) "_fa()" else "S")
                 name.startsWith("stackrestore") -> emit("S=${a[0]}")

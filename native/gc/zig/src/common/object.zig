@@ -56,7 +56,14 @@ pub inline fn clearBuffered(obj: *anyopaque) void {
     header(obj).* &= ~BUF_BIT;
 }
 
-pub const PTR_STACK_INITIAL_CAPACITY: usize = 256;
+/// Bytes a PtrStack block leaves for the allocator's own bookkeeping. Blocks are powers of two minus
+/// this, so they fill a power-of-two slot exactly: Zig's wasm32 libc malloc (std.heap.BrkAllocator)
+/// adds a 16-byte header and a 4-byte free-list word and rounds up to a power of two, so a 2^k-byte
+/// buffer took a 2^(k+1) slot (twice the memory); glibc maps blocks >= 128 KiB with a 16-byte header
+/// (one more page). Darwin malloc and mimalloc keep no header, and lose at most these 32 bytes.
+pub const ALLOC_SLACK: usize = 32;
+const PTR_STACK_INITIAL_BYTES: usize = 256 * @sizeOf(?*anyopaque);
+pub const PTR_STACK_INITIAL_CAPACITY: usize = (PTR_STACK_INITIAL_BYTES - ALLOC_SLACK) / @sizeOf(?*anyopaque);
 
 pub const PtrStack = struct {
     items: [*]?*anyopaque = undefined,
@@ -64,17 +71,23 @@ pub const PtrStack = struct {
     cap: usize = 0,
     owned: bool = false,
 
-    /// Inlined even in ReleaseSmall (the --target=js bitcode): the cycle collector pushes once per edge.
     pub inline fn push(self: *PtrStack, obj: ?*anyopaque) void {
-        if (self.len == self.cap) self.grow();
+        if (self.len == self.cap) {
+            @branchHint(.unlikely);
+            self.grow(self.len + 1);
+        }
         self.items[self.len] = obj;
         self.len += 1;
     }
 
-    fn grow(self: *PtrStack) void {
-        @branchHint(.cold);
-        const new_cap = if (self.cap == 0) PTR_STACK_INITIAL_CAPACITY else self.cap * 2;
-        const bytes = new_cap * @sizeOf(?*anyopaque);
+    /// Out of line: keeps `push` a compare + store at every visitor call site.
+    noinline fn grow(self: *PtrStack, need: usize) void {
+        // Block sizes (capacity bytes + ALLOC_SLACK) double from PTR_STACK_INITIAL_BYTES.
+        const W = @sizeOf(?*anyopaque);
+        var block: usize = if (self.cap == 0) PTR_STACK_INITIAL_BYTES else (self.cap * W + ALLOC_SLACK) * 2;
+        while (block - ALLOC_SLACK < need * W) block *= 2;
+        const new_cap = (block - ALLOC_SLACK) / W;
+        const bytes = new_cap * W;
         const raw = if (self.cap == 0)
             host.malloc(bytes)
         else
@@ -102,9 +115,21 @@ pub const PtrStack = struct {
         self.* = .{};
     }
 
+    /// Moves every pointer of `from` onto `to` (same order as pushing them one by one).
+    /// An empty `to` just trades buffers with `from` (O(1); no copy while a lock is held);
+    /// otherwise one bulk copy.
     pub fn moveFrom(to: *PtrStack, from: *PtrStack) void {
-        var i: usize = 0;
-        while (i < from.len) : (i += 1) to.push(from.items[i]);
+        if (from.len == 0) return;
+        if (to.len == 0) {
+            const t = to.*;
+            to.* = from.*;
+            from.* = t;
+            from.len = 0;
+            return;
+        }
+        if (to.cap - to.len < from.len) to.grow(to.len + from.len);
+        @memcpy(to.items[to.len .. to.len + from.len], from.items[0..from.len]);
+        to.len += from.len;
         from.len = 0;
     }
 };
