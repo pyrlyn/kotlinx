@@ -1365,9 +1365,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is IntL, is BoolL, is NullL, is CharL -> true
             is NameE -> e.n == local || e.n in nested || lookup(e.n) != null || e.n == "this" || thisField(e.n)
             is MemberE -> !e.safe && fieldOf(e.recv, e.n)
-            is BinE -> (e.op == "&&" || e.op == "||" || e.op == "===" || e.op == "!==" ||
-                ((e.op == "==" || e.op == "!=") && (e.l is NullL || e.r is NullL))) && safeE(e.l) && safeE(e.r)
-            is UnE -> (e.op == "!" && safeE(e.e)) || (e.op == "-" && (e.e is IntL || e.e is DblL))
+            is BinE -> (e.op == BinOp.AND || e.op == BinOp.OR || e.op == BinOp.IDENT || e.op == BinOp.NOT_IDENT ||
+                ((e.op == BinOp.EQ || e.op == BinOp.NE) && (e.l is NullL || e.r is NullL))) && safeE(e.l) && safeE(e.r)
+            is UnE -> (e.op == UnOp.NOT && safeE(e.e)) || (e.op == UnOp.NEG && (e.e is IntL || e.e is DblL))
             is DblL -> true
             is IfE -> safeE(e.cond) && safeB(e.th) && safeB(e.el)
             else -> false
@@ -1418,7 +1418,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 }
                 val tg = s.target
                 // `a += b` on a class with `plusAssign` (member or extension) and no `plus`: `a.plusAssign(b)`.
-                OP_FUNS[s.op.dropLast(1)]?.takeIf { s.op != "=" }?.let { base ->
+                BinOp.ofOrNull(s.op.dropLast(1))?.let { OP_FUNS[it] }?.takeIf { s.op != "=" }?.let { base ->
                     val tt = probeType(tg)
                     fun has(n: String) = tt != null && (hasMember(tt, n) || hasMext(n, tt) || extFuns[n]?.any { extMatches(tt, it.params[0].type, it.typeParams) } == true)
                     if ((tt is Ty.Cls || tt is Ty.Iface) && has(base + "Assign") && !has(base)) {
@@ -1431,7 +1431,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     // `a()[i()] += v`: receiver and index are evaluated once.
                     withTemps(listOf(genExpr(tg.recv), genExpr(tg.idx))) { (r, i) ->
                         val t2 = IndexE(r, i).also { it.line = s.line }
-                        assign(t2, BinE(s.op.dropLast(1), t2, s.value).also { it.line = s.line }); Val("", Ty.Unit)
+                        assign(t2, BinE(BinOp.of(s.op.dropLast(1)), t2, s.value).also { it.line = s.line }); Val("", Ty.Unit)
                     }
                     return
                 }
@@ -1439,11 +1439,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     // Compound assignment evaluates the receiver once.
                     withTemps(listOf(genExpr(tg.recv))) { (x) ->
                         val t2 = MemberE(x, tg.n, false).also { it.line = s.line }
-                        assign(t2, BinE(s.op.dropLast(1), t2, s.value).also { it.line = s.line }); Val("", Ty.Unit)
+                        assign(t2, BinE(BinOp.of(s.op.dropLast(1)), t2, s.value).also { it.line = s.line }); Val("", Ty.Unit)
                     }
                     return
                 }
-                val value = if (s.op == "=") s.value else BinE(s.op.dropLast(1), s.target, s.value).also { it.line = s.line }
+                val value = if (s.op == "=") s.value else BinE(BinOp.of(s.op.dropLast(1)), s.target, s.value).also { it.line = s.line }
                 assign(s.target, value)
             }
             is IncS -> releaseIfOwned(genExpr(PostIncE(s.target, s.op).also { it.line = s.line }))
@@ -1685,11 +1685,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun genFor(s: ForS) {
         val it0 = s.iter
         // `for (x in C(0)..C(2))` with a user `rangeTo`: iterate over the object it returns.
-        val it = if (it0 is BinE && it0.op == ".." && probeType(it0.l).let { t -> (t is Ty.Cls || t is Ty.Iface) && progKind(t) == null })
+        val it = if (it0 is BinE && it0.op == BinOp.RANGE && probeType(it0.l).let { t -> (t is Ty.Cls || t is Ty.Iface) && progKind(t) == null })
             CallE(MemberE(it0.l, "rangeTo", false).also { x -> x.line = it0.line }, emptyList(), listOf(it0.r), null).also { x -> x.line = it0.line }
         else it0
         // `for (x in c)` over a class with `operator fun iterator()` (hasNext/next): a while loop over the iterator.
-        if (!(it is BinE && it.op in setOf("..", "until", "downTo", "step"))) {
+        if (!(it is BinE && it.op in setOf(BinOp.RANGE, BinOp.UNTIL, BinOp.DOWN_TO, BinOp.STEP))) {
             val pt = probeType(it)
             val cn = (pt as? Ty.Cls)?.name
             if (cn != null && classes[cn]?.methods?.containsKey("iterator") == true) {
@@ -1705,10 +1705,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         val lc = label("for.cond"); val lb = label("for.body"); val ls = label("for.step"); val le = label("for.end")
         scopes.add(Scope())
-        val rng = (if (it is BinE && it.op == "step") it.l else it) as? BinE
-        if (rng != null && rng.op in setOf("..", "until", "downTo")) {
+        val rng = (if (it is BinE && it.op == BinOp.STEP) it.l else it) as? BinE
+        if (rng != null && rng.op in setOf(BinOp.RANGE, BinOp.UNTIL, BinOp.DOWN_TO)) {
             // Progression: lo..hi, lo until hi, hi downTo lo, each optionally `step n` (n > 0).
-            val down = rng.op == "downTo"
+            val down = rng.op == BinOp.DOWN_TO
             val lo0 = genExpr(rng.l); val hi0 = genExpr(rng.r)
             val uns = lo0.t.isUnsigned || hi0.t.isUnsigned
             val wide = lo0.t == Ty.I64 || hi0.t == Ty.I64 || lo0.t == Ty.U64 || hi0.t == Ty.U64
@@ -1727,8 +1727,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             } else "1"
             val idx = declare(s.name, t, false, false)
             emit("store ${t.llvm} ${lo.v}, ptr ${idx.slot}")
-            val cmp = (if (uns) "u" else "s") + when (rng.op) { ".." -> "le"; "until" -> "lt"; else -> "ge" }
-            val topTested = stepV == "1" && rng.op == "until"
+            val cmp = (if (uns) "u" else "s") + when (rng.op) { BinOp.RANGE -> "le"; BinOp.UNTIL -> "lt"; else -> "ge" }
+            val topTested = stepV == "1" && rng.op == BinOp.UNTIL
             if (topTested) {
                 // `lo until hi`: classic top-tested counted loop (what LLVM's loop passes and vectorizer expect).
                 startBlock(lc)
@@ -1756,7 +1756,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     startBlock(le)
                 }
             } else {
-            val last = if (rng.op == "until") emitT("sub ${t.llvm} ${hi.v}, 1") else hi.v
+            val last = if (rng.op == BinOp.UNTIL) emitT("sub ${t.llvm} ${hi.v}, 1") else hi.v
             val i2 = emitT("load ${t.llvm}, ptr ${idx.slot}")
             // Remaining distance to the bound (unsigned: never overflows); stop if the next step passes it.
             val rem = if (down) emitT("sub ${t.llvm} $i2, $last") else emitT("sub ${t.llvm} $last, $i2")
@@ -1816,10 +1816,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val n = "\$n${tmpN++}"; val go = "\$go${tmpN++}"
             val mem = { f: String -> MemberE(p, f, false).l() }
             genStmt(VarS(n, true, null, mem("first")).l())
-            genStmt(VarS(go, true, null, UnE("!", CallE(mem("isEmpty"), emptyList(), emptyList(), null).l()).l()).l())
-            val adv = ExprS(IfE(BinE("==", NameE(s.name).l(), mem("last")).l(),
+            genStmt(VarS(go, true, null, UnE(UnOp.NOT, CallE(mem("isEmpty"), emptyList(), emptyList(), null).l()).l()).l())
+            val adv = ExprS(IfE(BinE(BinOp.EQ, NameE(s.name).l(), mem("last")).l(),
                 Block(listOf(AssignS(NameE(go).l(), "=", BoolL(false).l()).l())),
-                Block(listOf(AssignS(NameE(n).l(), "=", BinE("+", NameE(s.name).l(), mem("step")).l()).l()))).l()).l()
+                Block(listOf(AssignS(NameE(n).l(), "=", BinE(BinOp.PLUS, NameE(s.name).l(), mem("step")).l()).l()))).l()).l()
             genStmt(WhileS(NameE(go).l(), Block(listOf(VarS(s.name, false, null, NameE(n).l()).l(), adv) + s.body.stmts)).l())
             Val("", Ty.Unit)
         }
@@ -1860,7 +1860,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     withTemps(listOf(old)) { (x) ->
                         val savedIv = incViaExt; incViaExt = custom
                         val nv = (if (custom) CallE(MemberE(x, mname, false).also { it.line = e.line }, emptyList(), emptyList(), null)
-                            else BinE(if (op == "++") "+" else "-", x, IntL(1, false)).also { it.line = e.line }.let { b -> if (w16) CallE(MemberE(b, "toShort", false).also { it.line = e.line }, emptyList(), emptyList(), null) else b }).also { it.line = e.line }
+                            else BinE(if (op == "++") BinOp.PLUS else BinOp.MINUS, x, IntL(1, false)).also { it.line = e.line }.let { b -> if (w16) CallE(MemberE(b, "toShort", false).also { it.line = e.line }, emptyList(), emptyList(), null) else b }).also { it.line = e.line }
                         // `++a[i, j]` yields the value passed to `set`; calling `get` again would repeat its side effects.
                         if (pre && multiIndexGet(tg)) try { withTemps(listOf(genExpr(nv))) { (y) -> assign(tg, y); genExpr(y) } } finally { incViaExt = savedIv }
                         else {
@@ -1918,15 +1918,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             is BinE -> genBin(e)
             is UnE -> {
-                if (e.op == "#class") return classLiteral(e.e)
-                if (e.op.startsWith("::")) return genRef(e, if (e.e is NullL) null else e.e, e.op.removePrefix("::"))
+                if (e.op == UnOp.CLASS_LIT) return classLiteral(e.e)
+                if (e.op == UnOp.REF) return genRef(e, if (e.e is NullL) null else e.e, e.ref!!)
                 val v = genExpr(e.e)
-                if (e.op == "!!") return genNonNull(v)
-                if (v.t is Ty.Cls || v.t is Ty.Iface) return method(v, when (e.op) { "-" -> "unaryMinus"; "+" -> "unaryPlus"; else -> "not" }, opCall("", null))
+                if (e.op == UnOp.NOT_NULL) return genNonNull(v)
+                if (v.t is Ty.Cls || v.t is Ty.Iface) return method(v, when (e.op) { UnOp.NEG -> "unaryMinus"; UnOp.PLUS -> "unaryPlus"; else -> "not" }, opCall("", null))
                 when (e.op) {
-                    "!" -> Val(emitT("xor i1 ${coerce(v, Ty.I1).v}, true"), Ty.I1)
-                    "+" -> if (v.t.isNum) coerce(v, if (v.t == Ty.I8) Ty.I32 else v.t) else method(v, "unaryPlus", opCall("", null))
-                    "-" -> when {
+                    UnOp.NOT -> Val(emitT("xor i1 ${coerce(v, Ty.I1).v}, true"), Ty.I1)
+                    UnOp.PLUS -> if (v.t.isNum) coerce(v, if (v.t == Ty.I8) Ty.I32 else v.t) else method(v, "unaryPlus", opCall("", null))
+                    UnOp.NEG -> when {
                         v.t.isFp -> Val(emitT("fneg ${v.t.llvm} ${v.v}"), v.t)
                         v.t.isInt -> { val w = coerce(v, if (v.t == Ty.I8) Ty.I32 else v.t); Val(emitT("sub ${w.t.llvm} 0, ${w.v}"), w.t) }
                         else -> fail("unary minus on ${v.t}")
@@ -2259,7 +2259,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             .all { b -> covered.any { sub(b, it) } }
     }
 
-    private fun isSubjCond(c: E) = (c is IsE && (c.e as? NameE)?.n == "\$subj") || (c is BinE && (c.op == "in" || c.op == "!in") && (c.l as? NameE)?.n == "\$subj")
+    private fun isSubjCond(c: E) = (c is IsE && (c.e as? NameE)?.n == "\$subj") || (c is BinE && (c.op == BinOp.IN || c.op == BinOp.NOT_IN) && (c.l as? NameE)?.n == "\$subj")
 
     private fun genWhenBody(e: WhenE, subj: Val?): Val {
         val le = label("when.end")
@@ -2285,8 +2285,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             for (ce in conds) {
                 // After `!is Float ->` / `!is Double ->`, an `Any` subject is smart-cast: compare a literal with IEEE `==`.
                 val fpCast = if (subj != null && isAny(subj.t) && ce is DblL) e.branches.take(bi).any { b -> b.conds?.singleOrNull()?.let { it is IsE && it.neg && isSubjCond(it) && it.type.name == (if (ce.f32) "Float" else "Double") && !it.type.nullable } == true } else false
-                val x = if (fpCast) compare("==", unbox(Val(subj!!.v, subj.t, false), if ((ce as DblL).f32) Ty.F32 else Ty.F64), genExpr(ce)).v
-                else if (subj != null && !isSubjCond(ce)) compare("==", Val(subj.v, subj.t, false), genExpr(ce)).v else coerce(genExpr(ce), Ty.I1).v
+                val x = if (fpCast) compare(BinOp.EQ, unbox(Val(subj!!.v, subj.t, false), if ((ce as DblL).f32) Ty.F32 else Ty.F64), genExpr(ce)).v
+                else if (subj != null && !isSubjCond(ce)) compare(BinOp.EQ, Val(subj.v, subj.t, false), genExpr(ce)).v else coerce(genExpr(ce), Ty.I1).v
                 c = if (c == null) x else emitT("or i1 $c, $x")
             }
             condBr(c!!, lt, ln)
@@ -2543,7 +2543,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     /** `==` / `!=` with a nullable primitive side: null-aware, IEEE/numeric comparison of the values. */
-    private fun nboxEq(op: String, a: Val, b: Val): Val {
+    private fun nboxEq(op: BinOp, a: Val, b: Val): Val {
         val from = cur
         val lc = label("neq.chk"); val lv = label("neq.val"); val le = label("neq.end")
         val an = if (a.t is Ty.NBox) emitT("icmp eq ptr ${a.v}, null") else "false"
@@ -2554,13 +2554,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         startBlock(lv)
         val x = if (a.t is Ty.NBox) unbox(Val(a.v, a.t, false), a.t.inner) else a
         val y = if (b.t is Ty.NBox) unbox(Val(b.v, b.t, false), b.t.inner) else b
-        val c = coerce(compare("==", Val(x.v, x.t, false), Val(y.v, y.t, false)), Ty.I1).v
+        val c = coerce(compare(BinOp.EQ, Val(x.v, x.t, false), Val(y.v, y.t, false)), Ty.I1).v
         val vEnd = cur
         br(le)
         startBlock(le)
         val eq = emitT("phi i1 [ $bothNull, %$from ], [ $c, %$vEnd ]")
         releaseIfOwned(a); releaseIfOwned(b)
-        return Val(if (op == "==") eq else emitT("xor i1 $eq, true"), Ty.I1)
+        return Val(if (op == BinOp.EQ) eq else emitT("xor i1 $eq, true"), Ty.I1)
     }
 
     /** `recv?.x`: evaluates `f` only when recv is non-null; the result must be a pointer type. */
@@ -2596,7 +2596,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val p = body.params.firstOrNull() ?: "it"
                 val n = "\$rep${scopeN++}"
                 return Block(listOf(VarS(n, false, null, e.args[0]).l(),
-                    ForS(p, BinE("..", IntL(0, false).l(), BinE("-", NameE(n).l(), IntL(1, false).l()).l()).l(), body).l()))
+                    ForS(p, BinE(BinOp.RANGE, IntL(0, false).l(), BinE(BinOp.MINUS, NameE(n).l(), IntL(1, false).l()).l()).l(), body).l()))
             }
             return null
         }
@@ -2614,7 +2614,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (!stmt) return null
         val tn = "\$sf${scopeN++}"
         return Block(listOf(VarS(tn, false, null, c.recv).l(),
-            ExprS(IfE(BinE("!=", NameE(tn).l(), NullL().l()).l(), inner(NameE(tn).l()), null).l()).l()))
+            ExprS(IfE(BinE(BinOp.NE, NameE(tn).l(), NullL().l()).l(), inner(NameE(tn).l()), null).l()).l()))
     }
     private var scopeN = 0
 
@@ -2745,7 +2745,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (callee is MemberE) {
             if (callee.safe) return safe(callee.recv) { r -> method(r, callee.n, e) }
             // `x!!.f()`: a member of the non-null type wins over an extension on the nullable type (`fun Long?.inv()`).
-            if (callee.recv is UnE && callee.recv.op == "!!") {
+            if (callee.recv is UnE && callee.recv.op == UnOp.NOT_NULL) {
                 val r = genExpr(callee.recv)
                 nonNullRecv = true
                 try { return method(r, callee.n, e) } finally { nonNullRecv = false }
@@ -2780,7 +2780,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val named = e.args.filterIsInstance<NamedE>()
         val pos = e.args.filter { it !is NamedE }
         fun pack(items: List<E>): E {
-            if (items.size == 1 && items[0] is UnE && (items[0] as UnE).op == "*") {
+            if (items.size == 1 && items[0] is UnE && (items[0] as UnE).op == UnOp.SPREAD) {
                 // `*intArrayOf(...)` into a vararg (a list here): copied into a list, as Kotlin copies spread arrays.
                 val x = (items[0] as UnE).e
                 return if (probeType(x) is Ty.Arr) CallE(MemberE(x, "toList", false).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line } else x
@@ -3102,11 +3102,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val a = e.args
                 val (cond, msg) = when (n) {
                     "assertTrue" -> a[0] to strL("Expected value to be true.")
-                    "assertFalse" -> UnE("!", a[0]) to strL("Expected value to be false.")
-                    "assertNull" -> BinE("==", a[0], NullL()) to strL("Expected value to be null, but was: <", a[0], ">.")
-                    "assertNotNull" -> BinE("!=", a[0], NullL()) to strL("Expected value to be not null.")
-                    "assertEquals" -> BinE("==", a[0], a[1]) to strL("Expected <", a[0], ">, actual <", a[1], ">.")
-                    else -> BinE("!=", a[0], a[1]) to strL("Illegal value: <", a[1], ">.")
+                    "assertFalse" -> UnE(UnOp.NOT, a[0]) to strL("Expected value to be false.")
+                    "assertNull" -> BinE(BinOp.EQ, a[0], NullL()) to strL("Expected value to be null, but was: <", a[0], ">.")
+                    "assertNotNull" -> BinE(BinOp.NE, a[0], NullL()) to strL("Expected value to be not null.")
+                    "assertEquals" -> BinE(BinOp.EQ, a[0], a[1]) to strL("Expected <", a[0], ">, actual <", a[1], ">.")
+                    else -> BinE(BinOp.NE, a[0], a[1]) to strL("Illegal value: <", a[1], ">.")
                 }
                 listOf(cond, msg).forEach { it.line = line }
                 val c = coerce(genExpr(cond), Ty.I1)
@@ -3117,7 +3117,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (excMode) throwNew("AssertionError", m)
                 else { emit("call void @rt_panic(ptr ${m.v})"); emit("unreachable"); term = true }
                 startBlock(ok)
-                return if (n == "assertNotNull") genExpr(UnE("!!", a[0]).also { it.line = line }) else Val("", Ty.Unit)
+                return if (n == "assertNotNull") genExpr(UnE(UnOp.NOT_NULL, a[0]).also { it.line = line }) else Val("", Ty.Unit)
             }
             "assertFailsWith", "assertFails" -> if (excMode && e.lambda != null) {
                 val t = e.typeArgs.singleOrNull() ?: TypeRef("Throwable", emptyList(), false)
@@ -3310,7 +3310,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // its expected type when the other arguments bound it (its own type arguments are then inferred from it).
             fun genericArg(a: E) = a is CallE && (a.callee as? NameE)?.n?.let { it in genericFuns && it !in sigs } == true
             // `::f` of an overloaded function: resolved after the other arguments, from the bound parameter type.
-            fun ovRef(a: E) = a is UnE && a.op.startsWith("::") && a.e is NullL && a.op.drop(2) in Overloads.map && lookup(a.op.drop(2)) == null
+            fun ovRef(a: E) = a is UnE && a.op == UnOp.REF && a.e is NullL && a.ref!! in Overloads.map && lookup(a.ref) == null
             all.forEachIndexed { i, a -> if (a !is LambdaE && !genericArg(a) && !ovRef(a)) { rawN[i] = genExpr(a); track(rawN[i]!!); if (e.typeArgs.isEmpty()) cs.collect(f.params[i].type, rawN[i]!!.t, f.typeParams) } }
             if (all.any { it !is LambdaE && genericArg(it) }) {
                 val env0 = LinkedHashMap(env)
@@ -4158,10 +4158,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun smartCasts(cond: E, positive: Boolean): List<Pair<String, TypeRef>> = when {
         cond is IsE && cond.e is NameE && cond.neg != positive && cond.type.args.none { it.name == "*" } && cond.type.name != "Any" -> listOf(cond.e.n to cond.type)
         // `x != null` narrows a nullable primitive local to its value.
-        cond is BinE && ((cond.op == "!=" && positive) || (cond.op == "==" && !positive)) && cond.l is NameE && cond.r is NullL -> listOf(cond.l.n to TypeRef("\$nn", emptyList(), false))
-        cond is BinE && cond.op == "&&" && positive -> smartCasts(cond.l, true) + smartCasts(cond.r, true)
-        cond is BinE && cond.op == "||" && !positive -> smartCasts(cond.l, false) + smartCasts(cond.r, false)
-        cond is UnE && cond.op == "!" -> smartCasts(cond.e, !positive)
+        cond is BinE && ((cond.op == BinOp.NE && positive) || (cond.op == BinOp.EQ && !positive)) && cond.l is NameE && cond.r is NullL -> listOf(cond.l.n to TypeRef("\$nn", emptyList(), false))
+        cond is BinE && cond.op == BinOp.AND && positive -> smartCasts(cond.l, true) + smartCasts(cond.r, true)
+        cond is BinE && cond.op == BinOp.OR && !positive -> smartCasts(cond.l, false) + smartCasts(cond.r, false)
+        cond is UnE && cond.op == UnOp.NOT -> smartCasts(cond.e, !positive)
         else -> emptyList()
     }
 
@@ -4223,7 +4223,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                         genNamedCall(t.name, CallE(NameE(t.name), emptyList(), args, null).also { it.line = line })
                     }
                 }
-                "equals" -> return compare("==", r, genExpr(e.args.single()))
+                "equals" -> return compare(BinOp.EQ, r, genExpr(e.args.single()))
                 "hashCode" -> { val v = Val(emitT("trunc i64 ${emitT("ptrtoint ptr ${r.v} to i64")} to i32"), Ty.I32); releaseIfOwned(r); return v }
                 "toString" -> return sbMsg(r)
             }
@@ -4240,7 +4240,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val gt = emitT("select i1 ${emitT("fcmp ogt double $x, $y")}, i32 1, i32 $bc")
                 return Val(emitT("select i1 ${emitT("fcmp olt double $x, $y")}, i32 -1, i32 $gt"), Ty.I32)
             }
-            val lt = coerce(compare("<", r, o), Ty.I1).v; val gt = coerce(compare(">", r, o), Ty.I1).v
+            val lt = coerce(compare(BinOp.LT, r, o), Ty.I1).v; val gt = coerce(compare(BinOp.GT, r, o), Ty.I1).v
             return Val(emitT("select i1 $lt, i32 -1, i32 ${emitT("zext i1 $gt to i32")}"), Ty.I32)
         }
         if (n == "hashCode" && e.args.isEmpty()) when {
@@ -4354,7 +4354,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 return withTemps(listOf(r)) { (x) -> method(genExpr(NameE("this").also { it.line = line }), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
         }
         if (isAny(t) && n == "toString" && e0.args.isEmpty()) { val s = anyCall("anyToString__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return s }
-        if (isAny(t) && n == "equals" && e0.args.size == 1) return compare("==", r, genExpr(e0.args[0]))
+        if (isAny(t) && n == "equals" && e0.args.size == 1) return compare(BinOp.EQ, r, genExpr(e0.args[0]))
         if (isAny(t) && e0.args.isEmpty() && n.startsWith("to") && "numTo${n.drop(2)}__" in funDecls) { val c = anyCall("numTo${n.drop(2)}__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return c }
         if (isAny(t) && n == "hashCode" && e0.args.isEmpty()) { val h = anyCall("anyHashCode__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return h }
         // Internal: canonical bits of a Double (all NaNs equal), used by data class equals.
@@ -4365,15 +4365,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return Val(emitT("select i1 $nan, i64 9221120237041090560, i64 $b"), Ty.I64)
         }
         // Operators of numbers and strings called as methods: `1.plus(2)`, `"a".plus("b")`, `1.rangeTo(3)`, `x.equals(y)`.
-        val opOf = mapOf("plus" to "+", "minus" to "-", "times" to "*", "div" to "/", "rem" to "%", "rangeTo" to "..", "equals" to "==")
+        val opOf = mapOf("plus" to BinOp.PLUS, "minus" to BinOp.MINUS, "times" to BinOp.TIMES, "div" to BinOp.DIV, "rem" to BinOp.REM, "rangeTo" to BinOp.RANGE, "equals" to BinOp.EQ)
         // `equals` is boxed equality: false for another type; Double.equals compares bits (0.0 != -0.0), not supported.
         if (n == "equals" && t.isFp && e0.args.size == 1) fail("$t.equals() is not supported")
         if (n == "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.Char || t == Ty.Str) && e0.args.size == 1 && e0.args[0] !is NamedE &&
             extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false) {
             val a = genExpr(e0.args[0])
-            if (a.t is Ty.NBox && a.t.inner == t) return nboxEq("==", r, a)
+            if (a.t is Ty.NBox && a.t.inner == t) return nboxEq(BinOp.EQ, r, a)
             if (a.t != t) { releaseIfOwned(a); releaseIfOwned(r); return Val("false", Ty.I1) }
-            return compare("==", r, a)
+            return compare(BinOp.EQ, r, a)
         }
         if (n != "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t.isFp || t == Ty.Char || (t == Ty.Str && (n == "plus" || n == "equals"))) &&
             n in opOf && e0.args.size == 1 && e0.args[0] !is NamedE && e0.lambda == null && (!e0.infix || extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false))
@@ -4381,14 +4381,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // Built-in members `inc()`/`dec()` of numbers and chars win over extensions.
         // Byte (I8) is excluded: its inc() must wrap at 8 bits.
         if ((t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.Char) && (n == "inc" || n == "dec") && e0.args.isEmpty() && !incViaExt)
-            return withTemps(listOf(r)) { (x) -> genExpr(BinE(if (n == "inc") "+" else "-", x, IntL(1, false)).also { it.line = line }) }
+            return withTemps(listOf(r)) { (x) -> genExpr(BinE(if (n == "inc") BinOp.PLUS else BinOp.MINUS, x, IntL(1, false)).also { it.line = line }) }
         val nn = nonNullRecv; nonNullRecv = false
         // Bitwise members called as methods: `x.shl(2)`, `x.inv()` (they win over an extension when the receiver is `y!!`).
         if ((t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64) && (nn || extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false) && e0.lambda == null && e0.args.none { it is NamedE }) {
             if (n in setOf("and", "or", "xor", "shl", "shr", "ushr") && e0.args.size == 1)
-                return withTemps(listOf(r)) { (x) -> genExpr(BinE(n, x, e0.args[0]).also { it.line = line }) }
+                return withTemps(listOf(r)) { (x) -> genExpr(BinE(BinOp.of(n), x, e0.args[0]).also { it.line = line }) }
             if (n == "inv" && e0.args.isEmpty())
-                return withTemps(listOf(r)) { (x) -> genExpr(BinE("xor", x, UnE("-", IntL(1, t == Ty.I64 || t == Ty.U64)).also { it.line = line }).also { it.line = line }) }
+                return withTemps(listOf(r)) { (x) -> genExpr(BinE(BinOp.XOR, x, UnE(UnOp.NEG, IntL(1, t == Ty.I64 || t == Ty.U64)).also { it.line = line }).also { it.line = line }) }
         }
         if (!hasMember(t, n)) extFuns[n]?.firstOrNull { extMatches(t, it.params[0].type, it.typeParams) && !(nn && it.params[0].type.nullable && t.llvm != "ptr") }?.let { f ->
             return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
@@ -4410,9 +4410,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val it0 = NameE("it").also { it.line = line }
             val tn = ((a as? UnE)?.e as? NameE)?.n
             val call: E = when {
-                a is UnE && a.op.startsWith("::") && a.e is NullL && a.op.drop(2) in funDecls -> CallE(NameE(a.op.drop(2)), emptyList(), listOf(it0), null)
-                a is UnE && a.op.startsWith("::") && tn != null && lookup(tn) == null && tn in classes -> {
-                    val m = a.op.drop(2)
+                a is UnE && a.op == UnOp.REF && a.e is NullL && a.ref!! in funDecls -> CallE(NameE(a.ref), emptyList(), listOf(it0), null)
+                a is UnE && a.op == UnOp.REF && tn != null && lookup(tn) == null && tn in classes -> {
+                    val m = a.ref!!
                     if (m in classes.getValue(tn).methods && !m.startsWith("\$prop\$")) CallE(MemberE(it0, m, false), emptyList(), emptyList(), null) else MemberE(it0, m, false)
                 }
                 else -> CallE(a, emptyList(), listOf(it0), null)
@@ -4563,7 +4563,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun argFor(a: E, t: Ty, own: Boolean = false): Val =
         adaptedRef(a, t) ?: if (a is LambdaE) (samSig(t)?.let { (s, recv) -> genLambda(a, s.params, s.ret, recv, susp = s.suspend) }
             ?: fnSig(t).let { s -> genLambda(a, s?.params, s?.ret, isRecvFn(t), susp = t is Ty.Iface && isSuspFnName(t.name)) }) else withExpected(a, t) {
-            if (a is UnE && a.op.startsWith("::")) refExpected = fnSig(t)
+            if (a is UnE && a.op == UnOp.REF) refExpected = fnSig(t)
             try { if (own) genArg(a) else genExpr(a) } finally { refExpected = null }
         }
 
@@ -4585,10 +4585,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * varargs are filled in, and a result is dropped when `Unit` is expected. Lowered to a lambda of the expected type.
      */
     private fun adaptedRef(a: E, t: Ty): Val? {
-        if (a !is UnE || !a.op.startsWith("::") || a.e !is NullL) return null
+        if (a !is UnE || a.op != UnOp.REF || a.e !is NullL) return null
         val s = fnSig(t) ?: return null
         if (isRecvFn(t)) return null
-        var n = a.op.drop(2)
+        var n = a.ref!!
         // `::f` of an overloaded top-level function: the overload whose parameter types match the expected type.
         if (n in Overloads.map && lookup(n) == null) {
             val c = Overloads.map.getValue(n).filter { o -> o.params.size == s.params.size && o.params.withIndex().all { (i, q) -> (try { resolve(q.type) } catch (x: CompileError) { null }) == s.params[i] } }
@@ -5165,7 +5165,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (!v.t.isNum) fail("sumOf selector must return a number")
                 accTy = if (v.t == Ty.I8) Ty.I32 else v.t
                 val cur = emitT("load ${accTy.llvm}, ptr $acc")
-                val nv = arith("+", Val(cur, accTy), v)
+                val nv = arith(BinOp.PLUS, Val(cur, accTy), v)
                 emit("store ${accTy.llvm} ${nv.v}, ptr $acc")
             }
             "count" -> {
@@ -5202,21 +5202,21 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun genBin(e: BinE): Val {
         when (e.op) {
-            "&&", "||" -> {
+            BinOp.AND, BinOp.OR -> {
                 val a = coerce(genExpr(e.l), Ty.I1)
                 val from = cur
                 val lr = label("logic.rhs"); val le = label("logic.end")
-                if (e.op == "&&") condBr(a.v, lr, le) else condBr(a.v, le, lr)
+                if (e.op == BinOp.AND) condBr(a.v, lr, le) else condBr(a.v, le, lr)
                 startBlock(lr)
-                scopes.add(Scope()); applyCasts(smartCasts(e.l, e.op == "&&"))
+                scopes.add(Scope()); applyCasts(smartCasts(e.l, e.op == BinOp.AND))
                 val b = try { coerce(genExpr(e.r), Ty.I1) } finally { scopes.removeAt(scopes.size - 1) }
                 val bFrom = cur
-                if (term) { startBlock(le); return Val(if (e.op == "&&") "false" else "true", Ty.I1) } // rhs never completes
+                if (term) { startBlock(le); return Val(if (e.op == BinOp.AND) "false" else "true", Ty.I1) } // rhs never completes
                 br(le)
                 startBlock(le)
-                return Val(emitT("phi i1 [ ${if (e.op == "&&") "false" else "true"}, %$from ], [ ${b.v}, %$bFrom ]"), Ty.I1)
+                return Val(emitT("phi i1 [ ${if (e.op == BinOp.AND) "false" else "true"}, %$from ], [ ${b.v}, %$bFrom ]"), Ty.I1)
             }
-            "?:" -> {
+            BinOp.ELVIS -> {
                 val a = genExpr(e.l)
                 if (a.t.llvm != "ptr") return a
                 if (a.t is Ty.NBox) elvisBox(a, e.r)?.let { return it }
@@ -5241,61 +5241,63 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 startBlock(le)
                 return if (b == null) Val(a.v, a.t, a.owned) else Val(emitT("phi ptr [ ${a.v}, %$lhsEnd ], [ ${b.v}, %$rhsEnd ]"), a.t, owned)
             }
-            "..", "until", "downTo", "step" -> return rangeValue(e)
-            "in", "!in" -> {
+            BinOp.RANGE, BinOp.UNTIL, BinOp.DOWN_TO, BinOp.STEP -> return rangeValue(e)
+            BinOp.IN, BinOp.NOT_IN -> {
                 val v = inRange(e.l, e.r)
-                return if (e.op == "in") v else Val(emitT("xor i1 ${v.v}, true"), Ty.I1)
+                return if (e.op == BinOp.IN) v else Val(emitT("xor i1 ${v.v}, true"), Ty.I1)
             }
+            else -> {}
         }
-        if (e.op == "===" || e.op == "!==") return identity(e)
+        if (e.op == BinOp.IDENT || e.op == BinOp.NOT_IDENT) return identity(e)
         val a = genExpr(e.l)
-        if ((e.op == "==" || e.op == "!=") && a.t is Ty.NBox && isSafeCall(e.l) && e.r !is NullL) {
+        if ((e.op == BinOp.EQ || e.op == BinOp.NE) && a.t is Ty.NBox && isSafeCall(e.l) && e.r !is NullL) {
             // `a?.x == f()`: when `a` is null the right side is not evaluated (as Kotlin/Native does).
             val from = cur; val lv = label("seq.val"); val le = label("seq.end")
             condBr(emitT("icmp eq ptr ${a.v}, null"), le, lv)
             startBlock(lv)
             val c = nboxEq(e.op, a, genExpr(e.r)); val vEnd = cur
             br(le); startBlock(le)
-            return Val(emitT("phi i1 [ ${e.op == "!="}, %$from ], [ ${c.v}, %$vEnd ]"), Ty.I1)
+            return Val(emitT("phi i1 [ ${e.op == BinOp.NE}, %$from ], [ ${c.v}, %$vEnd ]"), Ty.I1)
         }
         if (a.t is Ty.Cls || a.t is Ty.Iface) {
             // Operator overloading: `a + b` -> a.plus(b); `a < b` -> a.compareTo(b) < 0. `==` stays identity.
             OP_FUNS[e.op]?.let { return method(a, it, opCall(it, e.r)) }
-            if (e.op in setOf("<", ">", "<=", ">=")) return compare(e.op, method(a, "compareTo", opCall("compareTo", e.r)), Val("0", Ty.I32))
+            if (e.op in setOf(BinOp.LT, BinOp.GT, BinOp.LE, BinOp.GE)) return compare(e.op, method(a, "compareTo", opCall("compareTo", e.r)), Val("0", Ty.I32))
         }
         // A nullable primitive has no built-in arithmetic, so an operator extension on it (`Int?.plus`) is the only candidate.
         if (a.t is Ty.NBox) OP_FUNS[e.op]?.let { n ->
             if (extFuns[n]?.any { it.params[0].type.nullable && extMatches(a.t, it.params[0].type, it.typeParams) } == true) return method(a, n, opCall(n, e.r))
         }
         // `operator fun String?.plus` applies to nullable receivers, whose nullability is not tracked here.
-        if (e.op == "+" && a.t == Ty.Str && extFuns["plus"]?.any { it.params[0].type.name == "String" && it.params[0].type.nullable } == true)
+        if (e.op == BinOp.PLUS && a.t == Ty.Str && extFuns["plus"]?.any { it.params[0].type.name == "String" && it.params[0].type.nullable } == true)
             fail("operator extension 'plus' on String? is not supported")
         val b = genExpr(e.r)
         if (a.t == Ty.Char || b.t == Ty.Char) return charOp(e.op, a, b)
         // `Double? == Int?` after nullable smart casts: null handling plus numeric promotion is not modelled yet.
-        if ((e.op == "==" || e.op == "!=") && a.t != b.t && a.t.isNum && b.t.isNum && (nullableAlias(e.l) || nullableAlias(e.r)))
+        if ((e.op == BinOp.EQ || e.op == BinOp.NE) && a.t != b.t && a.t.isNum && b.t.isNum && (nullableAlias(e.l) || nullableAlias(e.r)))
             fail("equality of smart-cast nullable ${a.t} and ${b.t} is not supported")
-        if ((e.op == "==" || e.op == "!=") && a.t.isFp && b.t.isFp && (boxedDoubleOperand(e.l) || boxedDoubleOperand(e.r)))
+        if ((e.op == BinOp.EQ || e.op == BinOp.NE) && a.t.isFp && b.t.isFp && (boxedDoubleOperand(e.l) || boxedDoubleOperand(e.r)))
             return compare(e.op, Val(doubleBits(a), Ty.I64), Val(doubleBits(b), Ty.I64))
         return when (e.op) {
-            "==", "!=", "<", ">", "<=", ">=" -> compare(e.op, a, b)
-            "+" -> if (a.t == Ty.Str) concat(a, b) else arith(e.op, a, b)
-            "-", "*", "/", "%" -> arith(e.op, a, b)
-            "and", "or", "xor" -> {
+            BinOp.EQ, BinOp.NE, BinOp.LT, BinOp.GT, BinOp.LE, BinOp.GE -> compare(e.op, a, b)
+            BinOp.PLUS -> if (a.t == Ty.Str) concat(a, b) else arith(e.op, a, b)
+            BinOp.MINUS, BinOp.TIMES, BinOp.DIV, BinOp.REM -> arith(e.op, a, b)
+            BinOp.BIT_AND, BinOp.BIT_OR, BinOp.XOR -> {
                 if (a.t == Ty.I1 && b.t == Ty.I1) return Val(emitT("${e.op} i1 ${a.v}, ${b.v}"), Ty.I1)
                 if (!a.t.isInt || !b.t.isInt || a.t != b.t && (a.t.rank < 2 || b.t.rank < 2)) fail("'${e.op}' needs matching Int/Long operands")
                 val t = if (a.t.rank >= b.t.rank) a.t else b.t
                 Val(emitT("${e.op} ${t.llvm} ${coerce(a, t).v}, ${coerce(b, t).v}"), t)
             }
-            "shl", "shr", "ushr" -> {
+            BinOp.SHL, BinOp.SHR, BinOp.USHR -> {
                 if (!a.t.isInt) fail("'${e.op}' on ${a.t}")
                 val t = if (a.t == Ty.I64) Ty.I64 else Ty.I32
                 val x = coerce(a, t)
                 val cnt = emitT("and ${t.llvm} ${coerce(b, t).v}, ${if (t == Ty.I64) 63 else 31}")
-                val op = mapOf("shl" to "shl", "shr" to "ashr", "ushr" to "lshr").getValue(e.op)
+                val op = when (e.op) { BinOp.SHL -> "shl"; BinOp.SHR -> "ashr"; else -> "lshr" }
                 Val(emitT("$op ${t.llvm} ${x.v}, $cnt"), t)
             }
-            else -> fail("unknown operator ${e.op}")
+            BinOp.AND, BinOp.OR, BinOp.ELVIS, BinOp.RANGE, BinOp.UNTIL, BinOp.DOWN_TO, BinOp.STEP, BinOp.IN, BinOp.NOT_IN,
+            BinOp.IDENT, BinOp.NOT_IDENT -> fail("internal: operator ${e.op} handled above")
         }
     }
 
@@ -5303,7 +5305,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * `Array(n) { i -> init }` / `IntArray(n) { ... }`: creates the container with [mk] (element type [hint] or the
      * init block's type, probed with rollback), then runs the block inline for each index and stores with [put].
      */
-    private fun isSpread(x: E) = x is UnE && x.op == "*"
+    private fun isSpread(x: E) = x is UnE && x.op == UnOp.SPREAD
 
     /**
      * `listOf(*a, x, *b)` / `intArrayOf(*xs)` / a vararg mixing spreads and items: `{ val l = ...; l.add(x); l.addAll(b.toList()); <end(l)> }`.
@@ -5407,7 +5409,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             for (p in leaves) {
                 val v: E = p.fold(x) { acc, fn -> MemberE(acc, fn, false).also { it.line = line } }
                 val add = CallE(MemberE(l, "add", false).also { it.line = line }, emptyList(), listOf(if (elem == "Any") AsE(v, TypeRef("Any", emptyList(), false), false).also { it.line = line } else v), null).also { it.line = line }
-                genStmt(ExprS(IfE(BinE("!=", v, NullL().also { it.line = line }).also { it.line = line }, Block(listOf(ExprS(add).also { it.line = line })), null).also { it.line = line }).also { it.line = line })
+                genStmt(ExprS(IfE(BinE(BinOp.NE, v, NullL().also { it.line = line }).also { it.line = line }, Block(listOf(ExprS(add).also { it.line = line })), null).also { it.line = line }).also { it.line = line })
             }
             genExpr(l)
         }
@@ -5441,16 +5443,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun rangeValue(e: BinE): Val {
         val a = genExpr(e.l)
         // `C(0)..C(2)` on a class: its `operator fun rangeTo` (member or extension), not a prelude progression.
-        if (e.op == ".." && (a.t is Ty.Cls || a.t is Ty.Iface) && progKind(a.t) == null) return method(a, "rangeTo", opCall("rangeTo", e.r))
+        if (e.op == BinOp.RANGE && (a.t is Ty.Cls || a.t is Ty.Iface) && progKind(a.t) == null) return method(a, "rangeTo", opCall("rangeTo", e.r))
         val b = genExpr(e.r)
-        val k = if (e.op == "step") progKind(a.t) ?: fail("step on ${a.t}") else rangeKind(a.t, b.t)
-        val fn = "kt_" + mapOf(".." to "rangeTo", "until" to "until", "downTo" to "downTo", "step" to "step").getValue(e.op) + k
+        val k = if (e.op == BinOp.STEP) progKind(a.t) ?: fail("step on ${a.t}") else rangeKind(a.t, b.t)
+        val fn = "kt_" + when (e.op) { BinOp.RANGE -> "rangeTo"; BinOp.UNTIL -> "until"; BinOp.DOWN_TO -> "downTo"; BinOp.STEP -> "step"; else -> error("internal: range operator ${e.op}") } + k
         return withTemps(listOf(a, b)) { (x, y) -> genNamedCall(fn, CallE(NameE(fn), emptyList(), listOf(x, y), null)) }
     }
 
     /** `x in r`: range literals compare against their bounds directly; other values call `contains`. */
     private fun inRange(xe: E, re: E): Val {
-        if (re is BinE && re.op in setOf("..", "until", "downTo")) {
+        if (re is BinE && re.op in setOf(BinOp.RANGE, BinOp.UNTIL, BinOp.DOWN_TO)) {
             val x = genExpr(xe); val lo = genExpr(re.l); val hi = genExpr(re.r)
             val k = rangeKind(lo.t, hi.t)
             val t0 = when (k) { "C" -> Ty.I32; "L" -> Ty.I64; "U" -> Ty.U32; "UL" -> Ty.U64; else -> if (x.t == Ty.I64) Ty.I64 else Ty.I32 }
@@ -5460,9 +5462,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (k == "C" && x.t != Ty.Char) fail("type mismatch: expected Char, found ${x.t}")
             val xv = c(x); val l = c(lo); val h = c(hi)
             val (p, q) = when (re.op) {
-                ".." -> compare("<=", l, xv) to compare("<=", xv, h)
-                "until" -> compare("<=", l, xv) to compare("<", xv, h)
-                else -> compare("<=", h, xv) to compare("<=", xv, l)
+                BinOp.RANGE -> compare(BinOp.LE, l, xv) to compare(BinOp.LE, xv, h)
+                BinOp.UNTIL -> compare(BinOp.LE, l, xv) to compare(BinOp.LT, xv, h)
+                else -> compare(BinOp.LE, h, xv) to compare(BinOp.LE, xv, l)
             }
             return Val(emitT("and i1 ${p.v}, ${q.v}"), Ty.I1)
         }
@@ -5470,14 +5472,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return withTemps(listOf(r)) { (rv) -> genExpr(CallE(MemberE(rv, "contains", false).also { it.line = line }, emptyList(), listOf(xe), null).also { it.line = line }) }
     }
 
-    private fun charOp(op: String, a: Val, b: Val): Val {
+    private fun charOp(op: BinOp, a: Val, b: Val): Val {
         val asInt = { v: Val -> if (v.t == Ty.Char) Val(v.v, Ty.I32) else v }
         return when {
-            op in setOf("==", "!=", "<", ">", "<=", ">=") && a.t == Ty.Char && b.t == Ty.Char -> compare(op, asInt(a), asInt(b))
-            op == "-" && a.t == Ty.Char && b.t == Ty.Char -> arith("-", asInt(a), asInt(b))
+            op in setOf(BinOp.EQ, BinOp.NE, BinOp.LT, BinOp.GT, BinOp.LE, BinOp.GE) && a.t == Ty.Char && b.t == Ty.Char -> compare(op, asInt(a), asInt(b))
+            op == BinOp.MINUS && a.t == Ty.Char && b.t == Ty.Char -> arith(BinOp.MINUS, asInt(a), asInt(b))
             // Char arithmetic wraps modulo 2^16.
-            (op == "+" || op == "-") && a.t == Ty.Char && b.t.isInt -> Val(emitT("and i32 ${arith(op, asInt(a), coerce(b, Ty.I32)).v}, 65535"), Ty.Char)
-            op == "+" && a.t == Ty.Str -> concat(a, b)
+            (op == BinOp.PLUS || op == BinOp.MINUS) && a.t == Ty.Char && b.t.isInt -> Val(emitT("and i32 ${arith(op, asInt(a), coerce(b, Ty.I32)).v}, 65535"), Ty.Char)
+            op == BinOp.PLUS && a.t == Ty.Str -> concat(a, b)
             else -> fail("operator $op on ${a.t} and ${b.t}")
         }
     }
@@ -5503,12 +5505,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      * by zero are undefined behaviour), and `MIN_VALUE / -1` wraps to MIN_VALUE with remainder 0 (sdiv/srem overflow
      * there, also undefined). A constant divisor needs neither check unless it is 0 or -1.
      */
-    private fun arith(op: String, a0: Val, b0: Val): Val {
+    private fun arith(op: BinOp, a0: Val, b0: Val): Val {
         val a = nbArg(a0); val b = nbArg(b0)
         val t = numType(a, b)
         val x = coerce(a, t).v; val y = coerce(b, t).v
         val ins = (if (t.isFp) FP_OPS else if (t.isUnsigned) UNSIGNED_OPS else SIGNED_OPS).getValue(op)
-        if (t.isFp || (op != "/" && op != "%")) return Val(emitT("$ins ${t.llvm} $x, $y"), t)
+        if (t.isFp || (op != BinOp.DIV && op != BinOp.REM)) return Val(emitT("$ins ${t.llvm} $x, $y"), t)
         val c = y.toLongOrNull()
         if (c == null || c == 0L) {
             val bad = label("div.zero"); val ok = label("div.ok")
@@ -5519,12 +5521,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             startBlock(ok)
         }
         if (t.isUnsigned || (c != null && c != -1L)) return Val(emitT("$ins ${t.llvm} $x, $y"), t)
-        if (c == -1L) return Val(if (op == "/") emitT("sub ${t.llvm} 0, $x") else "0", t)
+        if (c == -1L) return Val(if (op == BinOp.DIV) emitT("sub ${t.llvm} 0, $x") else "0", t)
         // y == -1: divide by 1 instead (no overflow), then pick -x (wrapping) or 0.
         val m1 = emitT("icmp eq ${t.llvm} $y, -1")
         val safe = emitT("select i1 $m1, ${t.llvm} 1, ${t.llvm} $y")
         val q = emitT("$ins ${t.llvm} $x, $safe")
-        val alt = if (op == "/") emitT("sub ${t.llvm} 0, $x") else "0"
+        val alt = if (op == BinOp.DIV) emitT("sub ${t.llvm} 0, $x") else "0"
         return Val(emitT("select i1 $m1, ${t.llvm} $alt, ${t.llvm} $q"), t)
     }
 
@@ -5570,8 +5572,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     private fun identity(e: BinE): Val {
-        val eq = if (e.op == "===") "==" else "!="
-        if (e.l is NullL || e.r is NullL) return genExpr(BinE(eq, e.l, e.r).also { it.line = e.line })
+        val eq = if (e.op == BinOp.IDENT) BinOp.EQ else BinOp.NE
+        if (e.l is NullL || e.r is NullL) return genExpr(BinE(if (e.op == BinOp.IDENT) BinOp.EQ else BinOp.NE, e.l, e.r).also { it.line = e.line })
         val a = genExpr(e.l); val b = genExpr(e.r)
         fun refOk(t: Ty) = (t is Ty.Cls && !t.name.startsWith("AnyBox")) || (t is Ty.Iface && !isAny(t)) || t is Ty.Arr || t is Ty.ListTy || t is Ty.MapTy
         if (a.t.llvm != "ptr" && b.t.llvm != "ptr") return compare(eq, a, b)
@@ -5579,24 +5581,24 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         // is that object). Two `Any`s stay refused: boxes of equal primitives are distinct here.
         fun objOk(t: Ty, o: Ty) = refOk(t) || (isAny(t) && (o is Ty.Cls || o is Ty.Iface) && refOk(o))
         if (!objOk(a.t, b.t) || !objOk(b.t, a.t)) fail("identity comparison of ${a.t} and ${b.t} is not supported")
-        val r = Val(emitT("icmp ${if (eq == "==") "eq" else "ne"} ptr ${a.v}, ${b.v}"), Ty.I1)
+        val r = Val(emitT("icmp ${if (eq == BinOp.EQ) "eq" else "ne"} ptr ${a.v}, ${b.v}"), Ty.I1)
         releaseIfOwned(a); releaseIfOwned(b)
         return r
     }
 
-    private fun compare(op: String, a: Val, b: Val): Val {
+    private fun compare(op: BinOp, a: Val, b: Val): Val {
         // Values of different primitive types are never equal (`equals` of boxed values). Kotlin rejects this for
         // non-literal operands outside generic code, so it only shows up through type parameters (`fun <A, B: Any> f(a: A, b: B) = a == b`).
-        if ((op == "==" || op == "!=") && tenv.isNotEmpty() && a.t != b.t && a.t in NUMERIC && b.t in NUMERIC && !CONST_RE.matches(a.v) && !CONST_RE.matches(b.v))
-            return Val(if (op == "==") "false" else "true", Ty.I1)
+        if ((op == BinOp.EQ || op == BinOp.NE) && tenv.isNotEmpty() && a.t != b.t && a.t in NUMERIC && b.t in NUMERIC && !CONST_RE.matches(a.v) && !CONST_RE.matches(b.v))
+            return Val(if (op == BinOp.EQ) "false" else "true", Ty.I1)
         // A type parameter bound by a `null` argument (RawPtr) against a primitive: null is never equal to a number.
-        if ((op == "==" || op == "!=") && tenv.isNotEmpty() && ((a.t == Ty.RawPtr && b.t in NUMERIC) || (b.t == Ty.RawPtr && a.t in NUMERIC))) {
+        if ((op == BinOp.EQ || op == BinOp.NE) && tenv.isNotEmpty() && ((a.t == Ty.RawPtr && b.t in NUMERIC) || (b.t == Ty.RawPtr && a.t in NUMERIC))) {
             releaseIfOwned(a); releaseIfOwned(b)
-            return Val(if (op == "==") "false" else "true", Ty.I1)
+            return Val(if (op == BinOp.EQ) "false" else "true", Ty.I1)
         }
-        if ((op == "==" || op == "!=") && a.v != "null" && b.v != "null" && listOf(a.t, b.t).any { it is Ty.Iface && it.name.startsWith("\$Fn") })
+        if ((op == BinOp.EQ || op == BinOp.NE) && a.v != "null" && b.v != "null" && listOf(a.t, b.t).any { it is Ty.Iface && it.name.startsWith("\$Fn") })
             fail("equality of function values is not supported")
-        if ((op == "==" || op == "!=") && a.t is Ty.Cls && a.v != "null" && b.v != "null" && classes.getValue(a.t.name).methods["equals"]?.params?.size == 1) {
+        if ((op == BinOp.EQ || op == BinOp.NE) && a.t is Ty.Cls && a.v != "null" && b.v != "null" && classes.getValue(a.t.name).methods["equals"]?.params?.size == 1) {
             // User-defined equals(other: Any?): same pointer -> true, null receiver -> other is null, else a.equals(b).
             val ls = label("ueq.same"); val lc = label("ueq.call"); val ln = label("ueq.null"); val le = label("ueq.end")
             val bb = if (b.t is Ty.Cls || b.t is Ty.Iface) b else coerce(b, Ty.Iface("Any"))
@@ -5616,24 +5618,24 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             startBlock(le)
             val eq = emitT("phi i1 [ true, %$ls ], [ false, %$fromN ], [ ${r.v}, %$fromC ]")
             releaseIfOwned(a); releaseIfOwned(bb)
-            return Val(if (op == "==") eq else emitT("xor i1 $eq, true"), Ty.I1)
+            return Val(if (op == BinOp.EQ) eq else emitT("xor i1 $eq, true"), Ty.I1)
         }
-        if ((op == "==" || op == "!=") && (isAny(a.t) || isAny(b.t)) && a.v != "null" && b.v != "null") {
+        if ((op == BinOp.EQ || op == BinOp.NE) && (isAny(a.t) || isAny(b.t)) && a.v != "null" && b.v != "null") {
             val anyT = if (isAny(a.t)) a.t else b.t
             val x = coerce(a, anyT); val y = coerce(b, anyT)
             val same = emitT("icmp eq ptr ${x.v}, ${y.v}")
             val r = coerce(anyCall("anyEquals__", listOf(x, y)), Ty.I1)
             val eq = emitT("or i1 $same, ${r.v}")
-            return Val(if (op == "==") eq else emitT("xor i1 $eq, true"), Ty.I1)
+            return Val(if (op == BinOp.EQ) eq else emitT("xor i1 $eq, true"), Ty.I1)
         }
-        if ((op == "==" || op == "!=") && (a.t is Ty.Arr) != (b.t is Ty.Arr) && (a.t.isInt || b.t.isInt)) fail("cannot compare ${a.t} and ${b.t}")
-        if (a.t == Ty.I1 && b.t == Ty.I1 && (op == "==" || op == "!=")) return Val(emitT("icmp ${if (op == "==") "eq" else "ne"} i1 ${a.v}, ${b.v}"), Ty.I1)
+        if ((op == BinOp.EQ || op == BinOp.NE) && (a.t is Ty.Arr) != (b.t is Ty.Arr) && (a.t.isInt || b.t.isInt)) fail("cannot compare ${a.t} and ${b.t}")
+        if (a.t == Ty.I1 && b.t == Ty.I1 && (op == BinOp.EQ || op == BinOp.NE)) return Val(emitT("icmp ${if (op == BinOp.EQ) "eq" else "ne"} i1 ${a.v}, ${b.v}"), Ty.I1)
         // `null` vs a non-nullable primitive never matches (kotlinc only warns).
         if ((a.v == "null" && b.t.llvm != "ptr") || (b.v == "null" && a.t.llvm != "ptr")) {
-            if (op != "==" && op != "!=") fail("cannot order null")
-            return Val(if (op == "==") "false" else "true", Ty.I1)
+            if (op != BinOp.EQ && op != BinOp.NE) fail("cannot order null")
+            return Val(if (op == BinOp.EQ) "false" else "true", Ty.I1)
         }
-        if (a.t is Ty.Cls && a.t == b.t && a.v != "null" && b.v != "null" && (classDecls[a.t.name]?.isValue == true || isData(a.t)) && (op == "==" || op == "!=")) {
+        if (a.t is Ty.Cls && a.t == b.t && a.v != "null" && b.v != "null" && (classDecls[a.t.name]?.isValue == true || isData(a.t)) && (op == BinOp.EQ || op == BinOp.NE)) {
             // Value classes compare by their single property (null-safe: same pointer -> equal, one null -> different).
             val ci = classes.getValue(a.t.name); val ft = ci.fields[0].second
             val same = emitT("icmp eq ptr ${a.v}, ${b.v}")
@@ -5651,16 +5653,16 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val fa = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${a.v}, i32 0, i32 2")}"), ft)
                 val fb = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${b.v}, i32 0, i32 2")}"), ft)
                 // Value class equality is boxed equality of the property: Float/Double compare by bits.
-                if (ft.isFp) compare("==", Val(doubleBits(fa), Ty.I64), Val(doubleBits(fb), Ty.I64)) else coerce(compare("==", fa, fb), Ty.I1)
+                if (ft.isFp) compare(BinOp.EQ, Val(doubleBits(fa), Ty.I64), Val(doubleBits(fb), Ty.I64)) else coerce(compare(BinOp.EQ, fa, fb), Ty.I1)
             }
             val fromF = cur
             br(le)
             startBlock(le)
             val r = emitT("phi i1 [ true, %$from ], [ false, %$fromC ], [ ${eq.v}, %$fromF ]")
             releaseIfOwned(a); releaseIfOwned(b)
-            return Val(if (op == "==") r else emitT("xor i1 $r, true"), Ty.I1)
+            return Val(if (op == BinOp.EQ) r else emitT("xor i1 $r, true"), Ty.I1)
         }
-        if (a.t is Ty.ListTy && b.t is Ty.ListTy && (op == "==" || op == "!=")) {
+        if (a.t is Ty.ListTy && b.t is Ty.ListTy && (op == BinOp.EQ || op == BinOp.NE)) {
             // Structural list equality: same size and pairwise-equal elements (null-safe).
             val res = "%l.leq.${tmpN++}"; val idx = "%l.leqi.${tmpN++}"
             allocas.append("  $res = alloca i1\n  $idx = alloca i64\n")
@@ -5682,7 +5684,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val ea = Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${a.v}, i64 $i)"), a.t.elem), a.t.elem)
             val eb = Val(fromSlot(emitT("call i64 @rt_list_get(ptr ${b.v}, i64 $i)"), b.t.elem), b.t.elem)
             val asInt = { v: Val -> if (v.t == Ty.Char) Val(v.v, Ty.I32) else v }
-            val eq = compare("==", asInt(ea), asInt(eb))
+            val eq = compare(BinOp.EQ, asInt(ea), asInt(eb))
             emit("store i64 ${emitT("add i64 $i, 1")}, ptr $idx")
             condBr(eq.v, lc, le)
             startBlock(lt)
@@ -5691,38 +5693,38 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             startBlock(le)
             val r = emitT("load i1, ptr $res")
             releaseIfOwned(a); releaseIfOwned(b)
-            return Val(if (op == "==") r else emitT("xor i1 $r, true"), Ty.I1)
+            return Val(if (op == BinOp.EQ) r else emitT("xor i1 $r, true"), Ty.I1)
         }
-        if (a.t == Ty.Str && b.t == Ty.Str && op in setOf("<", ">", "<=", ">=")) {
+        if (a.t == Ty.Str && b.t == Ty.Str && op in setOf(BinOp.LT, BinOp.GT, BinOp.LE, BinOp.GE)) {
             val c = emitT("call i32 @rt_str_cmp(ptr ${a.v}, ptr ${b.v})")
             releaseIfOwned(a); releaseIfOwned(b)
             return compare(op, Val(c, Ty.I32), Val("0", Ty.I32))
         }
-        if (a.t is Ty.Cls && op in setOf("<", ">", "<=", ">=") && "compareTo" in classes.getValue(a.t.name).methods) {
+        if (a.t is Ty.Cls && op in setOf(BinOp.LT, BinOp.GT, BinOp.LE, BinOp.GE) && "compareTo" in classes.getValue(a.t.name).methods) {
             val c = withTemps(listOf(a, b)) { (x, y) -> genExpr(CallE(MemberE(x, "compareTo", false).also { it.line = line }, emptyList(), listOf(y), null).also { it.line = line }) }
             return compare(op, c, Val("0", Ty.I32))
         }
-        if ((op == "==" || op == "!=") && (a.t is Ty.NBox || b.t is Ty.NBox) && a.v != "null" && b.v != "null" &&
+        if ((op == BinOp.EQ || op == BinOp.NE) && (a.t is Ty.NBox || b.t is Ty.NBox) && a.v != "null" && b.v != "null" &&
             (a.t is Ty.NBox || boxName(a.t) != null) && (b.t is Ty.NBox || boxName(b.t) != null) && a.t != Ty.Str && b.t != Ty.Str) return nboxEq(op, a, b)
         // Ordering needs a non-null smart cast (handled by aliases) or a user `compareTo` on the nullable type.
-        if (op != "==" && op != "!=" && (a.t is Ty.NBox || b.t is Ty.NBox)) fail("ordering of ${a.t} and ${b.t} is not supported")
+        if (op != BinOp.EQ && op != BinOp.NE && (a.t is Ty.NBox || b.t is Ty.NBox)) fail("ordering of ${a.t} and ${b.t} is not supported")
         if (a.t.llvm == "ptr" || b.t.llvm == "ptr") {
-            if (op != "==" && op != "!=") fail("cannot order references")
+            if (op != BinOp.EQ && op != BinOp.NE) fail("cannot order references")
             val res = if (a.t == Ty.Str && b.t == Ty.Str) {
                 val c = emitT("call i32 @rt_str_eq(ptr ${a.v}, ptr ${b.v})") // null-safe
-                Val(emitT("icmp ${if (op == "==") "ne" else "eq"} i32 $c, 0"), Ty.I1)
-            } else Val(emitT("icmp ${if (op == "==") "eq" else "ne"} ptr ${a.v}, ${b.v}"), Ty.I1)
+                Val(emitT("icmp ${if (op == BinOp.EQ) "ne" else "eq"} i32 $c, 0"), Ty.I1)
+            } else Val(emitT("icmp ${if (op == BinOp.EQ) "eq" else "ne"} ptr ${a.v}, ${b.v}"), Ty.I1)
             releaseIfOwned(a); releaseIfOwned(b)
             return res
         }
         val t = numType(a, b)
         val x = coerce(a, t).v; val y = coerce(b, t).v
         val res = if (t.isFp) {
-            val c = mapOf("==" to "oeq", "!=" to "une", "<" to "olt", ">" to "ogt", "<=" to "ole", ">=" to "oge").getValue(op)
+            val c = when (op) { BinOp.EQ -> "oeq"; BinOp.NE -> "une"; BinOp.LT -> "olt"; BinOp.GT -> "ogt"; BinOp.LE -> "ole"; BinOp.GE -> "oge"; else -> error("internal: comparison $op") }
             emitT("fcmp $c ${t.llvm} $x, $y")
         } else {
-            val c = if (t.isUnsigned) mapOf("==" to "eq", "!=" to "ne", "<" to "ult", ">" to "ugt", "<=" to "ule", ">=" to "uge").getValue(op)
-            else mapOf("==" to "eq", "!=" to "ne", "<" to "slt", ">" to "sgt", "<=" to "sle", ">=" to "sge").getValue(op)
+            val c = if (t.isUnsigned) when (op) { BinOp.EQ -> "eq"; BinOp.NE -> "ne"; BinOp.LT -> "ult"; BinOp.GT -> "ugt"; BinOp.LE -> "ule"; BinOp.GE -> "uge"; else -> error("internal: comparison $op") }
+            else when (op) { BinOp.EQ -> "eq"; BinOp.NE -> "ne"; BinOp.LT -> "slt"; BinOp.GT -> "sgt"; BinOp.LE -> "sle"; BinOp.GE -> "sge"; else -> error("internal: comparison $op") }
             emitT("icmp $c ${t.llvm} $x, $y")
         }
         return Val(res, Ty.I1)

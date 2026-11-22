@@ -327,7 +327,7 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
         is MemberE -> MemberE(e(x.recv), x.n, x.safe)
         is IndexE -> IndexE(e(x.recv), e(x.idx))
         is BinE -> BinE(x.op, e(x.l), e(x.r))
-        is UnE -> UnE(x.op, e(x.e))
+        is UnE -> UnE(x.op, e(x.e), x.ref)
         is NamedE -> NamedE(x.name, e(x.e))
         is IsE -> IsE(e(x.e), ty(x.type), x.neg)
         // `x as T` is unchecked (erasure): with T a class type a null passes through, as in Kotlin.

@@ -41,8 +41,42 @@ class IsE(val e: E, val type: TypeRef, val neg: Boolean) : E()
 class AsE(val e: E, val type: TypeRef, val safe: Boolean) : E()
 class MemberE(val recv: E, val n: String, val safe: Boolean) : E()
 class IndexE(val recv: E, val idx: E) : E()
-class BinE(val op: String, val l: E, val r: E) : E()
-class UnE(val op: String, val e: E) : E()
+/** Binary operators, including the built-in infix functions the parser folds into [BinE]; [sym] is the source spelling. */
+enum class BinOp(val sym: String) {
+    OR("||"), AND("&&"),
+    EQ("=="), NE("!="), IDENT("==="), NOT_IDENT("!=="),
+    LT("<"), GT(">"), LE("<="), GE(">="),
+    IN("in"), NOT_IN("!in"),
+    ELVIS("?:"),
+    BIT_AND("and"), BIT_OR("or"), XOR("xor"), SHL("shl"), SHR("shr"), USHR("ushr"), UNTIL("until"), DOWN_TO("downTo"), STEP("step"),
+    RANGE(".."),
+    PLUS("+"), MINUS("-"),
+    TIMES("*"), DIV("/"), REM("%");
+
+    override fun toString() = sym
+
+    companion object {
+        private val bySym = entries.associateBy { it.sym }
+        /** The operator spelled [s]; an unknown spelling is an internal error, never a silent fallback. */
+        fun of(s: String): BinOp = bySym[s] ?: throw IllegalArgumentException("unknown binary operator '$s'")
+        fun ofOrNull(s: String): BinOp? = bySym[s]
+    }
+}
+
+/** Unary operators; [REF] is a callable reference `recv::name` (the name is [UnE.ref]), [CLASS_LIT] is `e::class`. */
+enum class UnOp(val sym: String) {
+    NEG("-"), PLUS("+"), NOT("!"), NOT_NULL("!!"), SPREAD("*"), CLASS_LIT("#class"), REF("::");
+
+    override fun toString() = sym
+}
+
+class BinE(val op: BinOp, val l: E, val r: E) : E()
+/** [ref] is the referenced name exactly when [op] is [UnOp.REF]. */
+class UnE(val op: UnOp, val e: E, val ref: String?) : E() {
+    /** A non-reference unary operator. */
+    constructor(op: UnOp, e: E) : this(op, e, null)
+    init { require((op == UnOp.REF) == (ref != null)) { "UnE: callable reference name iff op is REF" } }
+}
 class IfE(val cond: E, val th: Block, val el: Block?) : E()
 /** Lambda literal used as a value (function-typed); compiled to a closure object implementing a `$Fn...` interface. */
 class LambdaE(val body: Block) : E()

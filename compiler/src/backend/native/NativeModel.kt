@@ -53,7 +53,7 @@ internal val EXCEPTIONS = listOf("AssertionError", "Error", "Exception", "Runtim
 /** `intArrayOf` -> `IntArray`: the constructor of the array a primitive `...ArrayOf` builds. */
 internal val ARRAY_OF_CTOR = listOf("Int", "Long", "Double", "Float", "Byte", "Boolean", "Char", "UInt", "ULong", "Short", "UByte", "UShort")
     .associate { it.replaceFirstChar(Char::lowercaseChar).let { l -> if (it.startsWith("U")) "u" + it.drop(1).lowercase() else l } + "ArrayOf" to it + "Array" }
-internal val OP_FUNS = mapOf("+" to "plus", "-" to "minus", "*" to "times", "/" to "div", "%" to "rem")
+internal val OP_FUNS = mapOf(BinOp.PLUS to "plus", BinOp.MINUS to "minus", BinOp.TIMES to "times", BinOp.DIV to "div", BinOp.REM to "rem")
 
 /** Native target: typed LLVM IR generation (linked by clang with runtime/runtime.c). */
 /** Thrown when code needs an instance of a generic class that is not in the program yet; [compileGenerics] adds it and retries. */
@@ -69,9 +69,9 @@ class NeedIface(val d: InterfaceD) : Exception()
 class NeedBatch(val needs: List<Exception>) : Exception()
 
 /** LLVM instructions of the arithmetic operators, by operand kind (see NativeBackend.arith). */
-internal val FP_OPS = mapOf("+" to "fadd", "-" to "fsub", "*" to "fmul", "/" to "fdiv", "%" to "frem")
-internal val UNSIGNED_OPS = mapOf("+" to "add", "-" to "sub", "*" to "mul", "/" to "udiv", "%" to "urem")
-internal val SIGNED_OPS = mapOf("+" to "add", "-" to "sub", "*" to "mul", "/" to "sdiv", "%" to "srem")
+internal val FP_OPS = mapOf(BinOp.PLUS to "fadd", BinOp.MINUS to "fsub", BinOp.TIMES to "fmul", BinOp.DIV to "fdiv", BinOp.REM to "frem")
+internal val UNSIGNED_OPS = mapOf(BinOp.PLUS to "add", BinOp.MINUS to "sub", BinOp.TIMES to "mul", BinOp.DIV to "udiv", BinOp.REM to "urem")
+internal val SIGNED_OPS = mapOf(BinOp.PLUS to "add", BinOp.MINUS to "sub", BinOp.TIMES to "mul", BinOp.DIV to "sdiv", BinOp.REM to "srem")
 
 /**
  * Deferred reference counting for possibly cyclic objects (GC implementations whose `caps` contain `deferred`,

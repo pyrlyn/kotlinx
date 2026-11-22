@@ -47,7 +47,7 @@ object Uses {
             is IndexE -> { expr(e.recv, straight, false, out); expr(e.idx, straight, false, out) }
             is BinE -> {
                 expr(e.l, straight, false, out)
-                expr(e.r, straight && e.op != "&&" && e.op != "||" && e.op != "?:", false, out)
+                expr(e.r, straight && e.op != BinOp.AND && e.op != BinOp.OR && e.op != BinOp.ELVIS, false, out)
             }
             is UnE -> expr(e.e, straight, false, out)
             is NamedE -> expr(e.e, straight, pos, out)

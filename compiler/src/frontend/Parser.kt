@@ -42,7 +42,7 @@ class Parser(toks: List<Tok>) {
         val tmp = { e: E -> val n = "\$mi${destructN++}"; pendingDecls.add(VarS(n, false, null, e).also { it.line = line }); mk(NameE(n)) }
         val r = tmp(m.recv); val a = g.args.map(tmp)
         val cur = mk(CallE(mk(MemberE(r, "get", false)), emptyList(), a, null))
-        return ExprS(mk(CallE(mk(MemberE(r, "set", false)), emptyList(), a + mk(BinE(op.dropLast(1), cur, v)), null))).also { it.line = line }
+        return ExprS(mk(CallE(mk(MemberE(r, "set", false)), emptyList(), a + mk(BinE(BinOp.of(op.dropLast(1)), cur, v)), null))).also { it.line = line }
     }
     /** Classes of anonymous objects (`object : T { }` expressions) declared before the current statement. */
     private var pendingDecls = ArrayList<S>()
@@ -94,7 +94,7 @@ class Parser(toks: List<Tok>) {
             var h: E = IntL(0, false)
             props.forEachIndexed { i, p ->
                 val ph = call(nm(p.name), "hashCode")
-                h = if (i == 0) ph else BinE("+", BinE("*", h, IntL(31, false)).also { it.line = l }, ph).also { it.line = l }
+                h = if (i == 0) ph else BinE(BinOp.PLUS, BinE(BinOp.TIMES, h, IntL(31, false)).also { it.line = l }, ph).also { it.line = l }
             }
             ms.add(FunD("hashCode", emptyList(), TypeRef("Int", emptyList(), false), null, h, l))
         }
@@ -106,8 +106,8 @@ class Parser(toks: List<Tok>) {
             // Arrays compare by identity in Kotlin's data-class equality (`Array<T>` is a list here, whose `==` would
             // compare contents). Short/UByte/UShort arrays share the representation of the arrays they widen to.
             val arr = p.type.name == "Array" || p.type.name in ANY_BOXED_ARRAYS || p.type.name in setOf("ShortArray", "UByteArray", "UShortArray")
-            val one = BinE(if (arr) "===" else "==", bits(nm(p.name)), bits(MemberE(nm("other"), p.name, false).also { it.line = l })).also { it.line = l }
-            eq = if (i == 0) one else BinE("&&", eq, one).also { it.line = l }
+            val one = BinE(if (arr) BinOp.IDENT else BinOp.EQ, bits(nm(p.name)), bits(MemberE(nm("other"), p.name, false).also { it.line = l })).also { it.line = l }
+            eq = if (i == 0) one else BinE(BinOp.AND, eq, one).also { it.line = l }
         }
         ms.add(FunD("\$equals", listOf(Param("other", self)), TypeRef("Boolean", emptyList(), false), null, eq, l))
         return ClassD(c.name, c.fields, c.supers, ms, c.line, c.ctorParams, c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs)
@@ -478,8 +478,8 @@ class Parser(toks: List<Tok>) {
         fun wrap(i: String, x: E, line: Int, tas: List<TypeRef> = emptyList()) = CallE(NameE("$i\$Sam").also { it.line = line }, tas, listOf(x), null).also { it.line = line }
         sb = Subst(emptyMap(), rw = rw@{ x ->
             // `::I` for a non-generic fun interface: `(fnType) -> I`, a lambda wrapping its argument.
-            if (x is UnE && x.op.startsWith("::") && x.e is NullL && funIfaces[x.op.drop(2)]?.typeParams?.isEmpty() == true) {
-                val i = x.op.drop(2)
+            if (x is UnE && x.op == UnOp.REF && x.e is NullL && funIfaces[x.ref!!]?.typeParams?.isEmpty() == true) {
+                val i = x.ref
                 return@rw LambdaE(Block(listOf(ExprS(wrap(i, NameE("f\$sam").also { it.line = x.line }, x.line)).also { it.line = x.line }),
                     listOf("f\$sam"), listOf(samFnType(TypeRef(i, emptyList(), false))))).also { it.line = x.line }
             }
@@ -659,7 +659,7 @@ class Parser(toks: List<Tok>) {
                 val r = (tg as? MemberE)?.recv
                 if (s.op != "=" && r != null && r !is NameE) fail("compound assignment to a context property needs a simple receiver")
                 val rr = r?.let { sb.e(it) }
-                val v = if (s.op == "=") sb.e(s.value) else BinE(s.op.dropLast(1), get(rr, n, s.line), sb.e(s.value)).also { it.line = s.line }
+                val v = if (s.op == "=") sb.e(s.value) else BinE(BinOp.of(s.op.dropLast(1)), get(rr, n, s.line), sb.e(s.value)).also { it.line = s.line }
                 val callee = (if (rr == null) NameE("\$cset\$$n") else MemberE(rr, "\$cset\$$n", false)).also { it.line = s.line }
                 ExprS(CallE(callee, emptyList(), listOf(v), null).also { it.line = s.line }).also { it.line = s.line }
             }
@@ -858,7 +858,7 @@ class Parser(toks: List<Tok>) {
         val objGlobals = objects.flatMap { n -> listOf(VarS("\$o\$$n", true, TypeRef(n, emptyList(), true), NullL()), VarS("\$i\$$n", true, TypeRef("Boolean", emptyList(), false), BoolL(false))) }
         for (n in objects) {
             val slot = NameE("\$o\$$n"); val flag = NameE("\$i\$$n")
-            val init = IfE(UnE("!", flag), Block(listOf(AssignS(flag, "=", BoolL(true)), AssignS(slot, "=", CallE(NameE(n), emptyList(), emptyList(), null)))), null)
+            val init = IfE(UnE(UnOp.NOT, flag), Block(listOf(AssignS(flag, "=", BoolL(true)), AssignS(slot, "=", CallE(NameE(n), emptyList(), emptyList(), null)))), null)
             funs.add(FunD("\$init\$$n", emptyList(), TypeRef("Unit", emptyList(), false), Block(listOf(ExprS(init))), null, 0))
             funs.add(FunD("\$get\$$n", emptyList(), TypeRef(n, emptyList(), false), Block(listOf(ExprS(CallE(NameE("\$init\$$n"), emptyList(), emptyList(), null)), RetS(slot))), null, 0))
         }
@@ -1407,8 +1407,8 @@ class Parser(toks: List<Tok>) {
                 when {
                     x is MemberE && x.recv is NameE && (x.recv.n in byName || x.recv.n in nestedIn) && nestedIn[x.n] == x.recv.n -> NameE(x.n).also { it.line = x.line }
                     // `A::Inner` / `a::Inner`: constructor reference of an inner class, as a lambda (the outer instance first when unbound).
-                    x is UnE && x.op.startsWith("::") && x.e is NameE && x.op.drop(2) in innerOf && byName[x.op.drop(2)] != null -> {
-                        val n = x.op.drop(2)
+                    x is UnE && x.op == UnOp.REF && x.e is NameE && x.ref!! in innerOf && byName[x.ref] != null -> {
+                        val n = x.ref
                         val ps = byName.getValue(n).ctorParams.filter { it.name != "outer\$" }
                         val unbound = innerOf[n] == x.e.n
                         val names = (if (unbound) listOf("rp\$o") else emptyList()) + ps.indices.map { "rp\$$it" }
@@ -1418,7 +1418,7 @@ class Parser(toks: List<Tok>) {
                         sub.e(LambdaE(Block(listOf(ExprS(call).also { it.line = x.line }), names, types)).also { it.line = x.line })
                     }
                     // `A::Nested`: constructor reference of a nested (not inner) class.
-                    x is UnE && x.op.startsWith("::") && x.e is NameE && x.op.drop(2).let { n -> nestedIn[n] == x.e.n && n !in innerOf } -> UnE(x.op, NullL()).also { it.line = x.line }
+                    x is UnE && x.op == UnOp.REF && x.e is NameE && x.ref!!.let { n -> nestedIn[n] == x.e.n && n !in innerOf } -> UnE(UnOp.REF, NullL(), x.ref).also { it.line = x.line }
                     x is NameE && x.n.startsWith("this@") -> {
                         val l = x.n.removePrefix("this@")
                         NameE(if (l == ctx) "\$self" else if (l == outerName) "outer\$" else fail("unknown label this@$l")).also { it.line = x.line }
@@ -1500,7 +1500,7 @@ class Parser(toks: List<Tok>) {
         lateinit var sub: Subst
         sub = Subst(emptyMap(), rw = { x ->
             if (x is NameE) out.add(x.n)
-            if (x is UnE && x.op.startsWith("::")) out.add(x.op.drop(2))
+            if (x is UnE && x.op == UnOp.REF) out.add(x.ref!!)
             null
         }, srw = { x -> if (x is LocalDeclS) localDeclNames(x.d, out); null })
         sub.fn(f)
@@ -1803,7 +1803,7 @@ class Parser(toks: List<Tok>) {
                             CallE(NameE(rename.getValue(x.callee.n)).also { it.line = x.callee.line }, x.typeArgs.map { sub.ty(it) },
                                 capFun.getValue(x.callee.n).map { (c, _) -> NameE(c).also { it.line = x.line } } + x.args.map { sub.e(it) },
                                 x.lambda?.let { sub.block(it) }).also { it.line = x.line }
-                        x is UnE && x.op.startsWith("::") && x.e is NullL && x.op.drop(2) in capFun ->
+                        x is UnE && x.op == UnOp.REF && x.e is NullL && x.ref!! in capFun ->
                             throw CompileError("line ${x.line}: references to recursive, generic or vararg capturing local functions are not supported")
                         x is CallE && x.lambda == null && x.callee is MemberE && !x.callee.safe && lamFns[x.callee.n]?.recv != null && x.callee.n !in ownerNames ->
                             lamArgs(lamFns.getValue(x.callee.n), x.args, x.line)?.let { a ->
@@ -1814,7 +1814,7 @@ class Parser(toks: List<Tok>) {
                         x is CallE && x.callee is NameE && x.callee.n in genFunTps && x.typeArgs.isEmpty() ->
                             CallE(NameE(rename[x.callee.n] ?: x.callee.n).also { it.line = x.callee.line }, genFunTps.getValue(x.callee.n).map { TypeRef(it, emptyList(), false) },
                                 x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line }
-                        x is UnE && x.op.startsWith("::") && x.e is NullL && x.op.drop(2) in genFunTps ->
+                        x is UnE && x.op == UnOp.REF && x.e is NullL && x.ref!! in genFunTps ->
                             throw CompileError("line ${x.line}: references to local functions using the enclosing function's type parameters are not supported")
                         x is CallE && x.callee is NameE && x.callee.n in genTps && x.typeArgs.isEmpty() ->
                             sub.e(CallE(x.callee, genTps.getValue(x.callee.n).map { TypeRef(it, emptyList(), false) }, x.args, x.lambda).also { it.line = x.line })
@@ -1829,7 +1829,7 @@ class Parser(toks: List<Tok>) {
                         x is CallE && x.callee is NameE && propClash[x.callee.n]?.takesArgs(x.args.size + (if (x.lambda != null) 1 else 0)) == false ->
                             CallE(x.callee, x.typeArgs.map { sub.ty(it) }, x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line }
                         x is NameE && x.n in rename -> NameE(rename.getValue(x.n)).also { it.line = x.line }
-                        x is UnE && x.op.startsWith("::") && x.e is NullL && x.op.drop(2) in rename -> UnE("::" + rename.getValue(x.op.drop(2)), x.e).also { it.line = x.line }
+                        x is UnE && x.op == UnOp.REF && x.e is NullL && x.ref in rename -> UnE(UnOp.REF, x.e, rename.getValue(x.ref!!)).also { it.line = x.line }
                         else -> null
                     }
                 }, srw = { x ->
@@ -2013,9 +2013,9 @@ class Parser(toks: List<Tok>) {
             is CharL -> simple("Char")
             is IsE -> simple("Boolean")
             is BinE -> when (e.op) {
-                "==", "!=", "===", "!==", "<", ">", "<=", ">=", "&&", "||" -> simple("Boolean")
-                "+" -> guess(e.l)?.takeIf { it.name == "String" } ?: guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double", "Float") } }
-                "-", "*", "/", "%" -> guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double", "Float") } }
+                BinOp.EQ, BinOp.NE, BinOp.IDENT, BinOp.NOT_IDENT, BinOp.LT, BinOp.GT, BinOp.LE, BinOp.GE, BinOp.AND, BinOp.OR -> simple("Boolean")
+                BinOp.PLUS -> guess(e.l)?.takeIf { it.name == "String" } ?: guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double", "Float") } }
+                BinOp.MINUS, BinOp.TIMES, BinOp.DIV, BinOp.REM -> guess(e.l)?.let { l -> guess(e.r)?.takeIf { it.name == l.name && l.name in setOf("Int", "Long", "Double", "Float") } }
                 else -> null
             }
             is IfE -> {
@@ -2800,7 +2800,7 @@ class Parser(toks: List<Tok>) {
                 val neg = tk.k == K.OP && tk.s == "!" && t[p + 1].k == K.ID && t[p + 1].s == "in"
                 if (!neg && !(tk.k == K.ID && tk.s == "in")) return l
                 p += if (neg) 2 else 1; skipNLOnly()
-                l = BinE(if (neg) "!in" else "in", l, binary(level + 1)).also { it.line = tk.line }
+                l = BinE(if (neg) BinOp.NOT_IN else BinOp.IN, l, binary(level + 1)).also { it.line = tk.line }
                 continue
             }
             if (levels[level] === INFIX_FUNS && tk.k == K.ID && tk.s in userInfix && tk.s !in INFIX_FUNS) {
@@ -2811,7 +2811,7 @@ class Parser(toks: List<Tok>) {
             val ok = if (levels[level] === INFIX_FUNS) tk.k == K.ID && tk.s in INFIX_FUNS else tk.k == K.OP && tk.s in levels[level]
             if (!ok) return l
             p++; skipNLOnly()
-            l = BinE(tk.s, l, binary(level + 1)).also { it.line = tk.line }
+            l = BinE(BinOp.of(tk.s), l, binary(level + 1)).also { it.line = tk.line }
         }
     }
 
@@ -2827,7 +2827,7 @@ class Parser(toks: List<Tok>) {
         if (tk.k == K.OP && (tk.s == "-" || tk.s == "!" || tk.s == "+")) {
             p++
             val e = prefix()
-            return if (tk.s == "+" && (e is IntL || e is DblL)) e else UnE(tk.s, e).also { it.line = tk.line }
+            return if (tk.s == "+" && (e is IntL || e is DblL)) e else UnE(when (tk.s) { "-" -> UnOp.NEG; "!" -> UnOp.NOT; else -> UnOp.PLUS }, e).also { it.line = tk.line }
         }
         return postfix()
     }
@@ -2837,8 +2837,8 @@ class Parser(toks: List<Tok>) {
         val a = nested(1) {
             val xs = ArrayList<E>()
             while (!isOp(")")) {
-                if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == "=") { val n = ident(); next(); xs.add(NamedE(n, if (isOp("*")) { val l = next().line; UnE("*", expr()).also { it.line = l } } else expr())) }
-                else if (isOp("*")) { val l = next().line; xs.add(UnE("*", expr()).also { it.line = l }) } else xs.add(expr())
+                if (peek().k == K.ID && t[p + 1].k == K.OP && t[p + 1].s == "=") { val n = ident(); next(); xs.add(NamedE(n, if (isOp("*")) { val l = next().line; UnE(UnOp.SPREAD, expr()).also { it.line = l } } else expr())) }
+                else if (isOp("*")) { val l = next().line; xs.add(UnE(UnOp.SPREAD, expr()).also { it.line = l }) } else xs.add(expr())
                 if (isOp(",")) next()
             }
             xs
@@ -2868,7 +2868,7 @@ class Parser(toks: List<Tok>) {
     }
 
     /** Arguments kept in place: literals, lambdas and spreads `*xs` (a spread is not a value of its own). */
-    private fun constArg(a: E) = a is LambdaE || (a is UnE && a.op == "*") || a is IntL || a is BoolL || a is CharL || a is DblL || a is NullL ||
+    private fun constArg(a: E) = a is LambdaE || (a is UnE && a.op == UnOp.SPREAD) || a is IntL || a is BoolL || a is CharL || a is DblL || a is NullL ||
         (a is StrL && a.isConstant)
 
     /**
@@ -2945,10 +2945,10 @@ class Parser(toks: List<Tok>) {
                     expectOp("]")
                     // `a[i, j]`: multi-argument indexing is a direct `get(i, j)` call (assignments: see [multiIndexAssign]).
                     if (ix.size == 1) IndexE(e, ix[0]) else CallE(MemberE(e, "get", false).also { it.line = tk.line }, emptyList(), ix, null).also { it.line = tk.line; multiIdx.add(it) } }
-                "!!" -> { p++; UnE("!!", e).also { it.line = tk.line } }
-                // Callable reference `recv::name`: UnE("::name", recv).
-                // Class literal `T::class` / `e::class`: UnE("#class", e) (resolved by the backend to a KClass).
-                "::" -> { p++; if (isId("class")) { next(); UnE("#class", e) } else UnE("::" + ident(), e) }
+                "!!" -> { p++; UnE(UnOp.NOT_NULL, e).also { it.line = tk.line } }
+                // Callable reference `recv::name`: UnE(REF, recv, "name").
+                // Class literal `T::class` / `e::class`: UnE(UnOp.CLASS_LIT, e) (resolved by the backend to a KClass).
+                "::" -> { p++; if (isId("class")) { next(); UnE(UnOp.CLASS_LIT, e) } else UnE(UnOp.REF, e, ident()) }
                 "++", "--" -> if (e is NameE || e is MemberE || e is IndexE || e in multiIdx) { p++; PostIncE(e, tk.s) } else break
                 "{" -> if (!noBraceCall && (e is MemberE || (e is NameE && e.n !in NO_TRAILING))) CallE(e, emptyList(), emptyList(), block(lambda = true)) else break
                 else -> break
@@ -2966,7 +2966,7 @@ class Parser(toks: List<Tok>) {
             // `::name`: a reference without receiver (NullL stands for "none").
             val l = next().line
             if (isId("class")) fail("class literals are not supported")
-            return UnE("::" + ident(), NullL()).also { it.line = l }
+            return UnE(UnOp.REF, NullL(), ident()).also { it.line = l }
         }
         val tk = next()
         val e: E = when (tk.k) {
@@ -2986,7 +2986,7 @@ class Parser(toks: List<Tok>) {
                     val sv = anonFun; val svl = anonLabel; anonFun = n; anonLabel = label
                     val fd = try { function() } finally { anonFun = sv; anonLabel = svl }
                     if (bodyLevel > 0) { pendingDecls.add(LocalDeclS(fd).also { it.line = tk.line }); sawLocal = true } else topAnonFuns.add(fd)
-                    UnE("::" + n, if (fd.recv != null) NameE(fd.recv.name).also { it.line = tk.line } else NullL()).also { it.line = tk.line }
+                    UnE(UnOp.REF, if (fd.recv != null) NameE(fd.recv.name).also { it.line = tk.line } else NullL(), n).also { it.line = tk.line }
                 } else fail("unexpected 'fun'", tk)
                 "true" -> BoolL(true)
                 "false" -> BoolL(false)
@@ -3100,7 +3100,7 @@ class Parser(toks: List<Tok>) {
             if (kw != null) {
                 p += if (neg) 2 else 1
                 val s = NameE("\$subj").also { it.line = tk.line }
-                return (if (kw == "is") IsE(s, type(), neg) else BinE(if (neg) "!in" else "in", s, expr())).also { it.line = tk.line }
+                return (if (kw == "is") IsE(s, type(), neg) else BinE(if (neg) BinOp.NOT_IN else BinOp.IN, s, expr())).also { it.line = tk.line }
             }
         }
         return expr()
