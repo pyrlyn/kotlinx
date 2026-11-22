@@ -62,6 +62,11 @@ class NeedClass(val cd: ClassD) : Exception()
 /** Code needs a function-type interface `$Fn<params..., ret>`; [compileGenerics] adds it and retries. */
 class NeedIface(val d: InterfaceD) : Exception()
 
+/** LLVM instructions of the arithmetic operators, by operand kind (see NativeBackend.arith). */
+private val FP_OPS = mapOf("+" to "fadd", "-" to "fsub", "*" to "fmul", "/" to "fdiv", "%" to "frem")
+private val UNSIGNED_OPS = mapOf("+" to "add", "-" to "sub", "*" to "mul", "/" to "udiv", "%" to "urem")
+private val SIGNED_OPS = mapOf("+" to "add", "-" to "sub", "*" to "mul", "/" to "sdiv", "%" to "srem")
+
 /**
  * Deferred reference counting for possibly cyclic objects (GC implementations whose `caps` contain `deferred`,
  * e.g. --gc=epoch): retain/release of traced objects are logged with rt_gc_log_inc / rt_gc_log_dec instead of
@@ -5539,21 +5544,34 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** A nullable primitive operand of arithmetic/ordering: Kotlin only allows it smart-cast, so a checked unbox. */
     private fun nbArg(v: Val): Val = if (v.t is Ty.NBox) coerce(v, v.t.inner) else v
 
+    /**
+     * Integer `/` and `%` as in Kotlin: a zero divisor throws ArithmeticException("/ by zero") (LLVM's sdiv/udiv/srem/urem
+     * by zero are undefined behaviour), and `MIN_VALUE / -1` wraps to MIN_VALUE with remainder 0 (sdiv/srem overflow
+     * there, also undefined). A constant divisor needs neither check unless it is 0 or -1.
+     */
     private fun arith(op: String, a0: Val, b0: Val): Val {
         val a = nbArg(a0); val b = nbArg(b0)
         val t = numType(a, b)
         val x = coerce(a, t).v; val y = coerce(b, t).v
-        val ins = if (t.isFp) mapOf("+" to "fadd", "-" to "fsub", "*" to "fmul", "/" to "fdiv", "%" to "frem")
-        else if (t.isUnsigned) mapOf("+" to "add", "-" to "sub", "*" to "mul", "/" to "udiv", "%" to "urem")
-        else mapOf("+" to "add", "-" to "sub", "*" to "mul", "/" to "sdiv", "%" to "srem")
-        if (excMode && !t.isFp && (op == "/" || op == "%") && !(y.toLongOrNull()?.let { it != 0L } ?: false)) {
+        val ins = (if (t.isFp) FP_OPS else if (t.isUnsigned) UNSIGNED_OPS else SIGNED_OPS).getValue(op)
+        if (t.isFp || (op != "/" && op != "%")) return Val(emitT("$ins ${t.llvm} $x, $y"), t)
+        val c = y.toLongOrNull()
+        if (c == null || c == 0L) {
             val bad = label("div.zero"); val ok = label("div.ok")
             emit("br i1 ${emitT("icmp eq ${t.llvm} $y, 0")}, label %$bad, label %$ok, !prof !1"); term = true
             startBlock(bad)
-            throwNew("ArithmeticException", Val(cstr("/ by zero"), Ty.Str))
+            if (excMode) throwNew("ArithmeticException", Val(cstr("/ by zero"), Ty.Str))
+            else { emit("call void @rt_panic(ptr ${cstr("ArithmeticException: / by zero")})"); emit("unreachable"); term = true }
             startBlock(ok)
         }
-        return Val(emitT("${ins.getValue(op)} ${t.llvm} $x, $y"), t)
+        if (t.isUnsigned || (c != null && c != -1L)) return Val(emitT("$ins ${t.llvm} $x, $y"), t)
+        if (c == -1L) return Val(if (op == "/") emitT("sub ${t.llvm} 0, $x") else "0", t)
+        // y == -1: divide by 1 instead (no overflow), then pick -x (wrapping) or 0.
+        val m1 = emitT("icmp eq ${t.llvm} $y, -1")
+        val safe = emitT("select i1 $m1, ${t.llvm} 1, ${t.llvm} $y")
+        val q = emitT("$ins ${t.llvm} $x, $safe")
+        val alt = if (op == "/") emitT("sub ${t.llvm} 0, $x") else "0"
+        return Val(emitT("select i1 $m1, ${t.llvm} $alt, ${t.llvm} $q"), t)
     }
 
     private val NUMERIC = setOf(Ty.I8, Ty.I32, Ty.I64, Ty.U32, Ty.U64, Ty.F32, Ty.F64, Ty.Char)
