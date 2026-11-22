@@ -180,9 +180,9 @@ private fun boxCapturedVars(p: Program): Program {
         if (boxed.isEmpty()) return body
         used = true
         lateinit var sub: Subst
-        sub = Subst(emptyMap(), { x -> if (x is NameE && x.n in boxed) MemberE(NameE(x.n).also { it.line = x.line }, "v", false).also { it.line = x.line } else null },
+        sub = Subst(emptyMap(), { x -> if (x is NameE && x.n in boxed) MemberE(NameE(x.n, line = x.line), "v", false, line = x.line) else null },
             { x -> if (x is VarS && x.isVar && x.name in boxed)
-                VarS(x.name, false, null, CallE(NameE("\$Ref"), listOfNotNull(x.type), listOf(sub.e(x.init)), null).also { it.line = x.line }).also { it.line = x.line }
+                VarS(x.name, false, null, CallE(NameE("\$Ref"), listOfNotNull(x.type), listOf(sub.e(x.init)), null, line = x.line), line = x.line)
                 else null })
         return sub.block(body)
     }
@@ -207,7 +207,7 @@ private fun boxCapturedVars(p: Program): Program {
     val globals = p.globals.map { g ->
         val b = Block(listOf(ExprS(g.init)))
         val nb = box(b)
-        if (nb === b) g else VarS(g.name, g.isVar, g.type, (nb.stmts.single() as ExprS).e).also { it.line = g.line }
+        if (nb === b) g else VarS(g.name, g.isVar, g.type, (nb.stmts.single() as ExprS).e, line = g.line)
     }
     val funs = p.funs.map { fn(it) }
     val classes = p.classes.map { cls(it) }
@@ -266,14 +266,14 @@ private fun rewriteStatics(p: Program): Program {
         val mine = c.fields.map { it.name }.toSet() + c.methods.map { it.name } + c.ctorParams.map { it.name }
         // Inside a companion object, `C.x` is its own member: use `this` (the global is not assigned during its init).
         if (comps.values.any { it.first == c.name }) return@map Subst(emptyMap(), rw = { x ->
-            global(x)?.let { g -> if (g is MemberE && g.recv is NameE && g.recv.n == c.name) MemberE(NameE("this").also { it.line = x.line }, g.n, g.safe).also { it.line = x.line } else g }
+            global(x)?.let { g -> if (g is MemberE && g.recv is NameE && g.recv.n == c.name) MemberE(NameE("this", line = x.line), g.n, g.safe, line = x.line) else g }
         }).cls(c, c.name, keepTypeParams = true)
         if (own.isEmpty() && comp == null) return@map sub.cls(c, c.name, keepTypeParams = true)
         Subst(emptyMap(), rw = { x ->
             when {
-                x is NameE && x.n in own -> NameE("$en$${x.n}").also { it.line = x.line }
+                x is NameE && x.n in own -> NameE("$en$${x.n}", line = x.line)
                 x is NameE && comp != null && x.n in comp.second && x.n !in mine && comp.first != "${c.name}$${x.n}" ->
-                    MemberE(NameE(comp.first), x.n, false).also { it.line = x.line }
+                    MemberE(NameE(comp.first), x.n, false, line = x.line)
                 else -> global(x)
             }
         }).cls(c, c.name, keepTypeParams = true)

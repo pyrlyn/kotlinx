@@ -39,7 +39,7 @@ object Uses {
             is CallE -> {
                 expr(e.callee, straight, false, out)
                 // `r.f(x)` may invoke a local of function type with receiver (`val f: R.(X) -> Y`): a (borrowing) use of `f`.
-                (e.callee as? MemberE)?.let { m -> if (!m.safe) out.add(Use(recvCallName.getOrPut(e) { NameE(m.n).also { it.line = e.line } }, false)) }
+                (e.callee as? MemberE)?.let { m -> if (!m.safe) out.add(Use(recvCallName.getOrPut(e) { NameE(m.n, line = e.line) }, false)) }
                 for (a in e.args) expr(a, straight, true, out)
                 e.lambda?.let { block(it, out) }
             }

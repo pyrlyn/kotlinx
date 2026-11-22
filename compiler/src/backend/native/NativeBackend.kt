@@ -202,7 +202,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val n = anyBoxName(v.t) ?: fail("${v.t} cannot be used as Any")
         // The list box holds `ArrayList<Any>`: the element type is erased (the list's own release function stays with it).
         val v = if (n == "List") Val(v.v, Ty.ListTy(Ty.Iface("Any")), v.owned) else v
-        val b = withTemps(listOf(v)) { (x) -> genNamedCall("AnyBox$n", CallE(NameE("AnyBox$n").also { it.line = line }, emptyList(), listOf(x), null).also { it.line = line }) }
+        val b = withTemps(listOf(v)) { (x) -> genNamedCall("AnyBox$n", CallE(NameE("AnyBox$n", line = line), emptyList(), listOf(x), null, line = line)) }
         return Val(b.v, t, true)
     }
 
@@ -218,7 +218,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     private fun anyCall(fn: String, vs: List<Val>): Val =
-        withTemps(vs) { xs -> genNamedCall(fn, CallE(NameE(fn).also { it.line = line }, emptyList(), xs, null).also { it.line = line }) }
+        withTemps(vs) { xs -> genNamedCall(fn, CallE(NameE(fn, line = line), emptyList(), xs, null, line = line)) }
 
     private fun coerce(v: Val, t: Ty): Val {
         if (v.t == t) return v
@@ -286,7 +286,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             condBr(emitT("icmp eq ptr ${x.v}, null"), ln, lw)
             startBlock(ln); br(le)
             startBlock(lw)
-            val r = coerce(genExpr(CallE(NameE(sam).also { it.line = line }, args, listOf(xs[0]), null).also { it.line = line }), t)
+            val r = coerce(genExpr(CallE(NameE(sam, line = line), args, listOf(xs[0]), null, line = line)), t)
             val from = cur; br(le)
             startBlock(le)
             Val(emitT("phi ptr [ null, %$ln ], [ ${r.v}, %$from ]"), t, r.owned)
@@ -1066,7 +1066,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 emit("call void @rt_gc_write_barrier(ptr %this)")
             } else emit("store ${ft.llvm} ${v.v}, ptr $fp${tbField(ft.llvm)}")
         }
-        for (f in c.fields) if (f.init == null) store(f.name, genArg(NameE(f.name).also { it.line = c.line }))
+        for (f in c.fields) if (f.init == null) store(f.name, genArg(NameE(f.name, line = c.line)))
         for (x in c.inits) {
             if (x is FieldD) {
                 val ft = ci.fields[ci.index(x.name)].second
@@ -1413,9 +1413,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                         val am = if (s.op == "+=") "add" else "remove"
                         if (vt is Ty.ListTy) {
                             val x = "\$pa${tmpN++}"
-                            val add = ExprS(CallE(MemberE(s.target, am, false), emptyList(), listOf(NameE(x).also { it.line = s.line }), null).also { it.line = s.line }).also { it.line = s.line }
-                            genStmt(ForS(x, s.value, Block(listOf(add))).also { it.line = s.line })
-                        } else releaseIfOwned(genExpr(CallE(MemberE(s.target, am, false), emptyList(), listOf(s.value), null).also { it.line = s.line }))
+                            val add = ExprS(CallE(MemberE(s.target, am, false), emptyList(), listOf(NameE(x, line = s.line)), null, line = s.line), line = s.line)
+                            genStmt(ForS(x, s.value, Block(listOf(add)), line = s.line))
+                        } else releaseIfOwned(genExpr(CallE(MemberE(s.target, am, false), emptyList(), listOf(s.value), null, line = s.line)))
                         return
                     }
                 }
@@ -1425,7 +1425,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     val tt = probeType(tg)
                     fun has(n: String) = tt != null && (hasMember(tt, n) || hasMext(n, tt) || extFuns[n]?.any { extMatches(tt, it.params[0].type, it.typeParams) } == true)
                     if ((tt is Ty.Cls || tt is Ty.Iface) && has(base + "Assign") && !has(base)) {
-                        releaseIfOwned(genExpr(CallE(MemberE(tg, base + "Assign", false).also { it.line = s.line }, emptyList(), listOf(s.value), null).also { it.line = s.line }))
+                        releaseIfOwned(genExpr(CallE(MemberE(tg, base + "Assign", false, line = s.line), emptyList(), listOf(s.value), null, line = s.line)))
                         return
                     }
                 }
@@ -1433,23 +1433,23 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (s.op != "=" && tg is IndexE && !(pure(tg.recv) && pure(tg.idx))) {
                     // `a()[i()] += v`: receiver and index are evaluated once.
                     withTemps(listOf(genExpr(tg.recv), genExpr(tg.idx))) { (r, i) ->
-                        val t2 = IndexE(r, i).also { it.line = s.line }
-                        assign(t2, BinE(BinOp.of(s.op.dropLast(1)), t2, s.value).also { it.line = s.line }); Val("", Ty.Unit)
+                        val t2 = IndexE(r, i, line = s.line)
+                        assign(t2, BinE(BinOp.of(s.op.dropLast(1)), t2, s.value, line = s.line)); Val("", Ty.Unit)
                     }
                     return
                 }
                 if (s.op != "=" && tg is MemberE && !pure(tg.recv) && !tg.safe) {
                     // Compound assignment evaluates the receiver once.
                     withTemps(listOf(genExpr(tg.recv))) { (x) ->
-                        val t2 = MemberE(x, tg.n, false).also { it.line = s.line }
-                        assign(t2, BinE(BinOp.of(s.op.dropLast(1)), t2, s.value).also { it.line = s.line }); Val("", Ty.Unit)
+                        val t2 = MemberE(x, tg.n, false, line = s.line)
+                        assign(t2, BinE(BinOp.of(s.op.dropLast(1)), t2, s.value, line = s.line)); Val("", Ty.Unit)
                     }
                     return
                 }
-                val value = if (s.op == "=") s.value else BinE(BinOp.of(s.op.dropLast(1)), s.target, s.value).also { it.line = s.line }
+                val value = if (s.op == "=") s.value else BinE(BinOp.of(s.op.dropLast(1)), s.target, s.value, line = s.line)
                 assign(s.target, value)
             }
-            is IncS -> releaseIfOwned(genExpr(PostIncE(s.target, s.op).also { it.line = s.line }))
+            is IncS -> releaseIfOwned(genExpr(PostIncE(s.target, s.op, line = s.line)))
             is WhileS -> if (s.isDo) {
                 pendingLabel = s.label ?: pendingLabel
                 val lc = label("do.cond"); val lb = label("do.body"); val le = label("do.end")
@@ -1498,12 +1498,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     /** Runs [f] with [target], its receiver evaluated once into a temporary when that has side effects. */
     private fun onceRecv(target: E, f: (E) -> Val): Val =
         if (target is MemberE && (target.recv !is NameE || isTopGetter(target.recv)) && !target.safe)
-            withTemps(listOf(genExpr(target.recv))) { (x) -> f(MemberE(x, target.n, false).also { it.line = target.line }) }
+            withTemps(listOf(genExpr(target.recv))) { (x) -> f(MemberE(x, target.n, false, line = target.line)) }
         // `a[i, j]++`: the receiver and every index are evaluated once, then read by `get` and written by `set`.
         else if (multiIndexGet(target)) {
             val g = target as CallE
             withTemps(listOf(genExpr((g.callee as MemberE).recv)) + g.args.map { genExpr(it) }) { xs ->
-                f(CallE(MemberE(xs[0], "get", false).also { it.line = g.line }, emptyList(), xs.drop(1), null).also { it.line = g.line })
+                f(CallE(MemberE(xs[0], "get", false, line = g.line), emptyList(), xs.drop(1), null, line = g.line))
             }
         } else f(target)
 
@@ -1517,7 +1517,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun assign(target: E, value: E) {
         if (multiIndexGet(target)) {
             val g = target as CallE
-            releaseIfOwned(genExpr(CallE(MemberE((g.callee as MemberE).recv, "set", false).also { it.line = g.line }, emptyList(), g.args + value, null).also { it.line = g.line }))
+            releaseIfOwned(genExpr(CallE(MemberE((g.callee as MemberE).recv, "set", false, line = g.line), emptyList(), g.args + value, null, line = g.line)))
             return
         }
         when (target) {
@@ -1525,12 +1525,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val l = lookup(target.n)
                 // Inside a receiver lambda: a property of its receiver (field or setter) wins over the enclosing class's.
                 if (l == null && (lookup("this")?.t as? Ty.Cls)?.let { classes[it.name] }?.let { it !== owner && (it.index(target.n) >= 0 || "\$set\$${target.n}" in it.methods) } == true)
-                    return assign(MemberE(NameE("this").also { it.line = target.line }, target.n, false).also { it.line = target.line }, value)
+                    return assign(MemberE(NameE("this", line = target.line), target.n, false, line = target.line), value)
                 if (l == null && owner != null && (owner!!.index(target.n) >= 0 || "\$set\$${target.n}" in owner!!.methods)) return assign(MemberE(NameE("this"), target.n, false), value)
                 // Inside a member extension: a property of the extension receiver (its field or setter).
                 if (l == null && (lookup("\$this_ext")?.t as? Ty.Cls)?.let { classes[it.name] }?.let { it.index(target.n) >= 0 || "\$set\$${target.n}" in it.methods } == true)
-                    return assign(MemberE(NameE("\$this_ext").also { it.line = target.line }, target.n, false).also { it.line = target.line }, value)
-                if (l == null && "\$tset\$${target.n}" in funDecls) { releaseIfOwned(genNamedCall("\$tset\$${target.n}", CallE(NameE("\$tset\$${target.n}"), emptyList(), listOf(value), null).also { it.line = line })); return }
+                    return assign(MemberE(NameE("\$this_ext", line = target.line), target.n, false, line = target.line), value)
+                if (l == null && "\$tset\$${target.n}" in funDecls) { releaseIfOwned(genNamedCall("\$tset\$${target.n}", CallE(NameE("\$tset\$${target.n}"), emptyList(), listOf(value), null, line = line))); return }
                 if (l == null) fail("unknown variable '${target.n}'")
                 if (!l.isVar) fail("val '${target.n}' cannot be reassigned")
                 var v = coerce(argFor(value, l.t, true), l.t)
@@ -1546,20 +1546,20 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 // Extension property setters: member extension `$set$x` of a receiver in scope, or top-level `ext$R$$set$x`.
                 val esm = "\$set\$${target.n}"
                 if (!hasMember(r.t, target.n)) {
-                    if (hasMext(esm, r.t)) { releaseIfOwned(method(r, esm, CallE(NameE(esm), emptyList(), listOf(value), null).also { it.line = line })); return }
+                    if (hasMext(esm, r.t)) { releaseIfOwned(method(r, esm, CallE(NameE(esm), emptyList(), listOf(value), null, line = line))); return }
                     extFuns[esm]?.firstOrNull { extMatches(r.t, it.params[0].type, it.typeParams) }?.let { f ->
-                        releaseIfOwned(withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), emptyList(), listOf(x, value), null).also { it.line = line }) }); return
+                        releaseIfOwned(withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), emptyList(), listOf(x, value), null, line = line)) }); return
                     }
                 }
                 // Interface `var` property: the abstract setter `$set$x(v)`, dispatched through the interface.
                 if (r.t is Ty.Iface && ifaceDecls[(r.t).name]?.methods?.any { it.name == esm } == true) {
-                    releaseIfOwned(method(r, esm, CallE(NameE(esm), emptyList(), listOf(value), null).also { it.line = line })); return
+                    releaseIfOwned(method(r, esm, CallE(NameE(esm), emptyList(), listOf(value), null, line = line))); return
                 }
                 val ct = r.t as? Ty.Cls ?: fail("cannot assign to ${r.t}.${target.n}")
                 val ci = classes.getValue(ct.name)
                 val sm = "\$set\$${target.n}"
                 if (sm in ci.methods && accessorWins(ci, sm, target.n)) {
-                    releaseIfOwned(callMethod(r, ci, sm, CallE(NameE(sm), emptyList(), listOf(value), null).also { it.line = line })); releaseIfOwned(r); return
+                    releaseIfOwned(callMethod(r, ci, sm, CallE(NameE(sm), emptyList(), listOf(value), null, line = line))); releaseIfOwned(r); return
                 }
                 val idx = ci.index(target.n).takeIf { it >= 0 } ?: fail("no field ${target.n} in ${ct.name}")
                 val ft = ci.fields[idx].second
@@ -1583,7 +1583,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is IndexE -> {
                 // `x[i] = v` on a type without built-in indexing: an `operator fun T.set` extension call.
                 if (!builtinIndexable(target.recv, true)) {
-                    releaseIfOwned(genExpr(CallE(MemberE(target.recv, "set", false).also { it.line = target.line }, emptyList(), listOf(target.idx, value), null).also { it.line = target.line }))
+                    releaseIfOwned(genExpr(CallE(MemberE(target.recv, "set", false, line = target.line), emptyList(), listOf(target.idx, value), null, line = target.line)))
                     return
                 }
                 val r = genExpr(target.recv)
@@ -1628,10 +1628,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         fun isEntry(x: E) = x is NameE && x.n == s.name
         val body = Subst(emptyMap(), rw = { x ->
             when {
-                x is CallE && x.args.isEmpty() && x.lambda == null && x.callee is MemberE && isEntry(x.callee.recv) && x.callee.n == "component1" -> NameE(kn).also { it.line = x.line }
-                x is CallE && x.args.isEmpty() && x.lambda == null && x.callee is MemberE && isEntry(x.callee.recv) && x.callee.n == "component2" -> NameE(vn).also { it.line = x.line }
-                x is MemberE && isEntry(x.recv) && x.n == "key" -> NameE(kn).also { it.line = x.line }
-                x is MemberE && isEntry(x.recv) && x.n == "value" -> NameE(vn).also { it.line = x.line }
+                x is CallE && x.args.isEmpty() && x.lambda == null && x.callee is MemberE && isEntry(x.callee.recv) && x.callee.n == "component1" -> NameE(kn, line = x.line)
+                x is CallE && x.args.isEmpty() && x.lambda == null && x.callee is MemberE && isEntry(x.callee.recv) && x.callee.n == "component2" -> NameE(vn, line = x.line)
+                x is MemberE && isEntry(x.recv) && x.n == "key" -> NameE(kn, line = x.line)
+                x is MemberE && isEntry(x.recv) && x.n == "value" -> NameE(vn, line = x.line)
                 x is NameE && isEntry(x) -> fail("a map entry is only supported through key/value or destructuring")
                 else -> null
             }
@@ -1689,7 +1689,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val it0 = s.iter
         // `for (x in C(0)..C(2))` with a user `rangeTo`: iterate over the object it returns.
         val it = if (it0 is BinE && it0.op == BinOp.RANGE && probeType(it0.l).let { t -> (t is Ty.Cls || t is Ty.Iface) && progKind(t) == null })
-            CallE(MemberE(it0.l, "rangeTo", false).also { x -> x.line = it0.line }, emptyList(), listOf(it0.r), null).also { x -> x.line = it0.line }
+            CallE(MemberE(it0.l, "rangeTo", false, line = it0.line), emptyList(), listOf(it0.r), null, line = it0.line)
         else it0
         // `for (x in c)` over a class with `operator fun iterator()` (hasNext/next): a while loop over the iterator.
         if (!(it is BinE && it.op in setOf(BinOp.RANGE, BinOp.UNTIL, BinOp.DOWN_TO, BinOp.STEP))) {
@@ -1700,9 +1700,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 fun <X : E> mk(x: X): X = x.also { e -> e.line = l }
                 fun call(r: E, n: String) = mk(CallE(mk(MemberE(r, n, false)), emptyList(), emptyList(), null))
                 val tmp = "\$iter${tmpN++}"
-                val next = VarS(s.name, false, null, call(mk(NameE(tmp)), "next")).also { x -> x.line = l }
+                val next = VarS(s.name, false, null, call(mk(NameE(tmp)), "next"), line = l)
                 val loop = WhileS(call(mk(NameE(tmp)), "hasNext"), Block(listOf(next) + s.body.stmts, s.body.params, s.body.paramTypes), false).also { w -> w.line = l; w.label = s.label }
-                genBlockBody(Block(listOf(VarS(tmp, false, null, call(it, "iterator")).also { x -> x.line = l }, loop)), false)
+                genBlockBody(Block(listOf(VarS(tmp, false, null, call(it, "iterator"), line = l), loop)), false)
                 return
             }
         }
@@ -1862,8 +1862,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     // The getter runs once for the old value; prefix forms read the property again for the result.
                     withTemps(listOf(old)) { (x) ->
                         val savedIv = incViaExt; incViaExt = custom
-                        val nv = (if (custom) CallE(MemberE(x, mname, false).also { it.line = e.line }, emptyList(), emptyList(), null)
-                            else BinE(if (op == "++") BinOp.PLUS else BinOp.MINUS, x, IntL(1, false)).also { it.line = e.line }.let { b -> if (w16) CallE(MemberE(b, "toShort", false).also { it.line = e.line }, emptyList(), emptyList(), null) else b }).also { it.line = e.line }
+                        val nv = (if (custom) CallE(MemberE(x, mname, false, line = e.line), emptyList(), emptyList(), null)
+                            else BinE(if (op == "++") BinOp.PLUS else BinOp.MINUS, x, IntL(1, false), line = e.line).let { b -> if (w16) CallE(MemberE(b, "toShort", false, line = e.line), emptyList(), emptyList(), null) else b }).also { it.line = e.line }
                         // `++a[i, j]` yields the value passed to `set`; calling `get` again would repeat its side effects.
                         if (pre && multiIndexGet(tg)) try { withTemps(listOf(genExpr(nv))) { (y) -> assign(tg, y); genExpr(y) } } finally { incViaExt = savedIv }
                         else {
@@ -1887,14 +1887,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     // The enclosing class instance even where a receiver lambda's `this` parameter shadows it.
                     e.n == "\$self" && owner != null -> Val("%this", Ty.Cls(owner!!.name))
                     // In a member extension the extension receiver's members win over the dispatch receiver's.
-                    extRecvHas(e.n, false) -> property(genExpr(NameE("\$this_ext").also { it.line = e.line }), e.n)
+                    extRecvHas(e.n, false) -> property(genExpr(NameE("\$this_ext", line = e.line)), e.n)
                     owner != null && (owner!!.index(e.n) >= 0 || "\$prop\$${e.n}" in owner!!.methods) -> property(Val("%this", Ty.Cls(owner!!.name)), e.n)
                     e.n in CONSTS -> Val("${CONSTS.getValue(e.n)}", Ty.I32)
                     // The `Unit` object as a value (`return Unit`, `else -> Unit`).
                     e.n == "Unit" && "Unit" !in classes -> Val("", Ty.Unit)
-                    "\$get\$${e.n}" in sigs -> genNamedCall("\$get\$${e.n}", CallE(NameE("\$get\$${e.n}"), emptyList(), emptyList(), null).also { it.line = e.line })
+                    "\$get\$${e.n}" in sigs -> genNamedCall("\$get\$${e.n}", CallE(NameE("\$get\$${e.n}"), emptyList(), emptyList(), null, line = e.line))
                     // Implicit receiver of a top-level extension function.
-                    lookup("this") != null -> property(genExpr(NameE("this").also { it.line = e.line }), e.n)
+                    lookup("this") != null -> property(genExpr(NameE("this", line = e.line)), e.n)
                     else -> fail("unknown name '${e.n}'")
                 }
             }
@@ -1905,7 +1905,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             is AsE -> genAs(e)
             is CallE -> genCall(e)
             is IndexE -> {
-                if (!builtinIndexable(e.recv, false)) return genExpr(CallE(MemberE(e.recv, "get", false).also { it.line = e.line }, emptyList(), listOf(e.idx), null).also { it.line = e.line })
+                if (!builtinIndexable(e.recv, false)) return genExpr(CallE(MemberE(e.recv, "get", false, line = e.line), emptyList(), listOf(e.idx), null, line = e.line))
                 val r = genExpr(e.recv)
                 if (r.t is Ty.Cls || r.t is Ty.Iface) return method(r, "get", opCall("get", e.idx))
                 val i0 = genExpr(e.idx)
@@ -2407,7 +2407,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (e.recv is NameE && e.recv.n == "super") {
             // `super.x`: the superclass getter if it has one, else the (inherited) field.
             val pm = "\$prop\$${e.n}"
-            if (superOf().index(e.n) < 0 && pm in superOf().methods) return superCall(pm, CallE(NameE(pm), emptyList(), emptyList(), null).also { it.line = line })
+            if (superOf().index(e.n) < 0 && pm in superOf().methods) return superCall(pm, CallE(NameE(pm), emptyList(), emptyList(), null, line = line))
             return property(Val("%this", Ty.Cls(owner!!.name)), e.n)
         }
         return property(genExpr(e.recv), e.n)
@@ -2449,10 +2449,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         (r.t as? Ty.Cls)?.let { t -> val ci = classes.getValue(t.name)
             if (pm in ci.methods && accessorWins(ci, pm, n)) { val v = callMethod(r, ci, pm, CallE(NameE(pm), emptyList(), emptyList(), null)); releaseIfOwned(r); return v }
         }
-        (r.t as? Ty.Iface)?.let { t -> ifaces[t.name]?.takeIf { pm in it.methods }?.let { ii -> val v = callIface(r, ii, pm, CallE(NameE(pm), emptyList(), emptyList(), null).also { it.line = line }); releaseIfOwned(r); return v } }
-        if (!hasMember(r.t, n) && hasMext(pm, r.t)) return method(r, pm, CallE(NameE(pm), emptyList(), emptyList(), null).also { it.line = line })
+        (r.t as? Ty.Iface)?.let { t -> ifaces[t.name]?.takeIf { pm in it.methods }?.let { ii -> val v = callIface(r, ii, pm, CallE(NameE(pm), emptyList(), emptyList(), null, line = line)); releaseIfOwned(r); return v } }
+        if (!hasMember(r.t, n) && hasMext(pm, r.t)) return method(r, pm, CallE(NameE(pm), emptyList(), emptyList(), null, line = line))
         if (!hasMember(r.t, n)) extFuns[pm]?.firstOrNull { extMatches(r.t, it.params[0].type, it.typeParams) }?.let { f ->
-            return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), emptyList(), listOf(x), null).also { it.line = line }) }
+            return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), emptyList(), listOf(x), null, line = line)) }
         }
         val res = when (val t = r.t) {
             is Ty.Cls -> {
@@ -2635,7 +2635,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val impl = sci.impl[n] ?: fail("abstract method ${sci.name}.$n() cannot be called via super")
         val sig = methodSigs["${sci.name}.$n"] ?: fail("unknown method ${sci.name}.$n()")
         val ps = methodParams(sci, n)
-        val e2 = if (ps != null && (e.args.any { it is NamedE } || allArgs(e).size < ps.size || ps.any { it.vararg })) normalize(ps, e, NameE("this").also { it.line = line }, sci) else e
+        val e2 = if (ps != null && (e.args.any { it is NamedE } || allArgs(e).size < ps.size || ps.any { it.vararg })) normalize(ps, e, NameE("this", line = line), sci) else e
         val args = methodArgs(sig, e2)
         return finishCall("call ${sig.ret.llvm} @m.$impl.$n(ptr %this${args.joinToString("") { ", ${it.t.llvm} ${it.v}" }})", sig.ret, args, susp = sig.suspend)
     }
@@ -2706,10 +2706,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val fps = Overloads.map.getValue(callee.n).first { it.name == pick }.params
             val all = allArgs(e).mapIndexed { i, a ->
                 val pt = fps.getOrNull(i)?.type
-                if (a is LambdaE && pt != null && pt.args.isEmpty() && "${pt.name}\$Sam" in classes) CallE(NameE("${pt.name}\$Sam").also { it.line = e.line }, emptyList(), listOf(a), null).also { it.line = e.line } else a
+                if (a is LambdaE && pt != null && pt.args.isEmpty() && "${pt.name}\$Sam" in classes) CallE(NameE("${pt.name}\$Sam", line = e.line), emptyList(), listOf(a), null, line = e.line) else a
             }
             val wrapped = e.lambda != null && all.last() !is LambdaE
-            return genCall(CallE(NameE(pick).also { it.line = callee.line }, e.typeArgs, if (e.lambda == null || wrapped) all else e.args, if (wrapped) null else e.lambda).also { it.line = e.line; it.infix = e.infix })
+            return genCall(CallE(NameE(pick, line = callee.line), e.typeArgs, if (e.lambda == null || wrapped) all else e.args, if (wrapped) null else e.lambda).also { it.line = e.line; it.infix = e.infix })
         }  // builder-inference hint (Parser.typeHint)
         // `recv.e(args)` with a local `e: R.(A) -> X` (no member `e` on recv): `e(recv, args)`.
         if (callee is MemberE && !callee.safe && (callee.recv as? NameE)?.n != "super") {
@@ -2718,7 +2718,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // (also a plain function type: an anonymous `fun R.(...)` is typed without its receiver here)
             if (l != null && fnSig(l.t)?.params?.size == allArgs(e).size + 1 && probeType(m.recv)?.let { rt -> !hasMemberNamed(rt, m.n) } == true) {
                 refuseValueVsExt(m.n, probeType(m.recv))
-                return invokeFn(genExpr(NameE(m.n).also { it.line = m.line }), CallE(NameE(m.n).also { it.line = m.line }, e.typeArgs, listOf(m.recv) + e.args, e.lambda).also { it.line = e.line })
+                return invokeFn(genExpr(NameE(m.n, line = m.line)), CallE(NameE(m.n, line = m.line), e.typeArgs, listOf(m.recv) + e.args, e.lambda, line = e.line))
             }
         }
         // A function that takes these arguments wins over a top-level property of function type with the same name
@@ -2734,14 +2734,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val k = recvCtxCount(ft)
             if ((isRecvFn(ft) || k > 0) && fnSig(ft)!!.params.size == allArgs(e).size + k + 1 && lookup("this") != null) {
                 refuseValueVsExt(callee.n, lookup("this")?.t)
-                return invokeFn(genExpr(callee), CallE(callee, e.typeArgs, listOf(NameE("this").also { it.line = line }) + e.args, e.lambda).also { it.line = e.line })
+                return invokeFn(genExpr(callee), CallE(callee, e.typeArgs, listOf(NameE("this", line = line)) + e.args, e.lambda, line = e.line))
             }
             return invokeFn(genExpr(callee), e)
         }
         // `x.fn(args)` / `x?.fn(args)` for a local `fn: R.(A) -> X` or `fn: context(C) R.(A) -> X`: invoke with `x` as the receiver argument.
         if (callee is MemberE && (lookup(callee.n)?.t ?: capturedFnType(callee.n))?.let { isRecvFn(it) || recvCtxCount(it) > 0 } == true && probeType(callee.recv)?.let { hasMemberNamed(it, callee.n) } != true) {
             refuseValueVsExt(callee.n, probeType(callee.recv))
-            fun call(recv: E) = invokeFn(genExpr(NameE(callee.n).also { it.line = line }), CallE(NameE(callee.n), e.typeArgs, listOf(recv) + e.args, e.lambda).also { it.line = e.line })
+            fun call(recv: E) = invokeFn(genExpr(NameE(callee.n, line = line)), CallE(NameE(callee.n), e.typeArgs, listOf(recv) + e.args, e.lambda, line = e.line))
             return if (!callee.safe) call(callee.recv) else safe(callee.recv) { r -> withTemps(listOf(r)) { (x) -> call(x) } }
         }
         if (callee is NameE && (funShadows || lookup(callee.n) == null || (callee.n in classes && scopes.none { callee.n in it.vars }))) return genNamedCall(callee.n, e)
@@ -2786,20 +2786,20 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (items.size == 1 && items[0] is UnE && (items[0] as UnE).op == UnOp.SPREAD) {
                 // `*intArrayOf(...)` into a vararg (a list here): copied into a list, as Kotlin copies spread arrays.
                 val x = (items[0] as UnE).e
-                return if (probeType(x) is Ty.Arr) CallE(MemberE(x, "toList", false).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line } else x
+                return if (probeType(x) is Ty.Arr) CallE(MemberE(x, "toList", false, line = line), emptyList(), emptyList(), null, line = line) else x
             }
             // A generic element type (`vararg xs: T`) is inferred from the items.
             val known = try { resolve(elemT); true } catch (x: CompileError) { false }
-            if (items.any(::isSpread)) return spreadBlock(items, if (known) listOf(elemT) else emptyList(), line) { NameE(it).also { x -> x.line = line } }
+            if (items.any(::isSpread)) return spreadBlock(items, if (known) listOf(elemT) else emptyList(), line) { NameE(it, line = line) }
             // `f<String>()` with `vararg xs: T`: the element type is the explicit type argument.
             if (!known && items.isEmpty()) {
                 val tps = (e.callee as? NameE)?.let { funDecls[it.n] }?.typeParams.orEmpty()
                 val ti = tps.indexOf(elemT.name)
                 if (elemT.args.isEmpty() && ti >= 0 && e.typeArgs.size == tps.size)
-                    return CallE(NameE("arrayListOf").also { it.line = line }, listOf(e.typeArgs[ti]), emptyList(), null).also { it.line = line }
+                    return CallE(NameE("arrayListOf", line = line), listOf(e.typeArgs[ti]), emptyList(), null, line = line)
                 fail("empty generic vararg is not supported")
             }
-            return CallE(NameE("arrayListOf").also { it.line = line }, if (known) listOf(elemT) else emptyList(), items, null).also { it.line = line }
+            return CallE(NameE("arrayListOf", line = line), if (known) listOf(elemT) else emptyList(), items, null, line = line)
         }
         val nv = named.firstOrNull { it.name == params[vi].name }
         // `operator fun set(vararg i: K, value: V)` from `a[i, j] = v`: the value is the last positional argument.
@@ -2807,8 +2807,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val tail = if (n == "set" && nv == null && vi == params.size - 2 && named.none { it.name == params.last().name } && pos.size > vi) pos.takeLast(1) else emptyList()
         val pos0 = pos.dropLast(tail.size)
         val newPos = (if (nv != null) pos0 else if (pos0.size <= vi) (if (params[vi].default != null) pos0 else pos0 + pack(emptyList())) else pos0.take(vi) + pack(pos0.drop(vi))) + tail
-        val newNamed = named.map { if (it === nv) NamedE(it.name, pack(listOf(it.e))).also { x -> x.line = it.line } else it }
-        return CallE(e.callee, e.typeArgs, newPos + newNamed, e.lambda).also { it.line = e.line }
+        val newNamed = named.map { if (it === nv) NamedE(it.name, pack(listOf(it.e)), line = it.line) else it }
+        return CallE(e.callee, e.typeArgs, newPos + newNamed, e.lambda, line = e.line)
     }
     private fun normalize(params: List<Param>, e: CallE, recv: E? = null, cls: ClassInfo? = null): CallE =
         normalized[e] ?: normalize0(params, e, recv, cls).also { normalized[e] = it }
@@ -2829,7 +2829,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (slots[i] != null) fail("parameter '${na.name}' passed twice")
             slots[i] = na.e
         }
-        if (e.lambda != null) { if (slots[params.lastIndex] != null) fail("too many arguments"); slots[params.lastIndex] = LambdaE(e.lambda).also { it.line = line } }
+        if (e.lambda != null) { if (slots[params.lastIndex] != null) fail("too many arguments"); slots[params.lastIndex] = LambdaE(e.lambda, line = line) }
         for (i in params.indices) if (slots[i] == null) {
             val d = params[i].default ?: fail("missing argument '${params[i].name}'")
             lateinit var sub: Subst
@@ -2842,18 +2842,18 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                         if (!simpleArg(a)) fail("default argument referring to a non-trivial argument is not supported")
                         a
                     }
-                    x is NameE && recv != null && cls != null && (cls.index(x.n) >= 0 || "\$prop\$${x.n}" in cls.methods) -> MemberE(recv, x.n, false).also { it.line = line }
+                    x is NameE && recv != null && cls != null && (cls.index(x.n) >= 0 || "\$prop\$${x.n}" in cls.methods) -> MemberE(recv, x.n, false, line = line)
                     x is NameE && x.n == "this" && recv != null -> recv
                     x is CallE && x.callee is NameE && recv != null && cls != null && x.callee.n in cls.methods ->
-                        CallE(MemberE(recv, x.callee.n, false).also { it.line = line }, x.typeArgs, x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = line }
+                        CallE(MemberE(recv, x.callee.n, false, line = line), x.typeArgs, x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }, line = line)
                     else -> null
                 }
             })
             val dv = sub.e(d)
             // A vararg default `= intArrayOf(1, 2)` is an array: copied into the list the vararg is lowered to.
-            slots[i] = if (params[i].vararg && probeType(dv) is Ty.Arr) CallE(MemberE(dv, "toList", false).also { it.line = line }, emptyList(), emptyList(), null).also { it.line = line } else dv
+            slots[i] = if (params[i].vararg && probeType(dv) is Ty.Arr) CallE(MemberE(dv, "toList", false, line = line), emptyList(), emptyList(), null, line = line) else dv
         }
-        return CallE(e.callee, e.typeArgs, slots.map { it!! }, null).also { it.line = e.line }
+        return CallE(e.callee, e.typeArgs, slots.map { it!! }, null, line = e.line)
     }
 
     /** Parameters (with defaults) of the method [n] as declared in [ci] or the nearest supertype declaring defaults. */
@@ -2945,13 +2945,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         var thisSeen = false
         for (i in scopes.indices.reversed()) {
             val vs = scopes[i].vars.entries.filter { it.key.startsWith("\$ctx\$") && fits(it.value.t, t) }
-            if (vs.isNotEmpty()) return NameE(vs.maxBy { it.key.drop(6).toIntOrNull() ?: -1 }.key).also { it.line = line }
+            if (vs.isNotEmpty()) return NameE(vs.maxBy { it.key.drop(6).toIntOrNull() ?: -1 }.key, line = line)
             // An implicit receiver (`with(c) { ... }`, an extension's `this`) can be named only while no inner `this` shadows it.
             val th = scopes[i].vars["this"] ?: continue
-            if (!thisSeen && fits(th.t, t)) return NameE("this").also { it.line = line }
+            if (!thisSeen && fits(th.t, t)) return NameE("this", line = line)
             thisSeen = true
         }
-        owner?.let { o -> if (fits(Ty.Cls(o.name), t)) return NameE("this").also { it.line = line } }
+        owner?.let { o -> if (fits(Ty.Cls(o.name), t)) return NameE("this", line = line) }
         fail("no context argument of type $t in scope")
     }
 
@@ -2967,12 +2967,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun genNamedCall(n: String, e00: CallE): Val {
         // A member of the implicit receiver wins over a top-level function with context parameters.
-        if (lookup(n) == null && extRecvHas(n, true)) return method(genExpr(NameE("\$this_ext").also { it.line = line }), n, e00)
+        if (lookup(n) == null && extRecvHas(n, true)) return method(genExpr(NameE("\$this_ext", line = line)), n, e00)
         // Another member extension applicable to the extension receiver: `fun T.a() = b()` calls `this.b()` (`fun T.b()`).
-        if (lookup(n) == null) lookup("\$this_ext")?.let { l -> if (hasMext(n, l.t)) return method(genExpr(NameE("\$this_ext").also { it.line = line }), n, e00) }
+        if (lookup(n) == null) lookup("\$this_ext")?.let { l -> if (hasMext(n, l.t)) return method(genExpr(NameE("\$this_ext", line = line)), n, e00) }
         if (lookup(n) == null && n in funDecls && n !in LiftedLocals.names && e00 !in ctxFilled) lookup("this")?.let { l ->
             val rt = l.t
-            if (rt is Ty.Cls && n in classes.getValue(rt.name).methods) return method(genExpr(NameE("this").also { it.line = line }), n, e00)
+            if (rt is Ty.Cls && n in classes.getValue(rt.name).methods) return method(genExpr(NameE("this", line = line)), n, e00)
         }
         val e0 = if (lookup(n) == null) withCtx(funDecls[n]?.params, e00) ?: e00 else e00
         if (n in classDecls && lookup(n) == null) secondaryFor(n, e0)?.let { return genNamedCall(it, e0) }
@@ -3120,15 +3120,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 if (excMode) throwNew("AssertionError", m)
                 else { emit("call void @rt_panic(ptr ${m.v})"); emit("unreachable"); term = true }
                 startBlock(ok)
-                return if (n == "assertNotNull") genExpr(UnE(UnOp.NOT_NULL, a[0]).also { it.line = line }) else Val("", Ty.Unit)
+                return if (n == "assertNotNull") genExpr(UnE(UnOp.NOT_NULL, a[0], line = line)) else Val("", Ty.Unit)
             }
             "assertFailsWith", "assertFails" -> if (excMode && e.lambda != null) {
                 val t = e.typeArgs.singleOrNull() ?: TypeRef("Throwable", emptyList(), false)
                 val v = "\$af${tmpN++}"
                 val msg = strL("Expected an exception of $t to be thrown, but was completed successfully.")
                 val thr = CallE(NameE("\$throw"), emptyList(), listOf(CallE(NameE("AssertionError"), emptyList(), listOf(msg), null)), null)
-                val body = Block(e.lambda.stmts + ExprS(thr).also { it.line = line })
-                return genTry(TryE(body, listOf(Catch(v, t, Block(listOf(ExprS(NameE(v).also { it.line = line }).also { it.line = line })))), null), true)
+                val body = Block(e.lambda.stmts + ExprS(thr, line = line))
+                return genTry(TryE(body, listOf(Catch(v, t, Block(listOf(ExprS(NameE(v, line = line), line = line))))), null), true)
             }
             "Array" -> if ((e.lambda != null && e.args.size == 1) || (e.lambda == null && e.args.size == 2)) {
                 initByValue(e)?.let { return genExpr(it) }
@@ -3143,7 +3143,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     fun <T : E> T.l(): T = also { it.line = line }
                     val get = IndexE(NameE(v).l(), NameE("it").l()).l()
                     CallE(NameE(ARRAY_OF_CTOR.getValue(n)).l(), emptyList(), listOf(MemberE(NameE(v).l(), "size", false).l()),
-                        Block(listOf(ExprS(get).also { it.line = line }))).l()
+                        Block(listOf(ExprS(get, line = line)))).l()
                 })
                 val et = when (n) { "shortArrayOf" -> Ty.I32; "ubyteArrayOf", "ushortArrayOf" -> Ty.U32; "intArrayOf" -> Ty.I32; "longArrayOf" -> Ty.I64; "doubleArrayOf" -> Ty.F64; "floatArrayOf" -> Ty.F32; "booleanArrayOf" -> Ty.I1; "charArrayOf" -> Ty.Char; "uintArrayOf" -> Ty.U32; "ulongArrayOf" -> Ty.U64; else -> Ty.I8 }
                 val a = emitT("call ptr @rt_arr_new(i64 ${e.args.size}, i64 ${et.size})")
@@ -3153,7 +3153,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             "ArrayList", "mutableListOf", "arrayListOf", "listOf", "arrayOf", "sequenceOf" -> {
                 // `ArrayList<T>(capacity)`: the capacity is only a hint (evaluated for its effects, then dropped).
-                if (n != "ArrayList" && e.args.any(::isSpread)) return genExpr(spreadBlock(e.args, e.typeArgs, line) { NameE(it).also { x -> x.line = line } })
+                if (n != "ArrayList" && e.args.any(::isSpread)) return genExpr(spreadBlock(e.args, e.typeArgs, line) { NameE(it, line = line) })
                 val capOnly = n == "ArrayList" && e.args.size == 1 && e.args[0] !is NamedE && e.typeArgs.isNotEmpty() && probeType(e.args[0])?.isInt == true
                 if (capOnly) releaseIfOwned(genExpr(e.args[0]))
                 else if (n == "ArrayList" && e.args.isNotEmpty()) fail("ArrayList(collection) is not supported")
@@ -3164,7 +3164,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val sib = e.args.filterIsInstance<CallE>().filter { it.typeArgs.isNotEmpty() && (it.callee as? NameE)?.n in genericFuns }
                     .groupBy { (it.callee as NameE).n }.mapValues { (_, l) -> l.map { it.typeArgs }.distinct().singleOrNull() }
                 fun withSib(a: E): E = if (a is CallE && a.typeArgs.isEmpty() && a.callee is NameE) sib[a.callee.n]?.let { ta ->
-                    CallE(a.callee, ta, a.args, a.lambda).also { it.line = a.line } } ?: a else a
+                    CallE(a.callee, ta, a.args, a.lambda, line = a.line) } ?: a else a
                 val vals = if (capOnly) emptyList() else e.args.map(::withSib).map { a -> if (ct != null) withExpected(a, ct) { genArg(a) } else genArg(a) }
                 // `val x: List<String> = listOf()`, a defaulted `List<T>` parameter: the expected type names the element.
                 val et = e.typeArgs.singleOrNull()?.let { resolve(it) } ?: vals.firstOrNull()?.t
@@ -3258,10 +3258,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // Extension (or member) call on the implicit receiver: in a member extension the extension receiver comes
             // before the dispatch receiver (`fun String.loud() = uppercase()`), unless a lambda rebound `this`.
             if (lookup("\$this_ext") != null && owner?.let { o -> lookup("this")?.t.let { it == null || it == Ty.Cls(o.name) } } == true) {
-                val onExt = CallE(MemberE(NameE("\$this_ext").also { it.line = line }, n, false).also { it.line = line }, e.typeArgs, e.args, e.lambda).also { it.line = line }
+                val onExt = CallE(MemberE(NameE("\$this_ext", line = line), n, false, line = line), e.typeArgs, e.args, e.lambda, line = line)
                 if (probeType(onExt) != null) return genExpr(onExt)
             }
-            if (lookup("this") != null) return method(genExpr(NameE("this").also { it.line = line }), n, e)
+            if (lookup("this") != null) return method(genExpr(NameE("this", line = line)), n, e)
             owner?.let { o -> if (extFuns[n] != null) return method(Val("%this", Ty.Cls(o.name)), n, e) }
         }
         val sig = sigs[n] ?: fail("unknown function '$n'")
@@ -3356,11 +3356,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                         lateinit var rw2: Subst
                         rw2 = Subst(emptyMap(), rw = { y -> when {
                             y is CallE && y.callee is MemberE && !y.callee.safe && (y.callee.recv as? NameE)?.n == pn ->
-                                CallE(NameE(y.callee.n).also { it.line = y.line }, y.typeArgs, y.args.map { rw2.e(it) }, y.lambda?.let { rw2.block(it) }).also { it.line = y.line }
-                            y is NameE && y.n == "this" -> NameE("\$recvArg").also { it.line = y.line }
+                                CallE(NameE(y.callee.n, line = y.line), y.typeArgs, y.args.map { rw2.e(it) }, y.lambda?.let { rw2.block(it) }, line = y.line)
+                            y is NameE && y.n == "this" -> NameE("\$recvArg", line = y.line)
                             // The receiver's own properties (`name`), unless a local of that name is in scope.
                             y is NameE && lookup(y.n) == null && (rt as? Ty.Cls)?.let { c -> classes[c.name]?.let { it.index(y.n) >= 0 || "\$prop\$${y.n}" in it.methods } } == true ->
-                                MemberE(NameE("\$recvArg").also { it.line = y.line }, y.n, false).also { it.line = y.line }
+                                MemberE(NameE("\$recvArg", line = y.line), y.n, false, line = y.line)
                             else -> null } })
                         builderInfer(rw2.block(a.body), pt.args[1], f.typeParams, env, listOf("\$recvArg" to rt))
                     }
@@ -3522,7 +3522,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 null -> {}
                 // Nested plain lambdas (`execute { yield(arg) }`) still see the builder's receiver.
                 is CallE -> { if (e.callee is NameE) calls.add(e)
-                    else if (e.callee is MemberE && !e.callee.safe && (e.callee.recv as? NameE)?.n == "this") calls.add(CallE(NameE(e.callee.n).also { it.line = e.line }, e.typeArgs, e.args, null).also { it.line = e.line })
+                    else if (e.callee is MemberE && !e.callee.safe && (e.callee.recv as? NameE)?.n == "this") calls.add(CallE(NameE(e.callee.n, line = e.line), e.typeArgs, e.args, null, line = e.line))
                     if (e.callee !is NameE) ex(e.callee); e.args.forEach { ex(it) }; e.lambda?.stmts?.forEach { stF(it) } }
                 is LambdaE -> e.body.stmts.forEach { stF(it) }
                 is NamedE -> ex(e.e)
@@ -3562,10 +3562,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             var strip: Subst? = null
             strip = Subst(emptyMap(), rw = { y -> when {
                 y is CallE && y.callee is MemberE && !y.callee.safe && (y.callee.recv as? NameE)?.n == cap ->
-                    CallE(NameE(y.callee.n).also { it.line = y.line }, y.typeArgs, y.args.map { strip!!.e(it) }, y.lambda?.let { strip!!.block(it) }).also { it.line = y.line }
-                y is NameE && y.n.startsWith("\$cap\$") -> NameE(y.n.removePrefix("\$cap\$")).also { it.line = y.line }
+                    CallE(NameE(y.callee.n, line = y.line), y.typeArgs, y.args.map { strip!!.e(it) }, y.lambda?.let { strip!!.block(it) }, line = y.line)
+                y is NameE && y.n.startsWith("\$cap\$") -> NameE(y.n.removePrefix("\$cap\$"), line = y.line)
                 else -> null } })
-            cd.methods.forEach { m -> m.body?.let { strip.block(it).stmts.forEach { s -> stImpl(s) } }; m.exprBody?.let { stImpl(ExprS(strip.e(it)).also { s -> s.line = it.line }) } }
+            cd.methods.forEach { m -> m.body?.let { strip.block(it).stmts.forEach { s -> stImpl(s) } }; m.exprBody?.let { stImpl(ExprS(strip.e(it), line = it.line)) } }
             cd.inits.forEach { if (it is Block) strip.block(it).stmts.forEach { s -> stImpl(s) } }
         }
         fun free(r: TypeRef): Boolean = (r.name in tps && r.name !in env) || r.args.any { free(it) }
@@ -4038,14 +4038,14 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun genAs(e0: AsE): Val {
         // `x as T` with an unbounded type parameter (implicit bound `Any?`) is unchecked: a null passes through.
         val e = if (instLine >= 0 && e0.type.name in tenv && !e0.type.nullable && !e0.safe && "$instLine:${e0.type.name}" in TypeParamBounds.unbounded)
-            AsE(e0.e, TypeRef(e0.type.name, e0.type.args, true), false).also { it.line = e0.line } else e0
+            AsE(e0.e, TypeRef(e0.type.name, e0.type.args, true), false, line = e0.line) else e0
         // `x as T` with a class-bounded type parameter (`T : C`) is unchecked beyond the bound, as with erasure:
         // check against the bound, then view the value as the instance's type.
         if (instLine >= 0 && e0.type.name in tenv && !e0.type.nullable && !e0.safe && e0.type.args.isEmpty()) {
             val b = TypeParamBounds.bounds["$instLine:${e0.type.name}"]
             val tt = tenv.getValue(e0.type.name)
             if (b != null && b.args.isEmpty() && !b.nullable && b.name in classes && tt is Ty.Cls && tt.name != b.name) {
-                val r = genAs(AsE(e0.e, b, false).also { it.line = e0.line })
+                val r = genAs(AsE(e0.e, b, false, line = e0.line))
                 return Val(r.v, tt, r.owned)
             }
         }
@@ -4066,7 +4066,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val tmp = "\$ccast${suspConvN++}"
                 val l = declare(tmp, v.t, false, true)
                 emit("store ptr ${consume(v).v}, ptr ${l.slot}")
-                return genExpr(CallE(NameE("KcCastCont").also { it.line = line }, listOf(oa.second[0], ob.second[0]), listOf(NameE(tmp).also { it.line = line }), null).also { it.line = line }).let { r -> Val(r.v, target, r.owned) }
+                return genExpr(CallE(NameE("KcCastCont", line = line), listOf(oa.second[0], ob.second[0]), listOf(NameE(tmp, line = line)), null, line = line)).let { r -> Val(r.v, target, r.owned) }
             }
             if (oa != null && ob != null && oa.first == ob.first && (oa.second + ob.second).none { it.name in prim && !it.nullable }) return Val(v.v, target, v.owned)
         }
@@ -4222,8 +4222,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     named.keys.forEach { k -> if (cd.ctorParams.none { it.name == k }) fail("unknown copy() parameter $k") }
                     val pos = e.args.filter { it !is NamedE }
                     return withTemps(listOf(r)) { (x) ->
-                        val args = cd.ctorParams.mapIndexed { i, p -> pos.getOrNull(i) ?: named[p.name]?.e ?: MemberE(x, p.name, false).also { it.line = line } }
-                        genNamedCall(t.name, CallE(NameE(t.name), emptyList(), args, null).also { it.line = line })
+                        val args = cd.ctorParams.mapIndexed { i, p -> pos.getOrNull(i) ?: named[p.name]?.e ?: MemberE(x, p.name, false, line = line) }
+                        genNamedCall(t.name, CallE(NameE(t.name), emptyList(), args, null, line = line))
                     }
                 }
                 "equals" -> return compare(BinOp.EQ, r, genExpr(e.args.single()))
@@ -4273,11 +4273,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val ln = label("lh.nn"); val lj = label("lh.join"); val from = cur
                 condBr(emitT("icmp eq ptr ${ev.v}, null"), lj, ln)
                 startBlock(ln)
-                val x = coerce(method(ev, "hashCode", CallE(e.callee, emptyList(), emptyList(), null).also { it.line = line }), Ty.I32)
+                val x = coerce(method(ev, "hashCode", CallE(e.callee, emptyList(), emptyList(), null, line = line)), Ty.I32)
                 val fromN = cur
                 br(lj); startBlock(lj)
                 emitT("phi i32 [ 0, %$from ], [ ${x.v}, %$fromN ]")
-            } else coerce(method(ev, "hashCode", CallE(e.callee, emptyList(), emptyList(), null).also { it.line = line }), Ty.I32).v
+            } else coerce(method(ev, "hashCode", CallE(e.callee, emptyList(), emptyList(), null, line = line)), Ty.I32).v
             emit("store i32 ${emitT("add i32 ${emitT("mul i32 ${emitT("load i32, ptr $h")}, 31")}, $eh")}, ptr $h")
             emit("store i64 ${emitT("add i64 $i, 1")}, ptr $idx")
             br(lc); startBlock(le)
@@ -4285,7 +4285,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             releaseIfOwned(r); return v
         }
         if (t is Ty.ListTy && e.args.isEmpty() && n.startsWith("component") && n.removePrefix("component").toIntOrNull() != null)
-            return method(r, "get", CallE(e.callee, emptyList(), listOf(IntL(n.removePrefix("component").toLong() - 1, false)), null).also { it.line = line })
+            return method(r, "get", CallE(e.callee, emptyList(), listOf(IntL(n.removePrefix("component").toLong() - 1, false)), null, line = line))
         return null
     }
 
@@ -4330,7 +4330,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (n == "\$provideDelegate") {
             val m = "provideDelegate"
             val has = hasMember(t, m) || extFuns[m]?.any { extMatches(t, it.params[0].type, it.typeParams) } == true || hasMext(m, t)
-            return if (has) method(r, m, CallE(MemberE((e0.callee as MemberE).recv, m, false).also { it.line = e0.line }, emptyList(), e0.args, null).also { it.line = e0.line }) else r
+            return if (has) method(r, m, CallE(MemberE((e0.callee as MemberE).recv, m, false, line = e0.line), emptyList(), e0.args, null, line = e0.line)) else r
         }
         // A property reference is itself a delegate (`val y by ::x`, `by a::x`, `by A::x`): `getValue(thisRef, p)` is
         // `get()`, or `get(thisRef)` for an unbound reference; `setValue` likewise calls `set`. These are stdlib
@@ -4338,23 +4338,23 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (t is Ty.Cls && t.name.startsWith("\$PRef") && extFuns[n].orEmpty().none { it.params[0].type.name == "Any" || it.params[0].type.name in it.typeParams } && (n == "getValue" && e0.args.size == 2 || n == "setValue" && e0.args.size == 3) && e0.args.none { it is NamedE }) {
             val unbound = methodSigs["${t.name}.get"]?.params?.size == 1
             val args = (if (unbound) e0.args.take(1) else emptyList()) + e0.args.drop(2)
-            return method(r, if (n == "getValue") "get" else "set", CallE(e0.callee, emptyList(), args, null).also { it.line = e0.line })
+            return method(r, if (n == "getValue") "get" else "set", CallE(e0.callee, emptyList(), args, null, line = e0.line))
         }
         // Member extension of the enclosing class (dispatch receiver `this`).
         owner?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, it.typeParams) && !hasMember(t, n) }?.let {
-            return withTemps(listOf(r)) { (x) -> callMethod(Val("%this", Ty.Cls(o.name)), o, "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
+            return withTemps(listOf(r)) { (x) -> callMethod(Val("%this", Ty.Cls(o.name)), o, "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda, line = line)) }
         } }
         // Member extension of the companion object of the enclosing class or of a class it is nested in (an implicit receiver).
         owner?.let { o -> companionMext(o.name, n, t)?.let { cn ->
-            return withTemps(listOf(r)) { (x) -> method(genExpr(NameE(cn).also { it.line = line }), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
+            return withTemps(listOf(r)) { (x) -> method(genExpr(NameE(cn, line = line)), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda, line = line)) }
         } }
         // Member extension of an implicit receiver (`with(obj) { x.ext() }`, a lambda with receiver).
         lookup("this")?.let { l -> val rt = l.t
             if (rt is Ty.Cls && rt.name != owner?.name) classes[rt.name]?.let { o -> o.methods["mext\$$n"]?.takeIf { extMatches(t, it.params[0].type, it.typeParams) && !hasMember(t, n) }?.let {
-                return withTemps(listOf(r)) { (x) -> method(genExpr(NameE("this").also { it.line = line }), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
+                return withTemps(listOf(r)) { (x) -> method(genExpr(NameE("this", line = line)), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda, line = line)) }
             } }
             if (rt is Ty.Iface && ifaces[rt.name]?.methods?.get("mext\$$n")?.params?.firstOrNull() == t && !hasMember(t, n))
-                return withTemps(listOf(r)) { (x) -> method(genExpr(NameE("this").also { it.line = line }), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
+                return withTemps(listOf(r)) { (x) -> method(genExpr(NameE("this", line = line)), "mext\$$n", CallE(NameE("mext\$$n"), e0.typeArgs, listOf(x) + e0.args, e0.lambda, line = line)) }
         }
         if (isAny(t) && n == "toString" && e0.args.isEmpty()) { val s = anyCall("anyToString__", listOf(Val(r.v, t, false))); releaseIfOwned(r); return s }
         if (isAny(t) && n == "equals" && e0.args.size == 1) return compare(BinOp.EQ, r, genExpr(e0.args[0]))
@@ -4380,37 +4380,37 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         if (n != "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t.isFp || t == Ty.Char || (t == Ty.Str && (n == "plus" || n == "equals"))) &&
             n in opOf && e0.args.size == 1 && e0.args[0] !is NamedE && e0.lambda == null && (!e0.infix || extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false))
-            return withTemps(listOf(r)) { (x) -> genExpr(BinE(opOf.getValue(n), x, e0.args[0]).also { it.line = line }) }
+            return withTemps(listOf(r)) { (x) -> genExpr(BinE(opOf.getValue(n), x, e0.args[0], line = line)) }
         // Built-in members `inc()`/`dec()` of numbers and chars win over extensions.
         // Byte (I8) is excluded: its inc() must wrap at 8 bits.
         if ((t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t == Ty.Char) && (n == "inc" || n == "dec") && e0.args.isEmpty() && !incViaExt)
-            return withTemps(listOf(r)) { (x) -> genExpr(BinE(if (n == "inc") BinOp.PLUS else BinOp.MINUS, x, IntL(1, false)).also { it.line = line }) }
+            return withTemps(listOf(r)) { (x) -> genExpr(BinE(if (n == "inc") BinOp.PLUS else BinOp.MINUS, x, IntL(1, false), line = line)) }
         val nn = nonNullRecv; nonNullRecv = false
         // Bitwise members called as methods: `x.shl(2)`, `x.inv()` (they win over an extension when the receiver is `y!!`).
         if ((t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64) && (nn || extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false) && e0.lambda == null && e0.args.none { it is NamedE }) {
             if (n in setOf("and", "or", "xor", "shl", "shr", "ushr") && e0.args.size == 1)
-                return withTemps(listOf(r)) { (x) -> genExpr(BinE(BinOp.of(n), x, e0.args[0]).also { it.line = line }) }
+                return withTemps(listOf(r)) { (x) -> genExpr(BinE(BinOp.of(n), x, e0.args[0], line = line)) }
             if (n == "inv" && e0.args.isEmpty())
-                return withTemps(listOf(r)) { (x) -> genExpr(BinE(BinOp.XOR, x, UnE(UnOp.NEG, IntL(1, t == Ty.I64 || t == Ty.U64)).also { it.line = line }).also { it.line = line }) }
+                return withTemps(listOf(r)) { (x) -> genExpr(BinE(BinOp.XOR, x, UnE(UnOp.NEG, IntL(1, t == Ty.I64 || t == Ty.U64), line = line), line = line)) }
         }
         if (!hasMember(t, n)) extFuns[n]?.firstOrNull { extMatches(t, it.params[0].type, it.typeParams) && !(nn && it.params[0].type.nullable && t.llvm != "ptr") }?.let { f ->
-            return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), e0.typeArgs, listOf(x) + e0.args, e0.lambda).also { it.line = line }) }
+            return withTemps(listOf(r)) { (x) -> genNamedCall(f.name, CallE(NameE(f.name), e0.typeArgs, listOf(x) + e0.args, e0.lambda, line = line)) }
         }
         // `x.p(args)` for a property `p` of function type with a getter (a class getter or an extension property): invoke its value.
         if ((t is Ty.Cls && classes.getValue(t.name).methods.let { "\$prop\$$n" in it && n !in it }) ||
             (!hasMember(t, n) && extFuns["\$prop\$$n"]?.any { it.params.size == 1 && extMatches(t, it.params[0].type, it.typeParams) } == true)) {
             return withTemps(listOf(r)) { (x) ->
-                val pe = MemberE(x, n, false).also { it.line = line }
+                val pe = MemberE(x, n, false, line = line)
                 val f = genExpr(pe)
                 if (fnSig(f.t) == null) fail("unknown method ${t}.$n()")
-                invokeFn(f, CallE(pe, e0.typeArgs, e0.args, e0.lambda).also { it.line = line })
+                invokeFn(f, CallE(pe, e0.typeArgs, e0.args, e0.lambda, line = line))
             }
         }
         dataMethod(r, n, e0)?.let { return it }
         if (t is Ty.ListTy && n in setOf("map", "filter", "forEach", "sumOf", "count") && e0.lambda == null && e0.args.size == 1 && e0.args[0] !is NamedE) {
             // A function value or callable reference argument becomes an inline lambda `{ f(it) }`.
             val a = e0.args[0]
-            val it0 = NameE("it").also { it.line = line }
+            val it0 = NameE("it", line = line)
             val tn = ((a as? UnE)?.e as? NameE)?.n
             val call: E = when {
                 a is UnE && a.op == UnOp.REF && a.e is NullL && a.ref!! in funDecls -> CallE(NameE(a.ref), emptyList(), listOf(it0), null)
@@ -4420,7 +4420,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 }
                 else -> CallE(a, emptyList(), listOf(it0), null)
             }.also { it.line = line }
-            return method(r, n, CallE(e0.callee, e0.typeArgs, emptyList(), Block(listOf(ExprS(call).also { it.line = line }))).also { it.line = e0.line })
+            return method(r, n, CallE(e0.callee, e0.typeArgs, emptyList(), Block(listOf(ExprS(call, line = line))), line = e0.line))
         }
         // A trailing lambda on a built-in method that is not an inline lambda builtin is an ordinary last argument.
         val e = if (e0.lambda != null && t !is Ty.Cls && t !is Ty.Iface && !(t is Ty.ListTy && n in setOf("map", "filter", "forEach", "sumOf", "count")) && n != "usePinned")
@@ -4518,7 +4518,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             t is Ty.ListTy && e.lambda != null && n in setOf("map", "filter", "forEach", "sumOf", "count") -> listLambda(r, t, n, e.lambda)
             // `sum()` of a numeric list: `sumOf { it }` (Int/Long/Double/... element types).
             t is Ty.ListTy && n == "sum" && e.args.isEmpty() && e.lambda == null && t.elem.isNum ->
-                listLambda(r, t, "sumOf", Block(listOf(ExprS(NameE("it").also { it.line = line }))))
+                listLambda(r, t, "sumOf", Block(listOf(ExprS(NameE("it", line = line)))))
             t == Ty.Arr(Ty.I8) && n == "usePinned" -> {
                 val lam = e.lambda ?: fail("usePinned needs a lambda")
                 scopes.add(Scope())
@@ -4598,8 +4598,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             n = c.singleOrNull()?.name ?: fail("cannot choose an overload of ::$n for ${t}")
             val le = RefLambdas.map.getOrPut(a) {
                 val names = s.params.indices.map { "rp\$$it" }
-                val call = CallE(NameE(n).also { it.line = line }, emptyList(), names.map { NameE(it).also { x -> x.line = line } }, null).also { it.line = line }
-                LambdaE(Block(listOf(ExprS(call).also { it.line = line }), names, s.params.map { tyRef(it) })).also { it.line = line }
+                val call = CallE(NameE(n, line = line), emptyList(), names.map { NameE(it, line = line) }, null, line = line)
+                LambdaE(Block(listOf(ExprS(call, line = line)), names, s.params.map { tyRef(it) }), line = line)
             }
             return genLambda(le, s.params, s.ret, susp = t is Ty.Iface && isSuspFnName(t.name))
         }
@@ -4609,8 +4609,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (s.params.size > f.params.size && f.params.none { it.vararg }) return null
         val le = RefLambdas.map.getOrPut(a) {
             val names = s.params.indices.map { "rp\$$it" }
-            val call = CallE(NameE(n).also { it.line = line }, emptyList(), names.map { NameE(it).also { x -> x.line = line } }, null).also { it.line = line }
-            LambdaE(Block(listOf(ExprS(call).also { it.line = line }), names, s.params.map { tyRef(it) })).also { it.line = line }
+            val call = CallE(NameE(n, line = line), emptyList(), names.map { NameE(it, line = line) }, null, line = line)
+            LambdaE(Block(listOf(ExprS(call, line = line)), names, s.params.map { tyRef(it) }), line = line)
         }
         return genLambda(le, s.params, s.ret)
     }
@@ -4698,9 +4698,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val l = declare(tmp, v.t, false, true)
         emit("store ptr ${consume(v).v}, ptr ${l.slot}")
         val ps = sig.params.indices.map { "\$sp$it" }
-        val call = CallE(NameE(tmp).also { it.line = line }, emptyList(), ps.map { NameE(it).also { x -> x.line = line } }, null).also { it.line = line }
+        val call = CallE(NameE(tmp, line = line), emptyList(), ps.map { NameE(it, line = line) }, null, line = line)
         // Cached per function and site: a restart of the function's generation must reuse the same lambda class.
-        val lam = SuspConvLambdas.map.getOrPut("$curFunKey|$tmp|${v.t}|$t") { LambdaE(Block(listOf(ExprS(call).also { it.line = line }), ps, emptyList())).also { it.line = line } }
+        val lam = SuspConvLambdas.map.getOrPut("$curFunKey|$tmp|${v.t}|$t") { LambdaE(Block(listOf(ExprS(call, line = line)), ps, emptyList()), line = line) }
         val r = genLambda(lam, sig.params, sig.ret, false, susp = true)
         return if (r.t == t) r else Val(r.v, t, r.owned)
     }
@@ -4722,7 +4722,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val sig = fnSig(f.t)
         val k = recvCtxCount(f.t)
         val e2 = if (sig != null && k > 0 && e.args.none { it is NamedE } && allArgs(e).size == sig.params.size - k)
-            CallE(e.callee, e.typeArgs, sig.params.take(k).map { ctxArg(it) } + e.args, e.lambda).also { it.line = e.line } else e
+            CallE(e.callee, e.typeArgs, sig.params.take(k).map { ctxArg(it) } + e.args, e.lambda, line = e.line) else e
         val v = callIface(f, ii, "invoke", e2)
         releaseIfOwned(f)
         return v
@@ -4760,8 +4760,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         fun setLam(params: List<TypeRef>, target: (List<E>) -> E): Val {
             val le = RefLambdas.setters.getOrPut(node) {
                 val names = params.indices.map { "rp\$$it" }
-                val xs = names.map { NameE(it).also { x -> x.line = line } }
-                LambdaE(Block(listOf(AssignS(target(xs.dropLast(1)), "=", xs.last()).also { it.line = line }), names, params)).also { it.line = line }
+                val xs = names.map { NameE(it, line = line) }
+                LambdaE(Block(listOf(AssignS(target(xs.dropLast(1)), "=", xs.last(), line = line)), names, params), line = line)
             }
             return genExpr(le)
         }
@@ -4769,15 +4769,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (params.size > 22) fail("references with more than 22 parameters are not supported")
             val le = RefLambdas.map.getOrPut(node) {
                 val names = params.indices.map { "rp\$$it" }
-                val call = body(names.map { NameE(it).also { x -> x.line = line } })
-                LambdaE(Block(listOf(ExprS(call).also { it.line = line }), names, params)).also { it.line = line }
+                val call = body(names.map { NameE(it, line = line) })
+                LambdaE(Block(listOf(ExprS(call, line = line)), names, params), line = line)
             }
             return genExpr(le)
         }
         fun callOn(r: E, name: String, args: List<E>, isProp: Boolean): E =
-            if (name == "get" && args.size == 1 && builtinGet) IndexE(r, args[0]).also { it.line = line }
-            else if (isProp) MemberE(r, name, false).also { it.line = line }
-            else CallE(MemberE(r, name, false).also { it.line = line }, emptyList(), args, null).also { it.line = line }
+            if (name == "get" && args.size == 1 && builtinGet) IndexE(r, args[0], line = line)
+            else if (isProp) MemberE(r, name, false, line = line)
+            else CallE(MemberE(r, name, false, line = line), emptyList(), args, null, line = line)
         fun memberParams0(t: Ty, name: String, bound: Boolean): Pair<List<TypeRef>, Boolean>? = when (t) {
             is Ty.Cls -> classes.getValue(t.name).let { ci ->
                 ci.methods[name]?.let { m -> (if (m.typeParams.isNotEmpty()) expParams(name, bound) else m.params.map { it.type }) to false }
@@ -4806,26 +4806,26 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (recv == null) {
             funDecls[n]?.let { f ->
                 if (f.typeParams.isNotEmpty()) fail("reference to generic function $n is not supported")
-                return lam(f.params.map { it.type }) { xs -> CallE(NameE(n).also { it.line = line }, emptyList(), xs, null).also { it.line = line } }
+                return lam(f.params.map { it.type }) { xs -> CallE(NameE(n, line = line), emptyList(), xs, null, line = line) }
             }
             classDecls[n]?.takeIf { it.typeParams.isEmpty() && it.enumEntries == null }?.let { c ->
-                return lam(c.ctorParams.map { it.type }) { xs -> CallE(NameE(n).also { it.line = line }, emptyList(), xs, null).also { it.line = line } }
+                return lam(c.ctorParams.map { it.type }) { xs -> CallE(NameE(n, line = line), emptyList(), xs, null, line = line) }
             }
-            owner?.let { o -> if (n in o.methods || o.index(n) >= 0) return genRef(node, NameE("this").also { it.line = line }, n) }
+            owner?.let { o -> if (n in o.methods || o.index(n) >= 0) return genRef(node, NameE("this", line = line), n) }
             // Top-level property `::x`: a getter function value.
             // A local function that captures locals is a local holding a lambda: `::f` is that value.
             // (A top-level property of function type is not one: `::f.get()` reads the property.)
-            lookup(n)?.takeIf { it !== globalVars[n] }?.let { l -> if (fnSig(l.t) != null) return genExpr(NameE(n).also { it.line = line }) }
+            lookup(n)?.takeIf { it !== globalVars[n] }?.let { l -> if (fnSig(l.t) != null) return genExpr(NameE(n, line = line)) }
             if (n in globalVars || prog.globals.any { it.name == n } || "\$get\$$n" in sigs) {
-                val g = lam(emptyList()) { NameE(n).also { it.line = line } }
+                val g = lam(emptyList()) { NameE(n, line = line) }
                 val isVar = prog.globals.firstOrNull { it.name == n }?.isVar == true || "\$set\$$n" in sigs
-                val st = if (isVar) setLam(listOf(tyRef(fnSig(g.t)!!.ret))) { NameE(n).also { it.line = line } } else null
+                val st = if (isVar) setLam(listOf(tyRef(fnSig(g.t)!!.ret))) { NameE(n, line = line) } else null
                 return propRef(g, st, n)
             }
             fail("unsupported callable reference ::$n")
         }
         // An anonymous `fun R.(...)` that captures locals is a local holding a lambda (receiver first): `R::$afN` is that value.
-        if (recv is NameE && n.startsWith("\$af")) lookup(n)?.let { l -> if (fnSig(l.t) != null) return asRecvFn(genExpr(NameE(n).also { it.line = line })) }
+        if (recv is NameE && n.startsWith("\$af")) lookup(n)?.let { l -> if (fnSig(l.t) != null) return asRecvFn(genExpr(NameE(n, line = line))) }
         // Unbound reference through a type name.
         val recvTa = (recv as? NameE)?.let { RefTypeArgs.map[it] }.orEmpty()
         val typeName = (recv as? NameE)?.n?.takeIf { lookup(it) == null && "\$get\$$it" !in sigs && (it in classes || it in ifaces || it in BUILTIN_REF_TYPES || recvTa.isNotEmpty()) && !(it == "this") }
@@ -4835,8 +4835,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (n.startsWith("\$af")) extFuns[n]?.singleOrNull()?.takeIf { f -> f.params.any { it.ctx } }?.let { f ->
                 val (ctx, rest) = f.params.drop(1).partition { it.ctx }
                 val g = lam(ctx.map { it.type } + f.params[0].type + rest.map { it.type }) { xs ->
-                    val args = (ctx + rest).zip(xs.take(ctx.size) + xs.drop(ctx.size + 1)) { p, x -> NamedE(p.name, x).also { it.line = line } }
-                    CallE(MemberE(xs[ctx.size], n, false).also { it.line = line }, emptyList(), args, null).also { it.line = line }
+                    val args = (ctx + rest).zip(xs.take(ctx.size) + xs.drop(ctx.size + 1)) { p, x -> NamedE(p.name, x, line = line) }
+                    CallE(MemberE(xs[ctx.size], n, false, line = line), emptyList(), args, null, line = line)
                 }
                 // Its inferred type is `context(C) R.() -> T`, so calls through it fill the context from scope.
                 fnSig(g.t)!!.let { sg -> CtxRecvFnTypes.add(TypeRef("\$Fn", (sg.params + sg.ret).map { tyRef(it) }, false), ctx.size) }
@@ -4847,7 +4847,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val (ps, isProp) = memberParams(t, n, false) ?: fail("unknown member $typeName::$n")
             val g = lam(listOf(tr) + ps) { xs -> callOn(xs[0], n, xs.drop(1), isProp) }
             if (!isProp) return if (n.startsWith("\$af")) asRecvFn(g) else g
-            val st = if (fieldIsVar(t, n)) setLam(listOf(tr, tyRef(fnSig(g.t)!!.ret))) { xs -> MemberE(xs[0], n, false).also { it.line = line } } else null
+            val st = if (fieldIsVar(t, n)) setLam(listOf(tr, tyRef(fnSig(g.t)!!.ret))) { xs -> MemberE(xs[0], n, false, line = line) } else null
             return propRef(g, st, n)
         }
         // Bound reference: the receiver is evaluated once and captured.
@@ -4856,9 +4856,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         scopes.add(Scope())
         val l = declare("\$refRecv", r.t, false, r.owned && r.t.isRef)
         emit("store ${r.t.llvm} ${r.v}, ptr ${l.slot}")
-        val g0 = lam(ps) { xs -> callOn(NameE("\$refRecv").also { it.line = line }, n, xs, isProp) }
+        val g0 = lam(ps) { xs -> callOn(NameE("\$refRecv", line = line), n, xs, isProp) }
         val res = consume(if (!isProp) g0 else propRef(g0,
-            if (fieldIsVar(r.t, n)) setLam(listOf(tyRef(fnSig(g0.t)!!.ret))) { MemberE(NameE("\$refRecv").also { it.line = line }, n, false).also { it.line = line } } else null, n))
+            if (fieldIsVar(r.t, n)) setLam(listOf(tyRef(fnSig(g0.t)!!.ret))) { MemberE(NameE("\$refRecv", line = line), n, false, line = line) } else null, n))
         releaseScope(scopes.last()); scopes.removeAt(scopes.size - 1)
         return res
     }
@@ -4877,8 +4877,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (cname !in classes) {
             fun fwd(m: String, field: String, ps: List<Ty>, ret: Ty): FunD {
                 val names = ps.indices.map { "p$it" }
-                val call = CallE(MemberE(MemberE(NameE("this").also { it.line = line }, field, false).also { it.line = line }, "invoke", false).also { it.line = line },
-                    emptyList(), names.map { NameE(it).also { x -> x.line = line } }, null).also { it.line = line }
+                val call = CallE(MemberE(MemberE(NameE("this", line = line), field, false, line = line), "invoke", false, line = line),
+                    emptyList(), names.map { NameE(it, line = line) }, null, line = line)
                 return FunD(m, names.mapIndexed { i, x -> Param(x, tyRef(ps[i])) }, tyRef(ret), null, call, line)
             }
             val methods = listOfNotNull(fwd("invoke", "\$g", gs.params, gs.ret), fwd("get", "\$g", gs.params, gs.ret),
@@ -4893,7 +4893,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (setter != null) { val sl = declare("\$prs", setter.t, false, setter.owned); emit("store ptr ${setter.v}, ptr ${sl.slot}"); args.add(NameE("\$prs")) }
         args.add(strL(pname))
         args.forEach { it.line = line }
-        val v = consume(genNamedCall(cname, CallE(NameE(cname), emptyList(), args, null).also { it.line = line }))
+        val v = consume(genNamedCall(cname, CallE(NameE(cname), emptyList(), args, null, line = line)))
         releaseScope(scopes.last()); scopes.removeAt(scopes.size - 1)
         return v
     }
@@ -4940,7 +4940,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // Declared parameter types (`{ x: Int -> }`) must agree with the function type.
             b0.paramTypes.forEachIndexed { i, pt -> if (pt != null && resolve(pt) != rest[i]) fail("lambda parameter '${names[i]}' is declared ${resolve(pt)}, expected ${rest[i]}") }
             val b1 = RecvLambdas.map.getOrPut(b0) { Block(b0.stmts, listOf("this") + names.mapIndexed { i, n -> if (n == "_") "\$_$i" else n }, emptyList()) }
-            return genLambda(LambdaE(b1).also { it.line = e.line }, ps, ret, false, asRecvFn = true, susp = susp)
+            return genLambda(LambdaE(b1, line = e.line), ps, ret, false, asRecvFn = true, susp = susp)
         }
         val ptys0: List<Ty> = if (declared.isEmpty()) {
             ps ?: emptyList()
@@ -5004,7 +5004,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }.also { b0.rewritten = it }
         if (outer) caps.add("\$outer" to Ty.Cls(o!!.name))
         val lamBody = if (recvNames.isEmpty()) lamBody0 else RecvCaps.map.getOrPut(lamBody0) {
-            Subst(emptyMap(), { x -> if (x is NameE && x.n in recvNames) MemberE(NameE("\$recv"), x.n, false).also { it.line = x.line } else null }).block(lamBody0)
+            Subst(emptyMap(), { x -> if (x is NameE && x.n in recvNames) MemberE(NameE("\$recv"), x.n, false, line = x.line) else null }).block(lamBody0)
         }
         if (recvNames.isNotEmpty()) caps.add("\$recv" to recvL!!.t)
         // `this` of an enclosing extension / receiver lambda used in a plain lambda: captured as `$thisCap`
@@ -5012,7 +5012,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val ti = if ("this" in pnames) -1 else caps.indexOfFirst { it.first == "this" }
         val lamBodyT = if (ti < 0) lamBody else {
             caps[ti] = "\$thisCap" to caps[ti].second
-            ThisCaps.map.getOrPut(lamBody) { Subst(emptyMap(), { x -> if (x is NameE && x.n == "this") NameE("\$thisCap").also { it.line = x.line } else null }).block(lamBody) }
+            ThisCaps.map.getOrPut(lamBody) { Subst(emptyMap(), { x -> if (x is NameE && x.n == "this") NameE("\$thisCap", line = x.line) else null }).block(lamBody) }
         }
         val rt = when {
             ret == Ty.Unit -> Ty.Unit
@@ -5044,13 +5044,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (name !in classes) {
             // Implicit parameters are also context values (a lambda of a `context(A) () -> R` type).
             val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i]), ctx = declared.isEmpty() && !asRecvFn) }, tyRef(rt), null,
-                WhenE(null, listOf(WhenBranch(null, body1))).also { it.line = line }, line)
+                WhenE(null, listOf(WhenBranch(null, body1)), line = line), line)
             val cd = ClassD(name, caps.map { (n, t) -> FieldD(n, capRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line)
             // Recorded, and a placeholder of the lambda's type goes on (this pass's output is discarded, see generate).
             if (!degraded) missing.getOrPut(name) { NeedClass(cd) }
             return Val("null", fnT, false)
         }
-        val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "\$self" else if (n == "\$recv" || n == "\$thisCap") "this" else n).also { it.line = line } }, null))
+        val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "\$self" else if (n == "\$recv" || n == "\$thisCap") "this" else n, line = line) }, null))
         return Val(v.v, fnT, v.owned)
     }
 
@@ -5091,12 +5091,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val ps = methodParams(ci, n)
         val e0 = withCtx(ps, e00) ?: e00
         if (ps != null && (e0.args.any { it is NamedE } || allArgs(e0).size < ps.size || ps.any { it.vararg })) {
-            if (r.v == "%this") return callMethod0(r, ci, n, normalize(ps, e0, NameE("this").also { it.line = line }, ci))
+            if (r.v == "%this") return callMethod0(r, ci, n, normalize(ps, e0, NameE("this", line = line), ci))
             // The receiver is visible to default arguments as `$recv` (a fixed name keeps [normalize]'s memo valid).
             scopes.add(Scope())
             val l = declare("\$recv", r.t, false, false)
             emit("store ptr ${r.v}, ptr ${l.slot}")
-            try { return callMethod0(r, ci, n, normalize(ps, e0, NameE("\$recv").also { it.line = line }, ci)) } finally { scopes.removeAt(scopes.size - 1) }
+            try { return callMethod0(r, ci, n, normalize(ps, e0, NameE("\$recv", line = line), ci)) } finally { scopes.removeAt(scopes.size - 1) }
         }
         return callMethod0(r, ci, n, e0)
     }
@@ -5340,7 +5340,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         fun <T : E> T.l(): T = also { it.line = e.line }
         val sz = "\$isz${tmpN++}"; val fn = "\$ifn${tmpN++}"
         val call = CallE(NameE(fn).l(), emptyList(), listOf(NameE("it").l()), null).l()
-        val arr = CallE(e.callee, e.typeArgs, listOf(NameE(sz).l()), Block(listOf(ExprS(call).also { it.line = e.line }))).l()
+        val arr = CallE(e.callee, e.typeArgs, listOf(NameE(sz).l()), Block(listOf(ExprS(call, line = e.line)))).l()
         val stmts = listOf(VarS(sz, false, null, e.args[0]), VarS(fn, false, null, f), ExprS(arr)).onEach { it.line = e.line }
         return WhenE(null, listOf(WhenBranch(null, Block(stmts)))).l()
     }
@@ -5407,12 +5407,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val leafTys = leaves.map { p -> p.fold(t) { acc, fn -> classes.getValue((acc as Ty.Cls).name).fields.first { it.first == fn }.second } }.toSet()
         val elem = (leafTys.singleOrNull() as? Ty.Cls)?.name ?: if ("Any" in ifaces) "Any" else if (leaves.isEmpty()) "String"
             else fail("collectReferenceFieldValues() on $t needs Any (fields of different reference types)")
-        val list = genExpr(CallE(NameE("ArrayList").also { it.line = line }, listOf(TypeRef(elem, emptyList(), false)), emptyList(), null).also { it.line = line })
+        val list = genExpr(CallE(NameE("ArrayList", line = line), listOf(TypeRef(elem, emptyList(), false)), emptyList(), null, line = line))
         return withTemps(listOf(r, list)) { (x, l) ->
             for (p in leaves) {
-                val v: E = p.fold(x) { acc, fn -> MemberE(acc, fn, false).also { it.line = line } }
-                val add = CallE(MemberE(l, "add", false).also { it.line = line }, emptyList(), listOf(if (elem == "Any") AsE(v, TypeRef("Any", emptyList(), false), false).also { it.line = line } else v), null).also { it.line = line }
-                genStmt(ExprS(IfE(BinE(BinOp.NE, v, NullL().also { it.line = line }).also { it.line = line }, Block(listOf(ExprS(add).also { it.line = line })), null).also { it.line = line }).also { it.line = line })
+                val v: E = p.fold(x) { acc, fn -> MemberE(acc, fn, false, line = line) }
+                val add = CallE(MemberE(l, "add", false, line = line), emptyList(), listOf(if (elem == "Any") AsE(v, TypeRef("Any", emptyList(), false), false, line = line) else v), null, line = line)
+                genStmt(ExprS(IfE(BinE(BinOp.NE, v, NullL(line = line), line = line), Block(listOf(ExprS(add, line = line))), null, line = line), line = line))
             }
             genExpr(l)
         }
@@ -5424,7 +5424,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             val n = "\$tmp${tmpN++}"
             val l = declare(n, v.t, false, v.owned && v.t.isRef)
             emit("store ${v.t.llvm} ${v.v}, ptr ${l.slot}")
-            NameE(n).also { it.line = line } as E
+            NameE(n, line = line) as E
         }
         val r = consume(f(names))
         releaseScope(scopes.last()); scopes.removeAt(scopes.size - 1)
@@ -5472,7 +5472,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return Val(emitT("and i1 ${p.v}, ${q.v}"), Ty.I1)
         }
         val r = genExpr(re)
-        return withTemps(listOf(r)) { (rv) -> genExpr(CallE(MemberE(rv, "contains", false).also { it.line = line }, emptyList(), listOf(xe), null).also { it.line = line }) }
+        return withTemps(listOf(r)) { (rv) -> genExpr(CallE(MemberE(rv, "contains", false, line = line), emptyList(), listOf(xe), null, line = line)) }
     }
 
     private fun charOp(op: BinOp, a: Val, b: Val): Val {
@@ -5571,12 +5571,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (n !in STD_KCLASS && n !in classDecls) fail("class literal of $n is not supported")
         val q = STD_KCLASS[n] ?: n
         fun str(s: String) = strL(s).also { it.line = line }
-        return genExpr(CallE(NameE("KClass").also { it.line = line }, emptyList(), listOf(str(n), str(q)), null).also { it.line = line })
+        return genExpr(CallE(NameE("KClass", line = line), emptyList(), listOf(str(n), str(q)), null, line = line))
     }
 
     private fun identity(e: BinE): Val {
         val eq = if (e.op == BinOp.IDENT) BinOp.EQ else BinOp.NE
-        if (e.l is NullL || e.r is NullL) return genExpr(BinE(if (e.op == BinOp.IDENT) BinOp.EQ else BinOp.NE, e.l, e.r).also { it.line = e.line })
+        if (e.l is NullL || e.r is NullL) return genExpr(BinE(if (e.op == BinOp.IDENT) BinOp.EQ else BinOp.NE, e.l, e.r, line = e.line))
         val a = genExpr(e.l); val b = genExpr(e.r)
         fun refOk(t: Ty) = (t is Ty.Cls && !t.name.startsWith("AnyBox")) || (t is Ty.Iface && !isAny(t)) || t is Ty.Arr || t is Ty.ListTy || t is Ty.MapTy
         if (a.t.llvm != "ptr" && b.t.llvm != "ptr") return compare(eq, a, b)
@@ -5614,7 +5614,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             startBlock(lc2); br(lc)
             startBlock(lc)
             val r = coerce(withTemps(listOf(Val(a.v, a.t, false), Val(bb.v, bb.t, false))) { (x, y) ->
-                genExpr(CallE(MemberE(x, "equals", false).also { it.line = line }, emptyList(), listOf(y), null).also { it.line = line })
+                genExpr(CallE(MemberE(x, "equals", false, line = line), emptyList(), listOf(y), null, line = line))
             }, Ty.I1)
             val fromC = cur
             br(le)
@@ -5651,7 +5651,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             condBr(anyNull, le, lf)
             startBlock(lf)
             val eq = if (isData(a.t)) coerce(withTemps(listOf(Val(a.v, a.t, false), Val(b.v, b.t, false))) { (x, y) ->
-                genExpr(CallE(MemberE(x, "\$equals", false).also { it.line = line }, emptyList(), listOf(y), null).also { it.line = line })
+                genExpr(CallE(MemberE(x, "\$equals", false, line = line), emptyList(), listOf(y), null, line = line))
             }, Ty.I1) else {
                 val fa = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${a.v}, i32 0, i32 2")}"), ft)
                 val fb = Val(emitT("load ${ft.llvm}, ptr ${emitT("getelementptr ${ci.llType}, ptr ${b.v}, i32 0, i32 2")}"), ft)
@@ -5704,7 +5704,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return compare(op, Val(c, Ty.I32), Val("0", Ty.I32))
         }
         if (a.t is Ty.Cls && op in setOf(BinOp.LT, BinOp.GT, BinOp.LE, BinOp.GE) && "compareTo" in classes.getValue(a.t.name).methods) {
-            val c = withTemps(listOf(a, b)) { (x, y) -> genExpr(CallE(MemberE(x, "compareTo", false).also { it.line = line }, emptyList(), listOf(y), null).also { it.line = line }) }
+            val c = withTemps(listOf(a, b)) { (x, y) -> genExpr(CallE(MemberE(x, "compareTo", false, line = line), emptyList(), listOf(y), null, line = line)) }
             return compare(op, c, Val("0", Ty.I32))
         }
         if ((op == BinOp.EQ || op == BinOp.NE) && (a.t is Ty.NBox || b.t is Ty.NBox) && a.v != "null" && b.v != "null" &&

@@ -12,15 +12,15 @@ const val GETTER_TYPE = "\$GetterType"
 /** A piece of a string template: literal text ([StrText]) or an interpolated expression ([E]). */
 sealed interface StrPart
 class StrText(val s: String) : StrPart
-sealed class E : StrPart { var line = 0 }
-class IntL(val v: Long, val long: Boolean, val unsigned: Boolean = false) : E()
+sealed class E(line: Int) : StrPart { var line = line }
+class IntL(val v: Long, val long: Boolean, val unsigned: Boolean = false, line: Int = 0) : E(line)
 /** `x++` / `x--` used as an expression: yields the old value. */
-class PostIncE(val target: E, val op: String) : E()
-class CharL(val v: Long) : E()
-class DblL(val v: Double, val f32: Boolean = false) : E()
-class BoolL(val v: Boolean) : E()
-class NullL : E()
-class StrL(val parts: List<StrPart>) : E() {
+class PostIncE(val target: E, val op: String, line: Int = 0) : E(line)
+class CharL(val v: Long, line: Int = 0) : E(line)
+class DblL(val v: Double, val f32: Boolean = false, line: Int = 0) : E(line)
+class BoolL(val v: Boolean, line: Int = 0) : E(line)
+class NullL(line: Int = 0) : E(line)
+class StrL(val parts: List<StrPart>, line: Int = 0) : E(line) {
     /** No interpolation: the literal is [text]. */
     val isConstant: Boolean get() = parts.all { it is StrText }
     /** The text of a constant template. */
@@ -28,19 +28,19 @@ class StrL(val parts: List<StrPart>) : E() {
 }
 /** A string template from literal text pieces and expressions (`strL("a=", e)`). */
 fun strL(vararg ps: Any): StrL = StrL(ps.map { if (it is String) StrText(it) else it as E })
-class NameE(val n: String) : E()
-class CallE(val callee: E, val typeArgs: List<TypeRef>, val args: List<E>, val lambda: Block?) : E() {
+class NameE(val n: String, line: Int = 0) : E(line)
+class CallE(val callee: E, val typeArgs: List<TypeRef>, val args: List<E>, val lambda: Block?, line: Int = 0) : E(line) {
     /** Written as `a name b`: builtin non-infix members (Int.rem) cannot be called this way, so extensions win. */
     var infix = false
 }
 /** Named call argument `name = e` (only `copy` of data classes accepts these). */
-class NamedE(val name: String, val e: E) : E()
+class NamedE(val name: String, val e: E, line: Int = 0) : E(line)
 /** `e is T` / `e !is T`. */
-class IsE(val e: E, val type: TypeRef, val neg: Boolean) : E()
+class IsE(val e: E, val type: TypeRef, val neg: Boolean, line: Int = 0) : E(line)
 /** `e as T` / `e as? T`. */
-class AsE(val e: E, val type: TypeRef, val safe: Boolean) : E()
-class MemberE(val recv: E, val n: String, val safe: Boolean) : E()
-class IndexE(val recv: E, val idx: E) : E()
+class AsE(val e: E, val type: TypeRef, val safe: Boolean, line: Int = 0) : E(line)
+class MemberE(val recv: E, val n: String, val safe: Boolean, line: Int = 0) : E(line)
+class IndexE(val recv: E, val idx: E, line: Int = 0) : E(line)
 /** Binary operators, including the built-in infix functions the parser folds into [BinE]; [sym] is the source spelling. */
 enum class BinOp(val sym: String) {
     OR("||"), AND("&&"),
@@ -70,43 +70,43 @@ enum class UnOp(val sym: String) {
     override fun toString() = sym
 }
 
-class BinE(val op: BinOp, val l: E, val r: E) : E()
+class BinE(val op: BinOp, val l: E, val r: E, line: Int = 0) : E(line)
 /** [ref] is the referenced name exactly when [op] is [UnOp.REF]. */
-class UnE(val op: UnOp, val e: E, val ref: String?) : E() {
+class UnE(val op: UnOp, val e: E, val ref: String?, line: Int = 0) : E(line) {
     /** A non-reference unary operator. */
-    constructor(op: UnOp, e: E) : this(op, e, null)
+    constructor(op: UnOp, e: E, line: Int = 0) : this(op, e, null, line)
     init { require((op == UnOp.REF) == (ref != null)) { "UnE: callable reference name iff op is REF" } }
 }
-class IfE(val cond: E, val th: Block, val el: Block?) : E()
+class IfE(val cond: E, val th: Block, val el: Block?, line: Int = 0) : E(line)
 /** Lambda literal used as a value (function-typed); compiled to a closure object implementing a `$Fn...` interface. */
-class LambdaE(val body: Block) : E()
+class LambdaE(val body: Block, line: Int = 0) : E(line)
 /** `catch (name: type) { body }` clause of a [TryE]. */
 class Catch(val name: String, val type: TypeRef, val body: Block)
 /** `try { body } catch (...) { ... } finally { ... }` (an expression). */
-class TryE(val body: Block, val catches: List<Catch>, val fin: Block?) : E()
+class TryE(val body: Block, val catches: List<Catch>, val fin: Block?, line: Int = 0) : E(line)
 /** `conds == null` is the else branch. */
 /** One `when` branch: its conditions (null for `else`) and its body. */
 data class WhenBranch(val conds: List<E>?, val body: Block)
-class WhenE(val subj: E?, val branches: List<WhenBranch>) : E()
+class WhenE(val subj: E?, val branches: List<WhenBranch>, line: Int = 0) : E(line)
 
 /** A statement node; [line] is its source line, for errors. */
-sealed class S { var line = 0 }
-class VarS(val name: String, val isVar: Boolean, val type: TypeRef?, val init: E) : S()
-class AssignS(val target: E, val op: String, val value: E) : S()
-class IncS(val target: E, val op: String) : S()
+sealed class S(line: Int) { var line = line }
+class VarS(val name: String, val isVar: Boolean, val type: TypeRef?, val init: E, line: Int = 0) : S(line)
+class AssignS(val target: E, val op: String, val value: E, line: Int = 0) : S(line)
+class IncS(val target: E, val op: String, line: Int = 0) : S(line)
 /** `isDo`: `do { body } while (cond)` (the body runs before the first test). */
-class WhileS(val cond: E, val body: Block, val isDo: Boolean = false) : S() { var label: String? = null }
-class ForS(val name: String, val iter: E, val body: Block) : S() { var label: String? = null }
-class RetS(val e: E?) : S()
-class ExprS(val e: E) : S()
+class WhileS(val cond: E, val body: Block, val isDo: Boolean = false, line: Int = 0) : S(line) { var label: String? = null }
+class ForS(val name: String, val iter: E, val body: Block, line: Int = 0) : S(line) { var label: String? = null }
+class RetS(val e: E?, line: Int = 0) : S(line)
+class ExprS(val e: E, line: Int = 0) : S(line)
 /** `break` / `continue` (unlabeled: innermost loop). */
-class JumpS(val isBreak: Boolean) : S() { /** `break@l` / `continue@l`. */ var label: String? = null }
+class JumpS(val isBreak: Boolean, line: Int = 0) : S(line) { /** `break@l` / `continue@l`. */ var label: String? = null }
 
 /**
  * A function, class, object or interface declared inside a block (`d` is a [FunD], [ClassD] or [InterfaceD]).
  * Only the parser creates it; `Parser.liftLocals` replaces every one before later passes run.
  */
-class LocalDeclS(val d: Any) : S()
+class LocalDeclS(val d: Any, line: Int = 0) : S(line)
 
 /** `params` are lambda parameter names (empty = implicit `it`). */
 class Block(val stmts: List<S>, val params: List<String> = emptyList(), val paramTypes: List<TypeRef?> = emptyList()) {
