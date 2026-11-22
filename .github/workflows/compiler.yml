@@ -71,6 +71,11 @@ jobs:
       - uses: mlugg/setup-zig@v2
         with:
           version: 0.17.1
+      # The JVM target's runtime (KxRt.java) uses Math.unsignedMultiplyHigh (Java 18+); the image default is 17.
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
       - name: clang, opt, mimalloc and sqlite (ffi test)
         run: |
           sudo apt-get update
