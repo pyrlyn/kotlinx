@@ -39,6 +39,9 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
     const only = b.option([]const u8, "gc", "Collector to build/test (default: all)");
+    const bench_options = b.addOptions();
+    bench_options.addOption(usize, "object_size", b.option(usize, "bench-object-size", "Ops object bytes (minimum 40; default 40)") orelse 40);
+    bench_options.addOption(usize, "live_count", b.option(usize, "bench-live", "Ops live objects (power of two; default 65536)") orelse 65536);
 
     const kxgc = b.addModule("kxgc", .{ .root_source_file = b.path("src/kxgc.zig") });
     const host = b.addModule("host", .{
@@ -103,8 +106,21 @@ pub fn build(b: *std.Build) void {
     kxgc_lib.addImport("host_options", host_options);
     runtime_host_lib.addImport("host_options", host_options);
 
+    // wasm32-wasi (Node/Bun/Deno/browser via scripts/wasm/run.mjs) is single-threaded: no pthreads,
+    // so `epoch` (background collector threads) is not built there.
+    const is_wasm = target.result.cpu.arch.isWasm();
+    // The shadow stack sits at the bottom of linear memory, so its whole size is resident memory of
+    // every wasm instance. Zig's default is 16 MiB; the collectors use explicit work stacks. Optimized
+    // tests and benches peak under 32 KiB of it, the Debug test suite near 180 KiB (suite.zig `objRel`
+    // recurses down a 1000-object chain), so keep at least 256 KiB for Debug. Overflowing it traps
+    // (stack-first layout).
+    const wasm_stack = b.option(u64, "wasm-stack-size", "wasm shadow stack bytes (default 1 MiB)") orelse 1 << 20;
+    // DWARF is ~94% of an optimized wasm module (1.2 MiB of 1.3 MiB) and engines keep the module bytes.
+    const strip_opt = b.option(bool, "strip", "Strip debug info (default: optimized wasm builds)");
+
     for (all_gcs) |g| {
         if (only) |want| if (!std.mem.eql(u8, want, g)) continue;
+        if (is_wasm and std.mem.eql(u8, g, "epoch")) continue;
 
         const coll = b.createModule(.{
             .root_source_file = b.path(b.fmt("src/{s}.zig", .{g})),
@@ -125,6 +141,7 @@ pub fn build(b: *std.Build) void {
                 .target = target,
                 .optimize = optimize,
                 .link_libc = true,
+                .strip = if (strip_opt) |v| v else if (is_wasm and optimize != .debug) true else null,
                 .imports = &.{
                     .{ .name = "collector", .module = coll },
                     .{ .name = "kxgc", .module = kxgc },
@@ -132,32 +149,12 @@ pub fn build(b: *std.Build) void {
                 },
             }),
         });
+        if (is_wasm) suite.stack_size = wasm_stack;
         b.installArtifact(suite);
 
         const run = b.addRunArtifact(suite);
         run.has_side_effects = true;
         test_step.dependOn(&run.step);
-
-        if (std.mem.eql(u8, g, "epoch")) {
-            const inc_suite = b.addExecutable(.{
-                .name = "gc-test-epoch-incmajor",
-                .root_module = b.createModule(.{
-                    .root_source_file = b.path("tests/native/epoch_incmajor.zig"),
-                    .target = target,
-                    .optimize = optimize,
-                    .link_libc = true,
-                    .imports = &.{
-                        .{ .name = "collector", .module = coll },
-                        .{ .name = "kxgc", .module = kxgc },
-                        .{ .name = "host", .module = host },
-                    },
-                }),
-            });
-            b.installArtifact(inc_suite);
-            const inc_run = b.addRunArtifact(inc_suite);
-            inc_run.has_side_effects = true;
-            test_step.dependOn(&inc_run.step);
-        }
 
         const bcoll = b.createModule(.{
             .root_source_file = b.path(b.fmt("src/{s}.zig", .{g})),
@@ -177,6 +174,7 @@ pub fn build(b: *std.Build) void {
                 .target = target,
                 .optimize = bench_opt,
                 .link_libc = true,
+                .strip = if (strip_opt) |v| v else if (is_wasm) true else null,
                 .imports = &.{
                     .{ .name = "collector", .module = bcoll },
                     .{ .name = "kxgc", .module = kxgc },
@@ -185,12 +183,39 @@ pub fn build(b: *std.Build) void {
             }),
         });
         ops.lto = ops_lto;
+        if (is_wasm) ops.stack_size = wasm_stack;
+        ops.root_module.addOptions("bench_options", bench_options);
         b.installArtifact(ops);
 
         const run_ops = b.addRunArtifact(ops);
         run_ops.addPassthruArgs();
         run_ops.has_side_effects = true;
         bench_step.dependOn(&run_ops.step);
+
+        // Cycle-collector workload (perceus / incremental; epoch and rc print "skipped"), and size-class
+        // phases (peak memory when memory freed by one size class must serve the next), and random churn
+        // (free and replace objects in random order), and mass death under deferred RC (epoch; the others
+        // print "skipped").
+        for ([_][]const u8{ "cycles", "phases", "churn", "drop" }) |bench| {
+            const exe = b.addExecutable(.{
+                .name = b.fmt("gc-{s}-{s}", .{ bench, g }),
+                .root_module = b.createModule(.{
+                    .root_source_file = b.path(b.fmt("bench/native/{s}.zig", .{bench})),
+                    .target = target,
+                    .optimize = bench_opt,
+                    .link_libc = true,
+                    .strip = if (strip_opt) |v| v else if (is_wasm) true else null,
+                    .imports = &.{
+                        .{ .name = "collector", .module = bcoll },
+                        .{ .name = "kxgc", .module = kxgc },
+                        .{ .name = "host", .module = host_fast },
+                    },
+                }),
+            });
+            exe.lto = ops_lto;
+            if (is_wasm) exe.stack_size = wasm_stack;
+            b.installArtifact(exe);
+        }
 
         // Static library for KotlinX: collector + runtime_host (extern → runtime.c).
         const coll_rt = b.createModule(.{
@@ -233,5 +258,4 @@ pub fn build(b: *std.Build) void {
         const bc = b.addInstallFile(bc_lib.getEmittedLlvmBc(), b.fmt("lib/libgc-{s}.bc", .{g}));
         bc_step.dependOn(&bc.step);
     }
-
 }

@@ -1,4 +1,4 @@
-//! Scoped Zig smoke for the vendored native epoch collector (cf79057).
+//! Scoped Zig smoke for the vendored native epoch collector (pyrlyn/gc@a65a3f6).
 //! Uses explicit modules: kxgc (ABI), host (runtime-symbol adapter), epoch (collector).
 //! Separate process from the C smoke so host exports are not duplicated with runtime.c.
 const std = @import("std");
