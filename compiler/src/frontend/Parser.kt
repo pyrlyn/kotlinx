@@ -229,9 +229,9 @@ class Parser(toks: List<Tok>) {
         fun nm(n: String) = NameE(n).also { it.line = l }
         fun call(r: E, n: String) = CallE(MemberE(r, n, false).also { it.line = l }, emptyList(), emptyList(), null).also { it.line = l }
         if ("toString" !in have) {
-            val parts = ArrayList<Any>()
-            props.forEachIndexed { i, p -> parts.add((if (i == 0) c.name + "(" else ", ") + p.name + "="); parts.add(nm(p.name)) }
-            parts.add(if (props.isEmpty()) c.name + "()" else ")")
+            val parts = ArrayList<StrPart>()
+            props.forEachIndexed { i, p -> parts.add(StrText((if (i == 0) c.name + "(" else ", ") + p.name + "=")); parts.add(nm(p.name)) }
+            parts.add(StrText(if (props.isEmpty()) c.name + "()" else ")"))
             ms.add(FunD("toString", emptyList(), TypeRef("String", emptyList(), false), null, StrL(parts).also { it.line = l }, l))
         }
         props.forEachIndexed { i, p -> if ("component${i + 1}" !in have) ms.add(FunD("component${i + 1}", emptyList(), p.type, null, nm(p.name), l)) }
@@ -303,7 +303,7 @@ class Parser(toks: List<Tok>) {
         val r = ret ?: if (anon != null && e is CallE && (e.callee as? NameE)?.n == anon.name) TypeRef(anon.supers.firstOrNull() ?: anon.name, anon.superTypeArgs[anon.supers.firstOrNull()] ?: emptyList(), false) else null
         // No declared return type and the body is more than the object itself (`(object : A {}) as A`): keep an
         // expression body (a block-valued `when`) so the return type is inferred from the whole expression.
-        return if (r == null) FunD(name, params, null, null, WhenE(null, listOf(null to Block(ds + ExprS(e).also { it.line = line }))).also { it.line = line }, line, typeParams, recv, isSuspend = isSuspend)
+        return if (r == null) FunD(name, params, null, null, WhenE(null, listOf(WhenBranch(null, Block(ds + ExprS(e).also { it.line = line })))).also { it.line = line }, line, typeParams, recv, isSuspend = isSuspend)
         else FunD(name, params, r, Block(ds + RetS(e).also { it.line = line }), null, line, typeParams, recv, isSuspend = isSuspend)
     }
 
@@ -1131,7 +1131,7 @@ class Parser(toks: List<Tok>) {
         for (c in classes) {
             val es = c.enumEntries ?: continue
             es.forEachIndexed { i, (n, args) ->
-                val call = CallE(NameE(enumBodies["${c.name}$$n"] ?: c.name), emptyList(), listOf(StrL(listOf(n)), IntL(i.toLong(), false)) + args, null).also { it.line = c.line }
+                val call = CallE(NameE(enumBodies["${c.name}$$n"] ?: c.name), emptyList(), listOf(strL(n), IntL(i.toLong(), false)) + args, null).also { it.line = c.line }
                 gs.add(VarS("${c.name}$$n", false, TypeRef(c.name, emptyList(), false), call).also { it.line = c.line })
             }
             val list = CallE(NameE("arrayListOf"), listOf(TypeRef(c.name, emptyList(), false)), es.map { NameE("${c.name}$${it.first}") }, null).also { it.line = c.line }
@@ -1188,7 +1188,7 @@ class Parser(toks: List<Tok>) {
                     props.add(f); inits.add(f)
                     val constOwner = curClass ?: curObject
                     if (isConst && constOwner != null) ConstFields.names.add("$constOwner.$n")
-                    if (isConst && constOwner != null && (f.init is IntL || f.init is BoolL || f.init is CharL || f.init is DblL || (f.init is StrL && (f.init).parts.all { it is String })))
+                    if (isConst && constOwner != null && (f.init is IntL || f.init is BoolL || f.init is CharL || f.init is DblL || (f.init is StrL && f.init.isConstant)))
                         {
                             constVals["$constOwner.$n"] = f.init; if ('$' in constOwner) constVals["${constOwner.substringBefore('$')}.$n"] = f.init
                             // A compile-time constant has its value before any initializer runs (`val x = foo()`,
@@ -2378,7 +2378,7 @@ class Parser(toks: List<Tok>) {
         if (!hit) return f
         val decl = VarS(n, false, null, NameE("this").also { it.line = f.line }).also { it.line = f.line }
         return if (b != null) FunD(f.name, f.params, f.ret, Block(listOf(decl) + b.stmts), null, f.line, f.typeParams, f.recv, isSuspend = f.isSuspend)
-        else FunD(f.name, f.params, f.ret, null, WhenE(null, listOf(null to Block(listOf(decl, ExprS(eb!!).also { it.line = f.line })))).also { it.line = f.line }, f.line, f.typeParams, f.recv, isSuspend = f.isSuspend)
+        else FunD(f.name, f.params, f.ret, null, WhenE(null, listOf(WhenBranch(null, Block(listOf(decl, ExprS(eb!!).also { it.line = f.line }))))).also { it.line = f.line }, f.line, f.typeParams, f.recv, isSuspend = f.isSuspend)
     }
 
     /** Delegated local variables (`val x by d`) of the function body being parsed. */
@@ -2994,27 +2994,27 @@ class Parser(toks: List<Tok>) {
 
     /** `"literal".trimIndent()` / `.trimMargin()` on a constant string: folded at compile time. */
     private fun foldStr(e: E, a: List<E>, lam: Block?): E? {
-        if (e !is MemberE || e.recv !is StrL || lam != null || !(e.recv).parts.all { it is String }) return null
-        val text = (e.recv).parts.joinToString("") { it as String }
+        if (e !is MemberE || e.recv !is StrL || lam != null || !e.recv.isConstant) return null
+        val text = e.recv.text
         val r = when {
             e.n == "trimIndent" && a.isEmpty() -> text.trimIndent()
             e.n == "trimMargin" && a.isEmpty() -> text.trimMargin()
-            e.n == "trimMargin" && a.size == 1 && a[0] is StrL && (a[0] as StrL).parts.all { it is String } -> {
-                val prefix = (a[0] as StrL).parts.joinToString("") { it as String }
+            e.n == "trimMargin" && a.size == 1 && a[0] is StrL && (a[0] as StrL).isConstant -> {
+                val prefix = (a[0] as StrL).text
                 // Kotlin throws at run time for a blank prefix; keep that behaviour instead of crashing the compiler.
                 if (prefix.isBlank()) return CallE(NameE("\$throw").also { it.line = e.line }, emptyList(),
                     listOf(CallE(NameE("IllegalArgumentException").also { it.line = e.line }, emptyList(),
-                        listOf(StrL(listOf("marginPrefix must be non-blank string."))), null)), null)
+                        listOf(strL("marginPrefix must be non-blank string.")), null)), null)
                 text.trimMargin(prefix)
             }
             else -> return null
         }
-        return StrL(listOf(r))
+        return strL(r)
     }
 
     /** Arguments kept in place: literals, lambdas and spreads `*xs` (a spread is not a value of its own). */
     private fun constArg(a: E) = a is LambdaE || (a is UnE && a.op == "*") || a is IntL || a is BoolL || a is CharL || a is DblL || a is NullL ||
-        (a is StrL && a.parts.all { it is String })
+        (a is StrL && a.isConstant)
 
     /**
      * Kotlin evaluates call arguments in source order, but the backend places named arguments in parameter order.
@@ -3047,7 +3047,7 @@ class Parser(toks: List<Tok>) {
             }
         }
         val call = CallE(callee2, emptyList(), args, lam).also { it.line = line }
-        return WhenE(null, listOf(null to Block(pre + ExprS(call).also { it.line = line }))).also { it.line = line }
+        return WhenE(null, listOf(WhenBranch(null, Block(pre + ExprS(call).also { it.line = line })))).also { it.line = line }
     }
 
     private fun postfix(): E {
@@ -3119,7 +3119,7 @@ class Parser(toks: List<Tok>) {
             K.CHAR -> CharL(tk.num)
             K.DBL -> DblL(tk.dbl, tk.flt)
             K.STR -> StrL(tk.parts.map {
-                if (it is TemplateCode) Parser(Lexer(it.code, it.line).lex()).also { p -> p.depth[0] = 1 }.expr() else it
+                if (it is TemplateCode) Parser(Lexer(it.code, it.line).lex()).also { p -> p.depth[0] = 1 }.expr() else StrText(it as String)
             })
             K.ID -> when (tk.s) {
                 "object" -> if (isOp(":") || isOp("{")) anonObject(tk.line) else fail("unexpected 'object'", tk)
@@ -3145,7 +3145,7 @@ class Parser(toks: List<Tok>) {
                 "return", "break", "continue" -> {
                     p--
                     val j = stmt()
-                    WhenE(null, listOf(null to Block(listOf(j)))).also { it.line = tk.line }
+                    WhenE(null, listOf(WhenBranch(null, Block(listOf(j))))).also { it.line = tk.line }
                 }
                 // `this@C` in class C: the class instance even inside receiver lambdas (NativeBackend's `$self`).
                 "this" -> if (t[p].k == K.OP && t[p].s == "@" && t[p + 1].k == K.ID) { p++; val l = ident(); NameE(if (l == curClass) "\$self" else "this@$l") } else NameE("this")
@@ -3255,7 +3255,7 @@ class Parser(toks: List<Tok>) {
         val subj = if (isOp("(")) { next(); val s = nested(1) { expr() }; expectOp(")"); s } else null
         expectOp("{")
         val branches = nested(0) {
-            val bs = ArrayList<Pair<List<E>?, Block>>()
+            val bs = ArrayList<WhenBranch>()
             while (true) {
                 skipNL()
                 if (isOp("}")) break
@@ -3265,7 +3265,7 @@ class Parser(toks: List<Tok>) {
                     cs
                 }
                 expectOp("->")
-                bs.add(conds to controlBody())
+                bs.add(WhenBranch(conds, controlBody()))
             }
             bs
         }

@@ -332,7 +332,7 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
         is IfE -> IfE(e(x.cond), block(x.th), blockN(x.el))
         is LambdaE -> LambdaE(block(x.body))
         is TryE -> TryE(block(x.body), x.catches.map { Catch(it.name, ty(it.type), block(it.body)) }, blockN(x.fin))
-        is WhenE -> WhenE(x.subj?.let { e(it) }, x.branches.map { (c, b) -> c?.map { e(it) } to block(b) })
+        is WhenE -> WhenE(x.subj?.let { e(it) }, x.branches.map { (c, b) -> WhenBranch(c?.map { e(it) }, block(b)) })
     }.also { if (it !== x) it.line = x.line }
 }
 

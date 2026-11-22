@@ -2009,7 +2009,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             }
             is IfE -> commonType(listOfNotNull(tailOf(e.th), tailOf(e.el)).takeIf { e.el != null && expected.none { x -> x.first === tailOf(e.th) } } ?: emptyList())
                 ?.let { t -> withExpected(e, t) { genIf(e) } } ?: genIf(e)
-            is WhenE -> commonType(e.branches.mapNotNull { tailOf(it.second) }.takeIf { l -> l.none { x -> expected.any { it.first === x } } } ?: emptyList())
+            is WhenE -> commonType(e.branches.mapNotNull { tailOf(it.body) }.takeIf { l -> l.none { x -> expected.any { it.first === x } } } ?: emptyList())
                 ?.let { t -> withExpected(e, t) { genWhen(e) } } ?: genWhen(e)
             is TryE -> genTry(e, true)
         }
@@ -2321,8 +2321,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
      */
     private fun sealedExhaustive(e: WhenE, subj: Val?): Boolean {
         val tn = when (val t = subj?.t) { is Ty.Cls -> t.name; is Ty.Iface -> t.name; else -> return false }
-        if (e.branches.any { it.first == null } || classDecls[tn]?.enumEntries?.isNotEmpty() == true) return false
-        val conds = e.branches.flatMap { it.first!! }
+        if (e.branches.any { it.conds == null } || classDecls[tn]?.enumEntries?.isNotEmpty() == true) return false
+        val conds = e.branches.flatMap { it.conds!! }
         if (conds.any { !(it is IsE && !it.neg && isSubjCond(it)) }) return false
         val covered = conds.map { (it as IsE).type.name }
         fun sub(c: ClassInfo, t: String): Boolean = c.name == t || t in c.ancestors ||
@@ -2340,8 +2340,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         var hasElse = false
         // A subject of enum type whose branches name every entry is exhaustive: the last branch acts as `else`.
         val entries = (subj?.t as? Ty.Cls)?.let { t -> classDecls[t.name]?.enumEntries?.map { "${t.name}$${it.first}" } }
-        val exhaustive = (entries != null && e.branches.none { it.first == null } &&
-            e.branches.flatMap { b -> b.first!!.map { (it as? NameE)?.n } }.containsAll(entries))
+        val exhaustive = (entries != null && e.branches.none { it.conds == null } &&
+            e.branches.flatMap { b -> b.conds!!.map { (it as? NameE)?.n } }.containsAll(entries))
         // Sealed hierarchies keep every `is` test (for the smart casts); falling through all of them cannot happen.
         val sealedEx = !exhaustive && sealedExhaustive(e, subj)
         for ((bi, br0) in e.branches.withIndex()) {
@@ -2357,7 +2357,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             var c: String? = null
             for (ce in conds) {
                 // After `!is Float ->` / `!is Double ->`, an `Any` subject is smart-cast: compare a literal with IEEE `==`.
-                val fpCast = if (subj != null && isAny(subj.t) && ce is DblL) e.branches.take(bi).any { b -> b.first?.singleOrNull()?.let { it is IsE && it.neg && isSubjCond(it) && it.type.name == (if (ce.f32) "Float" else "Double") && !it.type.nullable } == true } else false
+                val fpCast = if (subj != null && isAny(subj.t) && ce is DblL) e.branches.take(bi).any { b -> b.conds?.singleOrNull()?.let { it is IsE && it.neg && isSubjCond(it) && it.type.name == (if (ce.f32) "Float" else "Double") && !it.type.nullable } == true } else false
                 val x = if (fpCast) compare("==", unbox(Val(subj!!.v, subj.t, false), if ((ce as DblL).f32) Ty.F32 else Ty.F64), genExpr(ce)).v
                 else if (subj != null && !isSubjCond(ce)) compare("==", Val(subj.v, subj.t, false), genExpr(ce)).v else coerce(genExpr(ce), Ty.I1).v
                 c = if (c == null) x else emitT("or i1 $c, $x")
@@ -2381,11 +2381,13 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     }
 
     private fun genTemplate(e: StrL): Val {
-        if (e.parts.all { it is String }) return Val(cstr(e.parts.joinToString("")), Ty.Str)
+        if (e.isConstant) return Val(cstr(e.text), Ty.Str)
         val sb = emitT("call ptr @rt_sb_new()")
         for (p in e.parts) {
-            if (p is String) { if (p.isNotEmpty()) emit("call void @rt_sb_str(ptr $sb, ptr ${cstr(p)})") }
-            else appendVal("rt_sb_", "ptr $sb, ", genExpr(p as E))
+            when (p) {
+                is StrText -> if (p.s.isNotEmpty()) emit("call void @rt_sb_str(ptr $sb, ptr ${cstr(p.s)})")
+                is E -> appendVal("rt_sb_", "ptr $sb, ", genExpr(p))
+            }
         }
         return Val(emitT("call ptr @rt_sb_done(ptr $sb)"), Ty.Str, true)
     }
@@ -2834,7 +2836,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private val ifaceDecls by lazy { prog.ifaces.associateBy { it.name } }
 
     /** Simple argument expressions that can be duplicated into default arguments. */
-    private fun simpleArg(a: E) = a is NameE || a is IntL || a is BoolL || a is CharL || a is DblL || a is NullL || (a is StrL && a.parts.all { it is String })
+    private fun simpleArg(a: E) = a is NameE || a is IntL || a is BoolL || a is CharL || a is DblL || a is NullL || (a is StrL && a.isConstant)
 
     /**
      * Positional arguments for a call of a function with [params]: named arguments are put in place (evaluated in
@@ -3126,8 +3128,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             "println", "print" -> {
                 val a = e.args.singleOrNull()
                 if (a is StrL) for (p in a.parts) {
-                    if (p is String) { if (p.isNotEmpty()) emit("call void @rt_print_str(ptr ${cstr(p)})") }
-                    else appendVal("rt_print_", "", genExpr(p as E))
+                    when (p) {
+                        is StrText -> if (p.s.isNotEmpty()) emit("call void @rt_print_str(ptr ${cstr(p.s)})")
+                        is E -> appendVal("rt_print_", "", genExpr(p))
+                    }
                 } else if (a != null) {
                     val v = genExpr(a)
                     appendVal("rt_print_", "", v)  // releases an owned nullable-primitive box
@@ -3170,12 +3174,12 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             "assertTrue", "assertFalse", "assertEquals", "assertNotEquals", "assertNull", "assertNotNull" -> {
                 val a = e.args
                 val (cond, msg) = when (n) {
-                    "assertTrue" -> a[0] to StrL(listOf("Expected value to be true."))
-                    "assertFalse" -> UnE("!", a[0]) to StrL(listOf("Expected value to be false."))
-                    "assertNull" -> BinE("==", a[0], NullL()) to StrL(listOf("Expected value to be null, but was: <", a[0], ">."))
-                    "assertNotNull" -> BinE("!=", a[0], NullL()) to StrL(listOf("Expected value to be not null."))
-                    "assertEquals" -> BinE("==", a[0], a[1]) to StrL(listOf("Expected <", a[0], ">, actual <", a[1], ">."))
-                    else -> BinE("!=", a[0], a[1]) to StrL(listOf("Illegal value: <", a[1], ">."))
+                    "assertTrue" -> a[0] to strL("Expected value to be true.")
+                    "assertFalse" -> UnE("!", a[0]) to strL("Expected value to be false.")
+                    "assertNull" -> BinE("==", a[0], NullL()) to strL("Expected value to be null, but was: <", a[0], ">.")
+                    "assertNotNull" -> BinE("!=", a[0], NullL()) to strL("Expected value to be not null.")
+                    "assertEquals" -> BinE("==", a[0], a[1]) to strL("Expected <", a[0], ">, actual <", a[1], ">.")
+                    else -> BinE("!=", a[0], a[1]) to strL("Illegal value: <", a[1], ">.")
                 }
                 listOf(cond, msg).forEach { it.line = line }
                 val c = coerce(genExpr(cond), Ty.I1)
@@ -3191,7 +3195,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             "assertFailsWith", "assertFails" -> if (excMode && e.lambda != null) {
                 val t = e.typeArgs.singleOrNull() ?: TypeRef("Throwable", emptyList(), false)
                 val v = "\$af${tmpN++}"
-                val msg = StrL(listOf("Expected an exception of $t to be thrown, but was completed successfully."))
+                val msg = strL("Expected an exception of $t to be thrown, but was completed successfully.")
                 val thr = CallE(NameE("\$throw"), emptyList(), listOf(CallE(NameE("AssertionError"), emptyList(), listOf(msg), null)), null)
                 val body = Block(e.lambda.stmts + ExprS(thr).also { it.line = line })
                 return genTry(TryE(body, listOf(Catch(v, t, Block(listOf(ExprS(NameE(v).also { it.line = line }).also { it.line = line })))), null), true)
@@ -3835,7 +3839,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         fun b(x: Block?) = x != null && hasReturn(x.stmts)
         fun e(x: E?): Boolean = when (x) {
             is IfE -> e(x.cond) || b(x.th) || b(x.el)
-            is WhenE -> x.branches.any { b(it.second) }
+            is WhenE -> x.branches.any { b(it.body) }
             is TryE -> b(x.body) || x.catches.any { b(it.body) } || b(x.fin)
             is BinE -> e(x.l) || e(x.r)
             // A nested `with` with a return is expanded in place too: its return leaves the enclosing function.
@@ -4688,7 +4692,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             when (x) {
                 is CallE -> tails.add(x)
                 is IfE -> { collect((x.th.stmts.lastOrNull() as? ExprS)?.e); collect((x.el?.stmts?.lastOrNull() as? ExprS)?.e) }
-                is WhenE -> x.branches.forEach { collect((it.second.stmts.lastOrNull() as? ExprS)?.e) }
+                is WhenE -> x.branches.forEach { collect((it.body.stmts.lastOrNull() as? ExprS)?.e) }
                 else -> {}
             }
         }
@@ -4955,7 +4959,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         emit("store ptr ${getter.v}, ptr ${gl.slot}")
         val args = arrayListOf<E>(NameE("\$prg"))
         if (setter != null) { val sl = declare("\$prs", setter.t, false, setter.owned); emit("store ptr ${setter.v}, ptr ${sl.slot}"); args.add(NameE("\$prs")) }
-        args.add(StrL(listOf(pname)))
+        args.add(strL(pname))
         args.forEach { it.line = line }
         val v = consume(genNamedCall(cname, CallE(NameE(cname), emptyList(), args, null).also { it.line = line }))
         releaseScope(scopes.last()); scopes.removeAt(scopes.size - 1)
@@ -5108,7 +5112,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         if (name !in classes) {
             // Implicit parameters are also context values (a lambda of a `context(A) () -> R` type).
             val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i]), ctx = declared.isEmpty() && !asRecvFn) }, tyRef(rt), null,
-                WhenE(null, listOf(null to body1)).also { it.line = line }, line)
+                WhenE(null, listOf(WhenBranch(null, body1))).also { it.line = line }, line)
             val cd = ClassD(name, caps.map { (n, t) -> FieldD(n, capRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line)
             // Recorded, and a placeholder of the lambda's type goes on (this pass's output is discarded, see generate).
             missingLambdas.getOrPut(name) { NeedClass(cd) }
@@ -5388,7 +5392,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             rest.map { x -> ExprS(if (isSpread(x)) call(NameE(v).l(), "addAll", emptyList(), listOf(part(x))) else call(NameE(v).l(), "add", emptyList(), listOf(x))) } +
             ExprS(end(v))
         ss.forEach { it.line = l }
-        return WhenE(null, listOf(null to Block(ss))).l()
+        return WhenE(null, listOf(WhenBranch(null, Block(ss)))).l()
     }
 
     /**
@@ -5404,7 +5408,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val call = CallE(NameE(fn).l(), emptyList(), listOf(NameE("it").l()), null).l()
         val arr = CallE(e.callee, e.typeArgs, listOf(NameE(sz).l()), Block(listOf(ExprS(call).also { it.line = e.line }))).l()
         val stmts = listOf(VarS(sz, false, null, e.args[0]), VarS(fn, false, null, f), ExprS(arr)).onEach { it.line = e.line }
-        return WhenE(null, listOf(null to Block(stmts))).l()
+        return WhenE(null, listOf(WhenBranch(null, Block(stmts)))).l()
     }
 
     private fun initLambda(e: CallE): Block? = e.lambda ?: (e.args.getOrNull(1) as? LambdaE)?.takeIf { e.args.size == 2 }?.body
@@ -5632,7 +5636,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         }
         if (n !in STD_KCLASS && n !in classDecls) fail("class literal of $n is not supported")
         val q = STD_KCLASS[n] ?: n
-        fun str(s: String) = StrL(listOf(s)).also { it.line = line }
+        fun str(s: String) = strL(s).also { it.line = line }
         return genExpr(CallE(NameE("KClass").also { it.line = line }, emptyList(), listOf(str(n), str(q)), null).also { it.line = line })
     }
 

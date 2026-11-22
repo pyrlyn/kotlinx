@@ -9,7 +9,10 @@ class TypeRef(val name: String, val args: List<TypeRef>, val nullable: Boolean) 
 const val GETTER_TYPE = "\$GetterType"
 
 /** An expression node; [line] is its source line, for errors. */
-sealed class E { var line = 0 }
+/** A piece of a string template: literal text ([StrText]) or an interpolated expression ([E]). */
+sealed interface StrPart
+class StrText(val s: String) : StrPart
+sealed class E : StrPart { var line = 0 }
 class IntL(val v: Long, val long: Boolean, val unsigned: Boolean = false) : E()
 /** `x++` / `x--` used as an expression: yields the old value. */
 class PostIncE(val target: E, val op: String) : E()
@@ -17,7 +20,14 @@ class CharL(val v: Long) : E()
 class DblL(val v: Double, val f32: Boolean = false) : E()
 class BoolL(val v: Boolean) : E()
 class NullL : E()
-class StrL(val parts: List<Any>) : E() // String or E
+class StrL(val parts: List<StrPart>) : E() {
+    /** No interpolation: the literal is [text]. */
+    val isConstant: Boolean get() = parts.all { it is StrText }
+    /** The text of a constant template. */
+    val text: String get() = parts.joinToString("") { (it as StrText).s }
+}
+/** A string template from literal text pieces and expressions (`strL("a=", e)`). */
+fun strL(vararg ps: Any): StrL = StrL(ps.map { if (it is String) StrText(it) else it as E })
 class NameE(val n: String) : E()
 class CallE(val callee: E, val typeArgs: List<TypeRef>, val args: List<E>, val lambda: Block?) : E() {
     /** Written as `a name b`: builtin non-infix members (Int.rem) cannot be called this way, so extensions win. */
@@ -41,7 +51,9 @@ class Catch(val name: String, val type: TypeRef, val body: Block)
 /** `try { body } catch (...) { ... } finally { ... }` (an expression). */
 class TryE(val body: Block, val catches: List<Catch>, val fin: Block?) : E()
 /** `conds == null` is the else branch. */
-class WhenE(val subj: E?, val branches: List<Pair<List<E>?, Block>>) : E()
+/** One `when` branch: its conditions (null for `else`) and its body. */
+data class WhenBranch(val conds: List<E>?, val body: Block)
+class WhenE(val subj: E?, val branches: List<WhenBranch>) : E()
 
 /** A statement node; [line] is its source line, for errors. */
 sealed class S { var line = 0 }
