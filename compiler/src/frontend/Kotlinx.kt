@@ -225,16 +225,21 @@ private fun splitTop(s: String): List<String> {
 }
 
 /**
- * The kotlinx.serialization plugin: for every `@Serializable class X` appends `class X_KxSerializer : KSerializer<X>`
- * with a singleton `X_kxSerializer`
- * (JSON object with the primary-constructor properties in order) and rewrites `X.serializer()` to the singleton. Works on source
- * text so line numbers of user code are unchanged.
+ * The kotlinx.serialization plugin: for every `@Serializable class X` generates `class X_KxSerializer : KSerializer<X>`
+ * with a singleton `X_kxSerializer` (JSON object with the primary-constructor properties in order), returned as source
+ * text to append, and rewrites the program's tokens: `X.serializer()` -> `X_kxSerializer`, `decodeFromString<X>(` ->
+ * `decodeFromString(X_kxSerializer, ` and the same for `encodeToString`. Token rewrites keep the line numbers of user
+ * code and leave string literals alone. Null when the program declares no @Serializable class.
  */
-fun withSerializable(src: String): String {
-    val names = SERIALIZABLE_CLASS.findAll(src).map { it.groupValues[1] }.toList()
-    val enums = SERIALIZABLE_ENUM.findAll(src).map { it.groupValues[1] }.toList()
-    if (names.isEmpty() && enums.isEmpty()) return src
-    val prog = Parser(Lexer(src).lex()).program()
+fun withSerializable(src: String, toks: List<Tok>): Pair<List<Tok>, String>? {
+    val names0 = SERIALIZABLE_CLASS.findAll(src).map { it.groupValues[1] }.toList()
+    val enums0 = SERIALIZABLE_ENUM.findAll(src).map { it.groupValues[1] }.toList()
+    if (names0.isEmpty() && enums0.isEmpty()) return null
+    val prog = Parser(toks).program()
+    // The annotation is found in the text; a match inside a string literal names no declared class and is ignored.
+    val declared = prog.classes.map { it.name }.toSet()
+    val names = names0.filter { it in declared }; val enums = enums0.filter { it in declared }
+    if (names.isEmpty() && enums.isEmpty()) return null
     val gen = StringBuilder()
     var n = 0
     fun ty(t: TypeRef): String = t.name + (if (t.args.isEmpty()) "" else t.args.joinToString(", ", "<", ">") { ty(it) }) + (if (t.nullable) "?" else "")
@@ -289,7 +294,6 @@ fun withSerializable(src: String): String {
             else -> throw CompileError("@Serializable: unsupported property type ${ty(t)}")
         }
     }
-    var out = src
     for (name in names) {
         val c = prog.classes.firstOrNull { it.name == name } ?: throw CompileError("@Serializable class $name not found")
         val ps = c.ctorParams
@@ -311,15 +315,32 @@ fun withSerializable(src: String): String {
         gen.append("class ${name}_KxSerializer : KSerializer<$name> {\n" +
             "    override fun serialize(value: $name): JsonElement { val b = JsonObjectBuilder(); $encs; return b.build() }\n" +
             "    override fun deserialize(element: JsonElement): $name { val o = kxObj(element, \"$name\"); $decs return $name($args) }\n}\n")
-        out = out.replace(Regex("""\b$name\.serializer\(\)"""), "${name}_kxSerializer")
         gen.append("val ${name}_kxSerializer: KSerializer<$name> = ${name}_KxSerializer()\n")
     }
-    // Reified forms: `Json.decodeFromString<T>(s)` and `Json.encodeToString<T>(v)` name the serializer.
-    for (name in names) {
-        out = out.replace(Regex("""\bdecodeFromString<$name>\("""), "decodeFromString(${name}_kxSerializer, ")
-        out = out.replace(Regex("""\bencodeToString<$name>\("""), "encodeToString(${name}_kxSerializer, ")
+    return rewriteSerializerRefs(toks, names.toSet()) to gen.toString()
+}
+
+/** `X.serializer()` -> `X_kxSerializer`; `decodeFromString<X>(` / `encodeToString<X>(` -> `...(X_kxSerializer, `. */
+private fun rewriteSerializerRefs(toks: List<Tok>, names: Set<String>): List<Tok> {
+    fun op(t: Tok, s: String) = t.k == K.OP && t.s == s
+    fun id(t: Tok, s: String) = t.k == K.ID && t.s == s
+    val out = ArrayList<Tok>(toks.size)
+    var i = 0
+    while (i < toks.size) {
+        val t = toks[i]
+        if (t.k == K.ID && t.s in names && i + 4 < toks.size && op(toks[i + 1], ".") && id(toks[i + 2], "serializer") &&
+            op(toks[i + 3], "(") && op(toks[i + 4], ")") && !(i > 0 && op(toks[i - 1], "::"))) {
+            out.add(Tok(K.ID, "${t.s}_kxSerializer", t.line)); i += 5; continue
+        }
+        if ((id(t, "decodeFromString") || id(t, "encodeToString")) && i + 4 < toks.size && op(toks[i + 1], "<") &&
+            toks[i + 2].k == K.ID && toks[i + 2].s in names && op(toks[i + 3], ">") && op(toks[i + 4], "(")) {
+            val l = toks[i + 2].line
+            out.add(t); out.add(Tok(K.OP, "(", l)); out.add(Tok(K.ID, "${toks[i + 2].s}_kxSerializer", l)); out.add(Tok(K.OP, ",", l))
+            i += 5; continue
+        }
+        out.add(t); i++
     }
-    return out + "\n" + gen
+    return out
 }
 
 /**
