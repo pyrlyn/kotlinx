@@ -61,6 +61,11 @@ class NeedInstance(val name: String, val args: List<TypeRef>) : Exception()
 class NeedClass(val cd: ClassD) : Exception()
 /** Code needs a function-type interface `$Fn<params..., ret>`; [compileGenerics] adds it and retries. */
 class NeedIface(val d: InterfaceD) : Exception()
+/**
+ * Several of the above found in one generation pass: a lambda whose closure class is missing is recorded and replaced
+ * by a placeholder value, so the pass goes on and collects the other missing classes instead of restarting per lambda.
+ */
+class NeedBatch(val needs: List<Exception>) : Exception()
 
 /** LLVM instructions of the arithmetic operators, by operand kind (see NativeBackend.arith). */
 private val FP_OPS = mapOf("+" to "fadd", "-" to "fsub", "*" to "fmul", "/" to "fdiv", "%" to "frem")
@@ -413,7 +418,20 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     // ---------------------------------------------------------------- program
 
+    /** Closure classes missing in this pass, by name (see [NeedBatch]); the pass's IR is discarded when any are. */
+    private val missingLambdas = LinkedHashMap<String, NeedClass>()
+
     fun generate(): String {
+        val ir = try { generatePass() } catch (e: Exception) {
+            // With placeholders in play a later error may be an artifact of them: the next pass decides.
+            if (missingLambdas.isEmpty() || e is NeedBatch) throw e
+            throw NeedBatch(missingLambdas.values.toList<Exception>() + listOfNotNull(e.takeIf { it is NeedClass || it is NeedInstance || it is NeedIface }))
+        }
+        if (missingLambdas.isNotEmpty()) throw NeedBatch(missingLambdas.values.toList())
+        return ir
+    }
+
+    private fun generatePass(): String {
         for (c in prog.classes) classes[c.name] = ClassInfo(c.name, emptyList())
         for (i in prog.ifaces) ifaces[i.name] = IfaceInfo(i.name, emptyMap())
         for (i in prog.ifaces) {
@@ -5091,7 +5109,10 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             // Implicit parameters are also context values (a lambda of a `context(A) () -> R` type).
             val m = FunD("invoke", pnames.mapIndexed { i, n -> Param(n, tyRef(ptys[i]), ctx = declared.isEmpty() && !asRecvFn) }, tyRef(rt), null,
                 WhenE(null, listOf(null to body1)).also { it.line = line }, line)
-            throw NeedClass(ClassD(name, caps.map { (n, t) -> FieldD(n, capRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line))
+            val cd = ClassD(name, caps.map { (n, t) -> FieldD(n, capRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line)
+            // Recorded, and a placeholder of the lambda's type goes on (this pass's output is discarded, see generate).
+            missingLambdas.getOrPut(name) { NeedClass(cd) }
+            return Val("null", fnT, false)
         }
         val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "\$self" else if (n == "\$recv" || n == "\$thisCap") "this" else n).also { it.line = line } }, null))
         return Val(v.v, fnT, v.owned)

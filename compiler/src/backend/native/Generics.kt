@@ -4,7 +4,7 @@ package newkotlin
  * Generic classes are monomorphized: `class Box<T>` is never compiled itself; every type-argument list used by the
  * program (`Box<Int>`, `Box<String>`) becomes a plain class `Box$Int` / `Box$String` with T substituted in its AST.
  * Instances are discovered during code generation ([NeedInstance]); the class is added and generation restarts,
- * until the instance set is closed. Each instance has exact field types, so primitives stay unboxed and the
+ * until the instance set is closed (missing closure classes are collected per pass, [NeedBatch]). Each instance has exact field types, so primitives stay unboxed and the
  * Perceus RC / cycle analysis (cyclic classes, field release functions) is computed per instance.
  */
 /** Overloaded top-level functions: source name -> renamed declarations (`f$ov0`, ...), resolved per call by the backend. */
@@ -56,6 +56,35 @@ fun compileGenerics(p00: Program): String {
     fun fixSupers(c: ClassD): ClassD = if (c.superTypeArgs.keys.all { isFnSuper(it) }) c else
         ClassD(c.name, c.fields, c.supers.map { s -> if (isFnSuper(s)) s else c.superTypeArgs[s]?.let { ensure(s, it) } ?: s }, c.methods, c.line, c.ctorParams,
             c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs.filterKeys { isFnSuper(it) })
+    /** Adds what one generation pass found missing; the pass is then redone with it. */
+    fun addNeed(x: Exception) {
+        when (x) {
+            is NeedClass -> {
+                if (x.cd.name in extraClasses) throw CompileError("internal: class ${x.cd.name} requested twice")
+                if (extraClasses.size >= 5000) throw CompileError("too many lambda classes")
+                extraClasses[x.cd.name] = x.cd
+            }
+            is NeedIface -> {
+                if (x.d.name in extraIfaces) throw CompileError("internal: interface ${x.d.name} requested twice")
+                extraIfaces[x.d.name] = x.d
+            }
+            is NeedInstance -> {
+                val m = mangle(x.name, x.args)
+                if (x.name in genericIfaces) {
+                    if (m in ifaceInst) throw CompileError("internal: interface instance $m requested twice")
+                    ensure(x.name, x.args); return
+                }
+                if (m in inst) throw CompileError("internal: instance $m requested twice")
+                if (inst.size >= 1000) throw CompileError("too many generic class instances (recursive generic type?)")
+                val cd = generic.getValue(x.name)
+                origin[m] = x.name to x.args
+                // `C<Nothing>`: members of type `Nothing` hold no value; typed `Nothing?` (a null pointer) in the instance.
+                val args = x.args.map { if (it.name == "Nothing" && !it.nullable && it.args.isEmpty()) TypeRef("Nothing", emptyList(), true) else it }
+                inst[m] = Subst(cd.typeParams.zip(args).toMap()).cls(cd, m)
+            }
+            else -> throw x
+        }
+    }
     while (true) {
         var cls = (p0.classes.filter { it.typeParams.isEmpty() } + extraClasses.values).map { fixSupers(it) }
         while (true) {
@@ -72,26 +101,14 @@ fun compileGenerics(p00: Program): String {
         val prog = Program(p0.funs, cls, plainIfaces + ifaceInst.values + extraIfaces.values, p0.globals, p0.companions)
         try {
             return NativeBackend(prog, generic, origin, genericIfaces).generate()
+        } catch (n: NeedBatch) {
+            for (x in n.needs) addNeed(x)
         } catch (n: NeedClass) {
-            if (n.cd.name in extraClasses) throw CompileError("internal: class ${n.cd.name} requested twice")
-            if (extraClasses.size >= 5000) throw CompileError("too many lambda classes")
-            extraClasses[n.cd.name] = n.cd
+            addNeed(n)
         } catch (n: NeedIface) {
-            if (n.d.name in extraIfaces) throw CompileError("internal: interface ${n.d.name} requested twice")
-            extraIfaces[n.d.name] = n.d
+            addNeed(n)
         } catch (n: NeedInstance) {
-            val m = mangle(n.name, n.args)
-            if (n.name in genericIfaces) {
-                if (m in ifaceInst) throw CompileError("internal: interface instance $m requested twice")
-                ensure(n.name, n.args); continue
-            }
-            if (m in inst) throw CompileError("internal: instance $m requested twice")
-            if (inst.size >= 1000) throw CompileError("too many generic class instances (recursive generic type?)")
-            val cd = generic.getValue(n.name)
-            origin[m] = n.name to n.args
-            // `C<Nothing>`: members of type `Nothing` hold no value; typed `Nothing?` (a null pointer) in the instance.
-            val args = n.args.map { if (it.name == "Nothing" && !it.nullable && it.args.isEmpty()) TypeRef("Nothing", emptyList(), true) else it }
-            inst[m] = Subst(cd.typeParams.zip(args).toMap()).cls(cd, m)
+            addNeed(n)
         }
     }
 }
