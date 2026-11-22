@@ -30,3 +30,9 @@ bin/newkotlinc /tmp/hello.kt -o /tmp/hello   # works from any directory
 - [Architecture](compiler/docs/ARCHITECTURE.md): pipeline, key files, how to add a feature (start here to contribute).
 - [GC](native/gc/README.md), [STATUS.md](STATUS.md), [bench/table.md](bench/table.md), feature roadmap [#22](https://github.com/pyrlyn/kotlinx/issues/22).
 - GC is vendored under [`native/gc/`](native/gc/README.md) (C collectors `@a65a3f6`, Zig port `@2dea030` with KotlinX patches; default `--gc-runtime=zig`). No git submodule. See that README for Zig 0.17.1 vs legacy 0.16 notes.
+
+## License
+
+KotlinX is licensed under the [Apache License, Version 2.0](LICENSE) (Copyright 2026 pyrlyn). The vendored collectors
+under `native/gc/` come from [pyrlyn/gc](https://github.com/pyrlyn/gc), which does not declare a license yet; see
+[`native/gc/PROVENANCE.md`](native/gc/PROVENANCE.md#license).
