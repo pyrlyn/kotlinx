@@ -2,6 +2,8 @@ package newkotlin.mutation
 
 import newkotlin.compileToIr
 import newkotlin.deferredRc
+import newkotlin.hostTriple
+import newkotlin.hostTripleFor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.fail
@@ -90,6 +92,7 @@ class GoldenTest {
     @MethodSource("cases")
     fun golden(name: String) {
         deferredRc = false
+        hostTripleFor(System.getProperty("os.name"), System.getProperty("os.arch"))?.let { hostTriple = it }
         val src = File(root, "compiler/tests/$name.kt").readText()
         val expected = File(root, "compiler/tests/$name.out").readText().trimEnd('\n')
         val ir = compileToIr(src)

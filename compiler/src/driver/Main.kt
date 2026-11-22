@@ -143,8 +143,17 @@ fun main(args: Array<String>) {
     try { compile(args) } catch (e: CompileError) { fprintf(stderr, "newkotlinc: error: %s\n", e.message); exit(1) }
 }
 
+/** Sets [hostTriple] for the machine the driver runs on (the IR used to name arm64 macOS everywhere). */
+@OptIn(kotlin.experimental.ExperimentalNativeApi::class)
+private fun detectHostTriple() {
+    val os = when (Platform.osFamily) { OsFamily.MACOSX -> "macos"; OsFamily.LINUX -> "linux"; else -> return }
+    val arch = when (Platform.cpuArchitecture) { CpuArchitecture.ARM64 -> "arm64"; CpuArchitecture.X64 -> "x86_64"; else -> return }
+    hostTripleFor(os, arch)?.let { hostTriple = it }
+}
+
 private fun compile(args: Array<String>) {
     val o = try { parseArgs(args) } catch (e: UsageError) { usageExit(e.message ?: "bad arguments") }
+    detectHostTriple()
     if (o.help) { println(USAGE); return }
     val input = o.input; val output = o.output
     val runtime = o.runtime ?: getenv("NEWKOTLIN_RUNTIME")?.toKString() ?: "compiler/runtime/runtime.c"

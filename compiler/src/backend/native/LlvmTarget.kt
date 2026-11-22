@@ -22,8 +22,26 @@ enum class LlvmTarget(val triple: String, val dataLayout: String?, val ptrBytes:
     /** LLVM type of a C signature slot ("size" = size_t, "long" = long, else the LLVM type itself). */
     fun cType(t: String): String = when (t) { "size" -> cSize; "long" -> cLong; else -> t }
 
-    /** `target datalayout` / `target triple` lines that start the module. */
-    fun header(): String = (dataLayout?.let { "target datalayout = \"$it\"\n" } ?: "") + "target triple = \"$triple\"\n"
+    /** `target datalayout` / `target triple` lines that start the module ([HOST] uses [hostTriple]). */
+    fun header(): String = (dataLayout?.let { "target datalayout = \"$it\"\n" } ?: "") +
+        "target triple = \"${if (this == HOST) hostTriple else triple}\"\n"
+}
+
+/**
+ * Triple of [LlvmTarget.HOST] modules: the machine the program is built for. The driver sets it from the host it
+ * runs on ([hostTripleFor]); a Darwin triple on Linux made LLVM emit Darwin-only libcalls (memset_pattern16).
+ */
+var hostTriple = LlvmTarget.HOST.triple
+
+/** LLVM triple for an OS / CPU name pair ("macos"/"linux", "arm64"/"aarch64"/"x86_64"/"amd64", any case); null if unknown. */
+fun hostTripleFor(os: String, arch: String): String? {
+    val a = when (arch.lowercase()) { "arm64", "aarch64" -> "aarch64"; "x64", "x86_64", "amd64" -> "x86_64"; else -> return null }
+    val o = os.lowercase()
+    return when {
+        o.startsWith("mac") || o.startsWith("darwin") || o == "osx" -> if (a == "aarch64") "arm64-apple-macosx14.0.0" else "x86_64-apple-macosx14.0.0"
+        o.startsWith("linux") -> "$a-unknown-linux-gnu"
+        else -> null
+    }
 }
 
 /** Target of the current compilation (set once by the driver, like [deferredRc]). */
