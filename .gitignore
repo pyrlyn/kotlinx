@@ -21,3 +21,7 @@ native/gc/**/zig-out/
 native/gc/**/.zig-cache/
 /bench/jvm/out/
 bench/wasm/out/
+
+# Python bytecode caches
+__pycache__/
+*.py[cod]
