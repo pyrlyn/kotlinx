@@ -29,6 +29,14 @@ function $js_sbrk(n) {
   BRK = e;
   return p;
 }
+// llvm.wasm.memory.grow (the Zig GC's page pool on wasm32): `pages` 64 KiB pages at a 64 KiB boundary past BRK,
+// whose first page number it returns, as wasm returns the old memory size where the new pages start; -1 when full.
+function _memgrow(pages) {
+  const p = BRK + 65535 & -65536, e = p + pages * 65536;
+  if (e > MAXMEM || e < 0 || (e > buf.byteLength && !_grow(e))) return -1;
+  BRK = e;
+  return p >>> 16;
+}
 function _U() { throw new Error("unreachable code reached"); }
 // Frame address for runtime.c's release depth limit: 4 KB per probed frame, so its 4 MB room is 1024 nested releases.
 function _fa() { return S - (D << 12) | 0; }
@@ -136,6 +144,11 @@ function _saddo(a, ah, b, bh) { const r = a + b | 0, rh = ah + bh + ((r >>> 0) <
 function _uaddo(a, ah, b, bh) { const r = a + b | 0, rh = ah + bh + ((r >>> 0) < (a >>> 0)) | 0; H = rh; H1 = _ult(r, rh, a, ah); return r; }
 function _ssubo(a, ah, b, bh) { const r = a - b | 0, rh = ah - bh - ((a >>> 0) < (b >>> 0)) | 0; H = rh; H1 = ((ah ^ bh) & (ah ^ rh)) < 0; return r; }
 function _usubo(a, ah, b, bh) { const r = a - b | 0, rh = ah - bh - ((a >>> 0) < (b >>> 0)) | 0; H = rh; H1 = _ult(a, ah, b, bh); return r; }
+// llvm.{s,u}{add,sub}.sat.i64 (Zig's +| and -|): the overflow helpers, clamped to the range when they overflow.
+function _sadds(a, ah, b, bh) { const r = _saddo(a, ah, b, bh); if (!H1) return r; H = ah < 0 ? -2147483648 : 2147483647; return ah < 0 ? 0 : -1; }
+function _ssubs(a, ah, b, bh) { const r = _ssubo(a, ah, b, bh); if (!H1) return r; H = ah < 0 ? -2147483648 : 2147483647; return ah < 0 ? 0 : -1; }
+function _uadds(a, ah, b, bh) { const r = _uaddo(a, ah, b, bh); if (!H1) return r; H = -1; return -1; }
+function _usubs(a, ah, b, bh) { const r = _usubo(a, ah, b, bh); if (!H1) return r; H = 0; return 0; }
 function _smulo(a, ah, b, bh) { const p = _big(a, ah) * _big(b, bh); const r = _unbig(p); H1 = BigInt.asIntN(64, p) !== p; return r; }
 function _umulo(a, ah, b, bh) { const p = BigInt.asUintN(64, _big(a, ah)) * BigInt.asUintN(64, _big(b, bh)); const r = _unbig(p); H1 = p >= 18446744073709551616n; return r; }
 

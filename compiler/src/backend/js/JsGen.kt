@@ -319,8 +319,9 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
 
         val useCount = HashMap<String, Int>()
 
-        fun norm(e: String, bits: Int) = when (bits) { 32 -> "${w(e)}|0"; 16 -> "${w(e)}<<16>>16"; 8 -> "${w(e)}<<24>>24"; 1 -> "${w(e)}&1"; else -> throw CompileError("JS backend: i$bits arithmetic") }
-        fun u(e: String, bits: Int) = when (bits) { 32 -> "${w(e)}>>>0"; 16 -> "${w(e)}&65535"; 8 -> "${w(e)}&255"; 1 -> "+${w(e)}"; else -> throw CompileError("JS backend: i$bits") }
+        // Narrow integers (i8, i16, or an odd width LLVM's optimizer made up, such as i3) are kept sign-extended to 32 bits.
+        fun norm(e: String, bits: Int) = when (bits) { 32 -> "${w(e)}|0"; 1 -> "${w(e)}&1"; in 2..31 -> "${w(e)}<<${32 - bits}>>${32 - bits}"; else -> throw CompileError("JS backend: i$bits arithmetic") }
+        fun u(e: String, bits: Int) = when (bits) { 32 -> "${w(e)}>>>0"; 1 -> "+${w(e)}"; in 2..31 -> "${w(e)}&${(1L shl bits) - 1}"; else -> throw CompileError("JS backend: i$bits") }
         fun bitsOf(t: LTy) = when (t) { is LInt -> t.bits; LPtr -> 32; else -> throw CompileError("JS backend: not an integer type $t") }
 
         // ---- memory -------------------------------------------------------------------------------------------
@@ -665,7 +666,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                 "trunc" -> { val b = bitsOf(to); if (b == 32) listOf(x) else listOf(norm(x, b)) }
                 "zext" -> {
                     val fb = bitsOf(from)
-                    val lo = when (fb) { 1 -> "+${w(x)}"; 8 -> "${w(x)}&255"; 16 -> "${w(x)}&65535"; else -> x }
+                    val lo = if (fb < 32) u(x, fb) else x
                     if (isI64(to)) listOf(lo, "0") else listOf(lo)
                 }
                 "sext" -> {
@@ -840,6 +841,7 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                 name.startsWith("expect") || name.startsWith("threadlocal.address") || name.startsWith("launder.invariant") ||
                     name.startsWith("strip.invariant") || name.startsWith("ssa.copy") -> setResultCall(i, a.subList(0, parts(t).size))
                 name.startsWith("frameaddress") -> res("_fa()")
+                name.startsWith("wasm.memory.grow") -> res("_memgrow(${a[1]})")
                 name.startsWith("stacksave") -> res(if (depthProbe) "_fa()" else "S")
                 name.startsWith("stackrestore") -> emit("S=${a[0]}")
                 name.startsWith("trap") || name.startsWith("ubsantrap") || name.startsWith("debugtrap") -> emit("_U()")
@@ -863,6 +865,20 @@ class JsGen(private val m: LlModule, private val warn: (String) -> Unit = {}, pr
                     val at = i.ops[0].first
                     if (isI64(at)) res2("_${name.substring(0, 4)}64(${a.joinToString(",")})")
                     else { val b = bitsOf(at); val x = simple(if (name[0] == 'u') u(a[0], b) else a[0]); val y = simple(if (name[0] == 'u') u(a[1], b) else a[1]); res("($x>$y)-($x<$y)") }
+                }
+                name.startsWith("sadd.sat") || name.startsWith("ssub.sat") || name.startsWith("uadd.sat") || name.startsWith("usub.sat") -> {
+                    val k = name.substring(0, 4)
+                    if (i64) res2("_${k}s(${a.joinToString(",")})")
+                    else if (bitsOf(t) == 32) {
+                        // int32 operands: the exact sum or difference fits a double, so clamping it is the saturation.
+                        val x = simple(a[0]); val y = simple(a[1])
+                        res(when (k) {
+                            "sadd" -> "Math.max(-2147483648,Math.min(2147483647,$x+$y))"
+                            "ssub" -> "Math.max(-2147483648,Math.min(2147483647,$x-$y))"
+                            "uadd" -> "Math.min(4294967295,($x>>>0)+($y>>>0))|0"
+                            else -> "Math.max(0,($x>>>0)-($y>>>0))|0"
+                        })
+                    } else throw CompileError("JS backend: $n")
                 }
                 name.contains("with.overflow") -> {
                     val k = name.substringBefore(".with")
