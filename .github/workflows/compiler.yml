@@ -11,12 +11,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   test:
-    # Temporary (dropped before merge): run on both images to verify the macos-26 fix.
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-15, macos-26]
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-15
     timeout-minutes: 120
     env:
       KN_VERSION: "2.4.21"
