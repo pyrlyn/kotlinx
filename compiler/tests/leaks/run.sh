@@ -12,6 +12,20 @@ NKC=${NKC:-compiler/build/newkotlinc.kexe}
 [ -x "$NKC" ] || compiler/build.sh >/dev/null
 . compiler/tests/leaks/leaks_at_exit.sh
 out=compiler/build/leak-tmp; rm -rf "$out"; mkdir -p "$out"; fail=0
+asan_cflags="-O1 -g -fsanitize=address -fno-omit-frame-pointer"
+# A test binary that never exits would otherwise stall the suite until the CI job's timeout. macOS ships no
+# `timeout`; perl's alarm survives the exec and SIGALRM ends the program (exit 142).
+with_timeout() { local s=$1; shift; perl -e 'alarm shift; exec { $ARGV[0] } @ARGV or exit 127' "$s" "$@"; }
+# ASan runtimes before LLVM 22 deadlock in their own start-up on macOS 26.4+: get_dyld_hdr walks the shared cache
+# with a block, the block copy calls malloc, and malloc re-enters ASan's init (llvm/llvm-project#182943). Then no
+# ASan build runs at all, whatever the test. A trivial program built the same way tells a broken toolchain from a
+# broken test, so a broken toolchain skips the ASan step instead of failing (or hanging) every test.
+asan=1
+printf 'fun main() {\n  println("ok")\n}\n' > "$out/asan_probe.kt"
+if "$NKC" --alloc malloc --cflags "$asan_cflags" "$out/asan_probe.kt" -o "$out/asan_probe" 2>/dev/null; then
+  with_timeout 60 "$out/asan_probe" >/dev/null 2>&1
+  if [ $? -eq 142 ]; then asan=0; echo "SKIP asan (all tests): an ASan build of an empty program hangs at start-up; ASan runtime from LLVM < 22 on macOS 26.4+?"; fi
+fi
 for t in compiler/tests/leaks/*.kt; do
   n=$(basename "$t" .kt); exp=$(cat "compiler/tests/leaks/$n.out")
   if ! "$NKC" --leak-check "$t" -o "$out/$n.lc" 2>"$out/$n.err"; then echo "FAIL leak $n: compile: $(cat "$out/$n.err")"; fail=1; continue; fi
@@ -34,9 +48,12 @@ for t in compiler/tests/leaks/*.kt; do
         ;;
     esac
   fi
-  "$NKC" --alloc malloc --cflags "-O1 -g -fsanitize=address -fno-omit-frame-pointer" "$t" -o "$out/$n.asan" 2>/dev/null
-  got=$("$out/$n.asan" 2>"$out/$n.asanerr"); rc=$?
-  if [ $rc -eq 0 ] && [ "$got" = "$exp" ]; then echo "PASS asan $n"; else echo "FAIL asan $n (rc=$rc)"; head -20 "$out/$n.asanerr"; fail=1; fi
+  if [ $asan = 1 ]; then
+    "$NKC" --alloc malloc --cflags "$asan_cflags" "$t" -o "$out/$n.asan" 2>/dev/null
+    got=$(with_timeout 300 "$out/$n.asan" 2>"$out/$n.asanerr"); rc=$?
+    if [ $rc -eq 0 ] && [ "$got" = "$exp" ]; then echo "PASS asan $n"
+    else echo "FAIL asan $n (rc=$rc$([ $rc -eq 142 ] && echo ', timed out after 300 s'))"; head -20 "$out/$n.asanerr"; fail=1; fi
+  fi
   "$NKC" --alloc malloc "$t" -o "$out/$n" 2>/dev/null
   leaks_at_exit "$out/$n.leaks" "$out/$n"; lrc=$?
   if grep -q " 0 leaks for 0 total leaked bytes" "$out/$n.leaks"; then echo "PASS leaks $n"
