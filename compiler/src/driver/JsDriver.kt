@@ -62,7 +62,7 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
     fun cleanup() { tmps.forEach { remove(it) } }
     /** Runs c with stderr to the log; on failure prints the log and exits. */
     fun run(c: String) {
-        val r = system("$c 2>'$log'")
+        val r = system("$c 2>${shq(log)}")
         if (r != 0) { fprintf(stderr, "%s\ncommand failed (%d): %s\n", (try { readFile(log) } catch (e: CompileError) { "" }), r, c); cleanup(); exit(1) }
     }
     // LLVM 22 made llvm.coro.end return void; NativeBackend still writes the older i1 form (the native target
@@ -73,8 +73,8 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
     // RT_PLAIN_MALLOC: libc.c's allocator, not mimalloc; RT_LEAN_EXIT: no GC statistics and no final collection;
     // RT_SIZE_CHECK: arrays of 2 GB or more fail (OutOfMemoryError) instead of wrapping around the 32-bit size_t;
     // RT_JS: number text, exception messages and rt_nanos come from runtime.js (no printf), no getrlimit.
-    val cflags = "-S -emit-llvm -O2 -g0 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC -DRT_LEAN_EXIT -DRT_SIZE_CHECK -DRT_JS -I'$gcDir' $gcFlags"
-    run("$cc $cflags '$runtime' -o '$rtLl'")
+    val cflags = "-S -emit-llvm -O2 -g0 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC -DRT_LEAN_EXIT -DRT_SIZE_CHECK -DRT_JS -I${shq(gcDir)} $gcFlags"
+    run("$cc $cflags ${shq(runtime)} -o ${shq(rtLl)}")
     val rtIr = readFile(rtLl)
     // The program IR is wasm32's (LlvmTarget.JS32); runtime.c built for another target (--cc) would link into a
     // mismatched layout without an error.
@@ -84,13 +84,13 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
     // Native integer widths 32 only (not n32:64): opt then keeps loop counters in i32 instead of widening them
     // to i64, which JS has to emulate with two words.
     writeFile(rtLl, rtIr.replaceFirst(Regex("""(?m)^(target datalayout = "[^"]*)-n32:64-"""), "$1-n32-"))
-    run("$cc $cflags '$libc' -o '$libcLl'")
+    run("$cc $cflags ${shq(libc)} -o ${shq(libcLl)}")
     // The C runtime first: its target datalayout (the program IR has only a triple) becomes the module's.
-    run("'$link' -suppress-warnings '$rtLl' '$libcLl' '$ll' '$gcBc' -o '$linked'")
+    run("${shq(link)} -suppress-warnings ${shq(rtLl)} ${shq(libcLl)} ${shq(ll)} ${shq(gcBc)} -o ${shq(linked)}")
     // No loop unrolling: V8 tiers up and on-stack-replaces every copy of an unrolled loop separately (main runs once,
     // its loops reach optimized code through OSR), and the copies cost bundle size.
-    run("'$opt' -passes='internalize,scalarizer<load-store>,default<O3>' --internalize-public-api-list=main " +
-        "-vectorize-loops=false -vectorize-slp=false -disable-loop-unrolling -S '$linked' -o '$optLl'")
+    run("${shq(opt)} -passes='internalize,scalarizer<load-store>,default<O3>' --internalize-public-api-list=main " +
+        "-vectorize-loops=false -vectorize-slp=false -disable-loop-unrolling -S ${shq(linked)} -o ${shq(optLl)}")
     // LL2JS_PRETTY=1: LLVM names and one statement per line, for reading and profiling the output.
     val compact = getenv("LL2JS_PRETTY")?.toKString().isNullOrEmpty()
     val js = try { JsBackend.translate(readFile(optLl), readFile(runtimeJs), compact) { fprintf(stderr, "warning: %s\n", it) } }
@@ -112,6 +112,6 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
 internal fun minifyCommand(src: String, dst: String): String? {
     val tool = getenv("NK_MINIFIER")?.toKString()?.takeIf { it.isNotEmpty() }
         ?: listOf("esbuild", "bun").firstOrNull { system("command -v $it >/dev/null 2>&1") == 0 } ?: return null
-    return if (tool.substringAfterLast('/').startsWith("bun")) "'$tool' build --minify '$src' --outfile '$dst' >/dev/null"
-    else "'$tool' --minify --log-level=warning '$src' --outfile='$dst'"
+    return if (tool.substringAfterLast('/').startsWith("bun")) "${shq(tool)} build --minify ${shq(src)} --outfile ${shq(dst)} >/dev/null"
+    else "${shq(tool)} --minify --log-level=warning ${shq(src)} --outfile=${shq(dst)}"
 }

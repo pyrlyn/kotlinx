@@ -39,7 +39,7 @@ private fun writeBytes(path: String, b: ByteArray) {
     fclose(f)
 }
 
-private fun mtime(path: String): Long = capture("stat -f %m '$path' 2>/dev/null")?.toLongOrNull() ?: -1
+private fun mtime(path: String): Long = capture("stat -f %m ${shq(path)} 2>/dev/null")?.toLongOrNull() ?: -1
 
 /** Names of the C functions KxRt.java provides (`public static <type> name(`). */
 private fun runtimeFunctions(src: String): Set<String> =
@@ -61,8 +61,8 @@ private fun jdkTool(tool: String): String =
  */
 private fun runtimeClasses(src: String, dir: String): String {
     if (mtime("$dir/KxRt.class") >= mtime(src) && mtime(src) >= 0) return dir
-    sh("mkdir -p '$dir' && '${jdkTool("javac")}' -nowarn --add-exports java.base/jdk.internal.misc=ALL-UNNAMED " +
-        "-d '$dir' '$src'") {}
+    sh("mkdir -p ${shq(dir)} && ${shq(jdkTool("javac"))} -nowarn --add-exports java.base/jdk.internal.misc=ALL-UNNAMED " +
+        "-d ${shq(dir)} ${shq(src)}") {}
     return dir
 }
 
@@ -80,26 +80,26 @@ internal fun linkJvm(ir: String, output: String, runtime: String, gcSrc: String,
 
     val tmp = "$output.jvm-tmp"
     val ll = "$output.ll"
-    fun cleanup() { system("rm -rf '$tmp'"); if (!keepIr) remove(ll) }
-    sh("rm -rf '$tmp' && mkdir -p '$tmp/classes'", ::cleanup)
+    fun cleanup() { system("rm -rf ${shq(tmp)}"); if (!keepIr) remove(ll) }
+    sh("rm -rf ${shq(tmp)} && mkdir -p ${shq("$tmp/classes")}", ::cleanup)
     writeFile(ll, ir)
 
     // C sources -> bitcode. No vectorization (the translator handles scalars), no fortified libc calls, no stack
     // protector: the IR may then only call what KxRt.java provides.
     val cOpts = "-O2 -c -emit-llvm -fno-vectorize -fno-slp-vectorize -fno-stack-protector -fno-exceptions " +
         "-fno-unwind-tables -fno-asynchronous-unwind-tables -D_FORTIFY_SOURCE=0 -Wno-override-module $cflags"
-    val inputs = arrayListOf("'$ll'")
+    val inputs = arrayListOf("${shq(ll)}")
     val sources = listOf(runtime to "", gcSrc to "", "$rtDir/jvm/libc.c" to " -fno-builtin") + links.map { it to "" }
     for ((i, s) in sources.withIndex()) {
         val bc = "$tmp/in$i.bc"
-        sh("$cc $cOpts${s.second} '${s.first}' -o '$bc'", ::cleanup)
-        inputs.add("'$bc'")
+        sh("$cc $cOpts${s.second} ${shq(s.first)} -o ${shq(bc)}", ::cleanup)
+        inputs.add("${shq(bc)}")
     }
-    sh("'${sibling(opt, "llvm-link")}' ${inputs.joinToString(" ")} -o '$tmp/linked.bc'", ::cleanup)
+    sh("${shq(sibling(opt, "llvm-link"))} ${inputs.joinToString(" ")} -o ${shq("$tmp/linked.bc")}", ::cleanup)
     // Whole-program optimization: everything but main is internal. Vectorizers off (no vector types on the JVM).
-    sh("'$opt' -passes='internalize,default<O2>' -internalize-public-api-list=main,exit -vectorize-loops=false " +
-        "-vectorize-slp=false '$tmp/linked.bc' -S -o '$tmp/opt.ll'", ::cleanup)
-    if (keepIr) sh("cp '$tmp/linked.bc' '$output.linked.bc' && cp '$tmp/opt.ll' '$output.opt.ll'", ::cleanup)
+    sh("${shq(opt)} -passes='internalize,default<O2>' -internalize-public-api-list=main,exit -vectorize-loops=false " +
+        "-vectorize-slp=false ${shq("$tmp/linked.bc")} -S -o ${shq("$tmp/opt.ll")}", ::cleanup)
+    if (keepIr) sh("cp ${shq("$tmp/linked.bc")} ${shq("$output.linked.bc")} && cp ${shq("$tmp/opt.ll")} ${shq("$output.opt.ll")}", ::cleanup)
 
     val classBytes = try {
         JvmBackend(readFile("$tmp/opt.ll"), MAIN_CLASS, runtimeFunctions(readFile(kxrt))).generate()
@@ -109,9 +109,9 @@ internal fun linkJvm(ir: String, output: String, runtime: String, gcSrc: String,
     val rtClasses = runtimeClasses(kxrt, "$rtDir/../build/jvm-runtime")
     // jdk.internal.misc: Unsafe (memory); jdk.internal.util: Preconditions.checkIndex (bounds checks)
     writeFile("$tmp/manifest.txt", "Main-Class: $MAIN_CLASS\nAdd-Exports: java.base/jdk.internal.misc java.base/jdk.internal.util\n")
-    sh("cp '$rtClasses'/*.class '$tmp/classes/' && '${jdkTool("jar")}' --create --file '$tmp/out.jar' " +
-        "--manifest '$tmp/manifest.txt' -C '$tmp/classes' .", ::cleanup)
+    sh("cp ${shq(rtClasses)}/*.class ${shq("$tmp/classes/")} && ${shq(jdkTool("jar"))} --create --file ${shq("$tmp/out.jar")} " +
+        "--manifest ${shq("$tmp/manifest.txt")} -C ${shq("$tmp/classes")} .", ::cleanup)
     writeFile("$tmp/launcher", "#!/bin/sh\nexec java $JVM_OPTS -jar \"\$0\" \"\$@\"\n")
-    sh("cat '$tmp/launcher' '$tmp/out.jar' > '$output' && chmod +x '$output'", ::cleanup)
+    sh("cat ${shq("$tmp/launcher")} ${shq("$tmp/out.jar")} > ${shq(output)} && chmod +x ${shq(output)}", ::cleanup)
     cleanup()
 }
