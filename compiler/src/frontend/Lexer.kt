@@ -35,12 +35,7 @@ class Lexer(private val src: String, private var line: Int = 1) {
                 c == '\n' -> { out.add(Tok(K.NL, "\n", line)); line++; i++ }
                 c == ' ' || c == '\t' || c == '\r' -> i++
                 src.startsWith("//", i) -> while (i < src.length && src[i] != '\n') i++
-                src.startsWith("/*", i) -> {
-                    val e = src.indexOf("*/", i + 2)
-                    if (e < 0) throw CompileError("line $line: unterminated comment")
-                    line += src.substring(i, e).count { it == '\n' }
-                    i = e + 2
-                }
+                src.startsWith("/*", i) -> blockComment()
                 c.isDigit() -> number()
                 // Annotations (`@Ann`, `@file:Ann(...)`, `@a.b.Ann`, `@[A B]`) have no effect here; labels (`x@`, `break@x`) are glued.
                 c == '@' && (i == 0 || !(src[i - 1].isLetterOrDigit() || src[i - 1] == '_' || src[i - 1] == '`')) &&
@@ -154,12 +149,79 @@ class Lexer(private val src: String, private var line: Int = 1) {
     }
 
     private fun escape(): Char {
+        if (i + 1 >= src.length) throw CompileError("line $line: unterminated escape")
         val e = src[i + 1]; i += 2
         return when (e) {
-            'n' -> '\n'; 't' -> '\t'; 'r' -> '\r'; '0' -> '\u0000'
+            'n' -> '\n'; 't' -> '\t'; 'r' -> '\r'; 'b' -> '\b'; '0' -> '\u0000'
             '\\', '"', '\'', '$' -> e
+            'u' -> {
+                // `\uXXXX`: exactly four hex digits, one UTF-16 code unit (surrogate pairs are two escapes, as in Kotlin).
+                val hex = if (i + 4 <= src.length) src.substring(i, i + 4) else ""
+                if (hex.length != 4 || hex.any { it !in "0123456789abcdefABCDEF" }) throw CompileError("line $line: bad unicode escape \\u$hex")
+                i += 4
+                hex.toInt(16).toChar()
+            }
             else -> throw CompileError("line $line: unknown escape \\$e")
         }
+    }
+
+    /** `/* ... */`, which nests as in Kotlin: `/* a /* b */ still comment */`. */
+    private fun blockComment() {
+        val startLine = line
+        var d = 0
+        while (true) {
+            if (i >= src.length) throw CompileError("line $startLine: unterminated comment")
+            when {
+                src.startsWith("/*", i) -> { d++; i += 2 }
+                src.startsWith("*/", i) -> { d--; i += 2; if (d == 0) return }
+                else -> { if (src[i] == '\n') line++; i++ }
+            }
+        }
+    }
+
+    /**
+     * Index just past the `}` that closes a `${'$'}{` template whose code starts at [from]. Braces inside nested string,
+     * raw-string and char literals (`"${'$'}{"}"}"`, `"${'$'}{'{'}"`) and comments do not count.
+     */
+    private fun templateEnd(from: Int): Int {
+        var d = 1; var j = from
+        fun unterminated(): Nothing = throw CompileError("line $line: unterminated template")
+        while (d > 0) {
+            if (j >= src.length) unterminated()
+            val ch = src[j]
+            when {
+                src.startsWith("\"\"\"", j) -> {
+                    j += 3
+                    while (true) {
+                        if (j >= src.length) unterminated()
+                        if (src.startsWith("\"\"\"", j) && !src.startsWith("\"\"\"\"", j)) { j += 3; break }
+                        if (src[j] == '$' && j + 1 < src.length && src[j + 1] == '{') { j = templateEnd(j + 2); continue }
+                        j++
+                    }
+                }
+                ch == '"' -> {
+                    j++
+                    while (true) {
+                        if (j >= src.length || src[j] == '\n') unterminated()
+                        if (src[j] == '\\') { j += 2; continue }
+                        if (src[j] == '"') { j++; break }
+                        if (src[j] == '$' && j + 1 < src.length && src[j + 1] == '{') { j = templateEnd(j + 2); continue }
+                        j++
+                    }
+                }
+                ch == '\'' -> {
+                    // A char literal ('{', '\'', '\u007B'); a lone quote is left to the expression lexer.
+                    val e = src.indexOf('\'', j + if (j + 1 < src.length && src[j + 1] == '\\') 3 else 2)
+                    j = if (e > j && e - j <= 7) e + 1 else j + 1
+                }
+                src.startsWith("//", j) -> { while (j < src.length && src[j] != '\n') j++ }
+                src.startsWith("/*", j) -> { val e = src.indexOf("*/", j + 2); if (e < 0) unterminated(); j = e + 2 }
+                ch == '{' -> { d++; j++ }
+                ch == '}' -> { d--; j++ }
+                else -> j++
+            }
+        }
+        return j
     }
 
     private fun char() {
@@ -182,14 +244,11 @@ class Lexer(private val src: String, private var line: Int = 1) {
             when {
                 src.startsWith("\"\"\"", i) && !src.startsWith("\"\"\"\"", i) -> { i += 3; break }
                 c == '$' && i + 1 < src.length && src[i + 1] == '{' -> {
-                    var d = 1; var j = i + 2
-                    while (d > 0) {
-                        if (j >= src.length) throw CompileError("line $line: unterminated template")
-                        if (src[j] == '{') d++ else if (src[j] == '}') d--
-                        j++
-                    }
+                    val j = templateEnd(i + 2)
                     if (sb.isNotEmpty()) { parts.add(sb.toString()); sb.clear() }
                     parts.add(TemplateCode(src.substring(i + 2, j - 1), line))
+                    // A raw string's template may span lines; an ordinary string's cannot hold a newline outside nested raw strings.
+                    line += src.substring(i, j).count { it == '\n' }
                     i = j
                 }
                 c == '$' && nameTemplateEnd() > 0 -> {
@@ -216,14 +275,11 @@ class Lexer(private val src: String, private var line: Int = 1) {
                 c == '"' -> { i++; break }
                 c == '\\' -> sb.append(escape())
                 c == '$' && i + 1 < src.length && src[i + 1] == '{' -> {
-                    var d = 1; var j = i + 2
-                    while (d > 0) {
-                        if (j >= src.length) throw CompileError("line $line: unterminated template")
-                        if (src[j] == '{') d++ else if (src[j] == '}') d--
-                        j++
-                    }
+                    val j = templateEnd(i + 2)
                     if (sb.isNotEmpty()) { parts.add(sb.toString()); sb.clear() }
                     parts.add(TemplateCode(src.substring(i + 2, j - 1), line))
+                    // A raw string's template may span lines; an ordinary string's cannot hold a newline outside nested raw strings.
+                    line += src.substring(i, j).count { it == '\n' }
                     i = j
                 }
                 c == '$' && nameTemplateEnd() > 0 -> {
