@@ -5,7 +5,7 @@
 > Collector **bodies** (`kxgc.h`, `*/gc.c`, `common/*.inc`) match that snapshot byte-for-byte.
 > Surrounding docs/scripts may describe the old standalone-repo / submodule workflow; prefer
 > [`../../README.md`](../README.md) and KotlinX `bin/newkotlinc` for current wiring.
-> Zig collectors live separately under `native/gc/zig/` (`@a65a3f6` + `runtime_host` adapter).
+> Zig collectors live separately under `native/gc/zig/` (`@2dea030` + `runtime_host` adapter).
 
 ## How KotlinX uses this tree
 
