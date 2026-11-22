@@ -13,12 +13,13 @@ RUNS=${RUNS:-5}; out=$(mktemp -d); [ -n "${KEEP:-}" ] || trap 'rm -rf "$out"' EX
 # The old default (--alloc malloc) needs its own archive: a separate prefix keeps zig-out/wasm32-wasi intact.
 plain=$out/plain
 ( cd native/gc/zig && "${ZIG:-zig}" build gc-libs -Dgc=perceus -Dtarget=wasm32-wasi -Dplain-malloc=true -p "$plain" ) >/dev/null 2>&1 || { echo "FAIL perf: zig build (plain malloc)"; exit 1; }
-build() { # build <name> <case> <variant>: variant default | malloc | rc (--gc rc: no cycle collection)
+build() { # build <name> <case> <variant>: variant default | malloc | rc (--gc rc: no cycle collection) | c (C collector)
   local src=bench/cases/$2/kotlin/Main.kt
   case "$3" in
     default) "$NKC" --target=wasm "$src" -o "$out/$1.wasm" ;;
     malloc) NEWKOTLIN_GC_ZIG_WASM_LIB_DIR=$plain/lib "$NKC" --target=wasm --alloc malloc "$src" -o "$out/$1.wasm" ;;
     rc) "$NKC" --target=wasm --gc rc "$src" -o "$out/$1.wasm" ;;
+    c) "$NKC" --target=wasm --gc-runtime=c "$src" -o "$out/$1.wasm" ;;
   esac 2>"$out/$1.err"
 }
 run() { # run <wasm> <node flags>: prints "<nanos> <checksum>"; a run that prints no nanos= is retried twice, then
