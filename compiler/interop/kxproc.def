@@ -1,0 +1,35 @@
+# Process and file-status helpers for the driver (compiler/src/driver/Process.kt), bound by compiler/build.sh with
+# cinterop. Kotlin/Native's platform.posix on macOS has neither posix_spawn nor `environ` (Darwin exposes the
+# environment through _NSGetEnviron), and struct stat names its mtime field differently on macOS and Linux.
+package = kxproc
+headers = spawn.h
+headerFilter = spawn.h
+---
+#include <spawn.h>
+#include <sys/stat.h>
+#ifdef __APPLE__
+#include <crt_externs.h>
+#endif
+
+/** The calling process's environment block, passed to posix_spawnp so tools see the driver's environment. */
+static inline char **kx_environ(void) {
+#ifdef __APPLE__
+    return *_NSGetEnviron();
+#else
+    extern char **environ;
+    return environ;
+#endif
+}
+
+/** Modification time of path in seconds, or -1 when it cannot be stat'ed. */
+static inline long long kx_mtime(const char *path) {
+    struct stat st;
+    return stat(path, &st) == 0 ? (long long) st.st_mtime : -1;
+}
+
+/** 1 when path is a directory (symbolic links not followed), 0 when it is something else, -1 when it is missing. */
+static inline int kx_is_dir(const char *path) {
+    struct stat st;
+    if (lstat(path, &st) != 0) return -1;
+    return S_ISDIR(st.st_mode) ? 1 : 0;
+}
