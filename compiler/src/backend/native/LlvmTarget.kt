@@ -39,7 +39,8 @@ fun hostTripleFor(os: String, arch: String): String? {
     val o = os.lowercase()
     return when {
         o.startsWith("mac") || o.startsWith("darwin") || o == "osx" -> if (a == "aarch64") "arm64-apple-macosx14.0.0" else "x86_64-apple-macosx14.0.0"
-        o.startsWith("linux") -> "$a-unknown-linux-gnu"
+        // clang's default Linux triples (the JVM/JS drivers link clang-compiled bitcode with the module).
+        o.startsWith("linux") -> if (a == "x86_64") "x86_64-pc-linux-gnu" else "aarch64-unknown-linux-gnu"
         else -> null
     }
 }
