@@ -1,6 +1,6 @@
 #!/bin/bash
 # Builds the KotlinX compiler (newkotlinc) with Kotlin/Native into compiler/build/ (debug build;
-# set NEWKOTLIN_KN_FLAGS=-opt for an optimized compiler binary).
+# set NEWKOTLIN_KN_FLAGS=-opt for an optimized compiler binary). Warnings are errors (-Werror).
 set -e
 cd "$(dirname "$0")"
 # Kotlin/Native for the host (KONANC overrides; KN_VERSION picks the release under ~/.konan).
@@ -10,5 +10,5 @@ case "$(uname -m)" in arm64|aarch64) kn_arch=aarch64;; x86_64|amd64) kn_arch=x86
 KN=${KONANC:-$HOME/.konan/kotlin-native-prebuilt-$kn_os-$kn_arch-$KN_VERSION/bin/kotlinc-native}
 [ -x "$KN" ] || { echo "Kotlin/Native not found: $KN (install kotlin-native-prebuilt-$kn_os-$kn_arch-$KN_VERSION into ~/.konan or set KONANC)" >&2; exit 1; }
 mkdir -p build
-"$KN" $(find src -name "*.kt" | sort) -e newkotlin.main ${NEWKOTLIN_KN_FLAGS:-} -o build/newkotlinc
+"$KN" $(find src -name "*.kt" | sort) -e newkotlin.main -Werror ${NEWKOTLIN_KN_FLAGS:-} -o build/newkotlinc
 echo "built compiler/build/newkotlinc.kexe"

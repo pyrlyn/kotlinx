@@ -348,7 +348,7 @@ class Parser(toks: List<Tok>) {
         if (set != null && !isVar) fail("val cannot have a setter")
         val bfn = "\$bf\$$n"
         val sub = Subst(emptyMap(), rw = { x: E -> if (x is NameE && x.n == "field") NameE(bfn).also { it.line = x.line } else null },
-            srw = { st: S -> if (st is AssignS && st.target is NameE && (st.target as NameE).n == "field") AssignS(NameE(bfn), st.op, sub0!!.e(st.value)).also { it.line = st.line } else null })
+            srw = { st: S -> if (st is AssignS && st.target is NameE && (st.target).n == "field") AssignS(NameE(bfn), st.op, sub0!!.e(st.value)).also { it.line = st.line } else null })
         sub0 = sub
         val g = get?.let { sub.fn(it) } ?: FunD("\$prop\$$n", emptyList(), ty, null, NameE(bfn), f.init?.line ?: 0)
         val st = set?.let { sub.fn(it) } ?: if (isVar) FunD("\$set\$$n", listOf(Param("v\$", ty ?: fail("properties with accessors need an explicit type"))), TypeRef("Unit", emptyList(), false),
@@ -468,7 +468,7 @@ class Parser(toks: List<Tok>) {
         if (get == null && set == null && !bare) { p = save; return false }
         val bfn = "\$tbf\$$n"
         val sub = Subst(emptyMap(), rw = { x: E -> if (x is NameE && x.n == "field") NameE(bfn).also { it.line = x.line } else null },
-            srw = { st: S -> if (st is AssignS && st.target is NameE && (st.target as NameE).n == "field") AssignS(NameE(bfn), st.op, sub0!!.e(st.value)).also { it.line = st.line } else null })
+            srw = { st: S -> if (st is AssignS && st.target is NameE && (st.target).n == "field") AssignS(NameE(bfn), st.op, sub0!!.e(st.value)).also { it.line = st.line } else null })
         sub0 = sub
         funs.add(get?.let { sub.fn(it) } ?: FunD("\$get\$$n", emptyList(), ty, null, NameE(bfn).also { it.line = line }, line))
         if (isVar) funs.add(set?.let { sub.fn(it) } ?: FunD("\$tset\$$n", listOf(Param("v\$", ty)), TypeRef("Unit", emptyList(), false),
@@ -510,8 +510,8 @@ class Parser(toks: List<Tok>) {
         val top = funs.filter { it.recv == null }.groupBy { it.name }.filterValues { it.size == 1 }.mapValues { it.value[0] }
         var ret: TypeRef? = null
         sub = Subst(emptyMap(), rw = { x ->
-            if (x is CallE && x.callee is NameE && (x.callee as NameE).n in top && x.args.any { isLit(it) || (it is NamedE && isLit(it.e)) }) {
-                val f = top.getValue((x.callee as NameE).n)
+            if (x is CallE && x.callee is NameE && (x.callee).n in top && x.args.any { isLit(it) || (it is NamedE && isLit(it.e)) }) {
+                val f = top.getValue((x.callee).n)
                 CallE(x.callee, x.typeArgs, x.args.mapIndexed { i, a ->
                     if (a is NamedE) NamedE(a.name, lit(f.params.firstOrNull { it.name == a.name && !it.vararg }?.type, a.e)).also { it.line = a.line }
                     else lit(f.params.getOrNull(i)?.takeIf { !it.vararg }?.type, a)
@@ -1188,9 +1188,9 @@ class Parser(toks: List<Tok>) {
                     props.add(f); inits.add(f)
                     val constOwner = curClass ?: curObject
                     if (isConst && constOwner != null) ConstFields.names.add("$constOwner.$n")
-                    if (isConst && constOwner != null && (f.init is IntL || f.init is BoolL || f.init is CharL || f.init is DblL || (f.init is StrL && (f.init as StrL).parts.all { it is String })))
+                    if (isConst && constOwner != null && (f.init is IntL || f.init is BoolL || f.init is CharL || f.init is DblL || (f.init is StrL && (f.init).parts.all { it is String })))
                         {
-                            constVals["$constOwner.$n"] = f.init!!; if ('$' in constOwner) constVals["${constOwner.substringBefore('$')}.$n"] = f.init!!
+                            constVals["$constOwner.$n"] = f.init; if ('$' in constOwner) constVals["${constOwner.substringBefore('$')}.$n"] = f.init
                             // A compile-time constant has its value before any initializer runs (`val x = foo()`,
                             // `fun foo() = y` with `y` declared later): it is stored first.
                             inits.remove(f)
@@ -1849,7 +1849,7 @@ class Parser(toks: List<Tok>) {
                         // would pick another extension (members always win), so receivers with library operator
                         // extensions, type parameters and clashes with other extension operators are refused.
                         if (d.recv != null && d.name in OPERATOR_NAMES) {
-                            val r = d.recv!!
+                            val r = d.recv
                             // Function types erase nullable primitives (`(Int?) -> Int` takes an Int), so an `Int?` operator
                             // next to lambdas could miss its operands and fall back to the built-in operator: refused.
                             var lambdas = false
@@ -2123,7 +2123,7 @@ class Parser(toks: List<Tok>) {
                 val c = x.callee
                 val r = when {
                     c is NameE && c.n in privs -> NameE(nn(c.n))
-                    c is MemberE && c.n in privs && c.recv is NameE && (c.recv as NameE).n == "this" -> MemberE(c.recv, nn(c.n), false)
+                    c is MemberE && c.n in privs && c.recv is NameE && (c.recv).n == "this" -> MemberE(c.recv, nn(c.n), false)
                     else -> null
                 }
                 r?.let { CallE(it.also { e -> e.line = c.line }, x.typeArgs, x.args.map { sub.e(it) }, x.lambda?.let { sub.block(it) }).also { it.line = x.line } }
@@ -2173,7 +2173,7 @@ class Parser(toks: List<Tok>) {
                 when {
                     c is MemberE && c.n == "toString" && e.args.isEmpty() -> simple("String")
                     c is NameE -> known[c.n] ?: companionRet(name, c.n)
-                    c is MemberE && c.recv is NameE && (c.recv as NameE).n == "this" -> known[c.n]
+                    c is MemberE && c.recv is NameE && (c.recv).n == "this" -> known[c.n]
                     else -> null
                 }
             }
@@ -2373,7 +2373,7 @@ class Parser(toks: List<Tok>) {
         fun inner(g: FunD) = FunD(g.name, g.params, g.ret, g.body?.let { sub!!.block(it) }, g.exprBody?.let { sub!!.e(it) }, g.line, g.typeParams, g.recv, isSuspend = g.isSuspend)
         // Local functions (anonymous functions in the body) see the label too.
         sub = Subst(emptyMap(), rw = { x -> if (x is NameE && x.n == "this@$label") { hit = true; NameE(n).also { it.line = x.line } } else null },
-            srw = { st -> if (st is LocalDeclS && st.d is FunD) LocalDeclS(inner(st.d as FunD)).also { it.line = st.line } else null })
+            srw = { st -> if (st is LocalDeclS && st.d is FunD) LocalDeclS(inner(st.d)).also { it.line = st.line } else null })
         val b = f.body?.let { sub.block(it) }; val eb = f.exprBody?.let { sub.e(it) }
         if (!hit) return f
         val decl = VarS(n, false, null, NameE("this").also { it.line = f.line }).also { it.line = f.line }
@@ -2994,8 +2994,8 @@ class Parser(toks: List<Tok>) {
 
     /** `"literal".trimIndent()` / `.trimMargin()` on a constant string: folded at compile time. */
     private fun foldStr(e: E, a: List<E>, lam: Block?): E? {
-        if (e !is MemberE || e.recv !is StrL || lam != null || !(e.recv as StrL).parts.all { it is String }) return null
-        val text = (e.recv as StrL).parts.joinToString("") { it as String }
+        if (e !is MemberE || e.recv !is StrL || lam != null || !(e.recv).parts.all { it is String }) return null
+        val text = (e.recv).parts.joinToString("") { it as String }
         val r = when {
             e.n == "trimIndent" && a.isEmpty() -> text.trimIndent()
             e.n == "trimMargin" && a.isEmpty() -> text.trimMargin()
@@ -3131,7 +3131,7 @@ class Parser(toks: List<Tok>) {
                     val sv = anonFun; val svl = anonLabel; anonFun = n; anonLabel = label
                     val fd = try { function() } finally { anonFun = sv; anonLabel = svl }
                     if (bodyLevel > 0) { pendingDecls.add(LocalDeclS(fd).also { it.line = tk.line }); sawLocal = true } else topAnonFuns.add(fd)
-                    UnE("::" + n, if (fd.recv != null) NameE(fd.recv!!.name).also { it.line = tk.line } else NullL()).also { it.line = tk.line }
+                    UnE("::" + n, if (fd.recv != null) NameE(fd.recv.name).also { it.line = tk.line } else NullL()).also { it.line = tk.line }
                 } else fail("unexpected 'fun'", tk)
                 "true" -> BoolL(true)
                 "false" -> BoolL(false)

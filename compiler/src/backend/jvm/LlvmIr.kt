@@ -577,7 +577,7 @@ fun alignOf(t: LType): Int = when (val r = t.r()) {
     PtrT -> 8; FloatT -> 4; DoubleT -> 8
     is StructT -> if (r.packed) 1 else r.fields.maxOfOrNull { alignOf(it) } ?: 1
     is ArrayT -> alignOf(r.elem)
-    is VecT -> { var a = 1; val s = sizeOf(r.elem) * r.n; while (a < s) a *= 2; minOf(a, 16).toInt() }
+    is VecT -> { var a = 1; val s = sizeOf(r.elem) * r.n; while (a < s) a *= 2; minOf(a, 16) }
     else -> throw CompileError("jvm: no alignment for type $r")
 }
 

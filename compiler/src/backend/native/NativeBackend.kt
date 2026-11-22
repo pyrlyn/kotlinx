@@ -1079,7 +1079,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             if (!progress) {
                 fieldsPending.values.firstOrNull()?.let { throw it }
                 val (f, c) = inferPending.first(); line = f.line
-                if (lastErr != null && inferPending.size == 1) throw lastErr!!
+                if (lastErr != null && inferPending.size == 1) throw lastErr
                 errs.values.firstOrNull { e -> inferPending.none { p -> "'${p.first.name}'" in (e.message ?: "") || p.first.name in (e.message ?: "") } }?.let { throw it }
                 fail(if (c == null) "expression-bodied function '${f.name}' needs an explicit return type" else "method '${f.name}' needs an explicit return type")
             }
@@ -1350,7 +1350,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 line = s.line
                 res = genExpr(s.e)
                 if (res.t.isRef) res = consume(res)
-            } else if (onStack) { line = s.line; genStackObj(s as VarS) }
+            } else if (onStack) { line = s.line; genStackObj(s) }
             else if (s is VarS && borrowableFieldLocal(s, b.stmts, i, last)) { line = s.line; genBorrowedFieldLocal(s) } else {
                 val ife = ((s as? ExprS)?.e as? IfE)?.takeIf { it.el != null }
                 if (ife != null) {
@@ -1567,7 +1567,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     /** Runs [f] with [target], its receiver evaluated once into a temporary when that has side effects. */
     private fun onceRecv(target: E, f: (E) -> Val): Val =
-        if (target is MemberE && (target.recv !is NameE || isTopGetter(target.recv as NameE)) && !target.safe)
+        if (target is MemberE && (target.recv !is NameE || isTopGetter(target.recv)) && !target.safe)
             withTemps(listOf(genExpr(target.recv))) { (x) -> f(MemberE(x, target.n, false).also { it.line = target.line }) }
         // `a[i, j]++`: the receiver and every index are evaluated once, then read by `get` and written by `set`.
         else if (multiIndexGet(target)) {
@@ -1622,7 +1622,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     }
                 }
                 // Interface `var` property: the abstract setter `$set$x(v)`, dispatched through the interface.
-                if (r.t is Ty.Iface && ifaceDecls[(r.t as Ty.Iface).name]?.methods?.any { it.name == esm } == true) {
+                if (r.t is Ty.Iface && ifaceDecls[(r.t).name]?.methods?.any { it.name == esm } == true) {
                     releaseIfOwned(method(r, esm, CallE(NameE(esm), emptyList(), listOf(value), null).also { it.line = line })); return
                 }
                 val ct = r.t as? Ty.Cls ?: fail("cannot assign to ${r.t}.${target.n}")
@@ -2559,7 +2559,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         return res
     }
 
-    private fun isSafeCall(e: E): Boolean = (e is MemberE && e.safe) || (e is CallE && e.callee is MemberE && (e.callee as MemberE).safe)
+    private fun isSafeCall(e: E): Boolean = (e is MemberE && e.safe) || (e is CallE && e.callee is MemberE && (e.callee).safe)
 
     /** Kotlin/Native: a negative array size throws IllegalArgumentException (catchable when exceptions are used). */
     private fun checkArrSize(sz: Val): Val {
@@ -2762,7 +2762,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     private fun genCall(e: CallE): Val {
         val callee = e.callee
-        if (callee is MemberE && !callee.safe && callee.recv is NameE && (callee.recv as NameE).n == "super") return superCall(callee.n, e)
+        if (callee is MemberE && !callee.safe && callee.recv is NameE && (callee.recv).n == "super") return superCall(callee.n, e)
         val qn = flatten(callee)
         if (qn != null && qn in NANOS) return Val(emitT("call i64 @rt_nanos()"), Ty.I64)
         if (qn != null && (qn == "kotlin.math.sqrt" || qn == "kotlin.math.abs")) return genNamedCall(qn, e)
@@ -3304,7 +3304,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 val rc = emitT("load $ct, ptr $old")
                 condBr(emitT("icmp eq $ct $rc, 1"), lr, ld)
                 startBlock(lr)
-                emit("call void @relf.${(tok.t as Ty.Cls).name}(ptr $old)")
+                emit("call void @relf.${(tok.t).name}(ptr $old)")
                 br(lj)
                 startBlock(ld)
                 emit("call void ${releaseFn(tok.t)}(ptr $old)")
@@ -3352,7 +3352,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
     private fun bindExpectedRet(f: FunD, e: CallE, env: MutableMap<String, Ty>) {
         val r = f.ret ?: return
         // The call may have been normalized (trailing lambda, defaults) into a new CallE with the same callee.
-        val ex = (expected.lastOrNull { it.first === e } ?: expected.lastOrNull()?.takeIf { (it.first as? CallE)?.callee === e.callee })?.second ?: return
+        val ex = (expected.lastOrNull { it.first === e } ?: expected.lastOrNull()?.takeIf { it.first.callee === e.callee })?.second ?: return
         if (r.name in f.typeParams && r.name !in env && r.args.isEmpty() && !r.nullable && ex !is Ty.NBox) env[r.name] = ex
         // `fun <T> Continuation(...): Continuation<T>` with an expected `Continuation<Unit>`: bind from the instance type.
         else if (r.args.isNotEmpty() && r.name !in f.typeParams) { val one = LinkedHashMap<String, Ty>(); unify(r, ex, f.typeParams, one); for ((k, v) in one) if (k !in env) env[k] = v }
@@ -3508,7 +3508,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         fun subst(r: TypeRef): TypeRef = rsub[r.name]?.let { if (r.nullable) TypeRef(it.name, it.args, true) else it } ?: TypeRef(r.name, r.args.map { subst(it) }, r.nullable)
         fun produced(a: E): TypeRef? {
             if (rcd == null) return null
-            val n = when { a is NameE && a.n !in byName -> a.n; a is CallE && a.args.isEmpty() && a.lambda == null && (a.callee as? NameE) != null -> (a.callee as NameE).n; else -> return null }
+            val n = when { a is NameE && a.n !in byName -> a.n; a is CallE && a.args.isEmpty() && a.lambda == null && (a.callee as? NameE) != null -> (a.callee).n; else -> return null }
             val t = if (a is CallE) rcd.methods.firstOrNull { it.name == n && it.params.isEmpty() && it.typeParams.isEmpty() }?.ret
                 else rcd.fields.firstOrNull { it.name == n }?.type
             return t?.let { subst(it) }
@@ -3631,8 +3631,8 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                     CallE(NameE(y.callee.n).also { it.line = y.line }, y.typeArgs, y.args.map { strip!!.e(it) }, y.lambda?.let { strip!!.block(it) }).also { it.line = y.line }
                 y is NameE && y.n.startsWith("\$cap\$") -> NameE(y.n.removePrefix("\$cap\$")).also { it.line = y.line }
                 else -> null } })
-            cd.methods.forEach { m -> m.body?.let { strip!!.block(it).stmts.forEach { s -> stImpl(s) } }; m.exprBody?.let { stImpl(ExprS(strip!!.e(it)).also { s -> s.line = it.line }) } }
-            cd.inits.forEach { if (it is Block) strip!!.block(it).stmts.forEach { s -> stImpl(s) } }
+            cd.methods.forEach { m -> m.body?.let { strip.block(it).stmts.forEach { s -> stImpl(s) } }; m.exprBody?.let { stImpl(ExprS(strip.e(it)).also { s -> s.line = it.line }) } }
+            cd.inits.forEach { if (it is Block) strip.block(it).stmts.forEach { s -> stImpl(s) } }
         }
         fun free(r: TypeRef): Boolean = (r.name in tps && r.name !in env) || r.args.any { free(it) }
         /**
@@ -4443,7 +4443,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
             return compare("==", r, a)
         }
         if (n != "equals" && (t == Ty.I32 || t == Ty.I64 || t == Ty.U32 || t == Ty.U64 || t.isFp || t == Ty.Char || (t == Ty.Str && (n == "plus" || n == "equals"))) &&
-            n in opOf && e0.args.size == 1 && e0.args[0] !is NamedE && e0.lambda == null && (e0 !is CallE || !e0.infix || extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false))
+            n in opOf && e0.args.size == 1 && e0.args[0] !is NamedE && e0.lambda == null && (!e0.infix || extFuns[n]?.none { extMatches(t, it.params[0].type, it.typeParams) } != false))
             return withTemps(listOf(r)) { (x) -> genExpr(BinE(opOf.getValue(n), x, e0.args[0]).also { it.line = line }) }
         // Built-in members `inc()`/`dec()` of numbers and chars win over extensions.
         // Byte (I8) is excluded: its inc() must wrap at 8 bits.
