@@ -71,10 +71,10 @@ jobs:
       - uses: mlugg/setup-zig@v2
         with:
           version: 0.17.1
-      - name: clang, opt and mimalloc
+      - name: clang, opt, mimalloc and sqlite (ffi test)
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang llvm libmimalloc-dev
+          sudo apt-get install -y clang llvm libmimalloc-dev libsqlite3-dev
           echo "NK_CC=$(command -v clang)" >> "$GITHUB_ENV"
           echo "NK_OPT=$(ls /usr/bin/opt /usr/lib/llvm-*/bin/opt 2>/dev/null | sort -V | tail -1)" >> "$GITHUB_ENV"
       - name: Kotlin/Native toolchain

@@ -39,7 +39,7 @@ for t in compiler/tests/leaks/*.kt; do
   fi
   if [ "$KX_ASAN" = 1 ]; then
     "$NKC" --alloc malloc --cflags "$KX_ASAN_CFLAGS" "$t" -o "$out/$n.asan" 2>/dev/null
-    got=$(kx_with_timeout 300 "$out/$n.asan" 2>"$out/$n.asanerr"); rc=$?
+    got=$(LSAN_OPTIONS="suppressions=$PWD/compiler/tests/leaks/lsan.supp${LSAN_OPTIONS:+:$LSAN_OPTIONS}" kx_with_timeout 300 "$out/$n.asan" 2>"$out/$n.asanerr"); rc=$?
     if [ $rc -eq 0 ] && [ "$got" = "$exp" ]; then echo "PASS asan $n"
     else echo "FAIL asan $n (rc=$rc$([ $rc -eq 142 ] && echo ', timed out after 300 s'))"; head -20 "$out/$n.asanerr"; fail=1; fi
   fi

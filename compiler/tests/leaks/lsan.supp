@@ -1,0 +1,4 @@
+# LeakSanitizer (Linux ASan builds of compiler/tests/leaks): the epoch collector's deferred-free stack
+# (native/gc/zig common.object.PtrStack, grown by rt_gc_free_later) is not released at exit. It is collector
+# bookkeeping, not program objects (those are counted by --leak-check); see the PR notes.
+leak:common.object.PtrStack.grow
