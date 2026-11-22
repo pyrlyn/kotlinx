@@ -8,7 +8,9 @@ extern fn rt_panic(msg: [*:0]const u8) noreturn;
 pub fn oom() noreturn { rt_panic("OutOfMemoryError"); }
 pub fn malloc(n: usize) *anyopaque { return c.malloc(n) orelse oom(); }
 pub fn calloc(n: usize) *anyopaque { return c.calloc(1, n) orelse oom(); }
-/// `n` must be non-zero, as in host.zig: size-0 callers go through `regions.memRealloc`.
+/// `n` must be non-zero: realloc(p, 0) may legally return NULL (glibc frees p),
+/// which this non-null signature cannot express. Size-0 callers go through
+/// `regions.memRealloc` / `rt_gc_mem_realloc`, which handle it.
 pub fn realloc(p: ?*anyopaque, n: usize) *anyopaque {
     std.debug.assert(n != 0);
     return c.realloc(p, n) orelse oom();
@@ -23,6 +25,8 @@ pub fn getenv_present(name: [*:0]const u8) bool {
     const e = c.getenv(name) orelse return false;
     return e[0] != 0 and e[0] != '0';
 }
+/// Peak RSS in KiB. Linux `ru_maxrss` is already KiB; Darwin reports bytes. On wasm, linear
+/// memory never shrinks, so its current size is the peak.
 pub fn peakRssKb() i64 {
     if (comptime builtin.cpu.arch.isWasm()) return @intCast(@wasmMemorySize(0) * 64);
     const ru = std.posix.getrusage(c.rusage.SELF);

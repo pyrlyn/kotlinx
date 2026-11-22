@@ -17,6 +17,7 @@ NKC=${NKC:-compiler/build/newkotlinc.kexe}
 kx_require_free_space || exit 1
 kx_wrap_toolchain || exit 1
 CC=$NK_CC
+kx_probe_asan; [ "$KX_ASAN" = 0 ] && echo "SKIP asan (all gc tests): $KX_ASAN_SKIP"
 gcs=${GCS:-$(for d in native/gc/c/*/gc.c; do basename "$(dirname "$d")"; done)}
 out=compiler/build/gc-tmp; rm -rf "$out"; mkdir -p "$out"; fail=0
 for g in $gcs; do
@@ -38,11 +39,11 @@ for g in $gcs; do
       else echo "FAIL gc-traversal $g $o"; cat "$out/traversal-$g.err" "$out/traversal-$g.log" 2>/dev/null | head -20; fail=1; fi
     fi
   done
-  if [ "$g" = perceus ] || [ "$g" = incremental ]; then
+  if { [ "$g" = perceus ] || [ "$g" = incremental ]; } && [ "$KX_ASAN" = 1 ]; then
     testdef=""; [ "$g" = incremental ] && testdef=-DTEST_INCREMENTAL
-    if "$CC" -O1 -g -fsanitize=address -fno-omit-frame-pointer -DRT_PLAIN_MALLOC -Inative/gc/c $testdef \
+    if "$CC" $KX_ASAN_CFLAGS -DRT_PLAIN_MALLOC -Inative/gc/c $testdef \
        native/gc/c/tests/archive/unit/traversal.c compiler/runtime/runtime.c -o "$out/traversal-$g.asan" 2>"$out/traversal-$g.asanerr" \
-       && "$out/traversal-$g.asan" >"$out/traversal-$g.asanlog" 2>&1; then echo "PASS gc-traversal-asan $g"
+       && kx_with_timeout 300 "$out/traversal-$g.asan" >"$out/traversal-$g.asanlog" 2>&1; then echo "PASS gc-traversal-asan $g"
     else echo "FAIL gc-traversal-asan $g"; cat "$out/traversal-$g.asanerr" "$out/traversal-$g.asanlog" 2>/dev/null | head -20; fail=1; fi
   fi
   for t in native/gc/c/tests/kt/*.kt; do
@@ -55,9 +56,9 @@ for g in $gcs; do
       if [ $rc -eq 0 ] && [ "$got" = "$exp" ] && grep -q "leak-check: OK" "$out/$g.$n.lcerr"; then echo "PASS gc-leaks $g $n"
       else echo "FAIL gc-leaks $g $n (rc=$rc)"; grep -v "live=0" "$out/$g.$n.lcerr" | head; fail=1; fi
     fi
-    if has asan; then
-      "$NKC" --gc="$g" --alloc malloc --cflags "-O1 -g -fsanitize=address -fno-omit-frame-pointer" "$t" -o "$out/$g.$n.asan" 2>/dev/null
-      got=$("$out/$g.$n.asan" 2>"$out/$g.$n.asanerr"); rc=$?
+    if has asan && [ "$KX_ASAN" = 1 ]; then
+      "$NKC" --gc="$g" --alloc malloc --cflags "$KX_ASAN_CFLAGS" "$t" -o "$out/$g.$n.asan" 2>/dev/null
+      got=$(kx_with_timeout 300 "$out/$g.$n.asan" 2>"$out/$g.$n.asanerr"); rc=$?
       if [ $rc -eq 0 ] && [ "$got" = "$exp" ]; then echo "PASS gc-asan $g $n"; else echo "FAIL gc-asan $g $n (rc=$rc)"; head -20 "$out/$g.$n.asanerr"; fail=1; fi
     fi
   done
@@ -112,8 +113,9 @@ fi
 # there. Left behind, a later step frees it in the middle of its own release (double free under ASan).
 if [[ " $(echo $gcs) " == *" incremental "* ]]; then
   t=native/gc/c/tests/incremental/slice_black.kt
-  if "$NKC" --gc=incremental --alloc malloc --cflags "-O1 -g -fsanitize=address -fno-omit-frame-pointer" "$t" -o "$out/incremental.slice_black" 2>/dev/null; then
-    got=$(KX_GC_BUDGET_US=300 "$out/incremental.slice_black" 2>"$out/incremental.slice_black.err"); rc=$?
+  if [ "$KX_ASAN" = 0 ]; then echo "SKIP gc-incremental slice_black (ASan)"
+  elif "$NKC" --gc=incremental --alloc malloc --cflags "$KX_ASAN_CFLAGS" "$t" -o "$out/incremental.slice_black" 2>/dev/null; then
+    got=$(KX_GC_BUDGET_US=300 kx_with_timeout 300 "$out/incremental.slice_black" 2>"$out/incremental.slice_black.err"); rc=$?
     if [ $rc -eq 0 ] && [ "$got" = "53215861" ]; then echo "PASS gc-incremental slice_black"
     else echo "FAIL gc-incremental slice_black (rc=$rc)"; head -20 "$out/incremental.slice_black.err"; fail=1; fi
   else echo "FAIL gc-incremental slice_black: compile"; fail=1; fi

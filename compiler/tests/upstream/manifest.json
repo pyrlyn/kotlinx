@@ -4206,8 +4206,8 @@
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyReferenceWithExplicitType.kt"
   },
   "box/box/callableReference/property/extensionPropertyReferenceWithTypeParameter.kt": {
-   "category": "strings / templates",
-   "detail": "unsupported callable reference $Fn$ArrayList$String$$$String::baz",
+   "category": "local / extension functions",
+   "detail": "reference to foo, both an extension function and an extension property, is not supported",
    "status": "UNSUPPORTED",
    "upstream": "compiler/testData/codegen/box/callableReference/property/extensionPropertyReferenceWithTypeParameter.kt"
   },

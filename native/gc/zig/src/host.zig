@@ -115,45 +115,13 @@ test "pause histogram buckets and percentiles" {
     try std.testing.expectEqual(@as(i64, 100_000), pausePercentileNs(1.0));
 }
 
-pub fn oom() noreturn {
-    rt_panic("OutOfMemoryError");
-}
-
-pub fn malloc(n: usize) *anyopaque {
-    return c.malloc(n) orelse oom();
-}
-
-pub fn calloc(n: usize) *anyopaque {
-    return c.calloc(1, n) orelse oom();
-}
-
-/// `n` must be non-zero: realloc(p, 0) may legally return NULL (glibc frees p),
-/// which this non-null signature cannot express. Size-0 callers go through
-/// `regions.memRealloc` / `rt_gc_mem_realloc`, which handle it.
-pub fn realloc(p: ?*anyopaque, n: usize) *anyopaque {
-    std.debug.assert(n != 0);
-    return c.realloc(p, n) orelse oom();
-}
-
-pub fn free(p: ?*anyopaque) void {
-    c.free(p);
-}
-pub fn getenv_i64(name: [*:0]const u8, default_val: i64) i64 {
-    const e = c.getenv(name) orelse return default_val;
-    if (e[0] == 0) return default_val;
-    return std.fmt.parseInt(i64, std.mem.span(e), 10) catch default_val;
-}
-
-pub fn getenv_present(name: [*:0]const u8) bool {
-    const e = c.getenv(name) orelse return false;
-    return e[0] != 0 and e[0] != '0';
-}
-
-/// Peak RSS in KiB. Linux `ru_maxrss` is already KiB; Darwin reports bytes. On wasm, linear
-/// memory never shrinks, so its current size is the peak.
-pub fn peakRssKb() i64 {
-    if (comptime builtin.cpu.arch.isWasm()) return @intCast(@wasmMemorySize(0) * 64);
-    const ru = std.posix.getrusage(c.rusage.SELF);
-    if (builtin.os.tag == .macos) return @divTrunc(ru.maxrss, 1024);
-    return ru.maxrss;
-}
+// Shared with runtime_host.zig (KotlinX), so both hosts allocate and read the environment alike.
+const util = @import("lib/host_util.zig");
+pub const oom = util.oom;
+pub const malloc = util.malloc;
+pub const calloc = util.calloc;
+pub const realloc = util.realloc;
+pub const free = util.free;
+pub const getenv_i64 = util.getenv_i64;
+pub const getenv_present = util.getenv_present;
+pub const peakRssKb = util.peakRssKb;

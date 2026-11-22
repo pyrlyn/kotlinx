@@ -146,7 +146,6 @@ pub fn build(b: *std.Build) void {
                     .{ .name = "collector", .module = coll },
                     .{ .name = "kxgc", .module = kxgc },
                     .{ .name = "host", .module = host },
-                    .{ .name = "host_options", .module = host_options },
                 },
             }),
         });
@@ -259,5 +258,4 @@ pub fn build(b: *std.Build) void {
         const bc = b.addInstallFile(bc_lib.getEmittedLlvmBc(), b.fmt("lib/libgc-{s}.bc", .{g}));
         bc_step.dependOn(&bc.step);
     }
-
 }

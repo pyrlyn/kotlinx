@@ -29,10 +29,11 @@ function $js_sbrk(n) {
   BRK = e;
   return p;
 }
-// llvm.wasm.memory.grow (the Zig GC's page pool on wasm32): `pages` 64 KiB pages at a 64 KiB boundary past BRK,
-// whose first page number it returns, as wasm returns the old memory size where the new pages start; -1 when full.
-function _memgrow(pages) {
-  const p = BRK + 65535 & -65536, e = p + pages * 65536;
+// wasm memory.size / memory.grow on the same break: the memory "ends" at the break rounded up to a 64 KiB page, and
+// a grow returns the first new page (its pages are contiguous with the previous grow when no js_sbrk came between).
+function _msize() { return BRK + 65535 >>> 16; }
+function _mgrow(n) {
+  const p = BRK + 65535 & -65536, e = p + (n >>> 0) * 65536;
   if (e > MAXMEM || e < 0 || (e > buf.byteLength && !_grow(e))) return -1;
   BRK = e;
   return p >>> 16;

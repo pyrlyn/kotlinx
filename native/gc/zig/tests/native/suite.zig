@@ -4,7 +4,6 @@ const std = @import("std");
 const gc = @import("collector");
 const kx = @import("kxgc");
 const host = @import("host");
-const host_options = @import("host_options");
 
 const Obj = extern struct {
     hdr: u64,
@@ -633,10 +632,9 @@ fn traversal(count: usize) void {
     nodes[count - 1].hdr += 1;
     gc.rt_cc_possible_root(nodes[0]);
     gc.rt_gc_collect();
-    // perceus records the gray set (MarkGray, then ScanBlack over the record); without the record,
-    // MarkGray, Scan and ScanBlack each traverse the ring (the root once less). incremental counts
-    // without touching the counts, so nothing is restored: mark, then scan from the node with the
-    // outside reference.
+    // perceus records the gray set (markGray + scanBlack). Without the record, MarkGray, Scan and ScanBlack
+    // each traverse the ring (the root once less). incremental counts without touching the counts, so
+    // nothing is restored: mark, then scan from the node with the outside reference.
     const rec = @hasDecl(gc, "debugGrayRecordMax");
     const stepped = std.mem.eql(u8, std.mem.span(gc.rt_gc_name()), "incremental");
     const live_visits = if (stepped or rec) 2 * count else 3 * count - 1;
@@ -649,10 +647,9 @@ fn traversal(count: usize) void {
     nodes[count - 1].hdr -= 1;
     gc.rt_cc_possible_root(nodes[0]);
     gc.rt_gc_collect();
-    // perceus with the gray record walks the record instead of re-tracing from the root. Without it:
-    // MarkGray, Scan, CollectWhite. incremental: mark, the batch's count, the release.
-    const dead_visits = if (rec) 4 * count else live_visits + 3 * count;
-    check(node_freed == count and node_released == count and node_visits == dead_visits, "garbage ring");
+    // perceus with the record: markGray, then the recorded scan and collect. Without it: MarkGray, Scan,
+    // CollectWhite. incremental: mark, the batch's count, the release.
+    check(node_freed == count and node_released == count and node_visits == (if (rec) 4 * count else live_visits + 3 * count), "garbage ring");
     const a = nodeNew();
     const b = nodeNew();
     const c = nodeNew();
@@ -1081,8 +1078,6 @@ fn fillUntil(target: usize, head: *?*Filler) void {
 /// roots deferred or by the heap's growth, which also frees the deferred roots that died.
 fn generations() void {
     if (comptime !@hasDecl(gc, "debugDeferredLen")) return;
-    // The heap's growth is counted in pool pages, and -Dleakcheck / -Dplain-malloc bypass the pool.
-    if (comptime host_options.leakcheck or host_options.plain_malloc) return;
     gc.rt_gc_collect();
     const live0 = tri_live;
     const bad0 = tri_bad;

@@ -12,13 +12,18 @@
 //! On wasm the RC region (`rt_alloc`) has a pool of its own instead of malloc; both pools take pages
 //! from the same stock.
 //!
-//! KotlinX build options mirror C's preprocessor switches: -Dleakcheck gives every object a tagged
-//! prefix and counts it per region (`--leak-check`); -Dpool pools the RC region natively too
-//! (`--alloc pool`); -Dplain-malloc takes both regions from malloc (`--alloc malloc`). All default
-//! to false.
+//! KotlinX build options mirror the C preprocessor switches: -Dleakcheck enables tagged prefixes,
+//! region counters and traversal validation; -Dpool pools the RC region natively too; -Dplain-malloc
+//! selects malloc instead of the tracing pool. All default to false.
+//! The `leakcheck.add()` hook (rt_leak_obj; no-op unless -Dleakcheck) counts every object alloc/free
+//! in both regions, so `--leak-check` gets counts without the tagged-prefix mode.
 const std = @import("std");
 const builtin = @import("builtin");
 const c_std = std.c;
+extern "c" fn fdopen(fd: c_int, mode: [*:0]const u8) ?*c_std.FILE;
+fn errStream() ?*c_std.FILE {
+    return fdopen(2, "w");
+}
 const kx = @import("kxgc");
 const host = @import("host");
 const leak = @import("leakcheck");
@@ -368,9 +373,11 @@ var trace_pool = Pool{ .id = 0 };
 /// taking pages from the same stock. Natively it stays libc malloc, one of C's object allocators
 /// (C defaults to mimalloc).
 var rc_pool = Pool{ .id = 1 };
+// KotlinX `--alloc pool` (-Dpool) pools the RC region natively as well; `--alloc malloc` (-Dplain-malloc) keeps both
+// regions on malloc on wasm too, as the wasi-libc malloc baseline of compiler/tests/wasm/perf.sh expects.
 const rc_pooled = RT_POOL or (is_wasm and !RT_PLAIN_MALLOC);
 
-// ---- RT_LEAKCHECK: region tags and counters ---------------------------------------------------
+// ---- RT_LEAKCHECK: region tags and counters (KotlinX `--leak-check`) ---------------------------
 pub const RG_RC: i64 = 0x5243; // "RC"
 pub const RG_TRACE: i64 = 0x5452; // "TR"
 const RG_INDEX_RC = 0;
@@ -386,13 +393,9 @@ pub const Counters = struct {
 };
 pub var counters: Counters = .{};
 var report_registered = false;
-extern "c" fn fdopen(fd: c_int, mode: [*:0]const u8) ?*c_std.FILE;
 extern "c" fn atexit(f: *const fn () callconv(.c) void) c_int;
 extern "c" fn fprintf(stream: ?*c_std.FILE, fmt: [*:0]const u8, ...) c_int;
 extern "c" fn fflush(stream: ?*c_std.FILE) c_int;
-fn errStream() ?*c_std.FILE {
-    return fdopen(2, "w");
-}
 
 fn ensureReport() void {
     if (report_registered) return;
@@ -477,9 +480,13 @@ pub inline fn rtAllocTrace(size: i64) *anyopaque {
     if (RT_LEAKCHECK) {
         leak.add(1);
         counters.alloc[RG_INDEX_TRACE] += 1;
+        mallocGrow(size);
         return rgTag(host.malloc(@as(usize, @intCast(size)) + RG_PREFIX), RG_TRACE);
     }
-    if (RT_PLAIN_MALLOC) return rtAlloc(size);
+    if (RT_PLAIN_MALLOC) {
+        mallocGrow(size);
+        return host.malloc(@intCast(size));
+    }
     return trace_pool.alloc(size);
 }
 
@@ -487,15 +494,42 @@ pub inline fn rtFreeTrace(p: ?*anyopaque, size: i64) void {
     if (RT_LEAKCHECK) {
         leak.add(-1);
         counters.free[RG_INDEX_TRACE] += 1;
+        malloc_live -= @intCast(size);
         host.free(rgRaw(p.?, RG_TRACE));
         return;
     }
-    if (RT_PLAIN_MALLOC) return rtFree(p, size);
+    if (RT_PLAIN_MALLOC) {
+        malloc_live -= @intCast(size);
+        return host.free(p);
+    }
     if (p) |q| trace_pool.free(q, size);
+}
+
+// Without the pool (-Dleakcheck, -Dplain-malloc) the tracing region still reports its growth in pages
+// of the live bytes' high-water mark: the incremental collector starts major cycles and frees dead
+// deferred roots on `grow_hook` and `debugPoolPages`, and would otherwise never do so in these modes.
+var malloc_live: usize = 0;
+var malloc_pages: usize = 0;
+
+inline fn mallocGrow(size: i64) void {
+    const n: usize = @intCast(size);
+    if (malloc_live + n > malloc_pages * PAGE) mallocGrowSlow(n);
+    malloc_live += n;
+}
+
+noinline fn mallocGrowSlow(n: usize) void {
+    @branchHint(.cold);
+    if (grow_hook) |hook| {
+        hook();
+        // The hook may have freed objects: grow only by what is still missing.
+        if (malloc_live + n <= malloc_pages * PAGE) return;
+    }
+    malloc_pages = std.math.divCeil(usize, malloc_live + n, PAGE) catch unreachable;
 }
 
 /// Pool pages carved from the system so far.
 pub fn debugPoolPages() usize {
+    if (RT_LEAKCHECK or RT_PLAIN_MALLOC) return malloc_pages;
     return pages.carved;
 }
 
@@ -525,6 +559,26 @@ pub fn memFree(p: ?*anyopaque) void {
 
 pub fn notDeferred(what: [*:0]const u8) noreturn {
     host.rt_panic(what);
+}
+
+test "pool reuses same size class" {
+    if (RT_LEAKCHECK or RT_PLAIN_MALLOC) return error.SkipZigTest;
+    const a = rtAllocTrace(32);
+    const b = rtAllocTrace(32);
+    try std.testing.expect(a != b);
+    rtFreeTrace(a, 32);
+    const c = rtAllocTrace(32);
+    try std.testing.expect(c == a);
+    rtFreeTrace(b, 32);
+    rtFreeTrace(c, 32);
+}
+
+test "pool large sizes and alignment" {
+    const big = rtAllocTrace(RT_CLASSES * 8 + 1);
+    rtFreeTrace(big, RT_CLASSES * 8 + 1);
+    const x = rtAllocTrace(8);
+    try std.testing.expect(@intFromPtr(x) % 8 == 0);
+    rtFreeTrace(x, 8);
 }
 
 test "region tags and visit accounting" {

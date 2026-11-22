@@ -201,11 +201,6 @@ pub fn debugWorkBytes() usize {
     return td.work.cap * @sizeOf(?*anyopaque);
 }
 
-/// For the root-buffer test: capacity of the pending possible-root buffer.
-pub fn debugRootsCap() usize {
-    return cc_roots.cap;
-}
-
 pub fn debugRefCount(p: *anyopaque) u64 {
     return obj.refCount(p);
 }
@@ -215,11 +210,15 @@ pub fn debugColor(p: *anyopaque) u2 {
 pub fn debugIsBuffered(p: *anyopaque) bool {
     return obj.isBuffered(p);
 }
-/// For the gray-record test: entries markGray records before it falls back to tracing from the roots.
-pub const debugGrayRecordMax = td_mod.GRAY_RECORD_MAX.?;
 pub fn debugInitialCap() usize {
     return obj.PTR_STACK_INITIAL_CAPACITY;
 }
+/// For the root-buffer test: capacity of the pending possible-root buffer.
+pub fn debugRootsCap() usize {
+    return cc_roots.cap;
+}
+/// For the gray-record test: entries markGray records before it falls back to tracing from the roots.
+pub const debugGrayRecordMax = td_mod.GRAY_RECORD_MAX.?;
 /// For bench/native/cycles.zig: possible roots currently buffered.
 pub fn debugRootsLen() usize {
     return cc_roots.len;

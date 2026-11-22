@@ -2,15 +2,29 @@
 
 In-tree path dependencies (no git submodule, no out-of-repo symlinks, no network fetch).
 
-| Tree | Upstream | Commit | What is frozen |
-|---|---|---|---|
-| `native/gc/c/` | pyrlyn/gc | `6acde649c454e710ca1bc79e04651b0ef07b1b26` | **Collector bodies**: `kxgc.h`, `*/gc.c`, `common/*.inc`, caps. Snapshot docs/scripts are imported as-is and may mention the old submodule workflow. |
-| `native/gc/zig/src/{kxgc,host,epoch,rc,incremental}.zig`, `src/common/object.zig`, `tests/native/README.md`, `bench/native/`, `docs/zig-port.md`, `build.zig.zon` | pyrlyn/gc | `2dea030e9276cbc6cd8cab603489a27146d32d88` | **Zig collector bodies** from that commit (byte-matched). |
-| `native/gc/zig/src/perceus.zig`, `src/common/trial_deletion.zig`, `kxgc.h` | pyrlyn/gc + KotlinX | `2dea030` + local | Upstream plus class layouts in `KxVTab.cyclic` and the recorded gray set (scanGray/collectGray) for perceus. |
-| `native/gc/zig/src/common/regions.zig` | pyrlyn/gc + KotlinX | `2dea030` + local | Upstream page pool plus the `-Dleakcheck` (tagged prefixes, region report, `rt_leak_obj`), `-Dpool` and `-Dplain-malloc` modes that `bin/newkotlinc` selects. |
-| `native/gc/zig/build.zig`, `tests/native/suite.zig` | pyrlyn/gc + KotlinX | `2dea030` + local | Upstream plus the KotlinX steps (`gc-libs`, `gc-bc`, `compact`, build options) and tests for the local changes. |
-| `native/gc/zig/src/runtime_host.zig`, `src/lib/` | KotlinX adapter | (local) | Host for linking with `runtime.c` (externs; no duplicate runtime symbols); `lib/host_util.zig` mirrors the helpers of upstream `host.zig`. `host.zig` and `runtime_host.zig` are never linked into one executable. |
-| `native/gc/zig/src/compact.zig`, `native/gc/zig/tests/native/compact.zig`, `native/gc/c/compact/caps` | KotlinX | (local) | `compact` collector (the `--target=js` default) and its tests; not from pyrlyn/gc, not byte-matched. |
-| `native/gc/smoke/`, `native/gc/build.zig` | KotlinX | (local) | Umbrella modules (`kxgc_c` via `addTranslateC`), smokes, docs. |
+Upstream: [pyrlyn/gc](https://github.com/pyrlyn/gc) `2dea030e9276cbc6cd8cab603489a27146d32d88` (`zig.sha`); the C side is
+from `a65a3f66f7ece6afa73fee64510d990819961ad6` (`c.sha`), which upstream has not changed since.
+Updating: copy the upstream files below at the new commit, then re-apply the KotlinX patches listed here (a 3-way
+merge with the previous upstream commit as base keeps them).
+
+| Tree | Upstream | What is frozen |
+|---|---|---|
+| `native/gc/c/` | pyrlyn/gc `a65a3f6`: the C side of the repository, i.e. the files of the pre-Zig snapshot `6acde649` (`kxgc.h`, `*/gc.c`, `*/caps`, `*/config.sh`, `common/*.inc`, `bench/` without `bench/native/`, `docs/` without `zig-port.md`, `tests/` without `tests/native/`, `README.md`, `.gitignore`) | **Collector bodies** byte-matched. Path-adapted for KotlinX (`compiler/gc` -> `native/gc/c`, toolchain wrappers, Zig 0.17): `README.md`, `docs/extraction-plan.md`, `tests/archive/run.sh`, `tests/archive/unit/traversal.c`, `tests/zig/build.zig`, `tests/zig/src/runner.zig`. |
+| `native/gc/zig/` | pyrlyn/gc `2dea030`: `src/`, `tests/native/`, `bench/native/`, `build.zig`, `build.zig.zon`, `kxgc.h`, `docs/zig-port.md` | Byte-matched: `src/epoch.zig`, `src/incremental.zig`, `src/rc.zig`, `src/kxgc.zig`, `src/common/object.zig`, `bench/native/*`, `build.zig.zon`, `tests/native/README.md`. The rest carries the KotlinX patches below. Not vendored: `artifacts/`, `scripts/`, `renovate.json`. |
+| `native/gc/zig/src/runtime_host.zig` | KotlinX adapter (local) | Host for linking with `runtime.c` (externs; no duplicate runtime symbols). |
+| `native/gc/zig/src/compact.zig`, `native/gc/zig/tests/native/compact.zig`, `native/gc/c/compact/caps` | KotlinX (local) | `compact` collector (the `--target=js` default) and its tests; not from pyrlyn/gc. |
+| `native/gc/smoke/`, `native/gc/build.zig` | KotlinX (local) | Umbrella modules (`kxgc_c` via `addTranslateC`), smokes, docs. |
+
+## KotlinX patches on the upstream Zig tree
+
+| Files | Patch |
+|---|---|
+| `src/lib/host_options.zig`, `src/lib/leakcheck.zig`, `src/lib/host_util.zig` (local files) | Build options `-Dleakcheck`, `-Dpool`, `-Dplain-malloc`; the `rt_leak_obj` hook; allocation and environment helpers shared by `host.zig` and `runtime_host.zig`. |
+| `src/host.zig` | Allocation/environment helpers re-exported from `lib/host_util.zig` instead of defined inline. |
+| `src/common/regions.zig` | KotlinX allocation modes on top of the upstream page pool: `--leak-check` tagged prefixes, region counters and traversal validation (`visit`, `noteRun`, `report`); `--alloc pool` pools the RC region natively; `--alloc malloc` takes the tracing region from malloc, and on wasm the RC region too (upstream pools it there). Without the pool, the tracing region reports growth in pages of its live high-water mark (`grow_hook`, `debugPoolPages`), so the incremental collector still starts major cycles. |
+| `src/common/trial_deletion.zig`, `src/perceus.zig`, `kxgc.h` | Trial deletion over class layouts in the vtable's `cyclic` slot (`NativeBackend.kt` `cyclicSlot`) and a recorded gray set (`scanGray`, `collectGray`, capped natively by `GRAY_RECORD_MAX`); perceus frees layout garbage with `rt_free_trace(size)` and skips `relo` when it releases nothing. |
+| `build.zig` | `compact` collector; build options wired into every module; `gc-libs` (static `libgc-<name>.a` with `runtime_host`) and `gc-bc` (LLVM bitcode for `--target=js`) steps. |
+| `tests/native/suite.zig` | Tests for the patches above (`layoutCollect`, `rootBufferReuse`, the gray-record visit counts in `traversal`). |
+| `docs/zig-port.md` | KotlinX notes (compact, `--target=js`). |
 
 KotlinX wiring: `NEWKOTLIN_GC_DIR` → `native/gc/c`; default `--gc-runtime=zig` links `native/gc/zig/zig-out/lib/libgc-*.a`.

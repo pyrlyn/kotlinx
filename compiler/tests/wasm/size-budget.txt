@@ -1,12 +1,12 @@
 # Size regression budget for --target=wasm (compiler/tests/wasm/size.sh).
 # size <label> <source> <max main.wasm bytes>: default flags, stripped module; ~3% above the size when it was set.
 # Raised by ~700 bytes for trial deletion over class layouts and the recorded gray set (cycles 1.7x faster).
-# Raised for pyrlyn/gc@a65a3f6: its page pool walks free lists to return pages to the stock (Pages.step,
-# Pool.refill, +1.8 KB of code) and starts each size class at a non-null page sentinel (+1.6 KB of data).
+# Raised again for pyrlyn/gc a65a3f6's page pool (Pages.step and Pool.refill, ~1.8 KB of code, and its class
+# tables): pages return to a shared stock, so bigheap under node runs 11% faster in 8% less memory.
 size hello compiler/tests/wasm/size/hello.kt 14050
-size alloc bench/cases/alloc/kotlin/Main.kt 20200
+size alloc bench/cases/alloc/kotlin/Main.kt 20100
 size hashmap bench/cases/hashmap/kotlin/Main.kt 18750
-size nbody bench/cases/nbody/kotlin/Main.kt 22000
+size nbody bench/cases/nbody/kotlin/Main.kt 21900
 # forbid <regex>: no function of hello.wasm (name section kept) may match. Each was a large libc pull-in.
 forbid ^c\.stdlib\.qsort
 forbid ^sort\.pdq\.
