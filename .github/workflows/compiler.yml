@@ -1,11 +1,12 @@
-# KotlinX compiler on macOS (Apple Silicon): build, compiler/test.sh, upstream tests (also under --leak-check).
+# KotlinX compiler: macOS (Apple Silicon) build, compiler/test.sh, upstream tests (also under --leak-check, gated
+# against a baseline); Linux x86_64 build and golden tests; the JVM build in mutation/jvm.
 name: compiler
 on:
   pull_request:
-    paths: ["compiler/**", "native/gc/**", "bench/gc", "bench/wasm/**", "bin/newkotlinc", ".github/workflows/compiler.yml"]
+    paths: ["compiler/**", "native/gc/**", "bench/gc", "bench/wasm/**", "bin/newkotlinc", "mutation/**", ".github/workflows/compiler.yml"]
   push:
     branches: [main]
-    paths: ["compiler/**", "native/gc/**", "bench/gc", "bench/wasm/**", "bin/newkotlinc", ".github/workflows/compiler.yml"]
+    paths: ["compiler/**", "native/gc/**", "bench/gc", "bench/wasm/**", "bin/newkotlinc", "mutation/**", ".github/workflows/compiler.yml"]
 concurrency:
   group: compiler-${{ github.ref }}
   cancel-in-progress: true
@@ -56,5 +57,49 @@ jobs:
         run: compiler/tests/runtime/run.sh
       - name: Upstream tests
         run: python3 compiler/tests/upstream/run.py --nkc compiler/build/newkotlinc.kexe --jobs 3
-      - name: Upstream tests under --leak-check (report only)
-        run: python3 compiler/tests/upstream/run.py --leak-check --nkc compiler/build/newkotlinc.kexe --jobs 3 || true
+      # Known leaks are listed in leak-baseline-macos.txt: a new LEAK (or any other new non-PASS) fails the job,
+      # a fixed one is reported so the baseline can shrink.
+      - name: Upstream tests under --leak-check (against the baseline)
+        run: python3 compiler/tests/upstream/run.py --leak-check --nkc compiler/build/newkotlinc.kexe --jobs 3 --baseline compiler/tests/upstream/leak-baseline-macos.txt
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      KN_VERSION: "2.4.21"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: 0.17.1
+      - name: clang, opt and mimalloc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang llvm libmimalloc-dev
+          echo "NK_CC=$(command -v clang)" >> "$GITHUB_ENV"
+          echo "NK_OPT=$(ls /usr/bin/opt /usr/lib/llvm-*/bin/opt 2>/dev/null | sort -V | tail -1)" >> "$GITHUB_ENV"
+      - name: Kotlin/Native toolchain
+        run: |
+          mkdir -p ~/.konan
+          curl -fsSL "https://github.com/JetBrains/kotlin/releases/download/v${KN_VERSION}/kotlin-native-prebuilt-linux-x86_64-${KN_VERSION}.tar.gz" | tar xz -C ~/.konan
+      - name: Build Zig GC static libs
+        run: ( cd native/gc/zig && zig build gc-libs )
+      - name: Build compiler
+        run: NEWKOTLIN_KN_FLAGS=-opt compiler/build.sh
+      - name: compiler/test.sh
+        run: compiler/test.sh
+      - name: Upstream tests
+        run: python3 compiler/tests/upstream/run.py --nkc compiler/build/newkotlinc.kexe --jobs 4
+  mutation-jvm:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: gradle/actions/setup-gradle@v5
+      # The JVM build compiles compiler/src (minus driver/); the order-independence test needs no C compiler.
+      - name: Build and order-independence test
+        working-directory: mutation/jvm
+        run: gradle --no-daemon test --tests 'newkotlin.mutation.GoldenTest.compilationOrderDoesNotAffectIr'

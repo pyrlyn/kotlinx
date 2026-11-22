@@ -196,6 +196,9 @@ def main():
     ap.add_argument("--cflags", default=None)
     ap.add_argument("--json")
     ap.add_argument("--leak-check", action="store_true", help="compile with --leak-check; a passing test that leaks is LEAK")
+    ap.add_argument("--baseline", help="file of known non-PASS results ('STATUS path' lines): exit 0 unless a test is "
+                    "worse than its baseline entry (tests now passing are reported, not failed)")
+    ap.add_argument("--write-baseline", help="write the non-PASS results of this run as a baseline file")
     ap.add_argument("paths", nargs="*")
     a = ap.parse_args()
     global LEAK_CHECK
@@ -211,6 +214,28 @@ def main():
     print("summary:", " ".join(f"{k}={v}" for k, v in sorted(counts.items())), f"total={len(res)}")
     if a.json:
         json.dump({os.path.relpath(k, HERE): v for k, v in res.items()}, open(a.json, "w"), indent=1)
+    got = {os.path.relpath(p, HERE): r["status"] for p, r in res.items()}
+    if a.write_baseline:
+        with open(a.write_baseline, "w") as f:
+            f.write("# Known non-PASS upstream results (run.py --write-baseline); one 'STATUS path' per line.\n")
+            for k in sorted(got):
+                if got[k] != "PASS":
+                    f.write(f"{got[k]} {k}\n")
+    if a.baseline:
+        known = {}
+        for line in open(a.baseline):
+            line = line.strip()
+            if line and not line.startswith("#"):
+                st, path = line.split(" ", 1)
+                known[path] = st
+        new = sorted(k for k, st in got.items() if st != "PASS" and known.get(k) != st)
+        fixed = sorted(k for k, st in known.items() if got.get(k) == "PASS")
+        for k in fixed:
+            print(f"NOW PASSING {k} (was {known[k]}; remove it from {a.baseline})")
+        for k in new:
+            print(f"REGRESSION {got[k]} {k}" + (f" (baseline: {known[k]})" if k in known else ""))
+        print(f"baseline: {len(new)} regressions, {len(fixed)} now passing, {len(known)} known")
+        sys.exit(1 if new else 0)
     sys.exit(0 if counts.get("PASS", 0) == len(res) else 1)
 
 if __name__ == "__main__":
