@@ -270,7 +270,7 @@ private fun compile(args: Array<String>) {
         if (leakCheck) "-DRT_LEAKCHECK" else null)
     if (target == Target.JVM) {
         val opt = findOpt(optPath, majorVersion(cc)) ?: run { fprintf(stderr, "error: LLVM opt not found (--opt <path> or NK_OPT); the jvm target needs it\n"); exit(1); return }
-        try { linkJvm(ir, output, runtime, gcObjPath, "${defs.joinToString(" ")} -I${shq(gcDir)} $gcFlags", links, cc, opt, emitLl) }
+        try { linkJvm(ir, output, runtime, gcObjPath, defs + "-I$gcDir" + words(gcFlags), links, cc, opt, emitLl) }
         catch (e: CompileError) { fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1) }
         return
     }
