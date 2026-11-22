@@ -3,16 +3,14 @@
 package newkotlin
 
 import kotlinx.cinterop.*
-import kxproc.kx_environ
+import kxproc.kx_fa_addclose
+import kxproc.kx_fa_adddup2
+import kxproc.kx_fa_addopen
+import kxproc.kx_fa_free
+import kxproc.kx_fa_new
 import kxproc.kx_is_dir
 import kxproc.kx_mtime
-import kxproc.posix_spawn_file_actions_addclose
-import kxproc.posix_spawn_file_actions_adddup2
-import kxproc.posix_spawn_file_actions_addopen
-import kxproc.posix_spawn_file_actions_destroy
-import kxproc.posix_spawn_file_actions_init
-import kxproc.posix_spawn_file_actions_tVar
-import kxproc.posix_spawnp
+import kxproc.kx_spawnp
 import platform.posix.*
 
 // Tools (clang, opt, llvm-link, javac, jar, minifiers) are started from an argument vector with posix_spawnp: no
@@ -55,24 +53,23 @@ internal fun exec(argv: List<String>, stdout: Io = Io.Inherit, stderr: Io = Io.I
         if (capture && pipe(fds) != 0) throw CompileError("pipe failed: ${strerror(errno)?.toKString()}")
         val readFd = if (capture) fds[0] else -1
         val writeFd = if (capture) fds[1] else -1
-        val fa = alloc<posix_spawn_file_actions_tVar>()
-        if (posix_spawn_file_actions_init(fa.ptr) != 0) throw CompileError("posix_spawn_file_actions_init failed")
+        val fa = kx_fa_new() ?: throw CompileError("posix_spawn_file_actions_init failed")
         try {
             fun redirect(io: Io, fd: Int) {
                 when (io) {
                     Io.Inherit -> {}
-                    Io.Null -> posix_spawn_file_actions_addopen(fa.ptr, fd, "/dev/null", O_WRONLY, 0.convert())
-                    Io.Capture -> posix_spawn_file_actions_adddup2(fa.ptr, writeFd, fd)
-                    Io.Stdout -> posix_spawn_file_actions_adddup2(fa.ptr, 1, fd)
-                    is Io.File -> posix_spawn_file_actions_addopen(fa.ptr, fd, io.path, O_WRONLY or O_CREAT or O_TRUNC, 420.convert())
+                    Io.Null -> kx_fa_addopen(fa, fd, "/dev/null", O_WRONLY, 0)
+                    Io.Capture -> kx_fa_adddup2(fa, writeFd, fd)
+                    Io.Stdout -> kx_fa_adddup2(fa, 1, fd)
+                    is Io.File -> kx_fa_addopen(fa, fd, io.path, O_WRONLY or O_CREAT or O_TRUNC, 420)
                 }
             }
             redirect(stdout, 1)
             redirect(stderr, 2)
-            if (capture) { posix_spawn_file_actions_addclose(fa.ptr, readFd); posix_spawn_file_actions_addclose(fa.ptr, writeFd) }
+            if (capture) { kx_fa_addclose(fa, readFd); kx_fa_addclose(fa, writeFd) }
             val cargv = allocArrayOf(argv.map { it.cstr.ptr } + listOf(null))
-            val pid = alloc<pid_tVar>()
-            val rc = posix_spawnp(pid.ptr, argv[0], fa.ptr, null, cargv, kx_environ())
+            val pid = alloc<IntVar>()
+            val rc = kx_spawnp(pid.ptr, argv[0], fa, cargv)
             if (capture) close(writeFd)
             if (rc != 0) {
                 if (capture) close(readFd)
@@ -95,7 +92,7 @@ internal fun exec(argv: List<String>, stdout: Io = Io.Inherit, stderr: Io = Io.I
                 if (errno != EINTR) throw CompileError("waitpid failed for ${argv[0]}: ${strerror(errno)?.toKString()}")
             }
             Proc(decodeWaitStatus(st.value), out.decode())
-        } finally { posix_spawn_file_actions_destroy(fa.ptr) }
+        } finally { kx_fa_free(fa) }
     }
 }
 
