@@ -464,6 +464,7 @@ open class Job(body0: suspend () -> Unit) {
         }
     }
 }
+fun <T> kxUnchecked(x: T?): T = x as T
 class Deferred<T>(val compute: suspend () -> T) {
     var result: T? = null
     var hasResult = false
@@ -475,7 +476,10 @@ class Deferred<T>(val compute: suspend () -> T) {
         val f = failure
         if (f != null) throw f
         if (!hasResult) throw CancellationException("Deferred was cancelled")
-        return result!!
+        // hasResult, not `result != null`, says the value is there: T itself may be nullable (`async<String?> { null }`).
+        // Generic instances do not track nullability (Deferred<String?> is Deferred${'$'}String), so the value goes through
+        // an unchecked cast to an unbounded type parameter, which lets a null pass.
+        return kxUnchecked(result)
     }
     fun cancel() { job.cancel() }
 }
