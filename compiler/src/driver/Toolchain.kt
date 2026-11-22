@@ -7,21 +7,45 @@ import platform.posix.*
 
 // Host toolchain helpers shared by the native and js targets: files, shell commands, clang and LLVM opt lookup.
 
+/**
+ * POSIX shell quoting of one word: [s] in single quotes, each embedded `'` written as `'\''`. Every path or other
+ * value that reaches [system] / [capture] goes through this, so spaces, quotes, `$` or `;` in it stay literal.
+ * Values that are deliberately split into words (`--cc "zig cc -target ..."`, `--cflags`, config.sh output) are not.
+ */
+internal fun shq(s: String): String = "'" + s.replace("'", "'\\''") + "'"
+
+/** The whole file at [path] as UTF-8; [CompileError] when it cannot be opened, sized or fully read. */
 internal fun readFile(path: String): String {
     val f = fopen(path, "rb") ?: throw CompileError("cannot open $path")
     try {
-        fseek(f, 0, SEEK_END); val n = ftell(f).toInt(); fseek(f, 0, SEEK_SET)
+        if (fseek(f, 0, SEEK_END) != 0) throw CompileError("cannot seek $path")
+        val size: Long = ftell(f).convert()
+        if (size < 0) throw CompileError("cannot size $path")
+        if (size > Int.MAX_VALUE - 8) throw CompileError("$path is too large ($size bytes)")
+        if (fseek(f, 0, SEEK_SET) != 0) throw CompileError("cannot seek $path")
+        val n = size.toInt()
         val buf = ByteArray(n)
-        if (n > 0) buf.usePinned { fread(it.addressOf(0), 1u, n.toULong(), f) }
+        if (n > 0) {
+            val got: Long = buf.usePinned { fread(it.addressOf(0), 1u, n.convert(), f) }.convert()
+            if (got != size || ferror(f) != 0) throw CompileError("cannot read $path (read $got of $size bytes)")
+        }
         return buf.decodeToString()
     } finally { fclose(f) }
 }
 
+/** Writes [text] to [path]; [CompileError] on a short write or a failing close (e.g. a full disk). */
 internal fun writeFile(path: String, text: String) {
     val f = fopen(path, "wb") ?: throw CompileError("cannot write $path")
     val b = text.encodeToByteArray()
-    if (b.isNotEmpty()) b.usePinned { fwrite(it.addressOf(0), 1u, b.size.toULong(), f) }
-    fclose(f)
+    var closed = false
+    try {
+        if (b.isNotEmpty()) {
+            val put: Long = b.usePinned { fwrite(it.addressOf(0), 1u, b.size.convert(), f) }.convert()
+            if (put != b.size.toLong()) throw CompileError("cannot write $path (wrote $put of ${b.size} bytes)")
+        }
+        closed = true
+        if (fclose(f) != 0) throw CompileError("cannot write $path (close failed)")
+    } finally { if (!closed) fclose(f) }
 }
 
 /** First line of a shell command's stdout, or null. */
@@ -46,7 +70,7 @@ internal fun majorVersion(tool: String): Int? = majorCache.getOrPut(tool) {
 }
 
 private fun majorVersionRun(tool: String): Int? {
-    val out = capture("'$tool' --version 2>/dev/null | grep -oE '(LLVM|clang) version [0-9]+' | head -1") ?: return null
+    val out = capture("${shq(tool)} --version 2>/dev/null | grep -oE '(LLVM|clang) version [0-9]+' | head -1") ?: return null
     return out.substringAfterLast(' ').toIntOrNull()
 }
 
@@ -70,7 +94,7 @@ internal fun findCc(): String {
         if (v.startsWith("Apple")) { majorCache["/usr/bin/clang"] = Regex("version (\\d+)").find(v)?.groupValues?.get(1)?.toIntOrNull(); return "/usr/bin/clang" }
     }
     val home = getenv("HOME")?.toKString() ?: ""
-    return captureAll("ls -d '$home'/.local/share/mise/installs/conda-clang/*/bin/clang 2>/dev/null | grep -v /latest/ | sort -rV")
+    return captureAll("ls -d ${shq(home)}/.local/share/mise/installs/conda-clang/*/bin/clang 2>/dev/null | grep -v /latest/ | sort -rV")
         .firstOrNull { access(it, X_OK) == 0 } ?: "clang"
 }
 
@@ -95,9 +119,9 @@ internal fun findOpt(explicit: String?, maxMajor: Int?, minMajor: Int = 0): Stri
     // Prefer one the C compiler can read (LLVM major <= the C compiler's).
     fixed.firstOrNull { ok(it) && (maxMajor == null || (majorVersion(it) ?: 0) <= maxMajor) }?.let { return it }
     // mise `conda:llvm-tools` (the repo's mise.toml; `mise install`), newest version first.
-    val mise = captureAll("ls -d '$home'/.local/share/mise/installs/conda-llvm-tools/*/bin/opt 2>/dev/null | grep -v /latest/ | sort -rV")
+    val mise = captureAll("ls -d ${shq(home)}/.local/share/mise/installs/conda-llvm-tools/*/bin/opt 2>/dev/null | grep -v /latest/ | sort -rV")
     (mise.firstOrNull { o -> ok(o) && (maxMajor == null || (majorVersion(o) ?: 0) <= maxMajor) } ?: mise.firstOrNull { ok(it) })
         ?.let { return it }
-    val globs = "/opt/homebrew/opt/llvm@*/bin/opt /usr/local/opt/llvm@*/bin/opt '$home'/.local/share/mise/installs/llvm/*/bin/opt"
+    val globs = "/opt/homebrew/opt/llvm@*/bin/opt /usr/local/opt/llvm@*/bin/opt ${shq(home)}/.local/share/mise/installs/llvm/*/bin/opt"
     return capture("ls -d $globs 2>/dev/null | sort -V | tail -1")?.takeIf { ok(it) }
 }

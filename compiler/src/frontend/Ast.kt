@@ -9,58 +9,104 @@ class TypeRef(val name: String, val args: List<TypeRef>, val nullable: Boolean) 
 const val GETTER_TYPE = "\$GetterType"
 
 /** An expression node; [line] is its source line, for errors. */
-sealed class E { var line = 0 }
-class IntL(val v: Long, val long: Boolean, val unsigned: Boolean = false) : E()
+/** A piece of a string template: literal text ([StrText]) or an interpolated expression ([E]). */
+sealed interface StrPart
+class StrText(val s: String) : StrPart
+sealed class E(line: Int) : StrPart { var line = line }
+class IntL(val v: Long, val long: Boolean, val unsigned: Boolean = false, line: Int = 0) : E(line)
 /** `x++` / `x--` used as an expression: yields the old value. */
-class PostIncE(val target: E, val op: String) : E()
-class CharL(val v: Long) : E()
-class DblL(val v: Double, val f32: Boolean = false) : E()
-class BoolL(val v: Boolean) : E()
-class NullL : E()
-class StrL(val parts: List<Any>) : E() // String or E
-class NameE(val n: String) : E()
-class CallE(val callee: E, val typeArgs: List<TypeRef>, val args: List<E>, val lambda: Block?) : E() {
+class PostIncE(val target: E, val op: String, line: Int = 0) : E(line)
+class CharL(val v: Long, line: Int = 0) : E(line)
+class DblL(val v: Double, val f32: Boolean = false, line: Int = 0) : E(line)
+class BoolL(val v: Boolean, line: Int = 0) : E(line)
+class NullL(line: Int = 0) : E(line)
+class StrL(val parts: List<StrPart>, line: Int = 0) : E(line) {
+    /** No interpolation: the literal is [text]. */
+    val isConstant: Boolean get() = parts.all { it is StrText }
+    /** The text of a constant template. */
+    val text: String get() = parts.joinToString("") { (it as StrText).s }
+}
+/** A string template from literal text pieces and expressions (`strL("a=", e)`). */
+fun strL(vararg ps: Any): StrL = StrL(ps.map { if (it is String) StrText(it) else it as E })
+class NameE(val n: String, line: Int = 0) : E(line)
+class CallE(val callee: E, val typeArgs: List<TypeRef>, val args: List<E>, val lambda: Block?, line: Int = 0) : E(line) {
     /** Written as `a name b`: builtin non-infix members (Int.rem) cannot be called this way, so extensions win. */
     var infix = false
 }
 /** Named call argument `name = e` (only `copy` of data classes accepts these). */
-class NamedE(val name: String, val e: E) : E()
+class NamedE(val name: String, val e: E, line: Int = 0) : E(line)
 /** `e is T` / `e !is T`. */
-class IsE(val e: E, val type: TypeRef, val neg: Boolean) : E()
+class IsE(val e: E, val type: TypeRef, val neg: Boolean, line: Int = 0) : E(line)
 /** `e as T` / `e as? T`. */
-class AsE(val e: E, val type: TypeRef, val safe: Boolean) : E()
-class MemberE(val recv: E, val n: String, val safe: Boolean) : E()
-class IndexE(val recv: E, val idx: E) : E()
-class BinE(val op: String, val l: E, val r: E) : E()
-class UnE(val op: String, val e: E) : E()
-class IfE(val cond: E, val th: Block, val el: Block?) : E()
+class AsE(val e: E, val type: TypeRef, val safe: Boolean, line: Int = 0) : E(line)
+class MemberE(val recv: E, val n: String, val safe: Boolean, line: Int = 0) : E(line)
+class IndexE(val recv: E, val idx: E, line: Int = 0) : E(line)
+/** Binary operators, including the built-in infix functions the parser folds into [BinE]; [sym] is the source spelling. */
+enum class BinOp(val sym: String) {
+    OR("||"), AND("&&"),
+    EQ("=="), NE("!="), IDENT("==="), NOT_IDENT("!=="),
+    LT("<"), GT(">"), LE("<="), GE(">="),
+    IN("in"), NOT_IN("!in"),
+    ELVIS("?:"),
+    BIT_AND("and"), BIT_OR("or"), XOR("xor"), SHL("shl"), SHR("shr"), USHR("ushr"), UNTIL("until"), DOWN_TO("downTo"), STEP("step"),
+    RANGE(".."),
+    PLUS("+"), MINUS("-"),
+    TIMES("*"), DIV("/"), REM("%");
+
+    override fun toString() = sym
+
+    companion object {
+        private val bySym = entries.associateBy { it.sym }
+        /** The operator spelled [s]; an unknown spelling is an internal error, never a silent fallback. */
+        fun of(s: String): BinOp = bySym[s] ?: throw IllegalArgumentException("unknown binary operator '$s'")
+        fun ofOrNull(s: String): BinOp? = bySym[s]
+    }
+}
+
+/** Unary operators; [REF] is a callable reference `recv::name` (the name is [UnE.ref]), [CLASS_LIT] is `e::class`. */
+enum class UnOp(val sym: String) {
+    NEG("-"), PLUS("+"), NOT("!"), NOT_NULL("!!"), SPREAD("*"), CLASS_LIT("#class"), REF("::");
+
+    override fun toString() = sym
+}
+
+class BinE(val op: BinOp, val l: E, val r: E, line: Int = 0) : E(line)
+/** [ref] is the referenced name exactly when [op] is [UnOp.REF]. */
+class UnE(val op: UnOp, val e: E, val ref: String?, line: Int = 0) : E(line) {
+    /** A non-reference unary operator. */
+    constructor(op: UnOp, e: E, line: Int = 0) : this(op, e, null, line)
+    init { require((op == UnOp.REF) == (ref != null)) { "UnE: callable reference name iff op is REF" } }
+}
+class IfE(val cond: E, val th: Block, val el: Block?, line: Int = 0) : E(line)
 /** Lambda literal used as a value (function-typed); compiled to a closure object implementing a `$Fn...` interface. */
-class LambdaE(val body: Block) : E()
+class LambdaE(val body: Block, line: Int = 0) : E(line)
 /** `catch (name: type) { body }` clause of a [TryE]. */
 class Catch(val name: String, val type: TypeRef, val body: Block)
 /** `try { body } catch (...) { ... } finally { ... }` (an expression). */
-class TryE(val body: Block, val catches: List<Catch>, val fin: Block?) : E()
+class TryE(val body: Block, val catches: List<Catch>, val fin: Block?, line: Int = 0) : E(line)
 /** `conds == null` is the else branch. */
-class WhenE(val subj: E?, val branches: List<Pair<List<E>?, Block>>) : E()
+/** One `when` branch: its conditions (null for `else`) and its body. */
+data class WhenBranch(val conds: List<E>?, val body: Block)
+class WhenE(val subj: E?, val branches: List<WhenBranch>, line: Int = 0) : E(line)
 
 /** A statement node; [line] is its source line, for errors. */
-sealed class S { var line = 0 }
-class VarS(val name: String, val isVar: Boolean, val type: TypeRef?, val init: E) : S()
-class AssignS(val target: E, val op: String, val value: E) : S()
-class IncS(val target: E, val op: String) : S()
+sealed class S(line: Int) { var line = line }
+class VarS(val name: String, val isVar: Boolean, val type: TypeRef?, val init: E, line: Int = 0) : S(line)
+class AssignS(val target: E, val op: String, val value: E, line: Int = 0) : S(line)
+class IncS(val target: E, val op: String, line: Int = 0) : S(line)
 /** `isDo`: `do { body } while (cond)` (the body runs before the first test). */
-class WhileS(val cond: E, val body: Block, val isDo: Boolean = false) : S() { var label: String? = null }
-class ForS(val name: String, val iter: E, val body: Block) : S() { var label: String? = null }
-class RetS(val e: E?) : S()
-class ExprS(val e: E) : S()
+class WhileS(val cond: E, val body: Block, val isDo: Boolean = false, line: Int = 0) : S(line) { var label: String? = null }
+class ForS(val name: String, val iter: E, val body: Block, line: Int = 0) : S(line) { var label: String? = null }
+class RetS(val e: E?, line: Int = 0) : S(line)
+class ExprS(val e: E, line: Int = 0) : S(line)
 /** `break` / `continue` (unlabeled: innermost loop). */
-class JumpS(val isBreak: Boolean) : S() { /** `break@l` / `continue@l`. */ var label: String? = null }
+class JumpS(val isBreak: Boolean, line: Int = 0) : S(line) { /** `break@l` / `continue@l`. */ var label: String? = null }
 
 /**
  * A function, class, object or interface declared inside a block (`d` is a [FunD], [ClassD] or [InterfaceD]).
  * Only the parser creates it; `Parser.liftLocals` replaces every one before later passes run.
  */
-class LocalDeclS(val d: Any) : S()
+class LocalDeclS(val d: Any, line: Int = 0) : S(line)
 
 /** `params` are lambda parameter names (empty = implicit `it`). */
 class Block(val stmts: List<S>, val params: List<String> = emptyList(), val paramTypes: List<TypeRef?> = emptyList()) {
@@ -71,29 +117,19 @@ class Block(val stmts: List<S>, val params: List<String> = emptyList(), val para
 }
 
 /** `Owner.name` of every `const val` member (declared in a class or object body), for `isPermanent()`. */
-object ConstFields { val names = HashSet<String>() }
+object ConstFields { val names get() = compilationContext.constFields }
 
 /**
  * Type arguments written on a type-name receiver of a callable reference (`Array<String>::firstElement`), by the
  * receiver's NameE (references resolve by the type name; the arguments pick the instance, e.g. `ArrayList<String>`).
  */
-object RefTypeArgs { val map = HashMap<NameE, List<TypeRef>>() }
+object RefTypeArgs { val map get() = compilationContext.refTypeArgs }
 
 /** Names of top-level `external fun` declarations: implemented in C, linked via `--link`, called through the C ABI. */
-object Externs { val names = HashSet<String>() }
-/**
- * `suspend fun` declarations by source line and name. FunD is copied by many rewrites (extensions, generics,
- * private renames) that all keep the line, so suspend-ness is looked up by line and (a suffix/prefix of) the name.
- */
-object SuspendFuns {
-    val byLine = HashMap<Int, ArrayList<String>>()
-    fun add(line: Int, name: String) { byLine.getOrPut(line) { ArrayList() }.add(name) }
-    fun isSuspend(f: FunD): Boolean = byLine[f.line]?.any { n -> f.name == n || f.name.endsWith("\$" + n) || f.name.endsWith("." + n) || f.name.startsWith(n + "\$") } == true
-}
+object Externs { val names get() = compilationContext.externs }
 /** Numbers lambda blocks once, so each gets a stable id. */
 object LamIds {
-    private var next = 0
-    fun id(b: Block): Int { if (b.lamId < 0) b.lamId = next++; return b.lamId }
+    fun id(b: Block): Int { if (b.lamId < 0) b.lamId = compilationContext.nextLambda++; return b.lamId }
 }
 /** `default`: default argument, evaluated at the call site (may refer to earlier parameters). */
 class Param(val name: String, val type: TypeRef, val default: E? = null, /** `vararg`: [type] is the list type. */ val vararg: Boolean = false,
@@ -102,7 +138,9 @@ class Param(val name: String, val type: TypeRef, val default: E? = null, /** `va
 class FunD(val name: String, val params: List<Param>, val ret: TypeRef?, val body: Block?, val exprBody: E?, val line: Int,
            val typeParams: List<String> = emptyList(),
            /** Extension receiver type (`fun Recv.name(...)`); resolved away by [Parser.program]. */
-           val recv: TypeRef? = null) {
+           val recv: TypeRef? = null,
+           /** `suspend fun`: compiled as an LLVM coroutine. Every rewrite that copies a FunD carries it over. */
+           val isSuspend: Boolean = false) {
     /** Whether a call with [n] explicit arguments fits (context parameters are never passed explicitly). */
     fun takesArgs(n: Int) = params.filter { !it.ctx }.let { ps -> ps.any { it.vararg } || n in ps.count { it.default == null }..ps.size }
 }
@@ -132,7 +170,7 @@ class InterfaceD(val name: String, val methods: List<FunD>, val line: Int, val t
  * Type arguments of generic super-interfaces (direct and inherited) by interface name: `interface B : A<String>` ->
  * "B" -> {"A": [String]}. Generics instantiates `A$String` and points B's super at it.
  */
-object IfaceSuperArgs { val map = HashMap<String, Map<String, List<TypeRef>>>() }
+object IfaceSuperArgs { val map get() = compilationContext.ifaceSuperArgs }
 /** `globals`: top-level properties, initialized in declaration order before `main`. */
 class Program(val funs: List<FunD>, val classes: List<ClassD>, val ifaces: List<InterfaceD>, val globals: List<VarS> = emptyList(),
               /** Class name -> (companion object name, names the companion object declares, incl. its own name). */

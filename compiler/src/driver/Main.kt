@@ -43,11 +43,12 @@ private fun hasLib(dir: String): Boolean =
 
 private fun pkgConfigLibdir(): String? = capture("pkg-config --variable=libdir mimalloc 2>/dev/null")
 
-/** Directory with libmimalloc: ${'$'}NEWKOTLIN_MIMALLOC_DIR, pkg-config, then Homebrew/system paths. */
+/** Directory with libmimalloc: ${'$'}NEWKOTLIN_MIMALLOC_DIR, pkg-config, then Homebrew/system paths (incl. Debian multiarch). */
 private fun findMimalloc(): String? {
     getenv("NEWKOTLIN_MIMALLOC_DIR")?.toKString()?.let { return if (hasLib(it)) it else null }
     pkgConfigLibdir()?.let { if (hasLib(it)) return it }
-    return listOf("/opt/homebrew/opt/mimalloc/lib", "/usr/local/opt/mimalloc/lib", "/usr/local/lib", "/usr/lib")
+    return listOf("/opt/homebrew/opt/mimalloc/lib", "/usr/local/opt/mimalloc/lib", "/usr/local/lib", "/usr/lib",
+        "/usr/lib/x86_64-linux-gnu", "/usr/lib/aarch64-linux-gnu", "/usr/lib64")
         .firstOrNull { hasLib(it) }
 }
 
@@ -61,45 +62,110 @@ const val WASM_GC = "perceus"
  *  `zig build gc-bc -p ...` for --target=js). */
 const val WASM_ZIG_PREFIX = "zig-out/wasm32-wasi"
 
-/** The `newkotlinc` command; see docs/usage.md for the options. */
-fun main(args: Array<String>) {
-    var input: String? = null; var output: String? = null
-    var runtime = getenv("NEWKOTLIN_RUNTIME")?.toKString() ?: "compiler/runtime/runtime.c"
-    var target = Target.NATIVE
-    if (getenv("NEWKOTLIN_NO_BORROW_FIELD_LOCALS")?.toKString()?.let { it.isNotEmpty() && it != "0" } == true) borrowFieldLocals = false
-    var gc = getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() }
-    var gcRuntime = getenv("NEWKOTLIN_GC_RUNTIME")?.toKString()?.takeIf { it.isNotEmpty() }
-    var gcRuntimeSet = false // --gc-runtime given on the command line (bin/newkotlinc always exports NEWKOTLIN_GC_RUNTIME)
-    var alloc: String? = null; var leakCheck = false; var emitLl = false; var onlyIr = false; var minify = false
-    var ccArg: String? = null; var cflags = "-O3 -flto"; var optPath: String? = null; var noOpt = false
+/** Options from the command line only (environment defaults are applied by [main]); built by [parseArgs]. */
+data class Options(
+    val input: String? = null, val output: String? = null,
+    val runtime: String? = null, val target: Target = Target.NATIVE,
+    /** `--gc` / `--gc=` (null: ${'$'}NEWKOTLIN_GC or the target's default). */ val gc: String? = null,
+    /** `--gc-runtime` / `--gc-runtime=` (null: not given on the command line). */ val gcRuntime: String? = null,
+    val alloc: String? = null, val leakCheck: Boolean = false, val emitLl: Boolean = false, val onlyIr: Boolean = false,
+    val minify: Boolean = false, val cc: String? = null, val cflags: String = "-O3 -flto", val opt: String? = null,
+    val noOpt: Boolean = false, val links: List<String> = emptyList(), val help: Boolean = false,
+)
+
+/** A bad command line: [main] prints the message and the usage text and exits 2. */
+class UsageError(msg: String) : Exception(msg)
+
+private val ALLOCS = listOf("mimalloc", "malloc", "pool")
+
+/**
+ * Parses the command line. Every option that takes a value checks that one follows (`-o` at the end is a usage error,
+ * not an index out of bounds); unknown options, a second input file and bad `--target` / `--alloc` values are
+ * [UsageError]s.
+ */
+fun parseArgs(args: Array<String>): Options {
+    var o = Options()
     val links = ArrayList<String>()
     var i = 0
+    fun value(opt: String): String {
+        if (i + 1 >= args.size) throw UsageError("option $opt needs a value")
+        return args[++i]
+    }
+    fun target(t: String) = Target.parse(t) ?: throw UsageError("unknown target: $t (native, js, wasm or jvm)")
+    fun alloc(a: String) = a.also { if (it !in ALLOCS) throw UsageError("--alloc must be mimalloc, malloc or pool (got $it)") }
     while (i < args.size) {
-        when (val a = args[i]) {
-            "-o" -> output = args[++i]
-            "--target" -> target = Target.parse(args[++i]) ?: run { fprintf(stderr, "unknown target: %s\n", args[i]); exit(2); return }
-            "--runtime" -> runtime = args[++i]
-            "--gc" -> gc = args[++i]
-            "--gc-runtime" -> { gcRuntime = args[++i]; gcRuntimeSet = true }
-            "--emit-llvm" -> emitLl = true
-            "--minify" -> minify = true
-            "--leak-check" -> leakCheck = true
-            "--alloc" -> alloc = args[++i].also { if (it != "mimalloc" && it != "malloc" && it != "pool") { fprintf(stderr, "--alloc must be mimalloc, malloc or pool\n"); exit(2) } }
-            "--cc" -> ccArg = args[++i]
-            "--cflags" -> cflags = args[++i]
-            "--opt" -> optPath = args[++i]
-            "--no-opt" -> noOpt = true
-            "--link" -> links.add(args[++i])
-            "-S" -> onlyIr = true
-            "-h", "--help" -> { println(USAGE); return }
-            else -> if (a.startsWith("--gc=")) gc = a.substringAfter('=')
-            else if (a.startsWith("--gc-runtime=")) { gcRuntime = a.substringAfter('='); gcRuntimeSet = true }
-            else if (a.startsWith("--link=")) links.add(a.substringAfter('='))
-            else if (a.startsWith("--target=")) target = Target.parse(a.substringAfter('=')) ?: run { fprintf(stderr, "unknown target: %s\n", a); exit(2); return }
-            else if (input == null && !a.startsWith("-")) input = a else { fprintf(stderr, "unknown argument: %s\n%s\n", a, USAGE); exit(2) }
+        val a = args[i]
+        o = when {
+            a == "-o" -> o.copy(output = value(a))
+            a == "--target" -> o.copy(target = target(value(a)))
+            a.startsWith("--target=") -> o.copy(target = target(a.substringAfter('=')))
+            a == "--runtime" -> o.copy(runtime = value(a))
+            a == "--gc" -> o.copy(gc = value(a))
+            a.startsWith("--gc=") -> o.copy(gc = a.substringAfter('='))
+            a == "--gc-runtime" -> o.copy(gcRuntime = value(a))
+            a.startsWith("--gc-runtime=") -> o.copy(gcRuntime = a.substringAfter('='))
+            a == "--emit-llvm" -> o.copy(emitLl = true)
+            a == "--minify" -> o.copy(minify = true)
+            a == "--leak-check" -> o.copy(leakCheck = true)
+            a == "--alloc" -> o.copy(alloc = alloc(value(a)))
+            a == "--cc" -> o.copy(cc = value(a))
+            a == "--cflags" -> o.copy(cflags = value(a))
+            a == "--opt" -> o.copy(opt = value(a))
+            a == "--no-opt" -> o.copy(noOpt = true)
+            a == "--link" -> { links.add(value(a)); o }
+            a.startsWith("--link=") -> { links.add(a.substringAfter('=')); o }
+            a == "-S" -> o.copy(onlyIr = true)
+            a == "-h" || a == "--help" -> o.copy(help = true)
+            a.startsWith("-") && a != "-" -> throw UsageError("unknown option: $a")
+            o.input == null -> o.copy(input = a)
+            else -> throw UsageError("unexpected argument: $a (input already given: ${o.input})")
         }
         i++
     }
+    return o.copy(links = links)
+}
+
+/**
+ * [cflags] without the LTO flags (`-flto`, `-flto=thin`, `-flto=full`, `-flto-jobs=N`), as whole words: a Zig collector
+ * archive is machine code, which clang's LTO cannot read. A plain substring replace turned `-flto=thin` into `=thin`.
+ */
+fun stripLto(cflags: String): String = cflags.split(' ', '\t').filter { it.isNotEmpty() && it != "-flto" && !it.startsWith("-flto=") && !it.startsWith("-flto-") }.joinToString(" ")
+
+/** Whether [cflags] asks for LTO (a `-flto` or `-flto=<kind>` word, not a substring of another flag). */
+fun hasLto(cflags: String): Boolean = cflags.split(' ', '\t').any { it == "-flto" || it.startsWith("-flto=") }
+
+private fun usageExit(msg: String): Nothing {
+    fprintf(stderr, "newkotlinc: %s\n%s\n", msg, USAGE); exit(2); throw IllegalStateException()
+}
+
+/** The `newkotlinc` command; see docs/usage.md for the options. I/O failures of the driver ([CompileError]) exit 1. */
+fun main(args: Array<String>) {
+    try { compile(args) } catch (e: CompileError) { fprintf(stderr, "newkotlinc: error: %s\n", e.message); exit(1) }
+}
+
+/** Sets [hostTriple] for the machine the driver runs on (the IR used to name arm64 macOS everywhere). */
+@OptIn(kotlin.experimental.ExperimentalNativeApi::class)
+private fun detectHostTriple() {
+    val os = when (Platform.osFamily) { OsFamily.MACOSX -> "macos"; OsFamily.LINUX -> "linux"; else -> return }
+    val arch = when (Platform.cpuArchitecture) { CpuArchitecture.ARM64 -> "arm64"; CpuArchitecture.X64 -> "x86_64"; else -> return }
+    hostTripleFor(os, arch)?.let { hostTriple = it }
+}
+
+private fun compile(args: Array<String>) {
+    val o = try { parseArgs(args) } catch (e: UsageError) { usageExit(e.message ?: "bad arguments") }
+    detectHostTriple()
+    if (o.help) { println(USAGE); return }
+    val input = o.input; val output = o.output
+    val runtime = o.runtime ?: getenv("NEWKOTLIN_RUNTIME")?.toKString() ?: "compiler/runtime/runtime.c"
+    val target = o.target
+    if (getenv("NEWKOTLIN_NO_BORROW_FIELD_LOCALS")?.toKString()?.let { it.isNotEmpty() && it != "0" } == true) borrowFieldLocals = false
+    var gc = o.gc ?: getenv("NEWKOTLIN_GC")?.toKString()?.takeIf { it.isNotEmpty() }
+    // --gc-runtime given on the command line (bin/newkotlinc always exports NEWKOTLIN_GC_RUNTIME)
+    val gcRuntimeSet = o.gcRuntime != null
+    var gcRuntime = o.gcRuntime ?: getenv("NEWKOTLIN_GC_RUNTIME")?.toKString()?.takeIf { it.isNotEmpty() }
+    var alloc = o.alloc; val leakCheck = o.leakCheck; val emitLl = o.emitLl; val onlyIr = o.onlyIr; val minify = o.minify
+    var cflags = o.cflags; val optPath = o.opt; val noOpt = o.noOpt
+    val links = o.links
     val wasm = target == Target.WASM
     if (target == Target.JVM) {
         // The collector is translated with the program: C sources only, and no collector threads (epoch has one).
@@ -133,15 +199,28 @@ fun main(args: Array<String>) {
     if (gcRuntime != "zig" && gcRuntime != "c") {
         fprintf(stderr, "--gc-runtime must be zig or c (got %s)\n", gcRuntime); exit(2); return
     }
-    val cc = ccArg ?: if (wasm32) (getenv("NK_WASM_CC")?.toKString() ?: "zig cc -target wasm32-wasi") else findCc()
+    val cc = o.cc ?: if (wasm32) (getenv("NK_WASM_CC")?.toKString() ?: "zig cc -target wasm32-wasi") else findCc()
     // A compiler command with arguments (`zig cc ...`): its LLVM version picks the opt below.
     if (' ' in cc) majorCache[cc] = capture("$cc --version 2>/dev/null | grep -oE 'clang version [0-9]+' | head -1")?.substringAfterLast(' ')?.toIntOrNull()
     if (!target.implemented) { fprintf(stderr, "target %s is not supported yet\n", target.flag); exit(1); return }
-    if (input == null || output == null) { fprintf(stderr, "%s\n", USAGE); exit(2); return }
+    if (input == null) usageExit("no input file")
+    if (output == null) usageExit("no output file (-o <output>)")
+    // GC: caps/metadata and C sources under <gcDir>; Zig static libs under <zigLibDir>/libgc-<name>.a.
+    // Only the collector backend is zig|c; runtime.c is always the shared KotlinX runtime.
+    val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/c")
+    // The collector name is validated before its caps are read (it is a path component).
+    fun checkGc(name: String): Boolean {
+        if (name.isEmpty() || '/' in name || name == "." || name == "..") { fprintf(stderr, "unknown --gc %s\n", name); exit(2); return false }
+        if (access("$gcDir/$name/caps", F_OK) != 0 && access("$gcDir/$name/gc.c", F_OK) != 0) {
+            fprintf(stderr, "unknown --gc %s: no %s/%s/caps or %s/%s/gc.c (set NEWKOTLIN_GC_DIR or use bin/newkotlinc)\n", name, gcDir, name, gcDir, name)
+            exit(2); return false
+        }
+        return true
+    }
+    if (!checkGc(gc)) return
     // A GC whose caps file lists "deferred" needs deferred-RC code generation (see NativeBackend.deferredRc).
     run {
-        val dir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/c")
-        val caps = if (access("$dir/$gc/caps", F_OK) == 0) (try { readFile("$dir/$gc/caps") } catch (e: CompileError) { "" }) else ""
+        val caps = if (access("$gcDir/$gc/caps", F_OK) == 0) (try { readFile("$gcDir/$gc/caps") } catch (e: CompileError) { "" }) else ""
         deferredRc = caps.split(Regex("\\s+")).contains("deferred")
     }
     val ir = try { compileToIr(readFile(input)) } catch (e: CompileError) {
@@ -149,22 +228,12 @@ fun main(args: Array<String>) {
     }
     if (onlyIr) { writeFile(output, ir); return }
     // Same IR for compact and rc (neither defers RC); only the linked collector differs.
-    if (jsAutoGc && !allocatesCyclic(ir)) gc = JS_ACYCLIC_GC
-    // GC: caps/metadata and C sources under <gcDir>; Zig static libs under <zigLibDir>/libgc-<name>.a.
-    // Only the collector backend is zig|c; runtime.c is always the shared KotlinX runtime.
-    val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/c")
+    if (jsAutoGc && !allocatesCyclic(ir)) { gc = JS_ACYCLIC_GC; if (!checkGc(gc)) return }
     // wasm32 archives (wasm) and bitcode (js) live under their own prefix so they never replace the host ones in zig-out/lib.
     val zigLibDir = getenv(if (wasm32) "NEWKOTLIN_GC_ZIG_WASM_LIB_DIR" else "NEWKOTLIN_GC_ZIG_LIB_DIR")?.toKString()
         ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/zig/" + (if (wasm32) WASM_ZIG_PREFIX else "zig-out") + "/lib")
-    if (gc.isEmpty() || '/' in gc) {
-        fprintf(stderr, "unknown --gc %s\n", gc); exit(2); return
-    }
-    val gcCapsPath = "$gcDir/$gc/caps"
-    if (access(gcCapsPath, F_OK) != 0 && access("$gcDir/$gc/gc.c", F_OK) != 0) {
-        fprintf(stderr, "unknown --gc %s: no %s/ or %s/gc.c\n", gc, gcDir, gc); exit(2); return
-    }
     val gcFlags = if (access("$gcDir/$gc/config.sh", F_OK) == 0) {
-        capture("sh '$gcDir/$gc/config.sh'") ?: run { fprintf(stderr, "error: %s/%s/config.sh failed\n", gcDir, gc); exit(1); return }
+        capture("sh ${shq("$gcDir/$gc/config.sh")}") ?: run { fprintf(stderr, "error: %s/%s/config.sh failed\n", gcDir, gc); exit(1); return }
     } else ""
     if (target == Target.JS) {
         if (gcRuntime != "zig") { fprintf(stderr, "--target=js links the Zig collector (--gc-runtime=zig)\n"); exit(2); return }
@@ -172,12 +241,12 @@ fun main(args: Array<String>) {
         buildJs(ir, output, runtime, gc, gcDir, gcFlags, zigLibDir, cc, optPath, emitLl, minify)
         return
     }
-    val gcObj = if (gcRuntime == "c") {
+    val gcObjPath = if (gcRuntime == "c") {
         val gcSrc = "$gcDir/$gc/gc.c"
         if (access(gcSrc, F_OK) != 0) {
             fprintf(stderr, "unknown --gc %s: no %s\n", gc, gcSrc); exit(2); return
         }
-        "'$gcSrc'"
+        gcSrc
     } else {
         val lib = "$zigLibDir/libgc-$gc.a"
         if (access(lib, F_OK) != 0) {
@@ -191,19 +260,19 @@ fun main(args: Array<String>) {
         // libgc is LLVM machine code: Clang LTO cannot inspect a Zig archive.
         // Keep native code opaque and optimize the generated program only. wasm-ld (lld) links LTO bitcode
         // with a machine-code archive, so wasm keeps -flto for the program and runtime.c.
-        if (!wasm && "-flto" in cflags) cflags = cflags.replace("-flto", "")
-        "'$lib'"
+        if (!wasm && hasLto(cflags)) cflags = stripLto(cflags)
+        lib
     }
-    val def0 = (if (alloc == "pool") " -DRT_POOL" else "") + (if (alloc == "malloc") " -DRT_PLAIN_MALLOC" else "") + (if (leakCheck) " -DRT_LEAKCHECK" else "")
+    val gcObj = shq(gcObjPath)
+    val def = (if (alloc == "pool") " -DRT_POOL" else "") + (if (alloc == "malloc") " -DRT_PLAIN_MALLOC" else "") + (if (leakCheck) " -DRT_LEAKCHECK" else "")
     if (target == Target.JVM) {
         val opt = findOpt(optPath, majorVersion(cc)) ?: run { fprintf(stderr, "error: LLVM opt not found (--opt <path> or NK_OPT); the jvm target needs it\n"); exit(1); return }
-        try { linkJvm(ir, output, runtime, gcObj.trim('\''), "$def0 -I'$gcDir' $gcFlags", links, cc, opt, emitLl) }
+        try { linkJvm(ir, output, runtime, gcObjPath, "$def -I${shq(gcDir)} $gcFlags", links, cc, opt, emitLl) }
         catch (e: CompileError) { fprintf(stderr, "%s: error: %s\n", input, e.message); exit(1) }
         return
     }
     val ll = "$output.ll"
     writeFile(ll, if (wasm) wasmKeepHotCalls(ir) else ir)
-    val def = (if (alloc == "pool") " -DRT_POOL" else "") + (if (alloc == "malloc") " -DRT_PLAIN_MALLOC" else "") + (if (leakCheck) " -DRT_LEAKCHECK" else "")
     val link = if (alloc == "mimalloc") {
         val dir = findMimalloc() ?: run {
             remove(ll)
@@ -211,7 +280,7 @@ fun main(args: Array<String>) {
                 "set NEWKOTLIN_MIMALLOC_DIR to the directory containing libmimalloc, or use --alloc malloc\n")
             exit(1); return
         }
-        " -L'$dir' -lmimalloc -Wl,-rpath,'$dir'"
+        " -L${shq(dir)} -lmimalloc -Wl,-rpath,${shq(dir)}"
     } else ""
     var linkLl = ll
     val tmps = ArrayList<String>()
@@ -236,14 +305,14 @@ fun main(args: Array<String>) {
         linkLl = "$output.opt.ll"; tmps.add(linkLl)
         // With LTO the link step runs the full O3 pipeline once; opt then runs the matching LTO pre-link pipeline
         // (a standalone default<O3> before LTO optimizes twice and was up to 2x slower on closures/dispatch/matmul).
-        val pipeline = if ("-flto" in cflags) "lto-pre-link<O3>" else "default<O3>"
-        run1("'$opt' -passes='$pipeline' -S '$ll' -o '$linkLl'")
+        val pipeline = if (hasLto(cflags)) "lto-pre-link<O3>" else "default<O3>"
+        run1("${shq(opt)} -passes=${shq(pipeline)} -S ${shq(ll)} -o ${shq(linkLl)}")
         if (wasm) outlineWasmLoops(opt, linkLl, output, tmps)?.let { linkLl = it }
     }
     // wasm: deep recursion lives on the engine stack; the linear-memory shadow stack holds only address-taken
     // locals. 8 MiB matches the native default; -s drops the names section.
     val wasmLd = if (wasm) " -s -Wl,-z,stack-size=8388608" else ""
-    val cmd = "$cc $cflags$def$wasmLd -Wno-override-module -I'$gcDir' $gcFlags '$linkLl' '$runtime' $gcObj$link${links.joinToString("") { " '$it'" }} -o '$output'"
+    val cmd = "$cc $cflags$def$wasmLd -Wno-override-module -I${shq(gcDir)} $gcFlags ${shq(linkLl)} ${shq(runtime)} $gcObj$link${links.joinToString("") { " ${shq(it)}" }} -o ${shq(output)}"
     val rc = system(cmd)
     cleanup()
     if (rc != 0) { fprintf(stderr, "clang failed (%d): %s\n", rc, cmd); exit(1) }
@@ -256,12 +325,12 @@ fun main(args: Array<String>) {
 private fun outlineWasmLoops(opt: String, ll: String, output: String, tmps: MutableList<String>): String? {
     val named = "$output.named.ll"; val blocks = "$output.blocks"; val out = "$output.outlined.ll"
     tmps.add(named); tmps.add(blocks); tmps.add(out)
-    val info = captureAll("'$opt' -passes='instnamer,print<loops>' -S '$ll' -o '$named' 2>&1")
+    val info = captureAll("${shq(opt)} -passes='instnamer,print<loops>' -S ${shq(ll)} -o ${shq(named)} 2>&1")
     val lines = wasmOutlineLoopBlocks(info)
     if (lines.isEmpty()) return null
     writeFile(blocks, lines.joinToString("\n", postfix = "\n"))
     val before = definedFunctions(readFile(named))
-    if (system("'$opt' -passes=extract-blocks -extract-blocks-file='$blocks' -S '$named' -o '$out' 2>/dev/null") != 0) return null
+    if (system("${shq(opt)} -passes=extract-blocks -extract-blocks-file=${shq(blocks)} -S ${shq(named)} -o ${shq(out)} 2>/dev/null") != 0) return null
     writeFile(out, wasmMarkOutlined(readFile(out), before) ?: return null)
     return out
 }

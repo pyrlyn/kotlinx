@@ -547,7 +547,7 @@ class JvmBackend(private val ir: String, private val className: String, private 
             val signedP = if (p[0] == 'u') "s" + p.substring(1) else p
             val ifOp = mapOf("eq" to Op.IFEQ, "ne" to Op.IFNE, "slt" to Op.IFLT, "sge" to Op.IFGE, "sgt" to Op.IFGT, "sle" to Op.IFLE)[signedP]!!
             if (kind(t) == 'I') {
-                val bz = (b.v is CInt && (b.v as CInt).v == 0L) || b.v === CZero
+                val bz = (b.v is CInt && (b.v).v == 0L) || b.v === CZero
                 if (bz && !unsigned) { push(a); c.jump(ifOp, target, -1); return }
                 if (unsigned && bits(t) == 32) {
                     push(a); c.iconst(Int.MIN_VALUE); c.op(Op.IXOR, -1); push(b); c.iconst(Int.MIN_VALUE); c.op(Op.IXOR, -1)

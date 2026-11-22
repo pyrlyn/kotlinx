@@ -1,0 +1,4 @@
+# Known non-PASS upstream results (run.py --write-baseline); one 'STATUS path' per line.
+LEAK box/box/bce/withGetter.kt
+LEAK box/box/enum/initEnumAfterObjectAccess.kt
+LEAK box/box/inline/kt66017.kt

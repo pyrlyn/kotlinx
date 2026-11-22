@@ -425,7 +425,7 @@ class LlParser(private val text: String) {
             acceptP(",")
         }
         expectP(")")
-        val f = LlFunc(name, ret!!, params, va)
+        val f = LlFunc(name, ret, params, va)
         if (m.funcs[name]?.isDecl != false || isDef) m.funcs[name] = f
         return f
     }

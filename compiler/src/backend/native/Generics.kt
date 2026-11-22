@@ -3,12 +3,12 @@ package newkotlin
 /**
  * Generic classes are monomorphized: `class Box<T>` is never compiled itself; every type-argument list used by the
  * program (`Box<Int>`, `Box<String>`) becomes a plain class `Box$Int` / `Box$String` with T substituted in its AST.
- * Instances are discovered during code generation ([NeedInstance]); the class is added and generation restarts,
- * until the instance set is closed. Each instance has exact field types, so primitives stay unboxed and the
+ * Instances are discovered during code generation ([NeedInstance]); missing instances and closure classes are
+ * collected as a worklist per pass ([NeedBatch]), added together, and generation reruns until the set is closed. Each instance has exact field types, so primitives stay unboxed and the
  * Perceus RC / cycle analysis (cyclic classes, field release functions) is computed per instance.
  */
 /** Overloaded top-level functions: source name -> renamed declarations (`f$ov0`, ...), resolved per call by the backend. */
-object Overloads { val map = HashMap<String, List<FunD>>() }
+object Overloads { val map get() = compilationContext.overloads }
 
 /** Renames non-generic top-level overloads apart (`main` and extension functions are left alone). */
 fun renameOverloads(p: Program): Program {
@@ -17,7 +17,7 @@ fun renameOverloads(p: Program): Program {
     if (groups.isEmpty()) return p
     val renamed = HashMap<FunD, FunD>()
     for ((n, fs) in groups) {
-        val nfs = fs.mapIndexed { i, f -> FunD("$n\$ov$i", f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams, f.recv).also { renamed[f] = it } }
+        val nfs = fs.mapIndexed { i, f -> FunD("$n\$ov$i", f.params, f.ret, f.body, f.exprBody, f.line, f.typeParams, f.recv, isSuspend = f.isSuspend).also { renamed[f] = it } }
         Overloads.map[n] = nfs
     }
     return Program(p.funs.map { renamed[it] ?: it }, p.classes, p.ifaces, p.globals, p.companions)
@@ -56,6 +56,35 @@ fun compileGenerics(p00: Program): String {
     fun fixSupers(c: ClassD): ClassD = if (c.superTypeArgs.keys.all { isFnSuper(it) }) c else
         ClassD(c.name, c.fields, c.supers.map { s -> if (isFnSuper(s)) s else c.superTypeArgs[s]?.let { ensure(s, it) } ?: s }, c.methods, c.line, c.ctorParams,
             c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs.filterKeys { isFnSuper(it) })
+    /** Adds what one generation pass found missing; the pass is then redone with it. */
+    fun addNeed(x: Exception, batch: Boolean = false) {
+        when (x) {
+            is NeedClass -> {
+                if (x.cd.name in extraClasses) throw CompileError("internal: class ${x.cd.name} requested twice")
+                if (extraClasses.size >= 5000) throw CompileError("too many lambda classes")
+                extraClasses[x.cd.name] = x.cd
+            }
+            is NeedIface -> {
+                if (x.d.name in extraIfaces) throw CompileError("internal: interface ${x.d.name} requested twice")
+                extraIfaces[x.d.name] = x.d
+            }
+            is NeedInstance -> {
+                val m = mangle(x.name, x.args)
+                if (x.name in genericIfaces) {
+                    if (m in ifaceInst) { if (batch) return; throw CompileError("internal: interface instance $m requested twice") }
+                    ensure(x.name, x.args); return
+                }
+                if (m in inst) { if (batch) return; throw CompileError("internal: instance $m requested twice") }
+                if (inst.size >= 1000) throw CompileError("too many generic class instances (recursive generic type?)")
+                val cd = generic.getValue(x.name)
+                origin[m] = x.name to x.args
+                // `C<Nothing>`: members of type `Nothing` hold no value; typed `Nothing?` (a null pointer) in the instance.
+                val args = x.args.map { if (it.name == "Nothing" && !it.nullable && it.args.isEmpty()) TypeRef("Nothing", emptyList(), true) else it }
+                inst[m] = Subst(cd.typeParams.zip(args).toMap()).cls(cd, m)
+            }
+            else -> throw x
+        }
+    }
     while (true) {
         var cls = (p0.classes.filter { it.typeParams.isEmpty() } + extraClasses.values).map { fixSupers(it) }
         while (true) {
@@ -72,26 +101,17 @@ fun compileGenerics(p00: Program): String {
         val prog = Program(p0.funs, cls, plainIfaces + ifaceInst.values + extraIfaces.values, p0.globals, p0.companions)
         try {
             return NativeBackend(prog, generic, origin, genericIfaces).generate()
+        } catch (n: NeedBatch) {
+            // Closure classes found while instances were missing may have been typed against placeholders: when
+            // the batch has instances or interfaces, only those are added and the lambdas are rediscovered.
+            val types = n.needs.filter { it is NeedInstance || it is NeedIface }
+            for (x in types.ifEmpty { n.needs }) addNeed(x, batch = true)
         } catch (n: NeedClass) {
-            if (n.cd.name in extraClasses) throw CompileError("internal: class ${n.cd.name} requested twice")
-            if (extraClasses.size >= 5000) throw CompileError("too many lambda classes")
-            extraClasses[n.cd.name] = n.cd
+            addNeed(n)
         } catch (n: NeedIface) {
-            if (n.d.name in extraIfaces) throw CompileError("internal: interface ${n.d.name} requested twice")
-            extraIfaces[n.d.name] = n.d
+            addNeed(n)
         } catch (n: NeedInstance) {
-            val m = mangle(n.name, n.args)
-            if (n.name in genericIfaces) {
-                if (m in ifaceInst) throw CompileError("internal: interface instance $m requested twice")
-                ensure(n.name, n.args); continue
-            }
-            if (m in inst) throw CompileError("internal: instance $m requested twice")
-            if (inst.size >= 1000) throw CompileError("too many generic class instances (recursive generic type?)")
-            val cd = generic.getValue(n.name)
-            origin[m] = n.name to n.args
-            // `C<Nothing>`: members of type `Nothing` hold no value; typed `Nothing?` (a null pointer) in the instance.
-            val args = n.args.map { if (it.name == "Nothing" && !it.nullable && it.args.isEmpty()) TypeRef("Nothing", emptyList(), true) else it }
-            inst[m] = Subst(cd.typeParams.zip(args).toMap()).cls(cd, m)
+            addNeed(n)
         }
     }
 }
@@ -160,18 +180,18 @@ private fun boxCapturedVars(p: Program): Program {
         if (boxed.isEmpty()) return body
         used = true
         lateinit var sub: Subst
-        sub = Subst(emptyMap(), { x -> if (x is NameE && x.n in boxed) MemberE(NameE(x.n).also { it.line = x.line }, "v", false).also { it.line = x.line } else null },
+        sub = Subst(emptyMap(), { x -> if (x is NameE && x.n in boxed) MemberE(NameE(x.n, line = x.line), "v", false, line = x.line) else null },
             { x -> if (x is VarS && x.isVar && x.name in boxed)
-                VarS(x.name, false, null, CallE(NameE("\$Ref"), listOfNotNull(x.type), listOf(sub.e(x.init)), null).also { it.line = x.line }).also { it.line = x.line }
+                VarS(x.name, false, null, CallE(NameE("\$Ref"), listOfNotNull(x.type), listOf(sub.e(x.init)), null, line = x.line), line = x.line)
                 else null })
         return sub.block(body)
     }
     fun boxE(x: E): E { val b = Block(listOf(ExprS(x))); val nb = box(b); return if (nb === b) x else (nb.stmts.single() as ExprS).e }
     fun fn(f: FunD): FunD {
-        f.exprBody?.let { x -> val nx = boxE(x); return if (nx === x) f else FunD(f.name, f.params, f.ret, f.body, nx, f.line, f.typeParams, f.recv) }
+        f.exprBody?.let { x -> val nx = boxE(x); return if (nx === x) f else FunD(f.name, f.params, f.ret, f.body, nx, f.line, f.typeParams, f.recv, isSuspend = f.isSuspend) }
         val body = f.body ?: return f
         val nb = box(body)
-        return if (nb === body) f else FunD(f.name, f.params, f.ret, nb, f.exprBody, f.line, f.typeParams, f.recv)
+        return if (nb === body) f else FunD(f.name, f.params, f.ret, nb, f.exprBody, f.line, f.typeParams, f.recv, isSuspend = f.isSuspend)
     }
     /** Property initializers and `init` blocks run in the constructor; box their captured vars too. */
     fun cls(c: ClassD): ClassD {
@@ -187,7 +207,7 @@ private fun boxCapturedVars(p: Program): Program {
     val globals = p.globals.map { g ->
         val b = Block(listOf(ExprS(g.init)))
         val nb = box(b)
-        if (nb === b) g else VarS(g.name, g.isVar, g.type, (nb.stmts.single() as ExprS).e).also { it.line = g.line }
+        if (nb === b) g else VarS(g.name, g.isVar, g.type, (nb.stmts.single() as ExprS).e, line = g.line)
     }
     val funs = p.funs.map { fn(it) }
     val classes = p.classes.map { cls(it) }
@@ -246,14 +266,14 @@ private fun rewriteStatics(p: Program): Program {
         val mine = c.fields.map { it.name }.toSet() + c.methods.map { it.name } + c.ctorParams.map { it.name }
         // Inside a companion object, `C.x` is its own member: use `this` (the global is not assigned during its init).
         if (comps.values.any { it.first == c.name }) return@map Subst(emptyMap(), rw = { x ->
-            global(x)?.let { g -> if (g is MemberE && g.recv is NameE && g.recv.n == c.name) MemberE(NameE("this").also { it.line = x.line }, g.n, g.safe).also { it.line = x.line } else g }
+            global(x)?.let { g -> if (g is MemberE && g.recv is NameE && g.recv.n == c.name) MemberE(NameE("this", line = x.line), g.n, g.safe, line = x.line) else g }
         }).cls(c, c.name, keepTypeParams = true)
         if (own.isEmpty() && comp == null) return@map sub.cls(c, c.name, keepTypeParams = true)
         Subst(emptyMap(), rw = { x ->
             when {
-                x is NameE && x.n in own -> NameE("$en$${x.n}").also { it.line = x.line }
+                x is NameE && x.n in own -> NameE("$en$${x.n}", line = x.line)
                 x is NameE && comp != null && x.n in comp.second && x.n !in mine && comp.first != "${c.name}$${x.n}" ->
-                    MemberE(NameE(comp.first), x.n, false).also { it.line = x.line }
+                    MemberE(NameE(comp.first), x.n, false, line = x.line)
                 else -> global(x)
             }
         }).cls(c, c.name, keepTypeParams = true)
@@ -281,7 +301,7 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
     fun field(f: FieldD): FieldD = fieldMemo.getOrPut(f) { FieldD(f.name, f.type?.let { ty(it) }, f.isVar, f.init?.let { e(it) }, f.lateinit) }
 
     fun fn(f: FunD): FunD = FunD(f.name, f.params.map { Param(it.name, ty(it.type), it.default?.let { d -> e(d) }, it.vararg, it.ctx) }, f.ret?.let { ty(it) },
-        f.body?.let { block(it) }, f.exprBody?.let { e(it) }, f.line, f.typeParams)
+        f.body?.let { block(it) }, f.exprBody?.let { e(it) }, f.line, f.typeParams, isSuspend = f.isSuspend)
 
     fun block(b: Block): Block = Block(b.stmts.map { s(it) }, b.params, b.paramTypes.map { it?.let { t -> ty(t) } })
     fun blockN(b: Block?): Block? = b?.let { block(it) }
@@ -307,7 +327,7 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
         is MemberE -> MemberE(e(x.recv), x.n, x.safe)
         is IndexE -> IndexE(e(x.recv), e(x.idx))
         is BinE -> BinE(x.op, e(x.l), e(x.r))
-        is UnE -> UnE(x.op, e(x.e))
+        is UnE -> UnE(x.op, e(x.e), x.ref)
         is NamedE -> NamedE(x.name, e(x.e))
         is IsE -> IsE(e(x.e), ty(x.type), x.neg)
         // `x as T` is unchecked (erasure): with T a class type a null passes through, as in Kotlin.
@@ -315,7 +335,7 @@ class Subst(val env: Map<String, TypeRef>, val rw: ((E) -> E?)? = null, val srw:
         is IfE -> IfE(e(x.cond), block(x.th), blockN(x.el))
         is LambdaE -> LambdaE(block(x.body))
         is TryE -> TryE(block(x.body), x.catches.map { Catch(it.name, ty(it.type), block(it.body)) }, blockN(x.fin))
-        is WhenE -> WhenE(x.subj?.let { e(it) }, x.branches.map { (c, b) -> c?.map { e(it) } to block(b) })
+        is WhenE -> WhenE(x.subj?.let { e(it) }, x.branches.map { (c, b) -> WhenBranch(c?.map { e(it) }, block(b)) })
     }.also { if (it !== x) it.line = x.line }
 }
 

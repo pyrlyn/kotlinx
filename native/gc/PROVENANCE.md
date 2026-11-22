@@ -28,3 +28,12 @@ merge with the previous upstream commit as base keeps them).
 | `docs/zig-port.md` | KotlinX notes (compact, `--target=js`). |
 
 KotlinX wiring: `NEWKOTLIN_GC_DIR` → `native/gc/c`; default `--gc-runtime=zig` links `native/gc/zig/zig-out/lib/libgc-*.a`.
+
+## License
+
+**TODO (unresolved):** upstream [pyrlyn/gc](https://github.com/pyrlyn/gc) has no `LICENSE` file, no SPDX headers and no
+license metadata on GitHub (checked 2026-11-22 at `2dea030`); none of the vendored files under `native/gc/` carry a
+license notice either. Both repositories belong to the pyrlyn organization, but no license is inferred here: until
+pyrlyn/gc publishes one, the terms of `native/gc/c/` and `native/gc/zig/` (except the KotlinX-local files listed above,
+which are covered by the repository's root [`LICENSE`](../../LICENSE)) are undetermined. Resolve by adding a license
+to pyrlyn/gc and recording it here.

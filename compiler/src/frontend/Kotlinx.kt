@@ -225,16 +225,21 @@ private fun splitTop(s: String): List<String> {
 }
 
 /**
- * The kotlinx.serialization plugin: for every `@Serializable class X` appends `class X_KxSerializer : KSerializer<X>`
- * with a singleton `X_kxSerializer`
- * (JSON object with the primary-constructor properties in order) and rewrites `X.serializer()` to the singleton. Works on source
- * text so line numbers of user code are unchanged.
+ * The kotlinx.serialization plugin: for every `@Serializable class X` generates `class X_KxSerializer : KSerializer<X>`
+ * with a singleton `X_kxSerializer` (JSON object with the primary-constructor properties in order), returned as source
+ * text to append, and rewrites the program's tokens: `X.serializer()` -> `X_kxSerializer`, `decodeFromString<X>(` ->
+ * `decodeFromString(X_kxSerializer, ` and the same for `encodeToString`. Token rewrites keep the line numbers of user
+ * code and leave string literals alone. Null when the program declares no @Serializable class.
  */
-fun withSerializable(src: String): String {
-    val names = SERIALIZABLE_CLASS.findAll(src).map { it.groupValues[1] }.toList()
-    val enums = SERIALIZABLE_ENUM.findAll(src).map { it.groupValues[1] }.toList()
-    if (names.isEmpty() && enums.isEmpty()) return src
-    val prog = Parser(Lexer(src).lex()).program()
+fun withSerializable(src: String, toks: List<Tok>): Pair<List<Tok>, String>? {
+    val names0 = SERIALIZABLE_CLASS.findAll(src).map { it.groupValues[1] }.toList()
+    val enums0 = SERIALIZABLE_ENUM.findAll(src).map { it.groupValues[1] }.toList()
+    if (names0.isEmpty() && enums0.isEmpty()) return null
+    val prog = Parser(toks).program()
+    // The annotation is found in the text; a match inside a string literal names no declared class and is ignored.
+    val declared = prog.classes.map { it.name }.toSet()
+    val names = names0.filter { it in declared }; val enums = enums0.filter { it in declared }
+    if (names.isEmpty() && enums.isEmpty()) return null
     val gen = StringBuilder()
     var n = 0
     fun ty(t: TypeRef): String = t.name + (if (t.args.isEmpty()) "" else t.args.joinToString(", ", "<", ">") { ty(it) }) + (if (t.nullable) "?" else "")
@@ -289,7 +294,6 @@ fun withSerializable(src: String): String {
             else -> throw CompileError("@Serializable: unsupported property type ${ty(t)}")
         }
     }
-    var out = src
     for (name in names) {
         val c = prog.classes.firstOrNull { it.name == name } ?: throw CompileError("@Serializable class $name not found")
         val ps = c.ctorParams
@@ -311,15 +315,32 @@ fun withSerializable(src: String): String {
         gen.append("class ${name}_KxSerializer : KSerializer<$name> {\n" +
             "    override fun serialize(value: $name): JsonElement { val b = JsonObjectBuilder(); $encs; return b.build() }\n" +
             "    override fun deserialize(element: JsonElement): $name { val o = kxObj(element, \"$name\"); $decs return $name($args) }\n}\n")
-        out = out.replace(Regex("""\b$name\.serializer\(\)"""), "${name}_kxSerializer")
         gen.append("val ${name}_kxSerializer: KSerializer<$name> = ${name}_KxSerializer()\n")
     }
-    // Reified forms: `Json.decodeFromString<T>(s)` and `Json.encodeToString<T>(v)` name the serializer.
-    for (name in names) {
-        out = out.replace(Regex("""\bdecodeFromString<$name>\("""), "decodeFromString(${name}_kxSerializer, ")
-        out = out.replace(Regex("""\bencodeToString<$name>\("""), "encodeToString(${name}_kxSerializer, ")
+    return rewriteSerializerRefs(toks, names.toSet()) to gen.toString()
+}
+
+/** `X.serializer()` -> `X_kxSerializer`; `decodeFromString<X>(` / `encodeToString<X>(` -> `...(X_kxSerializer, `. */
+private fun rewriteSerializerRefs(toks: List<Tok>, names: Set<String>): List<Tok> {
+    fun op(t: Tok, s: String) = t.k == K.OP && t.s == s
+    fun id(t: Tok, s: String) = t.k == K.ID && t.s == s
+    val out = ArrayList<Tok>(toks.size)
+    var i = 0
+    while (i < toks.size) {
+        val t = toks[i]
+        if (t.k == K.ID && t.s in names && i + 4 < toks.size && op(toks[i + 1], ".") && id(toks[i + 2], "serializer") &&
+            op(toks[i + 3], "(") && op(toks[i + 4], ")") && !(i > 0 && op(toks[i - 1], "::"))) {
+            out.add(Tok(K.ID, "${t.s}_kxSerializer", t.line)); i += 5; continue
+        }
+        if ((id(t, "decodeFromString") || id(t, "encodeToString")) && i + 4 < toks.size && op(toks[i + 1], "<") &&
+            toks[i + 2].k == K.ID && toks[i + 2].s in names && op(toks[i + 3], ">") && op(toks[i + 4], "(")) {
+            val l = toks[i + 2].line
+            out.add(t); out.add(Tok(K.OP, "(", l)); out.add(Tok(K.ID, "${toks[i + 2].s}_kxSerializer", l)); out.add(Tok(K.OP, ",", l))
+            i += 5; continue
+        }
+        out.add(t); i++
     }
-    return out + "\n" + gen
+    return out
 }
 
 /**
@@ -332,36 +353,146 @@ open class CancellationException(message: String) : IllegalStateException(messag
 class TimeoutCancellationException(message: String) : CancellationException(message)
 class ClosedReceiveChannelException(message: String) : IllegalStateException(message)
 object KxSched {
-    val ready = ArrayList<Job>()
-    val timers = ArrayList<Job>()
-    // Started, unfinished jobs: cancelled and drained when runBlocking cannot make progress.
-    val live = ArrayList<Job>()
+    // Ready queue: a ring buffer (capacity a power of two); Job.queued keeps a job in it at most once.
+    var ready = ArrayList<Job?>()
+    var readyHead = 0
+    var readySize = 0
+    // Timers: a binary min-heap on (wakeAt, seq), seq keeping equal wake times FIFO. An entry is live while its
+    // job's timerSeq still equals the entry's seq; dropped timers are discarded lazily when they surface.
+    val heapJob = ArrayList<Job>()
+    val heapAt = ArrayList<Long>()
+    val heapSeq = ArrayList<Long>()
+    var timerCount = 0
+    var timerSeq = 0L
+    // Started, unfinished jobs (in start order): cancelled and drained when runBlocking cannot make progress.
+    // A finished job leaves a null slot (Job.liveIdx); slots are compacted only when a job is added.
+    val live = ArrayList<Job?>()
+    var liveCount = 0
     var current: Job? = null
     var now = 0L
-    fun wake(j: Job) { ready.add(j) }
+    fun wake(j: Job) {
+        if (j.queued) return
+        j.queued = true
+        if (readySize == ready.size) {
+            val cap = if (ready.size == 0) 16 else ready.size * 2
+            val nr = ArrayList<Job?>(cap)
+            var i = 0
+            while (i < cap) { nr.add(if (i < readySize) ready[(readyHead + i) and (ready.size - 1)] else null); i++ }
+            ready = nr
+            readyHead = 0
+        }
+        ready[(readyHead + readySize) and (ready.size - 1)] = j
+        readySize++
+    }
+    fun popReady(): Job {
+        val j = ready[readyHead]!!
+        ready[readyHead] = null
+        readyHead = (readyHead + 1) and (ready.size - 1)
+        readySize--
+        j.queued = false
+        return j
+    }
     fun wakeAll(ws: ArrayList<Job>) {
-        for (w in ws) ready.add(w)
+        for (w in ws) wake(w)
         while (ws.size > 0) ws.removeAt(ws.size - 1)
     }
+    private fun heapLess(a: Int, b: Int): Boolean =
+        heapAt[a] < heapAt[b] || (heapAt[a] == heapAt[b] && heapSeq[a] < heapSeq[b])
+    private fun heapSwap(a: Int, b: Int) {
+        val j = heapJob[a]; heapJob[a] = heapJob[b]; heapJob[b] = j
+        val t = heapAt[a]; heapAt[a] = heapAt[b]; heapAt[b] = t
+        val q = heapSeq[a]; heapSeq[a] = heapSeq[b]; heapSeq[b] = q
+    }
+    private fun heapPush(j: Job, at: Long, seq: Long) {
+        heapJob.add(j); heapAt.add(at); heapSeq.add(seq)
+        var i = heapJob.size - 1
+        while (i > 0) { val p = (i - 1) / 2; if (!heapLess(i, p)) break; heapSwap(i, p); i = p }
+    }
+    private fun heapPopMin() {
+        val last = heapJob.size - 1
+        heapSwap(0, last)
+        heapJob.removeAt(last); heapAt.removeAt(last); heapSeq.removeAt(last)
+        var i = 0
+        val n = heapJob.size
+        while (true) {
+            val l = 2 * i + 1
+            if (l >= n) break
+            var m = l
+            if (l + 1 < n && heapLess(l + 1, l)) m = l + 1
+            if (!heapLess(m, i)) break
+            heapSwap(i, m); i = m
+        }
+    }
+    private fun heapClear() {
+        while (heapJob.size > 0) { val last = heapJob.size - 1; heapJob.removeAt(last); heapAt.removeAt(last); heapSeq.removeAt(last) }
+    }
     fun addTimer(j: Job) {
-        timers.add(j)
-        var i = timers.size - 1
-        while (i > 0 && timers[i - 1].wakeAt > j.wakeAt) { val t = timers[i - 1]; timers[i - 1] = timers[i]; timers[i] = t; i-- }
+        if (j.timerSeq >= 0L) timerCount--
+        j.timerSeq = timerSeq
+        timerSeq++
+        timerCount++
+        heapPush(j, j.wakeAt, j.timerSeq)
+        // Mostly dropped entries: rebuild from the live ones so the heap stays proportional to the pending timers.
+        if (heapJob.size > 64 && heapJob.size > 4 * timerCount) {
+            val js = ArrayList<Job>(); val ats = ArrayList<Long>(); val sqs = ArrayList<Long>()
+            var i = 0
+            while (i < heapJob.size) { if (heapJob[i].timerSeq == heapSeq[i]) { js.add(heapJob[i]); ats.add(heapAt[i]); sqs.add(heapSeq[i]) }; i++ }
+            heapClear()
+            i = 0
+            while (i < js.size) { heapPush(js[i], ats[i], sqs[i]); i++ }
+        }
     }
     fun dropTimer(j: Job) {
-        var i = 0
-        while (i < timers.size) { if (timers[i] === j) { val t = timers.removeAt(i) } else i++ }
+        if (j.timerSeq < 0L) return
+        j.timerSeq = -1L
+        timerCount--
+        if (timerCount == 0) heapClear()
+    }
+    fun hasTimer(): Boolean = timerCount > 0
+    // The earliest pending timer (removed from the heap); the caller checks hasTimer() first.
+    fun popTimer(): Job {
+        while (true) {
+            val j = heapJob[0]
+            val seq = heapSeq[0]
+            heapPopMin()
+            if (j.timerSeq == seq) {
+                j.timerSeq = -1L
+                timerCount--
+                if (timerCount == 0) heapClear()
+                return j
+            }
+        }
+    }
+    fun addLive(j: Job) {
+        if (live.size >= 32 && live.size >= 2 * liveCount) {
+            var w = 0
+            var i = 0
+            while (i < live.size) { val x = live[i]; if (x != null) { live[w] = x; x.liveIdx = w; w++ }; i++ }
+            while (live.size > w) live.removeAt(live.size - 1)
+        }
+        j.liveIdx = live.size
+        live.add(j)
+        liveCount++
     }
     fun dropLive(j: Job) {
-        var i = 0
-        while (i < live.size) { if (live[i] === j) { val t = live.removeAt(i) } else i++ }
+        val i = j.liveIdx
+        if (i < 0) return
+        live[i] = null
+        j.liveIdx = -1
+        liveCount--
+        if (liveCount == 0) while (live.size > 0) live.removeAt(live.size - 1)
     }
-    fun isReady(j: Job): Boolean { for (r in ready) if (r === j) return true; return false }
+    fun isReady(j: Job): Boolean = j.queued
     // Resumes a suspended job so its suspension point can observe a cancellation.
     fun poke(j: Job) {
         if (current === j || j.isCompleted) return
         dropTimer(j)
-        if (!isReady(j)) wake(j)
+        wake(j)
+    }
+    // Cancels every live job that is not running (start order; jobs cancelled meanwhile only leave null slots).
+    fun cancelLive() {
+        var i = 0
+        while (i < live.size) { val j = live[i]; if (j != null && !j.running) j.cancel(); i++ }
     }
     // A nested runBlocking runs this loop inside a running job; that job is parked until the inner loop returns.
     // On a deadlock every live job is cancelled (so suspended coroutines unwind and free their frames), then it throws.
@@ -369,27 +500,25 @@ object KxSched {
         val parked = ArrayList<Job>()
         var deadlock = false
         while (!root.isCompleted) {
-            if (ready.size > 0) { val j = ready.removeAt(0); if (j.running) parked.add(j) else j.step() }
-            else if (timers.size > 0) { val j = timers.removeAt(0); if (j.wakeAt > now) now = j.wakeAt; if (j.running) parked.add(j) else j.step() }
+            if (readySize > 0) { val j = popReady(); if (j.running) parked.add(j) else j.step() }
+            else if (hasTimer()) { val j = popTimer(); if (j.wakeAt > now) now = j.wakeAt; if (j.running) parked.add(j) else j.step() }
             else if (!deadlock) {
                 deadlock = true
-                var i = 0
-                while (i < live.size) { val j = live[i]; if (!j.running) j.cancel(); i++ }
+                cancelLive()
                 root.cancel()
             }
             else throw IllegalStateException("runBlocking: coroutines cannot be cancelled")
         }
-        for (p in parked) ready.add(p)
+        for (p in parked) wake(p)
         if (deadlock) throw IllegalStateException("runBlocking: deadlock, no coroutine can make progress")
     }
     // After the outermost runBlocking: detached jobs still pending are cancelled and unwound (frames freed).
     fun drainDetached() {
         var rounds = 0
-        while (live.size > 0 && rounds < 1000) {
-            var i = 0
-            while (i < live.size) { val j = live[i]; if (!j.running) j.cancel(); i++ }
-            while (ready.size > 0) ready.removeAt(0).step()
-            while (timers.size > 0) timers.removeAt(0).step()
+        while (liveCount > 0 && rounds < 1000) {
+            cancelLive()
+            while (readySize > 0) popReady().step()
+            while (hasTimer()) popTimer().step()
             rounds++
         }
     }
@@ -413,6 +542,12 @@ open class Job(body0: suspend () -> Unit) {
     var isCompleted = false
     var isCancelled = false
     var wakeAt = 0L
+    // Scheduler bookkeeping: in the ready queue, the live timer entry (-1: none), the slot in KxSched.live
+    // (-1: none), and the job this one is registered to join (so a re-suspension does not register it twice).
+    var queued = false
+    var timerSeq = -1L
+    var liveIdx = -1
+    var joinTarget: Job? = null
     var scope: CoroutineScope? = null
     // Scopes this job is executing (its own, then nested coroutineScope blocks).
     val scopes = ArrayList<CoroutineScope>()
@@ -425,7 +560,7 @@ open class Job(body0: suspend () -> Unit) {
     }
     fun step() {
         if (isCompleted || running) return
-        if (handle == 0L) { started = true; handle = kxCoStart(body); KxSched.live.add(this) }
+        if (handle == 0L) { started = true; handle = kxCoStart(body); KxSched.addLive(this) }
         val prev = KxSched.current
         KxSched.current = this
         running = true
@@ -440,7 +575,9 @@ open class Job(body0: suspend () -> Unit) {
         scope = null
         while (scopes.size > 0) scopes.removeAt(scopes.size - 1)
         KxSched.dropLive(this)
-        KxSched.wakeAll(waiters)
+        // A waiter that gave up joining (cancelled) left a stale entry: only current joiners are woken.
+        for (w in waiters) if (w.joinTarget === this) { w.joinTarget = null; KxSched.wake(w) }
+        while (waiters.size > 0) waiters.removeAt(waiters.size - 1)
     }
     fun cancel() {
         if (isCompleted || isCancelled) return
@@ -450,20 +587,27 @@ open class Job(body0: suspend () -> Unit) {
         if (!started) { finish(); return }
         KxSched.poke(this)
     }
+    // The joiner registers once per join (a spurious resume does not add it again) and unregisters when it leaves.
     suspend fun join() {
-        while (!isCompleted) {
-            waiters.add(KxSched.me())
-            kxSuspend()
-        }
+        val me = KxSched.me()
+        try {
+            while (!isCompleted) {
+                if (me.joinTarget !== this) { waiters.add(me); me.joinTarget = this }
+                kxSuspend()
+            }
+        } finally { if (me.joinTarget === this) me.joinTarget = null }
     }
     // Waits without observing cancellation (a cancelled parent still waits for its children to unwind).
     suspend fun joinQuiet() {
+        val me = KxSched.me()
         while (!isCompleted) {
-            waiters.add(KxSched.me())
+            if (me.joinTarget !== this) { waiters.add(me); me.joinTarget = this }
             kxCoSuspend()
         }
+        if (me.joinTarget === this) me.joinTarget = null
     }
 }
+fun <T> kxUnchecked(x: T?): T = x as T
 class Deferred<T>(val compute: suspend () -> T) {
     var result: T? = null
     var hasResult = false
@@ -475,7 +619,10 @@ class Deferred<T>(val compute: suspend () -> T) {
         val f = failure
         if (f != null) throw f
         if (!hasResult) throw CancellationException("Deferred was cancelled")
-        return result!!
+        // hasResult, not `result != null`, says the value is there: T itself may be nullable (`async<String?> { null }`).
+        // Generic instances do not track nullability (Deferred<String?> is Deferred${'$'}String), so the value goes through
+        // an unchecked cast to an unbounded type parameter, which lets a null pass.
+        return kxUnchecked(result)
     }
     fun cancel() { job.cancel() }
 }
@@ -519,22 +666,27 @@ class CoroutineScope {
         if (!supervisor) { fail(e); return }
         kxHandle(h, e)
     }
-    fun <T> async(block: suspend CoroutineScope.() -> T): Deferred<T> {
+    // Like launch: the context's handler is inherited by the child scope, and async(SupervisorJob()) is detached
+    // (its failure stays in the Deferred, for await, instead of failing this scope).
+    fun <T> async(context: CoroutineContext = EmptyCoroutineContext, block: suspend CoroutineScope.() -> T): Deferred<T> {
         val child = CoroutineScope()
-        child.handler = handler
+        val h = kxHandlerOf(context)
+        child.handler = if (h != null) h else handler
+        val detached = kxIsSupervisor(context)
         val parent = this
         val d = Deferred<T> {
             try { val r = block(child); child.joinChildren(); r }
             catch (e: CancellationException) {
                 child.joinChildrenQuiet()
                 val f = child.failure
-                if (f != null) { if (!parent.supervisor) parent.fail(f); throw f }
+                if (f != null) { if (!parent.supervisor && !detached) parent.fail(f); throw f }
                 throw e
             }
-            catch (e: Throwable) { child.fail(e); child.joinChildrenQuiet(); if (!parent.supervisor) parent.fail(e); throw e }
+            catch (e: Throwable) { child.fail(e); child.joinChildrenQuiet(); if (!parent.supervisor && !detached) parent.fail(e); throw e }
         }
         d.job.scope = child; child.owner = d.job; d.job.scopes.add(child)
-        children.add(d.job); KxSched.wake(d.job)
+        if (!detached) children.add(d.job)
+        KxSched.wake(d.job)
         return d
     }
     suspend fun joinChildren() {

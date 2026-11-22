@@ -1,0 +1,10 @@
+call Foo.serializer() here
+decodeFromString<Foo>(x) and encodeToString<Foo>(y)
+
+suspend fun main() {
+}
+{"a":1,"b":"x"}
+Foo(a=1, b=x)
+{"a":2,"b":"Foo.serializer()"}
+Foo(a=3, b=y)
+done

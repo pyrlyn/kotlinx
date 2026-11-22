@@ -2,8 +2,12 @@ package newkotlin.mutation
 
 import newkotlin.compileToIr
 import newkotlin.deferredRc
+import newkotlin.hostTriple
+import newkotlin.hostTripleFor
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.fail
+import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import java.io.File
@@ -31,6 +35,17 @@ class GoldenTest {
             File(root, "compiler/tests").listFiles { f -> f.name.endsWith(".kt") }!!.map { it.name.removeSuffix(".kt") }.sorted()
                 .filter { it !in (System.getProperty("kx.skip") ?: "").split(",") }
 
+        /**
+         * C compiler for the golden programs: ${'$'}NK_CC, else the first `clang` on PATH, else /usr/bin/clang (Apple clang).
+         * Null when none is executable: the tests are then skipped (not failed) with a message naming NK_CC.
+         */
+        val cc: String? by lazy {
+            System.getenv("NK_CC")?.takeIf { it.isNotEmpty() }
+                ?: (System.getenv("PATH") ?: "").split(File.pathSeparator).filter { it.isNotEmpty() }
+                    .map { File(it, "clang") }.firstOrNull { it.canExecute() }?.path
+                ?: File("/usr/bin/clang").takeIf { it.canExecute() }?.path
+        }
+
         private fun sha(s: String) = MessageDigest.getInstance("SHA-256").digest(s.toByteArray()).joinToString("") { "%02x".format(it) }
 
         @Synchronized private fun record(name: String, h: String) {
@@ -40,11 +55,26 @@ class GoldenTest {
         }
     }
 
+    @Test
+    fun compilationOrderDoesNotAffectIr() {
+        // Different class/extern/bound/receiver names at the same source lines exposed process-wide caches.
+        val sources = listOf(
+            "fun apply(f: (Int) -> Int): Int = f(2)\nfun main() { println(apply { it + 1 }) }",
+            "class Other(val x: Int)\nfun main() { val f = { x: Int -> Other(x).x }; println(f(4)) }",
+            "fun <T> id(x: T): T = x as T\nfun main() { println(id(3)) }"
+        )
+        val expected = sources.map { compileToIr(it) }
+        for (i in sources.indices.reversed()) assertEquals(expected[i], compileToIr(sources[i]), "IR depends on compilation order: $i")
+        // A failed compilation must also drop its partially populated context.
+        try { compileToIr("fun main() { missing() }") } catch (e: newkotlin.CompileError) { }
+        for (i in sources.indices) assertEquals(expected[i], compileToIr(sources[i]), "IR changed after failure: $i")
+    }
+
     private fun runNative(name: String, ir: String): String {
         val dir = File(work, "${ProcessHandle.current().pid()}-${Thread.currentThread().id}").also { it.mkdirs() }
         val ll = File(dir, "$name.ll").also { it.writeText(ir) }
         val exe = File(dir, name)
-        val cc = System.getenv("NK_CC") ?: "/usr/bin/clang"
+        val cc = cc ?: error("no C compiler") // guarded by assumeTrue in golden()
         val build = ProcessBuilder(cc, "-O1", "-DRT_PLAIN_MALLOC", "-Wno-override-module", "-w", "-I", "$root/native/gc/c",
             ll.path, "$root/compiler/runtime/runtime.c", "$root/native/gc/c/perceus/gc.c", "-o", exe.path)
             .redirectErrorStream(true).start()
@@ -62,11 +92,13 @@ class GoldenTest {
     @MethodSource("cases")
     fun golden(name: String) {
         deferredRc = false
+        hostTripleFor(System.getProperty("os.name"), System.getProperty("os.arch"))?.let { hostTriple = it }
         val src = File(root, "compiler/tests/$name.kt").readText()
         val expected = File(root, "compiler/tests/$name.out").readText().trimEnd('\n')
         val ir = compileToIr(src)
         val h = sha(ir)
         if (!writing && baseline[name] == h) return
+        assumeTrue(cc != null) { "no C compiler: set NK_CC or put clang on PATH (golden program $name not run)" }
         val got = runNative(name, ir)
         assertEquals(expected, got, "golden output of compiler/tests/$name.kt")
         if (writing) record(name, h)

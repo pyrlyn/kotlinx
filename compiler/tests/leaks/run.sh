@@ -39,10 +39,12 @@ for t in compiler/tests/leaks/*.kt; do
   fi
   if [ "$KX_ASAN" = 1 ]; then
     "$NKC" --alloc malloc --cflags "$KX_ASAN_CFLAGS" "$t" -o "$out/$n.asan" 2>/dev/null
-    got=$(kx_with_timeout 300 "$out/$n.asan" 2>"$out/$n.asanerr"); rc=$?
+    got=$(LSAN_OPTIONS="suppressions=$PWD/compiler/tests/leaks/lsan.supp${LSAN_OPTIONS:+:$LSAN_OPTIONS}" kx_with_timeout 300 "$out/$n.asan" 2>"$out/$n.asanerr"); rc=$?
     if [ $rc -eq 0 ] && [ "$got" = "$exp" ]; then echo "PASS asan $n"
     else echo "FAIL asan $n (rc=$rc$([ $rc -eq 142 ] && echo ', timed out after 300 s'))"; head -20 "$out/$n.asanerr"; fail=1; fi
   fi
+  # macOS only: on Linux the ASan build above includes LeakSanitizer.
+  if ! command -v leaks >/dev/null 2>&1; then echo "SKIP leaks $n (no macOS leaks tool)"; continue; fi
   "$NKC" --alloc malloc "$t" -o "$out/$n" 2>/dev/null
   leaks_at_exit "$out/$n.leaks" "$out/$n"; lrc=$?
   if grep -q " 0 leaks for 0 total leaked bytes" "$out/$n.leaks"; then echo "PASS leaks $n"
@@ -50,5 +52,5 @@ for t in compiler/tests/leaks/*.kt; do
 done
 # Repeated `leaks` check with 4 collector threads: slab memory reachable only through interior pointers
 # used to be reported as a ROOT LEAK in ~20% of dlist runs (epoch GC, loaded machine); 72 runs, 6 at a time, catch it (measured: HEAD before the fix failed 2 of 36, 30 of 80; after 0 of 228).
-if [ "${NEWKOTLIN_GC:-default}" = epoch ]; then NKC="$NKC" KX_GC_THREADS=4 compiler/tests/leaks/stress.sh dlist 72 || fail=1; fi
+if [ "${NEWKOTLIN_GC:-default}" = epoch ] && command -v leaks >/dev/null 2>&1; then NKC="$NKC" KX_GC_THREADS=4 compiler/tests/leaks/stress.sh dlist 72 || fail=1; fi
 [ $fail -eq 0 ] && echo "LEAKS ALL PASSED" || { echo "LEAKS FAILED"; exit 1; }

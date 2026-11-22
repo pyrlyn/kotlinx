@@ -26,7 +26,7 @@ object Uses {
     }
 
     /** Synthetic name node per `r.f(...)` call (stable identity across analyses). */
-    private val recvCallName = HashMap<CallE, NameE>()
+    private val recvCallName get() = compilationContext.recvCallNames
 
     private fun block(b: Block, out: MutableList<Use>) { for (s in b.stmts) stmt(s, false, out) }
 
@@ -39,7 +39,7 @@ object Uses {
             is CallE -> {
                 expr(e.callee, straight, false, out)
                 // `r.f(x)` may invoke a local of function type with receiver (`val f: R.(X) -> Y`): a (borrowing) use of `f`.
-                (e.callee as? MemberE)?.let { m -> if (!m.safe) out.add(Use(recvCallName.getOrPut(e) { NameE(m.n).also { it.line = e.line } }, false)) }
+                (e.callee as? MemberE)?.let { m -> if (!m.safe) out.add(Use(recvCallName.getOrPut(e) { NameE(m.n, line = e.line) }, false)) }
                 for (a in e.args) expr(a, straight, true, out)
                 e.lambda?.let { block(it, out) }
             }
@@ -47,7 +47,7 @@ object Uses {
             is IndexE -> { expr(e.recv, straight, false, out); expr(e.idx, straight, false, out) }
             is BinE -> {
                 expr(e.l, straight, false, out)
-                expr(e.r, straight && e.op != "&&" && e.op != "||" && e.op != "?:", false, out)
+                expr(e.r, straight && e.op != BinOp.AND && e.op != BinOp.OR && e.op != BinOp.ELVIS, false, out)
             }
             is UnE -> expr(e.e, straight, false, out)
             is NamedE -> expr(e.e, straight, pos, out)
