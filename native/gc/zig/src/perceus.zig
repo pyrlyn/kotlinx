@@ -217,8 +217,9 @@ pub fn debugInitialCap() usize {
 pub fn debugRootsCap() usize {
     return cc_roots.cap;
 }
-/// For the gray-record test: entries markGray records before it falls back to tracing from the roots.
-pub const debugGrayRecordMax = td_mod.GRAY_RECORD_MAX.?;
+/// For the gray-record test: entries markGray records before it falls back to tracing from the roots;
+/// null on wasm, where the record has no limit.
+pub const debugGrayRecordMax: ?usize = td_mod.GRAY_RECORD_MAX;
 /// For bench/native/cycles.zig: possible roots currently buffered.
 pub fn debugRootsLen() usize {
     return cc_roots.len;

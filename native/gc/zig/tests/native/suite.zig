@@ -745,8 +745,9 @@ fn layoutCollect() void {
     check(reclaimedSoFar() - before == 2, "layout garbage cycle reclaimed");
     check(gc.debugRefCount(live[3]) == 1 and gc.debugRefCount(live[0]) == 2, "garbage -> live edge dropped");
     for (live) |n| check(gc.debugColor(n) == 0 and !gc.debugIsBuffered(n), "live ring black");
-    // past the record limit: same result through root tracing.
-    for ([_]usize{ 1000, gc.debugGrayRecordMax + 7 }) |count| {
+    // past the record limit: same result through root tracing. wasm has no limit, so no fallback to test.
+    const sizes: []const usize = if (gc.debugGrayRecordMax) |max| &.{ 1000, max + 7 } else &.{1000};
+    for (sizes) |count| {
         const big = lnodeRing(count);
         defer std.heap.page_allocator.free(big);
         big[count / 2].hdr += 1;
