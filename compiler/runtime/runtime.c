@@ -58,7 +58,7 @@ int js_f32_str(char *buf, float d);  /* the same for a float */
 __attribute__((noreturn)) void js_list_oob(int64_t i, int64_t len);
 __attribute__((noreturn)) void js_sb_len_oob(int64_t n);
 __attribute__((noreturn)) void js_map_no_key(int skeys, int64_t k);
-#elif defined(__wasi__) /* --target=wasm (wasm32-wasi): no CLOCK_UPTIME_RAW */
+#elif defined(__wasi__) || defined(__linux__) /* --target=wasm (wasm32-wasi) and Linux: no CLOCK_UPTIME_RAW */
 int64_t rt_nanos(void) { struct timespec t; clock_gettime(CLOCK_MONOTONIC, &t); return (int64_t)t.tv_sec * 1000000000 + t.tv_nsec; }
 #else
 int64_t rt_nanos(void) { return (int64_t)clock_gettime_nsec_np(CLOCK_UPTIME_RAW); }
