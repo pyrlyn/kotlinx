@@ -11,8 +11,6 @@ pub const caps = .{ .cycles = true, .precise = true, .asan = true, .deferred = f
 const TD = td_mod.TrialDeletion(true);
 var td = TD{};
 var cc_roots = obj.PtrStack{};
-/// The previous collection's root buffer, kept so the next one does not regrow cc_roots from 256 slots.
-var cc_spare = obj.PtrStack{};
 var cc_running: bool = false;
 var gc_stats = kx.Stats{};
 
@@ -48,6 +46,12 @@ pub export fn rt_gc_mem_free(p: ?*anyopaque) void {
 }
 
 pub export fn rt_cc_possible_root(p: ?*anyopaque) void {
+    // Out of line like C's separate translation unit: once `PtrStack.push` became small this
+    // got inlined into release paths, giving every release a stack frame (+30% on rc_pair).
+    @call(.never_inline, possibleRoot, .{p});
+}
+
+fn possibleRoot(p: ?*anyopaque) void {
     const o = p orelse return;
     obj.setColor(o, obj.PURPLE);
     if (obj.isBuffered(o)) return;
@@ -64,10 +68,12 @@ pub export fn rt_cc_dead(p: ?*anyopaque) void {
     }
 }
 
-fn markRoots(roots: *obj.PtrStack) usize {
+/// Compacts the live purple roots of `roots[0..n)` to the front. Freeing a root can buffer new roots,
+/// which `possibleRoot` appends after `n` (and may move `roots.items`).
+fn markRoots(roots: *obj.PtrStack, n: usize) usize {
     var kept: usize = 0;
     var i: usize = 0;
-    while (i < roots.len) : (i += 1) {
+    while (i < n) : (i += 1) {
         const root = roots.at(i).?;
         if (obj.color(root) == obj.PURPLE and obj.refCount(root) > 0) {
             td.markGray(root);
@@ -108,31 +114,42 @@ fn collectCycles() void {
     if (cc_running or cc_roots.len == 0) return;
     cc_running = true;
     const start = host.rt_nanos();
-    var roots = cc_roots;
-    cc_roots = cc_spare;
-    cc_spare = .{};
+    // This collection's roots are cc_roots[0..n). Roots buffered while it runs are appended after
+    // them and kept for the next one, in the same buffer. C moves them to a fresh buffer, which then
+    // regrew from its initial capacity to the threshold (a realloc and copy per doubling) every time.
+    const roots = &cc_roots;
+    const n = roots.len;
     td.traced = 0;
     td.activate();
     td.record = true;
-    roots.len = markRoots(&roots);
+    const kept = markRoots(roots, n);
     var i: usize = 0;
     if (td_mod.GRAY_RECORD_MAX == null or td.record) {
         // Every gray object is in td.gray: scan and collect walk that list instead of re-tracing from the roots.
         td.scanGray();
-        while (i < roots.len) : (i += 1) obj.clearBuffered(roots.at(i).?);
+        while (i < kept) : (i += 1) obj.clearBuffered(roots.at(i).?);
         td.collectGray();
     } else {
-        while (i < roots.len) : (i += 1) td.scan(roots.at(i).?);
+        while (i < kept) : (i += 1) td.scan(roots.at(i).?);
         i = 0;
-        while (i < roots.len) : (i += 1) {
+        while (i < kept) : (i += 1) {
             obj.clearBuffered(roots.at(i).?);
             td.collectWhite(roots.at(i).?);
         }
     }
     const reclaimed = freeGarbage();
-    roots.len = 0;
-    if (cc_spare.cap == 0) cc_spare = roots else roots.deinit();
+    const late = roots.len - n;
+    @memmove(roots.items[0..late], roots.items[n..roots.len]);
+    roots.len = late;
     td.adaptThreshold(reclaimed);
+    // A drain (no collection while it runs) or a threshold since lowered can leave the buffer far
+    // larger than the next collection needs: free it, as C does after every collection.
+    if (roots.cap > 2 * @max(td.threshold, late) + obj.PTR_STACK_INITIAL_CAPACITY) {
+        var fresh = obj.PtrStack{};
+        for (roots.items[0..late]) |r| fresh.push(r);
+        roots.deinit();
+        roots.* = fresh;
+    }
     gc_stats.collections += 1;
     gc_stats.reclaimed += @intCast(reclaimed);
     obj.statsAddPause(&gc_stats, host.rt_nanos() - start);
@@ -203,3 +220,8 @@ pub const debugGrayRecordMax = td_mod.GRAY_RECORD_MAX.?;
 pub fn debugInitialCap() usize {
     return obj.PTR_STACK_INITIAL_CAPACITY;
 }
+/// For bench/native/cycles.zig: possible roots currently buffered.
+pub fn debugRootsLen() usize {
+    return cc_roots.len;
+}
+pub const debugPoolPages = regions.debugPoolPages;
