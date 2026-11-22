@@ -3,8 +3,8 @@ package newkotlin
 /**
  * Generic classes are monomorphized: `class Box<T>` is never compiled itself; every type-argument list used by the
  * program (`Box<Int>`, `Box<String>`) becomes a plain class `Box$Int` / `Box$String` with T substituted in its AST.
- * Instances are discovered during code generation ([NeedInstance]); the class is added and generation restarts,
- * until the instance set is closed (missing closure classes are collected per pass, [NeedBatch]). Each instance has exact field types, so primitives stay unboxed and the
+ * Instances are discovered during code generation ([NeedInstance]); missing instances and closure classes are
+ * collected as a worklist per pass ([NeedBatch]), added together, and generation reruns until the set is closed. Each instance has exact field types, so primitives stay unboxed and the
  * Perceus RC / cycle analysis (cyclic classes, field release functions) is computed per instance.
  */
 /** Overloaded top-level functions: source name -> renamed declarations (`f$ov0`, ...), resolved per call by the backend. */
@@ -57,7 +57,7 @@ fun compileGenerics(p00: Program): String {
         ClassD(c.name, c.fields, c.supers.map { s -> if (isFnSuper(s)) s else c.superTypeArgs[s]?.let { ensure(s, it) } ?: s }, c.methods, c.line, c.ctorParams,
             c.inits, c.superArgs, c.typeParams, c.enumEntries, c.isValue, c.superTypeArgs.filterKeys { isFnSuper(it) })
     /** Adds what one generation pass found missing; the pass is then redone with it. */
-    fun addNeed(x: Exception) {
+    fun addNeed(x: Exception, batch: Boolean = false) {
         when (x) {
             is NeedClass -> {
                 if (x.cd.name in extraClasses) throw CompileError("internal: class ${x.cd.name} requested twice")
@@ -71,10 +71,10 @@ fun compileGenerics(p00: Program): String {
             is NeedInstance -> {
                 val m = mangle(x.name, x.args)
                 if (x.name in genericIfaces) {
-                    if (m in ifaceInst) throw CompileError("internal: interface instance $m requested twice")
+                    if (m in ifaceInst) { if (batch) return; throw CompileError("internal: interface instance $m requested twice") }
                     ensure(x.name, x.args); return
                 }
-                if (m in inst) throw CompileError("internal: instance $m requested twice")
+                if (m in inst) { if (batch) return; throw CompileError("internal: instance $m requested twice") }
                 if (inst.size >= 1000) throw CompileError("too many generic class instances (recursive generic type?)")
                 val cd = generic.getValue(x.name)
                 origin[m] = x.name to x.args
@@ -102,7 +102,10 @@ fun compileGenerics(p00: Program): String {
         try {
             return NativeBackend(prog, generic, origin, genericIfaces).generate()
         } catch (n: NeedBatch) {
-            for (x in n.needs) addNeed(x)
+            // Closure classes found while instances were missing may have been typed against placeholders: when
+            // the batch has instances or interfaces, only those are added and the lambdas are rediscovered.
+            val types = n.needs.filter { it is NeedInstance || it is NeedIface }
+            for (x in types.ifEmpty { n.needs }) addNeed(x, batch = true)
         } catch (n: NeedClass) {
             addNeed(n)
         } catch (n: NeedIface) {

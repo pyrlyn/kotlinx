@@ -334,16 +334,19 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
 
     // ---------------------------------------------------------------- program
 
-    /** Closure classes missing in this pass, by name (see [NeedBatch]); the pass's IR is discarded when any are. */
-    private val missingLambdas = LinkedHashMap<String, NeedClass>()
+    /**
+     * Closure classes and generic instances missing in this pass, by name (see [NeedBatch]); generation goes on with
+     * placeholders and the pass's IR is discarded when any are, so one pass collects the whole worklist.
+     */
+    private val missing = LinkedHashMap<String, Exception>()
 
     fun generate(): String {
         val ir = try { generatePass() } catch (e: Exception) {
             // With placeholders in play a later error may be an artifact of them: the next pass decides.
-            if (missingLambdas.isEmpty() || e is NeedBatch) throw e
-            throw NeedBatch(missingLambdas.values.toList<Exception>() + listOfNotNull(e.takeIf { it is NeedClass || it is NeedInstance || it is NeedIface }))
+            if (missing.isEmpty() || e is NeedBatch) throw e
+            throw NeedBatch(missing.values.toList() + listOfNotNull(e.takeIf { it is NeedClass || it is NeedInstance || it is NeedIface }))
         }
-        if (missingLambdas.isNotEmpty()) throw NeedBatch(missingLambdas.values.toList())
+        if (missing.isNotEmpty()) throw NeedBatch(missing.values.toList())
         return ir
     }
 
@@ -1377,7 +1380,15 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         emit("store ${v.t.llvm} ${v.v}, ptr ${l.slot}")
     }
 
+    /**
+     * Once something is missing this pass is only collecting the worklist (its IR is discarded): a statement that
+     * fails on a placeholder is skipped so the rest of the body still reports what it needs.
+     */
     private fun genStmt(s: S) {
+        try { genStmt0(s) } catch (e: Exception) { if (missing.isEmpty() || e is NeedBatch) throw e }
+    }
+
+    private fun genStmt0(s: S) {
         line = s.line
         when (s) {
             is VarS -> {
@@ -3805,7 +3816,9 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         val m = mangle(n, concrete)
         if (m in classes) return Ty.Cls(m)
         if (m in ifaces) return Ty.Iface(m)
-        throw NeedInstance(n, concrete)
+        // Recorded, and a placeholder type goes on (this pass's output is discarded, see generate).
+        missing.getOrPut(m) { NeedInstance(n, concrete) }
+        return if (n in genericClasses) Ty.Cls(m) else Ty.Iface(m)
     }
 
     /** Binds type parameters in [ref] against the concrete argument type [t]; the first binding wins (later args coerce). */
@@ -5031,7 +5044,7 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
                 WhenE(null, listOf(WhenBranch(null, body1))).also { it.line = line }, line)
             val cd = ClassD(name, caps.map { (n, t) -> FieldD(n, capRef(t), false) }, listOf(fnT.name) + listOfNotNull(twinFn(ptys, rt, asRecvFn, susp)?.name), listOf(m), line)
             // Recorded, and a placeholder of the lambda's type goes on (this pass's output is discarded, see generate).
-            missingLambdas.getOrPut(name) { NeedClass(cd) }
+            missing.getOrPut(name) { NeedClass(cd) }
             return Val("null", fnT, false)
         }
         val v = genNamedCall(name, CallE(NameE(name), emptyList(), caps.map { (n, _) -> NameE(if (n == "\$outer") "\$self" else if (n == "\$recv" || n == "\$thisCap") "this" else n).also { it.line = line } }, null))
