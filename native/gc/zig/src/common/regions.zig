@@ -360,8 +360,9 @@ var trace_pool = Pool{ .id = 0 };
 /// taking pages from the same stock. Natively it stays libc malloc, one of C's object allocators
 /// (C defaults to mimalloc).
 var rc_pool = Pool{ .id = 1 };
-// KotlinX `--alloc pool` (-Dpool) pools the RC region natively as well.
-const rc_pooled = is_wasm or RT_POOL;
+// KotlinX `--alloc pool` (-Dpool) pools the RC region natively as well; `--alloc malloc` (-Dplain-malloc) keeps both
+// regions on malloc on wasm too, as the wasi-libc malloc baseline of compiler/tests/wasm/perf.sh expects.
+const rc_pooled = RT_POOL or (is_wasm and !RT_PLAIN_MALLOC);
 
 // ---- RT_LEAKCHECK: region tags and counters (KotlinX `--leak-check`) ---------------------------
 pub const RG_RC: i64 = 0x5243; // "RC"
