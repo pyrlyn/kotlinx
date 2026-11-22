@@ -4831,6 +4831,11 @@ class NativeBackend(private val prog: Program, private val genericClasses: Map<S
         fun memberParams(t: Ty, name: String, bound: Boolean): Pair<List<TypeRef>, Boolean>? = memberParams0(t, name, bound)
             ?: extFuns[name]?.filter { it.params.isNotEmpty() && extMatches(t, it.params[0].type, it.typeParams) }?.takeIf { it.isNotEmpty() }?.let { fs ->
                 fun mentions(r: TypeRef, tps: List<String>): Boolean = r.name in tps || r.args.any { mentions(it, tps) }
+                // Kotlin picks between an extension function and an extension property of the same name by scope (a
+                // local `fun R.foo` is not visible above its declaration); local functions are lifted here, so the
+                // choice cannot be made and taking the function would silently call the wrong one.
+                if (extFuns["\$prop\$$name"]?.any { it.params.size == 1 && extMatches(t, it.params[0].type, it.typeParams) } == true)
+                    fail("reference to $name, both an extension function and an extension property, is not supported")
                 val f = fs.singleOrNull() ?: fail("reference to overloaded extension $name is not supported")
                 // A generic extension whose type parameters occur only in the receiver: the lambda's call `recv.f(..)`
                 // infers them from the receiver (`List<T>.first()`); others take them from the expected type.
