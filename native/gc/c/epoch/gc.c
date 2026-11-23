@@ -1,6 +1,6 @@
 // Epoch-based GC (newkotlinc --gc=epoch): deferred RC + concurrent cycle collection on a background thread
 // (Bacon, Attanasio, Lee, Rajan, Smith: "Java without the Coffee Breaks" / Bacon & Rajan, "Concurrent Cycle
-// Collection in Reference Counted Systems", 2001), adapted to ZKotlin.
+// Collection in Reference Counted Systems", 2001), adapted to KotlinX.
 //
 // Mutator (the program thread):
 //   * Acyclic objects: unchanged inline RC (Perceus), freed immediately.

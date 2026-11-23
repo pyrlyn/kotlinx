@@ -1,5 +1,5 @@
 //! Native Zig mirror of `kxgc.h` (KXGC_API_VERSION 1).
-//! Layout and function signatures are the C ABI contract with ZKotlin.
+//! Layout and function signatures are the C ABI contract with KotlinX.
 pub const api_version: u32 = 1;
 
 pub const CNT_MASK: u64 = 0xffffffff;

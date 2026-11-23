@@ -1,6 +1,6 @@
-# ZKotlin memory management: architecture
+# KotlinX memory management: architecture
 
-This document explains how memory is managed in programs compiled by the ZKotlin compiler
+This document explains how memory is managed in programs compiled by the KotlinX compiler
 (`newkotlinc`). For the list of implementations and how to select one, see [`../README.md`](../README.md).
 
 ## 1. Layers
@@ -290,7 +290,7 @@ dereferencing them (acyclic objects may be freed concurrently). The unit test `g
 - `compiler/test.sh`: everything, including leak tests and `compiler/gc/tests/run.sh`.
 - `GCS="default incremental" compiler/gc/tests/run.sh`: GC unit tests (-O1/-O3), Kotlin tests, leak-check
   and ASan per implementation. Tests marked `// gc-needs: cycles` are skipped without the `cycles` cap.
-- `bench/gc/compare.sh default incremental`: full ZKotlin suite per GC, interleaved over `ROUNDS` rounds (median).
+- `bench/gc/compare.sh default incremental`: full KotlinX suite per GC, interleaved over `ROUNDS` rounds (median).
 - `bench/gc/micro.sh default incremental`: GC microbenchmarks (time, peak RSS, pauses).
 - Results are appended, one file per benchmark, under `bench/results/` (see
   [`bench/gc/README.md`](../../../bench/gc/README.md)).

@@ -429,7 +429,7 @@ pub export fn rt_cc_dead(p: ?*anyopaque) void {
 }
 
 /// Microseconds to nanoseconds, negative as 0 and saturating. Clamped before a plain multiply:
-/// LLVM turns `*|` on a value known non-negative into @llvm.umul.fix.sat.i63, which the ZKotlin JS
+/// LLVM turns `*|` on a value known non-negative into @llvm.umul.fix.sat.i63, which the KotlinX JS
 /// backend (--target=js translates this collector's bitcode) cannot translate.
 fn usToNs(us: i64) i64 {
     return std.math.clamp(us, 0, std.math.maxInt(i64) / 1000) * 1000;
