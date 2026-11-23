@@ -62,7 +62,7 @@ jobs:
       - name: Upstream tests under --leak-check (against the baseline)
         run: python3 compiler/tests/upstream/run.py --leak-check --nkc compiler/build/newkotlinc.kexe --jobs 3 --baseline compiler/tests/upstream/leak-baseline-macos.txt
   linux:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 90
     env:
       KN_VERSION: "2.4.21"
@@ -95,7 +95,7 @@ jobs:
       - name: Upstream tests
         run: python3 compiler/tests/upstream/run.py --nkc compiler/build/newkotlinc.kexe --jobs 4
   mutation-jvm:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
