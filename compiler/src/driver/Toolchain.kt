@@ -5,12 +5,12 @@ package newkotlin
 import kotlinx.cinterop.*
 import platform.posix.*
 
-// Host toolchain helpers shared by the native and js targets: files, shell commands, clang and LLVM opt lookup.
+// Host toolchain helpers shared by the native and js targets: files, clang and LLVM opt lookup.
 
 /**
- * POSIX shell quoting of one word: [s] in single quotes, each embedded `'` written as `'\''`. Every path or other
- * value that reaches [system] / [capture] goes through this, so spaces, quotes, `$` or `;` in it stay literal.
- * Values that are deliberately split into words (`--cc "zig cc -target ..."`, `--cflags`, config.sh output) are not.
+ * POSIX shell quoting of one word: [s] in single quotes, each embedded `'` written as `'\''`. The driver runs no
+ * shell (tools are started from argv, see Process.kt); this only makes the commands in error messages ([cmdline])
+ * safe to paste into one.
  */
 internal fun shq(s: String): String = "'" + s.replace("'", "'\\''") + "'"
 
@@ -48,18 +48,6 @@ internal fun writeFile(path: String, text: String) {
     } finally { if (!closed) fclose(f) }
 }
 
-/** First line of a shell command's stdout, or null. */
-internal fun capture(cmd: String): String? {
-    val p = popen(cmd, "r") ?: return null
-    val out = StringBuilder()
-    memScoped {
-        val buf = allocArray<ByteVar>(512)
-        while (fgets(buf, 512, p) != null) out.append(buf.toKString())
-    }
-    pclose(p)
-    return out.toString().trim().lineSequence().firstOrNull()?.trim()?.ifEmpty { null }
-}
-
 /** Major LLVM version from `<tool> --version` ("LLVM version 23.1.4", "clang version 21.0.0"), or null. */
 internal val majorCache = HashMap<String, Int?>()
 
@@ -69,19 +57,10 @@ internal fun majorVersion(tool: String): Int? = majorCache.getOrPut(tool) {
     majorVersionRun(tool)
 }
 
-private fun majorVersionRun(tool: String): Int? {
-    val out = capture("${shq(tool)} --version 2>/dev/null | grep -oE '(LLVM|clang) version [0-9]+' | head -1") ?: return null
-    return out.substringAfterLast(' ').toIntOrNull()
-}
-
-/** All stdout lines of a shell command. */
-internal fun captureAll(cmd: String): List<String> {
-    val p = popen(cmd, "r") ?: return emptyList()
-    val out = StringBuilder()
-    memScoped { val buf = allocArray<ByteVar>(512); while (fgets(buf, 512, p) != null) out.append(buf.toKString()) }
-    pclose(p)
-    return out.lines().map { it.trim() }.filter { it.isNotEmpty() }
-}
+/** [tool] may be a command with arguments (`zig cc -target wasm32-wasi`, see [toolArgv]). */
+private fun majorVersionRun(tool: String): Int? =
+    execLines(toolArgv(tool) + "--version").firstNotNullOfOrNull { Regex("(?:LLVM|clang) version (\\d+)").find(it) }
+        ?.groupValues?.get(1)?.toIntOrNull()
 
 /**
  * C compiler/linker when --cc is absent: ${'$'}NK_CC, then Apple clang (/usr/bin/clang, macOS), then the newest
@@ -90,12 +69,11 @@ internal fun captureAll(cmd: String): List<String> {
  */
 internal fun findCc(): String {
     getenv("NK_CC")?.toKString()?.let { return it }
-    if (access("/usr/bin/clang", X_OK) == 0) capture("/usr/bin/clang --version 2>/dev/null")?.let { v ->
+    if (access("/usr/bin/clang", X_OK) == 0) execLine(listOf("/usr/bin/clang", "--version"))?.let { v ->
         if (v.startsWith("Apple")) { majorCache["/usr/bin/clang"] = Regex("version (\\d+)").find(v)?.groupValues?.get(1)?.toIntOrNull(); return "/usr/bin/clang" }
     }
     val home = getenv("HOME")?.toKString() ?: ""
-    return captureAll("ls -d ${shq(home)}/.local/share/mise/installs/conda-clang/*/bin/clang 2>/dev/null | grep -v /latest/ | sort -rV")
-        .firstOrNull { access(it, X_OK) == 0 } ?: "clang"
+    return miseTools(home, "conda-clang", "clang").firstOrNull { access(it, X_OK) == 0 } ?: "clang"
 }
 
 /**
@@ -110,8 +88,8 @@ internal fun findOpt(explicit: String?, maxMajor: Int?, minMajor: Int = 0): Stri
     getenv("NK_OPT")?.toKString()?.let { if (minMajor == 0 || ok(it)) return if (access(it, X_OK) == 0) it else null }
     // mise shims (also returned by xcrun, which searches PATH) cost ~0.4 s per call and pick the version by the
     // current directory; skip them and use the mise installs below.
-    capture("command -v opt 2>/dev/null")?.let { if ("/mise/shims/" !in it && ok(it)) return it }
-    capture("xcrun --find opt 2>/dev/null")?.let { if ("/mise/shims/" !in it && ok(it)) return it }
+    onPath("opt")?.let { if ("/mise/shims/" !in it && ok(it)) return it }
+    if (onPath("xcrun") != null) execLine(listOf("xcrun", "--find", "opt"))?.let { if ("/mise/shims/" !in it && ok(it)) return it }
     // Common LLVM install locations: conda env, Homebrew llvm (unversioned, then newest llvm@N), mise.
     val home = getenv("HOME")?.toKString() ?: ""
     val fixed = listOfNotNull(getenv("CONDA_PREFIX")?.toKString()?.let { "$it/bin/opt" },
@@ -119,9 +97,15 @@ internal fun findOpt(explicit: String?, maxMajor: Int?, minMajor: Int = 0): Stri
     // Prefer one the C compiler can read (LLVM major <= the C compiler's).
     fixed.firstOrNull { ok(it) && (maxMajor == null || (majorVersion(it) ?: 0) <= maxMajor) }?.let { return it }
     // mise `conda:llvm-tools` (the repo's mise.toml; `mise install`), newest version first.
-    val mise = captureAll("ls -d ${shq(home)}/.local/share/mise/installs/conda-llvm-tools/*/bin/opt 2>/dev/null | grep -v /latest/ | sort -rV")
+    val mise = miseTools(home, "conda-llvm-tools", "opt")
     (mise.firstOrNull { o -> ok(o) && (maxMajor == null || (majorVersion(o) ?: 0) <= maxMajor) } ?: mise.firstOrNull { ok(it) })
         ?.let { return it }
-    val globs = "/opt/homebrew/opt/llvm@*/bin/opt /usr/local/opt/llvm@*/bin/opt ${shq(home)}/.local/share/mise/installs/llvm/*/bin/opt"
-    return capture("ls -d $globs 2>/dev/null | sort -V | tail -1")?.takeIf { ok(it) }
+    // Newest of /opt/homebrew/opt/llvm@*/bin/opt, /usr/local/opt/llvm@*/bin/opt and mise llvm/*/bin/opt.
+    val versioned = listOf("/opt/homebrew/opt", "/usr/local/opt").flatMap { d -> globPaths(d, "/bin/opt") { it.startsWith("llvm@") } } +
+        globPaths("$home/.local/share/mise/installs/llvm", "/bin/opt")
+    return versioned.maxWithOrNull(versionOrder)?.takeIf { ok(it) }
 }
+
+/** `<home>/.local/share/mise/installs/<plugin>/<version>/bin/<tool>` that exist, newest version first, without `latest`. */
+private fun miseTools(home: String, plugin: String, tool: String): List<String> =
+    globPaths("$home/.local/share/mise/installs/$plugin", "/bin/$tool") { it != "latest" }.sortedWith(versionOrder).reversed()

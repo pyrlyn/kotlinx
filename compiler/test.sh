@@ -135,7 +135,7 @@ if command -v node >/dev/null && [ -s "$out/js.js" ]; then
       && [ "$(wc -c < "$out/js.min.js")" -lt "$(wc -c < "$out/js.js")" ]; then echo "PASS target-js-minify"
   else echo "FAIL target-js-minify: $(head -c 300 "$out/jsmin.err")"; fail=1; fi
 fi
-# Driver: usage errors, shell quoting of paths, LTO flag filtering (compiler/tests/driver/run.sh).
+# Driver: usage errors, argv quoting of paths and flags (no shell), LTO flag filtering (compiler/tests/driver/run.sh).
 NKC="$NKC" compiler/tests/driver/run.sh || fail=1
 # Leak tests (own tests, compiler/tests/leaks): runtime live-object count, ASan, macOS leaks.
 NKC="$NKC" compiler/tests/leaks/run.sh || fail=1

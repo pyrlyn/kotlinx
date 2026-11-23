@@ -25,6 +25,8 @@ then: opt (lto-pre-link<O3>) -> clang -O3 -flto with runtime/runtime.c + gc/<nam
                           (LIBC_SIGS, NativeBackend.libcCall), the entry symbol and pointer-size offsets; linked by
                           `zig cc -target wasm32-wasi` with the perceus collector (no threads; Zig archive built for
                           wasm32-wasi into native/gc/zig/zig-out/wasm32-wasi/lib) and wasi-libc malloc
+driver/Process.kt           tools (clang, opt, llvm-link, zig cc, javac, jar, minifiers) run from argv via posix_spawnp
+                          (compiler/interop/kxproc.def, cinterop in build.sh); no shell, Kotlin globbing and file ops
 --target jvm (driver/JvmLink.kt): clang -emit-llvm of runtime.c + gc.c + runtime/jvm/libc.c, llvm-link, opt O2
   backend/jvm/LlvmIr.kt     LLVM IR text parser
   backend/jvm/JvmBackend.kt LLVM IR -> JVM bytecode (class Main; memory through Unsafe, see docs/jvm.md)
