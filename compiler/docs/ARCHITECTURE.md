@@ -1,4 +1,4 @@
-# KotlinX compiler: architecture map for contributors
+# ZKotlin compiler: architecture map for contributors
 
 A short map of `newkotlinc` so a feature can be added without re-reading the whole compiler. Function names are
 given instead of line numbers (they drift). GC internals are documented separately in
@@ -105,6 +105,6 @@ while emitting IR.
 
 ## Ranking what to do next
 
-`compiler/tests/upstream/report.py` summarizes the manifest. The roadmap issue [#22](https://github.com/pyrlyn/kotlinx/issues/22) (label `upstream-feature`) ranks
+`compiler/tests/upstream/report.py` summarizes the manifest. The roadmap issue [#22](https://github.com/pyrlyn/zkotlin/issues/22) (label `upstream-feature`) ranks
 missing features by the number of UNSUPPORTED upstream tests whose first error they cause. Counts are lower bounds:
 a test may hit a second missing feature after the first one is fixed.

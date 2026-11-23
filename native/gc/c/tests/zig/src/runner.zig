@@ -90,8 +90,8 @@ fn repoRoot() []const u8 {
     while (true) {
         if (p.exists(p.fmt("{s}/native/gc/c/kxgc.h", .{dir}))) return dir;
         if (p.exists(p.fmt("{s}/compiler/gc/kxgc.h", .{dir}))) return dir; // legacy layout
-        const slash = std.mem.lastIndexOfScalar(u8, dir, '/') orelse @panic("not inside the KotlinX repository");
-        if (slash == 0) @panic("not inside the KotlinX repository");
+        const slash = std.mem.lastIndexOfScalar(u8, dir, '/') orelse @panic("not inside the ZKotlin repository");
+        if (slash == 0) @panic("not inside the ZKotlin repository");
         dir = dir[0..slash];
     }
 }

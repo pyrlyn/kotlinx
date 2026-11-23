@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""kxbindgen (prototype): one C header -> a Kotlin file of `external fun` declarations for KotlinX FFI.
+"""kxbindgen (prototype): one C header -> a Kotlin file of `external fun` declarations for ZKotlin FFI.
 
 Usage: kxbindgen.py <header.h> -o <out.kt> [--link <arg>]... [--cc clang] [-- <extra clang args>]
 

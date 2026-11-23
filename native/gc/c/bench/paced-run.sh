@@ -1,7 +1,7 @@
 #!/bin/bash
 # One isolated measurement run for the paced-freeing experiment (gc-improvement-experiment).
 #   bench/gc/paced-run.sh <tree> <out-dir>
-# In <tree> (a kotlinx checkout with a built compiler): the full GC test suite (zig build ported in compiler/gc/tests/zig),
+# In <tree> (a zkotlin checkout with a built compiler): the full GC test suite (zig build ported in compiler/gc/tests/zig),
 # then bench/gc/micro.sh epoch perceus, then one KX_GC_DEBUG=1 run per epoch micro benchmark (collector
 # scratch memory, boundary max, freed paced/boundary). Writes one file per benchmark to <out-dir>:
 #   gc-tests.txt, micro-table.md, micro-<bench>.txt. Run with no other heavy processes.

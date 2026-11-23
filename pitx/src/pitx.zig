@@ -1,4 +1,4 @@
-//! pitx: mutation testing on LLVM IR emitted by the KotlinX compiler (PIT-style, IR instead of JVM bytecode).
+//! pitx: mutation testing on LLVM IR emitted by the ZKotlin compiler (PIT-style, IR instead of JVM bytecode).
 //!
 //! Library + CLI (src/main.zig). Works only on copies of IR text; never touches sources. Zig std only.
 //! See DESIGN.md.
@@ -227,7 +227,7 @@ pub const SkipFilter = struct {
 pub const EnumOptions = struct {
     ops: []const Operator = &all_operators,
     skip: ?SkipFilter = null,
-    /// Skip functions not reachable from @main (e.g. the unused stdlib prelude of every KotlinX module).
+    /// Skip functions not reachable from @main (e.g. the unused stdlib prelude of every ZKotlin module).
     only_reachable: bool = false,
 };
 
@@ -385,7 +385,7 @@ fn runTimed(a: Allocator, io: Io, argv: []const []const u8, timeout_ms: i64) !Ru
 pub const Harness = union(enum) {
     /// Run a standalone IR module with `lli`.
     lli: struct { timeout_ms: i64 = 10_000 },
-    /// Link a KotlinX-emitted module with the runtime + GC via clang (as the driver does) and run it.
+    /// Link a ZKotlin-emitted module with the runtime + GC via clang (as the driver does) and run it.
     link: struct {
         runtime: []const u8,
         gc_dir: []const u8,

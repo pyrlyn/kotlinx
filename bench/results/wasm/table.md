@@ -1,10 +1,10 @@
-# Kotlin → wasm: KotlinX (LLVM, linear memory) vs Kotlin/Wasm (WasmGC)
+# Kotlin → wasm: ZKotlin (LLVM, linear memory) vs Kotlin/Wasm (WasmGC)
 Node v26.7.0 (V8), 5 runs round-robin after a warm-up, medians. Lower is better everywhere; **bold** = best per row.
 
 ## Kernel time, ms
 Time the program measures around its kernel (`nanos=`).
 
-| Case | KotlinX → LLVM → wasm32 | KotlinX + wasm-opt -O3 | KotlinX, C collector | Kotlin/Wasm (DCE) | Kotlin/Wasm + Binaryen (Gradle prod) | KotlinX / Kotlin/Wasm |
+| Case | ZKotlin → LLVM → wasm32 | ZKotlin + wasm-opt -O3 | ZKotlin, C collector | Kotlin/Wasm (DCE) | Kotlin/Wasm + Binaryen (Gradle prod) | ZKotlin / Kotlin/Wasm |
 |---|---|---|---|---|---|---|
 | sum | 12.2 | **11.7** | 12.6 | 76.1 | 27.4 | 0.43× |
 | alloc | **188.5** | 195.5 | 189.8 | 680.8 | 284.4 | 0.66× |
@@ -27,7 +27,7 @@ Time the program measures around its kernel (`nanos=`).
 ## Process wall time, ms
 Whole `node` process, incl. startup and wasm compile.
 
-| Case | KotlinX → LLVM → wasm32 | KotlinX + wasm-opt -O3 | KotlinX, C collector | Kotlin/Wasm (DCE) | Kotlin/Wasm + Binaryen (Gradle prod) | KotlinX / Kotlin/Wasm |
+| Case | ZKotlin → LLVM → wasm32 | ZKotlin + wasm-opt -O3 | ZKotlin, C collector | Kotlin/Wasm (DCE) | Kotlin/Wasm + Binaryen (Gradle prod) | ZKotlin / Kotlin/Wasm |
 |---|---|---|---|---|---|---|
 | sum | 67 | **64** | 67 | 136 | 85 | 0.76× |
 | alloc | **244** | 249 | 245 | 746 | 346 | 0.70× |
@@ -50,7 +50,7 @@ Whole `node` process, incl. startup and wasm compile.
 ## Peak RSS, MB
 Whole `node` process.
 
-| Case | KotlinX → LLVM → wasm32 | KotlinX + wasm-opt -O3 | KotlinX, C collector | Kotlin/Wasm (DCE) | Kotlin/Wasm + Binaryen (Gradle prod) | KotlinX / Kotlin/Wasm |
+| Case | ZKotlin → LLVM → wasm32 | ZKotlin + wasm-opt -O3 | ZKotlin, C collector | Kotlin/Wasm (DCE) | Kotlin/Wasm + Binaryen (Gradle prod) | ZKotlin / Kotlin/Wasm |
 |---|---|---|---|---|---|---|
 | sum | **57.6** | 64.7 | 57.7 | 62.3 | 63.7 | 0.92× |
 | alloc | 74.8 | 79.9 | **74.5** | 286.6 | 250.1 | 0.30× |
@@ -72,7 +72,7 @@ Whole `node` process.
 
 ## main.wasm size, KB
 
-| Case | KotlinX → LLVM → wasm32 | KotlinX + wasm-opt -O3 | KotlinX, C collector | Kotlin/Wasm (DCE) | Kotlin/Wasm + Binaryen (Gradle prod) | KotlinX / Kotlin/Wasm |
+| Case | ZKotlin → LLVM → wasm32 | ZKotlin + wasm-opt -O3 | ZKotlin, C collector | Kotlin/Wasm (DCE) | Kotlin/Wasm + Binaryen (Gradle prod) | ZKotlin / Kotlin/Wasm |
 |---|---|---|---|---|---|---|
 | sum | 41.5 | 34.2 | 36.4 | 120.4 | **14.7** | 2.33× |
 | alloc | 43.1 | 35.4 | 42.6 | 131.1 | **16.9** | 2.09× |
@@ -94,7 +94,7 @@ Whole `node` process.
 
 ## main.wasm gzip -9, KB
 
-| Case | KotlinX → LLVM → wasm32 | KotlinX + wasm-opt -O3 | KotlinX, C collector | Kotlin/Wasm (DCE) | Kotlin/Wasm + Binaryen (Gradle prod) | KotlinX / Kotlin/Wasm |
+| Case | ZKotlin → LLVM → wasm32 | ZKotlin + wasm-opt -O3 | ZKotlin, C collector | Kotlin/Wasm (DCE) | Kotlin/Wasm + Binaryen (Gradle prod) | ZKotlin / Kotlin/Wasm |
 |---|---|---|---|---|---|---|
 | sum | 15.5 | 14.4 | 13.6 | 40.9 | **7.2** | 2.00× |
 | alloc | 16.2 | 15.0 | 15.8 | 44.0 | **8.2** | 1.83× |

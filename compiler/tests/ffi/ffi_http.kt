@@ -41,7 +41,7 @@ fun parse(raw: String): Request {
 
 fun handle(r: Request): String {
     val body = when (r.path) {
-        "/" -> "hello from KotlinX"
+        "/" -> "hello from ZKotlin"
         "/agent" -> "you are " + (r.headers["user-agent"] ?: "nobody")
         else -> null
     }

@@ -1,4 +1,4 @@
-# KotlinX compiler: macOS (Apple Silicon) build, compiler/test.sh, upstream tests (also under --leak-check, gated
+# ZKotlin compiler: macOS (Apple Silicon) build, compiler/test.sh, upstream tests (also under --leak-check, gated
 # against a baseline); Linux x86_64 build and golden tests; the JVM build in mutation/jvm.
 name: compiler
 on:

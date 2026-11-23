@@ -207,7 +207,7 @@ private fun compile(args: Array<String>) {
     if (input == null) usageExit("no input file")
     if (output == null) usageExit("no output file (-o <output>)")
     // GC: caps/metadata and C sources under <gcDir>; Zig static libs under <zigLibDir>/libgc-<name>.a.
-    // Only the collector backend is zig|c; runtime.c is always the shared KotlinX runtime.
+    // Only the collector backend is zig|c; runtime.c is always the shared ZKotlin runtime.
     val gcDir = getenv("NEWKOTLIN_GC_DIR")?.toKString() ?: (runtime.substringBeforeLast('/', ".") + "/../../native/gc/c")
     // The collector name is validated before its caps are read (it is a path component).
     fun checkGc(name: String): Boolean {

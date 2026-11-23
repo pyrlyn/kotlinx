@@ -1,4 +1,4 @@
-# Mutation testing (KotlinX)
+# Mutation testing (ZKotlin)
 
 Nothing here changes the compiler, runtime or GC sources. Every mutant is written into a private copy
 of the files it needs, and the existing test suites run against that copy.

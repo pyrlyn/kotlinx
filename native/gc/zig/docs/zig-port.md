@@ -10,11 +10,11 @@ Frozen C collector SHA: `21f34a960f8b56d1dcdf1ab55b8e5e14e4e8ff31`.
 ```
 src/kxgc.zig                 KXGC_API_VERSION 1 types / ABI
 src/host.zig                 standalone runtime symbols (clock, panic, pause accounting)
-src/runtime_host.zig         KotlinX adapter; runtime callbacks stay in runtime.c
+src/runtime_host.zig         ZKotlin adapter; runtime callbacks stay in runtime.c
 src/lib/host_util.zig        shared allocator / environment / RSS helpers for both hosts
 src/common/{object,regions,trial_deletion}.zig
 src/{rc,perceus,incremental,epoch}.zig
-src/compact.zig              KotlinX-local collector (no C original; --target=js default)
+src/compact.zig              ZKotlin-local collector (no C original; --target=js default)
 tests/native/suite.zig       gc_unit + api_test + traversal + one_pass
 tests/native/compact.zig     compact's own regression (it keeps no statistics)
 bench/native/ops.zig         port of bench/ops/ops.c
@@ -95,13 +95,13 @@ Paired Mac numbers for SHA `31bdbcf` live on the runner at
 | `tests/zig/mutation` | Mutates C source. |
 | epoch parallel MarkGray/Scan, incremental major, side-minor, early validation | C pause/RSS paths. Not claimed equivalent. Serial collector thread = `KX_GC_THREADS=1`. |
 | epoch common-region traversal accounting | C epoch bypasses those regions; leak-object counts and the other collectors' region reports remain available. |
-| KotlinX `runtime.c` | Shared runtime at `compiler/runtime/runtime.c`; not replaced by this port. Host stub matches its clock on macOS. |
+| ZKotlin `runtime.c` | Shared runtime at `compiler/runtime/runtime.c`; not replaced by this port. Host stub matches its clock on macOS. |
 
 ## Runtime integration and duplication review
 
 `host.zig` and `runtime_host.zig` are separate ABI adapters, not alternative
 collectors: the former exports runtime callbacks for standalone tests; the
-latter imports the same symbols from KotlinX `runtime.c`. They must not be linked
+latter imports the same symbols from ZKotlin `runtime.c`. They must not be linked
 into the same executable. Both use the shared non-callback helpers in
 `lib/host_util.zig`. `kxgc.zig` is the Zig ABI view; translate-C `kxgc_c` in the
 umbrella build is its C-header view, not a second implementation. Collectors reuse

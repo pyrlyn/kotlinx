@@ -1,4 +1,4 @@
-// Original (pre-epoch default) KotlinX memory manager (newkotlinc --gc=perceus; was --gc=default before epoch became the default): Perceus-style reference counting (fast paths
+// Original (pre-epoch default) ZKotlin memory manager (newkotlinc --gc=perceus; was --gc=default before epoch became the default): Perceus-style reference counting (fast paths
 // inlined by the code generator) + a synchronous trial-deletion cycle collector (Bacon & Rajan 2001)
 // over the tracing region.
 //

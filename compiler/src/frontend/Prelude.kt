@@ -1,7 +1,7 @@
 package newkotlin
 
 /**
- * Library code written in KotlinX compiler itself, merged into a program that uses it: ranges and progressions as values
+ * Library code written in ZKotlin compiler itself, merged into a program that uses it: ranges and progressions as values
  * (`IntRange`, `IntProgression`, `LongRange`, `LongProgression`, `CharRange`, `CharProgression`).
  * Range operators outside a `for` header call the `kt_*` functions; `for` over a progression value iterates its fields.
  */
@@ -573,7 +573,7 @@ fun <T> emptyArray(): ArrayList<T> = ArrayList<T>()
 """
 private val EMPTY_LIST_USE = Regex("""\bemptyList\s*<|\bemptyArray\s*[<(]""")
 
-/** Kotlin/Native memory model queries: KotlinX has one memory model, reported as the new ("experimental") one. */
+/** Kotlin/Native memory model queries: ZKotlin has one memory model, reported as the new ("experimental") one. */
 const val MEMORY_MODEL = """
 enum class MemoryModel { STRICT, RELAXED, EXPERIMENTAL }
 object Platform {

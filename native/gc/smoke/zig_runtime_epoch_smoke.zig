@@ -1,4 +1,4 @@
-//! Smoke: KotlinX runtime.c + Zig libgc-epoch.a, API via `@import("kxgc_c")` (translate-c).
+//! Smoke: ZKotlin runtime.c + Zig libgc-epoch.a, API via `@import("kxgc_c")` (translate-c).
 const std = @import("std");
 const kxgc_c = @import("kxgc_c");
 

@@ -4,7 +4,7 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{ .preferred_optimize_mode = .ReleaseSafe });
     const o = b.addOptions();
-    o.addOption([]const u8, "root", b.option([]const u8, "root", "KotlinX repository root (default: nearest parent of the cwd with bin/newkotlinc)") orelse "");
+    o.addOption([]const u8, "root", b.option([]const u8, "root", "ZKotlin repository root (default: nearest parent of the cwd with bin/newkotlinc)") orelse "");
     o.addOption(usize, "runs", b.option(usize, "runs", "Measured runs per benchmark, median taken (default 5)") orelse 5);
     o.addOption(f64, "noise", b.option(f64, "noise", "Measurement noise margin on top of every limit (default 0.03)") orelse 0.03);
     o.addOption(f64, "allow", b.option(f64, "allow", "Allowed regression where epoch strongly beats Boehm (default 0.05)") orelse 0.05);

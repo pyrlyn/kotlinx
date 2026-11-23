@@ -1,5 +1,5 @@
 #!/bin/bash
-# KotlinX benchmark suite (bench/nkbench.sh: warm-up + 5 runs, mean of the middle 3) per GC
+# ZKotlin benchmark suite (bench/nkbench.sh: warm-up + 5 runs, mean of the middle 3) per GC
 # implementation, interleaved over ROUNDS rounds (median per case), then a table with the best value per row in bold.
 #   bench/gc/compare.sh [gc ...]      (default: epoch boehm perceus)  -> bench/results/gc/nk-<gc>.txt, table on stdout,
 #   and one file per benchmark: bench/results/gc-nk/<case>.json (one run per GC, see record.py)

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Speed and file size of `newkotlinc --target jvm` (LLVM IR -> JVM bytecode) against KotlinX native,
+# Speed and file size of `newkotlinc --target jvm` (LLVM IR -> JVM bytecode) against ZKotlin native,
 # Kotlin/Native and Kotlin/JVM, on the bench sources (bench/kotlin, bench/cases/*/kotlin).
 #
 #   bench/jvm/run.sh [case...]      default: every case

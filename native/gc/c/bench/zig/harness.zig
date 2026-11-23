@@ -1,4 +1,4 @@
-//! Shared harness for the KotlinX GC regression benchmarks: compiles a KotlinX benchmark program with
+//! Shared harness for the ZKotlin GC regression benchmarks: compiles a ZKotlin benchmark program with
 //! bin/newkotlinc for one `--gc`, runs it N times (fork/execve, wait4 rusage for peak RSS), times every run
 //! with a monotonic Timer, and parses the program's `nanos=` and the collector's `gc-stats:` line
 //! (KX_GC_STATS=1). Zig std + libc only.

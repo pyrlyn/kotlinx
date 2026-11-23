@@ -1,6 +1,6 @@
-# What Ktor and Room need from the KotlinX compiler
+# What Ktor and Room need from the ZKotlin compiler
 
-Analysis for PLAN.md P5 (2026-11-04). KotlinX compiles one Kotlin source file (plus generated preludes) to LLVM IR
+Analysis for PLAN.md P5 (2026-11-04). ZKotlin compiles one Kotlin source file (plus generated preludes) to LLVM IR
 for the native target; libraries are source subsets compiled into the program (`Kotlinx.kt`, `Prelude.kt`).
 Ktor and Room are large multi-module libraries; neither can be compiled from their own sources today. This lists
 the compiler features they depend on, what exists, and a realistic path.
@@ -19,7 +19,7 @@ the compiler features they depend on, what exists, and a realistic path.
 |---|---|---|
 | Coroutines: `suspend`, structured concurrency, `Job`, cancellation, `withTimeout`, `Dispatchers` | partial | Single-threaded scheduler with virtual time (`Kotlinx.kt`). No real I/O suspension: a socket read blocks the process. Needs an event loop (kqueue/epoll) integrated with the scheduler and `suspendCancellableCoroutine`. |
 | `Flow`, `Channel`, `select`, `ByteReadChannel`/`ByteWriteChannel` | partial | Flow/Channel subsets exist; `select` and byte channels do not. |
-| Multi-module compilation, `expect`/`actual`, `internal` visibility across modules | missing | Ktor is ~100 Gradle modules with expect/actual per platform. KotlinX compiles one file; needs a module/klib model or a source-concatenation build with name spacing. |
+| Multi-module compilation, `expect`/`actual`, `internal` visibility across modules | missing | Ktor is ~100 Gradle modules with expect/actual per platform. ZKotlin compiles one file; needs a module/klib model or a source-concatenation build with name spacing. |
 | Generics: variance (`in`/`out`), star projections, reified inline functions, generic class hierarchies | partial | Monomorphization works for most code; star projections (`Foo<*>`), casts to generic types and `open` generic hierarchies with generic methods are rejected (see kt52838, kt66359 in PLAN.md). Ktor's pipeline (`Pipeline<TSubject, TContext>`, `PipelinePhase`, interceptors as `suspend PipelineContext<..>.(..) -> Unit`) relies on all of these. |
 | Type-safe builders / DSLs (`routing { get("/") { call.respondText(..) } }`) | mostly | Lambdas with receivers and builder inference work; the DSL itself is plain code. |
 | Reflection: `typeOf<T>()`, `KType`, `KClass` | minimal | `TypeInfo` for content negotiation needs `typeOf<T>()` with type arguments. A compile-time `typeOf` (emit a type descriptor per instance) is feasible in a monomorphizing compiler. |
@@ -37,7 +37,7 @@ subset, like the kotlinx subsets — compiling upstream Ktor itself is not reali
 
 | Needed | State | Notes |
 |---|---|---|
-| Annotation processing (KSP) for `@Database`, `@Entity`, `@Dao`, `@Query` | missing | Room generates DAO implementations and SQL validation at build time. Options: run real KSP on the JVM over the sources and compile its output with KotlinX, or a built-in source generator like `withSerializable` (regex/AST-driven) for a subset (`@Entity` data classes, `@Insert`, `@Query` with positional parameters). |
+| Annotation processing (KSP) for `@Database`, `@Entity`, `@Dao`, `@Query` | missing | Room generates DAO implementations and SQL validation at build time. Options: run real KSP on the JVM over the sources and compile its output with ZKotlin, or a built-in source generator like `withSerializable` (regex/AST-driven) for a subset (`@Entity` data classes, `@Insert`, `@Query` with positional parameters). |
 | SQLite driver (`androidx.sqlite` `SQLiteDriver`, `SQLiteConnection`, `SQLiteStatement`) | basic | Shown by `ffi_sqlite.kt` (open, exec, prepare, bind, step, columns, finalize). Wrapping it in the androidx.sqlite interfaces is plain Kotlin. |
 | Coroutines: `suspend` DAO methods, `Flow<List<T>>` queries with invalidation | partial | Suspend DAOs work on the scheduler; observable queries need table-invalidation callbacks feeding a Flow (no threads needed). |
 | Generics, abstract classes with generated subclasses (`RoomDatabase`, `abstract fun userDao(): UserDao`) | partial | Abstract classes and interfaces work; `Room.databaseBuilder<AppDatabase>()` uses reified generics and a generated `AppDatabase_Impl` constructor (reflection on JVM; a generated factory on native). |

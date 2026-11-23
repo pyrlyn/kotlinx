@@ -1,5 +1,5 @@
 "use strict";
-// KotlinX JS runtime (newkotlinc --target=js): linear memory, 64-bit integer helpers and the libc subset that
+// ZKotlin JS runtime (newkotlinc --target=js): linear memory, 64-bit integer helpers and the libc subset that
 // compiler/runtime/runtime.c and the GC call. Generated code follows; it ends with a call to _start.
 // JsBackend wraps runtime, code and start call in one function, so these top-level `var`s are closure
 // variables (no global object properties, no `let` hole checks).

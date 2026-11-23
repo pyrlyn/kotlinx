@@ -44,7 +44,7 @@ pub fn build(b: *std.Build) void {
     b.installArtifact(runner);
 
     // Zig 0.17 removed Build.getInstallPath; objects install to this package's zig-out/obj.
-    // Runner cwd is the KotlinX repo root, so pass a repo-relative path.
+    // Runner cwd is the ZKotlin repo root, so pass a repo-relative path.
     const obj_dir = "native/gc/c/tests/zig/zig-out/obj";
     const repo = b.path("../../../..");
     inline for (.{ .{ "gc", "Run the Zig GC test suite", "" }, .{ "ported", "Run only the cases ported from run.sh", "--ported-only" }, .{ "mt", "Run only the multithreaded collector tests (plain + TSan)", "--mt-only" } }) |s| {

@@ -2,7 +2,7 @@
 """Runs the modules built by wasm/build.sh under Node and writes a comparison table.
 
 Per case: one warm-up run per variant, then RUNS runs round-robin over the variants (kx, kx-opt, kx-c, kw, kw-opt).
-The KotlinX / Kotlin/Wasm ratio uses the default build (Zig collector: kx, kx-opt); kx-c is shown for comparison.
+The ZKotlin / Kotlin/Wasm ratio uses the default build (Zig collector: kx, kx-opt); kx-c is shown for comparison.
 Kernel time = the program's own `nanos=` (same clock source for both: monotonic), median of RUNS.
 Wall = whole `node` process (startup, compile/instantiate, run), median. Peak RSS from /usr/bin/time -l, median.
 Size = main.wasm bytes and gzip -9 bytes (kw also needs its 659-byte main.mjs loader; kx uses wasm/run.mjs).
@@ -18,7 +18,7 @@ RUNS = int(sys.argv[1]) if len(sys.argv) > 1 else 5
 # 64 MB process stack limit (macOS hard limit) and a matching V8 limit.
 NODE = ["sh", "-c", 'ulimit -s 65520 && exec node --no-warnings --stack-size=60000 "$@"', "node"]
 VARIANTS = ["kx", "kx-opt", "kx-c", "kw", "kw-opt"]
-LABEL = {"kx": "KotlinX → LLVM → wasm32", "kx-opt": "KotlinX + wasm-opt -O3", "kx-c": "KotlinX, C collector",
+LABEL = {"kx": "ZKotlin → LLVM → wasm32", "kx-opt": "ZKotlin + wasm-opt -O3", "kx-c": "ZKotlin, C collector",
          "kw": "Kotlin/Wasm (DCE)", "kw-opt": "Kotlin/Wasm + Binaryen (Gradle prod)"}
 cases = os.environ.get("CASES", "").split() or sorted(os.listdir("wasm/out"), key=lambda c: (c != "sum", c))
 
@@ -71,13 +71,13 @@ for case in cases:
           flush=True)
 raw.close()
 
-out = [f"# Kotlin → wasm: KotlinX (LLVM, linear memory) vs Kotlin/Wasm (WasmGC)\n",
+out = [f"# Kotlin → wasm: ZKotlin (LLVM, linear memory) vs Kotlin/Wasm (WasmGC)\n",
        f"Node {node_v} (V8), {RUNS} runs round-robin after a warm-up, medians. Lower is better everywhere; "
        f"**bold** = best per row.\n"]
 
 
 def table(title, key, f, note=""):
-    out.append(f"\n## {title}\n{note}\n| Case | " + " | ".join(LABEL[v] for v in VARIANTS) + " | KotlinX / Kotlin/Wasm |\n")
+    out.append(f"\n## {title}\n{note}\n| Case | " + " | ".join(LABEL[v] for v in VARIANTS) + " | ZKotlin / Kotlin/Wasm |\n")
     out.append("|---|" + "---|" * (len(VARIANTS) + 1) + "\n")
     for case, r in rows.items():
         best = min(r[v][key] for v in r)

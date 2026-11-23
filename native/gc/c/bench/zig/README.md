@@ -1,6 +1,6 @@
 # GC regression benchmarks (Zig harness)
 
-A `zig build test` gate for the epoch collector. It compiles the existing KotlinX GC benchmark programs
+A `zig build test` gate for the epoch collector. It compiles the existing ZKotlin GC benchmark programs
 with `bin/newkotlinc --gc=epoch` (and `--gc=boehm` for reference), runs each one, and **fails loudly**
 when a metric crosses its threshold. Every failure line names the benchmark, the metric and the numbers:
 

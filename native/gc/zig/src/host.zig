@@ -1,9 +1,9 @@
 //! Standalone host for symbols `kxgc.h` says the runtime provides.
-//! KotlinX supplies these from `compiler/runtime/runtime.c`. This file is the
+//! ZKotlin supplies these from `compiler/runtime/runtime.c`. This file is the
 //! native equivalent used by tests and benches.
 //!
 //! Clock:
-//! - macOS: `clock_gettime_nsec_np(CLOCK_UPTIME_RAW)` (same as KotlinX runtime.c)
+//! - macOS: `clock_gettime_nsec_np(CLOCK_UPTIME_RAW)` (same as ZKotlin runtime.c)
 //! - elsewhere: `clock_gettime(CLOCK_MONOTONIC)`
 const std = @import("std");
 const builtin = @import("builtin");
@@ -115,7 +115,7 @@ test "pause histogram buckets and percentiles" {
     try std.testing.expectEqual(@as(i64, 100_000), pausePercentileNs(1.0));
 }
 
-// Shared with runtime_host.zig (KotlinX), so both hosts allocate and read the environment alike.
+// Shared with runtime_host.zig (ZKotlin), so both hosts allocate and read the environment alike.
 const util = @import("lib/host_util.zig");
 pub const oom = util.oom;
 pub const malloc = util.malloc;

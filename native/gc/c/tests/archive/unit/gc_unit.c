@@ -1,4 +1,4 @@
-// Unit tests of the KotlinX GC interface (kxgc.h), linked with the runtime and one implementation:
+// Unit tests of the ZKotlin GC interface (kxgc.h), linked with the runtime and one implementation:
 //   clang -I compiler/gc [-DKX_CAP_CYCLES] [-DKX_CAP_PRECISE] gc_unit.c runtime.c gc/<name>/gc.c
 // Objects are hand-built the way generated code lays them out: { header, vtable, fields... }.
 #include <stdio.h>

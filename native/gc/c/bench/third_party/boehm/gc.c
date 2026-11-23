@@ -1,4 +1,4 @@
-// Boehm-Demers-Weiser conservative collector (bdwgc) as a KotlinX GC backend (newkotlinc --gc=boehm).
+// Boehm-Demers-Weiser conservative collector (bdwgc) as a ZKotlin GC backend (newkotlinc --gc=boehm).
 // Reference counting stays on (generated fast paths free objects at count zero with GC_FREE); bdwgc
 // reclaims what RC cannot: unreachable cycles of possibly cyclic objects. Acyclic objects and runtime
 // storage that may hold references are uncollectable but scanned, so every reference to a traced object

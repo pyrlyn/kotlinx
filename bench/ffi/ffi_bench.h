@@ -1,4 +1,4 @@
-// Shared C side of the FFI benchmark: the same object file is linked into KotlinX and Kotlin/Native.
+// Shared C side of the FFI benchmark: the same object file is linked into ZKotlin and Kotlin/Native.
 #include <stdint.h>
 int64_t fb_add(int64_t acc, int64_t x);
 double fb_scale(double acc, double k);

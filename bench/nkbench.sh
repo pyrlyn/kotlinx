@@ -1,5 +1,5 @@
 #!/bin/bash
-# KotlinX compiler (default allocator; NKFLAGS adds compiler flags) on every case: warm-up + 5 runs, mean of the middle 3, in ms.
+# ZKotlin compiler (default allocator; NKFLAGS adds compiler flags) on every case: warm-up + 5 runs, mean of the middle 3, in ms.
 #   ./nkbench.sh <name> [git-ref]   -> results/nk/<name>.txt  ("case ms" per line, summary of this run)
 #   and one file per benchmark: results/${NKBENCH_SUITE:-nk}/<case>.json (every run appended: date, commit,
 #   ref, machine, toolchain, GC, mean ms and the 5 raw timings; see record.py).

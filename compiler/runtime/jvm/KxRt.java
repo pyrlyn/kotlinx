@@ -1,4 +1,4 @@
-// Java runtime of the KotlinX jvm target (newkotlinc --target jvm).
+// Java runtime of the ZKotlin jvm target (newkotlinc --target jvm).
 //
 // The translated program (one class, see compiler/src/backend/jvm/JvmBackend.kt) keeps the C memory model: pointers
 // are native addresses (long) accessed through jdk.internal.misc.Unsafe. This class provides what the C runtime

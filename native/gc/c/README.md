@@ -1,22 +1,22 @@
-# KotlinX memory manager (GC) — vendored C snapshot
+# ZKotlin memory manager (GC) — vendored C snapshot
 
-> **Vendored into KotlinX** at `native/gc/c/` from pyrlyn/gc `@6acde649c454e710ca1bc79e04651b0ef07b1b26`.
-> This is a **path dependency** inside the KotlinX tree (not a git submodule).
+> **Vendored into ZKotlin** at `native/gc/c/` from pyrlyn/gc `@6acde649c454e710ca1bc79e04651b0ef07b1b26`.
+> This is a **path dependency** inside the ZKotlin tree (not a git submodule).
 > Collector **bodies** (`kxgc.h`, `*/gc.c`, `common/*.inc`) match that snapshot byte-for-byte.
 > Surrounding docs/scripts may describe the old standalone-repo / submodule workflow; prefer
-> [`../../README.md`](../README.md) and KotlinX `bin/newkotlinc` for current wiring.
+> [`../../README.md`](../README.md) and ZKotlin `bin/newkotlinc` for current wiring.
 > Zig collectors live separately under `native/gc/zig/` (`@2dea030` + `runtime_host` adapter).
 
-## How KotlinX uses this tree
+## How ZKotlin uses this tree
 
 - Default collector **backend** is the experimental **Zig** port (`--gc-runtime=zig`, `NEWKOTLIN_GC_RUNTIME=zig`):
   `newkotlinc` links `native/gc/zig/zig-out/lib/libgc-<name>.a` with `compiler/runtime/runtime.c`.
 - **C** backend (`--gc-runtime=c`): compiles `<this-dir>/<name>/gc.c` in the same clang invocation as before.
 - Caps / `kxgc.h` / config.sh are always read from this C tree (`NEWKOTLIN_GC_DIR`, default `native/gc/c`).
-- `bench/gc` in KotlinX is a symlink to `native/gc/c/bench`.
+- `bench/gc` in ZKotlin is a symlink to `native/gc/c/bench`.
 - The shared program runtime remains `compiler/runtime/runtime.c` for both backends (only the collector is swapped).
 
-## Working on collectors inside KotlinX
+## Working on collectors inside ZKotlin
 
 ```
 cd native/gc/zig && zig build gc-libs   # Zig 0.17.1: static libs for --gc-runtime=zig

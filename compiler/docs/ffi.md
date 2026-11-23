@@ -1,4 +1,4 @@
-# FFI: calling C from KotlinX (prototype)
+# FFI: calling C from ZKotlin (prototype)
 
 ## Usage
 
@@ -18,7 +18,7 @@ bin/newkotlinc main.kt --link mylib.o --link -lm -o main # objects, archives, -l
 
 ## Design
 
-KotlinX already emits LLVM IR and links it with the C runtime and GC through one clang command, and the runtime is
+ZKotlin already emits LLVM IR and links it with the C runtime and GC through one clang command, and the runtime is
 reached from IR by plain `declare`d C symbols. FFI reuses exactly that:
 
 - `external fun name(...): R` (no body) is parsed as a top-level function and recorded in `Externs`.
@@ -29,7 +29,7 @@ reached from IR by plain `declare`d C symbols. FFI reuses exactly that:
 - `--link` appends inputs to the link line. A `.c` input is compiled under the same `-O3 -flto`, so small C
   functions can be inlined into Kotlin (link a prebuilt `.o` to keep a real call).
 
-Not chosen: JNI (KotlinX has no JVM), Kotlin/Native-style cinterop klibs (needs a stub compiler and klib format;
+Not chosen: JNI (ZKotlin has no JVM), Kotlin/Native-style cinterop klibs (needs a stub compiler and klib format;
 the header is turned into plain `external fun` text instead, see kxbindgen below).
 
 ## Supported types
@@ -39,11 +39,11 @@ the header is turned into plain `external fun` text instead, see kxbindgen below
 
 ## Limitations
 
-- No strings, arrays or Kotlin objects across the boundary (no pinning or ownership contract: the GC may free them; KotlinX strings
+- No strings, arrays or Kotlin objects across the boundary (no pinning or ownership contract: the GC may free them; ZKotlin strings
   are not guaranteed NUL-terminated C strings).
 - No structs by value, no callbacks (C -> Kotlin function pointers), no varargs.
 - The C symbol name equals the Kotlin name (no `@CName` rename yet).
-- C code must not throw/longjmp through Kotlin frames; KotlinX exceptions are not checked after C calls.
+- C code must not throw/longjmp through Kotlin frames; ZKotlin exceptions are not checked after C calls.
 - C functions must not hold Kotlin references; there is no GC safepoint/thread-state contract yet (fine for
   the epoch GC's background thread since only scalars/raw pointers cross).
 
@@ -52,7 +52,7 @@ the header is turned into plain `external fun` text instead, see kxbindgen below
 `compiler/tools/kxbindgen.py header.h -o bindings.kt [--link lib.c] [--cc clang] [-- clang args]` parses the
 header with clang's own JSON AST (`-Xclang -ast-dump=json`; no new dependency) and writes `external fun`s for
 functions with supported signatures, `const val`s for enum constants and integer `#define`s, and comments for
-what it skipped. KotlinX compiles one input file, so prepend the bindings to the program
+what it skipped. ZKotlin compiles one input file, so prepend the bindings to the program
 (`cat bindings.kt main.kt > all.kt`). Test: `compiler/test.sh` (kxbindgen case, `tests/ffi/gen_demo.*`).
 
 Plan:
@@ -70,6 +70,6 @@ Plan:
 
 ## Benchmark
 
-`bench/ffi/run.sh` (RUNS=5, MANY=1000): KotlinX `external fun` vs Kotlin/Native 2.4.21 cinterop (`-opt`), the same
+`bench/ffi/run.sh` (RUNS=5, MANY=1000): ZKotlin `external fun` vs Kotlin/Native 2.4.21 cinterop (`-opt`), the same
 C object (`clang -O2`, no LTO, so neither side can inline the callee), 100M calls per case, warm-up, median of
 interleaved runs, results checked for equality. Also binary size, peak RSS, startup and compile time.

@@ -1,4 +1,4 @@
-// Feature coverage for the KotlinX compiler subset; expected output in features.out.
+// Feature coverage for the ZKotlin compiler subset; expected output in features.out.
 class Node(val value: Long, var next: Node?)
 class Box(var items: ArrayList<Long>, var label: String)
 
