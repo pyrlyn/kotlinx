@@ -1,4 +1,4 @@
-# ZKotlin
+<h1><picture><source media="(prefers-color-scheme: dark)" srcset="brand/logo-dark.svg"><img src="brand/logo.svg" width="32" height="32" alt="" align="absmiddle"></picture> ZKotlin</h1>
 
 ZKotlin compiler: a Kotlin -> LLVM native compiler (`newkotlinc`), written in Kotlin (Kotlin/Native),
 with a Perceus-style reference-counting runtime. Moved from `listepo/mini-bench` with history.
