@@ -60,11 +60,12 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
     val optLl = "$output.opt.ll"; val log = "$output.log"
     val tmps = listOf(rtLl, libcLl, linked, log) + (if (emitLl) emptyList() else listOf(ll, optLl))
     fun cleanup() { tmps.forEach { remove(it) } }
-    /** Runs c with stderr to the log; on failure prints the log and exits. */
-    fun run(c: String) {
-        val r = system("$c 2>${shq(log)}")
-        if (r != 0) { fprintf(stderr, "%s\ncommand failed (%d): %s\n", (try { readFile(log) } catch (e: CompileError) { "" }), r, c); cleanup(); exit(1) }
+    /** Runs [argv] with stderr to the log (stdout to /dev/null when [quiet]); on failure prints the log and exits. */
+    fun run(argv: List<String>, quiet: Boolean = false) {
+        val r = exec(argv, if (quiet) Io.Null else Io.Inherit, Io.File(log)).status
+        if (r != 0) { fprintf(stderr, "%s\ncommand failed (%d): %s\n", (try { readFile(log) } catch (e: CompileError) { "" }), r, cmdline(argv)); cleanup(); exit(1) }
     }
+    val ccArgv = toolArgv(cc)
     // LLVM 22 made llvm.coro.end return void; NativeBackend still writes the older i1 form (the native target
     // pins opt to the C compiler's LLVM). Its result is never used.
     writeFile(ll, ir.replace("declare i1 @llvm.coro.end(", "declare void @llvm.coro.end(")
@@ -73,8 +74,9 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
     // RT_PLAIN_MALLOC: libc.c's allocator, not mimalloc; RT_LEAN_EXIT: no GC statistics and no final collection;
     // RT_SIZE_CHECK: arrays of 2 GB or more fail (OutOfMemoryError) instead of wrapping around the 32-bit size_t;
     // RT_JS: number text, exception messages and rt_nanos come from runtime.js (no printf), no getrlimit.
-    val cflags = "-S -emit-llvm -O2 -g0 -fno-vectorize -fno-slp-vectorize -DRT_PLAIN_MALLOC -DRT_LEAN_EXIT -DRT_SIZE_CHECK -DRT_JS -I${shq(gcDir)} $gcFlags"
-    run("$cc $cflags ${shq(runtime)} -o ${shq(rtLl)}")
+    val cflags = listOf("-S", "-emit-llvm", "-O2", "-g0", "-fno-vectorize", "-fno-slp-vectorize", "-DRT_PLAIN_MALLOC",
+        "-DRT_LEAN_EXIT", "-DRT_SIZE_CHECK", "-DRT_JS", "-I$gcDir") + words(gcFlags)
+    run(ccArgv + cflags + listOf(runtime, "-o", rtLl))
     val rtIr = readFile(rtLl)
     // The program IR is wasm32's (LlvmTarget.JS32); runtime.c built for another target (--cc) would link into a
     // mismatched layout without an error.
@@ -84,13 +86,13 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
     // Native integer widths 32 only (not n32:64): opt then keeps loop counters in i32 instead of widening them
     // to i64, which JS has to emulate with two words.
     writeFile(rtLl, rtIr.replaceFirst(Regex("""(?m)^(target datalayout = "[^"]*)-n32:64-"""), "$1-n32-"))
-    run("$cc $cflags ${shq(libc)} -o ${shq(libcLl)}")
+    run(ccArgv + cflags + listOf(libc, "-o", libcLl))
     // The C runtime first: its target datalayout (the program IR has only a triple) becomes the module's.
-    run("${shq(link)} -suppress-warnings ${shq(rtLl)} ${shq(libcLl)} ${shq(ll)} ${shq(gcBc)} -o ${shq(linked)}")
+    run(listOf(link, "-suppress-warnings", rtLl, libcLl, ll, gcBc, "-o", linked))
     // No loop unrolling: V8 tiers up and on-stack-replaces every copy of an unrolled loop separately (main runs once,
     // its loops reach optimized code through OSR), and the copies cost bundle size.
-    run("${shq(opt)} -passes='internalize,scalarizer<load-store>,default<O3>' --internalize-public-api-list=main " +
-        "-vectorize-loops=false -vectorize-slp=false -disable-loop-unrolling -S ${shq(linked)} -o ${shq(optLl)}")
+    run(listOf(opt, "-passes=internalize,scalarizer<load-store>,default<O3>", "--internalize-public-api-list=main",
+        "-vectorize-loops=false", "-vectorize-slp=false", "-disable-loop-unrolling", "-S", linked, "-o", optLl))
     // LL2JS_PRETTY=1: LLVM names and one statement per line, for reading and profiling the output.
     val compact = getenv("LL2JS_PRETTY")?.toKString().isNullOrEmpty()
     val js = try { JsBackend.translate(readFile(optLl), readFile(runtimeJs), compact) { fprintf(stderr, "warning: %s\n", it) } }
@@ -98,20 +100,24 @@ internal fun buildJs(ir: String, output: String, runtime: String, gc: String, gc
     writeFile(output, js)
     if (minify) {
         val min = "$output.min.tmp.js"
-        run(minifyCommand(output, min) ?: run { cleanup(); fail("--minify: neither esbuild nor bun is on PATH (or set NK_MINIFIER to one of them)") })
+        val m = minifyCommand(output, min) ?: run { cleanup(); fail("--minify: neither esbuild nor bun is on PATH (or set NK_MINIFIER to one of them)") }
+        run(m.argv, m.quiet)
         if (rename(min, output) != 0) { remove(min); cleanup(); fail("--minify: cannot replace $output") }
     }
     cleanup()
 }
 
+/** A minifier invocation: [argv], with stdout discarded when [quiet] (bun prints a build summary). */
+internal class MinifyCommand(val argv: List<String>, val quiet: Boolean)
+
 /**
- * Shell command that minifies JS file [src] into [dst] (identifiers, whitespace, constant folding), or null if no
+ * Command that minifies JS file [src] into [dst] (identifiers, whitespace, constant folding), or null if no
  * minifier is found: `NK_MINIFIER` (a path to esbuild or bun), else esbuild, else bun on PATH. Output names are
  * already short, so this mostly saves the minifier's expression rewrites and runtime.js's local names.
  */
-internal fun minifyCommand(src: String, dst: String): String? {
+internal fun minifyCommand(src: String, dst: String): MinifyCommand? {
     val tool = getenv("NK_MINIFIER")?.toKString()?.takeIf { it.isNotEmpty() }
-        ?: listOf("esbuild", "bun").firstOrNull { system("command -v $it >/dev/null 2>&1") == 0 } ?: return null
-    return if (tool.substringAfterLast('/').startsWith("bun")) "${shq(tool)} build --minify ${shq(src)} --outfile ${shq(dst)} >/dev/null"
-    else "${shq(tool)} --minify --log-level=warning ${shq(src)} --outfile=${shq(dst)}"
+        ?: listOf("esbuild", "bun").firstOrNull { onPath(it) != null } ?: return null
+    return if (tool.substringAfterLast('/').startsWith("bun")) MinifyCommand(listOf(tool, "build", "--minify", src, "--outfile", dst), true)
+    else MinifyCommand(listOf(tool, "--minify", "--log-level=warning", src, "--outfile=$dst"), false)
 }

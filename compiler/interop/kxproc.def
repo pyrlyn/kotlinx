@@ -1,0 +1,63 @@
+# Process and file-status helpers for the driver (compiler/src/driver/Process.kt), bound by compiler/build.sh with
+# cinterop. Kotlin/Native's platform.posix has posix_spawn on Linux but not on macOS, and `environ` on neither
+# (Darwin exposes the environment through _NSGetEnviron); struct stat names its mtime field differently on macOS and
+# Linux. Thin wrappers with their own names give the driver one API on both hosts.
+package = kxproc
+---
+#include <spawn.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#ifdef __APPLE__
+#include <crt_externs.h>
+#endif
+
+/** The calling process's environment block. */
+static inline char **kx_environ(void) {
+#ifdef __APPLE__
+    return *_NSGetEnviron();
+#else
+    extern char **environ;
+    return environ;
+#endif
+}
+
+/** A new, initialized posix_spawn_file_actions_t, or NULL. Free with kx_fa_free. */
+static inline void *kx_fa_new(void) {
+    posix_spawn_file_actions_t *fa = (posix_spawn_file_actions_t *) malloc(sizeof *fa);
+    if (fa && posix_spawn_file_actions_init(fa) != 0) { free(fa); return NULL; }
+    return fa;
+}
+static inline void kx_fa_free(void *fa) {
+    if (fa) { posix_spawn_file_actions_destroy((posix_spawn_file_actions_t *) fa); free(fa); }
+}
+static inline int kx_fa_addopen(void *fa, int fd, const char *path, int flags, int mode) {
+    return posix_spawn_file_actions_addopen((posix_spawn_file_actions_t *) fa, fd, path, flags, (mode_t) mode);
+}
+static inline int kx_fa_adddup2(void *fa, int from, int to) {
+    return posix_spawn_file_actions_adddup2((posix_spawn_file_actions_t *) fa, from, to);
+}
+static inline int kx_fa_addclose(void *fa, int fd) {
+    return posix_spawn_file_actions_addclose((posix_spawn_file_actions_t *) fa, fd);
+}
+
+/** posix_spawnp of argv (NULL-terminated) with the file actions fa and the calling process's environment;
+ *  the child's pid in *pid. 0 or an errno value. */
+static inline int kx_spawnp(int *pid, const char *file, void *fa, char *const argv[]) {
+    pid_t p = 0;
+    int rc = posix_spawnp(&p, file, (const posix_spawn_file_actions_t *) fa, NULL, argv, kx_environ());
+    *pid = (int) p;
+    return rc;
+}
+
+/** Modification time of path in seconds, or -1 when it cannot be stat'ed. */
+static inline long long kx_mtime(const char *path) {
+    struct stat st;
+    return stat(path, &st) == 0 ? (long long) st.st_mtime : -1;
+}
+
+/** 1 when path is a directory (symbolic links not followed), 0 when it is something else, -1 when it is missing. */
+static inline int kx_is_dir(const char *path) {
+    struct stat st;
+    if (lstat(path, &st) != 0) return -1;
+    return S_ISDIR(st.st_mode) ? 1 : 0;
+}

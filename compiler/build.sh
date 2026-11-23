@@ -10,5 +10,11 @@ case "$(uname -m)" in arm64|aarch64) kn_arch=aarch64;; x86_64|amd64) kn_arch=x86
 KN=${KONANC:-$HOME/.konan/kotlin-native-prebuilt-$kn_os-$kn_arch-$KN_VERSION/bin/kotlinc-native}
 [ -x "$KN" ] || { echo "Kotlin/Native not found: $KN (install kotlin-native-prebuilt-$kn_os-$kn_arch-$KN_VERSION into ~/.konan or set KONANC)" >&2; exit 1; }
 mkdir -p build
-"$KN" $(find src -name "*.kt" | sort) -e newkotlin.main -Werror ${NEWKOTLIN_KN_FLAGS:-} -o build/newkotlinc
+# interop/kxproc.def: posix_spawn and the environment block for the driver's process runner (src/driver/Process.kt);
+# rebuilt when the .def changes. CINTEROP overrides the cinterop next to kotlinc-native.
+case "$KN" in */*) CINTEROP=${CINTEROP:-$(dirname "$KN")/cinterop};; *) CINTEROP=${CINTEROP:-cinterop};; esac
+if [ ! -f build/kxproc.klib ] || [ interop/kxproc.def -nt build/kxproc.klib ]; then
+  "$CINTEROP" -def interop/kxproc.def -o build/kxproc >/dev/null
+fi
+"$KN" $(find src -name "*.kt" | sort) -l build/kxproc.klib -e newkotlin.main -Werror ${NEWKOTLIN_KN_FLAGS:-} -o build/newkotlinc
 echo "built compiler/build/newkotlinc.kexe"
