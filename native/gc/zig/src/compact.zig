@@ -1,5 +1,5 @@
 //! compact: plain reference counting plus a small synchronous cycle collector (Bacon & Rajan trial deletion).
-//! KotlinX-local (not a port of a C collector). It is the default for --target=js, where newkotlinc translates this
+//! ZKotlin-local (not a port of a C collector). It is the default for --target=js, where newkotlinc translates this
 //! file's bitcode to JavaScript together with every program, so its size counts as much as its speed.
 //!
 //! Same object header and compiler contract as perceus (kxgc.h): count in the low 32 bits, color in bits 32-33,

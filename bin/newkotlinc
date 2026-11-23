@@ -1,5 +1,5 @@
 #!/bin/bash
-# KotlinX compiler launcher: builds compiler/build/newkotlinc.kexe on first use, then runs it.
+# ZKotlin compiler launcher: builds compiler/build/newkotlinc.kexe on first use, then runs it.
 # Usage: bin/newkotlinc Main.kt -o main && ./main
 #
 # Zig GC backend (default NEWKOTLIN_GC_RUNTIME=zig / --gc-runtime=zig): always runs

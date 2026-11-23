@@ -1,1 +1,1 @@
-rootProject.name = "kotlinx-compiler-jvm-mutation"
+rootProject.name = "zkotlin-compiler-jvm-mutation"

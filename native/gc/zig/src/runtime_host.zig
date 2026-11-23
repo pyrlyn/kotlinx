@@ -1,4 +1,4 @@
-//! KotlinX host: runtime callbacks come from runtime.c. This module is never
+//! ZKotlin host: runtime callbacks come from runtime.c. This module is never
 //! linked together with the test bench host, which exports those callbacks.
 const c = @import("std").c;
 pub const oom = @import("lib/host_util.zig").oom;

@@ -1,6 +1,6 @@
-# pitx: mutation testing on KotlinX LLVM IR
+# pitx: mutation testing on ZKotlin LLVM IR
 
-pitx is to the KotlinX compiler what PIT is to JVM bytecode. It mutates the LLVM IR that `newkotlinc` emits,
+pitx is to the ZKotlin compiler what PIT is to JVM bytecode. It mutates the LLVM IR that `newkotlinc` emits,
 not the Kotlin sources. Each mutant is relinked and run, and pitx checks whether the tests notice.
 It answers two questions:
 - Which compiled behaviour is not pinned down by the golden tests (survivors = coverage gaps)?
@@ -24,7 +24,7 @@ enumerate sites (operators × instructions in reachable functions)
 copy IR, apply one textual edit ─> llvm-as verify ── fails ──> INVALID
         │
         ▼
-harness: lli (standalone IR)  |  clang IR + runtime.c + gc/<name>/gc.c (KotlinX module)
+harness: lli (standalone IR)  |  clang IR + runtime.c + gc/<name>/gc.c (ZKotlin module)
         │                                   └─ link fails ──> INVALID
         ▼
 run with timeout, compare (stdout, exit code) to the unmutated baseline

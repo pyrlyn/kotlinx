@@ -1,6 +1,6 @@
 # pitx
 
-Mutation testing on the LLVM IR emitted by KotlinX (like PIT, on IR instead of JVM bytecode). Written in Zig 0.17 (std only).
+Mutation testing on the LLVM IR emitted by ZKotlin (like PIT, on IR instead of JVM bytecode). Written in Zig 0.17 (std only).
 Design: [DESIGN.md](DESIGN.md).
 
 ```

@@ -1,4 +1,4 @@
-/* Scoped smoke: link KotlinX runtime.c + vendored C epoch collector.
+/* Scoped smoke: link ZKotlin runtime.c + vendored C epoch collector.
  * Immediate acyclic rt_alloc/rt_free + one traced free via VTab.freemem.
  * Entry is c_epoch_smoke_main so the Zig driver owns process main.
  */

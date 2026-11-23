@@ -1,13 +1,13 @@
 # Plan: extracting the GC into a separate project
 
-**Status (KotlinX consumer): done as an in-tree path dependency.** Collectors are vendored under
+**Status (ZKotlin consumer): done as an in-tree path dependency.** Collectors are vendored under
 `native/gc/c/` (C snapshot) and `native/gc/zig/` (Zig port); there is no `compiler/gc` git submodule.
 This document remains as historical design notes from the standalone-repo plan; see `native/gc/README.md`
-for the current KotlinX wiring (`--gc-runtime=zig|c`).
+for the current ZKotlin wiring (`--gc-runtime=zig|c`).
 
 ## What moves to the GC project
 
-| Today (in `pyrlyn/kotlinx`) | In the GC project | Language |
+| Today (in `pyrlyn/zkotlin`) | In the GC project | Language |
 |---|---|---|
 | `compiler/gc/kxgc.h` | public API header (the only contract with the compiler) | C |
 | `compiler/gc/common/object.inc`, `regions.inc`, `trial_deletion.inc` | shared internals: object header/colors, RC + tracing regions, trial-deletion cycle collector | C |
@@ -18,7 +18,7 @@ for the current KotlinX wiring (`--gc-runtime=zig|c`).
 | GC mutation tooling (source-level mutations of the C code, run against the Zig test suite; in progress) | mutation testing of the collectors | Python / Zig |
 | `compiler/gc/docs/` | architecture and plans | Markdown |
 
-What stays in KotlinX: the runtime (`compiler/runtime/runtime.c`), the code generator
+What stays in ZKotlin: the runtime (`compiler/runtime/runtime.c`), the code generator
 (`NativeBackend.kt`, which inlines the retain/release fast paths and knows the object layout), the
 `--gc` driver option, and the Kotlin golden/leak tests that are not GC-specific.
 
@@ -43,16 +43,16 @@ projects together (see "Versioning").
 - **Build:** collectors stay single-file C translation units. `newkotlinc` keeps compiling
   `<gc dir>/<name>/gc.c` in the same `clang -O3 -flto` invocation as the runtime and the program, so the
   default collector is still inlined at no extra cost. No prebuilt library is required.
-- **Link / locate:** KotlinX finds the GC sources through `NEWKOTLIN_GC_DIR` (already supported;
+- **Link / locate:** ZKotlin finds the GC sources through `NEWKOTLIN_GC_DIR` (already supported;
   default `<runtime dir>/../gc`). After the move the default will point at the pinned checkout of the
   GC project (git submodule or a fetched source tree; to be decided when the move happens).
 - **Select:** unchanged: `--gc=<name>` / `--gc <name>` or `NEWKOTLIN_GC`.
 - **Tests:** the GC project runs its Zig suite (`zig build test`, C collectors linked through
   `@cImport`) and the Zig benchmarks on its own. Kotlin-level GC tests need a `newkotlinc` binary, which
-  the GC project will take from a pinned KotlinX build or a `NEWKOTLINC` path. KotlinX keeps running
+  the GC project will take from a pinned ZKotlin build or a `NEWKOTLINC` path. ZKotlin keeps running
   `compiler/gc/tests/run.sh`-equivalent smoke tests against the pinned GC version in `compiler/test.sh`.
-- **Versioning / pinning:** KotlinX pins an exact GC commit or tag. The `kxgc.h` API gets a version
-  macro; KotlinX checks it at compile time. Updating the GC = bump the pin in a KotlinX PR that runs the
+- **Versioning / pinning:** ZKotlin pins an exact GC commit or tag. The `kxgc.h` API gets a version
+  macro; ZKotlin checks it at compile time. Updating the GC = bump the pin in a ZKotlin PR that runs the
   full compiler and GC test suites and the GC benchmarks.
 
 ## Rules until the move

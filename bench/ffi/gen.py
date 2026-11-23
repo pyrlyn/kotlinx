@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates the sources of the FFI benchmark: shared C, KotlinX (external fun) and Kotlin/Native (cinterop) mains.
+"""Generates the sources of the FFI benchmark: shared C, ZKotlin (external fun) and Kotlin/Native (cinterop) mains.
 `gen.py <out> <many>`: <many> extra C functions fb_f<i> (the "many functions" case)."""
 import sys, os
 out, many = sys.argv[1], int(sys.argv[2])

@@ -1,5 +1,5 @@
 #!/bin/bash
-# FFI call benchmark: KotlinX `external fun` vs Kotlin/Native cinterop, same C object (clang -O2, no LTO, so the
+# FFI call benchmark: ZKotlin `external fun` vs Kotlin/Native cinterop, same C object (clang -O2, no LTO, so the
 # callee is never inlined into either side). Reports ns/call (median of RUNS interleaved runs), binary size, peak RSS,
 # startup time and compile time. Usage: bench/ffi/run.sh [RUNS=5] [MANY=1000]
 set -eu
@@ -54,9 +54,9 @@ for v in ("kx", "kn"):
     res[v]["start_size_kib"] = os.path.getsize(exe(v + "_start")) / 1024
 assert res["kx"]["check"] == res["kn"]["check"], (res["kx"]["check"], res["kn"]["check"])
 print(f"check: {res['kx']['check']} (identical)")
-print(f"{'metric':<16}{'KotlinX':>12}{'K/N':>12}{'KX/KN':>8}")
+print(f"{'metric':<16}{'ZKotlin':>12}{'K/N':>12}{'KX/KN':>8}")
 for k in ("add_ns", "scale_ns", "bigptr_ns", "many_ns", "rss_mib", "size_kib", "start_ms", "start_rss_mib", "start_size_kib"):
     a, b = res["kx"][k], res["kn"][k]
     print(f"{k:<16}{a:>12.3f}{b:>12.3f}{a / b:>8.2f}")
 P
-echo "compile_ms KotlinX=$kx_ct K/N(cinterop+konanc)=$kn_ct"
+echo "compile_ms ZKotlin=$kx_ct K/N(cinterop+konanc)=$kn_ct"

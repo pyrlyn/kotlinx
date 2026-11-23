@@ -3,7 +3,7 @@
 ```
 cd bench
 ./build.sh && ./round.sh && RESULTS=results/round ./summarize.sh   # all languages
-ONLY=newkotlin ./build.sh && ./run.sh && ./summarize.sh            # KotlinX compiler rows only
+ONLY=newkotlin ./build.sh && ./run.sh && ./summarize.sh            # ZKotlin compiler rows only
 ./nkbench.sh mytest                                                 # -> bench/results/nk/mytest.txt
 ```
 
@@ -15,7 +15,7 @@ Run from `bench/` (`cd bench`); the scripts use the in-repo compiler (`../compil
 
 All scripts: warm-up + 5 runs per case, mean of the middle 3, in ms.
 
-- `./nkbench.sh <name> [git-ref]`: KotlinX compiler on every case → `results/nk/<name>.txt`.
+- `./nkbench.sh <name> [git-ref]`: ZKotlin compiler on every case → `results/nk/<name>.txt`.
   With a ref (for example `main`) the compiler is built from that ref; without one, the working tree is used.
   `NKFLAGS="--alloc malloc" ./nkbench.sh sys` passes extra compiler flags.
 - `./allocbench.sh [name]`: system malloc vs jemalloc vs mimalloc, plus Kotlin Native (`bench_kn.kexe`

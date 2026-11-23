@@ -12,7 +12,7 @@
 //! On wasm the RC region (`rt_alloc`) has a pool of its own instead of malloc; both pools take pages
 //! from the same stock.
 //!
-//! KotlinX build options mirror the C preprocessor switches: -Dleakcheck enables tagged prefixes,
+//! ZKotlin build options mirror the C preprocessor switches: -Dleakcheck enables tagged prefixes,
 //! region counters and traversal validation; -Dpool pools the RC region natively too; -Dplain-malloc
 //! selects malloc instead of the tracing pool. All default to false.
 //! The `leakcheck.add()` hook (rt_leak_obj; no-op unless -Dleakcheck) counts every object alloc/free
@@ -373,11 +373,11 @@ var trace_pool = Pool{ .id = 0 };
 /// taking pages from the same stock. Natively it stays libc malloc, one of C's object allocators
 /// (C defaults to mimalloc).
 var rc_pool = Pool{ .id = 1 };
-// KotlinX `--alloc pool` (-Dpool) pools the RC region natively as well; `--alloc malloc` (-Dplain-malloc) keeps both
+// ZKotlin `--alloc pool` (-Dpool) pools the RC region natively as well; `--alloc malloc` (-Dplain-malloc) keeps both
 // regions on malloc on wasm too, as the wasi-libc malloc baseline of compiler/tests/wasm/perf.sh expects.
 const rc_pooled = RT_POOL or (is_wasm and !RT_PLAIN_MALLOC);
 
-// ---- RT_LEAKCHECK: region tags and counters (KotlinX `--leak-check`) ---------------------------
+// ---- RT_LEAKCHECK: region tags and counters (ZKotlin `--leak-check`) ---------------------------
 pub const RG_RC: i64 = 0x5243; // "RC"
 pub const RG_TRACE: i64 = 0x5452; // "TR"
 const RG_INDEX_RC = 0;

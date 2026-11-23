@@ -1,5 +1,5 @@
 //! Shared host allocation and environment helpers.
-//! Only the standalone host exports runtime callbacks; runtime_host uses KotlinX's C symbols.
+//! Only the standalone host exports runtime callbacks; runtime_host uses ZKotlin's C symbols.
 const std = @import("std");
 const builtin = @import("builtin");
 const c = std.c;

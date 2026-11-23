@@ -1,6 +1,6 @@
 #!/bin/bash
 # Builds the benchmark cases (bench/kotlin = sum, bench/cases/*/kotlin) to WebAssembly two ways:
-#   kx      newkotlinc --target=wasm: KotlinX LLVM IR -> wasm32-wasi (linear memory, pyrlyn/zgc perceus RC + cycle
+#   kx      newkotlinc --target=wasm: ZKotlin LLVM IR -> wasm32-wasi (linear memory, pyrlyn/zgc perceus RC + cycle
 #           collector from native/gc/zig built for wasm32-wasi, wasi-libc malloc), linked by
 #           `zig cc -target wasm32-wasi -O3 -flto`
 #   kx-opt  kx + `wasm-opt -O3`

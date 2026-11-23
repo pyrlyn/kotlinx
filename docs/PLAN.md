@@ -1,6 +1,6 @@
-# KotlinX plan
+# ZKotlin plan
 
-Single source for what is done, where the numbers stand and what is left in the KotlinX compiler
+Single source for what is done, where the numbers stand and what is left in the ZKotlin compiler
 (`compiler/`, Kotlin -> LLVM IR, Kotlin/Native target) and its kotlinx library subsets.
 State as of main `3ae5715` (#178) plus the `feat/kotlinx-lib-3` and `feat/kotlinx-lib-4` PRs, 2026-11-04. Update this file with every PR that changes the picture.
 

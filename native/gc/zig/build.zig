@@ -1,4 +1,4 @@
-//! Native Zig build for the KotlinX GC port.
+//! Native Zig build for the ZKotlin GC port.
 //! Requires official Zig 0.17.1 (https://ziglang.org/download/ dated 2026-11-02).
 //! Do not use 0.18.0-dev (master).
 //!
@@ -6,7 +6,7 @@
 //!   zig build test                   # run native regression for all collectors
 //!   zig build test -Dgc=perceus      # one collector
 //!   zig build bench                  # optimized ops benches (ReleaseFast; LTO on ELF/COFF only)
-//!   zig build gc-libs                # static libs for KotlinX (runtime_host; link with runtime.c)
+//!   zig build gc-libs                # static libs for ZKotlin (runtime_host; link with runtime.c)
 const std = @import("std");
 
 const all_gcs = [_][]const u8{ "rc", "perceus", "incremental", "epoch", "compact" };
@@ -51,7 +51,7 @@ pub fn build(b: *std.Build) void {
         .link_libc = true,
     });
     host.addImport("host_options", host_options);
-    // Adapter for linking into KotlinX programs that already provide runtime.c symbols.
+    // Adapter for linking into ZKotlin programs that already provide runtime.c symbols.
     const runtime_host = b.addModule("runtime_host", .{
         .root_source_file = b.path("src/runtime_host.zig"),
         .target = target,
@@ -75,8 +75,8 @@ pub fn build(b: *std.Build) void {
 
     const test_step = b.step("test", "Run native Zig GC regression for selected collectors");
     const bench_step = b.step("bench", "Build and run native ops benches (ReleaseFast)");
-    const libs_step = b.step("gc-libs", "Install static libs (runtime_host) for KotlinX --gc-runtime=zig");
-    const bc_step = b.step("gc-bc", "Install LLVM bitcode of the runtime_host libs (KotlinX --target=js)");
+    const libs_step = b.step("gc-libs", "Install static libs (runtime_host) for ZKotlin --gc-runtime=zig");
+    const bc_step = b.step("gc-bc", "Install LLVM bitcode of the runtime_host libs (ZKotlin --target=js)");
     const bench_opt: std.builtin.Optimize = if (optimize == .debug) .fast else optimize;
     // Zig 0.17.1: LLVM LTO needs LLD. The self-hosted Mach-O linker cannot do LLVM LTO.
     const ops_lto: std.zig.LtoMode = switch (target.result.ofmt) {
@@ -217,7 +217,7 @@ pub fn build(b: *std.Build) void {
             b.installArtifact(exe);
         }
 
-        // Static library for KotlinX: collector + runtime_host (extern → runtime.c).
+        // Static library for ZKotlin: collector + runtime_host (extern → runtime.c).
         const coll_rt = b.createModule(.{
             .root_source_file = b.path(b.fmt("src/{s}.zig", .{g})),
             .target = target,

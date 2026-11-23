@@ -1,5 +1,5 @@
 #!/bin/bash
-# pitx on a KotlinX golden test: compile <test>.kt with --emit-llvm --no-opt into a scratch dir, check the
+# pitx on a ZKotlin golden test: compile <test>.kt with --emit-llvm --no-opt into a scratch dir, check the
 # unmutated binary matches <test>.out, then mutate the captured .ll and relink each mutant with runtime + GC.
 # Usage: pitx/run_kt.sh compiler/tests/<name>.kt [scratch-dir] [extra pitx args...]
 set -eu

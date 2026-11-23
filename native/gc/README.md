@@ -1,11 +1,11 @@
 # Native GC integration (path dependency)
 
-KotlinX vendors GC sources under `native/gc/` (no `compiler/gc` git submodule).
+ZKotlin vendors GC sources under `native/gc/` (no `compiler/gc` git submodule).
 
 | Path | Role |
 |---|---|
 | `c/` | C collectors @`a65a3f6` (`kxgc.h`, `*/gc.c`, benches, legacy tests) |
-| `zig/` | Zig collectors @`2dea030` + KotlinX patches ([PROVENANCE](PROVENANCE.md)) + `runtime_host.zig` adapter |
+| `zig/` | Zig collectors @`2dea030` + ZKotlin patches ([PROVENANCE](PROVENANCE.md)) + `runtime_host.zig` adapter |
 | `smoke/` | Scoped smokes (`kxgc_c` via `addTranslateC`, Zig `@import`) |
 | `build.zig` | Umbrella: path-dep modules + C `kxgc_c` via translate-c |
 
@@ -35,7 +35,7 @@ bin/newkotlinc --gc-runtime=c Main.kt -o main  # C collector .c sources
 ## What changes for programs
 
 Only the **collector backend** is Zig or C. `compiler/runtime/runtime.c` is always linked. `compact` (the
-`--target=js` default) is KotlinX-local and exists only in Zig: `native/gc/c/compact/` holds just its caps.
+`--target=js` default) is ZKotlin-local and exists only in Zig: `native/gc/c/compact/` holds just its caps.
 Zig port parity is incomplete vs C (see `zig/docs/zig-port.md`); defaulting to Zig is experimental on this branch.
 
 ## Archive freshness (`libgc-*.a`)

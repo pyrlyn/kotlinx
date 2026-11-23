@@ -1,7 +1,7 @@
 package newkotlin
 
 /*
- * Reader for the textual LLVM IR that `opt` prints (the subset an optimized, linked KotlinX program uses:
+ * Reader for the textual LLVM IR that `opt` prints (the subset an optimized, linked ZKotlin program uses:
  * no vectors, no EH, no varargs definitions). Platform independent, so the JS backend can be developed and
  * tested on the JVM too. Model: LlModule (types, globals, functions), each function a list of LlBlocks of LlInsts.
  */

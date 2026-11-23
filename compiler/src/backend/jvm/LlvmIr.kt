@@ -4,7 +4,7 @@ import newkotlin.CompileError
 
 /*
  * Textual LLVM IR (as printed by `opt -S`) -> a small in-memory model for the JVM backend.
- * Only the subset that `opt` leaves in a KotlinX program after `internalize,default<O2>` is modelled:
+ * Only the subset that `opt` leaves in a ZKotlin program after `internalize,default<O2>` is modelled:
  * scalar integer/float/pointer code, structs/arrays in memory, phi/select/switch, direct and indirect calls,
  * intrinsics, `{ iN, i1 }` aggregates (overflow intrinsics, cmpxchg). Anything else is a CompileError naming it.
  */

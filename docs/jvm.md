@@ -63,5 +63,5 @@ uses a different `llvm.coro.end` signature. `bin/newkotlinc` takes `opt` from `m
 `compiler/test.sh` runs the golden tests (with `--leak-check`) and the benchmark checksums on jvm too, whenever `java`
 is on `PATH`.
 
-`bench/jvm/run.sh` compares speed, peak RSS and file size against KotlinX native, Kotlin/Native and Kotlin/JVM. It
+`bench/jvm/run.sh` compares speed, peak RSS and file size against ZKotlin native, Kotlin/Native and Kotlin/JVM. It
 writes `bench/results/jvm/summary.md`.

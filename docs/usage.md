@@ -89,7 +89,7 @@ and 2 on a usage error or an unknown `--gc`.
 ## Example
 
 ```bash
-printf 'fun main() {\n    println("Hello from KotlinX")\n}\n' > /tmp/hello.kt
+printf 'fun main() {\n    println("Hello from ZKotlin")\n}\n' > /tmp/hello.kt
 bin/newkotlinc /tmp/hello.kt -o /tmp/hello --gc=rc --emit-llvm
-/tmp/hello                     # Hello from KotlinX; /tmp/hello.ll holds the IR
+/tmp/hello                     # Hello from ZKotlin; /tmp/hello.ll holds the IR
 ```
