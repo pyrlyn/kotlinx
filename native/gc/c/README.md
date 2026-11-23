@@ -1,6 +1,6 @@
 # ZKotlin memory manager (GC) — vendored C snapshot
 
-> **Vendored into ZKotlin** at `native/gc/c/` from pyrlyn/gc `@6acde649c454e710ca1bc79e04651b0ef07b1b26`.
+> **Vendored into ZKotlin** at `native/gc/c/` from pyrlyn/zgc `@6acde649c454e710ca1bc79e04651b0ef07b1b26`.
 > This is a **path dependency** inside the ZKotlin tree (not a git submodule).
 > Collector **bodies** (`kxgc.h`, `*/gc.c`, `common/*.inc`) match that snapshot byte-for-byte.
 > Surrounding docs/scripts may describe the old standalone-repo / submodule workflow; prefer

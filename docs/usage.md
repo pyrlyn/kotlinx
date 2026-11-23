@@ -50,7 +50,7 @@ driver involves is `sh <gc>/config.sh` (a collector's flag script) and the `sh` 
 
 `--target=wasm` reuses the whole native pipeline: the frontend, `NativeBackend` (with `LlvmTarget.WASM32`:
 wasm32 triple and data layout, 32-bit `size_t`/`long` for libc calls, entry `__main_argc_argv`), `opt`,
-`runtime.c` and a pyrlyn/gc collector. Objects live in linear memory and are managed by the collector, not by the
+`runtime.c` and a pyrlyn/zgc collector. Objects live in linear memory and are managed by the collector, not by the
 engine's GC. Defaults and limits:
 
 - `--gc perceus` (synchronous cycle collection; `incremental` and `rc` also work; `epoch` needs threads),
