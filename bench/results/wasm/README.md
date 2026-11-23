@@ -12,7 +12,7 @@ Reproduce: `bench/wasm/build.sh && bench/wasm/run.py` (Zig 0.17.1 on PATH or in 
   Kotlin/Wasm additionally compiles `bench/wasm/TimeShim.kt` (`kotlin.system.getTimeNanos` exists only on Kotlin/Native).
 - **KotlinX** (`newkotlinc --target=wasm`): the LLVM IR of the native backend for wasm32-wasi, `opt` LLVM 21,
   `zig cc -target wasm32-wasi -O3 -flto` (clang 21, wasi-libc, wasm-ld). Objects live in linear memory and are
-  managed by pyrlyn/gc's perceus collector (RC plus synchronous cycle collection) on wasi-libc malloc:
+  managed by pyrlyn/zgc's perceus collector (RC plus synchronous cycle collection) on wasi-libc malloc:
   - `kx`: the default, the Zig port (`native/gc/zig`, `libgc-perceus.a` built for wasm32-wasi);
   - `kx-opt`: `kx` after `wasm-opt -O3` (Binaryen 132);
   - `kx-c`: the C collector (`--gc-runtime=c`, `native/gc/c/perceus`).

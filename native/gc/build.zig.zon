@@ -15,7 +15,7 @@
         "zig.sha",
     },
     .dependencies = .{
-        // Vendored in-tree Zig collectors (pyrlyn/gc@2dea030 + KotlinX patches, see PROVENANCE.md). Path dep keeps the PR self-contained.
+        // Vendored in-tree Zig collectors (pyrlyn/zgc@2dea030 + KotlinX patches, see PROVENANCE.md). Path dep keeps the PR self-contained.
         .kxgc_zig = .{ .path = "zig" },
     },
 }
