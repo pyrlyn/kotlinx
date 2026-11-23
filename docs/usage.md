@@ -17,8 +17,8 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `--emit-llvm` | Also keep `<output>.ll`. |
 | `--minify` | `--target=js`: minify the output with esbuild or bun, whichever is on `PATH` (or `NK_MINIFIER`, a path to one of them). |
 | `-S` | Write only the LLVM IR to `<output>`; nothing is compiled or linked. |
-| `--cc <clang>` | C compiler and linker. Default: `$NK_CC`, Apple clang at `/usr/bin/clang`, the newest mise `conda:clang`, else `clang`. |
-| `--cflags "<flags>"` | Optimization flags for clang. Default: `-O3 -flto`. |
+| `--cc <clang>` | C compiler and linker. Default: `$NK_CC`, Apple clang at `/usr/bin/clang`, the newest mise `conda:clang`, else `clang`. A path to an executable is used as is (spaces included); anything else is split on whitespace into a command with arguments (`zig cc -target wasm32-wasi`). |
+| `--cflags "<flags>"` | Optimization flags for clang, split on whitespace (no shell quoting: each word is one argument). Default: `-O3 -flto`. |
 | `--opt <path>` | LLVM `opt` run on the IR before linking; see [toolchain.md](toolchain.md) for how it is found. |
 | `--no-opt` | Skip the `opt` step. |
 | `--leak-check` | Count live runtime objects and report at exit; the program exits 3 on a leak. |
@@ -40,6 +40,11 @@ the in-repo runtime, and uses the `opt` pinned by the repo's `mise.toml` unless 
 | `NEWKOTLIN_MIMALLOC_DIR` | Where to find `libmimalloc`. |
 | `NK_CC`, `NK_OPT` | Default C compiler and `opt`. |
 | `NK_WASM_CC` | C compiler and linker for `--target=wasm`, C compiler for `--target=js` (default: `zig cc -target wasm32-wasi`). |
+
+Tools are started from an argument vector with `posix_spawnp` (`compiler/src/driver/Process.kt`), never through a
+shell: paths and values with spaces, quotes, `$`, `;` or glob characters reach them literally. The only shell the
+driver involves is `sh <gc>/config.sh` (a collector's flag script) and the `sh` launcher written in front of a
+`--target jvm` jar, which is part of the output program.
 
 ## Wasm target
 

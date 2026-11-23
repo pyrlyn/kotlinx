@@ -2,9 +2,8 @@
 
 package newkotlin
 
-import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.convert
 import kotlinx.cinterop.toKString
-import kotlinx.cinterop.usePinned
 import platform.posix.*
 import newkotlin.jvm.JvmBackend
 
@@ -20,7 +19,8 @@ import newkotlin.jvm.JvmBackend
 private const val MAIN_CLASS = "Main"
 
 /**
- * JVM options of the launcher prefix (sh words, quoted where the shell could glob). No tiered-JIT size limit
+ * JVM options of the launcher prefix (sh words, quoted where the shell could glob). The launcher is part of the
+ * output program (a `sh` script by design, so the jar runs as `./out`); the driver itself runs no shell. No tiered-JIT size limit
  * (translated functions can be large); the program's own methods are compiled after 1/20 of the usual invocation
  * and loop counts (a translated method is hot from its first call, and short programs otherwise run mostly
  * interpreted); `quiet` keeps the CompileCommand banner off stdout.
@@ -28,18 +28,14 @@ private const val MAIN_CLASS = "Main"
 private const val JVM_OPTS = "-XX:-DontCompileHugeMethods -XX:CompileCommand=quiet " +
     "'-XX:CompileCommand=CompileThresholdScaling,$MAIN_CLASS::*,0.05'"
 
-private fun sh(cmd: String, cleanup: () -> Unit) {
-    val r = system(cmd)
-    if (r != 0) { cleanup(); throw CompileError("command failed ($r): $cmd") }
+/** Runs [argv]; on a non-zero exit runs [cleanup] and throws [CompileError] naming the command. */
+private fun run(argv: List<String>, cleanup: () -> Unit) {
+    try { execChecked(argv) } catch (e: CompileError) { cleanup(); throw e }
 }
 
-private fun writeBytes(path: String, b: ByteArray) {
-    val f = fopen(path, "wb") ?: throw CompileError("cannot write $path")
-    if (b.isNotEmpty()) b.usePinned { fwrite(it.addressOf(0), 1u, b.size.toULong(), f) }
-    fclose(f)
-}
-
-private fun mtime(path: String): Long = capture("stat -f %m ${shq(path)} 2>/dev/null")?.toLongOrNull() ?: -1
+/** Runs [step] (file operations); on [CompileError] runs [cleanup] first. */
+private inline fun <T> step(cleanup: () -> Unit, step: () -> T): T =
+    try { step() } catch (e: CompileError) { cleanup(); throw e }
 
 /** Names of the C functions KxRt.java provides (`public static <type> name(`). */
 private fun runtimeFunctions(src: String): Set<String> =
@@ -60,9 +56,9 @@ private fun jdkTool(tool: String): String =
  * The cache lives next to the compiler build (shared by all outputs), so javac runs once per KxRt.java change.
  */
 private fun runtimeClasses(src: String, dir: String): String {
-    if (mtime("$dir/KxRt.class") >= mtime(src) && mtime(src) >= 0) return dir
-    sh("mkdir -p ${shq(dir)} && ${shq(jdkTool("javac"))} -nowarn --add-exports java.base/jdk.internal.misc=ALL-UNNAMED " +
-        "-d ${shq(dir)} ${shq(src)}") {}
+    if (fileMtime("$dir/KxRt.class") >= fileMtime(src) && fileMtime(src) >= 0) return dir
+    mkdirs(dir)
+    run(listOf(jdkTool("javac"), "-nowarn", "--add-exports", "java.base/jdk.internal.misc=ALL-UNNAMED", "-d", dir, src)) {}
     return dir
 }
 
@@ -70,8 +66,9 @@ private fun runtimeClasses(src: String, dir: String): String {
  * Links [ir] for the jvm target into the executable jar [output].
  * [runtime] is runtime.c; its directory holds jvm/KxRt.java and jvm/libc.c. [gcSrc] is the collector's gc.c,
  * [cflags] the preprocessor flags shared with the native link (-D..., -I...). [links] are extra C sources (FFI).
+ * [cc] is the C compiler as given (a path, or a command with arguments, see [toolArgv]).
  */
-internal fun linkJvm(ir: String, output: String, runtime: String, gcSrc: String, cflags: String, links: List<String>,
+internal fun linkJvm(ir: String, output: String, runtime: String, gcSrc: String, cflags: List<String>, links: List<String>,
                      cc: String, opt: String, keepIr: Boolean) {
     val rtDir = runtime.substringBeforeLast('/', ".")
     val kxrt = "$rtDir/jvm/KxRt.java"
@@ -80,38 +77,50 @@ internal fun linkJvm(ir: String, output: String, runtime: String, gcSrc: String,
 
     val tmp = "$output.jvm-tmp"
     val ll = "$output.ll"
-    fun cleanup() { system("rm -rf ${shq(tmp)}"); if (!keepIr) remove(ll) }
-    sh("rm -rf ${shq(tmp)} && mkdir -p ${shq("$tmp/classes")}", ::cleanup)
+    fun cleanup() { removeTree(tmp); if (!keepIr) remove(ll) }
+    step(::cleanup) { removeTree(tmp); mkdirs("$tmp/classes") }
     writeFile(ll, ir)
 
     // C sources -> bitcode. No vectorization (the translator handles scalars), no fortified libc calls, no stack
     // protector: the IR may then only call what KxRt.java provides.
-    val cOpts = "-O2 -c -emit-llvm -fno-vectorize -fno-slp-vectorize -fno-stack-protector -fno-exceptions " +
-        "-fno-unwind-tables -fno-asynchronous-unwind-tables -D_FORTIFY_SOURCE=0 -Wno-override-module $cflags"
-    val inputs = arrayListOf("${shq(ll)}")
-    val sources = listOf(runtime to "", gcSrc to "", "$rtDir/jvm/libc.c" to " -fno-builtin") + links.map { it to "" }
+    val cOpts = listOf("-O2", "-c", "-emit-llvm", "-fno-vectorize", "-fno-slp-vectorize", "-fno-stack-protector",
+        "-fno-exceptions", "-fno-unwind-tables", "-fno-asynchronous-unwind-tables", "-D_FORTIFY_SOURCE=0",
+        "-Wno-override-module") + cflags
+    val inputs = arrayListOf(ll)
+    val sources = listOf(runtime to emptyList(), gcSrc to emptyList(), "$rtDir/jvm/libc.c" to listOf("-fno-builtin")) +
+        links.map { it to emptyList<String>() }
     for ((i, s) in sources.withIndex()) {
         val bc = "$tmp/in$i.bc"
-        sh("$cc $cOpts${s.second} ${shq(s.first)} -o ${shq(bc)}", ::cleanup)
-        inputs.add("${shq(bc)}")
+        run(toolArgv(cc) + cOpts + s.second + listOf(s.first, "-o", bc), ::cleanup)
+        inputs.add(bc)
     }
-    sh("${shq(sibling(opt, "llvm-link"))} ${inputs.joinToString(" ")} -o ${shq("$tmp/linked.bc")}", ::cleanup)
+    run(listOf(sibling(opt, "llvm-link")) + inputs + listOf("-o", "$tmp/linked.bc"), ::cleanup)
     // Whole-program optimization: everything but main is internal. Vectorizers off (no vector types on the JVM).
-    sh("${shq(opt)} -passes='internalize,default<O2>' -internalize-public-api-list=main,exit -vectorize-loops=false " +
-        "-vectorize-slp=false ${shq("$tmp/linked.bc")} -S -o ${shq("$tmp/opt.ll")}", ::cleanup)
-    if (keepIr) sh("cp ${shq("$tmp/linked.bc")} ${shq("$output.linked.bc")} && cp ${shq("$tmp/opt.ll")} ${shq("$output.opt.ll")}", ::cleanup)
+    run(listOf(opt, "-passes=internalize,default<O2>", "-internalize-public-api-list=main,exit", "-vectorize-loops=false",
+        "-vectorize-slp=false", "$tmp/linked.bc", "-S", "-o", "$tmp/opt.ll"), ::cleanup)
+    if (keepIr) step(::cleanup) {
+        writeFileBytes("$output.linked.bc", readBytes("$tmp/linked.bc")); writeFileBytes("$output.opt.ll", readBytes("$tmp/opt.ll"))
+    }
 
     val classBytes = try {
         JvmBackend(readFile("$tmp/opt.ll"), MAIN_CLASS, runtimeFunctions(readFile(kxrt))).generate()
     } catch (e: CompileError) { cleanup(); throw e }
-    writeBytes("$tmp/classes/$MAIN_CLASS.class", classBytes)
+    step(::cleanup) { writeFileBytes("$tmp/classes/$MAIN_CLASS.class", classBytes) }
 
     val rtClasses = runtimeClasses(kxrt, "$rtDir/../build/jvm-runtime")
     // jdk.internal.misc: Unsafe (memory); jdk.internal.util: Preconditions.checkIndex (bounds checks)
     writeFile("$tmp/manifest.txt", "Main-Class: $MAIN_CLASS\nAdd-Exports: java.base/jdk.internal.misc java.base/jdk.internal.util\n")
-    sh("cp ${shq(rtClasses)}/*.class ${shq("$tmp/classes/")} && ${shq(jdkTool("jar"))} --create --file ${shq("$tmp/out.jar")} " +
-        "--manifest ${shq("$tmp/manifest.txt")} -C ${shq("$tmp/classes")} .", ::cleanup)
+    step(::cleanup) {
+        // cp <rtClasses>/*.class <tmp>/classes/
+        val classes = globPaths(rtClasses, "") { it.endsWith(".class") }
+        if (classes.isEmpty()) throw CompileError("no compiled runtime classes in $rtClasses")
+        for (c in classes) writeFileBytes("$tmp/classes/${c.substringAfterLast('/')}", readBytes(c))
+    }
+    run(listOf(jdkTool("jar"), "--create", "--file", "$tmp/out.jar", "--manifest", "$tmp/manifest.txt", "-C", "$tmp/classes", "."), ::cleanup)
     writeFile("$tmp/launcher", "#!/bin/sh\nexec java $JVM_OPTS -jar \"\$0\" \"\$@\"\n")
-    sh("cat ${shq("$tmp/launcher")} ${shq("$tmp/out.jar")} > ${shq(output)} && chmod +x ${shq(output)}", ::cleanup)
+    step(::cleanup) {
+        concatFiles(listOf("$tmp/launcher", "$tmp/out.jar"), output)
+        if (chmod(output, 493.convert()) != 0) throw CompileError("cannot make $output executable")
+    }
     cleanup()
 }
