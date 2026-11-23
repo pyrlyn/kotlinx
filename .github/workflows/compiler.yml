@@ -103,7 +103,7 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
       # The JVM build compiles compiler/src (minus driver/); the order-independence test needs no C compiler.
       - name: Build and order-independence test
         working-directory: mutation/jvm
