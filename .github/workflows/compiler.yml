@@ -76,12 +76,25 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
+      # ubuntu-26.04 images ship clang/opt 20–22. Picking the newest opt (LLVM 22)
+      # leaves it ahead of clang / toolchain/cc (LLVM 21), which cannot read newer IR.
+      # Pair NK_OPT to the same LLVM major as NK_CC, as the macOS job already does.
       - name: clang, opt, mimalloc and sqlite (ffi test)
         run: |
           sudo apt-get update
           sudo apt-get install -y clang llvm libmimalloc-dev libsqlite3-dev
-          echo "NK_CC=$(command -v clang)" >> "$GITHUB_ENV"
-          echo "NK_OPT=$(ls /usr/bin/opt /usr/lib/llvm-*/bin/opt 2>/dev/null | sort -V | tail -1)" >> "$GITHUB_ENV"
+          NK_CC=$(command -v clang)
+          cc_major=$("$NK_CC" --version | sed -n 's/.*clang version \([0-9][0-9]*\).*/\1/p' | head -1)
+          test -n "$cc_major"
+          if ! [ -x "/usr/lib/llvm-${cc_major}/bin/opt" ]; then
+            sudo apt-get install -y "llvm-${cc_major}"
+          fi
+          NK_OPT="/usr/lib/llvm-${cc_major}/bin/opt"
+          test -x "$NK_CC" && test -x "$NK_OPT"
+          echo "NK_CC=$NK_CC" >> "$GITHUB_ENV"
+          echo "NK_OPT=$NK_OPT" >> "$GITHUB_ENV"
+          "$NK_CC" --version | head -1
+          "$NK_OPT" --version | head -1
       - name: Kotlin/Native toolchain
         run: |
           mkdir -p ~/.konan
