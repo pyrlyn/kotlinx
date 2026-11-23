@@ -12,7 +12,7 @@ tierup-nbody nbody default default:--no-liftoff 1.20
 # Cycle collection cost: perceus (default) against the C collector (--gc-runtime=c, native/gc/c/perceus), which runs
 # trial deletion by tracing the children of every object. Trial deletion over class layouts and the recorded gray set
 # (native/gc/zig/src/common/trial_deletion.zig): cycles 0.64x, bigheap 0.71x. (The baseline used to be --gc rc, which
-# never collects cycles and ran slower from the leaked memory; since pyrlyn/gc a65a3f6's page pool, leaking is cheap.)
+# never collects cycles and ran slower from the leaked memory; since pyrlyn/zgc a65a3f6's page pool, leaking is cheap.)
 cc-cycles cycles default c 0.80
 cc-bigheap bigheap default c 0.85
 # Tier-up of loops written in main: dispatch's inner loop, outlined from main's loop (WasmLoopOutline.kt), against
